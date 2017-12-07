@@ -24,6 +24,7 @@ import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.EffectAllowed;
+import com.vaadin.shared.ui.dnd.criteria.ComparisonOperator;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
@@ -86,20 +87,20 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
         // Create UI and add extensions
 
         ace.setStyleName("card");
-        addDragSourceExtension(ace);
-        addDropTargetExtension(ace);
+        addDragSourceExtension(ace, 14);
+        addDropTargetExtension(ace, 14);
 
         jack.setStyleName("card");
-        addDragSourceExtension(jack);
-        addDropTargetExtension(jack);
+        addDragSourceExtension(jack, 11);
+        addDropTargetExtension(jack, 11);
 
         queen.setStyleName("card");
-        addDragSourceExtension(queen);
-        addDropTargetExtension(queen);
+        addDragSourceExtension(queen, 12);
+        addDropTargetExtension(queen, 12);
 
         king.setStyleName("card");
-        addDragSourceExtension(king);
-        addDropTargetExtension(king);
+        addDragSourceExtension(king, 13);
+        addDropTargetExtension(king, 13);
     }
 
     private void removeExtensions() {
@@ -116,49 +117,53 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
         king.removeExtension(king.getExtensions().iterator().next());
     }
 
-    private void addDragSourceExtension(Label source) {
+    private void addDragSourceExtension(Label source, int cardValue) {
         // Create and attach extension
         DragSourceExtension<Label> dragSource = new DragSourceExtension<>(
                 source);
 
-        // Add listeners
-        dragSource.addDragStartListener(event -> {
-            log(event.getComponent().getValue() + " dragstart, effectsAllowed="
-                    + event.getEffectAllowed());
-        });
+        // Set card value via criteria API for acceptance criteria
+        dragSource.setPayload("card_value", cardValue);
 
-        dragSource.addDragEndListener(event -> {
-            log(event.getComponent().getValue() + " dragend, dropEffect="
-                    + event.getDropEffect());
-        });
+        // Add listeners
+        dragSource.addDragStartListener(event -> log(
+                event.getComponent().getValue() + " dragstart, effectsAllowed="
+                        + event.getEffectAllowed()));
+
+        dragSource
+                .addDragEndListener(event -> log(event.getComponent().getValue()
+                        + " dragend, dropEffect=" + event.getDropEffect()));
 
         sources.add(dragSource);
     }
 
-    private void addDropTargetExtension(Label target) {
+    private void addDropTargetExtension(Label target, int cardValue) {
         // Create and attach extension
         DropTargetExtension<Label> dropTarget = new DropTargetExtension<>(
                 target);
 
+        // Cards can be dropped onto others with smaller value
+        dropTarget.setDropCriterion("card_value",
+                ComparisonOperator.SMALLER_THAN, cardValue);
+
         // Add listener
-        dropTarget.addDropListener(event -> {
-            event.getDragSourceExtension().ifPresent(dragSource -> {
-                if (dragSource.getParent() instanceof Label) {
-                    Label source = (Label) dragSource.getParent();
+        dropTarget.addDropListener(event -> event.getDragSourceExtension()
+                .ifPresent(dragSource -> {
+                    if (dragSource.getParent() instanceof Label) {
+                        Label source = (Label) dragSource.getParent();
 
-                    // Swap source and target components
-                    desk.replaceComponent(target, source);
+                        // Swap source and target components
+                        desk.replaceComponent(target, source);
 
-                    log(event.getComponent().getValue() + " drop received "
-                            + source.getValue() + ", dropEffect="
-                            + event.getDropEffect() + ", mouseEventDetails="
-                            + event.getMouseEventDetails());
-                } else {
-                    log(event.getComponent().getValue()
-                            + " drop received something else than card");
-                }
-            });
-        });
+                        log(event.getComponent().getValue() + " drop received "
+                                + source.getValue() + ", dropEffect="
+                                + event.getDropEffect() + ", mouseEventDetails="
+                                + event.getMouseEventDetails());
+                    } else {
+                        log(event.getComponent().getValue()
+                                + " drop received something else than card");
+                    }
+                }));
 
         targets.add(dropTarget);
     }

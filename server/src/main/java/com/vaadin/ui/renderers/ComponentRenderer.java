@@ -38,10 +38,11 @@ import elemental.json.JsonValue;
  * instances.
  * <p>
  * Example of how to add a {@link Label} component to {@link Grid}:
+ *
  * <pre>
  * Grid<Person> grid;
- * grid.addColumn(person -> new Label(person.getFullName()), 
- *     new ComponentRenderer()).setCaption("Full Name");
+ * grid.addColumn(person -> new Label(person.getFullName()),
+ *         new ComponentRenderer()).setCaption("Full Name");
  * </pre>
  *
  * @author Vaadin Ltd
@@ -59,7 +60,7 @@ public class ComponentRenderer extends AbstractRenderer<Object, Component> {
 
     @Override
     public JsonValue encode(Component value) {
-        return Json.create(value.getConnectorId());
+        return value != null ? Json.create(value.getConnectorId()) : null;
     }
 
     @Override

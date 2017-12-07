@@ -19,6 +19,7 @@ package com.vaadin.client;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -29,9 +30,6 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Element;
 import com.vaadin.client.communication.JavaScriptMethodInvocation;
 import com.vaadin.client.communication.ServerRpcQueue;
-import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
-import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.JavaScriptConnectorState;
 import com.vaadin.shared.communication.MethodInvocation;
@@ -70,12 +68,7 @@ public class JavaScriptConnectorHelper {
     private int processedResponseId = -1;
 
     public void init() {
-        connector.addStateChangeHandler(new StateChangeHandler() {
-            @Override
-            public void onStateChanged(StateChangeEvent stateChangeEvent) {
-                processStateChanges();
-            }
-        });
+        connector.addStateChangeHandler(event -> processStateChanges());
     }
 
     /**
@@ -153,7 +146,7 @@ public class JavaScriptConnectorHelper {
     }
 
     protected boolean initJavaScript() {
-        ArrayList<String> initFunctionNames = getPotentialInitFunctionNames();
+        List<String> initFunctionNames = getPotentialInitFunctionNames();
         for (String initFunctionName : initFunctionNames) {
             if (tryInitJs(initFunctionName, getConnectorWrapper())) {
                 getLogger().info("JavaScript connector initialized using "
@@ -170,7 +163,7 @@ public class JavaScriptConnectorHelper {
         return false;
     }
 
-    protected void showInitProblem(ArrayList<String> attemptedNames) {
+    protected void showInitProblem(List<String> attemptedNames) {
         // Default does nothing
     }
 
@@ -260,13 +253,8 @@ public class JavaScriptConnectorHelper {
         if (listener == null) {
             LayoutManager layoutManager = LayoutManager
                     .get(connector.getConnection());
-            listener = new ElementResizeListener() {
-                @Override
-                public void onElementResize(ElementResizeEvent e) {
-                    invokeElementResizeCallback(e.getElement(),
-                            callbackFunction);
-                }
-            };
+            listener = event -> invokeElementResizeCallback(event.getElement(),
+                    callbackFunction);
             layoutManager.addElementResizeListener(element, listener);
             elementListeners.put(callbackFunction, listener);
         }
@@ -330,7 +318,7 @@ public class JavaScriptConnectorHelper {
     }
 
     private ServerConnector getConnector(String connectorId) {
-        if (connectorId == null || connectorId.length() == 0) {
+        if (connectorId == null || connectorId.isEmpty()) {
             return connector;
         }
 
@@ -363,7 +351,7 @@ public class JavaScriptConnectorHelper {
             // TODO Resolve conflicts using argument count and types
             String interfaceList = "";
             for (String iface : interfaces) {
-                if (interfaceList.length() != 0) {
+                if (!interfaceList.isEmpty()) {
                     interfaceList += ", ";
                 }
                 interfaceList += getJsInterfaceName(iface);
@@ -395,7 +383,7 @@ public class JavaScriptConnectorHelper {
             JavaScriptObject input)
     /*-{
         // Copy all fields to existing state object
-        for(var key in input) {
+        for (var key in input) {
             if (input.hasOwnProperty(key)) {
                 state[key] = input[key];
             }
@@ -437,7 +425,7 @@ public class JavaScriptConnectorHelper {
         if (!targets) {
             return;
         }
-        for(var i = 0; i < targets.length; i++) {
+        for (var i = 0; i < targets.length; i++) {
             var target = targets[i];
             target[methodName].apply(target, parameters);
         }
@@ -487,10 +475,10 @@ public class JavaScriptConnectorHelper {
         return initFunctionName;
     }
 
-    private ArrayList<String> getPotentialInitFunctionNames() {
+    private List<String> getPotentialInitFunctionNames() {
         ApplicationConfiguration conf = connector.getConnection()
                 .getConfiguration();
-        ArrayList<String> initFunctionNames = new ArrayList<String>();
+        List<String> initFunctionNames = new ArrayList<String>();
         Integer tag = Integer.valueOf(connector.getTag());
         while (tag != null) {
             String initFunctionName = conf.getServerSideClassNameForTag(tag);

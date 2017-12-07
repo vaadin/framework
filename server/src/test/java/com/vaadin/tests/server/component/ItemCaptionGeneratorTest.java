@@ -1,9 +1,10 @@
 package com.vaadin.tests.server.component;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.provider.DataGenerator;
@@ -71,9 +72,8 @@ public class ItemCaptionGeneratorTest {
             listing.getDataCommunicator().addDataGenerator(dataGenerator);
             listing.getDataCommunicator().beforeClientResponse(true);
 
-            Assert.assertEquals(
-                    listing.getClass().getName()
-                            + " does not convert null caption from generator to empty string",
+            assertEquals(listing.getClass().getName()
+                    + " does not convert null caption from generator to empty string",
                     "",
                     dataGenerator.generated.hasKey((String) listing.getData())
                             ? dataGenerator.generated.getString(

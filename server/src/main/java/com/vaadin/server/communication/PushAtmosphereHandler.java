@@ -28,7 +28,7 @@ import org.atmosphere.handler.AbstractReflectorAtmosphereHandler;
 
 /**
  * Handles Atmosphere requests and forwards them to logical methods in
- * {@link PushHandler}
+ * {@link PushHandler}.
  *
  * @since 7.5.0
  * @author Vaadin Ltd

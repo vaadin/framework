@@ -37,9 +37,8 @@ public class DuplicateJavascriptDependencies extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        addComponent(new Button("Test", e -> {
-            addComponent(new ResultLabel("It works"));
-        }));
+        addComponent(new Button("Test",
+                event -> addComponent(new ResultLabel("It works"))));
     }
 
 }

@@ -22,7 +22,6 @@ package com.vaadin.tests.components.tabsheet;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
@@ -41,25 +40,17 @@ public class TabSheetWithTabIds extends AbstractReindeerTestUI {
 
         addComponent(tabSheet);
 
-        Button b = new Button("Set ids", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                tab1.setId("tab1");
-                tab2.setId("tab2");
-                tab3.setId("tab3");
-            }
+        Button b = new Button("Set ids", event -> {
+            tab1.setId("tab1");
+            tab2.setId("tab2");
+            tab3.setId("tab3");
         });
         addComponent(b);
 
-        Button b2 = new Button("Clear ids", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                tab1.setId(null);
-                tab2.setId(null);
-                tab3.setId(null);
-            }
+        Button b2 = new Button("Clear ids", event -> {
+            tab1.setId(null);
+            tab2.setId(null);
+            tab3.setId(null);
         });
         addComponent(b2);
     }

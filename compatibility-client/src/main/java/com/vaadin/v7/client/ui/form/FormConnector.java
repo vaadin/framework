@@ -95,8 +95,9 @@ public class FormConnector extends AbstractComponentContainerConnector
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidget().client = client;
-        getWidget().id = uidl.getId();
+        VForm form = getWidget();
+        form.client = client;
+        form.id = uidl.getId();
 
         if (!isRealUpdate(uidl)) {
             return;
@@ -104,66 +105,67 @@ public class FormConnector extends AbstractComponentContainerConnector
 
         boolean legendEmpty = true;
         if (getState().caption != null) {
-            VCaption.setCaptionText(getWidget().caption, getState());
+            VCaption.setCaptionText(form.caption, getState());
             legendEmpty = false;
         } else {
-            getWidget().caption.setInnerText("");
+            form.caption.setInnerText("");
         }
-        if (getWidget().icon != null) {
-            getWidget().legend.removeChild(getWidget().icon.getElement());
+        if (form.icon != null) {
+            form.legend.removeChild(form.icon.getElement());
         }
         if (getIconUri() != null) {
-            getWidget().icon = client.getIcon(getIconUri());
-            getWidget().legend.insertFirst(getWidget().icon.getElement());
+            form.icon = client.getIcon(getIconUri());
+            form.legend.insertFirst(form.icon.getElement());
 
             legendEmpty = false;
         }
         if (legendEmpty) {
-            getWidget().addStyleDependentName("nocaption");
+            form.addStyleDependentName("nocaption");
         } else {
-            getWidget().removeStyleDependentName("nocaption");
+            form.removeStyleDependentName("nocaption");
         }
 
         if (null != getState().errorMessage) {
-            getWidget().errorMessage.updateMessage(getState().errorMessage);
-            getWidget().errorMessage.setVisible(true);
+            form.errorMessage.updateMessage(getState().errorMessage);
+            form.errorMessage.updateErrorLevel(getState().errorLevel);
+            form.errorMessage.setVisible(true);
         } else {
-            getWidget().errorMessage.setVisible(false);
+            form.errorMessage.setVisible(false);
         }
 
         if (ComponentStateUtil.hasDescription(getState())) {
-            getWidget().desc.setInnerHTML(getState().description);
-            if (getWidget().desc.getParentElement() == null) {
-                getWidget().fieldSet.insertAfter(getWidget().desc,
-                        getWidget().legend);
+            form.desc.setInnerHTML(getState().description);
+            if (form.desc.getParentElement() == null) {
+                form.fieldSet.insertAfter(form.desc,
+                        form.legend);
             }
         } else {
-            getWidget().desc.setInnerHTML("");
-            if (getWidget().desc.getParentElement() != null) {
-                getWidget().fieldSet.removeChild(getWidget().desc);
+            form.desc.setInnerHTML("");
+            if (form.desc.getParentElement() != null) {
+                form.fieldSet.removeChild(form.desc);
             }
         }
 
         // also recalculates size of the footer if undefined size form - see
         // #3710
-        client.runDescendentsLayout(getWidget());
+        client.runDescendentsLayout(form);
 
         // We may have actions attached
         if (uidl.getChildCount() >= 1) {
             UIDL childUidl = uidl.getChildByTagName("actions");
             if (childUidl != null) {
-                if (getWidget().shortcutHandler == null) {
-                    getWidget().shortcutHandler = new ShortcutActionHandler(
+                if (form.shortcutHandler == null) {
+                    form.shortcutHandler = new ShortcutActionHandler(
                             getConnectorId(), client);
-                    getWidget().keyDownRegistration = getWidget()
-                            .addDomHandler(getWidget(), KeyDownEvent.getType());
+                    form.keyDownRegistration = form
+                            .addDomHandler(form, KeyDownEvent.getType());
                 }
-                getWidget().shortcutHandler.updateActionMap(childUidl);
+                form.shortcutHandler.updateActionMap(childUidl);
             }
-        } else if (getWidget().shortcutHandler != null) {
-            getWidget().keyDownRegistration.removeHandler();
-            getWidget().shortcutHandler = null;
-            getWidget().keyDownRegistration = null;
+        } else if (form.shortcutHandler != null) {
+            form.keyDownRegistration.removeHandler();
+            form.shortcutHandler = null;
+            form.keyDownRegistration = null;
         }
     }
 

@@ -7,8 +7,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.event.ItemClickEvent;
-import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.RowHeaderMode;
 
@@ -17,14 +15,7 @@ public class SaneErrors extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         final Button b = new Button("Show me my NPE!");
-        b.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                throwError();
-            }
-
-        });
+        b.addClickListener(event -> throwError());
 
         /*
          * Errors from "legacy variable changes"
@@ -32,12 +23,7 @@ public class SaneErrors extends AbstractReindeerTestUI {
         final Table table = new Table();
         table.addItem("Show me my NPE!");
         table.setRowHeaderMode(RowHeaderMode.ID);
-        table.addItemClickListener(new ItemClickListener() {
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                throwError();
-            }
-        });
+        table.addItemClickListener(event -> throwError());
 
         final VerticalLayout content = new VerticalLayout(b, table);
 

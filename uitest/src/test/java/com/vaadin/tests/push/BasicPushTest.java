@@ -17,9 +17,7 @@ package com.vaadin.tests.push;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.AbstractTB3Test;
@@ -85,26 +83,16 @@ public abstract class BasicPushTest extends MultiBrowserTest {
     }
 
     protected void waitUntilClientCounterChanges(final int expectedValue) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                return BasicPushTest
-                        .getClientCounter(BasicPushTest.this) == expectedValue;
-            }
-        }, 10);
+        waitUntil(
+                input -> BasicPushTest
+                        .getClientCounter(BasicPushTest.this) == expectedValue,
+                10);
     }
 
     protected void waitUntilServerCounterChanges() {
         final int counter = BasicPushTest.getServerCounter(this);
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                return BasicPushTest
-                        .getServerCounter(BasicPushTest.this) > counter;
-            }
-        }, 10);
+        waitUntil(input -> BasicPushTest
+                .getServerCounter(BasicPushTest.this) > counter, 10);
     }
 
 }

@@ -19,7 +19,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.ServerRpc;
 
 /**
- * Client-to-server RPC interface for the Tree component
+ * Client-to-server RPC interface for the Tree component.
  *
  * @since 7.6
  * @author Vaadin Ltd
@@ -27,7 +27,7 @@ import com.vaadin.shared.communication.ServerRpc;
 public interface TreeServerRpc extends ServerRpc {
 
     /**
-     * Informs the server that a context click happened inside of Tree
+     * Informs the server that a context click happened inside of Tree.
      */
     public void contextClick(String rowKey, MouseEventDetails details);
 

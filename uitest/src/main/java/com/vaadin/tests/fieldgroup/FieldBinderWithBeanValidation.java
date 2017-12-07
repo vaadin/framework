@@ -7,7 +7,6 @@ import com.vaadin.tests.data.bean.PersonWithBeanValidationAnnotations;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
 import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.v7.data.fieldgroup.FieldGroup;
@@ -42,40 +41,23 @@ public class FieldBinderWithBeanValidation extends TestBase {
         addComponent(sex);
         addComponent(deceased);
 
-        Button commitButton = new Button("Commit", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                String msg = "Commit succesful";
-                try {
-                    fieldGroup.commit();
-                } catch (CommitException e) {
-                    msg = "Commit failed: " + e.getMessage();
-                }
-                Notification.show(msg);
-                log.log(msg);
-
+        Button commitButton = new Button("Commit", event -> {
+            String msg = "Commit succesful";
+            try {
+                fieldGroup.commit();
+            } catch (CommitException e) {
+                msg = "Commit failed: " + e.getMessage();
             }
+            Notification.show(msg);
+            log.log(msg);
         });
         Button discardButton = new Button("Discard",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        fieldGroup.discard();
-                        log.log("Discarded changes");
-
-                    }
+                event -> {
+                    fieldGroup.discard();
+                    log.log("Discarded changes");
                 });
         Button showBean = new Button("Show bean values",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        log.log(getPerson(fieldGroup).toString());
-
-                    }
-                });
+                event -> log.log(getPerson(fieldGroup).toString()));
         addComponent(commitButton);
         addComponent(discardButton);
         addComponent(showBean);

@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.server.component.window;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,23 +39,23 @@ public class WindowTest {
         Button b2 = new Button("button 2");
         window.setAssistiveDescription(l1, b2);
 
-        Assert.assertEquals(2, window.getAssistiveDescription().length);
-        Assert.assertEquals(l1, window.getAssistiveDescription()[0]);
-        Assert.assertEquals(b2, window.getAssistiveDescription()[1]);
+        assertEquals(2, window.getAssistiveDescription().length);
+        assertEquals(l1, window.getAssistiveDescription()[0]);
+        assertEquals(b2, window.getAssistiveDescription()[1]);
 
         // Modifying return value must not change actual value
         window.getAssistiveDescription()[0] = null;
 
-        Assert.assertEquals(2, window.getAssistiveDescription().length);
-        Assert.assertEquals(l1, window.getAssistiveDescription()[0]);
-        Assert.assertEquals(b2, window.getAssistiveDescription()[1]);
+        assertEquals(2, window.getAssistiveDescription().length);
+        assertEquals(l1, window.getAssistiveDescription()[0]);
+        assertEquals(b2, window.getAssistiveDescription()[1]);
 
     }
 
     @Test
     public void testSetPosition() {
         window.setPosition(100, 200);
-        Assert.assertEquals(100, window.getPositionX());
-        Assert.assertEquals(200, window.getPositionY());
+        assertEquals(100, window.getPositionX());
+        assertEquals(200, window.getPositionY());
     }
 }

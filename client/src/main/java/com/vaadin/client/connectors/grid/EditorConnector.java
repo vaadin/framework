@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
@@ -28,6 +29,7 @@ import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
+import com.vaadin.shared.Range;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.editor.EditorClientRpc;
@@ -46,6 +48,9 @@ import elemental.json.JsonObject;
 @Connect(EditorImpl.class)
 public class EditorConnector extends AbstractExtensionConnector {
 
+    private Integer currentEditedRow = null;
+    private boolean waitingForAvailableData = false;
+
     /**
      * EditorHandler for communicating with the server-side implementation.
      */
@@ -56,6 +61,20 @@ public class EditorConnector extends AbstractExtensionConnector {
 
         public CustomEditorHandler() {
             registerRpc(EditorClientRpc.class, new EditorClientRpc() {
+
+                @Override
+                public void bind(final int rowIndex) {
+                    // call this deferred to avoid issues with editing on init
+                    Scheduler.get().scheduleDeferred(() -> {
+                        currentEditedRow = rowIndex;
+                        // might need to wait for available data,
+                        // if data is available, ensureAvailability will immediately trigger the handler anyway,
+                        // so no need for alternative "immediately available" logic
+                        waitingForAvailableData = true;
+                        getParent().getDataSource().ensureAvailability(rowIndex, 1);
+                    });
+                }
+
                 @Override
                 public void cancel() {
                     serverInitiated = true;
@@ -110,6 +129,7 @@ public class EditorConnector extends AbstractExtensionConnector {
                 // a confirmation from the server
                 rpc.cancel(afterBeingSaved);
             }
+            currentEditedRow = null;
         }
 
         @Override
@@ -198,6 +218,13 @@ public class EditorConnector extends AbstractExtensionConnector {
     protected void extend(ServerConnector target) {
         Grid<JsonObject> grid = getParent().getWidget();
         grid.getEditor().setHandler(new CustomEditorHandler());
+        grid.addDataAvailableHandler((event) -> {
+            Range range = event.getAvailableRows();
+            if (waitingForAvailableData && currentEditedRow != null && range.contains(currentEditedRow)) {
+                getParent().getWidget().editRow(currentEditedRow);
+                waitingForAvailableData = false;
+            }
+        });
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.vaadin.test.widgetset;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -19,13 +18,9 @@ public abstract class AbstractTestWidgetSetUI extends UI {
         name.setCaption("Type your name here:");
 
         Button button = new Button("Click Me");
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent clickEvent) {
-                layout.addComponent(
-                        new Label("Thanks " + name.getValue() + ", it works!"));
-            }
-        });
+        button.addClickListener(
+                event -> layout.addComponent(new Label(
+                        "Thanks " + name.getValue() + ", it works!")));
 
         getPage().getJavaScript().execute(
                 "widgetsetinfo.innerText=document.querySelector('iframe').id;");

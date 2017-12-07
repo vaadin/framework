@@ -16,6 +16,11 @@
 
 package com.vaadin.tests.tb3;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -35,7 +40,6 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
@@ -199,31 +203,22 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     protected void waitForDebugMessage(final String expectedMessage,
             int timeout) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                return hasDebugMessage(expectedMessage);
-            }
-        }, timeout);
+        waitUntil(input -> hasDebugMessage(expectedMessage), timeout);
     }
 
     protected void clearDebugMessages() {
-        driver.findElement(By
-                .xpath("//button[@class='v-debugwindow-button' and @title='Clear log']"))
+        driver.findElement(By.xpath(
+                "//button[@class='v-debugwindow-button' and @title='Clear log']"))
                 .click();
     }
 
     protected void waitUntilRowIsVisible(final TableElement table,
             final int row) {
-        waitUntil(new ExpectedCondition<Object>() {
-            @Override
-            public Object apply(WebDriver input) {
-                try {
-                    return table.getCell(row, 0) != null;
-                } catch (NoSuchElementException e) {
-                    return false;
-                }
+        waitUntil(input -> {
+            try {
+                return table.getCell(row, 0) != null;
+            } catch (NoSuchElementException e) {
+                return false;
             }
         });
     }
@@ -273,7 +268,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
             parameters.add("restartApplication");
         }
 
-        if (parameters.size() > 0) {
+        if (!parameters.isEmpty()) {
             url += "?" + StringUtils.join(parameters, "&");
         }
 
@@ -309,7 +304,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     /**
      * Used to determine what port the test is running on
      *
-     * @return The port teh test is running on, by default 8888
+     * @return The port the test is running on, by default 8888
      */
     protected abstract int getDeploymentPort();
 
@@ -412,30 +407,6 @@ public abstract class AbstractTB3Test extends ParallelTest {
     }
 
     /**
-     * Waits up to 10s for the given condition to become true. Use e.g. as
-     * {@link #waitUntil(ExpectedConditions.textToBePresentInElement(by, text))}
-     *
-     * @param condition
-     *            the condition to wait for to become true
-     */
-    protected <T> void waitUntil(ExpectedCondition<T> condition) {
-        waitUntil(condition, 10);
-    }
-
-    /**
-     * Waits the given number of seconds for the given condition to become true.
-     * Use e.g. as
-     * {@link #waitUntil(ExpectedConditions.textToBePresentInElement(by, text))}
-     *
-     * @param condition
-     *            the condition to wait for to become true
-     */
-    protected <T> void waitUntil(ExpectedCondition<T> condition,
-            long timeoutInSeconds) {
-        new WebDriverWait(driver, timeoutInSeconds).until(condition);
-    }
-
-    /**
      * Waits up to 10s for the given condition to become false. Use e.g. as
      * {@link #waitUntilNot(ExpectedConditions.textToBePresentInElement(by,
      * text))}
@@ -466,12 +437,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     }
 
     protected void waitForElementNotPresent(final By by) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return input.findElements(by).isEmpty();
-            }
-        });
+        waitUntil(input -> input.findElements(by).isEmpty());
     }
 
     protected void waitForElementVisible(final By by) {
@@ -771,7 +737,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
         // Remove any possible URL parameters
         String pathWithoutQueryParameters = pathWithQueryParameters
                 .replaceAll("\\?.*", "");
-        if ("".equals(pathWithoutQueryParameters)) {
+        if (pathWithoutQueryParameters.isEmpty()) {
             return "ROOT";
         }
 
@@ -837,12 +803,9 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     protected void openDebugLogTab() {
 
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                WebElement element = getDebugLogButton();
-                return element != null;
-            }
+        waitUntil(input -> {
+            WebElement element = getDebugLogButton();
+            return element != null;
         }, 15);
         getDebugLogButton().click();
     }
@@ -861,8 +824,8 @@ public abstract class AbstractTB3Test extends ParallelTest {
             for (WebElement e : logElements) {
                 logRows += "\n" + e.getText();
             }
-            Assert.fail("Found debug messages with level " + level.getName()
-                    + ": " + logRows);
+            fail("Found debug messages with level " + level.getName() + ": "
+                    + logRows);
         }
     }
 
@@ -1112,20 +1075,20 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Asserts that an element is present
      *
      * @param by
-     *            the locatore for the element
+     *            the locator for the element
      */
     protected void assertElementPresent(By by) {
-        Assert.assertTrue("Element is not present", isElementPresent(by));
+        assertTrue("Element is not present", isElementPresent(by));
     }
 
     /**
      * Asserts that an element is not present
      *
      * @param by
-     *            the locatore for the element
+     *            the locator for the element
      */
     protected void assertElementNotPresent(By by) {
-        Assert.assertFalse("Element is present", isElementPresent(by));
+        assertFalse("Element is present", isElementPresent(by));
     }
 
     /**
@@ -1133,8 +1096,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * "?debug" as exceptions are otherwise not shown as notifications.
      */
     protected void assertNoErrorNotifications() {
-        Assert.assertFalse(
-                "Error notification with client side exception is shown",
+        assertFalse("Error notification with client side exception is shown",
                 isNotificationPresent("error"));
     }
 
@@ -1142,8 +1104,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Asserts that no system notifications are shown.
      */
     protected void assertNoSystemNotifications() {
-        Assert.assertFalse(
-                "Error notification with system error exception is shown",
+        assertFalse("Error notification with system error exception is shown",
                 isNotificationPresent("system"));
     }
 
@@ -1151,14 +1112,14 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Asserts that a system notification is shown.
      */
     protected void assertSystemNotification() {
-        Assert.assertTrue(
+        assertTrue(
                 "Error notification with system error exception is not shown",
                 isNotificationPresent("system"));
     }
 
     private boolean isNotificationPresent(String type) {
         if ("error".equals(type)) {
-            Assert.assertTrue(
+            assertTrue(
                     "Debug window must be open to be able to see error notifications",
                     isDebugWindowOpen());
         }
@@ -1193,7 +1154,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
         }
         message += " have a horizontal scrollbar (scrollWidth: " + scrollWidth
                 + ", clientWidth: " + clientWidth + "): " + errorMessage;
-        Assert.assertEquals(message, expected, hasScrollbar);
+        assertEquals(message, expected, hasScrollbar);
     }
 
     protected void assertNoVerticalScrollbar(WebElement element,
@@ -1205,7 +1166,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
         int scrollHeight = getScrollHeight(element);
         boolean hasScrollbar = scrollHeight > clientHeight;
 
-        Assert.assertFalse(
+        assertFalse(
                 "The element should not have a vertical scrollbar (scrollHeight: "
                         + scrollHeight + ", clientHeight: " + clientHeight
                         + "): " + errorMessage,
@@ -1254,7 +1215,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
             actualElement = ((WrapsElement) actualElement).getWrappedElement();
         }
 
-        Assert.assertEquals(expectedElement, actualElement);
+        assertEquals(expectedElement, actualElement);
     }
 
     protected WebElement getActiveElement() {
@@ -1266,14 +1227,10 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
         final WebElement rootDiv = findElement(
                 By.xpath("//div[contains(@class,'v-app')]"));
-        waitUntil(new ExpectedCondition<Boolean>() {
+        waitUntil(input -> {
+            String rootClass = rootDiv.getAttribute("class").trim();
 
-            @Override
-            public Boolean apply(WebDriver input) {
-                String rootClass = rootDiv.getAttribute("class").trim();
-
-                return rootClass.contains(theme);
-            }
+            return rootClass.contains(theme);
         }, 30);
     }
 

@@ -2,10 +2,7 @@ package com.vaadin.tests.components.treetable;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.data.Item;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.Tree.CollapseEvent;
 import com.vaadin.v7.ui.Tree.CollapseListener;
 import com.vaadin.v7.ui.Tree.ExpandEvent;
@@ -35,42 +32,20 @@ public class KeepAllItemsVisible extends TestBase
 
         tt.addListener((ExpandListener) this);
         tt.addListener((CollapseListener) this);
-        tt.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                recalculatePageLength(tt);
-                tt.markAsDirty();
-            }
+        tt.addValueChangeListener(event -> {
+            recalculatePageLength(tt);
+            tt.markAsDirty();
         });
         addComponent(tt);
 
         recalculatePageLength(tt);
 
         Button b = new Button("Set pagelength to 10",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        tt.setPageLength(10);
-                    }
-                });
+                event -> tt.setPageLength(10));
         addComponent(b);
-        b = new Button("Set pagelength to 20", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                tt.setPageLength(20);
-            }
-        });
+        b = new Button("Set pagelength to 20", event -> tt.setPageLength(20));
         addComponent(b);
-        b = new Button("Set pagelength to 0", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                tt.setPageLength(0);
-            }
-        });
+        b = new Button("Set pagelength to 0", event -> tt.setPageLength(0));
         addComponent(b);
     }
 

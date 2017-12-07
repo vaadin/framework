@@ -1,9 +1,10 @@
 package com.vaadin.v7.tests.server.component.abstractfield;
 
+import static org.junit.Assert.assertEquals;
+
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -53,13 +54,13 @@ public class AbsFieldDataSourceLocaleChangeTest {
         });
         tf.setImmediate(true);
         tf.setConvertedValue(10000);
-        Assert.assertEquals("0000010000", tf.getValue());
+        assertEquals("0000010000", tf.getValue());
 
         VerticalLayout vl = new VerticalLayout();
         ui.setContent(vl);
         ui.setLocale(new Locale("en", "US"));
 
         vl.addComponent(tf);
-        Assert.assertEquals("10,000", tf.getValue());
+        assertEquals("10,000", tf.getValue());
     }
 }

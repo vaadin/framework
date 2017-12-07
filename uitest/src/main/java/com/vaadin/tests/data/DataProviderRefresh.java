@@ -3,8 +3,6 @@ package com.vaadin.tests.data;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 import java.util.stream.Stream;
 
 import com.vaadin.data.provider.AbstractDataProvider;
@@ -101,7 +99,7 @@ public class DataProviderRefresh extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         Grid<Bean> grid = new Grid<>();
-        ArrayList<Bean> arrayList = new ArrayList<>();
+        List<Bean> arrayList = new ArrayList<>();
         Bean foo = new Bean("Foo", 10);
         arrayList.add(foo);
         arrayList.add(new Bean("Baz", 11));
@@ -111,8 +109,8 @@ public class DataProviderRefresh extends AbstractTestUI {
         grid.addColumn(Object::toString).setCaption("toString");
         addComponent(grid);
         addComponent(new Button("Replace item",
-                e -> dataProvider.refreshItem(new Bean("Bar", 10))));
-        addComponent(new Button("Select old", e -> grid.select(foo)));
+                event -> dataProvider.refreshItem(new Bean("Bar", 10))));
+        addComponent(new Button("Select old", event -> grid.select(foo)));
     }
 
 }

@@ -18,8 +18,6 @@ package com.vaadin.tests.components.combobox;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.ui.ComboBox;
 
 public class ComboBoxSetNullWhenNewItemsAllowed extends AbstractReindeerTestUI {
@@ -36,13 +34,10 @@ public class ComboBoxSetNullWhenNewItemsAllowed extends AbstractReindeerTestUI {
 
         final Label value = new Label("Selected: ");
 
-        comboBox.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (comboBox.getValue() != null) {
-                    comboBox.setValue(null);
-                    value.setValue("Selected: " + (String) comboBox.getValue());
-                }
+        comboBox.addValueChangeListener(event -> {
+            if (comboBox.getValue() != null) {
+                comboBox.setValue(null);
+                value.setValue("Selected: " + (String) comboBox.getValue());
             }
         });
         addComponent(comboBox);

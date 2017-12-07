@@ -15,14 +15,14 @@
  */
 package com.vaadin.tests.components.customlayout;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.v7.ui.TextField;
 
@@ -34,17 +34,11 @@ public class CustomLayoutWithMissingSlot extends AbstractTestUIWithLog {
         try {
             cl = new CustomLayout(new ByteArrayInputStream(
                     "<div>First: <div location='first'></div><p>Second: <div location='second'></div><p>"
-                            .getBytes("UTF-8")));
+                            .getBytes(UTF_8)));
             cl.addComponent(new TextField("This should be visible"), "first");
             Button button = new Button(
                     "This button is visible, together with one label");
-            button.addClickListener(new ClickListener() {
-
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    log("Button clicked");
-                }
-            });
+            button.addClickListener(event -> log("Button clicked"));
             cl.addComponent(button, "second");
             cl.addComponent(
                     new TextField("This won't be as the slot is missing"),
@@ -52,7 +46,6 @@ public class CustomLayoutWithMissingSlot extends AbstractTestUIWithLog {
 
             addComponent(cl);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

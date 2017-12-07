@@ -15,26 +15,24 @@
  */
 package com.vaadin.client.ui;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
-import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.event.dom.client.TouchEndEvent;
-import com.google.gwt.event.dom.client.TouchEndHandler;
 import com.google.gwt.event.dom.client.TouchMoveEvent;
 import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.MouseEventDetailsBuilder;
@@ -44,8 +42,8 @@ import com.vaadin.client.StyleConstants;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.extensions.DragSourceExtensionConnector;
@@ -65,7 +63,7 @@ import com.vaadin.shared.ui.TabIndexState;
 import com.vaadin.shared.ui.ui.UIState;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
-        implements ComponentConnector, HasErrorIndicator {
+        implements HasErrorIndicator {
 
     private HandlerRegistration contextHandler = null;
 
@@ -99,7 +97,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     private static final int TOUCH_CONTEXT_MENU_TIMEOUT = 500;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public AbstractComponentConnector() {
     }
@@ -108,19 +106,15 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     void handleContextClickListenerChange() {
         if (contextHandler == null && hasEventListener(EventId.CONTEXT_CLICK)) {
             contextHandler = getWidget()
-                    .addDomHandler(new ContextMenuHandler() {
-                        @Override
-                        public void onContextMenu(ContextMenuEvent event) {
-                            final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
-                                    .buildMouseEventDetails(
-                                            event.getNativeEvent(),
-                                            getWidget().getElement());
+                    .addDomHandler(event -> {
+                        final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
+                                .buildMouseEventDetails(event.getNativeEvent(),
+                                        getWidget().getElement());
 
-                            event.preventDefault();
-                            event.stopPropagation();
-                            sendContextClickEvent(mouseEventDetails,
-                                    event.getNativeEvent().getEventTarget());
-                        }
+                        event.preventDefault();
+                        event.stopPropagation();
+                        sendContextClickEvent(mouseEventDetails,
+                                event.getNativeEvent().getEventTarget());
                     }, ContextMenuEvent.getType());
 
             // if the widget has a contextclick listener, add touch support as
@@ -141,11 +135,11 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     /**
-     * The new default behaviour is for long taps to fire a contextclick event
-     * if there's a contextclick listener attached to the component.
+     * The new default behavior is for long taps to fire a contextclick event if
+     * there's a contextclick listener attached to the component.
      *
      * If you do not want this in your component, override this with a blank
-     * method to get rid of said behaviour.
+     * method to get rid of said behavior.
      *
      * @since 7.6
      */
@@ -165,11 +159,11 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     /**
-     * The new default behaviour is for long taps to fire a contextclick event
-     * if there's a contextclick listener attached to the component.
+     * The new default behavior is for long taps to fire a contextclick event if
+     * there's a contextclick listener attached to the component.
      *
      * If you do not want this in your component, override this with a blank
-     * method to get rid of said behaviour.
+     * method to get rid of said behavior.
      *
      * Some Vaadin Components already handle the long tap as a context menu.
      * This method is unnecessary for those.
@@ -177,63 +171,59 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * @since 7.6
      */
     protected void registerTouchHandlers() {
-        touchStartHandler = getWidget().addDomHandler(new TouchStartHandler() {
-
-            @Override
-            public void onTouchStart(final TouchStartEvent event) {
-                if (longTouchTimer != null && longTouchTimer.isRunning()) {
-                    return;
-                }
-
-                // Prevent selection for the element while pending long tap.
-                WidgetUtil.setTextSelectionEnabled(getWidget().getElement(),
-                        false);
-
-                if (BrowserInfo.get().isAndroid()) {
-                    // Android fires ContextMenu events automatically.
-                    return;
-                }
-
-                /*
-                 * we need to build mouseEventDetails eagerly - the event won't
-                 * be guaranteed to be around when the timer executes. At least
-                 * this was the case with iOS devices.
-                 */
-
-                final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
-                        .buildMouseEventDetails(event.getNativeEvent(),
-                                getWidget().getElement());
-
-                final EventTarget eventTarget = event.getNativeEvent()
-                        .getEventTarget();
-
-                longTouchTimer = new Timer() {
-
-                    @Override
-                    public void run() {
-                        // we're handling this event, our parent components
-                        // don't need to bother with it anymore.
-                        cancelParentTouchTimers();
-                        // The default context click
-                        // implementation only provides the
-                        // mouse coordinates relative to root
-                        // element of widget.
-
-                        sendContextClickEvent(mouseEventDetails, eventTarget);
-                        preventNextTouchEnd = true;
-                    }
-                };
-
-                Touch touch = event.getChangedTouches().get(0);
-                touchStartX = touch.getClientX();
-                touchStartY = touch.getClientY();
-
-                longTouchTimer.schedule(TOUCH_CONTEXT_MENU_TIMEOUT);
-
+        Widget widget = getWidget();
+        touchStartHandler = widget.addDomHandler(event -> {
+            if (longTouchTimer != null && longTouchTimer.isRunning()) {
+                return;
             }
+
+            // Prevent selection for the element while pending long tap.
+            WidgetUtil.setTextSelectionEnabled(widget.getElement(),
+                    false);
+
+            if (BrowserInfo.get().isAndroid()) {
+                // Android fires ContextMenu events automatically.
+                return;
+            }
+
+            /*
+             * we need to build mouseEventDetails eagerly - the event won't
+             * be guaranteed to be around when the timer executes. At least
+             * this was the case with iOS devices.
+             */
+
+            final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
+                    .buildMouseEventDetails(event.getNativeEvent(),
+                            widget.getElement());
+
+            final EventTarget eventTarget = event.getNativeEvent()
+                    .getEventTarget();
+
+            longTouchTimer = new Timer() {
+
+                @Override
+                public void run() {
+                    // we're handling this event, our parent components
+                    // don't need to bother with it anymore.
+                    cancelParentTouchTimers();
+                    // The default context click
+                    // implementation only provides the
+                    // mouse coordinates relative to root
+                    // element of widget.
+
+                    sendContextClickEvent(mouseEventDetails, eventTarget);
+                    preventNextTouchEnd = true;
+                }
+            };
+
+            Touch touch = event.getChangedTouches().get(0);
+            touchStartX = touch.getClientX();
+            touchStartY = touch.getClientY();
+
+            longTouchTimer.schedule(TOUCH_CONTEXT_MENU_TIMEOUT);
         }, TouchStartEvent.getType());
 
-        touchMoveHandler = getWidget().addDomHandler(new TouchMoveHandler() {
+        touchMoveHandler = widget.addDomHandler(new TouchMoveHandler() {
 
             @Override
             public void onTouchMove(TouchMoveEvent event) {
@@ -242,7 +232,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                     // expired, so let the browser handle the event.
                     cancelTouchTimer();
                 }
-
             }
 
             // mostly copy-pasted code from VScrollTable
@@ -271,17 +260,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             }
         }, TouchMoveEvent.getType());
 
-        touchEndHandler = getWidget().addDomHandler(new TouchEndHandler() {
+        touchEndHandler = widget.addDomHandler(event -> {
+            // cancel the timer so the event doesn't fire
+            cancelTouchTimer();
 
-            @Override
-            public void onTouchEnd(TouchEndEvent event) {
-                // cancel the timer so the event doesn't fire
-                cancelTouchTimer();
-
-                if (preventNextTouchEnd) {
-                    event.preventDefault();
-                    preventNextTouchEnd = false;
-                }
+            if (preventNextTouchEnd) {
+                event.preventDefault();
+                preventNextTouchEnd = false;
             }
         }, TouchEndEvent.getType());
     }
@@ -330,7 +315,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * interface.
      *
      * @since 7.6
-     * @param event
+     * @param details
+     * @param eventTarget
      */
     protected void sendContextClickEvent(MouseEventDetails details,
             EventTarget eventTarget) {
@@ -435,7 +421,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                  * TODO Enable this error when all widgets have been fixed to
                  * properly support tabIndex, i.e. implement Focusable
                  */
-                // VConsole.error("Tab index received for "
+                // getLogger().severe("Tab index received for "
                 // + Util.getSimpleName(getWidget())
                 // + " which does not implement Focusable");
             }
@@ -488,6 +474,28 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         Profiler.leave("AbstractComponentConnector.onStateChanged");
     }
 
+    @OnStateChange({ "errorMessage", "errorLevel" })
+    private void setErrorLevel() {
+        Widget widget = getWidget();
+        // Add or remove the widget's error level style name
+        ErrorUtil.setErrorLevelStyle(widget.getElement(),
+                widget.getStylePrimaryName() + StyleConstants.ERROR_EXT,
+                getState().errorLevel);
+
+        // Add or remove error indicator element
+        if (widget instanceof HasErrorIndicatorElement) {
+            HasErrorIndicatorElement hasErrorIndicatorElement = (HasErrorIndicatorElement) widget;
+            if (getState().errorMessage != null) {
+                hasErrorIndicatorElement.setErrorIndicatorElementVisible(true);
+                ErrorUtil.setErrorLevelStyle(hasErrorIndicatorElement.getErrorIndicatorElement(),
+                        StyleConstants.STYLE_NAME_ERROR_INDICATOR,
+                        getState().errorLevel);
+            } else {
+                hasErrorIndicatorElement.setErrorIndicatorElementVisible(false);
+            }
+        }
+    }
+
     @Override
     public void setWidgetEnabled(boolean widgetEnabled) {
         // add or remove v-disabled style name from the widget
@@ -504,7 +512,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             if (parent instanceof HasComponentsConnector) {
                 ((HasComponentsConnector) parent).updateCaption(this);
             } else if (parent == null && !(this instanceof UIConnector)) {
-                VConsole.error("Parent of connector "
+                getLogger().severe("Parent of connector "
                         + Util.getConnectorString(this)
                         + " is null. This is typically an indication of a broken component hierarchy");
             }
@@ -753,7 +761,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // at this point.
         if (getWidget() != null && getWidget().isAttached()) {
             getWidget().removeFromParent();
-            VConsole.error(
+            getLogger().severe(
                     "Widget is still attached to the DOM after the connector ("
                             + Util.getConnectorString(this)
                             + ") has been unregistered. Widget was removed.");
@@ -763,21 +771,18 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     @Override
     public TooltipInfo getTooltipInfo(Element element) {
         return new TooltipInfo(getState().description,
-                getState().descriptionContentMode, getState().errorMessage);
+                getState().descriptionContentMode, getState().errorMessage,
+                null, getState().errorLevel);
     }
 
     @Override
     public boolean hasTooltip() {
         // Normally, there is a tooltip if description or errorMessage is set
         AbstractComponentState state = getState();
-        if (state.description != null && !state.description.equals("")) {
+        if (state.description != null && !state.description.isEmpty()) {
             return true;
-        } else if (state.errorMessage != null
-                && !state.errorMessage.equals("")) {
-            return true;
-        } else {
-            return false;
         }
+        return state.errorMessage != null && !state.errorMessage.isEmpty();
     }
 
     /**
@@ -874,5 +879,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      */
     public void onDropTargetDetached() {
 
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(AbstractComponentConnector.class.getName());
     }
 }

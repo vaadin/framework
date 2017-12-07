@@ -234,7 +234,7 @@ public class GridColumnsTest {
     public void testReorderColumns() {
         Set<?> containerProperties = new LinkedHashSet<Object>(
                 grid.getContainerDataSource().getContainerPropertyIds());
-        Object[] properties = new Object[] { "column3", "column2", "column6" };
+        Object[] properties = { "column3", "column2", "column6" };
         grid.setColumnOrder(properties);
 
         int i = 0;

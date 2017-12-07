@@ -1,0 +1,102 @@
+---
+title: Contents
+order: 1
+layout: page
+---
+
+= Community articles for Vaadin Framework
+
+Helpful articles about Vaadin Framework written by the users for the users. The
+articles are presented as written by the author. Vaadin does not edit or maintain them.
+Pull requests welcome!
+
+NOTE: All contributions are very welcome! Just write your article in link:asciidoctor.org/docs/asciidoc-writers-guide[AsciiDoc],
+put it in this directory and send us a pull request. Updates to existing articles
+are great, too.
+
+[discrete]
+== Articles
+- <<AccessControlForViews#access-control-for-views,"Access control or views">>
+- <<CreatingAServlet3%2E0Application#creating-a-servlet-3.0-application,"Creating a Servlet 3.0 application">>
+- <<DevelopingPortletsForTheWebSpherePortalServer#developing-portlets-for-the-websphere-portal-server,"Developing portlets for the WebSphere Portal Server">>
+- <<ConfigureComboBoxesWisely#configure-comboboxes-wisely,"Configure ComboBoxes wisely">>
+- <<LettingTheUserDownloadAFile#letting-the-user-download-a-file,"Letting the user download a file">>
+- <<UsingVaadinInIBMDomino#using-vaadin-in-ibm-domino,"Using Vaadin in IBM Domino">>
+- <<VaadinTutorialForSwingDevelopers#a-hitchhikers-guide-to-convert-aswing-appto-modern-web-app,"Vaadin tutorial for Swing developers">>
+- <<SettingAndReadingSessionAttributes#setting-and-reading-session-attributes,"Setting and reading session attributes">>
+- <<EnablingServerPush#enabling-server-push,"Enabling server push">>
+- <<CleaningUpResourcesInAUI#cleaning-up-resources-in-a-ui,"Cleaning up resources in a UI">>
+- <<SendingEmailFromJavaApplications#sending-email-from-java-applications,"Sending email from Java applications">>
+- <<OptimizingSluggishUI#optimizing-sluggish-ui,"Optimizing sluggish UI">>
+- <<UsingParametersWithViews#using-parameters-with-views,"Using parameters with views">>
+- <<ConfiguringPushForYourEnvironment#configuring-push-for-your-environment,"Configuring push for your environment">>
+- <<SettingAndReadingCookies#setting-and-reading-cookies,"Setting and reading cookies">>
+- <<UsingPolling#using-polling,"Using polling">>
+- <<FindingTheCurrentUIAndPageAndVaadinSession#finding-the-current-ui-and-page-and-vaadin-session,"Finding the current UI and page and Vaadin Session">>
+- <<CreatingAnApplicationThatPreservesStateOnRefresh#creating-an-application-that-preserves-state-on-refresh,"Creating an application that preserves state on refresh">>
+- <<SendingEventsFromTheClientToTheServerUsingRPC#sending-events-from-the-client-to-the-server-using-RPC,"Sending events from the client to the server using RPC">>
+- <<HandlingLogout#handling-logout,"Handling logout">>
+- <<ScalableWebApplications#scalable-web-applications,"Scalable web applications">>
+- <<RememberToTheSetTheLocale#remember-to-the-set-the-locale,"Remember to the set the locale">>
+- <<MVCBasicsInITMillToolkit#mvc-basics-in-itmill-toolkit,"MVC Basics in IT Mill Toolkit">>
+- <<CustomizingTheStartupPageInAnApplication#customizing-the-startup-page-in-an-application,"Customizing the startup page in an application">>
+- <<UsingURIFragments#using-uri-fragments,"Using URI fragments">>
+- <<AccessingWebPageAndBrowserInformation#accessing-web-page-and-browser-information,"Accessing web page and browser information">>
+- <<GeneratingDynamicResourcesBasedOnURIOrParameters#generating-dynamic-resources-based-on-uri-or-parameters,"Generating dynamic resources based on URI or parameters">>
+- <<OptimizingTheWidgetSet#optimizing-the-widget-set,"Optimizing the widget set">>
+- <<UsingServerInitiatedEvents#using-server-initiated-events,"Using server-initiated events">>
+- <<ChooseInputFieldComponentsWisely#choosing-input-field-components-wisely,"Choose input field components wisely">>
+- <<CreatingASimpleComponent#creating-a-simple-component,"Creating a simple component">>
+- <<IntegratingAnExistingGWTWidget#integrating-an-existing-gwt-widget,"Integrating an existing GWT widget">>
+- <<IntegrationExperiences#integrating-vaadin-applications-with-other-technologies,"Integration experiences">>
+- <<VaadinOnGrailsCreateProjectInIntelliJIDEA#vaadin-on-grails-with-intellij-idea,"Vaadin on grails - Create project in IntelliJ IDEA">>
+- <<VaadinOnGrailsDatabaseAccess#vaadin-on-grails-database-access,"Vaadin on grails - Database access">>
+- <<VaadinOnGrailsMultipleUIs#vaadin-on-grails-multiple-uis,"Vaadin on grails - Multiple UIs">>
+- <<IntegratingAJavaScriptComponent#integrating-a-javascript-component,"Integrating a JavaScript component">>
+- <<IntegratingAJavaScriptLibraryAsAnExtension#integrating-a-javascript-library-as-an-extension,"Integrating a JavaScript library as an extension">>
+- <<UsingAJavaScriptLibraryOrAStyleSheetInAnAddOn#using-a-javascript-library-or-a-style-sheet-in-an-addon,"Using a JavaScript library or a style sheet in an add-on">>
+- <<ExposingServerSideAPIToJavaScript#exposing-server-side-api-to-javascript,"Exposing server-side API to JavaScript">>
+- <<UsingRPCFromJavaScript#using-rpc-from-javascript,"Using RPC from JavaScript">>
+- <<IBGettingStartedWithVaadinSpringWithoutSpringBoot#i-b-getting-started-with-vaadin-spring-without-spring-boot,"I b - Getting started with Vaadin Spring withoout Spring Boot">>
+- <<Vaadin7SpringSecurityBaseAuthentification#vaadin-7-spring-security-base-authentication,"Vaadin 7 + Spring Security (base authentication)">>
+- <<UsingBeanValidationToValidateInput#using-bean-validation-to-validate-input,"Using Bean Validation to validate input">>
+- <<VaadinSpringTips#vaadin-spring-tips,"Vaadin Spring tips">>
+- <<VaadinCDI#vaadin-cdi,"Vaadin CDI">>
+- <<IIInjectionAndScopes#ii-injection-and-scopes,"II - Injection and scopes">>
+- <<CreatingSecureVaadinApplicationsUsingJEE6#creating-secure-vaadin-applications-using-jee6,"Creating secure Vaadin applications using JEE6">>
+- <<UsingVaadinCDIWithJAASAuthentication#using-vaadin-cdi-with-jaas-authentication,"Using Vaadin CDI with JAAS authentication">>
+- <<LoadTestingWithGatling#loading-testing-with-gatling,"Load testing with Gatling">>
+- <<VaadinScalabilityTestingWithAmazonWebServices#vaadin-scalability-testing-with-amazon-web-services,"Vaadin scalability testing with Amazon Web Services">>
+- <<UsingFontIcons#using-font-icons-in-vaadin-7.2,"Using font icons in Vaadin 7.2">>
+- <<DynamicallyInjectingCSS#dynamically-injecting-css,"Dynamically injecting CSS">>
+- <<ValoExamples#valo-examples,"Valo examples">>
+- <<ReadOnlyVsDisabledFields#read-only-vs-disabled-fields,"Read-only vs Disabled fields">>
+- <<ValoThemeGettingStarted#valo-theme-getting-started,"Valo theme - Getting started">>
+- <<UseTooltipsToClarifyFunctions#use-tooltips-to-clarify-functions,"Use tooltips to clarify functions">>
+- <<EnableAndDisableButtonsToIndicateState#enable-and-disable-buttons-to-indicate-state,"Enable and disable buttons to indicate state">>
+- <<ChangingThemeOnTheFly#changing-theme-on-the-fly,"Changing theme on the fly">>
+- <<MarkRequiredFieldsAsSuch#mark-required-fields-as-such,"Mark required fields as such">>
+- <<PackagingSCSSOrCSSinAnAddon#packaging-scss-or-css-in-an-add-on,"Packaging SCSS or CSS in an add-on">>
+- <<RightAlignComparableNumericalFields#right-align-comparable-numeric-fields,"Right-align comparable numerical fields">>
+- <<CustomizingComponentThemeWithSass#customizing-component-theme-with-sass,"Customizing component theme with Sass">>
+- <<WidgetStylingUsingOnlyCSS#widget-styling-using-only-css,"Widget styling using only CSS">>
+- <<VisuallyDistinguishPrimaryActions#visually-distinguish-primary-actions,"Visually distinguish primary actions">>
+- <<LabelButtonsExpressively#label-buttons-expressively,"Label buttons expressively">>
+- <<CreatingAServlet3%2E0Application#creating-a-servlet-3.0-application,"Creating a servlet 3.0 application">>
+- <<CreatingAnEclipseProject#creating-an-eclipse-project,"Creating an Eclipse project">>
+- <<CreatingASimpleComponentContainer#creating-a-simple-component-container,"Creating a simple component container">>
+- <<UsingRPCToSendEventsToTheClient#using-rpc-to-send-events-to-the-client,"Using RPC to send events to the client">>
+- <<CreatingAComponentExtension#creating-a-component-extension,"Creating a component extension">>
+- <<CreatingAUIExtension#creating-a-ui-extension,"Creating a UI extension">>
+- <<UsingDeclarativeServices#using-declarative-services,"Using declarative services">>
+- <<DynamicallyUpdatingStateBeforeSendingChangesToClient#dynamically-updating-state-before-sending-changes-to-client,"Dynamically updating state before sending changes to client">>
+- <<GettingStartedOnNetBeans#getting-started-on-netbeans,"Getting started on NetBeans">>
+- <<ComponentAddonProjectSetupHOWTO#component-add-on-project-setup-howto,"Component add-on project setup how-to">>
+- <<CreatingAThemeUsingSass#creating-a-theme-using-sass,"Creating a theme using Sass">>
+- <<OpeningAUIInAPopupWindow#opening-a-ui-in-a-popup-window,"Opening a UI in a popup window">>
+- <<ViewChangeConfirmations#view-change-confirmations,"View change confirmations">>
+- <<CreatingABookmarkableApplicationWithBackButtonSupport#creating-a-bookmarkable-application-with-back-button-support,"Creating a bookmarkable application with back button support">>
+- <<BroadcastingMessagesToOtherUsers#broadcasting-messages-to-other-users,"Broadcasting messages to other users">>
+- <<ConfigureInputFieldsToGuideDataEntry#configure-input-fields-to-guide-data-entry,"Configure input fields to guide data entry">>
+- <<CreatingMultiTabApplications#creating-multi-tab-applications,"Creating multi-tab applications">>
+- <<AddingASplashScreen#adding-a-splash-sreen,"Adding a splash screen">>

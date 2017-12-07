@@ -15,11 +15,13 @@
  */
 package com.vaadin.v7.data.util.sqlcontainer.generator;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.StatementHelper;
@@ -39,12 +41,12 @@ public class StatementHelperTest {
         // should throw SQLException, not NPE
         try {
             helper.setParameterValuesToStatement(statement);
-            Assert.fail("Expected SQLExecption for unsupported type");
+            fail("Expected SQLExecption for unsupported type");
         } catch (SQLException e) {
             // Exception should contain info about which parameter and the type
             // which was unsupported
-            Assert.assertTrue(e.getMessage().contains("parameter 0"));
-            Assert.assertTrue(
+            assertTrue(e.getMessage().contains("parameter 0"));
+            assertTrue(
                     e.getMessage().contains(StatementHelper.class.getName()));
         }
     }

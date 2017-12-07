@@ -26,7 +26,7 @@ vertical.addComponent(new TextField("Postal code"));
 layout.addComponent(vertical);
 ----
 
-You could define it declaractively with the following equivalent design:
+You could define it declaratively with the following equivalent design:
 
 [source, html]
 ----
@@ -325,9 +325,7 @@ HTML file, which can be bound to a class extending [classname]#VerticalLayout#.
 [[application.declarative.composite.using]]
 === Using a Design
 
-The fact that a component is defined declaratively is not visible in its API, so
-you can create and use such it just like any other component.
-
+You can create and use a declaratively defined component just like any other component.
 For example, to use the previously defined design root component as the content
 of the entire UI:
 
@@ -370,5 +368,5 @@ navigator.addView(MAINVIEW, new MainView());
 ----
 
 See
-<<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator.urifragment,"Handling
-URI Fragment Path">> for a complete example.
+<<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator.pathparam,"Handling
+Path Parameters">> for a complete example.

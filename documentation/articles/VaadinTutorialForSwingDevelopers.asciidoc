@@ -1,0 +1,958 @@
+---
+title: Vaadin Tutorial For Swing Developers
+order: 8
+layout: page
+---
+
+[[a-hitchhikers-guide-to-convert-aswing-appto-modern-web-app]]
+A hitchhiker's guide to convert a Swing app to modern web app
+-------------------------------------------------------------
+
+[[intro]]
+Intro
+~~~~~
+
+As expressed by Pete Hunt (Facebook, React JS) in JavaOne 2014 Web
+Framework Smackdown, if you would be creating a UI toolkit, from a
+scratch, it would look nothing like a
+https://en.wikipedia.org/wiki/Document_Object_Model[DOM]. Web
+technologies indeed are not designed for application development, but
+rich text presentation. Markup based presentation has proven to be
+superior for more static content like web sites, but _applications_ are
+a bit different story. In the early stages of graphical UIs on
+computers, UI frameworks didn’t by accident form into “component based”
+libraries. Those UI libraries have developed during the decades, but the
+the basic concept of component based UI framework is still the most
+powerful way to create _applications_.
+
+But Swing, SWT, Qt and similar desktop UI frameworks have one major
+problem compared to web apps: they require you to install special
+software on your client machine. As we have learned during the internet
+era, this can be big problem. Users have lots of different kinds of
+applications that they use nowadays and installing all of them and
+especially maintaining those will become a burden for your IT
+department.
+
+Browser plugins like Java’s Applet/Java WebStart support (and there
+Swing or JavaFX) and Flash are the traditional workarounds to avoid
+installing software locally for workstations. But famous security holes
+in those, especially with outdated software, may become a huge problem
+and your IT department is nowadays most likely against installing any
+kind of third party browser plugins. For them it is much easier to just
+maintain one browser application. This is one of the fundamental reasons
+why pure web apps are conquering even most complex application domains
+nowadays. 
+
+[[welcome_to_the_8220wonderful8221_world_of_web_apps]]
+Welcome to the “wonderful” world of web apps
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+image:img/howvaadinworks2.png[How Vaadin works] Even
+for experienced desktop developers it may be a huge jump from the
+desktop world to the web development. Developing web applications is
+much trickier than developing basic desktop apps. There are lots of
+things that makes things complicated, such as client-server
+communication, the markup language and CSS used for display, new
+programming language for the client side and client-server communication
+in many different forms (basic http, ajax style requests, long polling,
+web sockets etc.). The fact is that, even with the most modern web app
+frameworks, web development is not as easy as building desktop apps.
+
+Vaadin Framework is an open source Java framework and is the closest
+thing to the component based Swing UI development in the mainstream web
+app world. Vaadin is a component based UI framework that tries to make
+web development as easy as traditional desktop development, maximizing
+developers’ productivity and the quality of the produced end user
+experience. In a Vaadin application the actual UI logic, written by you,
+lives in the server’s JVM. Instead of browser plugins, Vaadin has a
+built-in “thin client” that renders the UI efficiently in browsers. The
+highly optimized communication channel sends only the stuff that is
+really visible on user’s screen to thin client. Once the initial
+rendering has been done, only deltas, in both way, are transferred
+between the client and the server.
+
+The architecture of Vaadin Framework provides you an abstraction for the
+web development challenges, and most of the time you can forget that
+your are building a web application. Vaadin takes care of handling all
+the communication, html markup, css and browser differences - you can
+concentrate all your energy on your domain problems with clean Java
+approach and take advantage of your experience from the desktop
+applications.
+
+Vaadin uses GWT to implement its “thin client” running in the browser.
+GWT is another bit similar tool for web development, and its heart is
+its Java to JavaScript “compiler”. GWT also has a Swing like UI
+component library, but in GWT the Java code is compiled into JavaScript
+and executed in the browser. The compiler supports only a subset of Java
+and the fact that it is not running in JVM causes some other
+limitations, but the concepts are the same in it as well. Running your
+code in the browser as a white box also has some security implications.
+
+[[architectural_differences_you_should_notice]]
+Architectural differences you should notice
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Every architectural decision has its pros and consequences and so does
+switching from Swing to Vaadin in your UI layer.
+
+[[one_application_instance_many_users]]
+One application instance, many users
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The first thing you’ll notice is that you are now developing your UI
+right next to your data. Pretty much all modern business apps, both web
+and desktop apps, save their data somehow to a central server. Often the
+data is “shielded” with middleware layer, with e.g. EJBs. Now that you
+move to Vaadin UI, the EJB, or whatever the technology you use in your
+“backend”, is “closer”. It can often be run in the very same application
+server as your Vaadin UI, making some hard problems trivial. Using a
+local EJB is both efficient and secure.
+
+Even if you’d still use a separate application server for your EJBs,
+they are most probably connected to UI servers using a fast network that
+can handle chatty connection between UI and business layers more
+efficiently than typical client server communication - the network
+requirements by the Vaadin thin client are in many cases less demanding,
+so your application can be used over e.g. mobile networks.
+
+Another thing developers arriving from desktop Java to Vaadin will soon
+notice that fields with “static” keyword are quite different in the
+server world. Many desktop applications use static fields as “user
+global” variables. In Java apps running in server, they are “application
+global”, which is a big difference. Application servers generally use a
+class loader per web application (.war file), not class loader per user
+session. For “user global” variables, use fields in your UI class,
+https://vaadin.com/api/com/vaadin/server/VaadinSession.html[VaadinSession],
+http://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpSession.html[HttpSession]
+or e.g.
+http://docs.oracle.com/javaee/7/api/javax/enterprise/context/SessionScoped.html[@SessionScoped]
+CDI bean.
+
+Web applications in general will be much cheaper for IT departments to
+maintain. They have been traditionally run in company’s internal
+servers, but the trend of the era is hosting them in PaaS services, in
+the “cloud”. Instead of maintaining the application in each users’
+workstation, updates and changes only need to be applied to the server.
+Also all data, not just the shared parts, is saved on the server whose
+backups are much easier to handle. When your user’s workstation breaks,
+you can just give him/her a replacement and the work can continue.
+
+[[memory_and_cpu_usage_is_centralized_to_server]]
+Memory and CPU usage is centralized to server
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On the negative side is the fact that some of the computing previously
+done by your users workstation is now moved to the server. The CPU hit
+is typically negligible, but you might face some memory constraints
+without taking this fact into account. On the other hand, the fact that
+the application memory and processing happens now mostly on the server,
+might be a good thing. The server side approach makes it possible to
+handle really complex computing tasks, even with really modest handheld
+devices. This is naturally possible with Swing and central server as
+well, but with Vaadin approach this comes a free bonus feature.
+
+A typical Vaadin business app consumes 50-500kB of server memory per
+user, depending on your application characteristics. If you have a very
+small application you can do with smaller number and if you reference a
+lot of data from your UI, which usually makes things both faster and
+simpler, you might need even more memory per user.
+
+The per user memory usage is in line with e.g. Java EE standard JSF. If
+you do some basic math you can understand this isn’t an issue for most
+typical applications and modern application servers. But, in case you
+create an accidental memory leak in application code or a carelessly
+load the whole database table into memory, the memory consumption may
+become an issue earlier than with desktop applications. Accidentally
+referencing million basic database entities from a user session will
+easily consume 100-200MB of memory per session. This might still be
+tolerable in desktop applications, but if you have several concurrent
+users, you’ll soon be in trouble.
+
+The memory issues can usually be rather easily solved by using paging or
+by lazy loading the data from the backend to UI. Server capacity is also
+really cheap nowadays, so buying a more efficient server or clustering
+your application to multiple application servers is most likely much
+cheaper than by making compromises in your architectural design. But in
+case each of your application users need to do some heavy analysis with
+huge in-memory data sets, web applications are still not the way to go
+for your use case.
+
+If your applications memory usage is much more important than its
+development cost (read: you are trying to write next GMail), Vaadin
+framework might not be the right tool for your. If you still want to go
+to web applications, in this scenario you should strive for completely
+(server) stateless application and keep your UI logic in browsers.
+http://www.gwtproject.org[GWT] is a great library for this kind of
+applications.
+
+[[basic_component_usage]]
+Basic component usage
+~~~~~~~~~~~~~~~~~~~~~
+
+Basic component usage is something where you’ll really find yourself
+comfortable from the day one. APIs are not exactly the same, but they
+share the principle. Lets look at a very basic example, lets create a
+textfield and a button and just throw the textfield value on button
+click to sysout for debugging.
+
+[source,java]
+....
+final JTextField textField = new JTextField();
+JButton button = new JButton();
+button.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println("You typed: " + textField.getText());
+    }
+});
+add(textField);
+add(button);
+....
+
+… and the very same thing in Vaadin application looks like this:
+
+[source,java]
+....
+final TextField textField = new TextField();
+Button button = new Button();
+button.addClickListener(new Button.ClickListener() {
+    @Override
+    public void buttonClick(Button.ClickEvent event) {
+        System.out.println("You typed: " + textField.getValue());
+    }
+});
+addComponent(textField);
+addComponent(button);
+....
+
+No need to explain what happens in either of the cases ;-) Typically
+when Swing developers start using Vaadin, in basic component usage they
+find the methods they are looking for quickly with the help of their
+favorite IDE.
+
+Vaadin http://demo.vaadin.com/sampler/[Sampler] is a demo application
+that contains examples of the core components with source code usage
+example and references to JavaDocs. It is the favorite reference for
+many Vaadin developers. Naturally you can also refer to plain JavaDocs
+and our Book of Vaadin, the complete reference manual for Vaadin.
+
+[[event_handling_and_event_dispatching_thread]]
+Event handling and Event dispatching thread
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Like most typical desktop GUI libraries, Swing serializes all access to
+UI via so called event dispatching thread. It fires event listeners you
+hook to components and if you wish to modify the UI from another thread,
+you submit your UI changing tasks to it with
+SwingUtilities.invokeAndWait(Runnable) or
+SwingUtilities.invokeLater(Runnable).
+
+In Vaadin there is no similar thread, but naturally parallel UI access
+needs to be avoided. Vaadin uses UI (~ browser tab/window) level
+locking. Like with Swing apps, the code executed by framework (UI init,
+event listeners) is “thread safe”” by default. These code blocks are
+usually run in Servlet containers thread that is handling an
+HTTP/Websocket request. In case you need to modify a UI from any other
+thread, you should use _UI.getCurrent().access(Runnable)_ or
+_UI.getCurrent().accessSynchronously(Runnable)_ to ensure there is no
+parallel access.
+
+[[application_bootstrap]]
+Application bootstrap
+~~~~~~~~~~~~~~~~~~~~~
+
+A Vaadin application is basically a
+http://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpServlet.html[HttpServlet]
+behind the scenes. In portal environment its is a Portlet. Bootstrapping
+a Vaadin application depends a bit on the execution environment and used
+helper libraries.
+
+In Swing applications your execution typically starts from the iconic
+https://github.com/mstahv/ejb-swing-vaadin-crud/blob/master/desktop/src/main/java/org/vaadin/swingersclub/SwingApplication.java#L49-L52[main
+method] or from an Applet’s init method. In simple Vaadin Servlet
+deployment the similar entry point to your code is _UI_ class and its
+_init_ method. The counterpart for UI class is browser window or browser
+tab. If your Vaadin application is “embedded” into another page, you
+should consider it as the “slot” in that host page. One servlet can
+handle multiple UIs, mapped to different URLs, but typically you just
+have one per application.
+
+A code snippet below is an example of low level hello world Vaadin
+application bootstrap, it introduces a Vaadin servlet as a nested class
+using the @WebServlet annotation and a Vaadin UI mapped to it:
+
+[source,java]
+....
+public class MyUI extends UI {
+
+    @WebServlet(urlPatterns = "/*", name = "MyUIServlet")
+    @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
+    public static class MyUIServlet extends VaadinServlet {
+    }
+
+    @Override
+    protected void init(VaadinRequest vaadinRequest) {
+        setContent(new Label("Hello World!"));
+    }
+
+}
+....
+
+But, like with non trivial Swing apps, you might want to delegate some
+of this low level stuff to a framework that takes care of servlet, setup
+and UI mapping. It is highly suggested to use e.g.
+https://vaadin.com/javaee/[Java EE environment] with Vaadin CDI add-on
+or https://vaadin.com/spring/[Spring] as a basis for your application.
+In these cases you typically end up having different application views
+as class files and container specific annotations to hint how those
+should be served for the end users. In the example we are using
+cdi-helpers add-on that also gives you a basic top level navigation and
+application layout for free.
+
+The following class will be automatically visible in our applications
+menu. Not that the screenshot also shows some other views but our “about
+view”.
+
+[source,java]
+....
+@CDIView("about")
+public class AboutView extends VerticalLayout implements View {
+
+    @PostConstruct
+    void init() {
+        addComponent(new Label("Hello World !"));
+    }
+
+    @Override
+    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
+    }
+}
+....
+
+image:img/helloworldview.png[image]
+
+_Screenshot of the hello world view_
+
+[[laying_out_components]]
+Laying out components
+~~~~~~~~~~~~~~~~~~~~~
+
+In Swing you are using different Layout implementations that take care
+of positioning components in JPanel’s sub classes. You will find
+similarly named Layout interface in Vaadin as well, but there is a
+conceptual difference. In Vaadin Layout is just a normal component that
+whose main feature is to contain other components.
+
+[[layouts_in_vaadin]]
+Layouts in Vaadin
+^^^^^^^^^^^^^^^^^
+
+As you probably have learned while working with Swing applications,
+building layouts is generally a rather complex topic. We believe we have
+come up with really powerful and logical API, but understanding the
+basic concepts about layouts is something you really want to do before
+building any non-trivial application. Check out at least a nice
+http://youtu.be/7UxEfaQq4EQ?list=PLcRrh9hGNalnmA1mbDS0NBuq6N3Mnw2u1[tutorial
+style webinar] we had last year and also refer to our manual.
+
+Most commonly used Layout implementations are VerticalLayout,
+HorizontalLayout and GridLayout. By combining and configuring them
+intelligently you can achieve pretty much everything. CssLayout is also
+commonly used, due to its simplicity in browsers DOM. If you plan to
+theme your application it will be the favorite of your CSS artist, but
+it works also without any CSS at all, pretty much like FlowLayout in
+Swing, although you need to use some CSS if you want the flow to be
+horizontal.
+
+One thing related to Layouts is that each component in Vaadin has a
+caption and an icon. Most often these properties are handled by the
+layout and different layouts handle them in different ways. For example
+the FormLayout places caption and icon on the left side of the component
+as where HorizontalLayout and VerticalLayout place captions above the
+component. Naturally you don’t need to use the built in captions (and
+icons), but you can use Label components instead, like with Swing
+applications, and manually place them in the desired location.
+
+To get an overview of Layout components in Vaadin, you can also take a
+quick overview of them via our
+http://demo.vaadin.com/sampler/#ui/layout[Sampler application].
+
+[[custom_layouts]]
+Custom layouts
+^^^^^^^^^^^^^^
+
+The fact that Layout is just a component that contains other components
+gives us some nice flexibility. They can easily be reused to make a more
+domain specific classes using composition and, in case you can also
+master some browser development, it is easy to build completely new
+layouts. Even if you want to stick on the safe JVM side, the
+http://vaadin.com/directory[Directory] contains lots of different kind
+of layout implementations for custom purposes. Check e.g. BorderLayout
+(you can probably guess how it works ;-) ), ColumnLayout,
+DragAndDropLayouts, PortalLayouts and the handy layout helpers in
+Viritin.
+
+There is also a CustomLayout component in the core distribution, for
+which a better describing name would probably be “HtmlTemplateLayout”.
+From that you can figure out what it does. If you have a skilled
+“designer” in your team who masters html and css, you can use his HTML
+templates. Into the markup you just need to specify the “slots” where
+you want to place Vaadin components.
+
+[[visual_view_composition]]
+Visual view composition
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Some Swing developers swear for the name of handwritten layouts and
+complete control of your views. Another tribe likes to draft the UIs
+with visual tools and then wire it to the application logic using Java.
+The same thing in Vaadin world.
+
+image:https://vaadin.com/documents/10187/8663276/designersetup/c3ddcc59-0b6f-40f2-8bb2-456261b5d7a3?t=1418989464957[image]
+
+Vaadin Eclipse plugin comes with https://vaadin.com/designer[Vaadin
+Designer] that lets you design your UIs in “WYSIWYG” manner. You can add
+code manually to your visually designed classes and then later return to
+visual positioning if you want.
+
+The https://vaadin.com/designer[latest version] changed the “master
+data” of the layout to be based on HTML5 style markup. This may sound
+like a weird decision for some experienced Java developers, but the idea
+is that your layout designs and visual appearance can also be edited by
+less technical graphical artists, who don’t know anything about Java
+programming, but can do amazing tricks with graphics, html, css and
+typography. Named components will be naturally available via
+auto-generated classes, so customization and wiring to other parts of
+your application will still be plain old Java development that you
+already master. It is just the auto-generated Java parts that we changed
+into markup like format.
+
+[[binding_data_to_components]]
+Binding data to components
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+https://vaadin.com/book/-/page/datamodel.html#datamodel[Binding data]
+means the task of moving data between your UI components and your
+backend/domain objects, in both directions. Some Swing users are using
+advanced data binding libraries like BeansBinding. BeansBinding concepts
+could be adapted to Vaadin applications as well, but there are also
+really handy built-in helpers into Vaadin.
+
+There are interfaces called
+https://vaadin.com/api/com/vaadin/data/Item.html[Item] and
+https://vaadin.com/api/com/vaadin/data/Property.html[Property] (and utility
+implementations for those), used by all Vaadin
+http://vaadin.com/api/com/vaadin/data/Field.html[Field] components. You
+can use those, but most often you’ll use the built in BeanItem
+implementation, and typically via BeanFieldGroup helper. BeanFieldGroup
+can automatically bind your entities/DTOs to the corresponding
+https://vaadin.com/api/com/vaadin/ui/Field.html[Field] components.
+Similarly to BeansBinding in Swing development, this saves you from
+writing a huge amount of boilerplate code that basically just moves
+values from UI to your domain objects and vice versa.
+
+The BeanFieldGroup in Vaadin also supports by default
+http://beanvalidation.org[Bean Validation] annotations you might have
+already defined into your domain objects. The same rules can then be
+used on the UI layer to automatically perform validation before throwing
+your domain objects back to business layer.
+
+If you have ever used JTable component you are probably familiar with
+Swing’s interface called TableModel that is used to provide a way for
+JTable to list the actual data into it. In Vaadin the similar task is
+delegated to
+https://vaadin.com/api/com/vaadin/data/Container.html[Container]
+interface that contains Item instances. There are built in container
+implementations in the framework, of which BeanItemContainer will most
+probably become very familiar to you. It is a simple and efficient way
+to list your entities in Vaadin Table and in various select components.
+
+[[lazy_loading_large_data_sets]]
+Lazy loading large data sets
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In your Swing apps, if you have listed big data sets into your UI, you
+probably know you need to be careful what you load into your
+applications memory. Also, as your data is probably shared on the server
+in business applications, the network usage between your server and
+client may easily become the bottleneck. Typically this is solved by
+showing just the top most results of your DB query or using some sort of
+“paging” when listing lots of data.
+
+As we discussed earlier, Vaadin applications UI code has a huge aid from
+being executed right next to your data. The data is often already in
+your application servers memory or in a DB server that is either in the
+same physical server or most likely at least connected with strong
+network connection to your application server. This make data accessing
+both efficient and simple.
+
+At the same time the well optimized UI components in Vaadin only send
+the essential data through the wire from server to the client. For
+example in Table and ComboBox, only the visible parts of the data is
+sent to the client side and this ways network usage stays low, even when
+(virtually) displaying huge amounts of data.
+
+In case you can’t (due to scalability, memory usage) load all your data
+into servers memory, you’ll have to do similar tricks in Vaadin as well
+or you might run out of memory with lots of concurrent users. Limiting
+the result set and using paging at UI level is naturally in basic tools
+for Vaadin developers as well.
+
+But as UI components already do lazy loading between your server and
+client, you can also extend the lazy loading chain all the way to the
+database using “lazy loading” implementations of the
+https://vaadin.com/api/com/vaadin/data/Container.html[Container API].
+You can pretty easily write a totally custom version for your specific
+use case, but the strongly suggested method is to use helpers like
+https://vaadin.com/web/matti/blog/-/blogs/connecting-large-amounts-of-data-to-ui[LazyList]
+or https://vaadin.com/addon/lazy-query-container[LazyQueryContainer]
+instead. In most lazy loading cases, those are the tools that you really
+should use, but in some architectures you can also consider using
+https://vaadin.com/api/com/vaadin/data/util/sqlcontainer/SQLContainer.html[SqlContainer]
+or https://vaadin.com/addon/vaadin-jpacontainer[JPAContainer] which do
+rather optimized lazy loading automatically as well.
+
+[[structuring_your_ui_code]]
+Structuring your UI code
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you have maintained a large Swing application, you probably know it
+is possible to write messy code, event with Java and its static typing
+and great IDEs. For large desktop applications, especially with large
+teams and long maintained projects, you have probably applied some sort
+of design patterns like MVC or MVP to structure your UI code.
+
+The very same applies to Vaadin code as well. In large applications you
+most likely want to use some sort of strict rules to structure your
+code. In smaller applications it is fine to just separate logical parts
+of your UI to different, possibly reusable, classes.
+
+Thanks to similarities with Vaadin and Swing, you can apply your
+existing experience on this topic directly to Vaadin. Implementing a
+clean MVP pattern is a part of https://vaadin.com/training[Advanced
+Vaadin course], in case you want some proven experiences on the topic.
+Also, consider to use tools like http://cdi-spec.org[CDI] or
+http://projects.spring.io/spring-framework/[Spring], which may help you
+to implement your patterns in even more cleaner manner.
+
+[[testing]]
+Testing
+~~~~~~~
+
+One of the largest advantages of using well structured UI code is that
+it often becomes easier to write tests for your UI logic. By using e.g.
+MVP pattern in your code you can write unit tests for your presenter
+classes.
+
+In addition to writing unit tests to your backend and UI logic, it is
+good to have full stack integration tests or automated acceptance tests.
+http://arquillian.org[Arquillian] is a nice tool to write tests that run
+in a e.g. Java EE container with a real DB.
+
+Another nice helper to implement full end-to-end testing is
+https://vaadin.com/add-ons/testbench[Vaadin TestBench]. It is based on
+the open source Selenium project and drives real browsers and simulates
+user interactions. This way you can test the whole application stack
+from browser level to the database.
+
+[[example_crud_and_its_vaadin_conversion]]
+Example CRUD and its Vaadin conversion
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Lets image you have a server that stores your customer data. The
+persistency and business logic is hidden behind an EJB and your Swing
+based rich client reads and writes data into that via a remote EJB.
+There are lots of this kind of applications or bit similar that use more
+lower level communication mechanism to the database.
+
+We will use this kind of example application and look what the different
+UI implementations look like. Using this example you can hopefully get a
+pretty realistic idea what converting a Swing based Applet or desktop
+application into a Vaadin based web application might require and cost.
+
+The heart of the example is the EJB that talks to the underlying RDBMS.
+This part is shared by both Swing and Vaadin UI. The server used in the
+example is pretty modern Apache TomEE. Although your application might
+be using older technology, the concepts are most likely very similar,
+even if you were using lower level RMI, CORBA or even raw DB connection.
+
+Our example is a pretty trivial CRUD, but the business logic running in
+the EJB is typically the most critical part of your application. Luckily
+you can most often recycle this part of your application, as such as in
+this case, or with some modernization, and just re-write the UI part.
+Also at the UI part the programming model will be very familiar, so the
+task will be really easy for you and your colleagues - even without any
+web development experience.
+
+In this example we will just use raw Swing and Vaadin APIs in the UI.
+Some vice men in the industry have prepared for big changes in
+technologies. In case you have done something like this into your UI
+code the “Vaadin upgrade” might be even easier. E.g. one of our
+customer, when moving from AWT to Swing, wrote a bit more generic
+wrappers for their UI component and split all the UI logic to separate
+controllers. This was to help transition to yet another UI framework in
+the future. Today, from desktop world, you would naturally first think
+JavaFX. Instead of going into JavaFX, they wanted to eliminate Java
+requirement from their clients totally and go with pure browsers
+technologies.
+
+image:img/ejbswingvaadin.png[Architecture
+diagram]
+
+Architectural overview how a Swing based "thin client
+application" backed by an EJB can be transferred to web era using
+Vaadin. In the example application we build a both Swing and Vaadin UIs,
+connecting to exactly same EJB backend.
+
+[[application_initialization]]
+Application initialization
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you have been working with some larger Swing apps, you are, instead
+of starting up a JFrame from your main method like in our example, most
+probably using some sort of application framework as a basis. The
+https://netbeans.org/features/platform/index.html[NetBeans Platform] is
+an example of such. Similarly with Vaadin, it is hardly ever a good idea
+to go with raw Vaadin and a servlet container.
+
+There are couple of nice choices and in this example we are using a
+standard Java EE basis and use Vaadin CDI as the “framework” that help
+us to bootstrap the UI, and also in the next step to bind it to our
+backend.
+
+As a bonus, when using Vaadin CDI, you need to know even less about
+Servlets and web specific stuff. In Vaadin CDI application, the entry
+point to your application is the
+https://vaadin.com/api/com/vaadin/ui/UI.html[UI class] that you annotate
+with _@CDIUI(“”)_. The empty string means the UI’s “deployment path”,
+the last part in your url that you use to access your application, which
+in our example is the actual “root” of our application. If you want, you
+can have multiple UI’s in your application, just map them to different
+urls. The Vaadin CDI add-on will “magically” introduce the low level
+Servlet and configure your UIs to be displayed via it.
+
+If you look at
+https://github.com/mstahv/ejb-swing-vaadin-crud/blob/master/server/src/main/java/org/vaadin/vaadinui/AppUI.java[the
+actual UI class] in the example application, you’ll see it is
+practically empty. This is because we are using a yet another extension
+(our class extends ViewMenuUI from a
+https://vaadin.com/addon/cdi-helpers[cdi-helpers library]) to Vaadin CDI
+that creates you a basic top level application layout and view
+navigation automatically. This may be just what you need, but in many
+complex applications you might want to write a more domain specific
+version for this this part.
+
+The actual meat of the user interface code is written into views,
+annotated with CDIView. If you introduce a following class to your
+application, it will automatically automatically mapped to
+http://yourapp.com/contextpaht/#!about and the cdi-helpers will
+automatically register it to your applications main menu.
+
+[source,java]
+....
+@CDIView("about")
+public class AboutView extends VerticalLayout implements View {
+
+    @PostConstruct
+    void init() {
+        addComponent(new Label("Hello Vaadin World!"));
+    }
+
+    @Override
+    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
+    }
+}
+....
+
+If you are not familiar with CDI or managed beans in general, you might
+think why I’m doing the addComponent call in the @PostConstruct
+annotated init method instead of creating a basic constructor. In this
+particular case there wouldn’t be a difference, but in the next step we
+will be using dependency injection to connect to our EJB. As
+dependencies are not resolved yet during constructor call, it is often
+simpler to do all view initialization in @PostConstruct annotated init
+method instead.
+
+The enter method is called by Vaadin each time user enters the view. It
+is handy to refresh some some often changing data in it, but most often
+you don’t need to do anything in it.
+
+[[ejb_lookup]]
+EJB lookup
+^^^^^^^^^^
+
+In our desktop Swing example we have an ejb-client available on our
+classpath, and when the application first time needs access to the
+(remote) EJB,
+https://github.com/mstahv/ejb-swing-vaadin-crud/blob/master/desktop/src/main/java/org/vaadin/swingersclub/SwingApplication.java#L145-L166[it
+gets resolved] using a JNDI lookup with proper parameters. This is
+pretty handy actually, especially as we don’t have any proper security
+control in our example.
+
+In a real world application, if you are not using a remote EJB, client
+server communication might be bit trickier, but you most likely have
+some sort of remote interface you’ll somehow detect.
+
+In Vaadin application we could use exactly the same way, but as we chose
+a proper Java EE + Vaadin CDI basis for our example application, the
+very same procedure can be done in much cleaner and more maintainable
+manner. As our UI objects are CDI managed beans, we can simply use @EJB
+or @Inject annotation to get the reference to the very same
+CustomerFacade. The example below uses simple field injection, but
+stricter architects might want you to use constructor or method
+injection.
+
+[source,java]
+....
+@Inject
+CustomerService service;
+....
+
+In the further steps we’ll notice that the actual accessing our
+stateless EJB is pretty much similar in both cases.
+
+[[listing_entries_from_the_backend_to_table]]
+Listing entries from the backend to Table
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In our example Swing application we are using a
+https://github.com/mstahv/ejb-swing-vaadin-crud/blob/master/desktop/src/main/java/org/vaadin/swingersclub/SwingApplication.java#L58[simple
+TableModel], based on AbstractTableModel, to bind our customer database
+to UI table. We simply
+https://github.com/mstahv/ejb-swing-vaadin-crud/blob/master/desktop/src/main/java/org/vaadin/swingersclub/SwingApplication.java#L137-L143[grab
+all entities] from the backend to local List instance and create a
+TableModel that serves data form the list. For larger table you’d
+probably need to implement some sort of paging or just rudely limit the
+amount of listed entities. The code snippet from our Swing example is
+listed below. The CustomerTableModel is then passed to JTable instance.
+
+[source,java]
+....
+private List<Customer> customers;
+
+class CustomerTableModel extends AbstractTableModel {
+
+    @Override
+    public int getRowCount() {
+        return customers.size();
+    }
+
+    @Override
+    public int getColumnCount() {
+        return 3;
+    }
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        if (customers == null) {
+            customers = getCustomerFacade().findAll();
+        }
+        Customer c = customers.get(rowIndex);
+        switch (columnIndex) {
+            case 0:
+                return c.getFirstName();
+            case 1:
+                return c.getLastName();
+            case 2:
+                return c.getEmail();
+        }
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getColumnName(int column) {
+        return columnNames[column];
+    }
+}
+....
+
+In our Vaadin application we are using technically a pretty similar
+in-memory table view for the database. The example actually uses a
+commonly used helper class from an add-on called Viritin, that just
+accepts the list of pojos, but you gain similar result with
+BeanItemContainer and raw Table component as well. Creating a basic
+BeanItemContainer containing all our customers would look like this:
+
+[source,java]
+....
+BeanItemContainer<Customer> bic
+        = new BeanItemContainer<>(Customer.class, facade.findAll());
+....
+
+The BeanItemContainer makes bean introspection to detect the available
+properties and you can then limit the available columns by configuring
+your https://vaadin.com/api/com/vaadin/ui/Table.html[Table] instance.
+You can also get to the low level with Vaadin, like with the Swing
+example, and implement a custom
+https://vaadin.com/api/com/vaadin/data/Container.html[Container]
+implementation that you can pass to the Table. Most often the utility
+containers are what you want.
+
+Listing the whole (database) table in a Vaadin user interface this way
+is already far more efficient because the most of the data is still only
+in your server. The
+[Table]https://vaadin.com/api/com/vaadin/ui/Table.html) component only
+sends the visible viewport the Vaadin’s “thin client” and when user
+scrolls down more rows are fetched from the servers memory. You’ll save
+a lots of bandwidth compared to the desktop version.
+
+However, if we still want to make our Vaadin version better, we could
+use lazy loading of data also on the server side. The MTable from the
+https://vaadin.com/addon/viritin[Viritin add-on] in the following
+example only needs strategies to fetch the total number of entities and
+fetching entities in page manner. With Java 8 style constructs a lazy
+loading “binding” to our CustomerFacade could look like this:
+
+[source,java]
+....
+MTable<Customer> table = new MTable(
+        firstRow -> facade.findRange(firstRow, maxResults),
+        facade.count(),
+        maxResults
+);
+....
+
+That scales really well both in client and in server, and uses only a
+tiny bit of memory on the server side. There are lots of various lazy
+loading container implementations available in the
+https://vaadin.com/directory/[Vaadin Directory] and you can naturally
+write one yourself as well.
+
+[[binding_entity_to_a_form_for_editing]]
+Binding entity to a form for editing
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In our Swing example, we are creating an editor for our domain object in
+class called CustomerForm. In it we prepare some JTextField for the
+essential properties of the domain model, whose values we copy to domain
+object when users clicks the save button.
+
+[source,java]
+....
+JTextField firstName = new JTextField();
+JTextField lastName = new JTextField();
+JTextField email = new JTextField("yourname@yourdomain.com");
+JButton create = new JButton("Create");
+JButton update = new JButton("Update");
+
+@Override
+public void actionPerformed(ActionEvent e) {
+    Customer c = editedCustomer;
+    if (e.getSource() == create) {
+        c = new Customer();
+    }
+    c.setFirstName(firstName.getText());
+    c.setLastName(lastName.getText());
+    c.setEmail(email.getText());
+    if (e.getSource() == create) {
+        application.getCustomerFacade().create(c);
+    } else {
+        application.getCustomerFacade().edit(c);
+    }
+}
+....
+
+When an existing entity is set for editing, we set the existing values
+for the fields.
+
+[source,java]
+....
+void editCustomer(Customer c) {
+    this.editedCustomer = c;
+    firstName.setText(c.getFirstName());
+    lastName.setText(c.getLastName());
+    email.setText(c.getEmail());
+    updateButtonStates();
+}
+....
+
+Using this kind of low level approach is pretty similar in Vaadin as
+well. Instead of JTextField you are just using TextField class from
+Vaadin core and instead of getText() method you use getValue() to grab
+the value from the field.
+
+In a real life, in both Vaadin and Swing apps, you probably want to use
+your life for something better than writing lots of boilerplate code for
+this kind of basic forms. Vaadin comes with a really powerful tool
+called BeanFieldGroup to free yourself from writing the “glue code”
+between your UI fields and domain object properties. You can use either
+use naming convention or a @PropertyId annotation to hint BeanFieldGroup
+to do the “two way mapping” automatically. The getter-setter parts of
+the above can be written using BeanFieldGroup as follows:
+
+[source,java]
+....
+TextField firstName = new TextField("First name");
+TextField lastName = new TextField("Last name");
+TextField email = new TextField("Email");
+
+public void setCustomer(Customer customer) {
+    this.customer = customer;
+    BeanFieldGroup<Customer> bfg
+            = BeanFieldGroup.bindFieldsUnbuffered(customer, this);
+}
+....
+
+The BeanFieldGroup can also attach automatically constructed validators
+to your fields, based on the standard http://beanvalidation.org[Bean
+Validation] annotations, that you already might have on your domain
+objects. Naturally, you can manually configure validators at UI layer as
+well. BeanFieldGroup also provides “UI level buffering”, that might be
+handy in case you happen to be using “live objects”. In typical business
+apps, the backend is the right level that does the “buffering” for you.
+
+In our Vaadin example, we are using BeanFieldGroup via an
+https://github.com/mstahv/ejb-swing-vaadin-crud/blob/master/server/src/main/java/org/vaadin/vaadinui/CustomerForm.java[AbstractForm
+based class]. In addition to bean binding, it provides us with basic
+save, reset and delete buttons. In your own application you have the
+liberty to go with low level manual binding, automatic binding using
+BeanFieldGroup or with a handy helpers like the AbstractForm or your
+application specific version of it. The first option has the most
+control, the last has the cleanest code and is probably what you want in
+most cases.
+
+[[possible_conversion_strategy_wrappers_for_your_own_ui_framework]]
+Possible conversion strategy: wrappers for your own UI framework
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Some Swing developers have created a domain specific wrappers to hide
+the actual Swing API from their application code. One of our clients did
+this when moving their application from AWT to Swing and then wanting to
+prepare for a yet another UI library change in the future. They just
+needed to make some changes to their wrappers and then create an
+“adapter” for Vaadin UI.
+
+Whether this kind of wrapper strategy really pays off probably depends
+on the characteristics of the application itself. In our recent customer
+case it was estimated that even though their application was huge, going
+with pure Vaadin solution would have had smaller expenses. Also by
+creating your own UI abstraction layer, you will lose some flexibility
+and make additional development more expensive. However, the solution
+has also other advantages. With this approach it is cheap to maintain
+and support both modern Vaadin web client and the legacy Swing app and
+still implement fixes and enhancements to only one code base.
+
+The concept is by no means unique in the industry and SibVisions JVx
+framework is based on a similar approach. UI can be implemented just
+once can be deployed to both Swing and Vaadin based client applications.
+
+[[possible-conversion-strategy-gradually-move-to-web-ui]]
+Possible conversion strategy: gradually move to web UI
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Instead of rewriting the UI layer in a one big project it might be a
+good idea to start moving to web era gradually. You should consider this
+kind of approach especially if you have a well designed "backend" layer
+and a large application. You could start with screens that are most
+often needed on devices without managed software installations, like
+tablets, or home computers. Then proceed the conversion on more rarely
+used screens. On office computers you could keep using the existing
+software, with the full feature set, during the transition period.
+
+[[example-app-sources]]
+Example app sources
+^^^^^^^^^^^^^^^^^^^
+
+The full sources for the
+https://github.com/mstahv/ejb-swing-vaadin-crud[EJB CRUD example with
+both Swing and Vaadin UIs] is available via GitHub.

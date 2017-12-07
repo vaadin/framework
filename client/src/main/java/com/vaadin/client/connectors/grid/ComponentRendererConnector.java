@@ -43,15 +43,21 @@ public class ComponentRendererConnector
 
             @Override
             public SimplePanel createWidget() {
-                return GWT.create(SimplePanel.class);
+                SimplePanel panel = GWT.create(SimplePanel.class);
+                panel.setStyleName("component-wrap");
+                return panel;
             }
 
             @Override
             public void render(RendererCellReference cell, String connectorId,
                     SimplePanel widget) {
-                ComponentConnector connector = (ComponentConnector) ConnectorMap
-                        .get(getConnection()).getConnector(connectorId);
-                widget.setWidget(connector.getWidget());
+                if (connectorId != null) {
+                    ComponentConnector connector = (ComponentConnector) ConnectorMap
+                            .get(getConnection()).getConnector(connectorId);
+                    widget.setWidget(connector.getWidget());
+                } else if (widget.getWidget() != null) {
+                    widget.remove(widget.getWidget());
+                }
             }
         };
     }

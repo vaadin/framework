@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.vaadin</groupId>
     <artifactId>vaadin-test-widget-set-testutil</artifactId>
-    <version>8.1-SNAPSHOT</version>
+    <version>8.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <!-- 
         This module does not inherit the vaadin-test on purpose. It is done 
@@ -16,6 +16,8 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <vaadin.version>${project.version}</vaadin.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <dependencies>

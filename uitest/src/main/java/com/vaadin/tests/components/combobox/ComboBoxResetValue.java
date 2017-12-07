@@ -3,8 +3,6 @@ package com.vaadin.tests.components.combobox;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.ComboBox;
@@ -23,13 +21,10 @@ public class ComboBoxResetValue extends AbstractReindeerTestUI {
         final ComboBox cbNullSelectionNotAllowed = getComboBoxWithNullSelectionNotAllowed();
 
         Button b = new Button("Reset");
-        b.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                cbNullSelectionAllowedWithSetNullSelectionItemId.setValue(null);
-                cbNullSelectionAllowedWithoutNullSelectionItemId.setValue(null);
-                cbNullSelectionNotAllowed.setValue(null);
-            }
+        b.addClickListener(event -> {
+            cbNullSelectionAllowedWithSetNullSelectionItemId.setValue(null);
+            cbNullSelectionAllowedWithoutNullSelectionItemId.setValue(null);
+            cbNullSelectionNotAllowed.setValue(null);
         });
         addComponents(new HorizontalLayout(new VerticalLayout(
                 cbNullSelectionAllowedWithSetNullSelectionItemId,

@@ -25,8 +25,10 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.HasErrorIndicator;
+import com.vaadin.client.ui.HasErrorIndicatorElement;
 import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ImageIcon;
@@ -34,8 +36,9 @@ import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.ComponentStateUtil;
+import com.vaadin.shared.ui.ErrorLevel;
 
-public class VCaption extends HTML {
+public class VCaption extends HTML implements HasErrorIndicatorElement {
 
     public static final String CLASSNAME = "v-caption";
 
@@ -207,7 +210,7 @@ public class VCaption extends HTML {
             String c = owner.getState().caption;
             // A text forces the caption to be above the component.
             placedAfterComponent = false;
-            if (c == null || c.trim().equals("")) {
+            if (c == null || c.trim().isEmpty()) {
                 // Not sure if c even can be null. Should not.
 
                 // This is required to ensure that the caption uses space in all
@@ -259,23 +262,17 @@ public class VCaption extends HTML {
         AriaHelper.handleInputInvalid(owner.getWidget(), showError);
 
         if (showError) {
-            if (errorIndicatorElement == null) {
-                errorIndicatorElement = DOM.createDiv();
-                DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
-                DOM.setElementProperty(errorIndicatorElement, "className",
-                        "v-errorindicator");
+            setErrorIndicatorElementVisible(true);
 
-                DOM.insertChild(getElement(), errorIndicatorElement,
-                        getInsertPosition(InsertPosition.ERROR));
+            // Hide error indicator from assistive devices
+            Roles.getTextboxRole().setAriaHiddenState(errorIndicatorElement,
+                    true);
 
-                // Hide error indicator from assistive devices
-                Roles.getTextboxRole().setAriaHiddenState(errorIndicatorElement,
-                        true);
-            }
-        } else if (errorIndicatorElement != null) {
-            // Remove existing
-            getElement().removeChild(errorIndicatorElement);
-            errorIndicatorElement = null;
+            ErrorUtil.setErrorLevelStyle(errorIndicatorElement,
+                    StyleConstants.STYLE_NAME_ERROR_INDICATOR,
+                    owner.getState().errorLevel);
+        } else {
+            setErrorIndicatorElementVisible(false);
         }
 
         return (wasPlacedAfterComponent != placedAfterComponent);
@@ -322,6 +319,14 @@ public class VCaption extends HTML {
     public boolean updateCaptionWithoutOwner(String caption, boolean disabled,
             boolean hasDescription, boolean hasError, String iconURL,
             String iconAltText) {
+        return updateCaptionWithoutOwner(caption, disabled, hasDescription,
+                hasError, null, iconURL, iconAltText);
+    }
+
+    @Deprecated
+    public boolean updateCaptionWithoutOwner(String caption, boolean disabled,
+            boolean hasDescription, boolean hasError, ErrorLevel errorLevel,
+            String iconURL, String iconAltText) {
         boolean wasPlacedAfterComponent = placedAfterComponent;
 
         // Caption is placed after component unless there is some part which
@@ -378,7 +383,7 @@ public class VCaption extends HTML {
             // Update caption text
             // A text forces the caption to be above the component.
             placedAfterComponent = false;
-            if (caption.trim().equals("")) {
+            if (caption.trim().isEmpty()) {
                 // This is required to ensure that the caption uses space in all
                 // browsers when it is set to the empty string. If there is an
                 // icon, error indicator or required indicator they will ensure
@@ -401,19 +406,11 @@ public class VCaption extends HTML {
         }
 
         if (hasError) {
-            if (errorIndicatorElement == null) {
-                errorIndicatorElement = DOM.createDiv();
-                DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
-                DOM.setElementProperty(errorIndicatorElement, "className",
-                        "v-errorindicator");
-
-                DOM.insertChild(getElement(), errorIndicatorElement,
-                        getInsertPosition(InsertPosition.ERROR));
-            }
-        } else if (errorIndicatorElement != null) {
-            // Remove existing
-            getElement().removeChild(errorIndicatorElement);
-            errorIndicatorElement = null;
+            setErrorIndicatorElementVisible(true);
+            ErrorUtil.setErrorLevelStyle(errorIndicatorElement,
+                    StyleConstants.STYLE_NAME_ERROR_INDICATOR, errorLevel);
+        } else {
+            setErrorIndicatorElementVisible(false);
         }
 
         return (wasPlacedAfterComponent != placedAfterComponent);
@@ -434,7 +431,7 @@ public class VCaption extends HTML {
                 setMaxWidth(maxWidth);
             } else {
                 String width = getElement().getStyle().getProperty("width");
-                if (width != null && !width.equals("")) {
+                if (width != null && !width.isEmpty()) {
                     setWidth(getRequiredWidth() + "px");
                 }
             }
@@ -541,10 +538,10 @@ public class VCaption extends HTML {
         }
         if (captionText != null) {
             int textWidth = captionText.getScrollWidth();
-            if (BrowserInfo.get().isFirefox()) {
+            if (BrowserInfo.get().isFirefox() || BrowserInfo.get().isChrome()) {
                 /*
-                 * In Firefox3 the caption might require more space than the
-                 * scrollWidth returns as scrollWidth is rounded down.
+                 * The caption might require more space than the scrollWidth
+                 * returns as scrollWidth is rounded down.
                  */
                 int requiredWidth = WidgetUtil.getRequiredWidth(captionText);
                 if (requiredWidth > textWidth) {
@@ -665,7 +662,7 @@ public class VCaption extends HTML {
     }
 
     /**
-     * Sets the tooltip that should be shown for the caption
+     * Sets the tooltip that should be shown for the caption.
      *
      * @param tooltipInfo
      *            The tooltip that should be shown or null if no tooltip should
@@ -676,7 +673,7 @@ public class VCaption extends HTML {
     }
 
     /**
-     * Returns the tooltip that should be shown for the caption
+     * Returns the tooltip that should be shown for the caption.
      *
      * @return The tooltip to show or null if no tooltip should be shown
      */
@@ -692,12 +689,12 @@ public class VCaption extends HTML {
         return getOwnerPid(e);
     }
 
-    private native static void setOwnerPid(Element el, String pid)
+    private static native void setOwnerPid(Element el, String pid)
     /*-{
         el.vOwnerPid = pid;
     }-*/;
 
-    public native static String getOwnerPid(Element el)
+    public static native String getOwnerPid(Element el)
     /*-{
         return el.vOwnerPid;
     }-*/;
@@ -774,5 +771,24 @@ public class VCaption extends HTML {
 
     private static Logger getLogger() {
         return Logger.getLogger(VCaption.class.getName());
+    }
+
+    @Override
+    public Element getErrorIndicatorElement() {
+        return errorIndicatorElement;
+    }
+
+    @Override
+    public void setErrorIndicatorElementVisible(boolean visible) {
+        if (visible) {
+            if (errorIndicatorElement == null) {
+                errorIndicatorElement = ErrorUtil.createErrorIndicatorElement();
+                DOM.insertChild(getElement(), errorIndicatorElement,
+                        getInsertPosition(InsertPosition.ERROR));
+            }
+        } else if (errorIndicatorElement != null) {
+            getElement().removeChild(errorIndicatorElement);
+            errorIndicatorElement = null;
+        }
     }
 }

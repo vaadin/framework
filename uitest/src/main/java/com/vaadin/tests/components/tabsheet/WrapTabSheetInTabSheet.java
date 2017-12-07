@@ -2,7 +2,6 @@ package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
@@ -16,15 +15,12 @@ public class WrapTabSheetInTabSheet extends TestBase {
         addComponent(mainLayout);
 
         Button b = new Button("Wrap main layout in a TabSheet");
-        b.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                TabSheet tabsheet = new TabSheet();
-                ComponentContainer mainParent = (ComponentContainer) mainLayout
-                        .getParent();
-                mainParent.replaceComponent(mainLayout, tabsheet);
-                tabsheet.addTab(mainLayout, "Default tab");
-            }
+        b.addClickListener(event -> {
+            TabSheet tabsheet = new TabSheet();
+            ComponentContainer mainParent = (ComponentContainer) mainLayout
+                    .getParent();
+            mainParent.replaceComponent(mainLayout, tabsheet);
+            tabsheet.addTab(mainLayout, "Default tab");
         });
         mainLayout.addComponent(b);
     }

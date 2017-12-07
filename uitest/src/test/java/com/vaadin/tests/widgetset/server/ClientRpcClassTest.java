@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.widgetset.server;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -30,6 +31,6 @@ public class ClientRpcClassTest extends MultiBrowserTest {
 
         WebElement element = getDriver()
                 .findElement(By.id(ClientRpcClass.TEST_COMPONENT_ID));
-        Assert.assertEquals("pause", element.getText());
+        assertEquals("pause", element.getText());
     }
 }

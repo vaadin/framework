@@ -46,10 +46,10 @@ public class PropertyFormatterTest {
     @SuppressWarnings({ "rawtypes" })
     public void testCorrectTypeForFormat()
             throws InstantiationException, IllegalAccessException {
-        Class[] testedTypes = new Class[] { Integer.class, Boolean.class,
+        Class[] testedTypes = { Integer.class, Boolean.class,
                 Double.class, String.class, Date.class };
-        Object[] testValues = new Object[] { new Integer(3), Boolean.FALSE,
-                new Double(3.3), "bar", new Date() };
+        Object[] testValues = { 3, false,
+                3.3D, "bar", new Date() };
 
         int i = 0;
         for (Class class1 : testedTypes) {

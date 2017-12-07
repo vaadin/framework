@@ -15,6 +15,13 @@
  */
 package com.vaadin.client.ui;
 
+import static com.vaadin.shared.ui.datefield.DateTimeResolution.DAY;
+import static com.vaadin.shared.ui.datefield.DateTimeResolution.HOUR;
+import static com.vaadin.shared.ui.datefield.DateTimeResolution.MINUTE;
+import static com.vaadin.shared.ui.datefield.DateTimeResolution.MONTH;
+import static com.vaadin.shared.ui.datefield.DateTimeResolution.SECOND;
+import static com.vaadin.shared.ui.datefield.DateTimeResolution.YEAR;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -32,8 +39,7 @@ public class VDateTimeFieldCalendar extends
         VAbstractDateFieldCalendar<VDateTimeCalendarPanel, DateTimeResolution> {
 
     public VDateTimeFieldCalendar() {
-        super(GWT.create(VDateTimeCalendarPanel.class),
-                DateTimeResolution.MINUTE);
+        super(GWT.create(VDateTimeCalendarPanel.class), MINUTE);
     }
 
     @Override
@@ -46,58 +52,41 @@ public class VDateTimeFieldCalendar extends
 
         Date date2 = calendarPanel.getDate();
         Date currentDate = getCurrentDate();
+        DateTimeResolution resolution = getCurrentResolution();
         if (currentDate == null || date2.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) date2.clone());
-            getClient().updateVariable(getId(),
-                    getResolutionVariable(DateTimeResolution.YEAR),
-                    date2.getYear() + 1900, false);
-            if (getCurrentResolution().compareTo(DateTimeResolution.YEAR) < 0) {
-                getClient().updateVariable(getId(),
-                        getResolutionVariable(DateTimeResolution.MONTH),
-                        date2.getMonth() + 1, false);
-                if (getCurrentResolution()
-                        .compareTo(DateTimeResolution.MONTH) < 0) {
-                    getClient().updateVariable(getId(),
-                            getResolutionVariable(DateTimeResolution.DAY),
-                            date2.getDate(), false);
-                    if (getCurrentResolution()
-                            .compareTo(DateTimeResolution.DAY) < 0) {
-                        getClient().updateVariable(getId(),
-                                getResolutionVariable(DateTimeResolution.HOUR),
-                                date2.getHours(), false);
-                        if (getCurrentResolution()
-                                .compareTo(DateTimeResolution.HOUR) < 0) {
-                            getClient().updateVariable(getId(),
-                                    getResolutionVariable(
-                                            DateTimeResolution.MINUTE),
-                                    date2.getMinutes(), false);
-                            if (getCurrentResolution()
-                                    .compareTo(DateTimeResolution.MINUTE) < 0) {
-                                getClient().updateVariable(getId(),
-                                        getResolutionVariable(
-                                                DateTimeResolution.SECOND),
-                                        date2.getSeconds(), false);
+            bufferedResolutions.put(YEAR, date2.getYear() + 1900);
+            if (resolution.compareTo(YEAR) < 0) {
+                bufferedResolutions.put(MONTH, date2.getMonth() + 1);
+                if (resolution.compareTo(MONTH) < 0) {
+                    bufferedResolutions.put(DAY, date2.getDate());
+                    if (resolution.compareTo(DAY) < 0) {
+                        bufferedResolutions.put(HOUR, date2.getHours());
+                        if (resolution.compareTo(HOUR) < 0) {
+                            bufferedResolutions.put(MINUTE, date2.getMinutes());
+                            if (resolution.compareTo(MINUTE) < 0) {
+                                bufferedResolutions.put(SECOND,
+                                        date2.getSeconds());
                             }
                         }
                     }
                 }
             }
-            getClient().sendPendingVariableChanges();
+            sendBufferedValues();
         }
     }
 
     @Override
     public String resolutionAsString() {
-        if (getCurrentResolution().compareTo(DateTimeResolution.DAY) >= 0) {
+        if (getCurrentResolution().compareTo(DAY) >= 0) {
             return getResolutionVariable(getCurrentResolution());
-        } else {
-            return "full";
         }
+        return "full";
     }
 
     @Override
     public boolean isYear(DateTimeResolution resolution) {
-        return DateTimeResolution.YEAR.equals(resolution);
+        return YEAR.equals(resolution);
     }
 
     @Override

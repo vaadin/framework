@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.easymock.Capture;
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.Container.Indexed.ItemAddEvent;
@@ -485,7 +484,7 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
     public void testGetItemIdsRangeIndexOutOfBoundsDueToSizeChange() {
         IndexedContainer ic = new IndexedContainer();
         ic.addItem(new Object());
-        Assert.assertEquals(
+        assertEquals(
                 "Container returned too many items when the range was >> container size",
                 1, ic.getItemIds(0, 10).size());
     }

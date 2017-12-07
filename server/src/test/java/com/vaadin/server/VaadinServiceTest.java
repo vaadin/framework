@@ -17,13 +17,13 @@ package com.vaadin.server;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSessionBindingEvent;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.shared.Registration;
@@ -72,20 +72,20 @@ public class VaadinServiceTest {
 
         MockVaadinSession vaadinSession = new MockVaadinSession(service);
         service.fireSessionDestroy(vaadinSession);
-        Assert.assertEquals(
+        assertEquals(
                 "'fireSessionDestroy' method doesn't call 'close' for the session",
                 1, vaadinSession.getCloseCount());
 
         vaadinSession.valueUnbound(
                 EasyMock.createMock(HttpSessionBindingEvent.class));
 
-        Assert.assertEquals(
+        assertEquals(
                 "'fireSessionDestroy' method may not call 'close' "
                         + "method for closing session",
                 1, vaadinSession.getCloseCount());
 
-        Assert.assertEquals("SessionDestroyListeners not called exactly once",
-                1, listener.callCount);
+        assertEquals("SessionDestroyListeners not called exactly once", 1,
+                listener.callCount);
     }
 
     @Test
@@ -158,13 +158,12 @@ public class VaadinServiceTest {
 
         MockVaadinSession session = new MockVaadinSession(service);
         session.lock();
-        service.accessSession(session, () -> {
-            CurrentInstance.set(String.class, "Set in task");
-        });
+        service.accessSession(session,
+                () -> CurrentInstance.set(String.class, "Set in task"));
 
         CurrentInstance.set(String.class, "Original value");
         service.runPendingAccessTasks(session);
-        Assert.assertEquals(
+        assertEquals(
                 "Original CurrentInstance should be set after the task has been run",
                 "Original value", CurrentInstance.get(String.class));
     }
@@ -190,13 +189,13 @@ public class VaadinServiceTest {
         Registration remover2 = service.addServiceDestroyListener(listener2);
 
         service.destroy();
-        Assert.assertEquals(1, listener.callCount);
-        Assert.assertEquals(1, listener2.callCount);
+        assertEquals(1, listener.callCount);
+        assertEquals(1, listener2.callCount);
         service.removeServiceDestroyListener(listener);
         remover2.remove();
 
         service.destroy();
-        Assert.assertEquals(1, listener.callCount);
-        Assert.assertEquals(1, listener2.callCount);
+        assertEquals(1, listener.callCount);
+        assertEquals(1, listener2.callCount);
     }
 }

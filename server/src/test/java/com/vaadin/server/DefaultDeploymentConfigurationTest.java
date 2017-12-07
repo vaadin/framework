@@ -15,9 +15,10 @@
  */
 package com.vaadin.server;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Properties;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -37,7 +38,7 @@ public class DefaultDeploymentConfigurationTest {
         System.setProperty(prop, value);
         DefaultDeploymentConfiguration config = new DefaultDeploymentConfiguration(
                 clazz, new Properties());
-        Assert.assertEquals(value, config.getSystemProperty(prop));
+        assertEquals(value, config.getSystemProperty(prop));
     }
 
     @Test
@@ -50,6 +51,6 @@ public class DefaultDeploymentConfigurationTest {
                 value);
         DefaultDeploymentConfiguration config = new DefaultDeploymentConfiguration(
                 DefaultDeploymentConfigurationTest.class, new Properties());
-        Assert.assertEquals(value, config.getSystemProperty(prop));
+        assertEquals(value, config.getSystemProperty(prop));
     }
 }

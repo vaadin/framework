@@ -6,8 +6,6 @@ import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.util.Person;
 import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
@@ -23,7 +21,7 @@ public class GridRefreshRow extends AbstractTestUIWithLog {
     private PersonContainer container;
     private Grid grid;
 
-    private boolean styles[] = new boolean[] { false, false, false };
+    private boolean styles[] = { false, false, false };
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -61,20 +59,14 @@ public class GridRefreshRow extends AbstractTestUIWithLog {
         addComponent(grid);
 
         addComponents(new HorizontalLayout(update(0), update(1), update(2)));
-        Button refresh10 = new Button("Refresh 0-9", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                grid.refreshRows(container.getItemIds(0, 9).toArray());
-            }
-        });
+        Button refresh10 = new Button("Refresh 0-9",
+                event -> grid
+                        .refreshRows(container.getItemIds(0, 9).toArray()));
         refresh10.setId("refresh10");
         addComponents(new HorizontalLayout(refresh(0), refresh(1), refresh(2),
-                new Button("Refresh non-existant", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        grid.refreshRows("foobar");
-                    }
-                })), refresh10);
+                new Button("Refresh non-existant",
+                        event -> grid.refreshRows("foobar"))),
+                refresh10);
         addComponents(new HorizontalLayout(style(0), style(1), style(2)));
     }
 
@@ -87,24 +79,17 @@ public class GridRefreshRow extends AbstractTestUIWithLog {
     }
 
     private Component update(final int i) {
-        Button button = new Button("Update " + i, new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Person p = container.getIdByIndex(i);
-                p.setFirstName("!" + p.getFirstName());
-            }
+        Button button = new Button("Update " + i, event -> {
+            Person p = container.getIdByIndex(i);
+            p.setFirstName("!" + p.getFirstName());
         });
         button.setId("update" + i);
         return button;
     }
 
     protected Component refresh(final int i) {
-        Button button = new Button("Refresh row " + i, new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                grid.refreshRows(container.getIdByIndex(i));
-            }
-        });
+        Button button = new Button("Refresh row " + i,
+                event -> grid.refreshRows(container.getIdByIndex(i)));
         button.setId("refresh" + i);
         return button;
     }

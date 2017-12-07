@@ -15,7 +15,6 @@
  */
 package com.vaadin.v7.tests.server.component.grid.declarative;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.Container;
@@ -117,7 +116,7 @@ public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
 
         Grid read = read(design);
         Container cds = read.getContainerDataSource();
-        Assert.assertEquals("&amp;Test",
+        assertEquals("&amp;Test",
                 cds.getItem(cds.getItemIds().iterator().next())
                         .getItemProperty("test").getValue());
     }

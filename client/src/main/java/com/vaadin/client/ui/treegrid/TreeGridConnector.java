@@ -64,9 +64,8 @@ public class TreeGridConnector extends GridConnector {
     }
 
     public TreeGridConnector() {
-        registerRpc(FocusRpc.class, (rowIndex, cellIndex) -> {
-            getWidget().focusCell(rowIndex, cellIndex);
-        });
+        registerRpc(FocusRpc.class, (rowIndex, cellIndex) -> getWidget()
+                .focusCell(rowIndex, cellIndex));
     }
 
     private String hierarchyColumnId;
@@ -237,7 +236,7 @@ public class TreeGridConnector extends GridConnector {
             GridEventHandler<?> eventHandler)
     /*-{
         var browserEventHandlers = grid.@com.vaadin.client.widgets.Grid::browserEventHandlers;
-    
+
         // FocusEventHandler is initially 5th in the list of browser event handlers
         browserEventHandlers.@java.util.List::set(*)(5, eventHandler);
     }-*/;

@@ -1,13 +1,15 @@
 package com.vaadin.tests.server.component.button;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 
 /**
@@ -20,18 +22,16 @@ public class ButtonClickTest {
     public void clickDetachedButton() {
         Button b = new Button();
         AtomicInteger counter = new AtomicInteger(0);
-        b.addClickListener((ClickEvent event) -> {
-            counter.incrementAndGet();
-        });
+        b.addClickListener(event -> counter.incrementAndGet());
 
         b.click();
-        Assert.assertEquals(1, counter.get());
+        assertEquals(1, counter.get());
     }
 
     @Test
     public void testClick() {
         getButton().click();
-        Assert.assertTrue("Button doesn't fire clicks", clicked);
+        assertTrue("Button doesn't fire clicks", clicked);
     }
 
     @Test
@@ -39,7 +39,7 @@ public class ButtonClickTest {
         Button b = getButton();
         b.setEnabled(false);
         b.click();
-        Assert.assertFalse("Disabled button fires click events", clicked);
+        assertFalse("Disabled button fires click events", clicked);
     }
 
     private Button getButton() {
@@ -62,8 +62,6 @@ public class ButtonClickTest {
 
     private void addClickListener(Button b) {
         clicked = false;
-        b.addClickListener((ClickEvent ev) -> {
-            clicked = true;
-        });
+        b.addClickListener(event -> clicked = true);
     }
 }

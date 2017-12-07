@@ -1,7 +1,7 @@
 package com.vaadin.tests.containers;
 
 import java.util.Collection;
-import java.util.Comparator;
+import java.util.Locale;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
@@ -25,26 +25,24 @@ public class TestItemSorter extends TestBase {
         table = new Table("DefaultItemSorter with custom comparator");
         container = createContainer();
         populateContainer(container);
-        container.setItemSorter(new DefaultItemSorter(new Comparator<Object>() {
-
-            @Override
-            public int compare(Object o1, Object o2) {
-                if (o1 instanceof CheckBox && o2 instanceof CheckBox) {
-                    Boolean b1 = ((CheckBox) o1).getValue();
-                    return b1.compareTo(((CheckBox) o2).getValue());
-                } else if (o1 instanceof Button && o2 instanceof Button) {
-                    String caption1 = ((Button) o1).getCaption().toLowerCase();
-                    String caption2 = ((Button) o2).getCaption().toLowerCase();
-                    return caption1.compareTo(caption2);
-
-                } else if (o1 instanceof String && o2 instanceof String) {
-                    return ((String) o1).toLowerCase()
-                            .compareTo(((String) o2).toLowerCase());
-                }
-
-                return 0;
-
+        container.setItemSorter(new DefaultItemSorter((o1, o2) -> {
+            if (o1 instanceof CheckBox && o2 instanceof CheckBox) {
+                Boolean b1 = ((CheckBox) o1).getValue();
+                return b1.compareTo(((CheckBox) o2).getValue());
             }
+            if (o1 instanceof Button && o2 instanceof Button) {
+                String caption1 = ((Button) o1).getCaption()
+                        .toLowerCase(Locale.ROOT);
+                String caption2 = ((Button) o2).getCaption()
+                        .toLowerCase(Locale.ROOT);
+                return caption1.compareTo(caption2);
+            }
+            if (o1 instanceof String && o2 instanceof String) {
+                return ((String) o1).toLowerCase(Locale.ROOT)
+                        .compareTo(((String) o2).toLowerCase(Locale.ROOT));
+            }
+
+            return 0;
         }));
         table.setContainerDataSource(container);
 
@@ -54,8 +52,8 @@ public class TestItemSorter extends TestBase {
 
     private static void populateContainer(IndexedContainer container) {
         container.removeAllItems();
-        String[] strings = new String[] { "Text 1", "Text 2", "true", "false",
-                "Caption 1", "Caption 2" };
+        String[] strings = { "Text 1", "Text 2", "true", "false", "Caption 1",
+                "Caption 2" };
         for (String s : strings) {
             Object id = container.addItem();
             Item item = container.getItem(id);

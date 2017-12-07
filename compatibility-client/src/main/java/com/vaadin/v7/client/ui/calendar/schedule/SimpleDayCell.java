@@ -42,7 +42,7 @@ import com.vaadin.v7.client.ui.VCalendar;
 import com.vaadin.v7.shared.ui.calendar.DateConstants;
 
 /**
- * A class representing a single cell within the calendar in month-view
+ * A class representing a single cell within the calendar in month-view.
  *
  * @since 7.1
  * @author Vaadin Ltd.
@@ -50,8 +50,8 @@ import com.vaadin.v7.shared.ui.calendar.DateConstants;
 public class SimpleDayCell extends FocusableFlowPanel implements MouseUpHandler,
         MouseDownHandler, MouseOverHandler, MouseMoveHandler {
 
-    private static int BOTTOMSPACERHEIGHT = -1;
-    private static int EVENTHEIGHT = -1;
+    private static int bottomSpacerHeight = -1;
+    private static int eventHeight = -1;
     private static final int BORDERPADDINGSIZE = 1;
 
     private final VCalendar calendar;
@@ -111,8 +111,8 @@ public class SimpleDayCell extends FocusableFlowPanel implements MouseUpHandler,
 
     @Override
     public void onLoad() {
-        BOTTOMSPACERHEIGHT = bottomspacer.getOffsetHeight();
-        EVENTHEIGHT = BOTTOMSPACERHEIGHT;
+        bottomSpacerHeight = bottomspacer.getOffsetHeight();
+        eventHeight = bottomSpacerHeight;
     }
 
     public void setMonthGrid(MonthGrid monthGrid) {
@@ -180,8 +180,8 @@ public class SimpleDayCell extends FocusableFlowPanel implements MouseUpHandler,
         } else {
             // Dynamic height by the content
             DOM.removeElementAttribute(getElement(), "height");
-            slots = (intHeight - caption.getOffsetHeight() - BOTTOMSPACERHEIGHT)
-                    / EVENTHEIGHT;
+            slots = (intHeight - caption.getOffsetHeight() - bottomSpacerHeight)
+                    / eventHeight;
             if (slots > 10) {
                 slots = 10;
             }
@@ -221,11 +221,11 @@ public class SimpleDayCell extends FocusableFlowPanel implements MouseUpHandler,
             }
         }
 
-        int remainingSpace = intHeight - ((slots * EVENTHEIGHT)
-                + BOTTOMSPACERHEIGHT + caption.getOffsetHeight());
-        int newHeight = remainingSpace + BOTTOMSPACERHEIGHT;
+        int remainingSpace = intHeight - ((slots * eventHeight)
+                + bottomSpacerHeight + caption.getOffsetHeight());
+        int newHeight = remainingSpace + bottomSpacerHeight;
         if (newHeight < 0) {
-            newHeight = EVENTHEIGHT;
+            newHeight = eventHeight;
         }
         bottomspacer.setHeight(newHeight + "px");
 
@@ -283,7 +283,7 @@ public class SimpleDayCell extends FocusableFlowPanel implements MouseUpHandler,
             eventDiv.setTimeSpecificEvent(false);
             Date from = e.getStart();
             Date to = e.getEnd();
-            if (e.getStyleName().length() > 0) {
+            if (!e.getStyleName().isEmpty()) {
                 eventDiv.addStyleName("month-event " + e.getStyleName());
             } else {
                 eventDiv.addStyleName("month-event");

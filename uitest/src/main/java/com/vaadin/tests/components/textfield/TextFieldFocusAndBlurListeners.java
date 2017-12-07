@@ -66,13 +66,11 @@ public class TextFieldFocusAndBlurListeners extends TestBase
     @Override
     public void blur(BlurEvent event) {
         TextField tf = (TextField) event.getComponent();
-        log.log(tf.getCaption() + ": Blur. Value is: "
-                + tf.getValue().toString());
+        log.log(tf.getCaption() + ": Blur. Value is: " + tf.getValue());
 
     }
 
     public void valueChange(TextField source) {
-        log.log(source.getCaption() + ": ValueChange: "
-                + source.getValue().toString());
+        log.log(source.getCaption() + ": ValueChange: " + source.getValue());
     }
 }

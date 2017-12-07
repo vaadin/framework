@@ -54,13 +54,13 @@ public class UsingCustomNewItemHandlerInSelect extends CustomComponent {
     }
 
     public void populateSelect() {
-        final String[] names = new String[] { "John", "Mary", "Joe", "Sarah",
-                "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
+        final String[] names = { "John", "Mary", "Joe", "Sarah", "Jeff", "Jane",
+                "Peter", "Marc", "Josie", "Linus" };
         for (int j = 0; j < 4; j++) {
             Integer id = new Integer(sequence++);
             Item item = select.addItem(id);
-            item.getItemProperty("CAPTION").setValue(id.toString() + ": "
-                    + names[random.nextInt() % names.length]);
+            item.getItemProperty("CAPTION").setValue(
+                    id + ": " + names[random.nextInt() % names.length]);
         }
     }
 
@@ -71,7 +71,7 @@ public class UsingCustomNewItemHandlerInSelect extends CustomComponent {
             Integer id = new Integer(sequence++);
             Item item = select.addItem(id);
             item.getItemProperty("CAPTION")
-                    .setValue(id.toString() + ": " + newItemCaption);
+                    .setValue(id + ": " + newItemCaption);
             select.setValue(id);
         }
 

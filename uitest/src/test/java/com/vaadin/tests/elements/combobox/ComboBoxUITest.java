@@ -24,11 +24,6 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- * Validates that multiple calls to ComboBoxElement.selectByText(String) do not
- * append the input given each time to the previous one. The value in the
- * combobox's search field should be cleared before searching for a new one.
- */
 public class ComboBoxUITest extends MultiBrowserTest {
 
     @Before
@@ -52,6 +47,15 @@ public class ComboBoxUITest extends MultiBrowserTest {
     public void testSelectByTextNotFound() {
         ComboBoxElement cb = $(ComboBoxElement.class).first();
         cb.selectByText("foobar");
+    }
+
+    @Test
+    public void testSelectByTextWithIcons() {
+        ComboBoxElement cb = $(ComboBoxElement.class).id("with-icons");
+        cb.selectByText("GBP");
+        assertEquals("GBP", cb.getValue());
+        cb.selectByText("EUR");
+        assertEquals("EUR", cb.getValue());
     }
 
     private void testMultipleSelectByTextOperationsIn(

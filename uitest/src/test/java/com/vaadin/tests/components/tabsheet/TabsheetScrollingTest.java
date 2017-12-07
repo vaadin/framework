@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.tabsheet;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.Point;
@@ -37,7 +39,7 @@ public class TabsheetScrollingTest extends MultiBrowserTest {
             sendKey(Keys.ARROW_RIGHT);
         }
         sendKey(Keys.SPACE);
-        Assert.assertEquals("Hide this tab (21)", getHideButtonText());
+        assertEquals("Hide this tab (21)", getHideButtonText());
     }
 
     private WebElement getTab(int index) {
@@ -56,8 +58,8 @@ public class TabsheetScrollingTest extends MultiBrowserTest {
 
     private WebElement getTabByCaption(TabSheetElement ts, String caption) {
         WebElement tabBar = ts.findElement(By.className("v-tabsheet-tabs"));
-        return tabBar.findElement(By
-                .xpath("./tbody/tr/td[./div/div/div[contains(., normalize-space('"
+        return tabBar.findElement(By.xpath(
+                "./tbody/tr/td[./div/div/div[contains(., normalize-space('"
                         + caption + "'))]]"));
     }
 
@@ -72,10 +74,10 @@ public class TabsheetScrollingTest extends MultiBrowserTest {
         openTestURL();
         $(ButtonElement.class).id(TabsheetScrolling.SELECT_LAST).click();
         TabSheetElement tabsheetFixed = $(TabSheetElement.class).first();
-        Assert.assertTrue("Select last should scroll last tab into view",
+        assertTrue("Select last should scroll last tab into view",
                 isTabVisible(tabsheetFixed, "Tab 99"));
         $(ButtonElement.class).id(TabsheetScrolling.SELECT_FIRST).click();
-        Assert.assertTrue("Select first should scroll first tab into view",
+        assertTrue("Select first should scroll first tab into view",
                 isTabVisible(tabsheetFixed, "Tab 1"));
 
     }

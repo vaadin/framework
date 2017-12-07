@@ -31,6 +31,7 @@ import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Range;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.shared.ui.grid.DropMode;
@@ -78,7 +79,8 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
     private String styleDragBottom;
 
     /**
-     * Class name to apply when dragged over an empty grid.
+     * Class name to apply when dragged over an empty grid, or when dropping on
+     * rows is not possible (see {@link #isDroppingOnRowsPossible()}).
      */
     private String styleDragEmpty;
 
@@ -98,33 +100,59 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
         super.extend(target);
     }
 
+    /**
+     * Inspects whether the current drop would happen on the whole grid instead
+     * of specific row as the drop target. This is based on used drop mode,
+     * whether dropping on sorted grid rows is allowed (determined on server
+     * side and automatically updated to drop mode) and whether the grid is
+     * empty.
+     *
+     * @return {@code true} when the drop target is the whole grid, or
+     *         {@code false} when it is one of the rows
+     */
+    protected boolean isDroppingOnRowsPossible() {
+        if (getState().dropMode == DropMode.ON_GRID) {
+            return false;
+        }
+
+        if (getEscalator().getVisibleRowRange().isEmpty()) {
+            return false;
+        }
+
+        return true;
+    }
+
     @Override
     protected void sendDropEventToServer(List<String> types,
             Map<String, String> data, String dropEffect,
             NativeEvent dropEvent) {
-
-        String rowKey = null;
-        DropLocation dropLocation = null;
-
         Element targetElement = getTargetElement(
                 (Element) dropEvent.getEventTarget().cast());
-        // the target element is either the tablewrapper or one of the body rows
+
+        DropLocation dropLocation = getDropLocation(targetElement, dropEvent);
+        MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
+                .buildMouseEventDetails(dropEvent, targetElement);
+
+        String rowKey = null;
+
+        // the target is either on a row element or the table wrapper
         if (TableRowElement.is(targetElement)) {
             rowKey = getRowData(targetElement.cast())
                     .getString(GridState.JSONKEY_ROWKEY);
-            dropLocation = getDropLocation(targetElement, dropEvent);
-        } else {
-            dropLocation = DropLocation.EMPTY;
         }
-
-        MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
-                .buildMouseEventDetails(dropEvent, targetElement);
 
         getRpcProxy(GridDropTargetRpc.class).drop(types, data, dropEffect,
                 rowKey, dropLocation, mouseEventDetails);
     }
 
-    private JsonObject getRowData(TableRowElement row) {
+    /**
+     * Get the row data as json object for the given row.
+     *
+     * @param row
+     *            table row element
+     * @return row data as json object for the given row
+     */
+    protected JsonObject getRowData(TableRowElement row) {
         int rowIndex = ((Escalator.AbstractRowContainer) getGridBody())
                 .getLogicalRowIndex(row);
         return gridConnector.getDataSource().getRow(rowIndex);
@@ -132,8 +160,18 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
 
     /**
      * Returns the location of the event within the row.
+     *
+     * @param target
+     *            drop target element
+     * @param event
+     *            drop event
+     * @return the drop location to use
      */
-    private DropLocation getDropLocation(Element target, NativeEvent event) {
+    protected DropLocation getDropLocation(Element target, NativeEvent event) {
+        if (!isDroppingOnRowsPossible()) {
+            return DropLocation.EMPTY;
+        }
+
         if (TableRowElement.is(target)) {
             if (getState().dropMode == DropMode.BETWEEN) {
                 if (getRelativeY(target,
@@ -241,10 +279,21 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
         element.removeClassName(styleDragEmpty);
     }
 
-    private Element getTargetElement(Element source) {
+    /**
+     * Gets the target element for a dragover or drop event.
+     *
+     * @param source
+     *            the event target of the event
+     * @return the element that should be handled as the target of the event
+     */
+    protected Element getTargetElement(Element source) {
         final Element tableWrapper = getDropTargetElement();
         final BodyRowContainer gridBody = getGridBody();
-        final int rowCount = gridBody.getRowCount();
+        final Range visibleRowRange = getEscalator().getVisibleRowRange();
+
+        if (!isDroppingOnRowsPossible()) {
+            return tableWrapper;
+        }
 
         while (!Objects.equals(source, tableWrapper)) {
             // the drop might happen on top of header, body or footer rows
@@ -253,20 +302,22 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
                 if ("thead".equalsIgnoreCase(parentTagName)) {
                     // for empty grid or ON_TOP mode, drop as last row,
                     // otherwise as above first visible row
-                    if (rowCount == 0
+                    if (visibleRowRange.isEmpty()
                             || getState().dropMode == DropMode.ON_TOP) {
                         return tableWrapper;
                     } else {
-                        return gridBody.getRowElement(0);
+                        return gridBody
+                                .getRowElement(visibleRowRange.getStart());
                     }
                 } else if ("tfoot".equalsIgnoreCase(parentTagName)) {
                     // for empty grid or ON_TOP mode, drop as last row,
                     // otherwise as below last visible row
-                    if (rowCount == 0
+                    if (visibleRowRange.isEmpty()
                             || getState().dropMode == DropMode.ON_TOP) {
                         return tableWrapper;
                     } else {
-                        return gridBody.getRowElement(rowCount - 1);
+                        return gridBody
+                                .getRowElement(visibleRowRange.getEnd() - 1);
                     }
                 } else { // parent is tbody
                     return source;
@@ -274,15 +325,14 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
             }
             source = source.getParentElement();
         }
-        // the drag is on top of the tablewrapper
-        // if no rows in grid, or if the drop mode is ON_TOP, then there is no
-        // target row for the drop
-        if (rowCount == 0 || getState().dropMode == DropMode.ON_TOP) {
+        // the drag is on top of the tablewrapper, if the drop mode is ON_TOP,
+        // then there is no target row for the drop
+        if (getState().dropMode == DropMode.ON_TOP) {
             return tableWrapper;
-        } else { // if dragged under the last row to empty space, drop target
-                 // needs to be below the last row
-            return gridBody.getRowElement(rowCount - 1);
         }
+        // if dragged under the last row to empty space, drop target
+        // needs to be below the last row
+        return gridBody.getRowElement(visibleRowRange.getEnd() - 1);
     }
 
     @Override
@@ -303,6 +353,10 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
 
     private RowContainer.BodyRowContainer getGridBody() {
         return getEscalator().getBody();
+    }
+
+    private boolean isGridSortedByUser() {
+        return !gridConnector.getWidget().getSortOrder().isEmpty();
     }
 
     @Override

@@ -24,7 +24,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,16 +57,11 @@ public class ClassPathExplorer {
     /**
      * File filter that only accepts directories.
      */
-    private final static FileFilter DIRECTORIES_ONLY = (File f) -> {
-        if (f.exists() && f.isDirectory()) {
-            return true;
-        } else {
-            return false;
-        }
-    };
+    private static final FileFilter DIRECTORIES_ONLY = (File f) -> f.exists()
+            && f.isDirectory();
 
     /**
-     * Contains information about widgetsets and themes found on the classpath
+     * Contains information about widgetsets and themes found on the classpath.
      *
      * @since 7.1
      */
@@ -98,15 +92,15 @@ public class ClassPathExplorer {
      * entries that could include widgets/widgetsets are listed (primarily
      * directories, Vaadin JARs and add-on JARs).
      */
-    private static final List<String> rawClasspathEntries = getRawClasspathEntries();
+    private static final List<String> RAW_CLASSPATH_ENTRIES = getRawClasspathEntries();
 
     /**
      * Map from identifiers (either a package name preceded by the path and a
      * slash, or a URL for a JAR file) to the corresponding URLs. This is
      * constructed from the class path.
      */
-    private static final Map<String, URL> classpathLocations = getClasspathLocations(
-            rawClasspathEntries);
+    private static final Map<String, URL> CLASSPATH_LOCATIONS = getClasspathLocations(
+            RAW_CLASSPATH_ENTRIES);
 
     private static boolean debug = false;
 
@@ -144,7 +138,7 @@ public class ClassPathExplorer {
         long start = System.currentTimeMillis();
         Map<String, URL> widgetsets = new HashMap<>();
         Map<String, URL> themes = new HashMap<>();
-        Set<String> keySet = classpathLocations.keySet();
+        Set<String> keySet = CLASSPATH_LOCATIONS.keySet();
         for (String location : keySet) {
             searchForWidgetSetsAndAddonStyles(location, widgetsets, themes);
         }
@@ -185,29 +179,28 @@ public class ClassPathExplorer {
      * "Vaadin-Widgetsets" attribute in its manifest are added to widgetsets.
      *
      * @param locationString
-     *            an entry in {@link #classpathLocations}
+     *            an entry in {@link #CLASSPATH_LOCATIONS}
      * @param widgetsets
      *            a map from widgetset name (including package, with dots as
-     *            separators) to a URL (see {@link #classpathLocations}) - new
+     *            separators) to a URL (see {@link #CLASSPATH_LOCATIONS}) - new
      *            entries are added to this map
      */
     private static void searchForWidgetSetsAndAddonStyles(String locationString,
             Map<String, URL> widgetsets, Map<String, URL> addonStyles) {
 
-        URL location = classpathLocations.get(locationString);
+        URL location = CLASSPATH_LOCATIONS.get(locationString);
         File directory = new File(location.getFile());
 
         if (directory.exists() && !directory.isHidden()) {
             // Get the list of the files contained in the directory
-            String[] files = directory.list();
-            for (int i = 0; i < files.length; i++) {
+            for (String file : directory.list()) {
                 // we are only interested in .gwt.xml files
-                if (!files[i].endsWith(".gwt.xml")) {
+                if (!file.endsWith(".gwt.xml")) {
                     continue;
                 }
 
                 // remove the .gwt.xml extension
-                String classname = files[i].substring(0, files[i].length() - 8);
+                String classname = file.substring(0, file.length() - 8);
                 String packageName = locationString
                         .substring(locationString.lastIndexOf('/') + 1);
                 classname = packageName + "." + classname;
@@ -306,7 +299,7 @@ public class ClassPathExplorer {
      *
      * @return filtered list of class path entries
      */
-    private final static List<String> getRawClasspathEntries() {
+    private static final List<String> getRawClasspathEntries() {
         // try to keep the order of the classpath
         List<String> locations = new ArrayList<>();
 
@@ -323,8 +316,7 @@ public class ClassPathExplorer {
         debug("Classpath: " + classpath);
 
         String[] split = classpath.split(pathSep);
-        for (int i = 0; i < split.length; i++) {
-            String classpathEntry = split[i];
+        for (String classpathEntry : split) {
             if (acceptClassPathEntry(classpathEntry)) {
                 locations.add(classpathEntry);
             }
@@ -337,14 +329,14 @@ public class ClassPathExplorer {
      * Determine every URL location defined by the current classpath, and it's
      * associated package name.
      *
-     * See {@link #classpathLocations} for information on output format.
+     * See {@link #CLASSPATH_LOCATIONS} for information on output format.
      *
      * @param rawClasspathEntries
      *            raw class path entries as split from the Java class path
      *            string
-     * @return map of classpath locations, see {@link #classpathLocations}
+     * @return map of classpath locations, see {@link #CLASSPATH_LOCATIONS}
      */
-    private final static Map<String, URL> getClasspathLocations(
+    private static final Map<String, URL> getClasspathLocations(
             List<String> rawClasspathEntries) {
         long start = System.currentTimeMillis();
         // try to keep the order of the classpath
@@ -427,13 +419,13 @@ public class ClassPathExplorer {
 
     /**
      * Recursively add subdirectories and jar files to locations - see
-     * {@link #classpathLocations}.
+     * {@link #CLASSPATH_LOCATIONS}.
      *
      * @param name
      * @param file
      * @param locations
      */
-    private final static void include(String name, File file,
+    private static final void include(String name, File file,
             Map<String, URL> locations) {
         if (!file.exists()) {
             return;
@@ -455,26 +447,25 @@ public class ClassPathExplorer {
         }
 
         // add all directories recursively
-        File[] dirs = file.listFiles(DIRECTORIES_ONLY);
-        for (int i = 0; i < dirs.length; i++) {
+        for (File dir : file.listFiles(DIRECTORIES_ONLY)) {
             try {
                 // add the present directory
-                if (!dirs[i].isHidden()
-                        && !dirs[i].getPath().contains(File.separator + ".")) {
-                    String key = dirs[i].getCanonicalPath() + "/" + name
-                            + dirs[i].getName();
-                    URL url = dirs[i].getCanonicalFile().toURI().toURL();
+                if (!dir.isHidden()
+                        && !dir.getPath().contains(File.separator + ".")) {
+                    String key = dir.getCanonicalPath() + "/" + name
+                            + dir.getName();
+                    URL url = dir.getCanonicalFile().toURI().toURL();
                     locations.put(key, url);
                 }
             } catch (Exception ioe) {
                 return;
             }
-            include(name + dirs[i].getName(), dirs[i], locations);
+            include(name + dir.getName(), dir, locations);
         }
     }
 
     /**
-     * Add a jar file to locations - see {@link #classpathLocations}.
+     * Add a jar file to locations - see {@link #CLASSPATH_LOCATIONS}.
      *
      * @param file
      * @param locations
@@ -530,17 +521,15 @@ public class ClassPathExplorer {
     public static URL getWidgetsetSourceDirectory(String widgetsetFileName) {
         if (debug) {
             debug("classpathLocations values:");
-            ArrayList<String> locations = new ArrayList<>(
-                    classpathLocations.keySet());
+            List<String> locations = new ArrayList<>(
+                    CLASSPATH_LOCATIONS.keySet());
             for (String location : locations) {
-                debug(String.valueOf(classpathLocations.get(location)));
+                debug(String.valueOf(CLASSPATH_LOCATIONS.get(location)));
             }
         }
 
         URL firstDirectory = null;
-        Iterator<String> it = rawClasspathEntries.iterator();
-        while (it.hasNext()) {
-            String entry = it.next();
+        for (String entry : RAW_CLASSPATH_ENTRIES) {
 
             File directory = new File(entry);
             if (directory.exists() && !directory.isHidden()
@@ -571,7 +560,7 @@ public class ClassPathExplorer {
     }
 
     /**
-     * Test method for helper tool
+     * Test method for helper tool.
      */
     public static void main(String[] args) {
         log("Searching for available widgetsets and stylesheets...");

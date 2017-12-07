@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.embedded;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,18 +40,18 @@ public class EmbeddedAltTextTest extends MultiBrowserTest {
     public void testEmbeddedAltText() {
         EmbeddedElement embedded = $(EmbeddedElement.class).first();
 
-        Assert.assertEquals("Alt text of the image", getAltText(embedded));
+        assertEquals("Alt text of the image", getAltText(embedded));
         assertHtmlSource("Alt text of the object");
 
         $(ButtonElement.class).first().click();
 
-        Assert.assertEquals("New alt text of the image!", getAltText(embedded));
+        assertEquals("New alt text of the image!", getAltText(embedded));
         assertHtmlSource("New alt text of the object!");
     }
 
     private void assertHtmlSource(String html) {
         String pageSource = driver.getPageSource();
-        Assert.assertTrue("Page source does not contain '" + html + "'",
+        assertTrue("Page source does not contain '" + html + "'",
                 pageSource.contains(html));
     }
 

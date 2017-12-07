@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.tests.design.DeclarativeTestBaseBase;
@@ -68,7 +67,7 @@ public abstract class AbstractMultiSelectDeclarativeTest<T extends AbstractMulti
 
         DesignContext context = readComponentAndCompare(design, component,
                 ctxt -> configureContext(type, attribute, component, ctxt));
-        Assert.assertEquals(type,
+        assertEquals(type,
                 context.getCustomAttributes(context.getRootComponent())
                         .get(attribute));
         context = new DesignContext();
@@ -97,7 +96,7 @@ public abstract class AbstractMultiSelectDeclarativeTest<T extends AbstractMulti
 
         DesignContext context = readComponentAndCompare(design, component,
                 ctxt -> configureContext(type, attribute, component, ctxt));
-        Assert.assertEquals(type,
+        assertEquals(type,
                 context.getCustomAttributes(context.getRootComponent())
                         .get(attribute));
         context = new DesignContext();

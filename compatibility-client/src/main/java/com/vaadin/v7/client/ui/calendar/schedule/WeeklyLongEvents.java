@@ -98,7 +98,7 @@ public class WeeklyLongEvents extends HorizontalPanel implements HasTooltipKey {
                     eventLabel.addStyleDependentName("continued-to");
                 }
                 final String extraStyle = calendarEvent.getStyleName();
-                if (extraStyle != null && extraStyle.length() > 0) {
+                if (extraStyle != null && !extraStyle.isEmpty()) {
                     eventLabel.addStyleDependentName(extraStyle + "-all-day");
                 }
                 if (!started) {

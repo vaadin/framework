@@ -15,8 +15,6 @@
  */
 package com.vaadin.v7.client.ui.calendar.schedule;
 
-import java.util.Iterator;
-
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -91,8 +89,8 @@ public class DayToolbar extends HorizontalPanel implements ClickHandler {
     }
 
     public void add(String dayName, final String date,
-            String localized_date_format, String extraClass) {
-        Label l = new Label(dayName + " " + localized_date_format);
+            String localizedDateFormat, String extraClass) {
+        Label l = new Label(dayName + " " + localizedDateFormat);
         l.setStylePrimaryName("v-calendar-header-day");
 
         if (extraClass != null) {
@@ -158,9 +156,8 @@ public class DayToolbar extends HorizontalPanel implements ClickHandler {
     }
 
     private void updateDayLabelSizedStyleNames() {
-        Iterator<Widget> it = iterator();
-        while (it.hasNext()) {
-            updateWidgetSizedStyleName(it.next());
+        for (Widget w : this) {
+            updateWidgetSizedStyleName(w);
         }
     }
 

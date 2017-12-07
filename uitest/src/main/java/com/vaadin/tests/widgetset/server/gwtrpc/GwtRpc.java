@@ -32,7 +32,7 @@ public class GwtRpc extends AbstractReindeerTestUI {
     /**
      * Id of the button triggering the test case.
      */
-    public final static String BUTTON_ID = "gwtRpcButton";
+    public static final String BUTTON_ID = "gwtRpcButton";
 
     @Override
     protected void setup(VaadinRequest request) {

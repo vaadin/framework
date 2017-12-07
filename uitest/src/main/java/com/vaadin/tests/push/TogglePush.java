@@ -22,7 +22,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 
@@ -52,29 +51,16 @@ public class TogglePush extends AbstractReindeerTestUI {
         addComponent(pushSetting);
 
         addComponent(
-                new Button("Update counter now", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        updateCounter();
-                    }
-                }));
+                new Button("Update counter now", event -> updateCounter()));
 
         addComponent(new Button("Update counter in 1 sec",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                access(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        updateCounter();
-                                    }
-                                });
-                            }
-                        }, 1000);
-                    }
+                event -> {
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            access(() -> updateCounter());
+                        }
+                    }, 1000);
                 }));
     }
 

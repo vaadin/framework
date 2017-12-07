@@ -103,12 +103,8 @@ public class CompatibilityComponentElementGetValue extends AbstractTestUI {
         DateField df = new DateField();
         df.setDateFormat("yyyy-MM-dd");
         df.setValue(TEST_DATE_VALUE);
-        df.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                valueChangeLabel.setValue(DATEFIELD_VALUE_CHANGE);
-            }
-        });
+        df.addValueChangeListener(
+                event -> valueChangeLabel.setValue(DATEFIELD_VALUE_CHANGE));
         return df;
     }
 
@@ -122,12 +118,8 @@ public class CompatibilityComponentElementGetValue extends AbstractTestUI {
     private CheckBox createCheckBox() {
         CheckBox cb = new CheckBox();
         cb.setValue(true);
-        cb.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                valueChangeLabel.setValue(CHECKBOX_VALUE_CHANGE);
-            }
-        });
+        cb.addValueChangeListener(
+                value -> valueChangeLabel.setValue(CHECKBOX_VALUE_CHANGE));
         return cb;
     }
 
@@ -146,12 +138,8 @@ public class CompatibilityComponentElementGetValue extends AbstractTestUI {
         tab.addItems("item 1", TEST_STRING_VALUE, "item 3", "item 4");
         // Preselect a few items by creating a set
         tab.setValue(new HashSet<String>(Arrays.asList(TEST_STRING_VALUE)));
-        tab.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                valueChangeLabel.setValue(TWINCOL_VALUE_CHANGE);
-            }
-        });
+        tab.addValueChangeListener(
+                event -> valueChangeLabel.setValue(TWINCOL_VALUE_CHANGE));
 
         return tab;
     }

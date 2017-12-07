@@ -7,7 +7,6 @@ import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Notification;
@@ -122,42 +121,25 @@ public class BasicPersonForm extends AbstractTestUIWithLog {
         addComponent(sex);
         addComponent(deceased);
 
-        Button commitButton = new Button("Commit", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                String msg = "Commit succesful";
-                try {
-                    fieldGroup.commit();
-                } catch (CommitException e) {
-                    msg = "Commit failed: " + e.getMessage();
-                }
-                Notification notification = new Notification(msg);
-                notification.setDelayMsec(Notification.DELAY_FOREVER);
-                notification.show(getPage());
-                log(msg);
-
+        Button commitButton = new Button("Commit", event -> {
+            String msg = "Commit succesful";
+            try {
+                fieldGroup.commit();
+            } catch (CommitException e) {
+                msg = "Commit failed: " + e.getMessage();
             }
+            Notification notification = new Notification(msg);
+            notification.setDelayMsec(Notification.DELAY_FOREVER);
+            notification.show(getPage());
+            log(msg);
         });
         Button discardButton = new Button("Discard",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        fieldGroup.discard();
-                        log("Discarded changes");
-
-                    }
+                event -> {
+                    fieldGroup.discard();
+                    log("Discarded changes");
                 });
         Button showBean = new Button("Show bean values",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        log(getPerson(fieldGroup).toString());
-
-                    }
-                });
+                event -> log(getPerson(fieldGroup).toString()));
         addComponent(commitButton);
         addComponent(discardButton);
         addComponent(showBean);

@@ -19,7 +19,7 @@ public class RichTextAreaWithKeyboardShortcuts extends TestBase {
     private Handler actionHandler = new Handler() {
 
         ShortcutAction save = new ShortcutAction("^Save");
-        private Action[] actions = new Action[] { save };
+        private Action[] actions = { save };
 
         @Override
         public void handleAction(Action action, Object sender, Object target) {
@@ -31,7 +31,7 @@ public class RichTextAreaWithKeyboardShortcuts extends TestBase {
             msg += " Target:" + target.getClass().getSimpleName() + " '"
                     + f.getCaption() + "'";
 
-            String string = f.getValue().toString();
+            String string = f.getValue();
 
             msg += " Value: " + string;
             Notification notification = new Notification(msg);

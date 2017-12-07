@@ -15,7 +15,7 @@
  */
 package com.vaadin.ui.components.colorpicker;
 
-import java.awt.Point;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -32,13 +32,31 @@ import com.vaadin.ui.AbstractField;
  */
 public class ColorPickerGrid extends AbstractField<Color> {
 
+    private static class Point implements Serializable {
+        private int x;
+        private int y;
+
+        public Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+    }
+
     private static final String STYLENAME = "v-colorpicker-grid";
 
     private ColorPickerGridServerRpc rpc = new ColorPickerGridServerRpc() {
 
         @Override
         public void select(int x, int y) {
-            Color oldValue = colorGrid[x][y];
+            Color oldValue = colorGrid[y][x];
             ColorPickerGrid.this.x = x;
             ColorPickerGrid.this.y = y;
             fireEvent(new ValueChangeEvent<>(ColorPickerGrid.this, oldValue,
@@ -122,8 +140,8 @@ public class ColorPickerGrid extends AbstractField<Color> {
                 String color = c.getCSS();
 
                 colors[counter] = color;
-                xCoords[counter] = String.valueOf((int) p.getX());
-                yCoords[counter] = String.valueOf((int) p.getY());
+                xCoords[counter] = String.valueOf(p.getX());
+                yCoords[counter] = String.valueOf(p.getY());
                 counter++;
             }
             getState().changedColor = colors;
@@ -195,12 +213,12 @@ public class ColorPickerGrid extends AbstractField<Color> {
 
     @Override
     public Color getValue() {
-        return colorGrid[x][y];
+        return colorGrid[y][x];
     }
 
     @Override
     protected void doSetValue(Color color) {
-        colorGrid[x][y] = color;
+        colorGrid[y][x] = color;
         changedColors.put(new Point(x, y), color);
         sendChangedColors();
     }

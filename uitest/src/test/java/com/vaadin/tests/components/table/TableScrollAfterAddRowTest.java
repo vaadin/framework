@@ -16,8 +16,8 @@
 package com.vaadin.tests.components.table;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -61,7 +61,7 @@ public class TableScrollAfterAddRowTest extends MultiBrowserTest {
         scrollUp();
         addRow();
         sleep(200);
-        Assert.assertNotEquals("86", getCurrentPageFirstItemIndex());
+        assertNotEquals("86", getCurrentPageFirstItemIndex());
     }
 
     private void scrollUp() {

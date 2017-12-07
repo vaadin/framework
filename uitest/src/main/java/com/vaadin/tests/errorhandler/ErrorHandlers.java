@@ -9,8 +9,6 @@ import com.vaadin.server.ServerRpcManager.RpcInvocationException;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -38,15 +36,8 @@ public class ErrorHandlers extends AbstractReindeerTestUI {
 
         final VerticalLayout layoutWithErrorHandler = new VerticalLayout(
                 runtimeExceptionOnClick(new Button("Error handler on parent")));
-        ErrorHandler e = new ErrorHandler() {
-
-            @Override
-            public void error(com.vaadin.server.ErrorEvent event) {
-                layoutWithErrorHandler.addComponent(
-                        new Label("Layout error: " + getErrorMessage(event)));
-            }
-
-        };
+        ErrorHandler e = event -> layoutWithErrorHandler.addComponent(
+                new Label("Layout error: " + getErrorMessage(event)));
         layoutWithErrorHandler.setErrorHandler(e);
         layoutWithErrorHandler.addComponent(notificationErrorHandler(
                 npeOnClick(new Button("Error handler on button and parent"))));
@@ -96,25 +87,17 @@ public class ErrorHandlers extends AbstractReindeerTestUI {
     private Button runtimeExceptionOnClick(Button customErrorButton) {
         customErrorButton.setCaption("RE: " + customErrorButton.getCaption());
 
-        customErrorButton.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                throw new RuntimeException("Fail in click event");
-            }
+        customErrorButton.addClickListener(event -> {
+            throw new RuntimeException("Fail in click event");
         });
         return customErrorButton;
     }
 
     private Button npeOnClick(Button customErrorButton) {
         customErrorButton.setCaption("NPE: " + customErrorButton.getCaption());
-        customErrorButton.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Integer i = null;
-                i += 2;
-            }
+        customErrorButton.addClickListener(event -> {
+            Integer i = null;
+            i += 2;
         });
         return customErrorButton;
     }

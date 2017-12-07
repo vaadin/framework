@@ -15,13 +15,16 @@
  */
 package com.vaadin.tests.design;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.annotations.DesignRoot;
@@ -46,8 +49,8 @@ public class FieldNameWhichConflictsWithGettersTest {
     @Test
     public void readWithConflictingFields() {
         MyVerticalLayout v = new MyVerticalLayout();
-        Assert.assertNotNull(v.caption);
-        Assert.assertNotNull(v.description);
+        assertNotNull(v.caption);
+        assertNotNull(v.description);
     }
 
     @Test
@@ -65,18 +68,18 @@ public class FieldNameWhichConflictsWithGettersTest {
         context.setRootComponent(v);
 
         Design.write(context, baos);
-        String str = baos.toString("UTF-8");
+        String str = baos.toString(UTF_8.name());
 
         Document doc = Jsoup.parse(str);
         Element body = doc.body();
         Element captionElement = body.getElementById("caption");
-        Assert.assertNotNull(captionElement);
-        Assert.assertEquals("vaadin-label", captionElement.tagName());
+        assertNotNull(captionElement);
+        assertEquals("vaadin-label", captionElement.tagName());
 
         Element descriptionElement = captionElement.nextElementSibling();
-        Assert.assertNotNull(descriptionElement);
-        Assert.assertEquals("vaadin-text-field", descriptionElement.tagName());
-        Assert.assertEquals("description", descriptionElement.attr("_id"));
+        assertNotNull(descriptionElement);
+        assertEquals("vaadin-text-field", descriptionElement.tagName());
+        assertEquals("description", descriptionElement.attr("_id"));
 
     }
 }

@@ -422,7 +422,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
      * Updates the cursor position variable if it has changed since the last
      * update.
      *
-     * @return true iff the value was updated
+     * @return true if the value was updated
      */
     protected boolean updateCursorPosition() {
         if (WidgetUtil.isAttachedAndDisplayed(this)) {
@@ -534,7 +534,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @since 7.7.5
      */
     @Override

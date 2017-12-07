@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
@@ -28,7 +30,6 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.MouseEventDetails;
@@ -80,7 +81,8 @@ public class TreeConnector extends AbstractLegacyComponentConnector
         getWidget().readonly = isReadOnly();
 
         getWidget().dragMode = uidl.hasAttribute("dragMode")
-                ? uidl.getIntAttribute("dragMode") : 0;
+                ? uidl.getIntAttribute("dragMode")
+                : 0;
 
         getWidget().isNullSelectionAllowed = uidl
                 .getBooleanAttribute("nullselect");
@@ -98,8 +100,8 @@ public class TreeConnector extends AbstractLegacyComponentConnector
 
         TreeNode childTree = null;
         UIDL childUidl = null;
-        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
-            childUidl = (UIDL) i.next();
+        for (final Object child : uidl) {
+            childUidl = (UIDL) child;
             if ("actions".equals(childUidl.getTag())) {
                 updateActionMap(childUidl);
                 continue;
@@ -210,10 +212,11 @@ public class TreeConnector extends AbstractLegacyComponentConnector
                 levelProperty = Integer.valueOf(levelPropertyString);
             } catch (NumberFormatException e) {
                 levelProperty = 1;
-                VConsole.error(e);
+                getLogger().log(Level.SEVERE,
+                        e.getMessage() == null ? "" : e.getMessage(), e);
             }
 
-            renderChildNodes(rootNode, (Iterator) uidl.getChildIterator(),
+            renderChildNodes(rootNode, (Iterator) uidl.iterator(),
                     levelProperty + 1);
         }
     }
@@ -224,9 +227,8 @@ public class TreeConnector extends AbstractLegacyComponentConnector
      * @param uidl
      */
     private void updateActionMap(UIDL uidl) {
-        final Iterator<?> it = uidl.getChildIterator();
-        while (it.hasNext()) {
-            final UIDL action = (UIDL) it.next();
+        for (final Object child : uidl) {
+            final UIDL action = (UIDL) child;
             final String key = action.getStringAttribute("key");
             final String caption = action
                     .getStringAttribute(TreeConstants.ATTRIBUTE_ACTION_CAPTION);
@@ -265,7 +267,7 @@ public class TreeConnector extends AbstractLegacyComponentConnector
             if (uidl.getChildCount() == 0) {
                 treeNode.childNodeContainer.setVisible(false);
             } else {
-                renderChildNodes(treeNode, (Iterator) uidl.getChildIterator(),
+                renderChildNodes(treeNode, (Iterator) uidl.iterator(),
                         level + 1);
                 treeNode.childrenLoaded = true;
             }
@@ -391,5 +393,9 @@ public class TreeConnector extends AbstractLegacyComponentConnector
         getRpcProxy(TreeServerRpc.class).contextClick(key, details);
 
         WidgetUtil.clearTextSelection();
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(TreeConnector.class.getName());
     }
 }

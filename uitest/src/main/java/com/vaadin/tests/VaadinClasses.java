@@ -9,7 +9,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -82,8 +81,7 @@ public class VaadinClasses {
             try {
                 File f = new File(location.toURI());
                 if (!f.exists()) {
-                    throw new IOException(
-                            "Directory " + f.toString() + " does not exist");
+                    throw new IOException("Directory " + f + " does not exist");
                 }
                 findPackages(f, basePackage, baseClass, classes,
                         ignoredPackages);
@@ -95,14 +93,9 @@ public class VaadinClasses {
             findPackages(juc, basePackage, baseClass, classes);
         }
 
-        Collections.sort(classes, new Comparator<Class<? extends T>>() {
+        Collections.sort(classes,
+                (o1, o2) -> o1.getName().compareTo(o2.getName()));
 
-            @Override
-            public int compare(Class<? extends T> o1, Class<? extends T> o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-
-        });
         return classes;
     }
 

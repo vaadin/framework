@@ -19,6 +19,8 @@ package com.vaadin.server;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.vaadin.shared.ui.ErrorLevel;
+
 /**
  * Class for combining multiple error messages together.
  *
@@ -37,7 +39,7 @@ public class CompositeErrorMessage extends AbstractErrorMessage {
      */
     public CompositeErrorMessage(ErrorMessage... errorMessages) {
         super(null);
-        setErrorLevel(ErrorLevel.INFORMATION);
+        setErrorLevel(ErrorLevel.INFO);
 
         for (ErrorMessage errorMessage : errorMessages) {
             addErrorMessage(errorMessage);
@@ -60,7 +62,7 @@ public class CompositeErrorMessage extends AbstractErrorMessage {
     public CompositeErrorMessage(
             Collection<? extends ErrorMessage> errorMessages) {
         super(null);
-        setErrorLevel(ErrorLevel.INFORMATION);
+        setErrorLevel(ErrorLevel.INFO);
 
         for (ErrorMessage errorMessage : errorMessages) {
             addErrorMessage(errorMessage);

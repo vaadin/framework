@@ -14,6 +14,7 @@ metadataChecks = {
 	'https://vaadin.com/download/VERSIONS_7': '^7\..*',
 	'https://vaadin.com/download/release/7.7/LATEST': '^7\..*',
 	'https://vaadin.com/download/LATEST': '^6\..*',
+	'https://vaadin.com/download/LATEST8': '^8\.1\..*',
 	'https://vaadin.com/download/PRERELEASES': '^{ver}'
 }
 
@@ -70,23 +71,28 @@ content = """<html>
 
 mavenUrl = ""
 if not prerelease:
-	mavenUrl = "http://repo1.maven.org/maven2/com/vaadin/vaadin-server/{ver}".format(ver=args.version)
+	mavenUrl = "http://repo1.maven.org/maven2/com/vaadin/vaadin-server/"
 	content += "<tr><td></td><td><a href='{mvnUrl}'>Check {ver} is published to maven.org (might take a while)</td></tr>".format(ver=args.version, mvnUrl=mavenUrl)
 else:
-	mavenUrl = "http://maven.vaadin.com/vaadin-prereleases/com/vaadin/vaadin-server/{ver}".format(ver=args.version)
+	mavenUrl = "http://maven.vaadin.com/vaadin-prereleases/com/vaadin/vaadin-server/"
 	content += "<tr><td></td><td><a href='{mvnUrl}'>Check {ver} is published as prerelease to maven.vaadin.com</td></tr>".format(ver=args.version, mvnUrl=mavenUrl)
 
 content += "<tr><td></td><td><a href=\"https://github.com/vaadin/framework/milestones\">Create milestone for next version in GitHub</a></td></tr>"
 
-content += """
-<tr><td></td><td><a href="http://test.vaadin.com/{version}/run/LabelModes?restartApplication">Verify uploaded to test.vaadin.com</a></td></tr>
-""".format(version=args.version)
+#content += """
+#<tr><td></td><td><a href="http://test.vaadin.com/{version}/run/LabelModes?restartApplication">Verify uploaded to test.vaadin.com</a></td></tr>
+#""".format(version=args.version)
 
 if not prerelease:
 	content += '<tr><td></td><td><a href="http://vaadin.com/api">Verify API version list updated</a></td></tr>'
 
+content += "<tr><td></td><td>Run the generated tag_repositories.sh script</td></tr>"
+
 # close GitHub milestone
-content += "<tr><td></td><td><a href=\"https://github.com/vaadin/framework/milestones\">Close GitHub Milestone</a></td></tr>"
+content += "<tr><td></td><td><a href=\"https://github.com/vaadin/framework/milestones\">Close GitHub Milestone and create one for next version</a></td></tr>"
+
+# release notes
+content += "<tr><td></td><td><a href=\"https://github.com/vaadin/framework/releases/new\">Prepare release notes in GH</a></td></tr>"
 
 content += """
 <tr><td></td><td><a href="http://{teamcityUrl}/viewLog.html?buildId={buildId}&buildTypeId={buildTypeId}&tab=dependencies"><h2>Start Post-Publish Release from dependencies tab</a></td></tr>

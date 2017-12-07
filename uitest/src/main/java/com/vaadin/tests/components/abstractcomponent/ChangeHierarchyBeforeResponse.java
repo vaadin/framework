@@ -18,7 +18,6 @@ package com.vaadin.tests.components.abstractcomponent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 
@@ -34,20 +33,6 @@ public class ChangeHierarchyBeforeResponse extends AbstractReindeerTestUI {
         }
     };
 
-    private Button buttonToAdd = new Button("Added from beforeClientResponse",
-            new Button.ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    layout.addComponent(labelToRemove);
-                }
-            }) {
-        @Override
-        public void beforeClientResponse(boolean initial) {
-            super.beforeClientResponse(initial);
-            setCaption("Add label to layout");
-        }
-    };
-
     private Label labelToRemove = new Label("Label to remove") {
         int count = 0;
 
@@ -58,6 +43,15 @@ public class ChangeHierarchyBeforeResponse extends AbstractReindeerTestUI {
                 count++;
                 setValue("Initial count: " + count);
             }
+        }
+    };
+
+    private Button buttonToAdd = new Button("Added from beforeClientResponse",
+            event -> layout.addComponent(labelToRemove)) {
+        @Override
+        public void beforeClientResponse(boolean initial) {
+            super.beforeClientResponse(initial);
+            setCaption("Add label to layout");
         }
     };
 

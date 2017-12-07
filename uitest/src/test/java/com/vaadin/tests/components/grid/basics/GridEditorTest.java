@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -37,8 +38,8 @@ public abstract class GridEditorTest extends GridBasicsTest {
             .className("v-grid-editor-cancel");
     protected static final org.openqa.selenium.By BY_EDITOR_SAVE = By
             .className("v-grid-editor-save");
-    protected static final String[] TOGGLE_EDIT_ENABLED = new String[] {
-            "Component", "Editor", "Enabled" };
+    protected static final String[] TOGGLE_EDIT_ENABLED = { "Component",
+            "Editor", "Enabled" };
 
     @Override
     @Before
@@ -77,8 +78,8 @@ public abstract class GridEditorTest extends GridBasicsTest {
     }
 
     protected void assertEditorOpen() {
-        assertTrue("Editor is supposed to be open",
-                getGridElement().isElementPresent(By.vaadin("#editor")));
+        waitUntil(driver -> getGridElement()
+                .isElementPresent(By.vaadin("#editor")));
     }
 
     protected void assertEditorClosed() {
@@ -197,12 +198,11 @@ public abstract class GridEditorTest extends GridBasicsTest {
                 editorPos == editor.getLocation().getY());
     }
 
-    @Ignore("Needs programmatic sorting")
     @Test
     public void testEditorClosedOnSort() {
         editRow(5);
 
-        selectMenuPath("Component", "State", "Sort by column", "Column 0, ASC");
+        selectMenuPath("Component", "Columns", "Column 0", "Sort ASC");
 
         assertEditorClosed();
     }
@@ -215,6 +215,30 @@ public abstract class GridEditorTest extends GridBasicsTest {
         selectMenuPath("Component", "Filter", "Column 1 starts with \"(23\"");
 
         assertEditorClosed();
+    }
+
+    @Test
+    public void testEditorOpeningFromServer() {
+        selectMenuPath("Component", "Editor", "Edit row 5");
+        assertEditorOpen();
+
+        Assert.assertEquals("Unexpected editor field content", "5",
+                getEditor().getField(3).getAttribute("value"));
+        Assert.assertEquals("Unexpected not-editable column content", "(5, 1)",
+                getEditor().findElement(By.className("not-editable"))
+                        .getText());
+    }
+
+    @Test
+    public void testEditorOpenWithScrollFromServer() {
+        selectMenuPath("Component", "Editor", "Edit last row");
+        assertEditorOpen();
+
+        Assert.assertEquals("Unexpected editor field content", "999",
+                getEditor().getField(3).getAttribute("value"));
+        Assert.assertEquals("Unexpected not-editable column content",
+                "(999, 1)", getEditor()
+                        .findElement(By.className("not-editable")).getText());
     }
 
     protected WebElement getSaveButton() {

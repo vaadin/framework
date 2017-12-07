@@ -23,9 +23,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.Map;
 
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
@@ -63,10 +63,10 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     private HashSet<Object> noChildrenAllowed = null;
 
     /** Mapping from Item ID to parent Item ID */
-    private Hashtable<Object, Object> parent = null;
+    private Map<Object, Object> parent = null;
 
     /** Mapping from Item ID to a list of child IDs */
-    private Hashtable<Object, LinkedList<Object>> children = null;
+    private Map<Object, LinkedList<Object>> children = null;
 
     /** List that contains all root elements of the container. */
     private LinkedHashSet<Object> roots = null;
@@ -150,10 +150,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
                 parent = new Hashtable<Object, Object>();
                 children = new Hashtable<Object, LinkedList<Object>>();
                 roots = new LinkedHashSet<Object>(container.getItemIds());
-            }
-
-            // Check that the hierarchy is up-to-date
-            else {
+            } else {
+                // Check that the hierarchy is up-to-date
 
                 // ensure order of root and child lists is same as in wrapped
                 // container
@@ -168,8 +166,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
                 s.addAll(roots);
 
                 // Remove unnecessary items
-                for (final Iterator<Object> i = s.iterator(); i.hasNext();) {
-                    final Object id = i.next();
+                for (final Object id : s) {
                     if (!container.containsId(id)) {
                         removeFromHierarchyWrapper(id);
                     }
@@ -177,8 +174,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
                 // Add all the missing items
                 final Collection<?> ids = container.getItemIds();
-                for (final Iterator<?> i = ids.iterator(); i.hasNext();) {
-                    final Object id = i.next();
+                for (final Object id : ids) {
                     if (!s.contains(id)) {
                         addToHierarchyWrapper(id);
                         s.add(id);
@@ -188,8 +184,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
                 Object[] array = roots.toArray();
                 Arrays.sort(array, basedOnOrderFromWrappedContainer);
                 roots = new LinkedHashSet<Object>();
-                for (int i = 0; i < array.length; i++) {
-                    roots.add(array[i]);
+                for (Object root : array) {
+                    roots.add(root);
                 }
                 for (Object object : children.keySet()) {
                     LinkedList<Object> object2 = children.get(object);
@@ -742,7 +738,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(Container.ItemSetChangeListener listener) {
@@ -767,7 +763,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(Container.ItemSetChangeListener listener) {
@@ -792,7 +788,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addPropertySetChangeListener(Container.PropertySetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(Container.PropertySetChangeListener listener) {
@@ -817,7 +813,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removePropertySetChangeListener(Container.PropertySetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(Container.PropertySetChangeListener listener) {

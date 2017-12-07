@@ -5,7 +5,6 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
@@ -36,23 +35,14 @@ public class LayoutResizeTest extends TestBase {
                 new Label("<h2>Layout resize test</h2>", ContentMode.HTML));
 
         Button resize = new Button("Resize to 700x400",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        event.getButton().getUI().getPage().getJavaScript()
+                event -> event.getButton().getUI().getPage().getJavaScript()
                                 .execute(
-                                        "setTimeout(function() {window.resizeTo(700,400)}, 500)");
-                    }
-                });
+                                "setTimeout(function() {window.resizeTo(700,400)}, 500)"));
         left.addComponent(resize);
 
-        resize = new Button("Resize to 900x600", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
+        resize = new Button("Resize to 900x600", event ->
                 event.getButton().getUI().getPage().getJavaScript().execute(
-                        "setTimeout(function() {window.resizeTo(900,600)}, 500)");
-            }
-        });
+                "setTimeout(function() {window.resizeTo(900,600)}, 500)"));
         left.addComponent(resize);
 
         left.addComponent(new Label(

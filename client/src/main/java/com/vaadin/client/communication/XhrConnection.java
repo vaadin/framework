@@ -24,8 +24,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.ClosingEvent;
-import com.google.gwt.user.client.Window.ClosingHandler;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.CommunicationHandler;
 import com.vaadin.client.ApplicationConnection.RequestStartingEvent;
@@ -44,7 +42,7 @@ import elemental.json.JsonObject;
 
 /**
  * Provides a connection to the /UIDL url on the server and knows how to send
- * messages to that end point
+ * messages to that end point.
  *
  * @since 7.6
  * @author Vaadin Ltd
@@ -63,12 +61,8 @@ public class XhrConnection {
     private boolean webkitMaybeIgnoringRequests = false;
 
     public XhrConnection() {
-        Window.addWindowClosingHandler(new ClosingHandler() {
-            @Override
-            public void onWindowClosing(ClosingEvent event) {
-                webkitMaybeIgnoringRequests = true;
-            }
-        });
+        Window.addWindowClosingHandler(
+                event -> webkitMaybeIgnoringRequests = true);
     }
 
     /**
@@ -118,7 +112,7 @@ public class XhrConnection {
         }
 
         /**
-         * Sets the payload which was sent to the server
+         * Sets the payload which was sent to the server.
          *
          * @param payload
          *            the payload which was sent to the server
@@ -226,7 +220,7 @@ public class XhrConnection {
     }
 
     /**
-     * Retrieves the URI to use when sending RPCs to the server
+     * Retrieves the URI to use when sending RPCs to the server.
      *
      * @return The URI to use for server messages.
      */

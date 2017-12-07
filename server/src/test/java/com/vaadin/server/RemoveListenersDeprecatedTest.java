@@ -1,5 +1,9 @@
 package com.vaadin.server;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -7,7 +11,6 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.provider.AbstractDataProvider;
@@ -47,11 +50,10 @@ public class RemoveListenersDeprecatedTest {
                 if (addPattern.matcher(method.getName()).matches()
                         && method.getAnnotation(Deprecated.class) == null) {
                     Class<?> returnType = method.getReturnType();
-                    Assert.assertEquals(
-                            "Method " + method.getName()
-                                    + " is not deprectated in class "
-                                    + serverClass.getName()
-                                    + " and doesn't return a Registration object",
+                    assertEquals("Method " + method.getName()
+                            + " is not deprectated in class "
+                            + serverClass.getName()
+                            + " and doesn't return a Registration object",
                             Registration.class, returnType);
                 }
                 if (ALLOW_REMOVE_LISTENER.stream()
@@ -60,7 +62,7 @@ public class RemoveListenersDeprecatedTest {
                 }
 
                 if (removePattern.matcher(method.getName()).matches()) {
-                    Assert.assertNotNull(
+                    assertNotNull(
                             "Method " + method.getName() + " in class "
                                     + serverClass.getName()
                                     + " has not been marked as deprecated.",
@@ -68,7 +70,7 @@ public class RemoveListenersDeprecatedTest {
                 }
             }
         }
-        Assert.assertTrue(count > 0);
+        assertTrue(count > 0);
     }
 
     private static boolean acceptMethodEventSource(Method method) {

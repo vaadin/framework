@@ -12,15 +12,12 @@ ifdef::web[]
 image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/grids-and-trees/tree"]
 endif::web[]
 
-IMPORTANT: The [classname]#Tree# component is currently being developed and only available in the Framework 8.1 prerelease versions, starting from 8.1.0.beta1.
-
 [[components.tree.overview]]
 == Overview
 
 The [classname]#Tree# component allows a natural way to represent data that has hierarchical relationships.
 The user can drill down in the hierarchy by expanding items by clicking on the expand arrow, and likewise collapse items.
 [classname]#Tree# is a selection component that allows selecting items.
-It also supports drag and drop, so you can drag items to and from a tree, and drop them in the hierarchy.
 
 A typical use of the [classname]#Tree# component is for displaying a hierarchical menu, as illustrated in <<figure.components.tree>>, or for displaying file systems or hierarchical datasets.
 
@@ -96,6 +93,17 @@ tree.addItemClickListener(event ->
     Notification.show("Click",
             Notification.Type.HUMANIZED_MESSAGE)
 );
+----
+
+[[components.tree.right.clicks]]
+=== Right-clicks
+Right-clicks are supported similar way via `addContextClickListener()` method
+
+[source, java]
+----
+  tree.addContextClickListener(event -> Notification.show(
+        ((TreeContextClickEvent<Person>)event).getItem() + " Clicked")
+  );
 ----
 
 [[components.tree.expandcollapse]]

@@ -77,10 +77,10 @@ public class GridLayout extends AbstractLayout
         Layout.MarginHandler, LayoutClickNotifier {
 
     private GridLayoutServerRpc rpc = (MouseEventDetails mouseDetails,
-            Connector clickedConnector) -> {
-        fireEvent(LayoutClickEvent.createEvent(GridLayout.this, mouseDetails,
-                clickedConnector));
-    };
+            Connector clickedConnector) -> fireEvent(
+                    LayoutClickEvent.createEvent(GridLayout.this, mouseDetails,
+                            clickedConnector));
+
     /**
      * Cursor X position: this is where the next component with unspecified x,y
      * is inserted
@@ -217,16 +217,16 @@ public class GridLayout extends AbstractLayout
         // Inserts the component to right place at the list
         // Respect top-down, left-right ordering
         // component.setParent(this);
-        final Iterator<Component> i = components.iterator();
         final Map<Connector, ChildComponentData> childDataMap = getState().childData;
         int index = 0;
         boolean done = false;
-        while (!done && i.hasNext()) {
-            final ChildComponentData existingArea = childDataMap.get(i.next());
+        for (Component c : components) {
+            final ChildComponentData existingArea = childDataMap.get(c);
             if ((existingArea.row1 >= row1 && existingArea.column1 > column1)
                     || existingArea.row1 > row1) {
                 components.add(index, component);
                 done = true;
+                break;
             }
             index++;
         }
@@ -627,7 +627,7 @@ public class GridLayout extends AbstractLayout
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    public class OverlapsException extends java.lang.RuntimeException {
+    public class OverlapsException extends RuntimeException {
 
         private final Area existingArea;
 
@@ -652,14 +652,14 @@ public class GridLayout extends AbstractLayout
                 sb.append(component.getCaption());
                 sb.append("\"");
             }
-            sb.append(")");
+            sb.append(')');
             sb.append(" is already added to ");
             sb.append(existingArea.childData.column1);
-            sb.append(",");
+            sb.append(',');
             sb.append(existingArea.childData.column1);
-            sb.append(",");
+            sb.append(',');
             sb.append(existingArea.childData.row1);
-            sb.append(",");
+            sb.append(',');
             sb.append(existingArea.childData.row2);
             sb.append("(column1, column2, row1, row2).");
 
@@ -683,7 +683,7 @@ public class GridLayout extends AbstractLayout
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    public class OutOfBoundsException extends java.lang.RuntimeException {
+    public class OutOfBoundsException extends RuntimeException {
 
         private final Area areaOutOfBounds;
 
@@ -1059,7 +1059,7 @@ public class GridLayout extends AbstractLayout
     }
 
     /**
-     * Returns the expand ratio of given column
+     * Returns the expand ratio of given column.
      *
      * @see #setColumnExpandRatio(int, float)
      *
@@ -1315,7 +1315,7 @@ public class GridLayout extends AbstractLayout
                 Element col = cols.get(column);
                 Component child = null;
 
-                if (col.children().size() > 0) {
+                if (!col.children().isEmpty()) {
                     Element childElement = col.child(0);
                     child = designContext.readDesign(childElement);
                     alignments.put(child, DesignAttributeHandler

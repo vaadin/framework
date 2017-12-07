@@ -18,7 +18,7 @@ package com.vaadin.v7.client.ui;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.dom.client.Style.Overflow;
@@ -26,7 +26,6 @@ import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -73,11 +72,10 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     private final Panel panel;
 
     /**
-     * A ListBox which catches double clicks
+     * A ListBox which catches double clicks.
      *
      */
-    public class DoubleClickListBox extends ListBox
-            implements HasDoubleClickHandlers {
+    public class DoubleClickListBox extends ListBox {
         public DoubleClickListBox(boolean isMultipleSelect) {
             super(isMultipleSelect);
         }
@@ -230,8 +228,8 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         selections.setMultipleSelect(isMultiselect());
         options.clear();
         selections.clear();
-        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
-            final UIDL optionUidl = (UIDL) i.next();
+        for (final Object child : uidl) {
+            final UIDL optionUidl = (UIDL) child;
             if (optionUidl.hasAttribute("selected")) {
                 selections.addItem(optionUidl.getStringAttribute("caption"),
                         optionUidl.getStringAttribute("key"));
@@ -250,7 +248,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     @Override
     protected String[] getSelectedItems() {
-        final ArrayList<String> selectedItemKeys = new ArrayList<String>();
+        final List<String> selectedItemKeys = new ArrayList<String>();
         for (int i = 0; i < selections.getItemCount(); i++) {
             selectedItemKeys.add(selections.getValue(i));
         }

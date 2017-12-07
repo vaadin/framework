@@ -16,7 +16,6 @@
 
 package com.vaadin.ui;
 
-import java.io.Serializable;
 import java.util.Locale;
 
 import org.jsoup.nodes.Element;
@@ -63,7 +62,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * @author Vaadin Ltd.
  * @since 3.0
  */
-public interface Component extends ClientConnector, Sizeable, Serializable {
+public interface Component extends ClientConnector, Sizeable {
 
     /**
      * Gets all user-defined CSS style names of a component. If the component
@@ -173,6 +172,23 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public void addStyleName(String style);
 
     /**
+     * Adds one or more style names to this component by using one or multiple
+     * parameters.
+     *
+     * @param styles
+     *            the style name or style names to be added to the component
+     * @see #addStyleName(String)
+     * @see #setStyleName(String)
+     * @see #removeStyleName(String)
+     * @since 8.1
+     */
+    public default void addStyleNames(String... styles) {
+        for (String style : styles) {
+            addStyleName(style);
+        }
+    }
+
+    /**
      * Removes one or more style names from component. Multiple styles can be
      * specified as a space-separated list of style names.
      *
@@ -190,6 +206,23 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @see #addStyleName(String)
      */
     public void removeStyleName(String style);
+
+    /**
+     * Removes one or more style names from component. Multiple styles can be
+     * specified by using multiple parameters.
+     *
+     * @param styles
+     *            the style name or style names to be removed
+     * @see #removeStyleName(String)
+     * @see #setStyleName(String)
+     * @see #addStyleName(String)
+     * @since 8.1
+     */
+    public default void removeStyleNames(String... styles) {
+        for (String style : styles) {
+            removeStyleName(style);
+        }
+    }
 
     /**
      * Gets the primary style name of the component. See
@@ -594,7 +627,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public void setId(String id);
 
     /**
-     * Gets currently set debug identifier
+     * Gets currently set debug identifier.
      *
      * @return current id, null if not set
      */

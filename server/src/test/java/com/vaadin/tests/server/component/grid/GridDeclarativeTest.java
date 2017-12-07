@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.server.component.grid;
 
+import static org.junit.Assert.assertNull;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -26,7 +28,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 import org.jsoup.select.Selector;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.SelectionModel.Multi;
@@ -81,9 +82,9 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
                         + "<th plain-text column-ids='id'>Id</th></tr>"
                         + "</thead></table></%s>",
                 getComponentTag(),
-                heightMode.toString().toLowerCase(Locale.ENGLISH),
+                heightMode.toString().toLowerCase(Locale.ROOT),
                 frozenColumns, heightByRows,
-                SelectionMode.MULTI.toString().toLowerCase(Locale.ENGLISH),
+                SelectionMode.MULTI.toString().toLowerCase(Locale.ROOT),
                 getComponentTag());
 
         testRead(design, grid);
@@ -109,19 +110,17 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         String headerRowText3 = "foobar";
         join.setText(headerRowText3);
 
-        String design = String.format(
-                "<%s><table><colgroup>" + "<col column-id='column0' sortable>"
-                        + "<col column-id='id' sortable>"
-                        + "<col column-id='mail' sortable>"
-                        + "</colgroup><thead>"
-                        + "<tr default><th plain-text column-ids='column0'>First Name</th>"
-                        + "<th plain-text column-ids='id'>Id</th>"
-                        + "<th plain-text column-ids='mail'>Mail</th></tr>"
-                        + "<tr><th plain-text column-ids='column0'>%s</th>"
-                        + "<th colspan='2' plain-text column-ids='id,mail'>foobar</th></tr>"
-                        + "</thead></table></%s>",
-                getComponentTag(), headerRowText1, headerRowText3,
-                getComponentTag());
+        String design = String.format("<%s><table><colgroup>"
+                + "<col column-id='column0' sortable>"
+                + "<col column-id='id' sortable>"
+                + "<col column-id='mail' sortable>" + "</colgroup><thead>"
+                + "<tr default><th plain-text column-ids='column0'>First Name</th>"
+                + "<th plain-text column-ids='id'>Id</th>"
+                + "<th plain-text column-ids='mail'>Mail</th></tr>"
+                + "<tr><th plain-text column-ids='column0'>%s</th>"
+                + "<th colspan='2' plain-text column-ids='id,mail'>foobar</th></tr>"
+                + "</thead></table></%s>", getComponentTag(), headerRowText1,
+                headerRowText3, getComponentTag());
 
         testRead(design, grid);
         testWrite(design, grid);
@@ -150,19 +149,17 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         String footerRowText2 = "foobar";
         footer.join(cell2, cell3).setHtml(footerRowText2);
 
-        String design = String.format(
-                "<%s><table><colgroup>" + "<col column-id='column0' sortable>"
-                        + "<col column-id='id' sortable>"
-                        + "<col column-id='mail' sortable>"
-                        + "</colgroup><thead>"
-                        + "<tr default><th plain-text column-ids='column0'>First Name</th>"
-                        + "<th plain-text column-ids='id'>Id</th>"
-                        + "<th plain-text column-ids='mail'>Mail</th></tr></thead>"
-                        + "<tfoot><tr><td plain-text column-ids='column0'>%s</td>"
-                        + "<td colspan='2' column-ids='id,mail'>%s</td></tr></tfoot>"
-                        + "</table></%s>",
-                getComponentTag(), footerRowText1, footerRowText2,
-                getComponentTag());
+        String design = String.format("<%s><table><colgroup>"
+                + "<col column-id='column0' sortable>"
+                + "<col column-id='id' sortable>"
+                + "<col column-id='mail' sortable>" + "</colgroup><thead>"
+                + "<tr default><th plain-text column-ids='column0'>First Name</th>"
+                + "<th plain-text column-ids='id'>Id</th>"
+                + "<th plain-text column-ids='mail'>Mail</th></tr></thead>"
+                + "<tfoot><tr><td plain-text column-ids='column0'>%s</td>"
+                + "<td colspan='2' column-ids='id,mail'>%s</td></tr></tfoot>"
+                + "</table></%s>", getComponentTag(), footerRowText1,
+                footerRowText2, getComponentTag());
 
         testRead(design, grid);
         testWrite(design, grid);
@@ -203,17 +200,20 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         int expandRatio = 83;
         column2.setExpandRatio(expandRatio);
 
-        String design = String.format(
-                "<%s><table><colgroup>"
-                        + "<col column-id='column0' sortable='%s' editable resizable='%s' hidable hidden>"
-                        + "<col column-id='id' sortable hiding-toggle-caption='%s' width='%s' min-width='%s' max-width='%s' expand='%s'>"
-                        + "</colgroup><thead>"
-                        + "<tr default><th plain-text column-ids='column0'>%s</th>"
-                        + "<th plain-text column-ids='id'>%s</th>"
-                        + "</tr></thead>" + "</table></%s>",
-                getComponentTag(), sortable, resizable, hidingToggleCaption,
-                width, minWidth, maxWidth, expandRatio, caption, "Id",
-                getComponentTag());
+
+        String sortableSuffix = "";
+        if (sortable) {
+            sortableSuffix = "='true'";
+        }
+        String design = String.format("<%s><table><colgroup>"
+                + "<col column-id='column0' sortable%s editable resizable='%s' hidable hidden>"
+                + "<col column-id='id' sortable hiding-toggle-caption='%s' width='%s' min-width='%s' max-width='%s' expand='%s'>"
+                + "</colgroup><thead>"
+                + "<tr default><th plain-text column-ids='column0'>%s</th>"
+                + "<th plain-text column-ids='id'>%s</th>" + "</tr></thead>"
+                + "</table></%s>", getComponentTag(), sortableSuffix, resizable,
+                hidingToggleCaption, width, minWidth, maxWidth, expandRatio,
+                caption, "Id", getComponentTag());
 
         testRead(design, grid, true);
         testWrite(design, grid);
@@ -232,15 +232,14 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         footerRow.getCell(column1).setText("x");
         footerRow.getCell(column2).setHtml("y");
 
-        String design = String.format(
-                "<%s><table><colgroup>" + "<col column-id='column0' sortable>"
-                        + "<col column-id='id' sortable></colgroup><thead>"
-                        + "<tr default><th plain-text column-ids='column0'>First Name</th>"
-                        + "<th plain-text column-ids='id'>Id</th></tr>"
-                        + "</thead><tbody></tbody>"
-                        + "<tfoot><tr><td plain-text column-ids='column0'>x</td>"
-                        + "<td column-ids='id'>y</td></tr></tfoot>"
-                        + "</table></%s>",
+        String design = String.format("<%s><table><colgroup>"
+                + "<col column-id='column0' sortable>"
+                + "<col column-id='id' sortable></colgroup><thead>"
+                + "<tr default><th plain-text column-ids='column0'>First Name</th>"
+                + "<th plain-text column-ids='id'>Id</th></tr>"
+                + "</thead><tbody></tbody>"
+                + "<tfoot><tr><td plain-text column-ids='column0'>x</td>"
+                + "<td column-ids='id'>y</td></tr></tfoot>" + "</table></%s>",
                 getComponentTag(), getComponentTag());
 
         testRead(design, grid);
@@ -259,22 +258,22 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         grid.addColumn(Person::getFirstName).setCaption("First Name");
         grid.addColumn(Person::getLastName).setId("id").setCaption("Id");
 
-        String design = String.format(
-                "<%s><table><colgroup>" + "<col column-id='column0' sortable>"
-                        + "<col column-id='id' sortable></colgroup><thead>"
-                        + "<tr default><th plain-text column-ids='column0'>First Name</th>"
-                        + "<th plain-text column-ids='id'>Id</th></tr>"
-                        + "</thead><tbody>"
-                        + "<tr item='%s'><td>%s</td><td>%s</td></tr>"
-                        + "<tr item='%s'><td>%s</td><td>%s</td></tr>"
-                        + "</tbody></table></%s>",
-                getComponentTag(), person1.toString(), person1.getFirstName(),
+        String design = String.format("<%s><table><colgroup>"
+                + "<col column-id='column0' sortable>"
+                + "<col column-id='id' sortable></colgroup><thead>"
+                + "<tr default><th plain-text column-ids='column0'>First Name</th>"
+                + "<th plain-text column-ids='id'>Id</th></tr>"
+                + "</thead><tbody>"
+                + "<tr item='%s'><td>%s</td><td>%s</td></tr>"
+                + "<tr item='%s'><td>%s</td><td>%s</td></tr>"
+                + "</tbody></table></%s>", getComponentTag(),
+                person1.toString(), person1.getFirstName(),
                 person1.getLastName(), person2.toString(),
                 person2.getFirstName(), person2.getLastName(),
                 getComponentTag());
 
         Grid<?> readGrid = testRead(design, grid, true, true);
-        Assert.assertEquals(2, readGrid.getDataProvider().size(new Query<>()));
+        assertEquals(2, readGrid.getDataProvider().size(new Query<>()));
         testWrite(design, grid, true);
     }
 
@@ -324,7 +323,7 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
                 person3.getLastName(), getComponentTag());
 
         Grid<?> readGrid = testRead(design, grid, true, true);
-        Assert.assertEquals(3, readGrid.getDataProvider().size(new Query<>()));
+        assertEquals(3, readGrid.getDataProvider().size(new Query<>()));
         testWrite(design, grid, true);
     }
 
@@ -344,22 +343,22 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
                 .setSelectionMode(SelectionMode.SINGLE);
         model.select(person2);
 
-        String design = String.format(
-                "<%s><table><colgroup>" + "<col column-id='column0' sortable>"
-                        + "<col column-id='id' sortable></colgroup><thead>"
-                        + "<tr default><th plain-text column-ids='column0'>First Name</th>"
-                        + "<th plain-text column-ids='id'>Id</th></tr>"
-                        + "</thead><tbody>"
-                        + "<tr item='%s'><td>%s</td><td>%s</td></tr>"
-                        + "<tr item='%s' selected><td>%s</td><td>%s</td></tr>"
-                        + "</tbody></table></%s>",
-                getComponentTag(), person1.toString(), person1.getFirstName(),
+        String design = String.format("<%s><table><colgroup>"
+                + "<col column-id='column0' sortable>"
+                + "<col column-id='id' sortable></colgroup><thead>"
+                + "<tr default><th plain-text column-ids='column0'>First Name</th>"
+                + "<th plain-text column-ids='id'>Id</th></tr>"
+                + "</thead><tbody>"
+                + "<tr item='%s'><td>%s</td><td>%s</td></tr>"
+                + "<tr item='%s' selected><td>%s</td><td>%s</td></tr>"
+                + "</tbody></table></%s>", getComponentTag(),
+                person1.toString(), person1.getFirstName(),
                 person1.getLastName(), person2.toString(),
                 person2.getFirstName(), person2.getLastName(),
                 getComponentTag());
 
         Grid<?> readGrid = testRead(design, grid, true, true);
-        Assert.assertEquals(2, readGrid.getDataProvider().size(new Query<>()));
+        assertEquals(2, readGrid.getDataProvider().size(new Query<>()));
         testWrite(design, grid, true);
     }
 
@@ -395,7 +394,7 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
                 person2.getLastName(), getComponentTag());
 
         Grid<?> readGrid = testRead(design, grid, true, true);
-        Assert.assertEquals(2, readGrid.getDataProvider().size(new Query<>()));
+        assertEquals(2, readGrid.getDataProvider().size(new Query<>()));
         testWrite(design, grid, true);
 
         grid.setSelectionMode(SelectionMode.SINGLE);
@@ -408,7 +407,7 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
                 getComponentTag());
 
         readGrid = testRead(design, grid, true, true);
-        Assert.assertEquals(2, readGrid.getDataProvider().size(new Query<>()));
+        assertEquals(2, readGrid.getDataProvider().size(new Query<>()));
         testWrite(design, grid, true);
     }
 
@@ -540,8 +539,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         String actualFooter = grid.getFooterRow(0).getCell(id).getText();
         String expected = "> Test";
 
-        Assert.assertEquals(expected, actualHeader);
-        Assert.assertEquals(expected, actualFooter);
+        assertEquals(expected, actualHeader);
+        assertEquals(expected, actualFooter);
 
         design = design.replace(plainText, "");
         grid = read(design);
@@ -549,8 +548,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         actualFooter = grid.getFooterRow(0).getCell(id).getHtml();
         expected = "&gt; Test";
 
-        Assert.assertEquals(expected, actualHeader);
-        Assert.assertEquals(expected, actualFooter);
+        assertEquals(expected, actualHeader);
+        assertEquals(expected, actualFooter);
 
         grid = new Grid<>();
         Column<Person, String> column = grid.addColumn(Person::getFirstName)
@@ -566,9 +565,9 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         Element root = new Element(Tag.valueOf(getComponentTag()), "");
         grid.writeDesign(root, new DesignContext());
 
-        Assert.assertEquals("&amp;amp; Test",
+        assertEquals("&amp;amp; Test",
                 root.getElementsByTag("th").get(0).html());
-        Assert.assertEquals("&amp;amp; Test",
+        assertEquals("&amp;amp; Test",
                 root.getElementsByTag("td").get(0).html());
 
         header = grid.addHeaderRowAt(0);
@@ -581,10 +580,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         root = new Element(Tag.valueOf(getComponentTag()), "");
         grid.writeDesign(root, new DesignContext());
 
-        Assert.assertEquals("&amp; Test",
-                root.getElementsByTag("th").get(0).html());
-        Assert.assertEquals("&amp; Test",
-                root.getElementsByTag("td").get(0).html());
+        assertEquals("&amp; Test", root.getElementsByTag("th").get(0).html());
+        assertEquals("&amp; Test", root.getElementsByTag("td").get(0).html());
 
     }
 
@@ -617,14 +614,14 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
     }
 
     private void compareHeaders(Grid<?> expected, Grid<?> actual) {
-        Assert.assertEquals("Different header row count",
-                expected.getHeaderRowCount(), actual.getHeaderRowCount());
+        assertEquals("Different header row count", expected.getHeaderRowCount(),
+                actual.getHeaderRowCount());
         for (int i = 0; i < expected.getHeaderRowCount(); ++i) {
             HeaderRow expectedRow = expected.getHeaderRow(i);
             HeaderRow actualRow = actual.getHeaderRow(i);
 
             if (expectedRow.equals(expected.getDefaultHeaderRow())) {
-                Assert.assertEquals("Different index for default header row",
+                assertEquals("Different index for default header row",
                         actual.getDefaultHeaderRow(), actualRow);
             }
 
@@ -636,11 +633,11 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
 
                 switch (expectedCell.getCellType()) {
                 case TEXT:
-                    Assert.assertEquals(baseError + "Text content",
+                    assertEquals(baseError + "Text content",
                             expectedCell.getText(), actualCell.getText());
                     break;
                 case HTML:
-                    Assert.assertEquals(baseError + "HTML content",
+                    assertEquals(baseError + "HTML content",
                             expectedCell.getHtml(), actualCell.getHtml());
                     break;
                 case WIDGET:
@@ -654,8 +651,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
     }
 
     private void compareFooters(Grid<?> expected, Grid<?> actual) {
-        Assert.assertEquals("Different footer row count",
-                expected.getFooterRowCount(), actual.getFooterRowCount());
+        assertEquals("Different footer row count", expected.getFooterRowCount(),
+                actual.getFooterRowCount());
         for (int i = 0; i < expected.getFooterRowCount(); ++i) {
             FooterRow expectedRow = expected.getFooterRow(i);
             FooterRow actualRow = actual.getFooterRow(i);
@@ -668,11 +665,11 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
 
                 switch (expectedCell.getCellType()) {
                 case TEXT:
-                    Assert.assertEquals(baseError + "Text content",
+                    assertEquals(baseError + "Text content",
                             expectedCell.getText(), actualCell.getText());
                     break;
                 case HTML:
-                    Assert.assertEquals(baseError + "HTML content",
+                    assertEquals(baseError + "HTML content",
                             expectedCell.getHtml(), actualCell.getHtml());
                     break;
                 case WIDGET:
@@ -688,7 +685,7 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
     private void compareGridColumns(Grid<?> expected, Grid<?> actual) {
         List<?> columns = expected.getColumns();
         List<?> actualColumns = actual.getColumns();
-        Assert.assertEquals("Different amount of columns", columns.size(),
+        assertEquals("Different amount of columns", columns.size(),
                 actualColumns.size());
         for (int i = 0; i < columns.size(); ++i) {
             Column<?, ?> col1 = (Column<?, ?>) columns.get(i);
@@ -702,8 +699,14 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
                     col2.getMinimumWidth());
             assertEquals(baseError + "Expand ratio", col1.getExpandRatio(),
                     col2.getExpandRatio());
-            assertEquals(baseError + "Sortable", col1.isSortable(),
+
+            String id1 = col1.getId();
+            String id2 = col2.getId();
+            // column.getId() affects .isSortable()
+            if ((id1 != null && id2 != null) || (id1 == null && id2 == null)) {
+                assertEquals(baseError + "Sortable", col1.isSortable(),
                     col2.isSortable());
+            }
             assertEquals(baseError + "Editable", col1.isEditable(),
                     col2.isEditable());
             assertEquals(baseError + "Hidable", col1.isHidable(),
@@ -762,7 +765,7 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
 
         @SuppressWarnings("unchecked")
         Grid<Person> grid = read(design);
-        Assert.assertEquals(beanClass, grid.getBeanType());
+        assertEquals(beanClass, grid.getBeanType());
 
         testWrite(design, grid);
     }
@@ -786,31 +789,29 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         Document html = Jsoup.parse(design);
         Elements cols = Selector.select("vaadin-grid", html)
                 .select("colgroup > col");
-        Assert.assertEquals("Number of columns in the design file", i,
-                cols.size());
+        assertEquals("Number of columns in the design file", i, cols.size());
 
     }
 
     private void assertColumns(int expectedCount,
             List<Column<Person, ?>> expectedColumns,
             List<Column<Person, ?>> columns, Person testPerson) {
-        Assert.assertEquals(expectedCount, expectedColumns.size());
-        Assert.assertEquals(expectedCount, columns.size());
+        assertEquals(expectedCount, expectedColumns.size());
+        assertEquals(expectedCount, columns.size());
         for (int i = 0; i < expectedColumns.size(); i++) {
             Column<Person, ?> expectedColumn = expectedColumns.get(i);
             Column<Person, ?> column = columns.get(i);
 
             // Property mapping
-            Assert.assertEquals(expectedColumn.getId(), column.getId());
+            assertEquals(expectedColumn.getId(), column.getId());
             // Header caption
-            Assert.assertEquals(expectedColumn.getCaption(),
-                    column.getCaption());
+            assertEquals(expectedColumn.getCaption(), column.getCaption());
 
             // Value providers are not stored in the declarative file
             // so this only works for bean properties
             if (column.getId() != null
                     && !column.getId().equals("column" + i)) {
-                Assert.assertEquals(
+                assertEquals(
                         expectedColumn.getValueProvider().apply(testPerson),
                         column.getValueProvider().apply(testPerson));
             }
@@ -834,8 +835,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         assertColumns(0, grid.getColumns(), readGrid.getColumns(), testPerson);
 
         // Can add a mapped property
-        Assert.assertEquals("The email", readGrid.addColumn("email")
-                .getValueProvider().apply(testPerson));
+        assertEquals("The email", readGrid.addColumn("email").getValueProvider()
+                .apply(testPerson));
     }
 
     @Test
@@ -856,11 +857,11 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
 
         assertColumns(1, grid.getColumns(), readGrid.getColumns(), testPerson);
         // First name should not be mapped to the property
-        Assert.assertNull(readGrid.getColumns().get(0).getValueProvider()
+        assertNull(readGrid.getColumns().get(0).getValueProvider()
                 .apply(testPerson));
 
         // Can add a mapped property
-        Assert.assertEquals("the last", readGrid.addColumn("lastName")
+        assertEquals("the last", readGrid.addColumn("lastName")
                 .getValueProvider().apply(testPerson));
     }
 
@@ -882,7 +883,7 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
 
         assertColumns(12, grid.getColumns(), readGrid.getColumns(), testPerson);
         // First and last name should not be mapped to anything but should exist
-        Assert.assertNull(readGrid.getColumns().get(11).getValueProvider()
+        assertNull(readGrid.getColumns().get(11).getValueProvider()
                 .apply(testPerson));
 
     }

@@ -2,7 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.ui.Table;
@@ -44,8 +43,8 @@ public class AddItemToEmptyTable extends TestBase {
 
         rightTable.setSelectable(true);
         rightTable.setMultiSelect(true);
-        rightTable.setImmediate(true); // react at once when something is
-                                       // selected
+        // react at once when something is selected
+        rightTable.setImmediate(true);
 
         rightTable.addContainerProperty("name", String.class, null);
         // rightTable.setColumnWidth("name", 150);
@@ -57,26 +56,15 @@ public class AddItemToEmptyTable extends TestBase {
 
         addComponent(rightTable);
 
-        Button b = new Button("Add item", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Object id = rightTable.addItem();
-                Item item = rightTable.getItem(id);
-                item.getItemProperty("name").setValue("Role");
-                item.getItemProperty("info").setValue(new Button("Button"));
-
-            }
+        Button b = new Button("Add item", event -> {
+            Object id = rightTable.addItem();
+            Item item = rightTable.getItem(id);
+            item.getItemProperty("name").setValue("Role");
+            item.getItemProperty("info").setValue(new Button("Button"));
         });
         addComponent(b);
 
-        b = new Button("Clear", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                rightTable.removeAllItems();
-            }
-        });
+        b = new Button("Clear", event -> rightTable.removeAllItems());
         addComponent(b);
     }
 

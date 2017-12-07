@@ -59,12 +59,13 @@
 
         <p>
             Vaadin Framework @version@ is a
+<!--            maintenance release that includes a number of bug fixes, as listed in the <a href="#changelog">change log</a> below. -->
 <!--            feature release that includes -->
-            pre-release for evaluating
-            a number of new features and bug fixes, as listed in the <a
+                pre-release for evaluating
+                a number of new features and bug fixes, as listed in the <a
                 href="#enhancements">list of enhancements</a> and <a
                 href="#changelog">change log</a> below.
-		The API in this beta version is not considered final and may change based on your feedback.
+		The API in this alpha version is not considered final and may change based on your feedback.
 	</p>
 
         <!-- ================================================================ -->
@@ -82,41 +83,63 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Components In Grid</li>
-            <li>HTML5 Drag and Drop support</li>
-            <li>TreeGrid, Tree and HierarchicalDataProvider</li>
-            <li>Improved OSGi Support</li>
+            <li>Separate row heights for header, body and footer in Grid</li>
+            <li>Support for item descriptions (tooltips) in CheckBoxGroup, RadioButtonGroup and Tree</li>
+            <li>Binder supports removing bindings</li>
+            <li>Binding builder methods do not have to be chained</li>
+            <li>Bean validation failures will revert changes in Binder</li>
+            <li>Notification supports CloseListener</li>
+            <li>Tree now has methods to scroll it programmatically</li>
+            <li>The browser time zone can be obtained from WebBrowser if the browser supports it</li>
+            <li>AbstractDateField now supports formatting of time zone information</li>
+            <li>PushState based navigation support</li>
+            <li>Grid WAI-ARIA support has been improved (aria-sort added)</li>
+            <li>Client side ErrorLevel support</li>
+            <li>VaadinService, VaadinServlet and VaadinServletService have protected no-args constructors to make DI integrations simpler</li>
         </ul>
 
         </p>
 
         <p>
-            For enhancements introduced in Vaadin Framework 8.0, see the <a
-                href="http://vaadin.com/download/release/8.0/8.0.0/release-notes.html">Release
-                Notes for Vaadin Framework 8.0.0</a>.
+            For enhancements introduced in Vaadin Framework 8.1, see the <a
+                href="http://vaadin.com/download/release/8.1/8.1.0/release-notes.html">Release
+                Notes for Vaadin Framework 8.1.0</a>.
             For migrating from previous framework versions, see <a href="#incompatible">the list of incompatible changes</a> and <a href="#migrating">how to migrate
             to Vaadin Framework 8</a>.
         </p>
 
-        <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version@</h2>
-        
-        <li>The <tt>TreeGrid</tt> component replaces <tt>TreeTable</tt> component</li>
-        <li>The <tt>Tree</tt> component replaces old <tt>Tree</tt> component</li>
-        <li>The <tt>HierarchicalDataProvider</tt> interface replaces <tt>Container.Hierarchical</tt> and <<tt>TreeDataProvider</tt> replaces <tt>HierarchicalContainer</tt></li>
-        <li>The <tt>DragSourceExtension</tt> and <tt>DropTargetExtension</tt> extensions replace the old DnD features</li>
-        <li>OSGi bundle manifests of Vaadin Framework JARs no longer export <tt>/VAADIN</tt>, and there are new mechanisms for publishing static resources for OSGi</li>
-        <li>Tooltip styles for <tt>ContentMode.PREFORMATTED</tt> have been changed in all built-in themes to use the application font and allow long lines to wrap to multiple lines.</li>
-        <li><tt>Grid.Column</tt> now extends <tt>AbstractExtension</tt> instead of <tt>AbstractGridExtension</tt> to hide data generator specific API.</li>
-        <li><tt>DataCommunicator</tt>, <tt>DataKeyMapper</tt> and <tt>KeyMapper</tt> public APIs have some minor changes for better bean identification.</li>
-        <h2>For incompatible or behaviour-altering changes in 8.0, please see <a href="https://vaadin.com/download/release/8.0/8.0.0/release-notes.html#incompatible">8.0 release notes</a></h2>
+        <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h2>
+
+        <li>Row height in <tt>Grid</tt> is replaced with separate header, body and footer row heights</li>
+        <li><tt>GridState</tt> variable <tt>rowHeight</tt> has been replaced by three variables.</li>
+        <li><tt>Button</tt> has a new constructor that may cause constructor calls with null as first parameter to be ambiguous.</li>
+        <li><tt>DataCommunicator</tt> methods <tt>getDataProviderSize</tt> and <tt>fetchItemsWithRange</tt> are now <tt>public</tt>, not <tt>protected</tt>.</li>
+        <li><tt>Binder</tt> method <tt>getBindings</tt> now returns a Collection, not a Set.</li>
+        <li><tt>Binder</tt> protected method <tt>handleError</tt> now takes a <tt>ValidationResult</tt>, not <tt>String</tt>.</li>
+        <li><tt>BindingBuilder</tt> now works like a proper builder. Adding a converter will not mark Binding as <tt>bound</tt> allowing chaining to the same object.</li>
+        <li><tt>ErrorLevel</tt> is removed from <tt>ErrorMessage</tt> and now <tt>com.vaadin.shared.ui.ErrorLevel</tt> should be used.</li>
+        <li>Error indicators are now <tt>&lt;span class="v-errorindicator"&gt;&lt;/span&gt;</tt> elements.</li>
+        <li><tt>Embedded</tt> is not a <tt>LegacyComponent</tt> anymore.</li>
+        <li><tt>Notification</tt> method <tt>show</tt> returns <tt>Notification</tt>, instead of <tt>void</tt>.</li>
+        <li>The client side <tt>SelectionModel</tt> interface has a new method <tt>isMultiSelectionAllowed</tt>.</li>
+        <li><tt>AbstractDateField</tt> is not a <tt>LegacyComponent</tt> anymore.</li>
+        <li><tt>AbstractDateField</tt>.<tt>formatDate</tt> is now abstract.</li>
+        <li><tt>VAbstractTextualDate</tt>.<tt>updateDateVariables()</tt> is now <tt>updateBufferedResolutions()</tt> and <tt>updateAndSendBufferedValues()</tt>.</li>
+        <li>For <tt>GridDragStartEvent</tt> and <tt>GridDragEndEvent</tt> classes, the method <tt>getDraggedItems</tt> now returns a <tt>List</tt> instead of a <tt>Set</tt>, with the first-to-last item ordering from client side.</li>
+
+        <h2>For incompatible or behavior-altering changes in 8.1, please see <a href="https://vaadin.com/download/release/8.1/8.1.0/release-notes.html#incompatible">8.1 release notes</a></h2>
         
                 
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
+            <li><tt>@PushStateNavigation</tt> can cause browser to load resources from wrong URLs
+                (<a href="https://github.com/vaadin/framework/issues/10329">#10329</a>)
+            </li>
             <li>Drag'n'drop in a Table doesn't work on touch devices running
                 Internet Explorer (Windows Phone, Surface)
                 (<a href="https://github.com/vaadin/framework/issues/5170">#5170</a>)
             </li>
+            <li>Payload based drop criteria do not work on IE11 - use criteria scripts if IE11 support of drop validation is required</li>
             <li>Specifying layout sizes using <tt>em</tt> is currently discouraged, because it results in fractional
             components sizes in many cases, which might cause unwanted 1px gaps between components.
             </li>
@@ -128,7 +151,7 @@
                 <li>Push is currently not supported in portals (See <a
                     href="https://github.com/vaadin/framework/issues/3741">#3741</a>)
                 </li>
-                <li>>Transport mode WEBSOCKET does not support invalidating the session on Tomcat 7,
+                <li>Transport mode WEBSOCKET does not support invalidating the session on Tomcat 7,
                      nor setting cookies for the session. The new transport mode WEBSOCKET_XHR can be
                      used to bypass these limitations.
                      <br />
@@ -137,7 +160,7 @@
                 </li>
             </ul>
             </li>
-            <li>The Maven GWT compilation for <tt>Vaadin7WidgetSet</tt> requires at least 1G of memory, when using the <tt>vaadin-client-compability</tt> package. If compiled inside Eclipse, possibly even more.</li>
+            <li>The Maven GWT compilation for <tt>Vaadin7WidgetSet</tt> requires at least 1G of memory, when using the <tt>vaadin-client-compatibility</tt> package. If compiled inside Eclipse, possibly even more.</li>
         </ul>
 
 
@@ -252,7 +275,7 @@
             being part of the non-compatibility modules.
         </p>
         <p>
-        All applications using either <tt>Reindeer</tt>, <tt>Runo</tt>, <tt>Chameleon</tt> or <tt>Base</tt> theme must include the <tt>vaadin-compability-themes</tt> package.
+        All applications using either <tt>Reindeer</tt>, <tt>Runo</tt>, <tt>Chameleon</tt> or <tt>Base</tt> theme must include the <tt>vaadin-compatibility-themes</tt> package.
         </p>
 
         <p>
@@ -362,7 +385,7 @@
             <li>Oracle WebLogic Server 12.2</li>
             <li>IBM WebSphere Application Server 9</li>
             <li>JBoss EAP 6</li>
-            <li>Wildfly 8-10</li>
+            <li>Wildfly 8-11</li>
             <li>Jetty 8-9</li>
             <li>Glassfish 4</li>
             <li>Payara Server 164</li>
@@ -385,11 +408,11 @@
         </p>
 
         <ul>
-            <li>Mozilla Firefox (latest version, currently 48)</li>
-            <li>Mozilla Firefox ESR (latest version, currently 45 ESR)</li>
+            <li>Mozilla Firefox (latest version, currently 54)</li>
+            <li>Mozilla Firefox ESR (latest version, currently 52 ESR)</li>
             <li>Internet Explorer 11, Edge (latest version)</li>
             <li>Safari 9+</li>
-            <li>Google Chrome (latest version, currently 52)</li>
+            <li>Google Chrome (latest version, currently 59)</li>
         </ul>
 
         <p>

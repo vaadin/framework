@@ -15,9 +15,15 @@
  */
 package com.vaadin.osgi.liferay;
 
+import java.util.Optional;
+
+import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceObjects;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.log.LogService;
 
 import com.vaadin.server.UIClassSelectionEvent;
+import com.vaadin.server.UICreateEvent;
 import com.vaadin.server.UIProvider;
 import com.vaadin.ui.UI;
 
@@ -34,18 +40,44 @@ import com.vaadin.ui.UI;
 @SuppressWarnings("serial")
 public class OsgiUIProvider extends UIProvider {
     private Class<UI> uiClass;
+    private ServiceObjects<UI> serviceObjects;
+    private boolean prototype;
+    private Optional<LogService> logService;
 
     @SuppressWarnings("unchecked")
-    public OsgiUIProvider(ServiceObjects<UI> serviceObjects) {
+    public OsgiUIProvider(ServiceObjects<UI> serviceObjects,
+            Optional<LogService> logService) {
         super();
+        this.serviceObjects = serviceObjects;
+        this.logService = logService;
+
         UI ui = serviceObjects.getService();
+
+        ServiceReference<UI> reference = serviceObjects.getServiceReference();
+        Object property = reference.getProperty(Constants.SERVICE_SCOPE);
+
+        prototype = Constants.SCOPE_PROTOTYPE.equals(property);
+
         uiClass = (Class<UI>) ui.getClass();
+
         serviceObjects.ungetService(ui);
     }
 
     @Override
     public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
         return uiClass;
+    }
+
+    @Override
+    public UI createInstance(UICreateEvent event) {
+        if (prototype) {
+            UI ui = serviceObjects.getService();
+            ui.addDetachListener(event2 -> serviceObjects.ungetService(ui));
+            return ui;
+        }
+        logService.ifPresent(log -> log.log(LogService.LOG_WARNING,
+                "UI services should have a prototype scope! Creating UI instance using the default constructor!"));
+        return super.createInstance(event);
     }
 
     public String getDefaultPortletName() {

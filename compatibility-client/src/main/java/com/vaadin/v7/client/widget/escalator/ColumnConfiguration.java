@@ -172,16 +172,16 @@ public interface ColumnConfiguration {
             throws IllegalArgumentException;
 
     /**
-     * Refreshes a range of rows in the current row containers in each Escalator
+     * Refreshes a range of columns in the current row containers in each Escalator
      * section.
      * <p>
      * The data for the refreshed columns is queried from the current cell
      * renderer.
      *
      * @param index
-     *            the index of the first row that will be updated
-     * @param numberOfRows
-     *            the number of rows to update, starting from the index
+     *            the index of the first columns that will be updated
+     * @param numberOfColumns
+     *            the number of columns to update, starting from the index
      * @throws IndexOutOfBoundsException
      *             if any integer number in the range
      *             <code>[index..(index+numberOfColumns)]</code> is not an

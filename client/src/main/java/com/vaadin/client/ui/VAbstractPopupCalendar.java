@@ -17,6 +17,7 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.LiveValue;
@@ -24,12 +25,9 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -46,8 +44,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComputedStyle;
-import com.vaadin.client.VConsole;
-import com.vaadin.client.ui.VAbstractCalendarPanel.FocusOutListener;
 import com.vaadin.client.ui.VAbstractCalendarPanel.SubmitListener;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.ui.datefield.TextualDateFieldState;
@@ -65,7 +61,7 @@ import com.vaadin.shared.ui.datefield.TextualDateFieldState;
  */
 public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPanel<R>, R extends Enum<R>>
         extends VAbstractTextualDate<R>
-        implements Field, ClickHandler, CloseHandler<PopupPanel>, SubPartAware {
+        implements ClickHandler, CloseHandler<PopupPanel> {
 
     /** For internal use only. May be removed or replaced in the future. */
     public final Button calendarToggle = new Button();
@@ -79,16 +75,16 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     /** For internal use only. May be removed or replaced in the future. */
     public boolean parsable = true;
 
-    private boolean open = false;
+    private boolean open;
 
     /*
      * #14857: If calendarToggle button is clicked when calendar popup is
      * already open we should prevent calling openCalendarPanel() in onClick,
      * since we don't want to reopen it again right after it closes.
      */
-    private boolean preventOpenPopupCalendar = false;
-    private boolean cursorOverCalendarToggleButton = false;
-    private boolean toggleButtonClosesWithGuarantee = false;
+    private boolean preventOpenPopupCalendar;
+    private boolean cursorOverCalendarToggleButton;
+    private boolean toggleButtonClosesWithGuarantee;
 
     private boolean textFieldEnabled = true;
 
@@ -96,9 +92,9 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
 
     private Label selectedDate;
 
-    private Element descriptionForAssisitveDevicesElement;
+    private Element descriptionForAssistiveDevicesElement;
 
-    private final String CALENDAR_TOGGLE_ID = "popupButton";
+    private static final String CALENDAR_TOGGLE_ID = "popupButton";
 
     public VAbstractPopupCalendar(PANEL calendarPanel, R resolution) {
         super(resolution);
@@ -106,19 +102,13 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         calendarToggle.setText("");
         calendarToggle.addClickHandler(this);
 
-        calendarToggle.addDomHandler(new MouseOverHandler() {
-            @Override
-            public void onMouseOver(MouseOverEvent event) {
-                cursorOverCalendarToggleButton = true;
-            }
-        }, MouseOverEvent.getType());
+        calendarToggle.addDomHandler(
+                event -> cursorOverCalendarToggleButton = true,
+                MouseOverEvent.getType());
 
-        calendarToggle.addDomHandler(new MouseOutHandler() {
-            @Override
-            public void onMouseOut(MouseOutEvent event) {
-                cursorOverCalendarToggleButton = false;
-            }
-        }, MouseOutEvent.getType());
+        calendarToggle.addDomHandler(
+                event -> cursorOverCalendarToggleButton = false,
+                MouseOutEvent.getType());
 
         // -2 instead of -1 to avoid FocusWidget.onAttach to reset it
         calendarToggle.getElement().setTabIndex(-2);
@@ -129,25 +119,22 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
 
         add(calendarToggle);
 
-        // Description of the usage of the widget for assisitve device users
-        descriptionForAssisitveDevicesElement = DOM.createDiv();
-        descriptionForAssisitveDevicesElement.setInnerText(
+        // Description of the usage of the widget for assistive device users
+        descriptionForAssistiveDevicesElement = DOM.createDiv();
+        descriptionForAssistiveDevicesElement.setInnerText(
                 TextualDateFieldState.DESCRIPTION_FOR_ASSISTIVE_DEVICES);
-        AriaHelper.ensureHasId(descriptionForAssisitveDevicesElement);
+        AriaHelper.ensureHasId(descriptionForAssistiveDevicesElement);
         Roles.getTextboxRole().setAriaDescribedbyProperty(text.getElement(),
-                Id.of(descriptionForAssisitveDevicesElement));
+                Id.of(descriptionForAssistiveDevicesElement));
         AriaHelper.setVisibleForAssistiveDevicesOnly(
-                descriptionForAssisitveDevicesElement, true);
+                descriptionForAssistiveDevicesElement, true);
 
         calendar = calendarPanel;
         calendar.setParentField(this);
-        calendar.setFocusOutListener(new FocusOutListener() {
-            @Override
-            public boolean onFocusOut(DomEvent<?> event) {
-                event.preventDefault();
-                closeCalendarPanel();
-                return true;
-            }
+        calendar.setFocusOutListener(event -> {
+            event.preventDefault();
+            closeCalendarPanel();
+            return true;
         });
 
         // FIXME: Problem is, that the element with the provided id does not
@@ -207,35 +194,40 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     protected void onAttach() {
         super.onAttach();
         DOM.appendChild(RootPanel.get().getElement(),
-                descriptionForAssisitveDevicesElement);
+                descriptionForAssistiveDevicesElement);
     }
 
     @Override
     protected void onDetach() {
         super.onDetach();
-        descriptionForAssisitveDevicesElement.removeFromParent();
+        descriptionForAssistiveDevicesElement.removeFromParent();
         closeCalendarPanel();
     }
 
+    /**
+     * Changes the current date, and updates the
+     * {@link VDateField#bufferedResolutions}, possibly
+     * {@link VDateField#sendBufferedValues()} to the server if needed
+     *
+     * @param newDate
+     *            the new {@code Date} to update
+     */
     @SuppressWarnings("deprecation")
     public void updateValue(Date newDate) {
         Date currentDate = getCurrentDate();
+        R resolution = getCurrentResolution();
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) newDate.clone());
-            getClient().updateVariable(getId(),
-                    getResolutionVariable(
-                            calendar.getResolution(calendar::isYear)),
-                    newDate.getYear() + 1900, false);
-            if (!calendar.isYear(getCurrentResolution())) {
-                getClient().updateVariable(getId(),
-                        getResolutionVariable(
-                                calendar.getResolution(calendar::isMonth)),
-                        newDate.getMonth() + 1, false);
-                if (!calendar.isMonth(getCurrentResolution())) {
-                    getClient().updateVariable(getId(),
-                            getResolutionVariable(
-                                    calendar.getResolution(calendar::isDay)),
-                            newDate.getDate(), false);
+            bufferedResolutions.put(calendar.getResolution(calendar::isYear),
+                    newDate.getYear() + 1900);
+            if (!calendar.isYear(resolution)) {
+                bufferedResolutions.put(
+                        calendar.getResolution(calendar::isMonth),
+                        newDate.getMonth() + 1);
+                if (!calendar.isMonth(resolution)) {
+                    bufferedResolutions.put(
+                            calendar.getResolution(calendar::isDay),
+                            newDate.getDate());
                 }
             }
         }
@@ -299,7 +291,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     /**
      * Set correct tab index for disabled text field in IE as the value set in
      * setTextFieldEnabled(...) gets overridden in
-     * TextualDateConnection.updateFromUIDL(...)
+     * TextualDateConnection.updateFromUIDL(...).
      *
      * @since 7.3.1
      */
@@ -382,15 +374,16 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     }
 
     /**
-     * Opens the calendar panel popup
+     * Opens the calendar panel popup.
      */
     public void openCalendarPanel() {
-
         if (!open && !readonly && isEnabled()) {
             open = true;
 
             if (getCurrentDate() != null) {
                 calendar.setDate((Date) getCurrentDate().clone());
+            } else if (getDefaultDate() != null) {
+                calendar.setDate(getDefaultDate());
             } else {
                 calendar.setDate(new Date());
             }
@@ -399,8 +392,10 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
             popup.setWidth("");
             popup.setHeight("");
             popup.setPopupPositionAndShow(new PopupPositionCallback());
+
+            checkGroupFocus(true);
         } else {
-            VConsole.error("Cannot reopen popup, it is already open!");
+            getLogger().severe("Cannot reopen popup, it is already open!");
         }
     }
 
@@ -457,6 +452,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * Sets focus to Calendar panel.
      *
      * @param focus
+     *            {@code true} for {@code focus}, {@code false} for {@code blur}
      */
     public void setFocus(boolean focus) {
         calendar.setFocus(focus);
@@ -474,7 +470,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     /**
      * Sets the content of a special field for assistive devices, so that they
      * can recognize the change and inform the user (reading out in case of
-     * screen reader)
+     * screen reader).
      *
      * @param selectedDate
      *            Date that is currently selected
@@ -543,7 +539,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     }
 
     /**
-     * Closes the open popup panel
+     * Closes the open popup panel.
      */
     public void closeCalendarPanel() {
         if (open) {
@@ -581,7 +577,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      */
     public void setDescriptionForAssistiveDevices(
             String descriptionForAssistiveDevices) {
-        descriptionForAssisitveDevicesElement
+        descriptionForAssistiveDevicesElement
                 .setInnerText(descriptionForAssistiveDevices);
     }
 
@@ -592,7 +588,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * @return String with the description
      */
     public String getDescriptionForAssistiveDevices() {
-        return descriptionForAssisitveDevicesElement.getInnerText();
+        return descriptionForAssistiveDevicesElement.getInnerText();
     }
 
     /**
@@ -689,19 +685,16 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
                 // are in the lower right corner of the screen
                 if (overflow) {
                     return left;
-                } else {
-                    return left + calendarToggle.getOffsetWidth();
                 }
-            } else {
-                int[] margins = style.getMargin();
-                int desiredLeftPosition = calendarToggle.getAbsoluteLeft()
-                        - width - margins[1] - margins[3];
-                if (desiredLeftPosition >= 0) {
-                    return desiredLeftPosition;
-                } else {
-                    return left;
-                }
+                return left + calendarToggle.getOffsetWidth();
             }
+            int[] margins = style.getMargin();
+            int desiredLeftPosition = calendarToggle.getAbsoluteLeft() - width
+                    - margins[1] - margins[3];
+            if (desiredLeftPosition >= 0) {
+                return desiredLeftPosition;
+            }
+            return left;
         }
 
         private boolean positionRightSide() {
@@ -727,4 +720,12 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         }
     }
 
+    @Override
+    protected boolean hasChildFocus() {
+        return open;
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(VAbstractPopupCalendar.class.getName());
+    }
 }

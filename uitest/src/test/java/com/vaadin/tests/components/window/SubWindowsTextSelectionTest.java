@@ -15,9 +15,11 @@
  */
 package com.vaadin.tests.components.window;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -71,12 +73,12 @@ public class SubWindowsTextSelectionTest extends MultiBrowserTest {
                 .executeScript("return document.getSelection().toString();")
                 .toString();
 
-        Assert.assertTrue("Text selection was not empty:" + selection,
+        assertTrue("Text selection was not empty:" + selection,
                 selection.isEmpty());
 
         // Verify also that window was really moved
         Point location2 = element.getLocation();
-        Assert.assertEquals(location.getX() + (4 * 10), location2.getX());
+        assertEquals(location.getX() + (4 * 10), location2.getX());
 
     }
 

@@ -18,8 +18,10 @@ package com.vaadin.util;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 /**
  * An util class with helpers for reflection operations. Used internally by
@@ -29,6 +31,14 @@ import java.lang.reflect.Method;
  * @since 6.2
  */
 public class ReflectTools implements Serializable {
+
+    static final String CREATE_INSTANCE_FAILED = "Unable to create an instance of {0}. Make sure it has a no-arg constructor";
+    static final String CREATE_INSTANCE_FAILED_FOR_NON_STATIC_MEMBER_CLASS = "Unable to create an instance of {0}. Make sure the class is static if it is a nested class.";
+    static final String CREATE_INSTANCE_FAILED_ACCESS_EXCEPTION = "Unable to create an instance of {0}. Make sure the class is public and that is has a public no-arg constructor.";
+    static final String CREATE_INSTANCE_FAILED_NO_PUBLIC_NOARG_CONSTRUCTOR = "Unable to create an instance of {0}. Make sure the class has a public no-arg constructor.";
+    static final String CREATE_INSTANCE_FAILED_LOCAL_CLASS = "Cannot instantiate local class '%s'. Move class declaration outside the method.";
+    static final String CREATE_INSTANCE_FAILED_CONSTRUCTOR_THREW_EXCEPTION = "Unable to create an instance of {0}. The constructor threw an exception.";
+
     /**
      * Locates the method in the given class. Returns null if the method is not
      * found. Throws an ExceptionInInitializerError if there is a problem
@@ -72,9 +82,9 @@ public class ReflectTools implements Serializable {
      * @throws IllegalArgumentException
      *             If the value could not be retrieved
      */
-    public static Object getJavaFieldValue(Object object,
-            java.lang.reflect.Field field) throws IllegalArgumentException,
-            IllegalAccessException, InvocationTargetException {
+    public static Object getJavaFieldValue(Object object, Field field)
+            throws IllegalArgumentException, IllegalAccessException,
+            InvocationTargetException {
         PropertyDescriptor pd;
         try {
             pd = new PropertyDescriptor(field.getName(), object.getClass());
@@ -116,10 +126,9 @@ public class ReflectTools implements Serializable {
      * @throws IllegalArgumentException
      *             If the value could not be retrieved
      */
-    public static Object getJavaFieldValue(Object object,
-            java.lang.reflect.Field field, Class<?> propertyType)
-            throws IllegalArgumentException, IllegalAccessException,
-            InvocationTargetException {
+    public static Object getJavaFieldValue(Object object, Field field,
+            Class<?> propertyType) throws IllegalArgumentException,
+            IllegalAccessException, InvocationTargetException {
         PropertyDescriptor pd;
         try {
             pd = new PropertyDescriptor(field.getName(), object.getClass());
@@ -163,10 +172,9 @@ public class ReflectTools implements Serializable {
      * @throws InvocationTargetException
      *             If the value could not be assigned to the field
      */
-    public static void setJavaFieldValue(Object object,
-            java.lang.reflect.Field field, Object value)
-            throws IllegalAccessException, IllegalArgumentException,
-            InvocationTargetException {
+    public static void setJavaFieldValue(Object object, Field field,
+            Object value) throws IllegalAccessException,
+            IllegalArgumentException, InvocationTargetException {
         PropertyDescriptor pd;
         try {
             pd = new PropertyDescriptor(field.getName(), object.getClass());
@@ -248,5 +256,92 @@ public class ReflectTools implements Serializable {
         }
 
         return currentClass;
+    }
+
+    /**
+     * Creates a instance of the given class with a no-arg constructor.
+     * <p>
+     * Catches all exceptions which might occur and wraps them in a
+     * {@link IllegalArgumentException} with a descriptive error message hinting
+     * of what might be wrong with the class that could not be instantiated.
+     *
+     * @param cls
+     *            the class to instantiate
+     * @return an instance of the class
+     * @since 8.1.1
+     */
+    public static <T> T createInstance(Class<T> cls) {
+        checkClassAccessibility(cls);
+        try {
+            return cls.getConstructor().newInstance();
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException(String.format(
+                    CREATE_INSTANCE_FAILED_NO_PUBLIC_NOARG_CONSTRUCTOR,
+                    cls.getName()), e);
+        } catch (InstantiationException e) {
+            if (cls.isMemberClass() && !Modifier.isStatic(cls.getModifiers())) {
+                throw new IllegalArgumentException(String.format(
+                        CREATE_INSTANCE_FAILED_FOR_NON_STATIC_MEMBER_CLASS,
+                        cls.getName()), e);
+            } else {
+                throw new IllegalArgumentException(
+                        String.format(CREATE_INSTANCE_FAILED, cls.getName()),
+                        e);
+            }
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException(String.format(
+                    CREATE_INSTANCE_FAILED_ACCESS_EXCEPTION, cls.getName()), e);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(
+                    String.format(CREATE_INSTANCE_FAILED, cls.getName()), e);
+        } catch (InvocationTargetException e) {
+            throw new IllegalArgumentException(String.format(
+                    CREATE_INSTANCE_FAILED_CONSTRUCTOR_THREW_EXCEPTION,
+                    cls.getName()), e);
+        }
+    }
+
+    /**
+     * Makes a check whether the provided class is externally accessible for
+     * instantiation (e.g. it's not inner class (nested and not static) and is
+     * not a local class).
+     *
+     * @param cls
+     *            type to check
+     */
+    private static void checkClassAccessibility(Class<?> cls) {
+        if (cls.isMemberClass() && !Modifier.isStatic(cls.getModifiers())) {
+            throw new IllegalArgumentException(String.format(
+                    CREATE_INSTANCE_FAILED_FOR_NON_STATIC_MEMBER_CLASS,
+                    cls.getName()));
+        } else if (cls.isLocalClass()) {
+            throw new IllegalArgumentException(String
+                    .format(CREATE_INSTANCE_FAILED_LOCAL_CLASS, cls.getName()));
+        }
+    }
+
+    /**
+     * Returns the first non-synthetic method of the specified
+     * {@code listenerClass}, which must have single method in the source-code.
+     *
+     * This is needed, to remove the synthetic methods added if the class is
+     * instrumented.
+     *
+     * @param listenerClass
+     *            The {@link Class} of the listener, which has a single method
+     *            in the source code
+     * @return the first non-synthetic method
+     * @throws IllegalStateException
+     *             if the specified class does not have found method
+     * @since 8.2
+     */
+    public static Method getMethod(Class<?> listenerClass) {
+        for (Method m : listenerClass.getDeclaredMethods()) {
+            if (!m.isSynthetic()) {
+                return m;
+            }
+        }
+        throw new IllegalStateException("Class " + listenerClass.getName()
+                + " does not have a method.");
     }
 }

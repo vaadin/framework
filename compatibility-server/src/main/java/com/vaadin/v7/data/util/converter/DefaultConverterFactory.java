@@ -26,7 +26,6 @@ import com.vaadin.server.VaadinSession;
 /**
  * Default implementation of {@link ConverterFactory}. Provides converters for
  * standard types like {@link String}, {@link Double} and {@link Date}.
- * </p>
  * <p>
  * Custom converters can be provided by extending this class and using
  * {@link VaadinSession#setConverterFactory(ConverterFactory)}.
@@ -40,7 +39,7 @@ import com.vaadin.server.VaadinSession;
 @Deprecated
 public class DefaultConverterFactory implements ConverterFactory {
 
-    private final static Logger log = Logger
+    private static final Logger LOG = Logger
             .getLogger(DefaultConverterFactory.class.getName());
 
     @Override
@@ -49,7 +48,7 @@ public class DefaultConverterFactory implements ConverterFactory {
         Converter<PRESENTATION, MODEL> converter = findConverter(
                 presentationType, modelType);
         if (converter != null) {
-            log.finest(getClass().getName() + " created a "
+            LOG.finest(getClass().getName() + " created a "
                     + converter.getClass());
             return converter;
         }
@@ -58,12 +57,12 @@ public class DefaultConverterFactory implements ConverterFactory {
         Converter<MODEL, PRESENTATION> reverseConverter = findConverter(
                 modelType, presentationType);
         if (reverseConverter != null) {
-            log.finest(getClass().getName() + " created a reverse "
+            LOG.finest(getClass().getName() + " created a reverse "
                     + reverseConverter.getClass());
             return new ReverseConverter<PRESENTATION, MODEL>(reverseConverter);
         }
 
-        log.finest(getClass().getName() + " could not find a converter for "
+        LOG.finest(getClass().getName() + " could not find a converter for "
                 + presentationType.getName() + " to " + modelType.getName()
                 + " conversion");
         return null;

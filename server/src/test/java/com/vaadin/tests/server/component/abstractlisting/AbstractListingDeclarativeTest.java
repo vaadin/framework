@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.provider.Query;
@@ -170,7 +169,7 @@ public abstract class AbstractListingDeclarativeTest<T extends AbstractListing>
 
     private void testReadData(String design, T expected, T read,
             DesignContext context) {
-        Assert.assertEquals(
+        assertEquals(
                 read.getDataCommunicator().getDataProvider()
                         .size(new Query<>()),
                 expected.getDataCommunicator().getDataProvider()

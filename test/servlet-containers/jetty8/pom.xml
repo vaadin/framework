@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-servlet-containers-test</artifactId>
+        <version>8.3-SNAPSHOT</version>
+    </parent>
+    <artifactId>vaadin-test-jetty8-server</artifactId>
+    <name>Vaadin Jetty 8 Test</name>
+    <packaging>war</packaging>
+    <properties>
+        <jetty.skip>true</jetty.skip>
+        <mortbay.jetty.version>8.1.16.v20140903</mortbay.jetty.version>
+        <server.name>jetty8</server.name>
+    </properties>
+
+    <dependencies>
+        <!-- UI classes and tests from dependencies -->
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-test-server-ui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-test-server-tests</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- 
+                This server test is for an old, outdated version of jetty.
+                The configuration is not moved to the parent pom, since this 
+                is not useful anywhere else.
+            -->
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${mortbay.jetty.version}</version>
+                <executions>
+                    <execution>
+                        <id>start-jetty</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop-jetty</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <webApp>
+                        <contextPath>${context.path}</contextPath>
+                    </webApp>
+                    <stopKey>q</stopKey>
+                    <stopPort>8082</stopPort>
+                    <daemon>true</daemon>
+                    <skip>false</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

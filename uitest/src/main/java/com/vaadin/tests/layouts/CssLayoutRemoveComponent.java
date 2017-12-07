@@ -2,10 +2,8 @@ package com.vaadin.tests.layouts;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.v7.ui.TextField;
+import com.vaadin.ui.TextField;
 
 @SuppressWarnings("serial")
 public class CssLayoutRemoveComponent extends TestBase {
@@ -14,18 +12,15 @@ public class CssLayoutRemoveComponent extends TestBase {
     protected void setup() {
         final CssLayout layout = new CssLayout();
         final TextField tf = new TextField("Caption1");
-        Button b = new Button("Remove field ", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                layout.removeComponent(tf);
-            }
-
-        });
+        Button b = new Button("Remove field ",
+                event -> layout.removeComponent(tf));
         layout.addComponent(tf);
         layout.addComponent(b);
         layout.addComponent(new TextField("Caption2"));
-        layout.addComponent(new TextField("Caption3"));
+        TextField tf3 = new TextField("Caption3");
+        layout.addComponent(tf3);
+
+        tf3.focus();
 
         addComponent(layout);
     }

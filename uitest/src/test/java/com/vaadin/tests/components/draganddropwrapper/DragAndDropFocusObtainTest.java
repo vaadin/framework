@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.draganddropwrapper;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.AbstractTextFieldElement;
@@ -39,13 +40,13 @@ public class DragAndDropFocusObtainTest extends MultiBrowserTest {
                 .all()) {
             String caption = ta.getCaption();
             ta.click();
-            Assert.assertEquals(index + ". Field '" + caption + "' focused",
+            assertEquals(index + ". Field '" + caption + "' focused",
                     getLogRow(0));
             index++;
         }
 
         // Make sure we checked all fields
-        Assert.assertEquals(8 + 1, index);
+        assertEquals(8 + 1, index);
 
     }
 

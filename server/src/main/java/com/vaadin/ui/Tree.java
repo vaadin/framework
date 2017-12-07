@@ -16,12 +16,20 @@
 package com.vaadin.ui;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.HasHierarchicalDataProvider;
@@ -30,23 +38,32 @@ import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.HierarchicalDataProvider;
+import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.event.CollapseEvent;
 import com.vaadin.event.CollapseEvent.CollapseListener;
 import com.vaadin.event.ConnectorEvent;
+import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.ExpandEvent;
 import com.vaadin.event.ExpandEvent.ExpandListener;
 import com.vaadin.event.SerializableEventListener;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
+import com.vaadin.shared.EventId;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.tree.TreeMultiSelectionModelState;
 import com.vaadin.shared.ui.tree.TreeRendererState;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
+import com.vaadin.ui.components.grid.NoSelectionModel;
+import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.util.ReflectTools;
 
@@ -68,6 +85,7 @@ public class Tree<T> extends Composite
     @Deprecated
     private static final Method ITEM_CLICK_METHOD = ReflectTools
             .findMethod(ItemClickListener.class, "itemClick", ItemClick.class);
+    private Registration contextClickRegistration = null;
 
     /**
      * A listener for item click events.
@@ -101,6 +119,7 @@ public class Tree<T> extends Composite
     public static class ItemClick<T> extends ConnectorEvent {
 
         private final T item;
+        private final MouseEventDetails mouseEventDetails;
 
         /**
          * Constructs a new item click.
@@ -109,10 +128,15 @@ public class Tree<T> extends Composite
          *            the tree component
          * @param item
          *            the clicked item
+         * @param mouseEventDetails
+         *            information about the original mouse event (mouse button
+         *            clicked, coordinates if available etc.)
          */
-        protected ItemClick(Tree<T> source, T item) {
+        protected ItemClick(Tree<T> source, T item,
+                MouseEventDetails mouseEventDetails) {
             super(source);
             this.item = item;
+            this.mouseEventDetails = mouseEventDetails;
         }
 
         /**
@@ -128,6 +152,15 @@ public class Tree<T> extends Composite
         @Override
         public Tree<T> getSource() {
             return (Tree<T>) super.getSource();
+        }
+
+        /**
+         * Returns the mouse event details.
+         *
+         * @return the mouse event details
+         */
+        public MouseEventDetails getMouseEventDetails() {
+            return mouseEventDetails;
         }
     }
 
@@ -201,7 +234,7 @@ public class Tree<T> extends Composite
      *
      * @since 8.1
      */
-    public final static class TreeMultiSelectionModel<T>
+    public static final class TreeMultiSelectionModel<T>
             extends MultiSelectionModelImpl<T> {
 
         @Override
@@ -215,10 +248,21 @@ public class Tree<T> extends Composite
         }
     }
 
-    private TreeGrid<T> treeGrid = new TreeGrid<>();
+    private TreeGrid<T> treeGrid = createTreeGrid();
+
+    /**
+     * Create inner {@link TreeGrid} object. May be overridden in subclasses.
+     *
+     * @return new {@link TreeGrid}
+     */
+    protected TreeGrid<T> createTreeGrid() {
+        return new TreeGrid<>();
+    }
+
     private ItemCaptionGenerator<T> captionGenerator = String::valueOf;
     private IconGenerator<T> iconProvider = t -> null;
     private final TreeRenderer renderer;
+    private boolean autoRecalculateWidth = true;
 
     /**
      * Constructs a new Tree Component.
@@ -240,12 +284,21 @@ public class Tree<T> extends Composite
         treeGrid.setHeightUndefined();
         treeGrid.setHeightMode(HeightMode.UNDEFINED);
 
-        treeGrid.addExpandListener(e -> fireExpandEvent(e.getExpandedItem(),
-                e.isUserOriginated()));
-        treeGrid.addCollapseListener(e -> fireCollapseEvent(
-                e.getCollapsedItem(), e.isUserOriginated()));
-        treeGrid.addItemClickListener(
-                e -> fireEvent(new ItemClick<>(this, e.getItem())));
+        treeGrid.addExpandListener(event -> {
+            fireExpandEvent(event.getExpandedItem(), event.isUserOriginated());
+            if (autoRecalculateWidth) {
+                treeGrid.recalculateColumnWidths();
+            }
+        });
+        treeGrid.addCollapseListener(event -> {
+            fireCollapseEvent(event.getCollapsedItem(),
+                    event.isUserOriginated());
+            if (autoRecalculateWidth) {
+                treeGrid.recalculateColumnWidths();
+            }
+        });
+        treeGrid.addItemClickListener(event -> fireEvent(new ItemClick<>(this,
+                event.getItem(), event.getMouseEventDetails())));
     }
 
     /**
@@ -413,6 +466,17 @@ public class Tree<T> extends Composite
     }
 
     /**
+     * Returns whether a given item is expanded or collapsed.
+     *
+     * @param item
+     *            the item to check
+     * @return true if the item is expanded, false if collapsed
+     */
+    public boolean isExpanded(T item) {
+        return treeGrid.isExpanded(item);
+    }
+
+    /**
      * This method is a shorthand that delegates to the currently set selection
      * model.
      *
@@ -456,7 +520,7 @@ public class Tree<T> extends Composite
      * Adds a selection listener to the current selection model.
      * <p>
      * <strong>NOTE:</strong> If selection mode is switched with
-     * {@link setSelectionMode(SelectionMode)}, then this listener is not
+     * {@link #setSelectionMode(SelectionMode)}, then this listener is not
      * triggered anymore when selection changes!
      *
      * @param listener
@@ -465,7 +529,7 @@ public class Tree<T> extends Composite
      *
      * @throws UnsupportedOperationException
      *             if selection has been disabled with
-     *             {@link SelectionMode.NONE}
+     *             {@link SelectionMode#NONE}
      */
     public Registration addSelectionListener(SelectionListener<T> listener) {
         return treeGrid.addSelectionListener(listener);
@@ -557,6 +621,20 @@ public class Tree<T> extends Composite
     }
 
     /**
+     * Sets the description generator that is used for generating tooltip
+     * descriptions for items.
+     *
+     * @since 8.2
+     * @param descriptionGenerator
+     *            the item description generator to set, or <code>null</code> to
+     *            remove a previously set generator
+     */
+    public void setItemDescriptionGenerator(
+            DescriptionGenerator<T> descriptionGenerator) {
+        treeGrid.setDescriptionGenerator(descriptionGenerator);
+    }
+
+    /**
      * Gets the item caption generator.
      *
      * @return the item caption generator
@@ -597,12 +675,23 @@ public class Tree<T> extends Composite
     }
 
     /**
+     * Gets the item description generator.
+     *
+     * @since 8.2
+     * @return the item description generator
+     */
+    public DescriptionGenerator<T> getItemDescriptionGenerator() {
+        return treeGrid.getDescriptionGenerator();
+    }
+
+    /**
      * Adds an item click listener. The listener is called when an item of this
      * {@code Tree} is clicked.
      *
      * @param listener
      *            the item click listener, not null
      * @return a registration for the listener
+     * @see #addContextClickListener
      */
     public Registration addItemClickListener(ItemClickListener<T> listener) {
         return addListener(ItemClick.class, listener, ITEM_CLICK_METHOD);
@@ -637,31 +726,18 @@ public class Tree<T> extends Composite
         }
     }
 
-    /**
-     * @deprecated This component's height is always set to be undefined.
-     *             Calling this method will have no effect.
-     */
-    @Override
-    @Deprecated
-    public void setHeight(String height) {
-    }
-
-    /**
-     * @deprecated This component's height is always set to be undefined.
-     *             Calling this method will have no effect.
-     */
-    @Override
-    @Deprecated
-    public void setHeight(float height, Unit unit) {
-    }
-
-    /**
-     * @deprecated This component's height is always set to be undefined.
-     *             Calling this method will have no effect.
-     */
-    @Override
-    @Deprecated
-    public void setHeightUndefined() {
+    private SelectionMode getSelectionMode() {
+        SelectionModel<T> selectionModel = getSelectionModel();
+        SelectionMode mode = null;
+        if (selectionModel.getClass().equals(SingleSelectionModelImpl.class)) {
+            mode = SelectionMode.SINGLE;
+        } else if (selectionModel.getClass()
+                .equals(TreeMultiSelectionModel.class)) {
+            mode = SelectionMode.MULTI;
+        } else if (selectionModel.getClass().equals(NoSelectionModel.class)) {
+            mode = SelectionMode.NONE;
+        }
+        return mode;
     }
 
     @Override
@@ -767,7 +843,7 @@ public class Tree<T> extends Composite
     /**
      * Sets the height of a row. If -1 (default), the row height is calculated
      * based on the theme for an empty row before the Tree is displayed.
-     * 
+     *
      * @param rowHeight
      *            The height of a row in pixels or -1 for automatic calculation
      */
@@ -776,12 +852,359 @@ public class Tree<T> extends Composite
     }
 
     /**
+     * Gets the currently set content mode of the item captions of this Tree.
+     *
+     * @since 8.1.3
+     * @see ContentMode
+     * @return the content mode of the item captions of this Tree
+     */
+    public ContentMode getContentMode() {
+        return renderer.getState(false).mode;
+    }
+
+    /**
      * Sets the content mode of the item caption.
-     * 
+     *
+     * @see ContentMode
      * @param contentMode
      *            the content mode
      */
     public void setContentMode(ContentMode contentMode) {
         renderer.getState().mode = contentMode;
     }
+
+    /**
+     * Returns the current state of automatic width recalculation.
+     *
+     * @return {@code true} if enabled; {@code false} if disabled
+     *
+     * @since 8.1.1
+     */
+    public boolean isAutoRecalculateWidth() {
+        return autoRecalculateWidth;
+    }
+
+    /**
+     * Sets the automatic width recalculation on or off. This feature is on by
+     * default.
+     *
+     * @param autoRecalculateWidth
+     *            {@code true} to enable recalculation; {@code false} to turn it
+     *            off
+     *
+     * @since 8.1.1
+     */
+    public void setAutoRecalculateWidth(boolean autoRecalculateWidth) {
+        this.autoRecalculateWidth = autoRecalculateWidth;
+
+        treeGrid.getColumns().get(0)
+                .setMinimumWidthFromContent(autoRecalculateWidth);
+        treeGrid.recalculateColumnWidths();
+    }
+
+    /**
+     * Adds a context click listener that gets notified when a context click
+     * happens.
+     *
+     * @param listener
+     *            the context click listener to add, not null actual event
+     *            provided to the listener is {@link TreeContextClickEvent}
+     * @return a registration object for removing the listener
+     *
+     * @since 8.1
+     * @see #addItemClickListener
+     * @see Registration
+     */
+    @Override
+    public Registration addContextClickListener(
+            ContextClickEvent.ContextClickListener listener) {
+        Registration registration = addListener(EventId.CONTEXT_CLICK,
+                ContextClickEvent.class, listener,
+                ContextClickEvent.CONTEXT_CLICK_METHOD);
+        setupContextClickListener();
+        return () -> {
+            registration.remove();
+            setupContextClickListener();
+        };
+    }
+
+    @Override
+    @Deprecated
+    public void removeContextClickListener(
+            ContextClickEvent.ContextClickListener listener) {
+        super.removeContextClickListener(listener);
+        setupContextClickListener();
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        Attributes attrs = design.attributes();
+
+        SelectionMode mode = getSelectionMode();
+        if (mode != null) {
+            DesignAttributeHandler.writeAttribute("selection-mode", attrs, mode,
+                    SelectionMode.SINGLE, SelectionMode.class, designContext);
+        }
+        DesignAttributeHandler.writeAttribute("content-mode", attrs,
+                getContentMode(), ContentMode.TEXT, ContentMode.class,
+                designContext);
+
+        if (designContext.shouldWriteData(this)) {
+            writeItems(design, designContext);
+        }
+    }
+
+    private void writeItems(Element design, DesignContext designContext) {
+        getDataProvider().fetch(new HierarchicalQuery<>(null, null))
+                .forEach(item -> writeItem(design, designContext, item, null));
+    }
+
+    private void writeItem(Element design, DesignContext designContext, T item,
+            T parent) {
+
+        Element itemElement = design.appendElement("node");
+        itemElement.attr("item", serializeDeclarativeRepresentation(item));
+
+        if (parent != null) {
+            itemElement.attr("parent",
+                    serializeDeclarativeRepresentation(parent));
+        }
+
+        if (getSelectionModel().isSelected(item)) {
+            itemElement.attr("selected", true);
+        }
+
+        Resource icon = getItemIconGenerator().apply(item);
+        DesignAttributeHandler.writeAttribute("icon", itemElement.attributes(),
+                icon, null, Resource.class, designContext);
+
+        String text = getItemCaptionGenerator().apply(item);
+        itemElement.html(
+                Optional.ofNullable(text).map(Object::toString).orElse(""));
+
+        getDataProvider().fetch(new HierarchicalQuery<>(null, item)).forEach(
+                childItem -> writeItem(design, designContext, childItem, item));
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        Attributes attrs = design.attributes();
+        if (attrs.hasKey("selection-mode")) {
+            setSelectionMode(DesignAttributeHandler.readAttribute(
+                    "selection-mode", attrs, SelectionMode.class));
+        }
+        if (attrs.hasKey("content-mode")) {
+            setContentMode(DesignAttributeHandler.readAttribute("content-mode",
+                    attrs, ContentMode.class));
+        }
+        readItems(design.children());
+    }
+
+    private void readItems(Elements bodyItems) {
+        if (bodyItems.isEmpty()) {
+            return;
+        }
+
+        DeclarativeValueProvider<T> valueProvider = new DeclarativeValueProvider<>();
+        setItemCaptionGenerator(item -> valueProvider.apply(item));
+
+        DeclarativeIconGenerator<T> iconGenerator = new DeclarativeIconGenerator<>(
+                item -> null);
+        setItemIconGenerator(iconGenerator);
+
+        getSelectionModel().deselectAll();
+        List<T> selectedItems = new ArrayList<>();
+        TreeData<T> data = new TreeData<T>();
+
+        for (Element row : bodyItems) {
+            T item = deserializeDeclarativeRepresentation(row.attr("item"));
+            T parent = null;
+            if (row.hasAttr("parent")) {
+                parent = deserializeDeclarativeRepresentation(
+                        row.attr("parent"));
+            }
+            data.addItem(parent, item);
+            if (row.hasAttr("selected")) {
+                selectedItems.add(item);
+            }
+
+            valueProvider.addValue(item, row.html());
+            iconGenerator.setIcon(item, DesignAttributeHandler
+                    .readAttribute("icon", row.attributes(), Resource.class));
+        }
+
+        setDataProvider(new TreeDataProvider<>(data));
+        selectedItems.forEach(getSelectionModel()::select);
+    }
+
+    /**
+     * Deserializes a string to a data item. Used when reading from the
+     * declarative format of this Tree.
+     * <p>
+     * Default implementation is able to handle only {@link String} as an item
+     * type. There will be a {@link ClassCastException} if {@code T } is not a
+     * {@link String}.
+     *
+     * @since 8.1.3
+     *
+     * @see #serializeDeclarativeRepresentation(Object)
+     *
+     * @param item
+     *            string to deserialize
+     * @throws ClassCastException
+     *             if type {@code T} is not a {@link String}
+     * @return deserialized item
+     */
+    @SuppressWarnings("unchecked")
+    protected T deserializeDeclarativeRepresentation(String item) {
+        if (item == null) {
+            return (T) new String(UUID.randomUUID().toString());
+        }
+        return (T) new String(item);
+    }
+
+    /**
+     * Serializes an {@code item} to a string. Used when saving this Tree to its
+     * declarative format.
+     * <p>
+     * Default implementation delegates a call to {@code item.toString()}.
+     *
+     * @since 8.1.3
+     *
+     * @see #deserializeDeclarativeRepresentation(String)
+     *
+     * @param item
+     *            a data item
+     * @return string representation of the {@code item}.
+     */
+    protected String serializeDeclarativeRepresentation(T item) {
+        return item.toString();
+    }
+
+    private void setupContextClickListener() {
+        if (hasListeners(ContextClickEvent.class)) {
+            if (contextClickRegistration == null) {
+                contextClickRegistration = treeGrid
+                        .addContextClickListener(event -> {
+                            T item = null;
+                            if (event instanceof Grid.GridContextClickEvent) {
+                                item = ((Grid.GridContextClickEvent<T>) event)
+                                        .getItem();
+                            }
+                            fireEvent(new TreeContextClickEvent<>(this,
+                                    event.getMouseEventDetails(), item));
+                        });
+            }
+        } else if (contextClickRegistration != null) {
+            contextClickRegistration.remove();
+            contextClickRegistration = null;
+        }
+    }
+
+    /**
+     * ContextClickEvent for the Tree Component.
+     * <p>
+     * Usage:
+     *
+     * <pre>
+     * tree.addContextClickListener(event -&gt; Notification.show(
+     *         ((TreeContextClickEvent&lt;Person&gt;) event).getItem() + " Clicked"));
+     * </pre>
+     *
+     * @param <T>
+     *            the tree bean type
+     * @since 8.1
+     */
+    public static class TreeContextClickEvent<T> extends ContextClickEvent {
+
+        private final T item;
+
+        /**
+         * Creates a new context click event.
+         *
+         * @param source
+         *            the tree where the context click occurred
+         * @param mouseEventDetails
+         *            details about mouse position
+         * @param item
+         *            the item which was clicked or {@code null} if the click
+         *            happened outside any item
+         */
+        public TreeContextClickEvent(Tree<T> source,
+                MouseEventDetails mouseEventDetails, T item) {
+            super(source, mouseEventDetails);
+            this.item = item;
+        }
+
+        /**
+         * Returns the item of context clicked row.
+         *
+         * @return clicked item; {@code null} the click happened outside any
+         *         item
+         */
+        public T getItem() {
+            return item;
+        }
+
+        @Override
+        public Tree<T> getComponent() {
+            return (Tree<T>) super.getComponent();
+        }
+    }
+
+    /**
+     * Scrolls to a certain item, using {@link ScrollDestination#ANY}.
+     * <p>
+     * If the item has an open details row, its size will also be taken into
+     * account.
+     *
+     * @param row
+     *            zero based index of the item to scroll to in the current view.
+     * @throws IllegalArgumentException
+     *             if the provided row is outside the item range
+     * @since 8.2
+     */
+    public void scrollTo(int row) throws IllegalArgumentException {
+        treeGrid.scrollTo(row, ScrollDestination.ANY);
+    }
+
+    /**
+     * Scrolls to a certain item, using user-specified scroll destination.
+     * <p>
+     * If the item has an open details row, its size will also be taken into
+     * account.
+     *
+     * @param row
+     *            zero based index of the item to scroll to in the current view.
+     * @param destination
+     *            value specifying desired position of scrolled-to row, not
+     *            {@code null}
+     * @throws IllegalArgumentException
+     *             if the provided row is outside the item range
+     * @since 8.2
+     */
+    public void scrollTo(int row, ScrollDestination destination) {
+        treeGrid.scrollTo(row, destination);
+    }
+
+    /**
+     * Scrolls to the beginning of the first data row.
+     *
+     * @since 8.2
+     */
+    public void scrollToStart() {
+        treeGrid.scrollToStart();
+    }
+
+    /**
+     * Scrolls to the end of the last data row.
+     *
+     * @since 8.2
+     */
+    public void scrollToEnd() {
+        treeGrid.scrollToEnd();
+    }
+
 }

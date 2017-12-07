@@ -34,11 +34,11 @@ public interface DebugWindowServerRpc extends ServerRpc {
      * @since 7.1
      * @param connector
      *            the connector to locate
-     **/
+     */
     public void showServerDebugInfo(Connector connector);
 
     /**
-     * Invokes the layout analyzer on the server
+     * Invokes the layout analyzer on the server.
      *
      * @since 7.1
      */

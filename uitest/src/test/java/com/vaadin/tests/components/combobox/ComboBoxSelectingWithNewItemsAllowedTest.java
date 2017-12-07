@@ -21,6 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
@@ -59,6 +60,14 @@ public class ComboBoxSelectingWithNewItemsAllowedTest extends MultiBrowserTest {
     @Test
     public void itemIsAddedWithTab() {
         typeInputAndHitTab("a");
+
+        assertOneMoreThanInitial();
+        assertThatSelectedValueIs("a");
+    }
+
+    @Test
+    public void itemIsAddedWithClickOut() {
+        typeInputAndClickOut("a");
 
         assertOneMoreThanInitial();
         assertThatSelectedValueIs("a");
@@ -204,6 +213,13 @@ public class ComboBoxSelectingWithNewItemsAllowedTest extends MultiBrowserTest {
         sendKeysToInput(Keys.TAB);
     }
 
+    private void typeInputAndClickOut(String input) {
+        clearInputAndType(input);
+        new Actions(getDriver()).moveToElement(comboBoxElement, 10, 10)
+                .moveByOffset(comboBoxElement.getSize().getWidth(), 0).click()
+                .perform();
+    }
+
     private void clearInputAndType(String input) {
         comboBoxElement.clear();
         sendKeysToInput(input);
@@ -232,11 +248,7 @@ public class ComboBoxSelectingWithNewItemsAllowedTest extends MultiBrowserTest {
     }
 
     private void cancelSelection() {
-        if (BrowserUtil.isFirefox(getDesiredCapabilities())) {
-            findElement(By.className("v-app")).click();
-        } else {
-            sendKeysToInput(Keys.ESCAPE);
-        }
+        sendKeysToInput(Keys.ESCAPE);
     }
 
     private void assertThatSelectedValueIs(final String value) {

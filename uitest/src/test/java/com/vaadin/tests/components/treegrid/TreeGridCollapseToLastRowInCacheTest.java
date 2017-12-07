@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.treegrid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,14 +32,14 @@ public class TreeGridCollapseToLastRowInCacheTest extends SingleBrowserTest {
 
         assertNoErrorNotifications();
 
-        Assert.assertEquals("0 | 0", grid.getCell(0, 0).getText());
-        Assert.assertEquals("1 | 0", grid.getCell(1, 0).getText());
-        Assert.assertEquals("2 | 0", grid.getCell(2, 0).getText());
+        assertEquals("0 | 0", grid.getCell(0, 0).getText());
+        assertEquals("1 | 0", grid.getCell(1, 0).getText());
+        assertEquals("2 | 0", grid.getCell(2, 0).getText());
 
         grid.collapseWithClick(0);
 
-        Assert.assertEquals("0 | 0", grid.getCell(0, 0).getText());
-        Assert.assertEquals("0 | 1", grid.getCell(1, 0).getText());
+        assertEquals("0 | 0", grid.getCell(0, 0).getText());
+        assertEquals("0 | 1", grid.getCell(1, 0).getText());
 
         assertNoErrorNotifications();
     }

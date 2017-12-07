@@ -15,10 +15,11 @@
  */
 package com.vaadin.v7.tests.server;
 
+import static org.junit.Assert.fail;
+
 import java.util.EventObject;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.event.ContextClickEvent;
@@ -41,11 +42,11 @@ import com.vaadin.v7.ui.Table.TableContextClickEvent;
  */
 public class ContextClickListenerTest extends AbstractComponent {
 
-    private final static ContextClickEvent contextClickEvent = EasyMock
+    private static final ContextClickEvent contextClickEvent = EasyMock
             .createMock(ContextClickEvent.class);
-    private final static GridContextClickEvent gridContextClickEvent = EasyMock
+    private static final GridContextClickEvent gridContextClickEvent = EasyMock
             .createMock(GridContextClickEvent.class);
-    private final static TableContextClickEvent tableContextClickEvent = EasyMock
+    private static final TableContextClickEvent tableContextClickEvent = EasyMock
             .createMock(TableContextClickEvent.class);
 
     private final AssertListener contextListener = new AssertListener();
@@ -77,9 +78,9 @@ public class ContextClickListenerTest extends AbstractComponent {
 
         public void validate() {
             if (expected != null) {
-                Assert.fail("Expected context click never happened.");
+                fail("Expected context click never happened.");
             } else if (error != null) {
-                Assert.fail(error);
+                fail(error);
             }
         }
     }

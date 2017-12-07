@@ -18,7 +18,6 @@ package com.vaadin.tests.components.gridlayout;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
@@ -81,28 +80,19 @@ public class GridLayoutFocusOrderAfterShowChild extends AbstractTestUIWithLog {
 
         addComponent(gl);
 
-        addComponent(new Button("Show first", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                t1.setVisible(true);
-                l1.setVisible(true);
-            }
+        addComponent(new Button("Show first", event -> {
+            t1.setVisible(true);
+            l1.setVisible(true);
         }));
 
-        addComponent(new Button("Show third", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                t3.setVisible(true);
-                l3.setVisible(true);
-            }
+        addComponent(new Button("Show third", event -> {
+            t3.setVisible(true);
+            l3.setVisible(true);
         }));
 
-        addComponent(new Button("Show fifth", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                t5.setVisible(true);
-                l5.setVisible(true);
-            }
+        addComponent(new Button("Show fifth", event -> {
+            t5.setVisible(true);
+            l5.setVisible(true);
         }));
     }
 }

@@ -81,15 +81,11 @@ public class ComboBoxes2<T extends ComboBox> extends AbstractSelectTestCase<T> {
     private void createItemStyleGeneratorAction(String category) {
         LinkedHashMap<String, ItemStyleGenerator> options = new LinkedHashMap<>();
         options.put("-", null);
-        options.put("Bold fives", new ItemStyleGenerator() {
-            @Override
-            public String getStyle(ComboBox source, Object itemId) {
-                if (String.valueOf(itemId).indexOf('5') != -1) {
-                    return "bold";
-                } else {
-                    return null;
-                }
+        options.put("Bold fives", (source, itemId) -> {
+            if (String.valueOf(itemId).indexOf('5') != -1) {
+                return "bold";
             }
+            return null;
         });
         createSelectAction("Item style generator", category, options, "-",
                 itemStyleGeneratorCommand);

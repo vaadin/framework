@@ -19,7 +19,6 @@ package com.vaadin.tests.components.progressindicator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ProgressBar;
@@ -31,12 +30,9 @@ public class ProgressBarTest extends AbstractReindeerTestUI {
     private Thread updateThread = new Thread() {
         @Override
         public void run() {
-            Runnable updateTask = new Runnable() {
-                @Override
-                public void run() {
-                    counter++;
-                    updateLabel();
-                }
+            Runnable updateTask = () -> {
+                counter++;
+                updateLabel();
             };
 
             while (true) {
@@ -59,28 +55,15 @@ public class ProgressBarTest extends AbstractReindeerTestUI {
         updateLabel();
         addComponent(updatedFromBackround);
 
-        addComponent(new Button("Use ProgressBar", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                useComponent(new ProgressBar());
-            }
-        }));
+        addComponent(new Button("Use ProgressBar",
+                event -> useComponent(new ProgressBar())));
 
         addComponent(
-                new Button("Use ProgressIndicator", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        useComponent(new ProgressIndicator());
-                    }
-                }));
+                new Button("Use ProgressIndicator",
+                        event -> useComponent(new ProgressIndicator())));
 
         addComponent(new Button("Stop background thread",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        stopUpdateThread();
-                    }
-                }));
+                event -> stopUpdateThread()));
         updateThread.setDaemon(true);
         updateThread.start();
     }

@@ -7,8 +7,6 @@ import java.util.Locale;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.util.PropertyFormatter;
 import com.vaadin.v7.ui.TextField;
@@ -78,7 +76,7 @@ public class TextFieldWithPropertyFormatter extends TestBase {
             @Override
             public BigDecimal parse(String formattedValue) throws Exception {
                 if (formattedValue != null
-                        && formattedValue.trim().length() != 0) {
+                        && !formattedValue.trim().isEmpty()) {
                     BigDecimal value = (BigDecimal) df.parse(formattedValue);
                     value = value.setScale(2, BigDecimal.ROUND_HALF_UP);
                     return value;
@@ -95,19 +93,11 @@ public class TextFieldWithPropertyFormatter extends TestBase {
 
         Button b = new Button(
                 "Sync (typing 12345.6789 and clicking this should format field)");
-        b.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-            }
+        b.addClickListener(event -> {
         });
         addComponent(b);
         b = new Button("Set '12345.6789' to textfield on the server side");
-        b.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                tf1.setValue("12345.6789");
-            }
-        });
+        b.addClickListener(event -> tf1.setValue("12345.6789"));
         addComponent(b);
 
     }

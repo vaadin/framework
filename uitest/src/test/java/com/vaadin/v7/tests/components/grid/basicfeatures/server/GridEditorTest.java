@@ -42,12 +42,12 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
             .className("v-grid-editor-cancel");
     protected static final By BY_EDITOR_SAVE = By
             .className("v-grid-editor-save");
-    protected static final String[] EDIT_ITEM_5 = new String[] { "Component",
-            "Editor", "Edit item 5" };
-    protected static final String[] EDIT_ITEM_100 = new String[] { "Component",
-            "Editor", "Edit item 100" };
-    protected static final String[] TOGGLE_EDIT_ENABLED = new String[] {
-            "Component", "Editor", "Enabled" };
+    protected static final String[] EDIT_ITEM_5 = { "Component", "Editor",
+            "Edit item 5" };
+    protected static final String[] EDIT_ITEM_100 = { "Component", "Editor",
+            "Edit item 100" };
+    protected static final String[] TOGGLE_EDIT_ENABLED = { "Component",
+            "Editor", "Enabled" };
 
     @Before
     public void setUp() {
@@ -71,7 +71,7 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
         selectMenuPath(EDIT_ITEM_5);
         assertEditorClosed();
         boolean thrown = logContainsText(
-                "Exception occured, java.lang.IllegalStateException");
+                "Exception occurred, java.lang.IllegalStateException");
         assertTrue("IllegalStateException thrown", thrown);
     }
 
@@ -81,7 +81,7 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
         selectMenuPath(TOGGLE_EDIT_ENABLED);
         assertEditorOpen();
         boolean thrown = logContainsText(
-                "Exception occured, java.lang.IllegalStateException");
+                "Exception occurred, java.lang.IllegalStateException");
         assertTrue("IllegalStateException thrown", thrown);
     }
 

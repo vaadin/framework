@@ -16,12 +16,12 @@
 
 package com.vaadin.v7.data;
 
+import java.io.Serializable;
+
 import com.vaadin.data.Binder;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.server.Setter;
-
-import java.io.Serializable;
 
 /**
  * <p>
@@ -249,7 +249,7 @@ public interface Property<T> extends Serializable {
      * @since 3.0
      */
     @Deprecated
-    public interface Editor extends Property.Viewer, Serializable {
+    public interface Editor extends Property.Viewer {
 
     }
 
@@ -324,7 +324,7 @@ public interface Property<T> extends Serializable {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #addValueChangeListener(ValueChangeListener)}
-         **/
+         */
         @Deprecated
         public void addListener(Property.ValueChangeListener listener);
 
@@ -340,7 +340,7 @@ public interface Property<T> extends Serializable {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #removeValueChangeListener(ValueChangeListener)}
-         **/
+         */
         @Deprecated
         public void removeListener(Property.ValueChangeListener listener);
     }
@@ -418,7 +418,7 @@ public interface Property<T> extends Serializable {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #addReadOnlyStatusChangeListener(ReadOnlyStatusChangeListener)}
-         **/
+         */
         @Deprecated
         public void addListener(Property.ReadOnlyStatusChangeListener listener);
 
@@ -434,7 +434,7 @@ public interface Property<T> extends Serializable {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #removeReadOnlyStatusChangeListener(ReadOnlyStatusChangeListener)}
-         **/
+         */
         @Deprecated
         public void removeListener(
                 Property.ReadOnlyStatusChangeListener listener);

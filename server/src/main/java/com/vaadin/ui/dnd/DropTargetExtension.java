@@ -15,8 +15,10 @@
  */
 package com.vaadin.ui.dnd;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -26,6 +28,8 @@ import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
+import com.vaadin.shared.ui.dnd.criteria.ComparisonOperator;
+import com.vaadin.shared.ui.dnd.criteria.Criterion;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.dnd.event.DropEvent;
 import com.vaadin.ui.dnd.event.DropListener;
@@ -70,11 +74,10 @@ public class DropTargetExtension<T extends AbstractComponent>
      */
     protected void registerDropTargetRpc() {
         registerRpc(
-                (DropTargetRpc) (types, data, dropEffect, mouseEventDetails) -> {
+                (DropTargetRpc) (types, data, dropEffect, mouseEventDetails) ->
                     onDrop(types, data,
-                            DropEffect.valueOf(dropEffect.toUpperCase()),
-                            mouseEventDetails);
-                });
+                        DropEffect.valueOf(dropEffect.toUpperCase(Locale.ROOT)),
+                        mouseEventDetails));
     }
 
     /**
@@ -146,9 +149,13 @@ public class DropTargetExtension<T extends AbstractComponent>
     /**
      * Sets a criteria script in JavaScript to allow drop on this drop target.
      * The script is executed when something is dragged on top of the target,
-     * and the drop is not allowed in case the script returns {@code false}. If
-     * no script is set, then the drop is always accepted, if the set
-     * {@link #setDropEffect(DropEffect) dropEffect} matches the drag source.
+     * and the drop is not allowed in case the script returns {@code false}.
+     * <p>
+     * Drop will be allowed if it passes both this criteria script and the
+     * criteria set via any of {@code setDropCriterion()} or {@code
+     * setDropCriteria()} methods. If no criteria is set, then the drop is
+     * always accepted, if the set {@link #setDropEffect(DropEffect) dropEffect}
+     * matches the drag source.
      * <p>
      * <b>IMPORTANT:</b> Construct the criteria script carefully and do not
      * include untrusted sources such as user input. Always keep in mind that
@@ -157,22 +164,23 @@ public class DropTargetExtension<T extends AbstractComponent>
      * Example:
      *
      * <pre>
-     * target.setDropCriteria(
-     *         // If dragged source contains a URL, allow it to be dropped
-     *         "if (event.dataTransfer.types.includes('text/uri-list')) {"
-     *                 + "    return true;" + "}" +
+     * target.setDropCriterion(
+     *     // If dragged source contains a URL, allow it to be dropped
+     *     "if (event.dataTransfer.types.includes('text/uri-list')) {" +
+     *     "    return true;" +
+     *     "}" +
      *
-     *                 // Otherwise cancel the event"
-     *                 "return false;");
+     *     // Otherwise cancel the event
+     *     "return false;");
      * </pre>
      *
      * @param criteriaScript
      *            JavaScript to be executed when drop event happens or
      *            {@code null} to clear.
      */
-    public void setDropCriteria(String criteriaScript) {
-        if (!Objects.equals(getState(false).dropCriteria, criteriaScript)) {
-            getState().dropCriteria = criteriaScript;
+    public void setDropCriteriaScript(String criteriaScript) {
+        if (!Objects.equals(getState(false).criteriaScript, criteriaScript)) {
+            getState().criteriaScript = criteriaScript;
         }
     }
 
@@ -182,10 +190,120 @@ public class DropTargetExtension<T extends AbstractComponent>
      * allowed.
      *
      * @return JavaScript that executes when drop event happens.
-     * @see #setDropCriteria(String)
+     * @see #setDropCriteriaScript(String)
      */
-    public String getDropCriteria() {
-        return getState(false).dropCriteria;
+    public String getDropCriteriaScript() {
+        return getState(false).criteriaScript;
+    }
+
+    /**
+     * Set a drop criterion to allow drop on this drop target. When data is
+     * dragged on top of the drop target, the given value is compared to the
+     * drag source's payload with the same key. The drag passes this criterion
+     * if the value of the payload and the value given here are equal.
+     * <p>
+     * Note that calling this method will overwrite the previously set criteria.
+     * To set multiple criteria, call the {@link #setDropCriteria(Criterion.Match,
+     * Criterion...)} method.
+     * <p>
+     * To handle more complex criteria, define a custom script with {@link
+     * #setDropCriteriaScript(String)}. Drop will be allowed if both this
+     * criterion and the criteria script are passed.
+     *
+     * @param key
+     *         key of the payload to be compared
+     * @param value
+     *         value to be compared to the payload's value
+     * @see DragSourceExtension#setPayload(String, String)
+     */
+    public void setDropCriterion(String key, String value) {
+        setDropCriteria(Criterion.Match.ANY, new Criterion(key, value));
+    }
+
+    /**
+     * Set a drop criterion to allow drop on this drop target. When data is
+     * dragged on top of the drop target, the given value is compared to the
+     * drag source's payload with the same key. The drag passes this criterion
+     * if the value of the payload compared to the given value using the given
+     * operator holds.
+     * <p>
+     * Note that calling this method will overwrite the previously set criteria.
+     * To set multiple criteria, call the {@link #setDropCriteria(Criterion.Match,
+     * Criterion...)} method.
+     * <p>
+     * To handle more complex criteria, define a custom script with {@link
+     * #setDropCriteriaScript(String)}. Drop will be allowed if both this
+     * criterion and the criteria script are passed.
+     *
+     * @param key
+     *         key of the payload to be compared
+     * @param operator
+     *         comparison operator to be used
+     * @param value
+     *         value to be compared to the payload's value
+     * @see DragSourceExtension#setPayload(String, int)
+     */
+    public void setDropCriterion(String key, ComparisonOperator operator,
+            int value) {
+        setDropCriteria(Criterion.Match.ANY,
+                new Criterion(key, operator, value));
+    }
+
+    /**
+     * Set a drop criterion to allow drop on this drop target. When data is
+     * dragged on top of the drop target, the given value is compared to the
+     * drag source's payload with the same key. The drag passes this criterion
+     * if the value of the payload compared to the given value using the given
+     * operator holds.
+     * <p>
+     * Note that calling this method will overwrite the previously set criteria.
+     * To set multiple criteria, call the {@link #setDropCriteria(Criterion.Match,
+     * Criterion...)} method.
+     * <p>
+     * To handle more complex criteria, define a custom script with {@link
+     * #setDropCriteriaScript(String)}. Drop will be allowed if both this
+     * criterion and the criteria script are passed.
+     *
+     * @param key
+     *         key of the payload to be compared
+     * @param operator
+     *         comparison operator to be used
+     * @param value
+     *         value to be compared to the payload's value
+     * @see DragSourceExtension#setPayload(String, double)
+     */
+    public void setDropCriterion(String key, ComparisonOperator operator,
+            double value) {
+        setDropCriteria(Criterion.Match.ANY,
+                new Criterion(key, operator, value));
+    }
+
+    /**
+     * Sets multiple drop criteria to allow drop on this drop target. When data
+     * is dragged on top of the drop target, the value of the given criteria is
+     * compared to the drag source's payload with the same key.
+     * <p>
+     * The drag passes these criteria if, depending on {@code match}, any or all
+     * of the criteria matches the payload, that is the value of the payload
+     * compared to the value of the criterion using the criterion's operator
+     * holds.
+     * <p>
+     * Note that calling this method will overwrite the previously set
+     * criteria.
+     * <p>
+     * To handle more complex criteria, define a custom script with {@link
+     * #setDropCriteriaScript(String)}. Drop will be allowed if both this
+     * criterion and the criteria script are passed.
+     *
+     * @param match
+     *         defines whether any or all of the given criteria should match to
+     *         allow drop on this drop target
+     * @param criteria
+     *         criteria to be compared to the payload
+     */
+    public void setDropCriteria(Criterion.Match match, Criterion... criteria) {
+        getState().criteriaMatch = match;
+        getState().criteria = Arrays.asList(criteria);
     }
 
     /**

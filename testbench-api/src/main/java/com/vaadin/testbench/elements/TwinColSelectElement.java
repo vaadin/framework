@@ -33,13 +33,19 @@ public class TwinColSelectElement extends AbstractSelectElement {
     private WebElement selButton;
     private static org.openqa.selenium.By bySelect = By.tagName("select");
     private static org.openqa.selenium.By byButton = By.className("v-button");
+    private WebElement optionsElement;
+    private WebElement selectionsElement;
 
     @Override
     protected void init() {
         super.init();
         List<WebElement> selectElements = findElements(bySelect);
-        options = new Select(selectElements.get(0));
-        selectedOptions = new Select(selectElements.get(1));
+
+        optionsElement = selectElements.get(0);
+        selectionsElement = selectElements.get(1);
+
+        options = new Select(optionsElement);
+        selectedOptions = new Select(selectionsElement);
         List<WebElement> buttons = findElements(byButton);
         selButton = buttons.get(0);
         deselButton = buttons.get(1);
@@ -56,7 +62,7 @@ public class TwinColSelectElement extends AbstractSelectElement {
             }
             deselButton.click();
         }
-        while (selectedOptions.getOptions().size() > 0) {
+        while (!selectedOptions.getOptions().isEmpty()) {
             selectedOptions.selectByIndex(0);
             deselButton.click();
         }
@@ -153,5 +159,27 @@ public class TwinColSelectElement extends AbstractSelectElement {
     @Override
     public void clear() {
         deselectAll();
+    }
+
+    /**
+     * Gets the left {@code <select>} element inside the component, containing
+     * the available options.
+     *
+     * @return the select element containing options inside the component
+     * @since 8.1.1
+     */
+    public WebElement getOptionsElement() {
+        return optionsElement;
+    }
+
+    /**
+     * Gets the right {@code <select>} element inside the component, containing
+     * the selected options.
+     *
+     * @return the select element containing selection inside the component
+     * @since 8.1.1
+     */
+    public WebElement getSelectionsElement() {
+        return selectionsElement;
     }
 }

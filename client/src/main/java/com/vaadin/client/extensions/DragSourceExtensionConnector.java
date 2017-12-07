@@ -16,6 +16,7 @@
 package com.vaadin.client.extensions;
 
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -277,9 +278,8 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
                 WidgetUtil.getRelativeX(draggedElement, dragStartEvent)
                         - transformXOffset,
                 WidgetUtil.getRelativeY(draggedElement, dragStartEvent));
-        AnimationScheduler.get().requestAnimationFrame(timestamp -> {
-            clonedElement.removeFromParent();
-        }, clonedElement);
+        AnimationScheduler.get().requestAnimationFrame(
+                timestamp -> clonedElement.removeFromParent(), clonedElement);
     }
 
     /**
@@ -362,10 +362,10 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
                     .trim();
             return Integer.parseInt(x);
         } catch (NumberFormatException nfe) {
-            Logger.getLogger(DragSourceExtensionConnector.class.getName())
-                    .info("Unable to parse \"transform: translate(...)\" matrix "
-                            + n + ". value from computed style, matrix \""
-                            + matrix + "\", drag image might not be visible");
+            Logger.getLogger(DragSourceExtensionConnector.class.getName()).info(
+                    "Unable to parse \"transform: translate(...)\" matrix " + n
+                            + ". value from computed style, matrix \"" + matrix
+                            + "\", drag image might not be visible");
         }
         return 0;
     }
@@ -393,9 +393,11 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
             return;
         }
         style.clearProperty("transform");
-        AnimationScheduler.get().requestAnimationFrame(timestamp -> {
-            draggedElement.getStyle().setProperty("transform", transition);
-        }, draggedElement);
+        AnimationScheduler.get()
+                .requestAnimationFrame(
+                        timestamp -> draggedElement.getStyle()
+                                .setProperty("transform", transition),
+                        draggedElement);
     }
 
     /**
@@ -412,6 +414,11 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         for (String type : getState().types) {
             orderedData.put(type, getState().data.get(type));
         }
+
+        // Add payload for comparing against acceptance criteria
+        getState().payload.values().forEach(payload -> orderedData
+                .put(payload.getPayloadString(), payload.getValue()));
+
         return orderedData;
     }
 
@@ -484,7 +491,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
             assert dropEffect != null : "Drop effect should never be null";
 
             sendDragEndEventToServer(nativeEvent,
-                    DropEffect.valueOf(dropEffect.toUpperCase()));
+                    DropEffect.valueOf(dropEffect.toUpperCase(Locale.ROOT)));
         }
     }
 

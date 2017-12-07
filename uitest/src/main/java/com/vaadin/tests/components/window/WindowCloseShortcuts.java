@@ -15,9 +15,12 @@
  */
 package com.vaadin.tests.components.window;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
@@ -29,8 +32,6 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.RichTextArea;
@@ -61,54 +62,35 @@ public class WindowCloseShortcuts extends AbstractTestUI {
         buttonLayout.setSizeFull();
         buttonPanel.setCaption("Demo controls");
 
-        addButton(new Button("Open window", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                UI.getCurrent().addWindow(window);
-                window.center();
-                updateDesign();
-            }
+        addButton(new Button("Open window", event -> {
+            UI.getCurrent().addWindow(window);
+            window.center();
+            updateDesign();
         }));
 
-        addButton(new Button("Add ENTER close shortcut", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                window.addCloseShortcut(KeyCode.ENTER);
-                updateDesign();
-            }
+        addButton(new Button("Add ENTER close shortcut", event -> {
+            window.addCloseShortcut(KeyCode.ENTER);
+            updateDesign();
         }));
 
-        addButton(new Button("Add TAB close shortcut", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                window.addCloseShortcut(KeyCode.TAB);
-                updateDesign();
-            }
+        addButton(new Button("Add TAB close shortcut", event -> {
+            window.addCloseShortcut(KeyCode.TAB);
+            updateDesign();
         }));
 
-        addButton(new Button("Remove ESC close shortcut", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                window.removeCloseShortcut(KeyCode.ESCAPE);
-                updateDesign();
-            }
+        addButton(new Button("Remove ESC close shortcut", event -> {
+            window.removeCloseShortcut(KeyCode.ESCAPE);
+            updateDesign();
         }));
 
-        addButton(new Button("Clear all close shortcuts", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                window.removeAllCloseShortcuts();
-                updateDesign();
-            }
+        addButton(new Button("Clear all close shortcuts", event -> {
+            window.removeAllCloseShortcuts();
+            updateDesign();
         }));
 
-        addButton(new Button("Reset to default state", new ClickListener() {
-            @Override
-            @SuppressWarnings("deprecation")
-            public void buttonClick(ClickEvent event) {
-                window.removeCloseShortcut();
-                updateDesign();
-            }
+        addButton(new Button("Reset to default state", event -> {
+            window.removeCloseShortcut();
+            updateDesign();
         }));
 
         buttonPanel.setContent(buttonLayout);
@@ -144,7 +126,7 @@ public class WindowCloseShortcuts extends AbstractTestUI {
             DesignContext dc = new DesignContext();
             dc.setRootComponent(window);
             Design.write(dc, outputStream);
-            design = outputStream.toString("UTF-8");
+            design = outputStream.toString(UTF_8.name());
         } catch (Exception e) {
             return;
         }
@@ -165,7 +147,7 @@ public class WindowCloseShortcuts extends AbstractTestUI {
     }
 
     private String elementToHtml(Element producedElem, StringBuilder sb) {
-        ArrayList<String> names = new ArrayList<>();
+        List<String> names = new ArrayList<>();
         for (Attribute a : producedElem.attributes().asList()) {
             names.add(a.getKey());
         }
@@ -173,10 +155,10 @@ public class WindowCloseShortcuts extends AbstractTestUI {
 
         sb.append("<" + producedElem.tagName() + "");
         for (String attrName : names) {
-            sb.append(" ").append(attrName).append("=").append("\'")
+            sb.append(' ').append(attrName).append('=').append("\'")
                     .append(producedElem.attr(attrName)).append("\'");
         }
-        sb.append(">");
+        sb.append('>');
         for (Node child : producedElem.childNodes()) {
             if (child instanceof Element) {
                 elementToHtml((Element) child, sb);
@@ -185,7 +167,7 @@ public class WindowCloseShortcuts extends AbstractTestUI {
                 sb.append(text.trim());
             }
         }
-        sb.append("</").append(producedElem.tagName()).append(">");
+        sb.append("</").append(producedElem.tagName()).append('>');
         return sb.toString();
     }
 

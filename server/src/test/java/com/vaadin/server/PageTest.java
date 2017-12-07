@@ -15,8 +15,9 @@
  */
 package com.vaadin.server;
 
+import static org.junit.Assert.assertFalse;
+
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.Page.BrowserWindowResizeEvent;
@@ -43,8 +44,7 @@ public class PageTest {
 
         page.updateBrowserWindowSize(0, 0, true);
 
-        Assert.assertFalse("Listener is called after removal",
-                listener.isCalled());
+        assertFalse("Listener is called after removal", listener.isCalled());
     }
 
     @Test
@@ -56,8 +56,7 @@ public class PageTest {
                 .createMock(BrowserWindowResizeListener.class);
         page.removeBrowserWindowResizeListener(listener);
 
-        Assert.assertFalse(
-                "Page state 'hasResizeListeners' property has wrong value",
+        assertFalse("Page state 'hasResizeListeners' property has wrong value",
                 page.getState(false).hasResizeListeners);
     }
 

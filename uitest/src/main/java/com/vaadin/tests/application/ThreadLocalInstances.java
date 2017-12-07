@@ -8,7 +8,6 @@ import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.integration.FlagSeResource;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.UI;
@@ -67,12 +66,8 @@ public class ThreadLocalInstances extends AbstractTestCase {
     public ThreadLocalInstances() {
         mainWindow.addComponent(log);
         mainWindow.addComponent(new Embedded("Icon", resource));
-        mainWindow.addComponent(new Button("Sync", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                reportCurrentStatus("button listener");
-            }
-        }));
+        mainWindow.addComponent(new Button("Sync",
+                event -> reportCurrentStatus("button listener")));
 
         reportStatus("class init", staticInitApplication, staticInitRoot);
         reportCurrentStatus("app constructor");

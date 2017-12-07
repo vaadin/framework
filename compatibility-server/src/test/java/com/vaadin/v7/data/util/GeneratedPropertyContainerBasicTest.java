@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.easymock.Capture;
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.Container;
@@ -532,7 +531,7 @@ public class GeneratedPropertyContainerBasicTest
     public void testGetItemIdsRangeIndexOutOfBoundsDueToSizeChange() {
         GeneratedPropertyContainer ic = createContainer();
         ic.addItem(new Object());
-        Assert.assertEquals(
+        assertEquals(
                 "Container returned too many items when the range was >> container size",
                 1, ic.getItemIds(0, 10).size());
     }

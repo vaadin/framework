@@ -72,11 +72,9 @@ public class TreeDataProvider<T>
     @Override
     public boolean hasChildren(T item) {
         if (!treeData.contains(item)) {
-            throw new IllegalArgumentException("Item " + item
-                    + " could not be found in the backing TreeData. "
-                    + "Did you forget to refresh this data provider after item removal?");
+            // The item might be dropped from the tree already
+            return false;
         }
-
         return !treeData.getChildren(item).isEmpty();
     }
 

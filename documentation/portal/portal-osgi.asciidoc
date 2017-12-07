@@ -7,10 +7,8 @@ layout: page
 [[portal.osgi]]
 = OSGi Portlets on Liferay 7
 
-IMPORTANT: The OSGi support as described above is currently being developed and only available in the Framework 8.1 prerelease versions, starting from 8.1.0.beta1.
-
 Lifeary 7 supports modular portlet development using OSGi, and enables e.g.
-using multiple different Vaadin versions in different portlets on a page. 
+using multiple different Vaadin versions in different portlets on a page.
 
 For general OSGi considerations with Vaadin Framework such as packaging and
 bundle manifests, and how to publish static resources such as themes and
@@ -33,7 +31,7 @@ and configure it to use the correct static resources.
 ----
 @Theme(MyTheme.THEME_NAME)
 @VaadinLiferayPortletConfiguration(name = "Vaadin.Tutorial.1", displayName = "Vaadin Tutorial App")
-@Component(service = UI.class)
+@Component(service = UI.class, scope = ServiceScope.PROTOTYPE)
 public class MyUI extends UI {
   ...
 }
@@ -45,6 +43,15 @@ property files that plain JSR-362 portlets require.
 Alternatively, the property [literal]#com.vaadin.osgi.liferay.portlet-ui=true#
 can be used when publishing a UI as an OSGi service to publish the UI as a portlet.
 
+The scope of the service should be set to [literal]#ServiceScope.PROTOTYPE#, as new instances
+of the UI will be needed. When this scope set, declarative services annotations can
+be used to get references to other services within a UI instance.
+
+This is not an absolute requirement if you are not using other declarative services
+annotations in your UI besides the [interfacename]#@Component#. If the scope is not
+set to prototype a warning will be logged and the constructor of the UI will be used
+when new instances are needed.
+
 [source, java]
 ----
 @Theme(MyTheme.THEME_NAME)
@@ -53,11 +60,37 @@ can be used when publishing a UI as an OSGi service to publish the UI as a portl
         "javax.portlet.name=my.vaadin.app.app.1.0.0",
         "javax.portlet.display-name=Tutorial Portlet",
         "javax.portlet.security-role-ref=power-user,user",
-        "com.vaadin.osgi.liferay.portlet-ui=true"})
+        "com.vaadin.osgi.liferay.portlet-ui=true"},
+        scope = ServiceScope.PROTOTYPE)
 public class MyUI extends UI {
   ...
 }
 ----
 
+
+[[portal.osgi.portlet.gradle]]
+== Deployment a Portlet With OSGi (Gradle)
+Here is an example of a Liferay workspace with a portlet module and a short readme on how to deploy that to a Liferay portal.
+link:https://github.com/elmot/liferay-7-solid-portlet-example/[]
+
+[[portal.osgi.portlet]]
+== Deployment a Portlet With OSGi (Maven)
 An OSGi portlet should be packaged as a JAR with a proper OSGi bundle
 manifest, and deployed to a portal that has its required bundles installed.
+The maven archetype `com.vaadin:vaadin-archetype-liferay-portlet:8.1.0` is a good starting point to build an OSGi portlet application.
+The required bundles (and the application as well) can be installed using link:https://dev.liferay.com/develop/tutorials/-/knowledge_base/7-0/blade-cli[blade client].
+The latest client binary can be downloaded from the link: link:https://releases.liferay.com/tools/blade-cli/latest/blade.jar[]
+
+Here is an example script for doing that:
+[source, shell]
+----
+java -jar blade.jar sh start https://repo1.maven.org/maven2/org/jsoup/jsoup/1.8.3/jsoup-1.8.3.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/external/gentyref/1.2.0.vaadin1/gentyref-1.2.0.vaadin1.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-shared/8.1.0/vaadin-shared-8.1.0.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-server/8.1.0/vaadin-server-8.1.0.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-osgi-integration/8.1.0/vaadin-osgi-integration-8.1.0.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-client-compiled/8.1.0/vaadin-client-compiled-8.1.0.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-themes/8.1.0/vaadin-themes-8.1.0.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-liferay-integration/8.1.0/vaadin-liferay-integration-8.1.0.jar
+java -jar blade.jar sh start file:<path_to_liferay_portlet.jar>
+----

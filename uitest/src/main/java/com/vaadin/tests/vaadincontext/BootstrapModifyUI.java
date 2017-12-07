@@ -26,7 +26,6 @@ import com.vaadin.server.BootstrapResponse;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 
 public class BootstrapModifyUI extends AbstractReindeerTestUI {
@@ -36,15 +35,12 @@ public class BootstrapModifyUI extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         Button c = new Button("Add bootstrap listener",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        getSession().addBootstrapListener(
-                                createBootstrapListener());
-                        event.getButton().setEnabled(false);
-                        getSession().setAttribute(INSTALLED_ATRIBUTE_NAME,
-                                Boolean.TRUE);
-                    }
+                event->{
+                    getSession().addBootstrapListener(
+                            createBootstrapListener());
+                    event.getButton().setEnabled(false);
+                    getSession().setAttribute(INSTALLED_ATRIBUTE_NAME,
+                            Boolean.TRUE);
                 });
         addComponent(c);
         c.setEnabled(

@@ -70,7 +70,6 @@ public class DDTest1 extends TestBase {
                 // try {
                 // Thread.sleep(200);
                 // } catch (InterruptedException e) {
-                // // TODO Auto-generated catch block
                 // e.printStackTrace();
                 // }
                 // System.out.println("Done get to work.");
@@ -183,7 +182,6 @@ public class DDTest1 extends TestBase {
                         copyChildren(source, target, childId);
                     }
                 }
-
             }
 
             @Override

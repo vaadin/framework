@@ -78,7 +78,7 @@ public abstract class LegacyApplicationUIProvider extends UIProvider {
         VaadinRequest request = event.getRequest();
         String pathInfo = request.getPathInfo();
         String name = null;
-        if (pathInfo != null && pathInfo.length() > 0) {
+        if (pathInfo != null && !pathInfo.isEmpty()) {
             Matcher matcher = WINDOW_NAME_PATTERN.matcher(pathInfo);
             if (matcher.matches()) {
                 // Skip the initial slash

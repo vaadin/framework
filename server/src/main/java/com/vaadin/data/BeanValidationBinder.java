@@ -96,7 +96,7 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
             PropertyDefinition<BEAN, ?> definition) {
         Class<?> actualBeanType = findBeanType(beanType, definition);
         BeanValidator validator = new BeanValidator(actualBeanType,
-                definition.getName());
+                definition.getTopLevelName());
         if (requiredConfigurator != null) {
             configureRequired(binding, definition, validator);
         }
@@ -132,7 +132,7 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
         BeanDescriptor descriptor = validator.getJavaxBeanValidator()
                 .getConstraintsForClass(propertyHolderType);
         PropertyDescriptor propertyDescriptor = descriptor
-                .getConstraintsForProperty(definition.getName());
+                .getConstraintsForProperty(definition.getTopLevelName());
         if (propertyDescriptor == null) {
             return;
         }

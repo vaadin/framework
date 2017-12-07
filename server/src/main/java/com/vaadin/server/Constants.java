@@ -19,7 +19,7 @@ import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.declarative.DesignContext;
 
 /**
- * Internal constants used by both the client and the server side framework
+ * Internal constants used by both the client and the server side framework.
  *
  * @since 6.2
  *
@@ -66,7 +66,7 @@ public interface Constants {
             + "=================================================================";
 
     // Keep the version number in sync with pom.xml
-    static final String REQUIRED_ATMOSPHERE_RUNTIME_VERSION = "2.4.11.vaadin1";
+    static final String REQUIRED_ATMOSPHERE_RUNTIME_VERSION = "2.4.11.vaadin2";
 
     static final String INVALID_ATMOSPHERE_VERSION_WARNING = "\n"
             + "=================================================================\n"

@@ -89,7 +89,7 @@ public class Type {
                 if (i != 0) {
                     string += ',';
                 }
-                string += parameterTypes[i].toString();
+                string += parameterTypes[i];
             }
             string += '>';
         }
@@ -133,7 +133,7 @@ public class Type {
 
     public Object createProxy(InvokationHandler invokationHandler)
             throws NoDataException {
-        return TypeDataStore.get().getProxyHandler(this)
+        return TypeDataStore.getProxyHandler(this)
                 .createProxy(invokationHandler);
     }
 

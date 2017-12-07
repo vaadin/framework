@@ -53,9 +53,8 @@ public class Panel extends AbstractSingleComponentContainer
      */
     protected ActionManager actionManager;
 
-    private PanelServerRpc rpc = (MouseEventDetails mouseDetails) -> {
-        fireEvent(new ClickEvent(Panel.this, mouseDetails));
-    };
+    private PanelServerRpc rpc = (MouseEventDetails mouseDetails) -> fireEvent(
+            new ClickEvent(Panel.this, mouseDetails));
 
     /**
      * Creates a new empty panel.
@@ -243,7 +242,7 @@ public class Panel extends AbstractSingleComponentContainer
     }
 
     /**
-     * Removes all action handlers
+     * Removes all action handlers.
      */
     public void removeAllActionHandlers() {
         if (actionManager != null) {

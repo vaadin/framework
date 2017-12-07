@@ -37,6 +37,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.AbstractGridExtension;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.util.ReflectTools;
 
 import elemental.json.JsonObject;
 
@@ -238,6 +239,8 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
                     getState().columnFields.put(getInternalIdForColumn(c),
                             component.getConnectorId());
                 });
+
+        eventRouter.fireEvent(new EditorOpenEvent<T>(this, edited));
     }
 
     @Override
@@ -262,6 +265,28 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
     public void cancel() {
         doCancel(false);
         rpc.cancel();
+    }
+
+    @Override
+    public void editRow(int rowNumber)
+            throws IllegalStateException, IllegalArgumentException {
+        if (!isEnabled()) {
+            throw new IllegalStateException("Item editor is not enabled");
+        }
+        T beanToEdit = getParent().getDataCommunicator().
+            fetchItemsWithRange(rowNumber, 1).
+            stream().findFirst().orElseThrow(() -> new IllegalArgumentException(
+                "Row number " + rowNumber+ "did not yield any item from data provider"));
+        if (!beanToEdit.equals(edited)) {
+            if (isBuffered() && edited != null) {
+                throw new IllegalStateException("Editing item " + beanToEdit
+                    + " failed. Item editor is already editing item "
+                    + edited);
+            } else {
+                rpc.bind(rowNumber);
+            }
+        }
+
     }
 
     private void doCancel(boolean afterBeingSaved) {
@@ -336,13 +361,19 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
     @Override
     public Registration addSaveListener(EditorSaveListener<T> listener) {
         return eventRouter.addListener(EditorSaveEvent.class, listener,
-                EditorSaveListener.class.getDeclaredMethods()[0]);
+                ReflectTools.getMethod(EditorSaveListener.class));
     }
 
     @Override
     public Registration addCancelListener(EditorCancelListener<T> listener) {
         return eventRouter.addListener(EditorCancelEvent.class, listener,
-                EditorCancelListener.class.getDeclaredMethods()[0]);
+                ReflectTools.getMethod(EditorCancelListener.class));
+    }
+
+    @Override
+    public Registration addOpenListener(EditorOpenListener<T> listener) {
+        return eventRouter.addListener(EditorOpenEvent.class, listener,
+                ReflectTools.getMethod(EditorOpenListener.class));
     }
 
     @Override

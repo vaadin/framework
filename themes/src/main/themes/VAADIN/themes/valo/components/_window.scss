@@ -188,6 +188,31 @@ $v-window-modality-curtain-background-color: #222 !default;
       color: inherit;
     }
   }
+  
+  .#{$primary-stylename}-closebox:focus::after {
+    content: "";
+    position: absolute;
+    top: round($v-unit-size/6);
+    right: round($v-unit-size/6);
+    bottom: round($v-unit-size/6);
+    left: round($v-unit-size/18);
+    border-radius: $v-window-border-radius;
+    
+    @include valo-focus-style;
+  }
+  
+  .#{$primary-stylename}-maximizebox:focus::after,
+  .#{$primary-stylename}-restorebox:focus::after {
+    content: "";
+    position: absolute;
+    top: round($v-unit-size/6);
+    right: round($v-unit-size/18);
+    bottom: round($v-unit-size/6);
+    left: round($v-unit-size/6);
+    border-radius: $v-window-border-radius;
+    
+    @include valo-focus-style;
+  }
 
   .#{$primary-stylename}-closebox {
     padding-right: round($v-unit-size/9);
@@ -222,6 +247,10 @@ $v-window-modality-curtain-background-color: #222 !default;
       width: $v-unit-size;
       padding-right: 0;
       border-bottom-left-radius: $v-window-border-radius;
+      
+      &:focus::after {
+        left: round($v-unit-size/6);
+      }
     }
   }
 

@@ -29,7 +29,7 @@ import com.vaadin.shared.ui.MarginInfo;
  * @author Vaadin Ltd.
  * @since 3.0
  */
-public interface Layout extends ComponentContainer, Serializable {
+public interface Layout extends ComponentContainer {
 
     /**
      * AlignmentHandler is most commonly an advanced {@link Layout} that can
@@ -72,7 +72,7 @@ public interface Layout extends ComponentContainer, Serializable {
                 Alignment defaultComponentAlignment);
 
         /**
-         * Returns the alignment used for new components added to this layout
+         * Returns the alignment used for new components added to this layout.
          *
          * @return The default alignment
          */
@@ -93,8 +93,8 @@ public interface Layout extends ComponentContainer, Serializable {
          * <strong>NOTE:</strong> This will only affect the space between
          * components, not the space around all the components in the layout
          * (i.e. do not confuse this with the cellspacing attribute of a HTML
-         * Table). Use {@link MarginHandler#setMargin(boolean)} to add space around the
-         * layout.
+         * Table). Use {@link MarginHandler#setMargin(boolean)} to add space
+         * around the layout.
          * </p>
          *
          * <p>
@@ -140,8 +140,8 @@ public interface Layout extends ComponentContainer, Serializable {
          * <p>
          * <strong>NOTE:</strong> This will only affect the space around the
          * components in the layout, not space between the components in the
-         * layout. Use {@link SpacingHandler#setSpacing(boolean)} to add space between the
-         * components in the layout.
+         * layout. Use {@link SpacingHandler#setSpacing(boolean)} to add space
+         * between the components in the layout.
          * </p>
          *
          * <p>

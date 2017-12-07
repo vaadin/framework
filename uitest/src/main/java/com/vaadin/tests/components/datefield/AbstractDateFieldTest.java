@@ -31,7 +31,6 @@ public abstract class AbstractDateFieldTest<T extends AbstractLocalDateField>
                 weekNumberCommand);
         createDateFormatSelectAction(CATEGORY_FEATURES);
         createSetValueAction(CATEGORY_FEATURES);
-
     }
 
     private void createSetValueAction(String category) {
@@ -68,7 +67,6 @@ public abstract class AbstractDateFieldTest<T extends AbstractLocalDateField>
 
         createSelectAction("Date format", category, options, "-",
                 dateFormatCommand);
-
     }
 
     private String getDatePattern(Locale locale, int dateStyle) {

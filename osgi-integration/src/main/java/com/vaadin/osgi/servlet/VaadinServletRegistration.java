@@ -48,9 +48,9 @@ import com.vaadin.server.VaadinServlet;
  *
  * @since 8.1
  */
-@Component(immediate = true)
+@Component
 public class VaadinServletRegistration {
-    private Map<Long, ServiceRegistration<?>> registeredServlets = Collections
+    private final Map<ServiceReference<VaadinServlet>, ServiceRegistration<Servlet>> registeredServlets = Collections
             .synchronizedMap(new LinkedHashMap<>());
 
     private static final String MISSING_ANNOTATION_MESSAGE_FORMAT = "The property '%s' must be set in a '%s' without the '%s' annotation!";
@@ -64,19 +64,18 @@ public class VaadinServletRegistration {
     private LogService logService;
 
     @Reference(cardinality = ReferenceCardinality.MULTIPLE, service = VaadinServlet.class, policy = ReferencePolicy.DYNAMIC)
-    void bindVaadinServlet(ServiceReference<VaadinServlet> reference)
+    void bindVaadinServlet(VaadinServlet servlet, ServiceReference<VaadinServlet> reference)
             throws ResourceBundleInactiveException {
         log(LogService.LOG_WARNING, "VaadinServlet Registration");
-        BundleContext bundleContext = reference.getBundle().getBundleContext();
-        Hashtable<String, Object> properties = getProperties(reference);
 
-        VaadinServlet servlet = bundleContext.getService(reference);
+        Hashtable<String, Object> properties = getProperties(reference);
 
         WebServlet annotation = servlet.getClass()
                 .getAnnotation(WebServlet.class);
 
-        if (!validateSettings(annotation, properties))
+        if (!validateSettings(annotation, properties)) {
             return;
+        }
 
         properties.put(VAADIN_RESOURCES_PARAM, getResourcePath());
         if (annotation != null) {
@@ -85,17 +84,13 @@ public class VaadinServletRegistration {
                     Boolean.toString(annotation.asyncSupported()));
         }
 
+        // We register the Http Whiteboard servlet using the context of
+        // the bundle which registered the Vaadin Servlet, not our own
+        BundleContext bundleContext = reference.getBundle().getBundleContext();
         ServiceRegistration<Servlet> servletRegistration = bundleContext
                 .registerService(Servlet.class, servlet, properties);
-        Long serviceId = getServiceId(reference);
-        registeredServlets.put(serviceId, servletRegistration);
 
-        bundleContext.ungetService(reference);
-    }
-
-    private Long getServiceId(ServiceReference<VaadinServlet> reference) {
-        return (Long) reference
-                .getProperty(org.osgi.framework.Constants.SERVICE_ID);
+        registeredServlets.put(reference, servletRegistration);
     }
 
     private boolean validateSettings(WebServlet annotation,
@@ -128,12 +123,18 @@ public class VaadinServletRegistration {
         }
     }
 
-    void unbindVaadinServlet(ServiceReference<VaadinServlet> servletRef) {
-        Long serviceId = getServiceId(servletRef);
+    void unbindVaadinServlet(ServiceReference<VaadinServlet> reference) {
         ServiceRegistration<?> servletRegistration = registeredServlets
-                .remove(serviceId);
+                .remove(reference);
         if (servletRegistration != null) {
-            servletRegistration.unregister();
+            try {
+                servletRegistration.unregister();
+            } catch (IllegalStateException ise) {
+                // This service may have already been unregistered
+                // automatically by the OSGi framework if the
+                // application bundle is being stopped. This is
+                // obviously not a problem for us.
+            }
         }
     }
 

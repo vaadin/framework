@@ -1,8 +1,10 @@
 package com.vaadin.tests.components.gridlayout;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -23,16 +25,15 @@ public class GridLayoutExpandWithManyRowsTest extends SingleBrowserTest {
         // lower than the first row
         List<WebElement> slots = gridlayout
                 .findElements(By.className("v-gridlayout-slot"));
-        Assert.assertEquals(GridLayoutExpandWithManyRows.POPULATED_ROWS,
-                slots.size());
+        assertEquals(GridLayoutExpandWithManyRows.POPULATED_ROWS, slots.size());
 
         int firstRowHeight = slots.get(0).getSize().height;
         int lastRowHeight = firstRowHeight;
         for (int i = 1; i < GridLayoutExpandWithManyRows.POPULATED_ROWS; i++) {
             int rowHeight = slots.get(i).getSize().height;
-            Assert.assertTrue(rowHeight <= firstRowHeight);
-            Assert.assertTrue(rowHeight >= firstRowHeight - 2);
-            Assert.assertTrue(rowHeight <= lastRowHeight);
+            assertTrue(rowHeight <= firstRowHeight);
+            assertTrue(rowHeight >= firstRowHeight - 2);
+            assertTrue(rowHeight <= lastRowHeight);
 
             lastRowHeight = rowHeight;
         }

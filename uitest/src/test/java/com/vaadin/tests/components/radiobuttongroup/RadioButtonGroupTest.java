@@ -20,13 +20,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.RadioButtonGroupElement;
 import com.vaadin.tests.components.radiobutton.RadioButtonGroupTestUI;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -89,20 +89,20 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         selectMenuPath("Component", "Listeners", "Selection listener");
 
         getSelect().selectByText("Item 4");
-        Assert.assertEquals("1. Selected: Optional[Item 4]", getLogRow(0));
+        assertEquals("1. Selected: Optional[Item 4]", getLogRow(0));
 
         getSelect().selectByText("Item 2");
-        Assert.assertEquals("2. Selected: Optional[Item 2]", getLogRow(0));
+        assertEquals("2. Selected: Optional[Item 2]", getLogRow(0));
 
         getSelect().selectByText("Item 4");
-        Assert.assertEquals("3. Selected: Optional[Item 4]", getLogRow(0));
+        assertEquals("3. Selected: Optional[Item 4]", getLogRow(0));
     }
 
     @Test
     public void disabled_clickToSelect() {
         selectMenuPath("Component", "State", "Enabled");
 
-        Assert.assertTrue(getSelect().findElements(By.tagName("input")).stream()
+        assertTrue(getSelect().findElements(By.tagName("input")).stream()
                 .allMatch(element -> element.getAttribute("disabled") != null));
 
         selectMenuPath("Component", "Listeners", "Selection listener");
@@ -110,13 +110,89 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         String lastLogRow = getLogRow(0);
 
         getSelect().selectByText("Item 4");
-        Assert.assertEquals(lastLogRow, getLogRow(0));
+        assertEquals(lastLogRow, getLogRow(0));
 
         getSelect().selectByText("Item 2");
-        Assert.assertEquals(lastLogRow, getLogRow(0));
+        assertEquals(lastLogRow, getLogRow(0));
 
         getSelect().selectByText("Item 4");
-        Assert.assertEquals(lastLogRow, getLogRow(0));
+        assertEquals(lastLogRow, getLogRow(0));
+    }
+
+    @Test // #9258
+    public void disabled_correctClassNamesApplied() {
+        openTestURL("theme=valo");
+        selectMenuPath("Component", "State", "Enabled");
+
+        List<WebElement> options = getSelect().findElements(By.tagName("span"));
+        assertTrue(options.size() > 0);
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(className -> verifyRadioButtonDisabledClassNames(
+                        className, true));
+
+        selectMenuPath("Component", "State", "Enabled");
+
+        options = getSelect().findElements(By.tagName("span"));
+        assertTrue(options.size() > 0);
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(className -> verifyRadioButtonDisabledClassNames(
+                        className, false));
+    }
+
+    @Test // #9258
+    public void itemDisabledWithEnabledProvider_correctClassNamesApplied() {
+        openTestURL("theme=valo");
+
+        List<WebElement> options = getSelect().findElements(By.tagName("span"));
+
+        assertTrue(options.size() > 0);
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(cs -> verifyRadioButtonDisabledClassNames(cs, false));
+
+        selectMenuPath("Component", "Item Enabled Provider",
+                "Item Enabled Provider", "Disable Item 0");
+
+        String className = getSelect().findElements(By.tagName("span")).get(0)
+                .getAttribute("className");
+        verifyRadioButtonDisabledClassNames(className, true);
+
+        selectMenuPath("Component", "Item Enabled Provider",
+                "Item Enabled Provider", "Disable Item 3");
+
+        className = getSelect().findElements(By.tagName("span")).get(0)
+                .getAttribute("className");
+        verifyRadioButtonDisabledClassNames(className, false);
+
+        className = getSelect().findElements(By.tagName("span")).get(3)
+                .getAttribute("className");
+        verifyRadioButtonDisabledClassNames(className, true);
+
+        selectMenuPath("Component", "State", "Enabled");
+
+        options = getSelect().findElements(By.tagName("span"));
+
+        assertTrue(options.size() > 0);
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(cs -> verifyRadioButtonDisabledClassNames(cs, true));
+
+        selectMenuPath("Component", "Item Enabled Provider",
+                "Item Enabled Provider", "Disable Item 5");
+
+        options = getSelect().findElements(By.tagName("span"));
+
+        assertTrue(options.size() > 0);
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(cs -> verifyRadioButtonDisabledClassNames(cs, true));
+
+        selectMenuPath("Component", "State", "Enabled");
+
+        options = getSelect().findElements(By.tagName("span"));
+        className = options.remove(5).getAttribute("className");
+
+        assertTrue(options.size() > 0);
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(cs -> verifyRadioButtonDisabledClassNames(cs, false));
+        verifyRadioButtonDisabledClassNames(className, true);
     }
 
     @Test
@@ -131,7 +207,7 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         assertEquals(20, icons.size());
 
         for (int i = 0; i < icons.size(); i++) {
-            Assert.assertEquals(VaadinIcons.values()[i + 1].getCodepoint(),
+            assertEquals(VaadinIcons.values()[i + 1].getCodepoint(),
                     icons.get(i).getText().charAt(0));
         }
     }
@@ -146,13 +222,13 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         selectMenuPath("Component", "State", "Enabled");
 
         getSelect().selectByText("Item 5");
-        Assert.assertEquals("3. Selected: Optional[Item 5]", getLogRow(0));
+        assertEquals("3. Selected: Optional[Item 5]", getLogRow(0));
 
         getSelect().selectByText("Item 2");
-        Assert.assertEquals("4. Selected: Optional[Item 2]", getLogRow(0));
+        assertEquals("4. Selected: Optional[Item 2]", getLogRow(0));
 
         getSelect().selectByText("Item 4");
-        Assert.assertEquals("5. Selected: Optional[Item 4]", getLogRow(0));
+        assertEquals("5. Selected: Optional[Item 4]", getLogRow(0));
     }
 
     @Test
@@ -167,7 +243,7 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         selectMenuPath("Component", "Item Caption Generator",
                 "Item Caption Generator", "Null Caption Generator");
         for (String text : getSelect().getOptions()) {
-            Assert.assertEquals("", text);
+            assertEquals("", text);
         }
     }
 
@@ -176,21 +252,43 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         selectMenuPath("Component", "Listeners", "Selection listener");
 
         selectMenuPath("Component", "Selection", "Toggle Item 5");
-        Assert.assertEquals("2. Selected: Optional[Item 5]", getLogRow(0));
+        assertEquals("2. Selected: Optional[Item 5]", getLogRow(0));
         assertSelected("Item 5");
 
         selectMenuPath("Component", "Selection", "Toggle Item 1");
-        Assert.assertEquals("4. Selected: Optional[Item 1]", getLogRow(0));
+        assertEquals("4. Selected: Optional[Item 1]", getLogRow(0));
         // DOM order
         assertSelected("Item 1");
 
         selectMenuPath("Component", "Selection", "Toggle Item 5");
-        Assert.assertEquals("6. Selected: Optional[Item 5]", getLogRow(0));
+        assertEquals("6. Selected: Optional[Item 5]", getLogRow(0));
         assertSelected("Item 5");
     }
 
+    @Test
+    public void testItemDescriptionGenerators() {
+        TestBenchElement label;
+
+        selectMenuPath("Component", "Item Description Generator",
+                "Item Description Generator", "Default Description Generator");
+
+        label = (TestBenchElement) findElements(By.tagName("label")).get(5);
+        label.showTooltip();
+        assertEquals("Tooltip should contain the same text as caption",
+                label.getText(), getTooltipElement().getText());
+
+        selectMenuPath("Component", "Item Description Generator",
+                "Item Description Generator", "Custom Description Generator");
+
+        label = (TestBenchElement) findElements(By.tagName("label")).get(5);
+        label.showTooltip();
+        assertEquals("Tooltip should contain caption + ' Description'",
+                label.getText() + " Description",
+                getTooltipElement().getText());
+    }
+
     private void assertSelected(String expectedSelection) {
-        Assert.assertEquals(expectedSelection, getSelect().getValue());
+        assertEquals(expectedSelection, getSelect().getValue());
     }
 
     @Override
@@ -222,5 +320,24 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
             i++;
         }
         assertEquals("Number of items", count, i);
+    }
+
+    // needed to make tooltips work in IE tests
+    @Override
+    protected boolean requireWindowFocusForIE() {
+        return true;
+    }
+
+    private static void verifyRadioButtonDisabledClassNames(String className,
+            boolean disabled) {
+        assertEquals(
+                disabled ? "No"
+                        : "Extra" + " v-radiobutton-disabled class, was "
+                                + className,
+                disabled, className.contains("v-radiobutton-disabled"));
+        assertEquals(
+                disabled ? "No"
+                        : "Extra" + " v-disabled class, was " + className,
+                disabled, className.contains("v-disabled"));
     }
 }

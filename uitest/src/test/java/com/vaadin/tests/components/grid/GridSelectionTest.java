@@ -6,14 +6,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.GridElement;
@@ -267,7 +264,7 @@ public class GridSelectionTest extends GridBasicsTest {
         assertFalse(
                 "Unexpected NullPointerException when removing selected rows",
                 logContainsText(
-                        "Exception occured, java.lang.NullPointerException: null"));
+                        "Exception occurred, java.lang.NullPointerException: null"));
     }
 
     @Test
@@ -455,10 +452,10 @@ public class GridSelectionTest extends GridBasicsTest {
         for (int i = 0; i < 10; i++) {
             boolean rowSelected = grid.getRow(i).isSelected();
             if (expected.contains(i)) {
-                Assert.assertTrue("Expected row " + i + " to be selected",
+                assertTrue("Expected row " + i + " to be selected",
                         rowSelected);
             } else {
-                Assert.assertFalse("Expected row " + i + " not to be selected",
+                assertFalse("Expected row " + i + " not to be selected",
                         rowSelected);
             }
         }
@@ -476,13 +473,8 @@ public class GridSelectionTest extends GridBasicsTest {
 
     private void waitUntilCheckBoxValue(final WebElement checkBoxElememnt,
             final boolean expectedValue) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return expectedValue ? checkBoxElememnt.isSelected()
-                        : !checkBoxElememnt.isSelected();
-            }
-        }, 5);
+        waitUntil(input -> expectedValue ? checkBoxElememnt.isSelected()
+                : !checkBoxElememnt.isSelected(), 5);
     }
 
     private GridRowElement getRow(int i) {

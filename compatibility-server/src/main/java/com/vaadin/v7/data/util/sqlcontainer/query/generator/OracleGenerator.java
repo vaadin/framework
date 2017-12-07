@@ -88,7 +88,7 @@ public class OracleGenerator extends DefaultSQLGenerator {
                 query.append(
                         QueryBuilder.getWhereStringForFilters(filters, sh));
             }
-            query.append(")");
+            query.append(')');
             sh.setQueryString(query.toString());
             return sh;
         }

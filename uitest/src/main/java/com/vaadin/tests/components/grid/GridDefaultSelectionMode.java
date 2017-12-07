@@ -16,12 +16,11 @@
 package com.vaadin.tests.components.grid;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.VerticalLayout;
 
@@ -37,7 +36,7 @@ public class GridDefaultSelectionMode extends AbstractTestUI {
         person2.setFirstName("person");
         person2.setLastName("two");
 
-        ArrayList<Person> items = new ArrayList<>();
+        List<Person> items = new ArrayList<>();
         items.add(person1);
         items.add(person2);
 
@@ -49,21 +48,11 @@ public class GridDefaultSelectionMode extends AbstractTestUI {
 
         VerticalLayout v = new VerticalLayout();
 
-        v.addComponent(new Button("Deselect on server", new ClickListener() {
+        v.addComponent(new Button("Deselect on server",
+                event -> grid.getSelectionModel().deselectAll()));
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                grid.getSelectionModel().deselectAll();
-            }
-        }));
-
-        v.addComponent(new Button("Select on server", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                grid.getSelectionModel().select(person1);
-            }
-        }));
+        v.addComponent(new Button("Select on server",
+                event -> grid.getSelectionModel().select(person1)));
         v.addComponent(grid);
 
         addComponent(v);

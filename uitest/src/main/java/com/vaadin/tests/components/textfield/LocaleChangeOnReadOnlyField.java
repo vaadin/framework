@@ -33,12 +33,8 @@ public class LocaleChangeOnReadOnlyField extends AbstractReindeerTestUI {
     private Button addLocaleChangeButton(final TextField textField) {
         Button changeLocaleButton = new Button();
         changeLocaleButton.setCaption("Change Locale");
-        changeLocaleButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                textField.setLocale(Locale.GERMANY);
-            }
-        });
+        changeLocaleButton
+                .addClickListener(event -> textField.setLocale(Locale.GERMANY));
 
         return changeLocaleButton;
     }

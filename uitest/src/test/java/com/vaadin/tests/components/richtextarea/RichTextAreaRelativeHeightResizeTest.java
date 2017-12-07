@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.richtextarea;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
@@ -45,9 +47,9 @@ public class RichTextAreaRelativeHeightResizeTest extends MultiBrowserTest {
 
         // Check that the component height changed and that the editor height
         // changed equally as much
-        Assert.assertTrue("RichTextArea height didn't change",
+        assertTrue("RichTextArea height didn't change",
                 newHeight != originalHeight);
-        Assert.assertEquals(
+        assertEquals(
                 "Editor height change didn't match the Component height change",
                 newHeight - originalHeight,
                 newEditorHeight - originalEditorHeight);

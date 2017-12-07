@@ -15,20 +15,20 @@
  */
 package com.vaadin.tests.application;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.parallel.TestCategory;
@@ -46,18 +46,11 @@ public class ReconnectDialogThemeTest extends MultiBrowserThemeTestWithProxy {
         ButtonElement helloButton = $(ButtonElement.class).caption("Say hello")
                 .first();
         helloButton.click();
-        Assert.assertEquals("1. Hello from the server", getLogRow(0));
+        assertEquals("1. Hello from the server", getLogRow(0));
         disconnectProxy();
         helloButton.click();
         testBench().disableWaitForVaadin();
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                boolean present = isElementPresent(reconnectDialogBy);
-                return present;
-            }
-        });
+        waitUntil(driver -> isElementPresent(reconnectDialogBy));
 
         WebElement dialog = findElement(reconnectDialogBy);
         WebElement spinner = dialog.findElement(By.className("spinner"));
@@ -82,15 +75,11 @@ public class ReconnectDialogThemeTest extends MultiBrowserThemeTestWithProxy {
     public void gaveUpTheme() throws IOException {
         openTestURL("reconnectAttempts=3");
 
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                try {
-                    return $(ButtonElement.class).first() != null;
-                } catch (Exception e) {
-                    return false;
-                }
+        waitUntil(input -> {
+            try {
+                return $(ButtonElement.class).first() != null;
+            } catch (Exception e) {
+                return false;
             }
         });
 
@@ -103,20 +92,16 @@ public class ReconnectDialogThemeTest extends MultiBrowserThemeTestWithProxy {
     }
 
     private void waitForReconnectDialogWithText(final String text) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                try {
-                    final WebElement reconnectDialog = findElement(
-                            ReconnectDialogThemeTest.reconnectDialogBy);
-                    return reconnectDialog.findElement(By.className("text"))
-                            .getText().equals(text);
-                } catch (Exception e) {
-                    return false;
-                }
+        waitUntil(input -> {
+            try {
+                final WebElement reconnectDialog = findElement(
+                        ReconnectDialogThemeTest.reconnectDialogBy);
+                return reconnectDialog.findElement(By.className("text"))
+                        .getText().equals(text);
+            } catch (Exception e) {
+                return false;
             }
         }, 10);
-
     }
 
     private void assertHasManyColors(String message,
@@ -130,7 +115,7 @@ public class ReconnectDialogThemeTest extends MultiBrowserThemeTestWithProxy {
                 }
             }
         }
-        Assert.fail(message);
+        fail(message);
 
     }
 

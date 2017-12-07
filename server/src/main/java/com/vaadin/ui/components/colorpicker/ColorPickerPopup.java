@@ -18,7 +18,6 @@ package com.vaadin.ui.components.colorpicker;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -278,8 +277,8 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
         blueSlider = createRGBSlider("Blue", "blue");
         setRgbSliderValues(color);
 
-        redSlider.addValueChangeListener(e -> {
-            double red = e.getValue();
+        redSlider.addValueChangeListener(event -> {
+            double red = event.getValue();
             if (!updatingColors) {
                 Color newColor = new Color((int) red, selectedColor.getGreen(),
                         selectedColor.getBlue());
@@ -289,8 +288,8 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
 
         sliders.addComponent(redSlider);
 
-        greenSlider.addValueChangeListener(e -> {
-            double green = e.getValue();
+        greenSlider.addValueChangeListener(event -> {
+            double green = event.getValue();
             if (!updatingColors) {
                 Color newColor = new Color(selectedColor.getRed(), (int) green,
                         selectedColor.getBlue());
@@ -299,8 +298,8 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
         });
         sliders.addComponent(greenSlider);
 
-        blueSlider.addValueChangeListener(e -> {
-            double blue = e.getValue();
+        blueSlider.addValueChangeListener(event -> {
+            double blue = event.getValue();
             if (!updatingColors) {
                 Color newColor = new Color(selectedColor.getRed(),
                         selectedColor.getGreen(), (int) blue);
@@ -761,10 +760,8 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
                     .setRequiredIndicatorVisible(isRequiredIndicatorVisible());
         }
         if (component instanceof HasComponents) {
-            Iterator<Component> iterator = ((HasComponents) component)
-                    .iterator();
-            while (iterator.hasNext()) {
-                updateColorComponents(iterator.next());
+            for (Component c : (HasComponents) component) {
+                updateColorComponents(c);
             }
         }
     }

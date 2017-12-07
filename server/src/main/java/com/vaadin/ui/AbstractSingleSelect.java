@@ -230,10 +230,8 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         T oldSelection = getSelectedItem().orElse(getEmptyValue());
         doSetSelectedKey(key);
 
-        // Update diffstate so that a change will be sent to the client if the
-        // selection is changed to its original value
-        updateDiffstate("selectedItemKey",
-                key == null ? Json.createNull() : Json.create(key));
+        // Set diffstate to something that will always send selection to client
+        updateDiffstate("selectedItemKey", Json.createObject());
 
         fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this,
                 oldSelection, true));
@@ -319,7 +317,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         Element element = super.writeItem(design, item, context);
 
         if (isSelected(item)) {
-            element.attr("selected", "");
+            element.attr("selected", true);
         }
 
         return element;

@@ -15,12 +15,13 @@
  */
 package com.vaadin.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
@@ -32,17 +33,16 @@ public class GridCheckBoxDisplayTest extends SingleBrowserTest {
 
         GridElement grid = $(GridElement.class).first();
 
-        Assert.assertEquals("First item had wrong value", "true",
+        assertEquals("First item had wrong value", "true",
                 grid.getCell(0, 0).getText());
-        Assert.assertEquals("Second item had wrong value", "false",
+        assertEquals("Second item had wrong value", "false",
                 grid.getCell(1, 0).getText());
 
         // First edit false item and see that the CheckBox is unchecked
         grid.getCell(1, 0).doubleClick();
 
         CheckBoxElement checkbox = $(CheckBoxElement.class).first();
-        Assert.assertEquals("CheckBox was checked", "unchecked",
-                checkbox.getValue());
+        assertEquals("CheckBox was checked", "unchecked", checkbox.getValue());
 
         closeEditor();
 
@@ -50,7 +50,7 @@ public class GridCheckBoxDisplayTest extends SingleBrowserTest {
         grid.getCell(0, 0).doubleClick();
 
         checkbox = $(CheckBoxElement.class).first();
-        Assert.assertEquals("CheckBox was not checked.", "checked",
+        assertEquals("CheckBox was not checked.", "checked",
                 checkbox.getValue());
 
         closeEditor();
@@ -59,8 +59,7 @@ public class GridCheckBoxDisplayTest extends SingleBrowserTest {
         grid.getCell(1, 0).doubleClick();
 
         checkbox = $(CheckBoxElement.class).first();
-        Assert.assertEquals("CheckBox was checked", "unchecked",
-                checkbox.getValue());
+        assertEquals("CheckBox was checked", "unchecked", checkbox.getValue());
     }
 
     /**

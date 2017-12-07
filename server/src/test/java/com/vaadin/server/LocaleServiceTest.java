@@ -1,12 +1,13 @@
 package com.vaadin.server;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -956,16 +957,16 @@ public class LocaleServiceTest {
     @Test
     public void localeDateTimeFormat() {
         for (Locale l : expectedLocaleData.keySet()) {
-            Assert.assertEquals("Error verifying locale " + l,
+            assertEquals("Error verifying locale " + l,
                     expectedLocaleData.get(l).dateFormat,
                     localeService.createLocaleData(l).dateFormat);
-            Assert.assertEquals("Error verifying locale " + l,
+            assertEquals("Error verifying locale " + l,
                     expectedLocaleData.get(l).twelveHourClock,
                     localeService.createLocaleData(l).twelveHourClock);
-            Assert.assertEquals("Error verifying locale " + l,
+            assertEquals("Error verifying locale " + l,
                     expectedLocaleData.get(l).am,
                     localeService.createLocaleData(l).am);
-            Assert.assertEquals("Error verifying locale " + l,
+            assertEquals("Error verifying locale " + l,
                     expectedLocaleData.get(l).pm,
                     localeService.createLocaleData(l).pm);
         }
@@ -997,9 +998,9 @@ public class LocaleServiceTest {
     private static void generateData(Locale locale) {
         System.out.println();
         String id = locale.getLanguage();
-        if (!locale.getCountry().equals("")) {
+        if (!locale.getCountry().isEmpty()) {
             id += "_" + locale.getCountry();
-            if (!locale.getVariant().equals("")) {
+            if (!locale.getVariant().isEmpty()) {
                 id += "_" + locale.getVariant();
             }
         }

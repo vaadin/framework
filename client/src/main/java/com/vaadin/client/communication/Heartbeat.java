@@ -24,13 +24,12 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
- * Handles sending of heartbeats to the server and reacting to the response
+ * Handles sending of heartbeats to the server and reacting to the response.
  *
  * @since 7.2
  * @author Vaadin Ltd
@@ -53,9 +52,9 @@ public class Heartbeat {
     }
 
     /**
-     * Initializes the heartbeat for the given application connection
+     * Initializes the heartbeat for the given application connection.
      *
-     * @param connection
+     * @param applicationConnection
      *            the connection
      */
     public void init(ApplicationConnection applicationConnection) {
@@ -72,18 +71,11 @@ public class Heartbeat {
 
         connection.addHandler(
                 ApplicationConnection.ApplicationStoppedEvent.TYPE,
-                new ApplicationConnection.ApplicationStoppedHandler() {
-
-                    @Override
-                    public void onApplicationStopped(
-                            ApplicationStoppedEvent event) {
-                        setInterval(-1);
-                    }
-                });
+                event -> setInterval(-1));
     }
 
     /**
-     * Sends a heartbeat to the server
+     * Sends a heartbeat to the server.
      */
     public void send() {
         timer.cancel();

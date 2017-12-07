@@ -18,10 +18,10 @@ package com.vaadin.tests;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
@@ -65,36 +65,20 @@ public class TestForGridLayoutChildComponentRendering extends CustomComponent {
 
         main.addComponent(se, 0, 1, 1, 1);
 
-        Button b = new Button("refresh view", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                createNewView();
-            }
-        });
+        Button b = new Button("refresh view", event -> createNewView());
         main.addComponent(b);
 
-        b = new Button("reorder view", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                randomReorder();
-            }
-        });
+        b = new Button("reorder view", event -> randomReorder());
         main.addComponent(b);
 
         b = new Button("remove randomly one component",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        removeRandomComponent();
-                    }
-                });
+                event -> removeRandomComponent());
         main.addComponent(b);
-
     }
 
     public void randomReorder() {
         final Iterator<Component> it = main.getComponentIterator();
-        final ArrayList<Component> components = new ArrayList<>();
+        final List<Component> components = new ArrayList<>();
         while (it.hasNext()) {
             components.add(it.next());
         }
@@ -118,7 +102,7 @@ public class TestForGridLayoutChildComponentRendering extends CustomComponent {
 
     public void removeRandomComponent() {
         final Iterator<Component> it = main.getComponentIterator();
-        final ArrayList<Component> components = new ArrayList<>();
+        final List<Component> components = new ArrayList<>();
         while (it.hasNext()) {
             components.add(it.next());
         }

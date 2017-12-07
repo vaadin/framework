@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.abstractfield;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,60 +35,60 @@ public class AbstractComponentStyleNameTest {
     @Test
     public void add() {
         c.addStyleName("foo");
-        Assert.assertEquals("foo", c.getStyleName());
+        assertEquals("foo", c.getStyleName());
     }
 
     @Test
     public void addWithHeadingSpace() {
         c.addStyleName(" foo");
-        Assert.assertEquals("foo", c.getStyleName());
+        assertEquals("foo", c.getStyleName());
     }
 
     @Test
     public void addWithTrailingSpace() {
         c.addStyleName("foo ");
-        Assert.assertEquals("foo", c.getStyleName());
+        assertEquals("foo", c.getStyleName());
     }
 
     @Test
     public void removeWithHeadingSpace() {
         c.setStyleName("foo");
         c.removeStyleName(" foo");
-        Assert.assertEquals("", c.getStyleName());
+        assertEquals("", c.getStyleName());
     }
 
     @Test
     public void removeWithTrailingSpace() {
         c.setStyleName("foo");
         c.removeStyleName("foo ");
-        Assert.assertEquals("", c.getStyleName());
+        assertEquals("", c.getStyleName());
     }
 
     @Test
     public void addMultipleTimes() {
         c.addStyleName("foo");
         c.addStyleName("foo");
-        Assert.assertEquals("foo", c.getStyleName());
+        assertEquals("foo", c.getStyleName());
     }
 
     @Test
     public void setStyleAdd() {
         c.setStyleName("foo", true);
-        Assert.assertEquals("foo", c.getStyleName());
+        assertEquals("foo", c.getStyleName());
     }
 
     @Test
     public void setStyleMultipleAdd() {
         c.setStyleName("foo", true);
         c.setStyleName("foo", true);
-        Assert.assertEquals("foo", c.getStyleName());
+        assertEquals("foo", c.getStyleName());
     }
 
     @Test
     public void setStyleRemove() {
         c.addStyleName("foo");
         c.setStyleName("foo", false);
-        Assert.assertEquals("", c.getStyleName());
+        assertEquals("", c.getStyleName());
     }
 
     @Test
@@ -95,14 +96,14 @@ public class AbstractComponentStyleNameTest {
         c.addStyleName("foo");
         c.setStyleName("foo", false);
         c.setStyleName("foo", false);
-        Assert.assertEquals("", c.getStyleName());
+        assertEquals("", c.getStyleName());
     }
 
     @Test
     public void remove() {
         c.addStyleName("foo");
         c.removeStyleName("foo");
-        Assert.assertEquals("", c.getStyleName());
+        assertEquals("", c.getStyleName());
     }
 
     @Test
@@ -110,6 +111,6 @@ public class AbstractComponentStyleNameTest {
         c.addStyleName("foo");
         c.removeStyleName("foo");
         c.removeStyleName("foo");
-        Assert.assertEquals("", c.getStyleName());
+        assertEquals("", c.getStyleName());
     }
 }

@@ -24,7 +24,6 @@ import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 
 @Push(value = PushMode.MANUAL, transport = Transport.LONG_POLLING)
 public class ManualLongPollingPushUI extends AbstractTestUIWithLog {
@@ -34,61 +33,38 @@ public class ManualLongPollingPushUI extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         Button b = new Button("Manual push after 1s",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        executor.submit(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                access(new Runnable() {
-
-                                    @Override
-                                    public void run() {
-                                        log("Logged after 1s, followed by manual push");
-                                        push();
-                                    }
-                                });
-
-                            }
+                event -> {
+                    executor.submit(() -> {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        access(() -> {
+                            log("Logged after 1s, followed by manual push");
+                            push();
                         });
-                    }
+                    });
                 });
         addComponent(b);
 
         b = new Button("Double manual push after 1s",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        executor.submit(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                access(new Runnable() {
-
-                                    @Override
-                                    public void run() {
-                                        log("First message logged after 1s, followed by manual push");
-                                        push();
-                                        log("Second message logged after 1s, followed by manual push");
-                                        push();
-                                    }
-                                });
-
-                            }
+                event -> {
+                    executor.submit(() -> {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        access(() -> {
+                            log("First message logged after 1s, followed by manual push");
+                            push();
+                            log("Second message logged after 1s, followed by manual push");
+                            push();
                         });
-                    }
+                    });
                 });
         addComponent(b);
-
     }
 
 }

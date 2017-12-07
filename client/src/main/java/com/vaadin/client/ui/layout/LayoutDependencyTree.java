@@ -17,6 +17,7 @@ package com.vaadin.client.ui.layout;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JsArrayString;
@@ -30,7 +31,6 @@ import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.ManagedLayout;
 import com.vaadin.shared.AbstractComponentState;
 
@@ -311,28 +311,6 @@ public class LayoutDependencyTree {
 
         }
 
-        /**
-         * Go up the hierarchy to find a component whose size might have changed
-         * in the other direction because changes to this component causes
-         * scrollbars to appear or disappear.
-         *
-         * @return
-         */
-        private LayoutDependency findPotentiallyChangedScrollbar() {
-            ComponentConnector currentConnector = connector;
-            while (true) {
-                ServerConnector parent = currentConnector.getParent();
-                if (!(parent instanceof ComponentConnector)) {
-                    return null;
-                }
-                if (parent instanceof MayScrollChildren) {
-                    return getDependency(currentConnector.getConnectorId(),
-                            getOppositeDirection());
-                }
-                currentConnector = (ComponentConnector) parent;
-            }
-        }
-
         private int getOppositeDirection() {
             return direction == HORIZONTAL ? VERTICAL : HORIZONTAL;
         }
@@ -428,10 +406,10 @@ public class LayoutDependencyTree {
     private final FastStringMap<LayoutDependency>[] dependenciesInDirection = new FastStringMap[] {
             FastStringMap.create(), FastStringMap.create() };
 
-    private final FastStringSet[] measureQueueInDirection = new FastStringSet[] {
+    private final FastStringSet[] measureQueueInDirection = {
             FastStringSet.create(), FastStringSet.create() };
 
-    private final FastStringSet[] layoutQueueInDirection = new FastStringSet[] {
+    private final FastStringSet[] layoutQueueInDirection = {
             FastStringSet.create(), FastStringSet.create() };
 
     private final ApplicationConnection connection;
@@ -637,7 +615,7 @@ public class LayoutDependencyTree {
     }
 
     private static String getSizeDefinition(String size) {
-        if (size == null || size.length() == 0) {
+        if (size == null || size.isEmpty()) {
             return "undefined";
         } else if (size.endsWith("%")) {
             return "relative";
@@ -725,7 +703,7 @@ public class LayoutDependencyTree {
     public Collection<ComponentConnector> getMeasureTargets() {
         JsArrayString targetIds = getMeasureTargetsJsArray();
         int length = targetIds.length();
-        ArrayList<ComponentConnector> targets = new ArrayList<>(length);
+        List<ComponentConnector> targets = new ArrayList<>(length);
         ConnectorMap connectorMap = ConnectorMap.get(connection);
 
         for (int i = 0; i < length; i++) {
@@ -743,10 +721,10 @@ public class LayoutDependencyTree {
     }
 
     public void logDependencyStatus(ComponentConnector connector) {
-        VConsole.log("====");
+        getLogger().info("====");
         String connectorId = connector.getConnectorId();
-        VConsole.log(getDependency(connectorId, HORIZONTAL).toString());
-        VConsole.log(getDependency(connectorId, VERTICAL).toString());
+        getLogger().info(getDependency(connectorId, HORIZONTAL).toString());
+        getLogger().info(getDependency(connectorId, VERTICAL).toString());
     }
 
     public boolean noMoreChangesExpected(ComponentConnector connector) {

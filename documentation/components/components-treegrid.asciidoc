@@ -12,8 +12,6 @@ ifdef::web[]
 image:{live-demo-image}[alt="Live Demo", link="http://demo.vaadin.com/sampler/#ui/grids-and-trees/treegrid"]
 endif::web[]
 
-IMPORTANT: The [classname]#TreeGrid# component is currently being developed and only available in the Framework 8.1 prerelease versions, starting from 8.1.0.alpha1.
-
 [[components.treegrid.overview]]
 == Overview
 

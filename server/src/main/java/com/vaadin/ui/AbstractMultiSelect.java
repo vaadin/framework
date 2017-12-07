@@ -89,7 +89,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
 
     }
 
-    private class MultiSelectDataGenerator implements DataGenerator<T> {
+    private final class MultiSelectDataGenerator implements DataGenerator<T> {
         @Override
         public void generateData(T data, JsonObject jsonObject) {
             String caption = getItemCaptionGenerator().apply(data);
@@ -426,7 +426,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
         Element element = super.writeItem(design, item, context);
 
         if (isSelected(item)) {
-            element.attr("selected", "");
+            element.attr("selected", true);
         }
 
         return element;

@@ -20,20 +20,12 @@ public class FirstTabNotVisibleWhenTabsheetNotClipped
 
     @Override
     protected void setup(VaadinRequest request) {
-        addButton("Toggle first not clipped tab", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                firstNotClippedTab.setVisible(!firstNotClippedTab.isVisible());
-            }
-        });
+        addButton("Toggle first not clipped tab", event -> firstNotClippedTab
+                .setVisible(!firstNotClippedTab.isVisible()));
         addComponent(createNotClippedTabSheet());
 
-        addButton("Toggle first clipped tab", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                firstClippedTab.setVisible(!firstClippedTab.isVisible());
-            }
-        });
+        addButton("Toggle first clipped tab", event -> firstClippedTab
+                .setVisible(!firstClippedTab.isVisible()));
         addComponent(createClippedTabSheet());
 
         addComponent(new Label("VerticalLayout:"));
@@ -71,7 +63,7 @@ public class FirstTabNotVisibleWhenTabsheetNotClipped
 
         TabSheet tabsheet = new TabSheet();
         String[] letters = { "A", "B", "C", "D" };
-        HashMap<String, TabSheet.Tab> tabMap = new HashMap<>();
+        Map<String, TabSheet.Tab> tabMap = new HashMap<>();
 
         for (String letter : letters) {
             VerticalLayout vLayout = new VerticalLayout();
@@ -100,24 +92,20 @@ public class FirstTabNotVisibleWhenTabsheetNotClipped
     }
 
     private Button.ClickListener createTabListener(
-            final HashMap<String, TabSheet.Tab> map, final TabSheet tabsheet) {
+            final Map<String, TabSheet.Tab> map, final TabSheet tabsheet) {
 
-        Button.ClickListener clickListener = new Button.ClickListener() {
+        Button.ClickListener clickListener = event -> {
+            // id of the button is the same as the tab's caption
+            String tabName = event.getComponent().getId();
 
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                // id of the button is the same as the tab's caption
-                String tabName = event.getComponent().getId();
+            for (Map.Entry<String, TabSheet.Tab> entry : map.entrySet()) {
+                TabSheet.Tab tab = entry.getValue();
 
-                for (Map.Entry<String, TabSheet.Tab> entry : map.entrySet()) {
-                    TabSheet.Tab tab = entry.getValue();
-
-                    if (entry.getKey().equals(tabName)) {
-                        tab.setVisible(true);
-                        tabsheet.setSelectedTab(tab.getComponent());
-                    } else {
-                        tab.setVisible(false);
-                    }
+                if (entry.getKey().equals(tabName)) {
+                    tab.setVisible(true);
+                    tabsheet.setSelectedTab(tab.getComponent());
+                } else {
+                    tab.setVisible(false);
                 }
             }
         };

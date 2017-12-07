@@ -15,9 +15,12 @@
  */
 package com.vaadin.tests;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -40,32 +43,35 @@ public class CurrentTimeMillisTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        boolean highResTimeSupported = !BrowserUtil
-                .isPhantomJS(getDesiredCapabilities())
+        boolean phantomJs1 = BrowserUtil.isPhantomJS(getDesiredCapabilities())
+                && "1".equals(getDesiredCapabilities().getVersion());
+        boolean highResTimeSupported = !phantomJs1
                 && !BrowserUtil.isSafari(getDesiredCapabilities());
 
         String time = getJsonParsingTime();
-        Assert.assertNotNull("JSON parsing time is not found", time);
+        assertNotNull("JSON parsing time is not found", time);
         time = time.trim();
         if (time.endsWith("ms")) {
             time = time.substring(0, time.length() - 2);
         }
         if (highResTimeSupported) {
-            if (BrowserUtil.isChrome(getDesiredCapabilities())) {
+            if (BrowserUtil.isChrome(getDesiredCapabilities())
+                    || BrowserUtil.isFirefox(getDesiredCapabilities())) {
                 // Chrome (version 33 at least) sometimes doesn't use high res
-                // time if number of ms is less then 1
-                Assert.assertTrue(
+                // time for very short times
+                assertTrue(
                         "High resolution time is not used in "
                                 + "JSON parsing mesurement. Time=" + time,
-                        time.equals("0") || time.indexOf('.') > 0);
+                        time.equals("0") || time.equals("1")
+                                || time.indexOf('.') > 0);
             } else {
-                Assert.assertTrue(
+                assertTrue(
                         "High resolution time is not used in "
                                 + "JSON parsing mesurement. Time=" + time,
                         time.indexOf('.') > 0);
             }
         } else {
-            Assert.assertFalse("Unexpected dot is detected in browser "
+            assertFalse("Unexpected dot is detected in browser "
                     + "that doesn't support high resolution time and "
                     + "should report time as integer number. Time=" + time,
                     time.indexOf('.') > 0);

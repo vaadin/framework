@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.textfield;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
@@ -28,20 +29,20 @@ public class EnumTextFieldTest extends SingleBrowserTest {
         openTestURL();
         $(TextFieldElement.class).first().clear();
         $(TextFieldElement.class).first().sendKeys("Value", Keys.TAB);
-        Assert.assertEquals("3. Value (valid)", getLogRow(0));
+        assertEquals("3. Value (valid)", getLogRow(0));
 
         $(TextFieldElement.class).first().clear();
         $(TextFieldElement.class).first().sendKeys("VaLuE");
         $(TextFieldElement.class).first().sendKeys(Keys.TAB);
-        Assert.assertEquals("5. Value (valid)", getLogRow(0));
+        assertEquals("5. Value (valid)", getLogRow(0));
 
         $(TextFieldElement.class).first().clear();
         $(TextFieldElement.class).first().sendKeys("The last value");
         $(TextFieldElement.class).first().sendKeys(Keys.TAB);
-        Assert.assertEquals("7. The last value (valid)", getLogRow(0));
+        assertEquals("7. The last value (valid)", getLogRow(0));
 
         $(TextFieldElement.class).first().clear();
-        Assert.assertEquals("8. null (valid)", getLogRow(0));
+        assertEquals("8. null (valid)", getLogRow(0));
 
     }
 
@@ -52,7 +53,7 @@ public class EnumTextFieldTest extends SingleBrowserTest {
 
         $(TextFieldElement.class).first().sendKeys("bar");
         $(TextFieldElement.class).first().sendKeys(Keys.TAB);
-        Assert.assertEquals("3. bar (INVALID)", getLogRow(0));
+        assertEquals("3. bar (INVALID)", getLogRow(0));
 
     }
 }

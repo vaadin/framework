@@ -15,7 +15,6 @@
  */
 package com.vaadin.v7.data.util;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EventObject;
@@ -151,8 +150,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         }
     }
 
-    private static abstract class BaseItemAddOrRemoveEvent extends EventObject
-            implements Serializable {
+    private abstract static class BaseItemAddOrRemoveEvent extends EventObject {
         protected Object itemId;
         protected int index;
         protected int count;
@@ -450,7 +448,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Deprecated
     @Override
     public void addListener(Container.ItemSetChangeListener listener) {
@@ -472,7 +470,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Deprecated
     @Override
     public void removeListener(Container.ItemSetChangeListener listener) {
@@ -525,9 +523,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         // Filter
         boolean equal = true;
         Iterator<ITEMIDTYPE> origIt = originalFilteredItemIds.iterator();
-        for (final Iterator<ITEMIDTYPE> i = getAllItemIds().iterator(); i
-                .hasNext();) {
-            final ITEMIDTYPE id = i.next();
+        for (final ITEMIDTYPE id : getAllItemIds()) {
             if (passesFilters(id)) {
                 // filtered list comes from the full list, can use ==
                 equal = equal && origIt.hasNext() && origIt.next() == id;
@@ -554,9 +550,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (getFilters().isEmpty()) {
             return true;
         }
-        final Iterator<Filter> i = getFilters().iterator();
-        while (i.hasNext()) {
-            final Filter f = i.next();
+        for (final Filter f : getFilters()) {
             if (!f.passesFilter(itemId, item)) {
                 return false;
             }
@@ -644,9 +638,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (getFilters().isEmpty() || propertyId == null) {
             return false;
         }
-        final Iterator<Filter> i = getFilters().iterator();
-        while (i.hasNext()) {
-            final Filter f = i.next();
+        for (final Filter f : getFilters()) {
             if (f.appliesToProperty(propertyId)) {
                 return true;
             }

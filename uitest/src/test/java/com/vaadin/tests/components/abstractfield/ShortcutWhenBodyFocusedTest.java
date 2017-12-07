@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.abstractfield;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -30,13 +31,13 @@ public class ShortcutWhenBodyFocusedTest extends SingleBrowserTest {
         openTestURL();
         ButtonElement b = $(ButtonElement.class).caption("Hello").first();
         b.click();
-        Assert.assertEquals("1. Hello clicked", getLogRow(0));
+        assertEquals("1. Hello clicked", getLogRow(0));
 
         b.sendKeys("A");
-        Assert.assertEquals("2. Hello clicked", getLogRow(0));
+        assertEquals("2. Hello clicked", getLogRow(0));
 
         WebElement body = findElement(By.xpath("//body"));
         body.sendKeys("A");
-        Assert.assertEquals("3. Hello clicked", getLogRow(0));
+        assertEquals("3. Hello clicked", getLogRow(0));
     }
 }

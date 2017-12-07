@@ -1,6 +1,7 @@
 package com.vaadin.tests.core;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -17,17 +18,15 @@ public class SpecialCharactersEncodingUITest extends SingleBrowserTest {
         openTestURL();
         String textFieldValue = $(TextFieldElement.class).id("textfield")
                 .getValue();
-        Assert.assertEquals(SpecialCharactersEncodingUI.textWithZwnj,
-                textFieldValue);
+        assertEquals(SpecialCharactersEncodingUI.textWithZwnj, textFieldValue);
         LabelElement label = $(LabelElement.class).id("label");
         String labelValue = getHtml(label); // getText() strips some characters
-        Assert.assertEquals(SpecialCharactersEncodingUI.textWithZwnj,
-                labelValue);
+        assertEquals(SpecialCharactersEncodingUI.textWithZwnj, labelValue);
 
         MenuBarElement menubar = $(MenuBarElement.class).first();
         WebElement menuItem = menubar
                 .findElement(By.className("v-menubar-menuitem-caption"));
-        Assert.assertEquals(SpecialCharactersEncodingUI.textWithZwnj,
+        assertEquals(SpecialCharactersEncodingUI.textWithZwnj,
                 getHtml(menuItem));
     }
 

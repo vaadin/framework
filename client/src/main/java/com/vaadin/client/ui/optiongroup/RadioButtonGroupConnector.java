@@ -19,6 +19,8 @@ package com.vaadin.client.ui.optiongroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.dom.client.Element;
+import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.AbstractSingleSelectConnector;
@@ -28,6 +30,7 @@ import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.ListingJsonConstants;
 import com.vaadin.shared.ui.optiongroup.RadioButtonGroupState;
 import com.vaadin.ui.RadioButtonGroup;
 
@@ -54,7 +57,7 @@ public class RadioButtonGroupConnector
         super.init();
 
         selectionChangeRegistration = getWidget().addSelectionChangeHandler(
-                e -> selectionRpc.select(getRowKey(e)));
+                event -> selectionRpc.select(getRowKey(event)));
     }
 
     @Override
@@ -118,6 +121,23 @@ public class RadioButtonGroupConnector
             options.add(dataSource.getRow(i));
         }
         select.buildOptions(options);
+        getLayoutManager().setNeedsMeasure(this);
         updateSelectedItem();
+    }
+
+    @Override
+    public TooltipInfo getTooltipInfo(Element element) {
+        JsonObject item = getWidget().getItem(element);
+        if (item != null
+                && item.hasKey(ListingJsonConstants.JSONKEY_ITEM_DESCRIPTION)) {
+            return new TooltipInfo(item
+                    .getString(ListingJsonConstants.JSONKEY_ITEM_DESCRIPTION));
+        }
+        return super.getTooltipInfo(element);
+    }
+
+    @Override
+    public boolean hasTooltip() {
+        return true;
     }
 }

@@ -119,7 +119,7 @@ public class FileDropTarget<T extends AbstractComponent>
 
         // Send upload URLs to the client if there are files to be
         // uploaded
-        if (urls.size() > 0) {
+        if (!urls.isEmpty()) {
             getRpcProxy(FileDropTargetClientRpc.class).sendUploadUrl(urls);
         }
     }
@@ -263,10 +263,6 @@ public class FileDropTarget<T extends AbstractComponent>
             @Override
             public long getContentLength() {
                 return file.getFileSize();
-            }
-
-            public StreamVariable getReceiver() {
-                return FileReceiver.this;
             }
 
             @Override

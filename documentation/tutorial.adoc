@@ -1003,6 +1003,7 @@ Data JPA. We have also collected a couple of other resources for an easy
 start in your Vaadin developer career.
 
  * https://vaadin.com/docs/-/part/framework/introduction/intro-overview.html[Vaadin online documentation]
+ * https://vaadin.com/full-stack-starter[Bakery App Starter for Vaadin Framework 8 and Spring] - A fully functional and tested full stack application for you to use as a starting point and a reference implementation on how business grade Vaadin applications should be made.
  * http://spring.io/guides/gs/crud-with-vaadin/[Creating CRUD UI with Vaadin] - the tutorial for your first Vaadin application using a Spring based backend.
  * https://github.com/mstahv/jpa-invoicer[Jave EE example app] - a Vaadin app example for creating invoices that uses Java EE backend, Apache DeltaSpike Data for simple JPA layer, OAuth2 based login, PDF generation etc.
  * http://vaadin.com/directory[Directory] - a vast source of awesome Vaadin add-ons

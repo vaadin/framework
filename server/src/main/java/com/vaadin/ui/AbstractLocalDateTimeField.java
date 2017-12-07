@@ -18,8 +18,11 @@ package com.vaadin.ui;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 import com.vaadin.data.validator.DateTimeRangeValidator;
@@ -29,7 +32,7 @@ import com.vaadin.shared.ui.datefield.DateTimeResolution;
 
 /**
  * Abstract DateField class for {@link LocalDateTime} type.
- * 
+ *
  * @author Vaadin Ltd
  *
  * @since 8.0
@@ -163,4 +166,17 @@ public abstract class AbstractLocalDateTimeField
         }
     }
 
+    @Override
+    protected String formatDate(LocalDateTime value) {
+        if (value == null) {
+            return "";
+        }
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter
+                .ofLocalizedDateTime(FormatStyle.SHORT);
+        Locale locale = getLocale();
+        if (locale != null) {
+            dateTimeFormatter = dateTimeFormatter.withLocale(locale);
+        }
+        return value.format(dateTimeFormatter);
+    }
 }

@@ -10,8 +10,6 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -24,7 +22,7 @@ import com.vaadin.v7.ui.ListSelect;
 
 public class OrderedLayoutBasics extends TestBase {
 
-    String valignName[] = new String[] { "top", "middle", "bottom" };
+    String valignName[] = { "top", "middle", "bottom" };
 
     Set<AbstractOrderedLayout> layouts = new HashSet<>();
     private AbstractOrderedLayout layoutContainer;
@@ -547,7 +545,7 @@ public class OrderedLayoutBasics extends TestBase {
         // AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER, valign[i % 3]);
         // }
         //
-        // tf.setValue(tf.getValue().toString() + " (100% wide)");
+        // tf.setValue(tf.getValue() + " (100% wide)");
         // tf.setWidth("100%");
 
         // tf = new TextField("100%x70px Field");
@@ -640,7 +638,7 @@ public class OrderedLayoutBasics extends TestBase {
         // AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER, valign[i % 3]);
         // }
         //
-        // tf.setValue(tf.getValue().toString() + " (100% wide)");
+        // tf.setValue(tf.getValue() + " (100% wide)");
         // tf.setWidth("100%");
 
         // tf = new TextField("100%x70px Field");
@@ -1032,45 +1030,29 @@ public class OrderedLayoutBasics extends TestBase {
     }
 
     private Button createAddButton(AbstractOrderedLayout ol) {
-        Button b = new Button("Add before", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
+        Button b = new Button("Add before", event ->
                 addBefore((AbstractOrderedLayout) event.getButton().getData(),
-                        event.getButton().getParent(), "");
-            }
-
-        });
+                event.getButton().getParent(), ""));
         b.setData(ol);
 
         return b;
     }
 
     private Button createWideAddButton(AbstractOrderedLayout ol) {
-        Button b = new Button("Add 100% before", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                addBefore((AbstractOrderedLayout) event.getButton().getData(),
-                        event.getButton().getParent(), "100%");
-            }
-
-        });
+        Button b = new Button("Add 100% before",
+                event -> addBefore(
+                        (AbstractOrderedLayout) event.getButton().getData(),
+                        event.getButton().getParent(), "100%"));
         b.setData(ol);
 
         return b;
     }
 
     private Button createRemoveButton(AbstractOrderedLayout ol, String suffix) {
-        Button b = new Button("Remove this " + suffix, new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                remove((AbstractOrderedLayout) event.getButton().getData(),
-                        event.getButton().getParent());
-            }
-
-        });
+        Button b = new Button("Remove this " + suffix,
+                event -> remove(
+                        (AbstractOrderedLayout) event.getButton().getData(),
+                        event.getButton().getParent()));
         b.setWidth("100%");
         b.setData(ol);
 

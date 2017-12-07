@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.panel;
 
-import com.vaadin.event.MouseEvents.ClickEvent;
-import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
@@ -13,14 +11,8 @@ public class PanelClickListenerRelativeCoordinates extends TestBase {
         VerticalLayout panelLayout = new VerticalLayout();
         panelLayout.setMargin(true);
         Panel panel = new Panel("Panel's caption", panelLayout);
-        panel.addClickListener(new ClickListener() {
-
-            @Override
-            public void click(ClickEvent event) {
-                getMainWindow().showNotification("" + event.getRelativeX()
-                        + ", " + event.getRelativeY());
-            }
-        });
+        panel.addClickListener(event -> getMainWindow().showNotification(
+                "" + event.getRelativeX() + ", " + event.getRelativeY()));
         addComponent(panel);
 
     }

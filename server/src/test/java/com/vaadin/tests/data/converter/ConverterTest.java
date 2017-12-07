@@ -1,6 +1,7 @@
 package com.vaadin.tests.data.converter;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.data.Converter;
@@ -13,9 +14,8 @@ public class ConverterTest {
     SerializableFunction<String, Result<String>> toModel = presentation -> {
         if (presentation.startsWith("presentation-")) {
             return Result.ok(presentation.substring("presentation-".length()));
-        } else {
-            return Result.error("invalid prefix: " + presentation);
         }
+        return Result.error("invalid prefix: " + presentation);
     };
 
     SerializableFunction<String, String> toPresentation = model -> "presentation-"
@@ -26,9 +26,9 @@ public class ConverterTest {
 
     @Test
     public void basicConversion() {
-        Assert.assertEquals("presentation-123",
+        assertEquals("presentation-123",
                 converter.convertToPresentation("123", new ValueContext()));
-        Assert.assertEquals("123",
+        assertEquals("123",
                 converter.convertToModel("presentation-123", new ValueContext())
                         .getOrThrow(msg -> new AssertionError(msg)));
     }

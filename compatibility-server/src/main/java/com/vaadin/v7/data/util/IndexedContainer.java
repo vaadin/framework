@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.v7.data.Container;
@@ -39,7 +40,7 @@ import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
 /**
  * An implementation of the <code>{@link Container.Indexed}</code> interface
  * with all important features.
- * </p>
+ * <p>
  *
  * Features:
  * <ul>
@@ -74,29 +75,29 @@ public class IndexedContainer
     /**
      * Linked list of ordered Property IDs.
      */
-    private ArrayList<Object> propertyIds = new ArrayList<Object>();
+    private List<Object> propertyIds = new ArrayList<Object>();
 
     /**
      * Property ID to type mapping.
      */
-    private Hashtable<Object, Class<?>> types = new Hashtable<Object, Class<?>>();
+    private Map<Object, Class<?>> types = new Hashtable<Object, Class<?>>();
 
     /**
      * Hash of Items, where each Item is implemented as a mapping from Property
      * ID to Property value.
      */
-    private Hashtable<Object, Map<Object, Object>> items = new Hashtable<Object, Map<Object, Object>>();
+    private Map<Object, Map<Object, Object>> items = new Hashtable<Object, Map<Object, Object>>();
 
     /**
      * Set of properties that are read-only.
      */
-    private HashSet<Property<?>> readOnlyProperties = new HashSet<Property<?>>();
+    private Set<Property<?>> readOnlyProperties = new HashSet<Property<?>>();
 
     /**
      * List of all Property value change event listeners listening all the
      * properties.
      */
-    private LinkedList<Property.ValueChangeListener> propertyValueChangeListeners = null;
+    private List<Property.ValueChangeListener> propertyValueChangeListeners = null;
 
     /**
      * Data structure containing all listeners interested in changes to single
@@ -104,9 +105,9 @@ public class IndexedContainer
      * hashtable that maps Item IDs to a linked list of listeners listening
      * Property identified by given Property ID and Item ID.
      */
-    private Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>> singlePropertyValueChangeListeners = null;
+    private Map<Object, Map<Object, List<Property.ValueChangeListener>>> singlePropertyValueChangeListeners;
 
-    private HashMap<Object, Object> defaultPropertyValues;
+    private Map<Object, Object> defaultPropertyValues;
 
     private int nextGeneratedItemId = 1;
 
@@ -146,7 +147,7 @@ public class IndexedContainer
     /**
      * Gets the type of a Property stored in the list.
      *
-     * @param id
+     * @param propertyId
      *            the ID of the Property.
      * @return Type of the requested Property
      */
@@ -266,7 +267,7 @@ public class IndexedContainer
      * @param t
      *            data table of added item
      */
-    private void addDefaultValues(Hashtable<Object, Object> t) {
+    private void addDefaultValues(Map<Object, Object> t) {
         if (defaultPropertyValues != null) {
             for (Object key : defaultPropertyValues.keySet()) {
                 t.put(key, defaultPropertyValues.get(key));
@@ -389,7 +390,7 @@ public class IndexedContainer
 
     @Override
     protected void registerNewItem(int index, Object newItemId, Item item) {
-        Hashtable<Object, Object> t = new Hashtable<Object, Object>();
+        Map<Object, Object> t = new Hashtable<Object, Object>();
         items.put(newItemId, t);
         addDefaultValues(t);
     }
@@ -415,7 +416,7 @@ public class IndexedContainer
         }
 
         /**
-         * Iff one item is added, gives its index.
+         * If and only if one item is added, gives its index.
          *
          * @return -1 if either multiple items are changed or some other change
          *         than add is done.
@@ -434,7 +435,7 @@ public class IndexedContainer
      * @since 3.0
      */
     private static class PropertyValueChangeEvent extends EventObject
-            implements Property.ValueChangeEvent, Serializable {
+            implements Property.ValueChangeEvent {
 
         private PropertyValueChangeEvent(Property source) {
             super(source);
@@ -456,7 +457,7 @@ public class IndexedContainer
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addPropertySetChangeListener(Container.PropertySetChangeListener)}
-     **/
+     */
     @Deprecated
     @Override
     public void addListener(Container.PropertySetChangeListener listener) {
@@ -472,7 +473,7 @@ public class IndexedContainer
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removePropertySetChangeListener(Container.PropertySetChangeListener)}
-     **/
+     */
     @Deprecated
     @Override
     public void removeListener(Container.PropertySetChangeListener listener) {
@@ -490,7 +491,7 @@ public class IndexedContainer
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addValueChangeListener(Property.ValueChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(Property.ValueChangeListener listener) {
@@ -508,7 +509,7 @@ public class IndexedContainer
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeValueChangeListener(Property.ValueChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(Property.ValueChangeListener listener) {
@@ -525,11 +526,10 @@ public class IndexedContainer
 
         // Sends event to listeners listening all value changes
         if (propertyValueChangeListeners != null) {
-            final Object[] l = propertyValueChangeListeners.toArray();
             final Property.ValueChangeEvent event = new IndexedContainer.PropertyValueChangeEvent(
                     source);
-            for (int i = 0; i < l.length; i++) {
-                ((Property.ValueChangeListener) l[i]).valueChange(event);
+            for (Object l : propertyValueChangeListeners.toArray()) {
+                ((Property.ValueChangeListener) l).valueChange(event);
             }
         }
 
@@ -543,15 +543,13 @@ public class IndexedContainer
                 if (listenerList != null) {
                     final Property.ValueChangeEvent event = new IndexedContainer.PropertyValueChangeEvent(
                             source);
-                    Object[] listeners = listenerList.toArray();
-                    for (int i = 0; i < listeners.length; i++) {
-                        ((Property.ValueChangeListener) listeners[i])
+                    for (Object listener : listenerList.toArray()) {
+                        ((Property.ValueChangeListener) listener)
                                 .valueChange(event);
                     }
                 }
             }
         }
-
     }
 
     @Override
@@ -917,7 +915,7 @@ public class IndexedContainer
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #addValueChangeListener(Property.ValueChangeListener)}
-         **/
+         */
         @Override
         @Deprecated
         public void addListener(Property.ValueChangeListener listener) {
@@ -933,7 +931,7 @@ public class IndexedContainer
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #removeValueChangeListener(Property.ValueChangeListener)}
-         **/
+         */
         @Override
         @Deprecated
         public void removeListener(Property.ValueChangeListener listener) {
@@ -983,39 +981,39 @@ public class IndexedContainer
         final IndexedContainer nc = new IndexedContainer();
 
         // Clone the shallow properties
-        nc.setAllItemIds(getAllItemIds() != null
-                ? (ListSet<Object>) ((ListSet<Object>) getAllItemIds()).clone()
-                : null);
+        nc.setAllItemIds(
+                getAllItemIds() != null ? new ListSet<Object>(getAllItemIds())
+                        : null);
         nc.setItemSetChangeListeners(getItemSetChangeListeners() != null
                 ? new LinkedList<Container.ItemSetChangeListener>(
                         getItemSetChangeListeners())
                 : null);
         nc.propertyIds = propertyIds != null
-                ? (ArrayList<Object>) propertyIds.clone() : null;
+                ? new ArrayList<Object>(propertyIds)
+                : null;
         nc.setPropertySetChangeListeners(getPropertySetChangeListeners() != null
                 ? new LinkedList<Container.PropertySetChangeListener>(
                         getPropertySetChangeListeners())
                 : null);
         nc.propertyValueChangeListeners = propertyValueChangeListeners != null
-                ? (LinkedList<Property.ValueChangeListener>) propertyValueChangeListeners
-                        .clone()
+                ? new LinkedList<Property.ValueChangeListener>(
+                        propertyValueChangeListeners)
                 : null;
         nc.readOnlyProperties = readOnlyProperties != null
-                ? (HashSet<Property<?>>) readOnlyProperties.clone() : null;
+                ? new HashSet<Property<?>>(readOnlyProperties)
+                : null;
         nc.singlePropertyValueChangeListeners = singlePropertyValueChangeListeners != null
-                ? (Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>>) singlePropertyValueChangeListeners
-                        .clone()
+                ? new Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>>(
+                        singlePropertyValueChangeListeners)
                 : null;
 
-        nc.types = types != null ? (Hashtable<Object, Class<?>>) types.clone()
+        nc.types = types != null ? new Hashtable<Object, Class<?>>(types)
                 : null;
 
-        nc.setFilters(
-                (HashSet<Filter>) ((HashSet<Filter>) getFilters()).clone());
+        nc.setFilters(new HashSet<Filter>(getFilters()));
 
         nc.setFilteredItemIds(getFilteredItemIds() == null ? null
-                : (ListSet<Object>) ((ListSet<Object>) getFilteredItemIds())
-                        .clone());
+                : new ListSet<Object>(getFilteredItemIds()));
 
         // Clone property-values
         if (items == null) {

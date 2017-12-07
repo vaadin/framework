@@ -5,12 +5,10 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.event.ItemClickEvent;
-import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.AbstractSelect;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Tree;
@@ -32,15 +30,11 @@ public class ItemClickEvents extends AbstractReindeerTestUI {
         log.setId("log");
 
         HorizontalLayout ol = createHorizontalLayout(tree);
-        Button b = new Button("icon", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (tree.getItemIconPropertyId() == null) {
-                    tree.setItemIconPropertyId("icon");
-                } else {
-                    tree.setItemIconPropertyId(null);
-                }
-
+        Button b = new Button("icon", event -> {
+            if (tree.getItemIconPropertyId() == null) {
+                tree.setItemIconPropertyId("icon");
+            } else {
+                tree.setItemIconPropertyId(null);
             }
         });
         ol.addComponent(b);
@@ -61,12 +55,7 @@ public class ItemClickEvents extends AbstractReindeerTestUI {
                 new ExternalResource(
                         "https://vaadin.com/vaadin-theme/images/vaadin-logo.png"));
 
-        tree.addListener(new ItemClickListener() {
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                logEvent(event, "tree");
-            }
-        });
+        tree.addItemClickListener(event -> logEvent(event, "tree"));
         tree.setId("tree");
 
         HorizontalLayout ol2 = createHorizontalLayout(table);
@@ -80,22 +69,11 @@ public class ItemClickEvents extends AbstractReindeerTestUI {
             item.getItemProperty("Column").setValue("Row " + i);
 
         }
-        table.addListener(new ItemClickListener() {
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                logEvent(event, "table");
-            }
-        });
+        table.addItemClickListener(event -> logEvent(event, "table"));
         table.setId("table");
 
         addComponent(log);
-        addComponent(new Button("Clear log", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                log.clear();
-            }
-        }));
+        addComponent(new Button("Clear log", event -> log.clear()));
         addComponent(ol);
         addComponent(tree);
         addComponent(ol2);
@@ -123,7 +101,7 @@ public class ItemClickEvents extends AbstractReindeerTestUI {
         if (event.isShiftKey()) {
             modifiers += "shift ";
         }
-        if (!"".equals(modifiers)) {
+        if (!modifiers.isEmpty()) {
             modifiers = " (" + modifiers.trim() + ")";
         }
 

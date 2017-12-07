@@ -1,6 +1,9 @@
 package com.vaadin.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
@@ -17,17 +20,17 @@ public class GridRendererSwitchTest extends SingleBrowserTest {
         openTestURL();
 
         GridElement grid = $(GridElement.class).first();
-        Assert.assertEquals("Unexpected content in first grid cell", "Foo 0",
+        assertEquals("Unexpected content in first grid cell", "Foo 0",
                 grid.getCell(0, 0).getAttribute("innerHTML"));
         ButtonElement button = $(ButtonElement.class).first();
         button.click();
-        Assert.assertFalse("No button in cell", grid.getCell(0, 0)
+        assertFalse("No button in cell", grid.getCell(0, 0)
                 .findElements(By.tagName("button")).isEmpty());
         grid.getCell(0, 0).findElement(By.tagName("button")).click();
-        Assert.assertTrue("Notification not shown",
+        assertTrue("Notification not shown",
                 isElementPresent(NotificationElement.class));
         button.click();
-        Assert.assertEquals("Cell should be back to text content.", "Foo 0",
+        assertEquals("Cell should be back to text content.", "Foo 0",
                 grid.getCell(0, 0).getAttribute("innerHTML"));
 
         assertNoErrorNotifications();
@@ -39,26 +42,24 @@ public class GridRendererSwitchTest extends SingleBrowserTest {
         openTestURL();
 
         GridElement grid = $(GridElement.class).first();
-        Assert.assertEquals("Unexpected content in first grid cell", "Foo 0",
+        assertEquals("Unexpected content in first grid cell", "Foo 0",
                 grid.getCell(0, 0).getAttribute("innerHTML"));
         ButtonElement button = $(ButtonElement.class).caption("Switch").first();
         button.click();
         ButtonElement reverse = $(ButtonElement.class).caption("Reverse")
                 .first();
         reverse.click();
-        Assert.assertEquals(
-                "Unexpected content in first grid cell after reorder", "Bar 0",
-                grid.getCell(0, 0).getAttribute("innerHTML"));
+        assertEquals("Unexpected content in first grid cell after reorder",
+                "Bar 0", grid.getCell(0, 0).getAttribute("innerHTML"));
 
-        Assert.assertFalse("No button in cell after reversing order", grid
+        assertFalse("No button in cell after reversing order", grid
                 .getCell(0, 1).findElements(By.tagName("button")).isEmpty());
         grid.getCell(0, 1).findElement(By.tagName("button")).click();
-        Assert.assertTrue("Notification not shown",
+        assertTrue("Notification not shown",
                 isElementPresent(NotificationElement.class));
         reverse.click();
-        Assert.assertFalse("No button in cell after restoring original order",
-                grid.getCell(0, 0).findElements(By.tagName("button"))
-                        .isEmpty());
+        assertFalse("No button in cell after restoring original order", grid
+                .getCell(0, 0).findElements(By.tagName("button")).isEmpty());
 
         assertNoErrorNotifications();
     }
@@ -69,29 +70,28 @@ public class GridRendererSwitchTest extends SingleBrowserTest {
         openTestURL();
 
         GridElement grid = $(GridElement.class).first();
-        Assert.assertEquals("Unexpected content in first grid cell", "Foo 0",
+        assertEquals("Unexpected content in first grid cell", "Foo 0",
                 grid.getCell(0, 0).getAttribute("innerHTML"));
         ButtonElement reverse = $(ButtonElement.class).caption("Reverse")
                 .first();
 
         reverse.click();
-        Assert.assertEquals(
-                "Unexpected content in first grid cell after reorder", "Bar 0",
-                grid.getCell(0, 0).getAttribute("innerHTML"));
+        assertEquals("Unexpected content in first grid cell after reorder",
+                "Bar 0", grid.getCell(0, 0).getAttribute("innerHTML"));
 
         ButtonElement button = $(ButtonElement.class).caption("Switch").first();
         button.click();
 
-        Assert.assertFalse(
+        assertFalse(
                 "No button in cell after reversing order and changing renderer",
                 grid.getCell(0, 1).findElements(By.tagName("button"))
                         .isEmpty());
         grid.getCell(0, 1).findElement(By.tagName("button")).click();
-        Assert.assertTrue("Notification not shown",
+        assertTrue("Notification not shown",
                 isElementPresent(NotificationElement.class));
 
         button.click();
-        Assert.assertEquals("Cell should be back to text content.", "Foo 0",
+        assertEquals("Cell should be back to text content.", "Foo 0",
                 grid.getCell(0, 1).getAttribute("innerHTML"));
 
         assertNoErrorNotifications();
@@ -103,15 +103,14 @@ public class GridRendererSwitchTest extends SingleBrowserTest {
         openTestURL();
 
         GridElement grid = $(GridElement.class).first();
-        Assert.assertEquals("Unexpected content in first grid cell", "Foo 0",
+        assertEquals("Unexpected content in first grid cell", "Foo 0",
                 grid.getCell(0, 0).getAttribute("innerHTML"));
         ButtonElement reverse = $(ButtonElement.class).caption("Reverse")
                 .first();
 
         reverse.click();
-        Assert.assertEquals(
-                "Unexpected content in first grid cell after reorder", "Bar 0",
-                grid.getCell(0, 0).getAttribute("innerHTML"));
+        assertEquals("Unexpected content in first grid cell after reorder",
+                "Bar 0", grid.getCell(0, 0).getAttribute("innerHTML"));
 
         grid.toggleColumnHidden("Bar");
 
@@ -120,12 +119,12 @@ public class GridRendererSwitchTest extends SingleBrowserTest {
 
         assertNoErrorNotifications();
 
-        Assert.assertFalse(
+        assertFalse(
                 "No button in cell after reversing order and changing renderer",
                 grid.getCell(0, 0).findElements(By.tagName("button"))
                         .isEmpty());
         grid.getCell(0, 0).findElement(By.tagName("button")).click();
-        Assert.assertTrue("Notification not shown",
+        assertTrue("Notification not shown",
                 isElementPresent(NotificationElement.class));
     }
 
@@ -135,12 +134,12 @@ public class GridRendererSwitchTest extends SingleBrowserTest {
         openTestURL();
 
         GridElement grid = $(GridElement.class).first();
-        Assert.assertEquals("Unexpected content in first grid cell", "Foo 0",
+        assertEquals("Unexpected content in first grid cell", "Foo 0",
                 grid.getCell(0, 0).getAttribute("innerHTML"));
 
         grid.toggleColumnHidden("Foo");
 
-        Assert.assertEquals("Unexpected content in first grid cell after hide",
+        assertEquals("Unexpected content in first grid cell after hide",
                 "Bar 0", grid.getCell(0, 0).getAttribute("innerHTML"));
 
         ButtonElement button = $(ButtonElement.class).caption("Switch").first();
@@ -148,7 +147,7 @@ public class GridRendererSwitchTest extends SingleBrowserTest {
 
         assertNoErrorNotifications();
 
-        Assert.assertEquals(
+        assertEquals(
                 "Unexpected content in first grid cell after hidden renderer change",
                 "Bar 0", grid.getCell(0, 0).getAttribute("innerHTML"));
     }

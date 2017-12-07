@@ -7,8 +7,6 @@ layout: page
 [[advanced.osgi]]
 = Vaadin OSGi Support
 
-IMPORTANT: The OSGi support as described here is currently being developed and only available in the Framework 8.1 prerelease versions, starting from 8.1.0.beta1.
-
 Vaadin applications can be deployed on an OSGi compatible servlet container, or on Liferay 7 as OSGi portlets.
 
 An OSGi application typically consists of multiple bundles that can be deployed separately. Multiple versions of each bundle can be present, and the OSGi runtime resolves their dependencies at run-time based on bundle manifests.
@@ -16,6 +14,94 @@ An OSGi application typically consists of multiple bundles that can be deployed 
 To deploy Vaadin applications as OSGi bundles, static resources (including themes and widget sets) must be published using the appropriate APIs to enable using multiple Vaadin versions on the same server.
 
 The application is typically packaged as a JAR file, and needs to have a valid OSGi bundle manifest which can be created e.g. by the `bnd-maven-plugin`. All the dependencies of the application should be available as OSGi bundles.
+
+[[advanced.osgi.servlet.maven]]
+== Minimal Vaadin Project For OSGi
+Vaadin application for OSGi should be a valid bundle, i.e. it should be packaged as a `.jar` file, and it should have a proper OSGi manifest inside.
+The easiest way to convert regular maven-based Vaadin application into a valid OSGi bundle consists of five steps:
+
+* Change packaging type to `jar` in your `pom.xml`:
+[source, xml]
+----
+    <packaging>jar</packaging>
+----
+* Change the scope for all vaadin dependencies from default to `provided`, like this:
+[source, xml]
+----
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-server</artifactId>
+            <scope>provided</scope>
+        </dependency>
+----
+* Add OSGi-related dependencies to the project
+[source, xml]
+----
+        <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-osgi-integration</artifactId>
+            <version>8.1.0.beta1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.core</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.annotation</artifactId>
+            <version>6.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.cmpn</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+----
+* Setup necessary plugins for building the project:
+[source, xml]
+----
+ <build>
+        <plugins>
+            <plugin>
+                <groupId>biz.aQute.bnd</groupId>
+                <artifactId>bnd-maven-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>bnd-process</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
+            </plugin>
+            ...
+        </plugins>
+    </build>
+----
+* Add bundle script (`bnd.bnd`) into the project root folder:
+[source, text]
+----
+Bundle-Name: ${project.name}
+Bundle-Version: ${project.version}
+Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
+Export-Package: com.example.osgi.myapplication
+Import-Package: *
+Web-ContentPath: /myapp
+----
 
 [[advanced.osgi.servlet]]
 == Publishing a Servlet With OSGi
@@ -66,3 +152,33 @@ Alternatively, an OSGi bundle activator or an SCR Component [interfacename]#@Act
 ----
 
 In addition to these approaches, it is also possible to repackage all the static resources of an application to a single bundle and export the [filename]#/VAADIN# directory. This can be useful e.g. when migrating an old Vaadin OSGi application in an environment that does not support parallel deployments of multiple versions of the application.
+
+[[advanced.osgi.deploy]]
+== Deployment to OSGi container.
+
+In order to have your application running under OSGi container, you need to have Vaadin framework bundles deployed, and then the application bundle can be deployed and started.
+Here is a list of required Vaadin bundles, in order of loading:
+
+* `jsoup-1.8.3.jar`
+* `gentyref-1.2.0.vaadin1.jar`
+* `vaadin-shared-8.1.x.jar`
+* `vaadin-server-8.1.x.jar-8.1.x.jar`
+* `vaadin-osgi-integration-8.1.x.jar`
+* `vaadin-client-compiled-8.1.x.jar` (not required, if your project uses its own widgetset)
+* `vaadin-themes-8.1.x.jar`
+
+And here is a complete script to have Vaadin application up and running using link:https://karaf.apache.org/[Apache Karaf 4.0.8] console:
+
+[source]
+----
+feature:install http
+feature:install http-whiteboard
+bundle:install -s mvn:org.jsoup/jsoup/1.8.3
+bundle:install -s mvn:com.vaadin.external/gentyref/1.2.0.vaadin1
+bundle:install -s mvn:com.vaadin/vaadin-shared/8.1.0
+bundle:install -s mvn:com.vaadin/vaadin-server/8.1.0
+bundle:install -s mvn:com.vaadin/vaadin-osgi-integration/8.1.0
+bundle:install -s mvn:com.vaadin/vaadin-client-compiled/8.1.0
+bundle:install -s mvn:com.vaadin/vaadin-themes/8.1.0
+bundle:install -s file:path-to-the-application.jar
+----

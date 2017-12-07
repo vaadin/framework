@@ -43,22 +43,12 @@ import com.vaadin.data.provider.TreeDataProvider;
 public class TreeData<T> implements Serializable {
 
     private static class HierarchyWrapper<T> implements Serializable {
-        private T item;
         private T parent;
         private List<T> children;
 
-        public HierarchyWrapper(T item, T parent) {
-            this.item = item;
+        public HierarchyWrapper(T parent) {
             this.parent = parent;
             children = new ArrayList<>();
-        }
-
-        public T getItem() {
-            return item;
-        }
-
-        public void setItem(T item) {
-            this.item = item;
         }
 
         public T getParent() {
@@ -71,10 +61,6 @@ public class TreeData<T> implements Serializable {
 
         public List<T> getChildren() {
             return children;
-        }
-
-        public void setChildren(List<T> children) {
-            this.children = children;
         }
 
         public void addChild(T child) {
@@ -94,7 +80,7 @@ public class TreeData<T> implements Serializable {
      */
     public TreeData() {
         itemToWrapperMap = new LinkedHashMap<>();
-        itemToWrapperMap.put(null, new HierarchyWrapper<>(null, null));
+        itemToWrapperMap.put(null, new HierarchyWrapper<>(null));
     }
 
     /**
@@ -368,6 +354,117 @@ public class TreeData<T> implements Serializable {
     }
 
     /**
+     * Get the parent item for the given item.
+     *
+     * @param item
+     *         the item for which to retrieve the parent item for
+     * @return parent item for the given item or {@code null} if the item is a
+     *         root item.
+     * @throws IllegalArgumentException
+     *         if the item does not exist in this structure
+     * @since 8.1.1
+     */
+    public T getParent(T item) {
+        if (!contains(item)) {
+            throw new IllegalArgumentException(
+                    "Item '" + item + "' not in hierarchy");
+        }
+        return itemToWrapperMap.get(item).getParent();
+    }
+
+    /**
+     * Moves an item to become a child of the given parent item. The new parent
+     * item must exist in the hierarchy. Setting the parent to {@code null}
+     * makes the item a root item. After making changes to the tree data, {@link
+     * TreeDataProvider#refreshAll()} should be called.
+     *
+     * @param item
+     *         the item to be set as the child of {@code parent}
+     * @param parent
+     *         the item to be set as parent or {@code null} to set the item as
+     *         root
+     * @since 8.1
+     */
+    public void setParent(T item, T parent) {
+        if (!contains(item)) {
+            throw new IllegalArgumentException(
+                    "Item '" + item + "' not in the hierarchy");
+        }
+
+        if (parent != null && !contains(parent)) {
+            throw new IllegalArgumentException(
+                    "Parent needs to be added before children. "
+                            + "To set as root item, call with parent as null");
+        }
+
+        if (item.equals(parent)) {
+            throw new IllegalArgumentException(
+                    "Item cannot be the parent of itself");
+        }
+
+        T oldParent = itemToWrapperMap.get(item).getParent();
+
+        if (!Objects.equals(oldParent, parent)) {
+            // Remove item from old parent's children
+            itemToWrapperMap.get(oldParent).removeChild(item);
+
+            // Add item to parent's children
+            itemToWrapperMap.get(parent).addChild(item);
+
+            // Set item's new parent
+            itemToWrapperMap.get(item).setParent(parent);
+        }
+    }
+
+    /**
+     * Moves an item to the position immediately after a sibling item. The two
+     * items must have the same parent. After making changes to the tree data,
+     * {@link TreeDataProvider#refreshAll()} should be called.
+     *
+     * @param item
+     *         the item to be moved
+     * @param sibling
+     *         the item after which the moved item will be located, or {@code
+     *         null} to move item to first position
+     * @since 8.1
+     */
+    public void moveAfterSibling(T item, T sibling) {
+        if (!contains(item)) {
+            throw new IllegalArgumentException(
+                    "Item '" + item + "' not in the hierarchy");
+        }
+
+        if (sibling == null) {
+            List<T> children = itemToWrapperMap.get(getParent(item))
+                    .getChildren();
+
+            // Move item to first position
+            children.remove(item);
+            children.add(0, item);
+        } else {
+            if (!contains(sibling)) {
+                throw new IllegalArgumentException(
+                        "Item '" + sibling + "' not in the hierarchy");
+            }
+
+            T parent = itemToWrapperMap.get(item).getParent();
+
+            if (!Objects.equals(parent,
+                    itemToWrapperMap.get(sibling).getParent())) {
+                throw new IllegalArgumentException(
+                        "Items '" + item + "' and '" + sibling
+                                + "' don't have the same parent");
+            }
+
+            List<T> children = itemToWrapperMap.get(parent).getChildren();
+
+            // Move item to the position after the sibling
+            children.remove(item);
+            children.add(children.indexOf(sibling) + 1, item);
+        }
+    }
+
+    /**
      * Check whether the given item is in this hierarchy.
      *
      * @param item
@@ -380,7 +477,7 @@ public class TreeData<T> implements Serializable {
     }
 
     private void putItem(T item, T parent) {
-        HierarchyWrapper<T> wrappedItem = new HierarchyWrapper<>(item, parent);
+        HierarchyWrapper<T> wrappedItem = new HierarchyWrapper<>(parent);
         if (itemToWrapperMap.containsKey(parent)) {
             itemToWrapperMap.get(parent).addChild(item);
         }

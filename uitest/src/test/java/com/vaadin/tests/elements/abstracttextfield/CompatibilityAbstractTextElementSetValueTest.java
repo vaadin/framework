@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.elements.abstracttextfield;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,7 +30,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class CompatibilityAbstractTextElementSetValueTest
         extends MultiBrowserTest {
-    private final static String TYPED_STRING = "this is typed string";
+    private static final String TYPED_STRING = "this is typed string";
 
     @Before
     public void init() {
@@ -60,8 +61,8 @@ public class CompatibilityAbstractTextElementSetValueTest
         LabelElement eventCount = $(LabelElement.class).get(4);
         // we can type any string in date field element
         elem.setValue(TYPED_STRING);
-        Assert.assertEquals(TYPED_STRING, elem.getValue());
-        Assert.assertEquals("1", eventCount.getText());
+        assertEquals(TYPED_STRING, elem.getValue());
+        assertEquals("1", eventCount.getText());
     }
 
     // helper methods
@@ -69,16 +70,15 @@ public class CompatibilityAbstractTextElementSetValueTest
     private void checkType(AbstractTextFieldElement elem,
             LabelElement eventCount) {
         // check first that the initial value is set
-        Assert.assertEquals(
-                CompatibilityAbstractTextElementSetValue.INITIAL_VALUE,
+        assertEquals(CompatibilityAbstractTextElementSetValue.INITIAL_VALUE,
                 elem.getValue());
         elem.setValue(TYPED_STRING);
 
         // check that typed value is the same
-        Assert.assertEquals(TYPED_STRING, elem.getValue());
+        assertEquals(TYPED_STRING, elem.getValue());
 
         // checks that there was only one change value event
-        Assert.assertEquals("1", eventCount.getText());
+        assertEquals("1", eventCount.getText());
 
     }
 }

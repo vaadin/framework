@@ -27,6 +27,7 @@ import com.vaadin.shared.ui.dnd.DragSourceRpc;
 import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.EffectAllowed;
+import com.vaadin.shared.ui.dnd.criteria.Payload;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.dnd.event.DragEndEvent;
 import com.vaadin.ui.dnd.event.DragEndListener;
@@ -38,7 +39,7 @@ import com.vaadin.ui.dnd.event.DragStartListener;
  * functionality.
  *
  * @param <T>
- *            Type of the component to be extended.
+ *         Type of the component to be extended.
  * @author Vaadin Ltd
  * @since 8.1
  */
@@ -58,7 +59,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * Extends {@code target} component and makes it a drag source.
      *
      * @param target
-     *            Component to be extended.
+     *         Component to be extended.
      */
     public DragSourceExtension(T target) {
         super.extend(target);
@@ -125,7 +126,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * side. Fires the {@link DragEndEvent}.
      *
      * @param dropEffect
-     *            the drop effect on the dragend
+     *         the drop effect on the dragend
      */
     protected void onDragEnd(DropEffect dropEffect) {
         DragEndEvent<T> event = new DragEndEvent<>(getParent(), dropEffect);
@@ -150,7 +151,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * equivalent to {@link EffectAllowed#ALL}.
      *
      * @param effect
-     *            Effects to allow for this draggable element. Cannot be {@code
+     *         Effects to allow for this draggable element. Cannot be {@code
      *         null}.
      */
     public void setEffectAllowed(EffectAllowed effect) {
@@ -294,6 +295,75 @@ public class DragSourceExtension<T extends AbstractComponent>
     }
 
     /**
+     * Sets payload for this drag source to use with acceptance criterion. The
+     * payload is transferred as data type in the data transfer object in the
+     * following format: {@code "v-item:string:key:value"}. The given value is
+     * compared to the criterion value when the drag source is dragged on top of
+     * a drop target that has the suitable criterion.
+     * <p>
+     * Note that setting payload in Internet Explorer 11 is not possible due to
+     * the browser's limitations.
+     *
+     * @param key
+     *         key of the payload to be transferred
+     * @param value
+     *         value of the payload to be transferred
+     * @see DropTargetExtension#setDropCriterion(String, String)
+     */
+    public void setPayload(String key, String value) {
+        setPayload(key, String.valueOf(value), Payload.ValueType.STRING);
+    }
+
+    /**
+     * Sets payload for this drag source to use with acceptance criterion. The
+     * payload is transferred as data type in the data transfer object in the
+     * following format: {@code "v-item:integer:key:value"}. The given value is
+     * compared to the criterion value when the drag source is dragged on top of
+     * a drop target that has the suitable criterion.
+     * <p>
+     * Note that setting payload in Internet Explorer 11 is not possible due to
+     * the browser's limitations.
+     *
+     * @param key
+     *         key of the payload to be transferred
+     * @param value
+     *         value of the payload to be transferred
+     * @see DropTargetExtension#setDropCriterion(String, com.vaadin.shared.ui.dnd.criteria.ComparisonOperator,
+     * int)
+     *      DropTargetExtension#setDropCriterion(String, ComparisonOperator, int)
+     */
+    public void setPayload(String key, int value) {
+        setPayload(key, String.valueOf(value), Payload.ValueType.INTEGER);
+    }
+
+    /**
+     * Sets payload for this drag source to use with acceptance criterion. The
+     * payload is transferred as data type in the data transfer object in the
+     * following format: {@code "v-item:double:key:value"}. The given value is
+     * compared to the criterion value when the drag source is dragged on top of
+     * a drop target that has the suitable criterion.
+     * <p>
+     * Note that setting payload in Internet Explorer 11 is not possible due to
+     * the browser's limitations.
+     *
+     * @param key
+     *         key of the payload to be transferred
+     * @param value
+     *         value of the payload to be transferred
+     * @see DropTargetExtension#setDropCriterion(String, com.vaadin.shared.ui.dnd.criteria.ComparisonOperator,
+     * double)
+     *      DropTargetExtension#setDropCriterion(String, ComparisonOperator, double)
+     */
+    public void setPayload(String key, double value) {
+        setPayload(key, String.valueOf(value), Payload.ValueType.DOUBLE);
+    }
+
+    private void setPayload(String key, String value,
+            Payload.ValueType valueType) {
+        getState().payload.put(key, new Payload(key, value, valueType));
+    }
+
+    /**
      * Set server side drag data. This data is available in the drop event and
      * can be used to transfer data between drag source and drop target if they
      * are in the same UI.
@@ -322,7 +392,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * dragstart event happens on the client side.
      *
      * @param listener
-     *            Listener to handle dragstart event.
+     *         Listener to handle dragstart event.
      * @return Handle to be used to remove this listener.
      */
     public Registration addDragStartListener(DragStartListener<T> listener) {
@@ -337,7 +407,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * event happens on the client side.
      *
      * @param listener
-     *            Listener to handle dragend event.
+     *         Listener to handle dragend event.
      * @return Handle to be used to remove this listener.
      */
     public Registration addDragEndListener(DragEndListener<T> listener) {
@@ -349,7 +419,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * Set a custom drag image for the current drag source.
      *
      * @param imageResource
-     *            Resource of the image to be displayed as drag image.
+     *         Resource of the image to be displayed as drag image.
      */
     public void setDragImage(Resource imageResource) {
         setResource(DragSourceState.RESOURCE_DRAG_IMAGE, imageResource);

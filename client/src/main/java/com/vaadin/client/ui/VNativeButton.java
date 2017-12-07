@@ -27,10 +27,12 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.button.ButtonServerRpc;
 
-public class VNativeButton extends Button implements ClickHandler {
+public class VNativeButton extends Button implements ClickHandler,
+        HasErrorIndicatorElement {
 
     public static final String CLASSNAME = "v-nativebutton";
 
@@ -44,7 +46,7 @@ public class VNativeButton extends Button implements ClickHandler {
     public ButtonServerRpc buttonRpcProxy;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element errorIndicatorElement;
+    private Element errorIndicatorElement;
 
     /** For internal use only. May be removed or replaced in the future. */
     public final Element captionElement = DOM.createSpan();
@@ -159,4 +161,22 @@ public class VNativeButton extends Button implements ClickHandler {
         clickPending = false;
     }
 
+    @Override
+    public Element getErrorIndicatorElement() {
+        return errorIndicatorElement;
+    }
+
+    @Override
+    public void setErrorIndicatorElementVisible(boolean visible) {
+        if (visible) {
+            if (errorIndicatorElement == null) {
+                errorIndicatorElement = ErrorUtil.createErrorIndicatorElement();
+                getElement()
+                        .insertBefore(errorIndicatorElement, captionElement);
+            }
+        } else if (errorIndicatorElement != null) {
+            getElement().removeChild(errorIndicatorElement);
+            errorIndicatorElement = null;
+        }
+    }
 }

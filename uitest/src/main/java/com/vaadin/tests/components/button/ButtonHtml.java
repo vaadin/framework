@@ -2,7 +2,6 @@ package com.vaadin.tests.components.button;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 
 /*
  * NOTE This class is arbitrarily picked to represent a legacy application in
@@ -23,13 +22,8 @@ public class ButtonHtml extends TestBase {
         addComponent(b);
 
         final Button swapButton = new Button("<i>Swap button<i>");
-        swapButton.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                swapButton.setCaptionAsHtml(!swapButton.isCaptionAsHtml());
-            }
-        });
+        swapButton.addClickListener(event -> swapButton
+                .setCaptionAsHtml(!swapButton.isCaptionAsHtml()));
         addComponent(swapButton);
     }
 

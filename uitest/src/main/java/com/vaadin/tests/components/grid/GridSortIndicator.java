@@ -32,10 +32,11 @@ public class GridSortIndicator extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         final Grid<Person> grid = getGrid();
         addComponent(grid);
-        addComponent(new Button("Sort first", e -> grid
+        addComponent(new Button("Sort first", event -> grid
                 .sort(grid.getColumn("name"), SortDirection.ASCENDING)));
         addComponent(new Button("Sort both",
-                e -> grid.setSortOrder(GridSortOrder.asc(grid.getColumn("name"))
+                event -> grid
+                        .setSortOrder(GridSortOrder.asc(grid.getColumn("name"))
                         .thenAsc(grid.getColumn("age")))));
     }
 

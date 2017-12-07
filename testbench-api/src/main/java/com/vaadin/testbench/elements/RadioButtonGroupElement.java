@@ -25,7 +25,7 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.RadioButtonGroup")
-public class RadioButtonGroupElement extends AbstractSelectElement {
+public class RadioButtonGroupElement extends AbstractSingleSelectElement {
 
     private static org.openqa.selenium.By bySelectOption = By
             .className("v-select-option");
@@ -55,7 +55,7 @@ public class RadioButtonGroupElement extends AbstractSelectElement {
     }
 
     /**
-     * Return value of the selected option in the option group
+     * Return value of the selected option in the option group.
      *
      * @return value of the selected option in the option group
      */
@@ -74,7 +74,7 @@ public class RadioButtonGroupElement extends AbstractSelectElement {
     }
 
     /**
-     * Select option in the option group with the specified value
+     * Select option in the option group with the specified value.
      *
      * @param chars
      *            value of the option in the option group which will be selected

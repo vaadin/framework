@@ -19,7 +19,6 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Objects;
@@ -100,6 +99,8 @@ public class Upload extends AbstractComponent
     private int totalBytes;
 
     private String buttonCaption = "Upload";
+
+    private String buttonStyleName;
 
     /**
      * ProgressListeners to which information about progress is sent during
@@ -185,11 +186,14 @@ public class Upload extends AbstractComponent
 
         if (buttonCaption != null) {
             target.addAttribute("buttoncaption", buttonCaption);
+            if (buttonStyleName != null) {
+                target.addAttribute("buttonstylename", buttonStyleName);
+            }
         }
 
         target.addAttribute("nextid", nextid);
 
-        // Post file to this strean variable
+        // Post file to this stream variable
         target.addVariable(this, "action", getStreamVariable());
 
     }
@@ -237,9 +241,9 @@ public class Upload extends AbstractComponent
                     .getDeclaredMethod("uploadStarted", StartedEvent.class);
             UPLOAD_SUCCEEDED_METHOD = SucceededListener.class
                     .getDeclaredMethod("uploadSucceeded", SucceededEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in Upload");
         }
     }
@@ -276,15 +280,15 @@ public class Upload extends AbstractComponent
          *            the source of the file.
          * @param filename
          *            the received file name.
-         * @param MIMEType
+         * @param mimeType
          *            the MIME type of the received file.
          * @param length
          *            the length of the received file.
          */
-        public FinishedEvent(Upload source, String filename, String MIMEType,
+        public FinishedEvent(Upload source, String filename, String mimeType,
                 long length) {
             super(source);
-            type = MIMEType;
+            type = mimeType;
             this.filename = filename;
             this.length = length;
         }
@@ -342,13 +346,13 @@ public class Upload extends AbstractComponent
          *
          * @param source
          * @param filename
-         * @param MIMEType
+         * @param mimeType
          * @param length
          * @param reason
          */
-        public FailedEvent(Upload source, String filename, String MIMEType,
+        public FailedEvent(Upload source, String filename, String mimeType,
                 long length, Exception reason) {
-            this(source, filename, MIMEType, length);
+            this(source, filename, mimeType, length);
             this.reason = reason;
         }
 
@@ -356,12 +360,12 @@ public class Upload extends AbstractComponent
          *
          * @param source
          * @param filename
-         * @param MIMEType
+         * @param mimeType
          * @param length
          */
-        public FailedEvent(Upload source, String filename, String MIMEType,
+        public FailedEvent(Upload source, String filename, String mimeType,
                 long length) {
-            super(source, filename, MIMEType, length);
+            super(source, filename, mimeType, length);
         }
 
         /**
@@ -384,12 +388,12 @@ public class Upload extends AbstractComponent
          *
          * @param source
          * @param filename
-         * @param MIMEType
+         * @param mimeType
          * @param length
          */
         public NoOutputStreamEvent(Upload source, String filename,
-                String MIMEType, long length) {
-            super(source, filename, MIMEType, length);
+                String mimeType, long length) {
+            super(source, filename, mimeType, length);
         }
     }
 
@@ -402,14 +406,13 @@ public class Upload extends AbstractComponent
          *
          * @param source
          * @param filename
-         * @param MIMEType
+         * @param mimeType
          * @param length
          */
         public NoInputStreamEvent(Upload source, String filename,
-                String MIMEType, long length) {
-            super(source, filename, MIMEType, length);
+                String mimeType, long length) {
+            super(source, filename, mimeType, length);
         }
-
     }
 
     /**
@@ -425,14 +428,13 @@ public class Upload extends AbstractComponent
          *
          * @param source
          * @param filename
-         * @param MIMEType
+         * @param mimeType
          * @param length
          */
-        public SucceededEvent(Upload source, String filename, String MIMEType,
+        public SucceededEvent(Upload source, String filename, String mimeType,
                 long length) {
-            super(source, filename, MIMEType, length);
+            super(source, filename, mimeType, length);
         }
-
     }
 
     /**
@@ -454,14 +456,14 @@ public class Upload extends AbstractComponent
          *
          * @param source
          * @param filename
-         * @param MIMEType
+         * @param mimeType
          * @param contentLength
          */
-        public StartedEvent(Upload source, String filename, String MIMEType,
+        public StartedEvent(Upload source, String filename, String mimeType,
                 long contentLength) {
             super(source);
             this.filename = filename;
-            type = MIMEType;
+            type = mimeType;
             length = contentLength;
         }
 
@@ -601,16 +603,16 @@ public class Upload extends AbstractComponent
     public interface SucceededListener extends Serializable {
 
         /**
-         * Upload successfull..
+         * Upload successful.
          *
          * @param event
-         *            the Upload successfull event.
+         *            the Upload successful event.
          */
         public void uploadSucceeded(SucceededEvent event);
     }
 
     /**
-     * Listener for {@link ChangeEvent}
+     * Listener for {@link ChangeEvent}.
      *
      * @since 7.2
      */
@@ -753,7 +755,7 @@ public class Upload extends AbstractComponent
     }
 
     /**
-     * Adds a filename change event listener
+     * Adds a filename change event listener.
      *
      * @param listener
      *            the Listener to add, not null
@@ -765,7 +767,7 @@ public class Upload extends AbstractComponent
     }
 
     /**
-     * Removes a filename change event listener
+     * Removes a filename change event listener.
      *
      * @param listener
      *            the listener to be removed
@@ -779,10 +781,10 @@ public class Upload extends AbstractComponent
      * Emit upload received event.
      *
      * @param filename
-     * @param MIMEType
+     * @param mimeType
      */
-    protected void fireStarted(String filename, String MIMEType) {
-        fireEvent(new Upload.StartedEvent(this, filename, MIMEType,
+    protected void fireStarted(String filename, String mimeType) {
+        fireEvent(new Upload.StartedEvent(this, filename, mimeType,
                 contentLength));
     }
 
@@ -790,29 +792,29 @@ public class Upload extends AbstractComponent
      * Emits the upload failed event.
      *
      * @param filename
-     * @param MIMEType
+     * @param mimeType
      * @param length
      */
-    protected void fireUploadInterrupted(String filename, String MIMEType,
+    protected void fireUploadInterrupted(String filename, String mimeType,
             long length) {
-        fireEvent(new Upload.FailedEvent(this, filename, MIMEType, length));
+        fireEvent(new Upload.FailedEvent(this, filename, mimeType, length));
     }
 
-    protected void fireNoInputStream(String filename, String MIMEType,
+    protected void fireNoInputStream(String filename, String mimeType,
             long length) {
-        fireEvent(new Upload.NoInputStreamEvent(this, filename, MIMEType,
+        fireEvent(new Upload.NoInputStreamEvent(this, filename, mimeType,
                 length));
     }
 
-    protected void fireNoOutputStream(String filename, String MIMEType,
+    protected void fireNoOutputStream(String filename, String mimeType,
             long length) {
-        fireEvent(new Upload.NoOutputStreamEvent(this, filename, MIMEType,
+        fireEvent(new Upload.NoOutputStreamEvent(this, filename, mimeType,
                 length));
     }
 
-    protected void fireUploadInterrupted(String filename, String MIMEType,
+    protected void fireUploadInterrupted(String filename, String mimeType,
             long length, Exception e) {
-        fireEvent(new Upload.FailedEvent(this, filename, MIMEType, length, e));
+        fireEvent(new Upload.FailedEvent(this, filename, mimeType, length, e));
     }
 
     /**
@@ -841,9 +843,7 @@ public class Upload extends AbstractComponent
         // this is implemented differently than other listeners to maintain
         // backwards compatibility
         if (progressListeners != null) {
-            for (Iterator<ProgressListener> it = progressListeners
-                    .iterator(); it.hasNext();) {
-                ProgressListener l = it.next();
+            for (ProgressListener l : progressListeners) {
                 l.updateProgress(totalBytes, contentLength);
             }
         }
@@ -966,7 +966,7 @@ public class Upload extends AbstractComponent
     @FunctionalInterface
     public interface ProgressListener extends Serializable {
         /**
-         * Updates progress to listener
+         * Updates progress to listener.
          *
          * @param readBytes
          *            bytes transferred
@@ -977,10 +977,22 @@ public class Upload extends AbstractComponent
     }
 
     /**
+     * Returns the string rendered into button that fires uploading.
+     *
      * @return String to be rendered into button that fires uploading
      */
     public String getButtonCaption() {
         return buttonCaption;
+    }
+
+    /**
+     * Returns the stylename rendered into button that fires uploading.
+     *
+     * @return Stylename to be rendered into button that fires uploading
+     * @since 8.2
+     */
+    public String getButtonStyleName() {
+        return buttonStyleName;
     }
 
     /**
@@ -1007,6 +1019,21 @@ public class Upload extends AbstractComponent
      */
     public void setButtonCaption(String buttonCaption) {
         this.buttonCaption = buttonCaption;
+        markAsDirty();
+    }
+
+    /**
+     * In addition to the actual file chooser, upload components have button
+     * that starts actual upload progress. This method is used to set a
+     * stylename to that button.
+     *
+     * @param buttonStyleName
+     *            styleName for upload components button.
+     * @see #setButtonCaption(String) about when the button is shown / hidden.
+     * @since 8.2
+     */
+    public void setButtonStyleName(String buttonStyleName) {
+        this.buttonStyleName = buttonStyleName;
         markAsDirty();
     }
 

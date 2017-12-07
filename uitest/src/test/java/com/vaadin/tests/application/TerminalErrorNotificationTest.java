@@ -1,6 +1,8 @@
 package com.vaadin.tests.application;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -12,8 +14,8 @@ public class TerminalErrorNotificationTest extends MultiBrowserTest {
     public void tb2test() throws Exception {
         openTestURL();
         $(ButtonElement.class).first().click();
-        Assert.assertTrue(isElementPresent(NotificationElement.class));
-        Assert.assertEquals("Got an exception: You asked for it",
+        assertTrue(isElementPresent(NotificationElement.class));
+        assertEquals("Got an exception: You asked for it",
                 $(NotificationElement.class).first().getCaption());
     }
 }

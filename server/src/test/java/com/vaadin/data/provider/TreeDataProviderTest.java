@@ -1,5 +1,10 @@
 package com.vaadin.data.provider;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -7,7 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.TreeData;
@@ -64,20 +68,86 @@ public class TreeDataProviderTest
     @Test
     public void treeData_remove_root_item() {
         data.removeItem(null);
-        Assert.assertTrue(data.getChildren(null).isEmpty());
+        assertTrue(data.getChildren(null).isEmpty());
     }
 
     @Test
     public void treeData_clear() {
         data.clear();
-        Assert.assertTrue(data.getChildren(null).isEmpty());
+        assertTrue(data.getChildren(null).isEmpty());
     }
 
     @Test
     public void treeData_re_add_removed_item() {
         StrBean item = rootData.get(0);
         data.removeItem(item).addItem(null, item);
-        Assert.assertTrue(data.getChildren(null).contains(item));
+        assertTrue(data.getChildren(null).contains(item));
+    }
+
+    @Test
+    public void treeData_get_parent() {
+        StrBean root = rootData.get(0);
+        StrBean firstChild = data.getChildren(root).get(0);
+        assertNull(data.getParent(root));
+        assertEquals(root, data.getParent(firstChild));
+    }
+
+    @Test
+    public void treeData_set_parent() {
+        StrBean item1 = rootData.get(0);
+        StrBean item2 = rootData.get(1);
+        assertEquals(0, data.getChildren(item2).size());
+        assertEquals(10, data.getRootItems().size());
+
+        // Move item1 as item2's child
+        data.setParent(item1, item2);
+        assertEquals(1, data.getChildren(item2).size());
+        assertEquals(9, data.getRootItems().size());
+        assertEquals(item1, data.getChildren(item2).get(0));
+
+        // Move back to root
+        data.setParent(item1, null);
+        assertEquals(0, data.getChildren(item2).size());
+        assertEquals(10, data.getRootItems().size());
+    }
+
+    @Test
+    public void treeData_move_after_sibling() {
+        StrBean root0 = rootData.get(0);
+        StrBean root9 = rootData.get(9);
+        assertEquals(root0, data.getRootItems().get(0));
+        assertEquals(root9, data.getRootItems().get(9));
+
+        // Move to last position
+        data.moveAfterSibling(root0, root9);
+        assertEquals(root0, data.getRootItems().get(9));
+        assertEquals(root9, data.getRootItems().get(8));
+
+        // Move back to first position
+        data.moveAfterSibling(root0, null);
+        assertEquals(root0, data.getRootItems().get(0));
+        assertEquals(root9, data.getRootItems().get(9));
+
+        StrBean child0 = data.getChildren(root0).get(0);
+        StrBean child2 = data.getChildren(root0).get(2);
+
+        // Move first child to different position
+        data.moveAfterSibling(child0, child2);
+        assertEquals(2, data.getChildren(root0).indexOf(child0));
+        assertEquals(1, data.getChildren(root0).indexOf(child2));
+
+        // Move child back to first position
+        data.moveAfterSibling(child0, null);
+        assertEquals(0, data.getChildren(root0).indexOf(child0));
+        assertEquals(2, data.getChildren(root0).indexOf(child2));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void treeData_move_after_sibling_different_parents() {
+        StrBean root0 = rootData.get(0);
+        StrBean wrongSibling = data.getChildren(root0).get(0);
+
+        data.moveAfterSibling(root0, wrongSibling);
     }
 
     @Test
@@ -92,9 +162,9 @@ public class TreeDataProviderTest
         dataCollection.addRootItems(Arrays.asList("a", "b", "c"));
         dataStream.addRootItems(Arrays.asList("a", "b", "c").stream());
 
-        Assert.assertEquals(data.getRootItems(), dataVarargs.getRootItems());
-        Assert.assertEquals(data.getRootItems(), dataCollection.getRootItems());
-        Assert.assertEquals(data.getRootItems(), dataStream.getRootItems());
+        assertEquals(data.getRootItems(), dataVarargs.getRootItems());
+        assertEquals(data.getRootItems(), dataCollection.getRootItems());
+        assertEquals(data.getRootItems(), dataStream.getRootItems());
     }
 
     @Test
@@ -107,12 +177,12 @@ public class TreeDataProviderTest
             }
             return Arrays.asList(item + "/a", item + "/b", item + "/c");
         });
-        Assert.assertEquals(stringData.getChildren("a"),
+        assertEquals(stringData.getChildren("a"),
                 Arrays.asList("a/a", "a/b", "a/c"));
-        Assert.assertEquals(stringData.getChildren("b"),
+        assertEquals(stringData.getChildren("b"),
                 Arrays.asList("b/a", "b/b", "b/c"));
-        Assert.assertEquals(stringData.getChildren("c"), Arrays.asList());
-        Assert.assertEquals(stringData.getChildren("a/b"), Arrays.asList());
+        assertEquals(stringData.getChildren("c"), Arrays.asList());
+        assertEquals(stringData.getChildren("a/b"), Arrays.asList());
     }
 
     @Test
@@ -125,12 +195,12 @@ public class TreeDataProviderTest
             }
             return Stream.of(item + "/a", item + "/b", item + "/c");
         });
-        Assert.assertEquals(stringData.getChildren("a"),
+        assertEquals(stringData.getChildren("a"),
                 Arrays.asList("a/a", "a/b", "a/c"));
-        Assert.assertEquals(stringData.getChildren("b"),
+        assertEquals(stringData.getChildren("b"),
                 Arrays.asList("b/a", "b/b", "b/c"));
-        Assert.assertEquals(stringData.getChildren("c"), Arrays.asList());
-        Assert.assertEquals(stringData.getChildren("a/b"), Arrays.asList());
+        assertEquals(stringData.getChildren("c"), Arrays.asList());
+        assertEquals(stringData.getChildren("a/b"), Arrays.asList());
     }
 
     @Test
@@ -138,26 +208,26 @@ public class TreeDataProviderTest
         getDataProvider().setFilter(item -> item.getValue().equals("Xyz")
                 || item.getValue().equals("Baz"));
 
-        Assert.assertEquals(10, sizeWithUnfilteredQuery());
+        assertEquals(10, sizeWithUnfilteredQuery());
 
         getDataProvider().setFilter(item -> !item.getValue().equals("Foo")
                 && !item.getValue().equals("Xyz"));
 
-        Assert.assertEquals(
+        assertEquals(
                 "Previous filter should be replaced when setting a new one", 6,
                 sizeWithUnfilteredQuery());
 
         getDataProvider().setFilter(null);
 
-        Assert.assertEquals("Setting filter to null should remove all filters",
-                20, sizeWithUnfilteredQuery());
+        assertEquals("Setting filter to null should remove all filters", 20,
+                sizeWithUnfilteredQuery());
     }
 
     @Test
     public void addFilter() {
         getDataProvider().addFilter(item -> item.getId() <= 10);
         getDataProvider().addFilter(item -> item.getId() >= 5);
-        Assert.assertEquals(5, sizeWithUnfilteredQuery());
+        assertEquals(5, sizeWithUnfilteredQuery());
     }
 
     @Override
@@ -165,29 +235,28 @@ public class TreeDataProviderTest
         DataProvider<StrBean, String> strFilterDataProvider = getDataProvider()
                 .withConvertedFilter(
                         text -> strBean -> strBean.getValue().contains(text));
-        Assert.assertEquals("Only one item should match 'Xyz'", 1,
+        assertEquals("Only one item should match 'Xyz'", 1,
                 strFilterDataProvider
                         .size(new HierarchicalQuery<>("Xyz", null)));
-        Assert.assertEquals("No item should match 'Zyx'", 0,
-                strFilterDataProvider
-                        .size(new HierarchicalQuery<>("Zyx", null)));
-        Assert.assertEquals("Unexpected number of matches for 'Foo'", 3,
+        assertEquals("No item should match 'Zyx'", 0, strFilterDataProvider
+                .size(new HierarchicalQuery<>("Zyx", null)));
+        assertEquals("Unexpected number of matches for 'Foo'", 3,
                 strFilterDataProvider
                         .size(new HierarchicalQuery<>("Foo", null)));
-        Assert.assertEquals("No items should've been filtered out",
-                rootData.size(), strFilterDataProvider
+        assertEquals("No items should've been filtered out", rootData.size(),
+                strFilterDataProvider
                         .size(new HierarchicalQuery<>(null, null)));
     }
 
     @Override
     public void filteringListDataProvider_defaultFilterType() {
-        Assert.assertEquals("Only one item should match 'Xyz'", 1,
+        assertEquals("Only one item should match 'Xyz'", 1,
                 getDataProvider().size(new HierarchicalQuery<>(
                         strBean -> strBean.getValue().contains("Xyz"), null)));
-        Assert.assertEquals("No item should match 'Zyx'", 0,
+        assertEquals("No item should match 'Zyx'", 0,
                 dataProvider.size(new HierarchicalQuery<>(
                         strBean -> strBean.getValue().contains("Zyx"), null)));
-        Assert.assertEquals("Unexpected number of matches for 'Foo'", 3,
+        assertEquals("Unexpected number of matches for 'Foo'", 3,
                 getDataProvider()
                         .size(new HierarchicalQuery<>(fooFilter, null)));
     }
@@ -204,7 +273,7 @@ public class TreeDataProviderTest
                         null))
                 .collect(Collectors.toList());
 
-        Assert.assertEquals("Sorted data and original data sizes don't match",
+        assertEquals("Sorted data and original data sizes don't match",
                 getDataProvider().fetch(new HierarchicalQuery<>(null, null))
                         .count(),
                 list.size());
@@ -213,17 +282,16 @@ public class TreeDataProviderTest
             StrBean prev = list.get(i - 1);
             StrBean cur = list.get(i);
             // Test specific sort
-            Assert.assertTrue(
+            assertTrue(
                     "Failure: " + prev.getRandomNumber() + " > "
                             + cur.getRandomNumber(),
                     prev.getRandomNumber() <= cur.getRandomNumber());
 
             if (prev.getRandomNumber() == cur.getRandomNumber()) {
                 // Test default sort
-                Assert.assertTrue(
-                        prev.getValue().compareTo(cur.getValue()) <= 0);
+                assertTrue(prev.getValue().compareTo(cur.getValue()) <= 0);
                 if (prev.getValue().equals(cur.getValue())) {
-                    Assert.assertTrue(prev.getId() > cur.getId());
+                    assertTrue(prev.getId() > cur.getId());
                 }
             }
         }
@@ -238,7 +306,7 @@ public class TreeDataProviderTest
                 .fetch(new HierarchicalQuery<>(null, null))
                 .collect(Collectors.toList());
 
-        Assert.assertEquals("Sorted data and original data sizes don't match",
+        assertEquals("Sorted data and original data sizes don't match",
                 rootData.size(), list.size());
 
         for (int i = 1; i < list.size(); ++i) {
@@ -246,7 +314,7 @@ public class TreeDataProviderTest
             StrBean cur = list.get(i);
 
             // Test default sort
-            Assert.assertTrue(prev.getValue().compareTo(cur.getValue()) <= 0);
+            assertTrue(prev.getValue().compareTo(cur.getValue()) <= 0);
         }
     }
 
@@ -266,15 +334,15 @@ public class TreeDataProviderTest
                         .thenAsc("id").build(), comp, null, null))
                 .collect(Collectors.toList());
 
-        Assert.assertNotEquals("First value should not match", rootData.get(0),
+        assertNotEquals("First value should not match", rootData.get(0),
                 list.get(0));
 
-        Assert.assertEquals("Sorted data and original data sizes don't match",
+        assertEquals("Sorted data and original data sizes don't match",
                 rootData.size(), list.size());
 
         rootData.sort(comp);
         for (int i = 0; i < rootData.size(); ++i) {
-            Assert.assertEquals("Sorting result differed", rootData.get(i),
+            assertEquals("Sorting result differed", rootData.get(i),
                     list.get(i));
         }
     }
@@ -296,9 +364,8 @@ public class TreeDataProviderTest
     }
 
     private void assertHierarchyCorrect() {
-        Assert.assertEquals(flattenedData,
-                getFlattenedData(new ArrayList<>(), null));
-        Assert.assertEquals(flattenedData,
+        assertEquals(flattenedData, getFlattenedData(new ArrayList<>(), null));
+        assertEquals(flattenedData,
                 getFlattenedDataFromProvider(new ArrayList<>(), null));
     }
 

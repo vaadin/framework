@@ -1,5 +1,7 @@
 package com.vaadin.v7.data.util.sqlcontainer.connection;
 
+import java.util.Hashtable;
+
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
@@ -15,7 +17,7 @@ public class MockInitialContextFactory implements InitialContextFactory {
     }
 
     @Override
-    public Context getInitialContext(java.util.Hashtable<?, ?> environment)
+    public Context getInitialContext(Hashtable<?, ?> environment)
             throws NamingException {
         if (mockCtx == null) {
             throw new IllegalStateException("mock context was not set.");

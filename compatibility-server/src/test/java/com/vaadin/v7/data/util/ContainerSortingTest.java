@@ -1,7 +1,6 @@
 package com.vaadin.v7.data.util;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.junit.Test;
@@ -154,10 +153,8 @@ public class ContainerSortingTest {
     private void verifyOrder(Container.Sortable ic, Object[] idOrder) {
         int size = ic.size();
         Object[] actual = new Object[size];
-        Iterator<?> i = ic.getItemIds().iterator();
         int index = 0;
-        while (i.hasNext()) {
-            Object o = i.next();
+        for (Object o : ic.getItemIds()) {
             if (o.getClass() == Integer.class
                     && idOrder[index].getClass() == String.class) {
                 o = idToName.get(o);

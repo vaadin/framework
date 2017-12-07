@@ -18,8 +18,6 @@ package com.vaadin.tests.components.embedded;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Image;
 import com.vaadin.v7.ui.themes.Reindeer;
@@ -27,7 +25,7 @@ import com.vaadin.v7.ui.themes.Reindeer;
 /**
  * Tests that {@link Embedded} uses correct theme when the theme is set with
  * {@link #setTheme(String)}, and also updates correctly if theme is changed
- * later. {@link Image} is used as the baseline for correct behaviour.
+ * later. {@link Image} is used as the baseline for correct behavior.
  *
  * @author Vaadin Ltd
  */
@@ -37,15 +35,11 @@ public class EmbeddedThemeResource extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest request) {
         setTheme("tests-components");
 
-        addButton("Toggle theme", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (Reindeer.THEME_NAME.equals(getTheme())) {
-                    setTheme("tests-components");
-                } else {
-                    setTheme(Reindeer.THEME_NAME);
-                }
+        addButton("Toggle theme", event -> {
+            if (Reindeer.THEME_NAME.equals(getTheme())) {
+                setTheme("tests-components");
+            } else {
+                setTheme(Reindeer.THEME_NAME);
             }
         });
 

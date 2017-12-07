@@ -103,7 +103,7 @@ public class TreeFilesystem extends com.vaadin.server.LegacyApplication
         for (int x = 0; x < files.length; x++) {
             try {
                 // add new item (String) to tree
-                final String path = files[x].getCanonicalPath().toString();
+                final String path = files[x].getCanonicalPath();
                 tree.addItem(path);
                 // set parent if this item has one
                 if (parent != null) {

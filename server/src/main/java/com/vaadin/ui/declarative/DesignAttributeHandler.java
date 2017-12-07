@@ -25,6 +25,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -58,10 +59,10 @@ public class DesignAttributeHandler implements Serializable {
         return Logger.getLogger(DesignAttributeHandler.class.getName());
     }
 
-    private final static Map<Class<?>, AttributeCacheEntry> cache = new ConcurrentHashMap<>();
+    private static final Map<Class<?>, AttributeCacheEntry> CACHE = new ConcurrentHashMap<>();
 
     // translates string <-> object
-    private final static DesignFormatter FORMATTER = new DesignFormatter();
+    private static final DesignFormatter FORMATTER = new DesignFormatter();
 
     /**
      * Returns the currently used formatter. All primitive types and all types
@@ -74,7 +75,7 @@ public class DesignAttributeHandler implements Serializable {
     }
 
     /**
-     * Clears the children and attributes of the given element
+     * Clears the children and attributes of the given element.
      *
      * @param design
      *            the element to be cleared
@@ -136,7 +137,7 @@ public class DesignAttributeHandler implements Serializable {
 
     /**
      * Searches for supported setter and getter types from the specified class
-     * and returns the list of corresponding design attributes
+     * and returns the list of corresponding design attributes.
      *
      * @param clazz
      *            the class scanned for setters
@@ -144,7 +145,7 @@ public class DesignAttributeHandler implements Serializable {
      */
     public static Collection<String> getSupportedAttributes(Class<?> clazz) {
         resolveSupportedAttributes(clazz);
-        return cache.get(clazz).getAttributes();
+        return CACHE.get(clazz).getAttributes();
     }
 
     /**
@@ -159,7 +160,7 @@ public class DesignAttributeHandler implements Serializable {
         if (clazz == null) {
             throw new IllegalArgumentException("The clazz can not be null");
         }
-        if (cache.containsKey(clazz)) {
+        if (CACHE.containsKey(clazz)) {
             // NO-OP
             return;
         }
@@ -183,12 +184,12 @@ public class DesignAttributeHandler implements Serializable {
                 entry.addAttribute(attribute, getter, setter);
             }
         }
-        cache.put(clazz, entry);
+        CACHE.put(clazz, entry);
     }
 
     /**
      * Writes the specified attribute to the design if it differs from the
-     * default value got from the <code> defaultInstance <code>
+     * default value got from the <code> defaultInstance </code>.
      *
      * @param component
      *            the component used to get the attribute value
@@ -326,11 +327,11 @@ public class DesignAttributeHandler implements Serializable {
         propertyName = removeSubsequentUppercase(propertyName);
         String[] words = propertyName.split("(?<!^)(?=[A-Z])");
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < words.length; i++) {
-            if (builder.length() > 0) {
-                builder.append("-");
+        for (String word : words) {
+            if (builder.length() != 0) {
+                builder.append('-');
             }
-            builder.append(words[i].toLowerCase());
+            builder.append(word.toLowerCase(Locale.ROOT));
         }
         return builder.toString();
     }
@@ -356,13 +357,13 @@ public class DesignAttributeHandler implements Serializable {
             // written in lower case
             if (matcher.group(1).isEmpty()) {
                 matcher.appendReplacement(result,
-                        matched.toLowerCase() + matcher.group(3));
+                        matched.toLowerCase(Locale.ROOT) + matcher.group(3));
                 // otherwise the first character of the group stays uppercase,
                 // while the others are lower case
             } else {
                 matcher.appendReplacement(result,
                         matcher.group(1) + matched.substring(0, 1)
-                                + matched.substring(1).toLowerCase()
+                                + matched.substring(1).toLowerCase(Locale.ROOT)
                                 + matcher.group(3));
             }
             // in both cases the uppercase letter of the next word (or string's
@@ -412,7 +413,7 @@ public class DesignAttributeHandler implements Serializable {
     private static Method findSetterForAttribute(Class<?> clazz,
             String attribute) {
         resolveSupportedAttributes(clazz);
-        return cache.get(clazz).getSetter(attribute);
+        return CACHE.get(clazz).getSetter(attribute);
     }
 
     /**
@@ -428,7 +429,7 @@ public class DesignAttributeHandler implements Serializable {
     private static Method findGetterForAttribute(Class<?> clazz,
             String attribute) {
         resolveSupportedAttributes(clazz);
-        return cache.get(clazz).getGetter(attribute);
+        return CACHE.get(clazz).getGetter(attribute);
     }
 
     /**
@@ -449,7 +450,7 @@ public class DesignAttributeHandler implements Serializable {
         }
 
         private Collection<String> getAttributes() {
-            ArrayList<String> attributes = new ArrayList<>();
+            List<String> attributes = new ArrayList<>();
             attributes.addAll(accessMethods.keySet());
             return attributes;
         }

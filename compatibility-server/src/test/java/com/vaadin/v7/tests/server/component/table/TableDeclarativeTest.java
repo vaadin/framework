@@ -15,7 +15,6 @@
  */
 package com.vaadin.v7.tests.server.component.table;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.ExternalResource;
@@ -171,9 +170,9 @@ public class TableDeclarativeTest extends TableDeclarativeTestBase {
                 + "  </tfoot>" + "</table>" + "</vaadin7-table>";
         Table read = read(design);
 
-        Assert.assertEquals("& Test",
+        assertEquals("& Test",
                 read.getContainerProperty("test", "test").getValue());
-        Assert.assertEquals("& Test", read.getColumnHeader("test"));
-        Assert.assertEquals("& Test", read.getColumnFooter("test"));
+        assertEquals("& Test", read.getColumnHeader("test"));
+        assertEquals("& Test", read.getColumnFooter("test"));
     }
 }

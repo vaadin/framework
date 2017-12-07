@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.javascriptcomponent;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
@@ -46,11 +47,11 @@ public class JavaScriptStateTrackingTest extends SingleBrowserTest {
 
     private void assertValues(int expectedCounter, String expectedField1,
             String expectedField2) {
-        Assert.assertEquals(String.valueOf(expectedCounter),
+        assertEquals(String.valueOf(expectedCounter),
                 findElement(By.id("counter")).getText());
-        Assert.assertEquals(String.valueOf(expectedField1),
+        assertEquals(String.valueOf(expectedField1),
                 findElement(By.id("field1")).getText());
-        Assert.assertEquals(String.valueOf(expectedField2),
+        assertEquals(String.valueOf(expectedField2),
                 findElement(By.id("field2")).getText());
     }
 }

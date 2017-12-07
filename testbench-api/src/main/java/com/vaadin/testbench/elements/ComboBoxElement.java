@@ -28,7 +28,7 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.ComboBox")
-public class ComboBoxElement extends AbstractSelectElement {
+public class ComboBoxElement extends AbstractSingleSelectElement {
 
     private static org.openqa.selenium.By bySuggestionPopup = By
             .vaadin("#popup");
@@ -118,14 +118,14 @@ public class ComboBoxElement extends AbstractSelectElement {
     }
 
     /**
-     * Open the suggestion popup
+     * Open the suggestion popup.
      */
     public void openPopup() {
         findElement(By.vaadin("#button")).click();
     }
 
     /**
-     * Gets the text representation of all suggestions on the current page
+     * Gets the text representation of all suggestions on the current page.
      *
      * @return List of suggestion texts
      */
@@ -191,7 +191,7 @@ public class ComboBoxElement extends AbstractSelectElement {
     }
 
     /**
-     * Returns the suggestion popup element
+     * Returns the suggestion popup element.
      */
     public WebElement getSuggestionPopup() {
         ensurePopupOpen();
@@ -199,7 +199,7 @@ public class ComboBoxElement extends AbstractSelectElement {
     }
 
     /**
-     * Return value of the combo box element
+     * Return value of the combo box element.
      *
      * @return value of the combo box element
      */

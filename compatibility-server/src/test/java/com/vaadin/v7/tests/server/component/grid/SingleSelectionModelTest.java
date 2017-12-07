@@ -15,8 +15,10 @@
  */
 package com.vaadin.v7.tests.server.component.grid;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -53,8 +55,7 @@ public class SingleSelectionModelTest {
 
     @After
     public void tearDown() {
-        Assert.assertFalse("Some expected event did not happen.",
-                expectingEvent);
+        assertFalse("Some expected event did not happen.", expectingEvent);
     }
 
     private IndexedContainer createDataSource() {
@@ -116,7 +117,7 @@ public class SingleSelectionModelTest {
         } catch (Exception e) {
             throw e.getCause();
         }
-        Assert.assertTrue("Should still wait for event", expectingEvent);
+        assertTrue("Should still wait for event", expectingEvent);
         expectingEvent = false;
     }
 
@@ -132,19 +133,18 @@ public class SingleSelectionModelTest {
             @Override
             public void select(SelectionEvent event) {
                 if (selected != null) {
-                    Assert.assertTrue("Selection did not contain expected item",
+                    assertTrue("Selection did not contain expected item",
                             event.getAdded().contains(selected));
                 } else {
-                    Assert.assertTrue("Unexpected selection",
+                    assertTrue("Unexpected selection",
                             event.getAdded().isEmpty());
                 }
 
                 if (deselected != null) {
-                    Assert.assertTrue(
-                            "DeSelection did not contain expected item",
+                    assertTrue("DeSelection did not contain expected item",
                             event.getRemoved().contains(deselected));
                 } else {
-                    Assert.assertTrue("Unexpected selection",
+                    assertTrue("Unexpected selection",
                             event.getRemoved().isEmpty());
                 }
 

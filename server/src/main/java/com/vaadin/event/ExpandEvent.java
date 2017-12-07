@@ -29,7 +29,8 @@ import com.vaadin.util.ReflectTools;
  * @param <T>
  *            the expanded item's type
  */
-public class ExpandEvent<T> extends Component.Event {
+public class ExpandEvent<T> extends Component.Event
+        implements HasUserOriginated {
 
     private final T expandedItem;
 
@@ -62,13 +63,7 @@ public class ExpandEvent<T> extends Component.Event {
         return expandedItem;
     }
 
-    /**
-     * Returns whether this event was triggered by user interaction, on the
-     * client side, or programmatically, on the server side.
-     *
-     * @return {@code true} if this event originates from the client,
-     *         {@code false} otherwise.
-     */
+    @Override
     public boolean isUserOriginated() {
         return userOriginated;
     }

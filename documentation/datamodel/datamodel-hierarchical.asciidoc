@@ -7,8 +7,6 @@ layout: page
 [[datamodel.hierarchical]]
 = Hierarchical Data
 
-IMPORTANT: The [interfacename]#HierarchicalDataProvider# is currently being developed and only available in the Framework 8.1 prerelease versions, starting from 8.1.0.alpha1.
-
 The [classname]#Tree# and the [classname]#TreeGrid# components allow you to show data with hierarchical relationships between items.
 That data can be populated by on-demand from a back end by implementing the [interfacename]#HierarchicalDataProvider# interface. If you have the data available in-memory on the server,
 you use the collection style API of [classname]#TreeData# and then pass it to a [classname]#TreeDataProvider#. This chapter introduces the hierarchical data providers and how they work.
@@ -27,7 +25,7 @@ Collection<Project> projects = service.getProjects();
 
 TreeData<Project> data = new TreeData<>();
 // add root level items
-data.addItems(null, Project::getSubProjects);
+data.addItems(null, projects);
 
 // add children for the root level items
 projects.forEach(project -> data.addItems(project, project.getChildren()));

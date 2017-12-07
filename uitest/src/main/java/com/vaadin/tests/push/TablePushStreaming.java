@@ -49,29 +49,17 @@ public class TablePushStreaming extends AbstractReindeerTestUI {
         final Table t = new Table("The table");
         t.setContainerDataSource(generateContainer(10, 10, iteration++));
         t.setSizeFull();
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                for (int i = 0; i < 99; i++) {
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                    access(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            t.setContainerDataSource(generateContainer(
-                                    t.getVisibleColumns().length, t.size(),
-                                    iteration++));
-                        }
-
-                    });
+        Runnable r = () -> {
+            for (int i = 0; i < 99; i++) {
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-
+                access(() ->
+                        t.setContainerDataSource(
+                                generateContainer(t.getVisibleColumns().length,
+                                t.size(), iteration++)));
             }
         };
         Thread tr = new Thread(r);
@@ -97,9 +85,7 @@ public class TablePushStreaming extends AbstractReindeerTestUI {
                 item.getItemProperty("Property" + col).setValue(
                         "Row " + row + " col " + col + "(" + iter + ")");
             }
-
         }
-
         return ic;
     }
 

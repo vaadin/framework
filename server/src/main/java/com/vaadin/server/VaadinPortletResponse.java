@@ -50,7 +50,7 @@ public class VaadinPortletResponse implements VaadinResponse {
     private final VaadinPortletService vaadinService;
 
     /**
-     * Wraps a portlet response and an associated vaadin service
+     * Wraps a portlet response and an associated vaadin service.
      *
      * @param response
      *            the portlet response to wrap

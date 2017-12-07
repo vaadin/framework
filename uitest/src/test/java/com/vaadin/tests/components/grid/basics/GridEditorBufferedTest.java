@@ -81,8 +81,7 @@ public class GridEditorBufferedTest extends GridEditorTest {
         new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
 
         assertEditorClosed();
-        assertEquals("100 changed",
-                getGridElement().getCell(100, 4).getText());
+        assertEquals("100 changed", getGridElement().getCell(100, 4).getText());
     }
 
     @Test
@@ -178,7 +177,7 @@ public class GridEditorBufferedTest extends GridEditorTest {
     private void makeInvalidEdition() {
         editRow(5);
         assertFalse(logContainsText(
-                "Exception occured, java.lang.IllegalStateException"));
+                "Exception occurred, java.lang.IllegalStateException"));
 
         GridEditorElement editor = getGridElement().getEditor();
 
@@ -308,5 +307,45 @@ public class GridEditorBufferedTest extends GridEditorTest {
 
         assertEditorOpen();
         assertEquals("(2, 0)", getGridElement().getCell(2, 0).getText());
+    }
+
+    @Test
+    public void testFocusWhenCancelByKeyboard() {
+        editRow(5);
+        getGridElement().getEditor().getField(0).click();
+        new Actions(getDriver()).sendKeys(Keys.ESCAPE).perform();
+        assertTrue("Focus should be in the Grid",
+                getFocusedElement().getAttribute("class").contains("v-grid"));
+    }
+
+    @Test
+    public void testFocusWhenSaveByKeyboard() {
+        editRow(5);
+        getGridElement().getEditor().getField(0).click();
+        new Actions(getDriver()).sendKeys(Keys.ENTER).perform();
+        assertTrue("Focus should be in the Grid",
+                getFocusedElement().getAttribute("class").contains("v-grid"));
+    }
+
+    @Test
+    public void testFocusWhenSaveByClick() {
+        editRow(5);
+
+        getGridElement().getEditor()
+                .findElement(By.className("v-grid-editor-save")).click();
+
+        assertTrue("Focus should be in the Grid",
+                getFocusedElement().getAttribute("class").contains("v-grid"));
+    }
+
+    @Test
+    public void testFocusWhenCancelByClick() {
+        editRow(5);
+
+        getGridElement().getEditor()
+                .findElement(By.className("v-grid-editor-cancel")).click();
+
+        assertTrue("Focus should be in the Grid",
+                getFocusedElement().getAttribute("class").contains("v-grid"));
     }
 }

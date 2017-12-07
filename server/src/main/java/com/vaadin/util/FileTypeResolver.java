@@ -19,6 +19,7 @@ package com.vaadin.util;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,18 +43,18 @@ public class FileTypeResolver implements Serializable {
     /**
      * Default icon given if no icon is specified for a mime-type.
      */
-    static public Resource DEFAULT_ICON = new ThemeResource(
+    public static Resource DEFAULT_ICON = new ThemeResource(
             "../runo/icons/16/document.png");
 
     /**
      * Default mime-type.
      */
-    static public String DEFAULT_MIME_TYPE = "application/octet-stream";
+    public static String DEFAULT_MIME_TYPE = "application/octet-stream";
 
     /**
      * Initial file extension to mime-type mapping.
      */
-    private static final String initialExtToMIMEMap = "application/cu-seeme                            csm cu,"
+    private static final String INITIAL_EXT_TO_MIME_MAP = "application/cu-seeme                            csm cu,"
             + "application/dsptype                             tsp,"
             + "application/futuresplash                        spl,"
             + "application/mac-binhex40                        hqx,"
@@ -220,7 +221,7 @@ public class FileTypeResolver implements Serializable {
     static {
 
         // Initialize extension to MIME map
-        final StringTokenizer lines = new StringTokenizer(initialExtToMIMEMap,
+        final StringTokenizer lines = new StringTokenizer(INITIAL_EXT_TO_MIME_MAP,
                 ",");
         while (lines.hasMoreTokens()) {
             final String line = lines.nextToken();
@@ -270,7 +271,8 @@ public class FileTypeResolver implements Serializable {
             }
 
             // Return type from extension map, if found
-            final String type = EXT_TO_MIME_MAP.get(ext.toLowerCase());
+            final String type = EXT_TO_MIME_MAP
+                    .get(ext.toLowerCase(Locale.ROOT));
             if (type != null) {
                 return type;
             }
@@ -354,24 +356,24 @@ public class FileTypeResolver implements Serializable {
      * @param extension
      *            the filename extension to be associated with
      *            <code>MIMEType</code>.
-     * @param MIMEType
+     * @param mimeType
      *            the new mime-type for <code>extension</code>.
      */
-    public static void addExtension(String extension, String MIMEType) {
-        EXT_TO_MIME_MAP.put(extension.toLowerCase(), MIMEType);
+    public static void addExtension(String extension, String mimeType) {
+        EXT_TO_MIME_MAP.put(extension.toLowerCase(Locale.ROOT), mimeType);
     }
 
     /**
      * Adds a icon for the given mime-type. If the mime-type also has a
      * corresponding icon, it is replaced with the new icon.
      *
-     * @param MIMEType
+     * @param mimeType
      *            the mime-type whose icon is to be changed.
      * @param icon
      *            the new icon to be associated with <code>MIMEType</code>.
      */
-    public static void addIcon(String MIMEType, Resource icon) {
-        MIME_TO_ICON_MAP.put(MIMEType, icon);
+    public static void addIcon(String mimeType, Resource icon) {
+        MIME_TO_ICON_MAP.put(mimeType, icon);
     }
 
     /**

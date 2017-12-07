@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.Assert;
-
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Container.Filterable;
 import com.vaadin.v7.data.Container.ItemSetChangeEvent;
@@ -42,7 +40,7 @@ public abstract class AbstractContainerTestBase {
          * Check that no one event has occurred since the previous assert call.
          */
         public void assertNone() {
-            Assert.assertEquals(lastAssertedEventCount, eventCount);
+            assertEquals(lastAssertedEventCount, eventCount);
         }
 
         /**
@@ -50,7 +48,7 @@ public abstract class AbstractContainerTestBase {
          * call.
          */
         public void assertOnce() {
-            Assert.assertEquals(++lastAssertedEventCount, eventCount);
+            assertEquals(++lastAssertedEventCount, eventCount);
         }
 
         /**
@@ -154,7 +152,7 @@ public abstract class AbstractContainerTestBase {
         }
 
         // getItemProperty
-        Assert.assertNull(
+        assertNull(
                 container.getItem(itemIdInSet).getItemProperty("notinset"));
 
     }
@@ -208,20 +206,20 @@ public abstract class AbstractContainerTestBase {
             container.removeAllItems();
 
             Object id = container.addItem();
-            Assert.assertTrue(container.containsId(id));
-            Assert.assertNotNull(container.getItem(id));
+            assertTrue(container.containsId(id));
+            assertNotNull(container.getItem(id));
 
             Item item = container.addItem("foo");
-            Assert.assertNotNull(item);
-            Assert.assertTrue(container.containsId("foo"));
-            Assert.assertEquals(item, container.getItem("foo"));
+            assertNotNull(item);
+            assertTrue(container.containsId("foo"));
+            assertEquals(item, container.getItem("foo"));
 
             // Add again
             Item item2 = container.addItem("foo");
-            Assert.assertNull(item2);
+            assertNull(item2);
 
             // Null is not a valid itemId
-            Assert.assertNull(container.addItem(null));
+            assertNull(container.addItem(null));
         } catch (UnsupportedOperationException e) {
             // Ignore contains which do not support addItem*
         }
@@ -232,25 +230,25 @@ public abstract class AbstractContainerTestBase {
             container.removeAllItems();
 
             Object id = container.addItemAt(0);
-            Assert.assertTrue(container.containsId(id));
-            Assert.assertEquals(id, container.getIdByIndex(0));
-            Assert.assertNotNull(container.getItem(id));
+            assertTrue(container.containsId(id));
+            assertEquals(id, container.getIdByIndex(0));
+            assertNotNull(container.getItem(id));
 
             Item item = container.addItemAt(0, "foo");
-            Assert.assertNotNull(item);
-            Assert.assertTrue(container.containsId("foo"));
-            Assert.assertEquals(item, container.getItem("foo"));
-            Assert.assertEquals("foo", container.getIdByIndex(0));
+            assertNotNull(item);
+            assertTrue(container.containsId("foo"));
+            assertEquals(item, container.getItem("foo"));
+            assertEquals("foo", container.getIdByIndex(0));
 
             Item itemAtEnd = container.addItemAt(2, "atend");
-            Assert.assertNotNull(itemAtEnd);
-            Assert.assertTrue(container.containsId("atend"));
-            Assert.assertEquals(itemAtEnd, container.getItem("atend"));
-            Assert.assertEquals("atend", container.getIdByIndex(2));
+            assertNotNull(itemAtEnd);
+            assertTrue(container.containsId("atend"));
+            assertEquals(itemAtEnd, container.getItem("atend"));
+            assertEquals("atend", container.getIdByIndex(2));
 
             // Add again
             Item item2 = container.addItemAt(0, "foo");
-            Assert.assertNull(item2);
+            assertNull(item2);
         } catch (UnsupportedOperationException e) {
             // Ignore contains which do not support addItem*
         }
@@ -265,28 +263,28 @@ public abstract class AbstractContainerTestBase {
         try {
             container.removeAllItems();
 
-            Assert.assertNotNull(container.addItem(0));
+            assertNotNull(container.addItem(0));
 
             Item item = container.addItemAfter(null, "foo");
-            Assert.assertNotNull(item);
-            Assert.assertTrue(container.containsId("foo"));
-            Assert.assertEquals(item, container.getItem("foo"));
-            Assert.assertEquals("foo",
+            assertNotNull(item);
+            assertTrue(container.containsId("foo"));
+            assertEquals(item, container.getItem("foo"));
+            assertEquals("foo",
                     container.getItemIds().iterator().next());
 
             Item itemAtEnd = container.addItemAfter(0, "atend");
-            Assert.assertNotNull(itemAtEnd);
-            Assert.assertTrue(container.containsId("atend"));
-            Assert.assertEquals(itemAtEnd, container.getItem("atend"));
+            assertNotNull(itemAtEnd);
+            assertTrue(container.containsId("atend"));
+            assertEquals(itemAtEnd, container.getItem("atend"));
             Iterator<?> i = container.getItemIds().iterator();
             i.next();
             i.next();
-            Assert.assertEquals("atend", i.next());
+            assertEquals("atend", i.next());
 
             // Add again
-            Assert.assertNull(container.addItemAfter(null, "foo"));
-            Assert.assertNull(container.addItemAfter("atend", "foo"));
-            Assert.assertNull(container.addItemAfter("nonexistant", "123123"));
+            assertNull(container.addItemAfter(null, "foo"));
+            assertNull(container.addItemAfter("atend", "foo"));
+            assertNull(container.addItemAfter("nonexistant", "123123"));
         } catch (UnsupportedOperationException e) {
             // Ignore contains which do not support addItem*
         }
@@ -421,43 +419,43 @@ public abstract class AbstractContainerTestBase {
         initializeContainer(container);
 
         // indexOfId
-        Assert.assertEquals(itemPosition, container.indexOfId(itemId));
+        assertEquals(itemPosition, container.indexOfId(itemId));
 
         // getIdByIndex
-        Assert.assertEquals(itemId, container.getIdByIndex(itemPosition));
+        assertEquals(itemId, container.getIdByIndex(itemPosition));
 
         // addItemAt
         if (testAddEmptyItemAt) {
             Object addedId = container.addItemAt(itemPosition);
-            Assert.assertEquals(itemPosition, container.indexOfId(addedId));
-            Assert.assertEquals(itemPosition + 1, container.indexOfId(itemId));
-            Assert.assertEquals(addedId, container.getIdByIndex(itemPosition));
-            Assert.assertEquals(itemId,
+            assertEquals(itemPosition, container.indexOfId(addedId));
+            assertEquals(itemPosition + 1, container.indexOfId(itemId));
+            assertEquals(addedId, container.getIdByIndex(itemPosition));
+            assertEquals(itemId,
                     container.getIdByIndex(itemPosition + 1));
 
             Object newFirstId = container.addItemAt(0);
-            Assert.assertEquals(0, container.indexOfId(newFirstId));
-            Assert.assertEquals(itemPosition + 2, container.indexOfId(itemId));
-            Assert.assertEquals(newFirstId, container.firstItemId());
-            Assert.assertEquals(newFirstId, container.getIdByIndex(0));
-            Assert.assertEquals(itemId,
+            assertEquals(0, container.indexOfId(newFirstId));
+            assertEquals(itemPosition + 2, container.indexOfId(itemId));
+            assertEquals(newFirstId, container.firstItemId());
+            assertEquals(newFirstId, container.getIdByIndex(0));
+            assertEquals(itemId,
                     container.getIdByIndex(itemPosition + 2));
 
             Object newLastId = container.addItemAt(container.size());
-            Assert.assertEquals(container.size() - 1,
+            assertEquals(container.size() - 1,
                     container.indexOfId(newLastId));
-            Assert.assertEquals(itemPosition + 2, container.indexOfId(itemId));
-            Assert.assertEquals(newLastId, container.lastItemId());
-            Assert.assertEquals(newLastId,
+            assertEquals(itemPosition + 2, container.indexOfId(itemId));
+            assertEquals(newLastId, container.lastItemId());
+            assertEquals(newLastId,
                     container.getIdByIndex(container.size() - 1));
-            Assert.assertEquals(itemId,
+            assertEquals(itemId,
                     container.getIdByIndex(itemPosition + 2));
 
-            Assert.assertTrue(container.removeItem(addedId));
-            Assert.assertTrue(container.removeItem(newFirstId));
-            Assert.assertTrue(container.removeItem(newLastId));
+            assertTrue(container.removeItem(addedId));
+            assertTrue(container.removeItem(newFirstId));
+            assertTrue(container.removeItem(newLastId));
 
-            Assert.assertFalse(
+            assertFalse(
                     "Removing non-existing item should indicate failure",
                     container.removeItem(addedId));
         }
@@ -465,35 +463,35 @@ public abstract class AbstractContainerTestBase {
         // addItemAt
         if (testAddItemAtWithId) {
             container.addItemAt(itemPosition, newItemId);
-            Assert.assertEquals(itemPosition, container.indexOfId(newItemId));
-            Assert.assertEquals(itemPosition + 1, container.indexOfId(itemId));
-            Assert.assertEquals(newItemId,
+            assertEquals(itemPosition, container.indexOfId(newItemId));
+            assertEquals(itemPosition + 1, container.indexOfId(itemId));
+            assertEquals(newItemId,
                     container.getIdByIndex(itemPosition));
-            Assert.assertEquals(itemId,
+            assertEquals(itemId,
                     container.getIdByIndex(itemPosition + 1));
-            Assert.assertTrue(container.removeItem(newItemId));
-            Assert.assertFalse(container.containsId(newItemId));
+            assertTrue(container.removeItem(newItemId));
+            assertFalse(container.containsId(newItemId));
 
             container.addItemAt(0, newItemId);
-            Assert.assertEquals(0, container.indexOfId(newItemId));
-            Assert.assertEquals(itemPosition + 1, container.indexOfId(itemId));
-            Assert.assertEquals(newItemId, container.firstItemId());
-            Assert.assertEquals(newItemId, container.getIdByIndex(0));
-            Assert.assertEquals(itemId,
+            assertEquals(0, container.indexOfId(newItemId));
+            assertEquals(itemPosition + 1, container.indexOfId(itemId));
+            assertEquals(newItemId, container.firstItemId());
+            assertEquals(newItemId, container.getIdByIndex(0));
+            assertEquals(itemId,
                     container.getIdByIndex(itemPosition + 1));
-            Assert.assertTrue(container.removeItem(newItemId));
-            Assert.assertFalse(container.containsId(newItemId));
+            assertTrue(container.removeItem(newItemId));
+            assertFalse(container.containsId(newItemId));
 
             container.addItemAt(container.size(), newItemId);
-            Assert.assertEquals(container.size() - 1,
+            assertEquals(container.size() - 1,
                     container.indexOfId(newItemId));
-            Assert.assertEquals(itemPosition, container.indexOfId(itemId));
-            Assert.assertEquals(newItemId, container.lastItemId());
-            Assert.assertEquals(newItemId,
+            assertEquals(itemPosition, container.indexOfId(itemId));
+            assertEquals(newItemId, container.lastItemId());
+            assertEquals(newItemId,
                     container.getIdByIndex(container.size() - 1));
-            Assert.assertEquals(itemId, container.getIdByIndex(itemPosition));
-            Assert.assertTrue(container.removeItem(newItemId));
-            Assert.assertFalse(container.containsId(newItemId));
+            assertEquals(itemId, container.getIdByIndex(itemPosition));
+            assertTrue(container.removeItem(newItemId));
+            assertFalse(container.containsId(newItemId));
         }
     }
 
@@ -597,7 +595,7 @@ public abstract class AbstractContainerTestBase {
     }
 
     protected void initializeContainer(Container container) {
-        Assert.assertTrue(container.removeAllItems());
+        assertTrue(container.removeAllItems());
         Object[] propertyIds = container.getContainerPropertyIds().toArray();
         for (Object propertyId : propertyIds) {
             container.removeContainerProperty(propertyId);

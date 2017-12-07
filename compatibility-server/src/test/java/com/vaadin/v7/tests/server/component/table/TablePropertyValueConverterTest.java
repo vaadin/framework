@@ -21,9 +21,9 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -44,8 +44,8 @@ public class TablePropertyValueConverterTest {
     @Test
     public void testRemovePropertyId() {
         Collection<Object> converters = table.getCurrentConverters();
-        assertTrue("Set of converters was empty at the start.",
-                converters.size() > 0);
+        assertFalse("Set of converters was empty at the start.",
+                converters.isEmpty());
 
         Object firstId = converters.iterator().next();
 
@@ -215,7 +215,7 @@ public class TablePropertyValueConverterTest {
             }
         });
         Set<Object> converters = customTable.getCurrentConverters();
-        assertTrue("Converter was not set.", converters.size() > 0);
+        assertFalse("Converter was not set.", converters.isEmpty());
     }
 
     @Test
@@ -347,7 +347,7 @@ public class TablePropertyValueConverterTest {
                 Field f = Table.class
                         .getDeclaredField("propertyValueConverters");
                 f.setAccessible(true);
-                HashMap<Object, Converter<String, Object>> pvc = (HashMap<Object, Converter<String, Object>>) f
+                Map<Object, Converter<String, Object>> pvc = (Map<Object, Converter<String, Object>>) f
                         .get(this);
                 Set<Object> currentConverters = new HashSet<Object>();
                 for (Entry<Object, Converter<String, Object>> entry : pvc

@@ -42,7 +42,7 @@ public class ServerRpcManager<T extends ServerRpc> implements Serializable {
 
     /**
      * Wrapper exception for exceptions which occur during invocation of an RPC
-     * call
+     * call.
      *
      * @author Vaadin Ltd
      * @since 7.0
@@ -68,7 +68,7 @@ public class ServerRpcManager<T extends ServerRpc> implements Serializable {
 
     }
 
-    private static final Map<Class<?>, Class<?>> boxedTypes = new HashMap<>();
+    private static final Map<Class<?>, Class<?>> BOXED_TYPES = new HashMap<>();
     static {
         try {
             Class<?>[] boxClasses = new Class<?>[] { Boolean.class, Byte.class,
@@ -77,7 +77,7 @@ public class ServerRpcManager<T extends ServerRpc> implements Serializable {
             for (Class<?> boxClass : boxClasses) {
                 Field typeField = boxClass.getField("TYPE");
                 Class<?> primitiveType = (Class<?>) typeField.get(boxClass);
-                boxedTypes.put(primitiveType, boxClass);
+                BOXED_TYPES.put(primitiveType, boxClass);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

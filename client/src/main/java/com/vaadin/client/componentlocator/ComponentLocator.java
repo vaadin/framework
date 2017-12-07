@@ -152,7 +152,7 @@ public class ComponentLocator {
         for (LocatorStrategy strategy : locatorStrategies) {
             if (strategy.validatePath(path)) {
                 List<Element> elements = strategy.getElementsByPath(path);
-                if (elements.size() > 0) {
+                if (!elements.isEmpty()) {
                     for (Element e : elements) {
                         jsElements.push(e);
                     }
@@ -184,7 +184,7 @@ public class ComponentLocator {
             if (strategy.validatePath(path)) {
                 List<Element> elements = strategy
                         .getElementsByPathStartingAt(path, root);
-                if (elements.size() > 0) {
+                if (!elements.isEmpty()) {
                     for (Element e : elements) {
                         jsElements.push(e);
                     }

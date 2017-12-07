@@ -17,7 +17,6 @@ package com.vaadin.v7.tests.server.component.grid.declarative;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.ContentMode;
@@ -307,8 +306,8 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         String actualFooter = grid.getFooterRow(0).getCell("> test").getText();
         String expected = "> Test";
 
-        Assert.assertEquals(expected, actualHeader);
-        Assert.assertEquals(expected, actualFooter);
+        assertEquals(expected, actualHeader);
+        assertEquals(expected, actualFooter);
 
         design = design.replace("plain-text=\"true\"", "");
         grid = read(design);
@@ -316,8 +315,8 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         actualFooter = grid.getFooterRow(0).getCell("> test").getHtml();
         expected = "&gt; Test";
 
-        Assert.assertEquals(expected, actualHeader);
-        Assert.assertEquals(expected, actualFooter);
+        assertEquals(expected, actualHeader);
+        assertEquals(expected, actualFooter);
 
         grid = new Grid();
         grid.setColumns("test");
@@ -332,9 +331,9 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         Element root = new Element(Tag.valueOf("vaadin7-grid"), "");
         grid.writeDesign(root, new DesignContext());
 
-        Assert.assertEquals("&amp;amp; Test",
+        assertEquals("&amp;amp; Test",
                 root.getElementsByTag("th").get(0).html());
-        Assert.assertEquals("&amp;amp; Test",
+        assertEquals("&amp;amp; Test",
                 root.getElementsByTag("td").get(0).html());
 
         header = grid.addHeaderRowAt(0);
@@ -347,9 +346,9 @@ public class GridHeaderFooterDeclarativeTest extends GridDeclarativeTestBase {
         root = new Element(Tag.valueOf("vaadin7-grid"), "");
         grid.writeDesign(root, new DesignContext());
 
-        Assert.assertEquals("&amp; Test",
+        assertEquals("&amp; Test",
                 root.getElementsByTag("th").get(0).html());
-        Assert.assertEquals("&amp; Test",
+        assertEquals("&amp; Test",
                 root.getElementsByTag("td").get(0).html());
 
     }

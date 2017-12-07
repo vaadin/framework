@@ -18,84 +18,64 @@ package com.vaadin.client.ui.datefield;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.LocaleNotLoadedException;
-import com.vaadin.client.Paintable;
-import com.vaadin.client.UIDL;
-import com.vaadin.client.VConsole;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.VDateField;
-import com.vaadin.shared.ui.datefield.DateFieldConstants;
+import com.vaadin.shared.ui.datefield.AbstractDateFieldServerRpc;
+import com.vaadin.shared.ui.datefield.AbstractDateFieldState;
 
 public abstract class AbstractDateFieldConnector<R extends Enum<R>>
-        extends AbstractFieldConnector implements Paintable {
+        extends AbstractFieldConnector {
 
     @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
-
-        // Save details
-        getWidget().client = client;
-        getWidget().paintableId = uidl.getId();
-
-        getWidget().setReadonly(isReadOnly());
-        getWidget().setEnabled(isEnabled());
-
-        if (uidl.hasAttribute("locale")) {
-            final String locale = uidl.getStringAttribute("locale");
-            try {
-                getWidget().dts.setLocale(locale);
-                getWidget().setCurrentLocale(locale);
-            } catch (final LocaleNotLoadedException e) {
-                getWidget().setCurrentLocale(getWidget().dts.getLocale());
-                VConsole.error("Tried to use an unloaded locale \"" + locale
-                        + "\". Using default locale ("
-                        + getWidget().getCurrentLocale() + ").");
-                VConsole.error(e);
-            }
-        }
-
-        // We show week numbers only if the week starts with Monday, as ISO 8601
-        // specifies
-        getWidget().setShowISOWeekNumbers(
-                uidl.getBooleanAttribute(DateFieldConstants.ATTR_WEEK_NUMBERS)
-                        && getWidget().dts.getFirstDayOfWeek() == 1);
-
-        // Remove old stylename that indicates current resolution
-        setWidgetStyleName(getWidget().getStylePrimaryName() + "-"
-                + getWidget().resolutionAsString(), false);
-
-        updateResolution(uidl);
-
-        // Add stylename that indicates current resolution
-        setWidgetStyleName(getWidget().getStylePrimaryName() + "-"
-                + getWidget().resolutionAsString(), true);
-
-        getWidget().setCurrentDate(getTimeValues(uidl));
+    protected void init() {
+        super.init();
+        getWidget().rpc = getRpcProxy(AbstractDateFieldServerRpc.class);
     }
 
-    private void updateResolution(UIDL uidl) {
-        Optional<R> newResolution = getWidget().getResolutions().filter(
-                res -> uidl.hasVariable(getWidget().getResolutionVariable(res)))
+    private void updateResolution() {
+        VDateField<R> widget = getWidget();
+        Map<String, Integer> stateResolutions = getState().resolutions;
+        Optional<R> newResolution = widget.getResolutions()
+                .filter(res -> stateResolutions.containsKey(res.name()))
                 .findFirst();
 
-        getWidget().setCurrentResolution(newResolution.orElse(null));
+        widget.setCurrentResolution(newResolution.orElse(null));
     }
 
-    protected Map<R, Integer> getTimeValues(UIDL uidl) {
-        Stream<R> resolutions = getWidget().getResolutions();
-        R resolution = getWidget().getCurrentResolution();
-        return resolutions
-                .collect(Collectors.toMap(Function.identity(),
-                        res -> (resolution.compareTo(res) <= 0)
-                                ? uidl.getIntVariable(
-                                        getWidget().getResolutionVariable(res))
-                                : -1));
+    private Map<R, Integer> getTimeValues() {
+        VDateField<R> widget = getWidget();
+        Map<String, Integer> stateResolutions = getState().resolutions;
+        Stream<R> resolutions = widget.getResolutions();
+        R resolution = widget.getCurrentResolution();
+        return resolutions.collect(Collectors.toMap(Function.identity(),
+                res -> resolution.compareTo(res) <= 0
+                        ? stateResolutions.get(res.name())
+                        : null));
+    }
+
+    /**
+     * Returns the default date (when no date is selected) components as a map
+     * from Resolution to the corresponding value.
+     *
+     * @return default date component map
+     * @since 8.2
+     */
+    protected Map<R, Integer> getDefaultValues() {
+        VDateField<R> widget = getWidget();
+        Map<String, Integer> stateResolutions = getState().resolutions;
+        Stream<R> resolutions = widget.getResolutions();
+        R resolution = widget.getCurrentResolution();
+        return resolutions.collect(Collectors.toMap(Function.identity(),
+                res -> resolution.compareTo(res) <= 0
+                        ? stateResolutions.get("default-" + res.name())
+                        : null));
     }
 
     @SuppressWarnings("unchecked")
@@ -104,4 +84,56 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
         return (VDateField<R>) super.getWidget();
     }
 
+    @Override
+    public AbstractDateFieldState getState() {
+        return (AbstractDateFieldState) super.getState();
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        VDateField<R> widget = getWidget();
+
+        // Save details
+        widget.client = getConnection();
+        widget.connector = this;
+
+        widget.setReadonly(isReadOnly());
+        widget.setEnabled(isEnabled());
+
+        final String locale = getState().locale;
+        try {
+            widget.dts.setLocale(locale);
+            widget.setCurrentLocale(locale);
+        } catch (final LocaleNotLoadedException e) {
+            widget.setCurrentLocale(widget.dts.getLocale());
+            getLogger().severe("Tried to use an unloaded locale \"" + locale
+                    + "\". Using default locale (" + widget.getCurrentLocale()
+                    + ").");
+            getLogger().log(Level.SEVERE,
+                    e.getMessage() == null ? "" : e.getMessage(), e);
+        }
+
+        // We show week numbers only if the week starts with Monday, as ISO 8601
+        // specifies
+        widget.setShowISOWeekNumbers(getState().showISOWeekNumbers
+                && widget.dts.getFirstDayOfWeek() == 1);
+
+        // Remove old stylename that indicates current resolution
+        setWidgetStyleName(widget.getStylePrimaryName() + "-"
+                + widget.resolutionAsString(), false);
+
+        updateResolution();
+
+        // Add stylename that indicates current resolution
+        setWidgetStyleName(widget.getStylePrimaryName() + "-"
+                + widget.resolutionAsString(), true);
+
+        widget.setCurrentDate(getTimeValues());
+        widget.setDefaultDate(getDefaultValues());
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(AbstractDateFieldConnector.class.getName());
+    }
 }

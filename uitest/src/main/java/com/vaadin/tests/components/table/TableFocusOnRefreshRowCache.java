@@ -1,8 +1,6 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.v7.event.ItemClickEvent;
-import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.Table;
 
 public class TableFocusOnRefreshRowCache extends TestBase {
@@ -17,12 +15,7 @@ public class TableFocusOnRefreshRowCache extends TestBase {
         }
 
         table.setSelectable(true);
-        table.addListener(new ItemClickListener() {
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                table.refreshRowCache();
-            }
-        });
+        table.addItemClickListener(event -> table.refreshRowCache());
         addComponent(table);
     }
 

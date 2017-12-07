@@ -25,7 +25,7 @@ import com.google.gwt.event.shared.GwtEvent;
  */
 public class GridEnabledEvent extends GwtEvent<GridEnabledHandler> {
     /**
-     * The type of this event
+     * The type of this event.
      */
     public static final Type<GridEnabledHandler> TYPE = new Type<>();
     private final boolean enabled;

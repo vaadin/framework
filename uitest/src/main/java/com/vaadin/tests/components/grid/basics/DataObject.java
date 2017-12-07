@@ -86,8 +86,8 @@ public class DataObject {
                 obj.setSmallRandom(rand.nextInt(5));
 
                 obj.setDate(new Date(timestamp));
-                timestamp += 91250000; // a bit over a day, just to get
-                                       // variation
+                // a bit over a day, just to get variation
+                timestamp += 91250000;
 
                 data.add(obj);
             }

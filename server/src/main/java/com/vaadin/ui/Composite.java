@@ -19,10 +19,10 @@ package com.vaadin.ui;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.Optional;
 
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
+import com.vaadin.server.SerializableFunction;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.composite.CompositeState;
 
@@ -48,7 +48,6 @@ import com.vaadin.shared.ui.composite.CompositeState;
  */
 public class Composite extends AbstractComponent implements HasComponents {
 
-    private static final String COMPOSITE_HAS_NO_DOM_OR_WIDGET = "A composite has no DOM or widget";
     /**
      * The contained component.
      */
@@ -148,43 +147,72 @@ public class Composite extends AbstractComponent implements HasComponents {
 
     @Override
     public String getStyleName() {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        Component root = getCompositionRoot();
+        return root == null ? "" : root.getStyleName();
     }
 
     @Override
     public void setStyleName(String style) {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        getRootOrThrow().setStyleName(style);
     }
 
     @Override
     public void setStyleName(String style, boolean add) {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        getRootAbstractComponentOrThrow().setStyleName(style, add);
     }
 
     @Override
     public void addStyleName(String style) {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        getRootOrThrow().addStyleName(style);
     }
 
     @Override
     public void removeStyleName(String style) {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        getRootOrThrow().removeStyleName(style);
     }
 
     @Override
     public String getPrimaryStyleName() {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        return getRootAbstractComponentPropertyOrNull(
+                AbstractComponent::getPrimaryStyleName);
     }
 
     @Override
     public void setPrimaryStyleName(String style) {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        getRootOrThrow().setPrimaryStyleName(style);
     }
 
     private Component getRootOrThrow() {
-        return Optional.ofNullable(getCompositionRoot())
-                .orElseThrow(() -> new IllegalStateException(
-                        "Composition root has not been set"));
+        Component root = getCompositionRoot();
+        if (root == null) {
+            throw new IllegalStateException(
+                    "Composition root has not been set");
+        }
+        return root;
+    }
+
+    private AbstractComponent getRootAbstractComponentOrThrow() {
+        Component root = getRootOrThrow();
+        if (!(root instanceof AbstractComponent)) {
+            throw new IllegalStateException(
+                    "Composition root is not AbstractComponent");
+        }
+        return (AbstractComponent) root;
+    }
+
+    private <T> T getRootPropertyOrNull(
+            SerializableFunction<Component, T> getter) {
+        Component root = getCompositionRoot();
+        return root == null ? null : getter.apply(root);
+    }
+
+    private <T> T getRootAbstractComponentPropertyOrNull(
+            SerializableFunction<AbstractComponent, T> getter) {
+        Component root = getCompositionRoot();
+        if (root instanceof AbstractComponent) {
+            return getter.apply((AbstractComponent) root);
+        }
+        return null;
     }
 
     @Override
@@ -249,84 +277,86 @@ public class Composite extends AbstractComponent implements HasComponents {
 
     @Override
     public void setId(String id) {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        getRootOrThrow().setId(id);
     }
 
     @Override
     public String getId() {
-        // Design.read relies on being able to call this
-        return null;
+        return getRootPropertyOrNull(Component::getId);
     }
 
     @Override
     public void setDebugId(String id) {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        getRootAbstractComponentOrThrow().setDebugId(id);
     }
 
     @Override
     public String getDebugId() {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        return getRootAbstractComponentPropertyOrNull(
+                AbstractComponent::getDebugId);
     }
 
     @Override
     public String getCaption() {
-        // Design.read relies on being able to call this
-        return null;
+        return getRootPropertyOrNull(Component::getCaption);
     }
 
     @Override
     public void setCaption(String caption) {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        getRootOrThrow().setCaption(caption);
     }
 
     @Override
     public void setCaptionAsHtml(boolean captionAsHtml) {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        getRootAbstractComponentOrThrow().setCaptionAsHtml(captionAsHtml);
     }
 
     @Override
     public boolean isCaptionAsHtml() {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        return getRootAbstractComponentPropertyOrNull(
+                AbstractComponent::isCaptionAsHtml);
     }
 
     @Override
     public Resource getIcon() {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        return getRootPropertyOrNull(Component::getIcon);
     }
 
     @Override
     public void setIcon(Resource icon) {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        getRootOrThrow().setIcon(icon);
     }
 
     @Override
     public String getDescription() {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        return getRootOrThrow().getDescription();
     }
 
     @Override
     public void setDescription(String description) {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        getRootAbstractComponentOrThrow().setDescription(description);
     }
 
     @Override
     public void setDescription(String description, ContentMode mode) {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        getRootAbstractComponentOrThrow().setDescription(description, mode);
     }
 
     @Override
     public ErrorMessage getErrorMessage() {
-        return null;
+        return getRootAbstractComponentPropertyOrNull(
+                AbstractComponent::getErrorMessage);
     }
 
     @Override
     public ErrorMessage getComponentError() {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        return getRootAbstractComponentPropertyOrNull(
+                AbstractComponent::getComponentError);
     }
 
     @Override
     public void setComponentError(ErrorMessage componentError) {
-        throw new UnsupportedOperationException(COMPOSITE_HAS_NO_DOM_OR_WIDGET);
+        getRootAbstractComponentOrThrow().setComponentError(componentError);
     }
 
 }

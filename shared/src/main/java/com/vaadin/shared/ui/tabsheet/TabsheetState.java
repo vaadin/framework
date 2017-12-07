@@ -34,14 +34,15 @@ public class TabsheetState extends AbstractComponentContainerState {
      * tabs.
      */
     @NoLayout
+    @DelegateToWidget
     public int tabIndex;
 
     public List<TabState> tabs = new ArrayList<>();
 
-    /** true to show the tab bar, false to only show the contained component */
+    /** true to show the tab bar, false to only show the contained component. */
     public boolean tabsVisible = true;
 
-    /** the key of the currently selected tab */
+    /** the key of the currently selected tab. */
     public String selected;
 
     @DelegateToWidget

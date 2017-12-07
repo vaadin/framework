@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -34,26 +36,26 @@ public class DisallowedDeselectionTest extends MultiBrowserTest {
         openTestURL();
 
         GridRowElement row = $(GridElement.class).first().getRow(0);
-        Assert.assertFalse(row.isSelected());
+        assertFalse(row.isSelected());
 
         select(row);
-        Assert.assertTrue(row.isSelected());
+        assertTrue(row.isSelected());
 
         // deselection is disallowed
         select(row);
-        Assert.assertTrue(row.isSelected());
+        assertTrue(row.isSelected());
 
         // select another row
         GridRowElement oldRow = row;
         row = $(GridElement.class).first().getRow(1);
         select(row);
-        Assert.assertTrue(row.isSelected());
-        Assert.assertFalse(oldRow.isSelected());
+        assertTrue(row.isSelected());
+        assertFalse(oldRow.isSelected());
 
         $(ButtonElement.class).first().click();
 
         select(row);
-        Assert.assertFalse(row.isSelected());
+        assertFalse(row.isSelected());
     }
 
     private void select(GridRowElement row) {

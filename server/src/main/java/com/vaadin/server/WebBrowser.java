@@ -42,6 +42,7 @@ public class WebBrowser implements Serializable {
     private int rawTimezoneOffset = 0;
     private int dstSavings;
     private boolean dstInEffect;
+    private String timeZoneId;
     private boolean touchDevice;
 
     private VBrowserDetails browserDetails;
@@ -330,6 +331,17 @@ public class WebBrowser implements Serializable {
     }
 
     /**
+     * Tests if the browser is run on ChromeOS (e.g. a Chromebook).
+     *
+     * @return true if run on ChromeOS false if the user is not using ChromeOS
+     *         or if no information on the browser is present
+     * @since 8.1.1
+     */
+    public boolean isChromeOS() {
+        return browserDetails.isChromeOS();
+    }
+
+    /**
      * Returns the browser-reported TimeZone offset in milliseconds from GMT.
      * This includes possible daylight saving adjustments, to figure out which
      * TimeZone the user actually might be in, see
@@ -340,6 +352,19 @@ public class WebBrowser implements Serializable {
      */
     public int getTimezoneOffset() {
         return timezoneOffset;
+    }
+
+    /**
+     * Returns the TimeZone Id (like "Europe/Helsinki") provided by the browser
+     * (if the browser supports this feature).
+     *
+     * @return the TimeZone Id if provided by the browser, null otherwise.
+     * @see <a href=
+     *      "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat/resolvedOptions">Intl.DateTimeFormat.prototype.resolvedOptions()</a>
+     * @since 8.2
+     */
+    public String getTimeZoneId() {
+        return timeZoneId;
     }
 
     /**
@@ -439,7 +464,7 @@ public class WebBrowser implements Serializable {
      * @param touchDevice
      */
     void updateClientSideDetails(String sw, String sh, String tzo, String rtzo,
-            String dstSavings, String dstInEffect, String curDate,
+            String dstSavings, String dstInEffect, String tzId, String curDate,
             boolean touchDevice) {
         if (sw != null) {
             try {
@@ -476,6 +501,11 @@ public class WebBrowser implements Serializable {
         if (dstInEffect != null) {
             this.dstInEffect = Boolean.parseBoolean(dstInEffect);
         }
+        if (tzId == null || "undefined".equals(tzId)) {
+            timeZoneId = null;
+        } else {
+            timeZoneId = tzId;
+        }
         if (curDate != null) {
             try {
                 long curTime = Long.parseLong(curDate);
@@ -499,7 +529,7 @@ public class WebBrowser implements Serializable {
         locale = request.getLocale();
         address = request.getRemoteAddr();
         secureConnection = request.isSecure();
-        // Headers are case insensitive according to the specifiation but are
+        // Headers are case insensitive according to the specification but are
         // case sensitive in Weblogic portal...
         String agent = request.getHeader("User-Agent");
 
@@ -514,6 +544,7 @@ public class WebBrowser implements Serializable {
                     request.getParameter("v-rtzo"),
                     request.getParameter("v-dstd"),
                     request.getParameter("v-dston"),
+                    request.getParameter("v-tzid"),
                     request.getParameter("v-curdate"),
                     request.getParameter("v-td") != null);
         }

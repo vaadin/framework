@@ -3,6 +3,7 @@ package com.vaadin.tests.components.table;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -25,7 +26,7 @@ public class ColumnReorderingWithManyColumnsTest extends MultiBrowserTest {
                 .findElement(By.className("v-table-focus-slot-right"));
         String markedColumnName = markedElement.findElement(By.xpath(".."))
                 .getText();
-        assertEquals("col-9", markedColumnName.toLowerCase());
+        assertEquals("col-9", markedColumnName.toLowerCase(Locale.ROOT));
     }
 
     private void drag(WebElement source, WebElement target) {

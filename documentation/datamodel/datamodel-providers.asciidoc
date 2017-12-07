@@ -522,13 +522,13 @@ DataProvider<Person, String> onlyString = dataProvider.withConvertedFilter(
 );
 
 // For use with some external filter, e.g. a search form
-ConfigurableDataProvider<Person, Void, PersonFilter> everythingConfigurable =
+ConfigurableFilterDataProvider<Person, Void, PersonFilter> everythingConfigurable =
   dataProvider.withConfigurableFilter();
 everythingConfigurable.setFilter(
   new PersonFilter(someText, someDepartment));
 
 // For use with ComboBox and separate department filtering
-ConfigurableDataProvider<Person, String, Department> mixed =
+ConfigurableFilterDataProvider<Person, String, Department> mixed =
   dataProvider.withConfigurableFilter(
     // Can be shortened as PersonFilter::new
     (filterText, department) -> {

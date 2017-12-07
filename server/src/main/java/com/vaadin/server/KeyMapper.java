@@ -16,7 +16,6 @@
 
 package com.vaadin.server;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,22 +29,24 @@ import com.vaadin.data.provider.DataKeyMapper;
  * @author Vaadin Ltd.
  * @since 3.0
  */
-public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
+public class KeyMapper<V> implements DataKeyMapper<V> {
 
     private int lastKey = 0;
 
-    private final HashMap<Object, String> objectIdKeyMap = new HashMap<>();
+    private final Map<Object, String> objectIdKeyMap = new HashMap<>();
 
-    private final HashMap<String, V> keyObjectMap = new HashMap<>();
+    private final Map<String, V> keyObjectMap = new HashMap<>();
 
     private ValueProvider<V, Object> identifierGetter;
 
     /**
-     * Constructs a new mapper
+     * Constructs a new mapper.
      *
-     * @param identifierGetter has to return a unique key for every bean, and the returned key has to
-     *                         follow general {@code hashCode()} and {@code equals()} contract,
-     *                         see {@link Object#hashCode()} for details.
+     * @param identifierGetter
+     *            has to return a unique key for every bean, and the returned
+     *            key has to follow general {@code hashCode()} and
+     *            {@code equals()} contract, see {@link Object#hashCode()} for
+     *            details.
      * @since 8.1
      */
     public KeyMapper(ValueProvider<V, Object> identifierGetter) {
@@ -53,7 +54,7 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
     }
 
     /**
-     * Constructs a new mapper with trivial {@code identifierGetter}
+     * Constructs a new mapper with trivial {@code identifierGetter}.
      */
     public KeyMapper() {
         this(v -> v);
@@ -62,7 +63,8 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
     /**
      * Gets key for an object.
      *
-     * @param o the object.
+     * @param o
+     *            the object.
      */
     @Override
     public String key(V o) {
@@ -79,11 +81,23 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
         }
 
         // If the object is not yet mapped, map it
-        key = String.valueOf(++lastKey);
+        key = createKey();
         objectIdKeyMap.put(id, key);
         keyObjectMap.put(key, o);
 
         return key;
+    }
+
+    /**
+     * Creates a key for a new item.
+     *
+     * This method can be overridden to customize the keys used.
+     *
+     * @return new key
+     * @since 8.1.2
+     */
+    protected String createKey() {
+        return String.valueOf(++lastKey);
     }
 
     @Override
@@ -94,7 +108,8 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
     /**
      * Retrieves object with the key.
      *
-     * @param key the name with the desired value.
+     * @param key
+     *            the name with the desired value.
      * @return the object with the key.
      */
     @Override
@@ -105,11 +120,13 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
     /**
      * Removes object from the mapper.
      *
-     * @param removeobj the object to be removed.
+     * @param removeobj
+     *            the object to be removed.
      */
     @Override
     public void remove(V removeobj) {
-        final String key = objectIdKeyMap.remove(identifierGetter.apply(removeobj));
+        final String key = objectIdKeyMap
+                .remove(identifierGetter.apply(removeobj));
         if (key != null) {
             keyObjectMap.remove(key);
         }
@@ -127,9 +144,10 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
     /**
      * Checks if the given key is mapped to an object.
      *
-     * @param key the key to check
+     * @param key
+     *            the key to check
      * @return <code>true</code> if the key is currently mapped,
-     * <code>false</code> otherwise
+     *         <code>false</code> otherwise
      * @since 7.7
      */
     public boolean containsKey(String key) {
@@ -151,7 +169,8 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
             this.identifierGetter = identifierGetter;
             objectIdKeyMap.clear();
             for (Map.Entry<String, V> entry : keyObjectMap.entrySet()) {
-                objectIdKeyMap.put(identifierGetter.apply(entry.getValue()),entry.getKey());
+                objectIdKeyMap.put(identifierGetter.apply(entry.getValue()),
+                        entry.getKey());
             }
         }
     }

@@ -63,14 +63,6 @@ public class ComponentElementGetValue extends AbstractTestUI {
     public static final String DATEFIELD_VALUE_CHANGE = "dateFieldValueChange";
     public static final String MULTI_SELECT_VALUE_CHANGE = "multiSelectValueChange";
 
-    private List<String> createTestItems() {
-        List<String> options = new ArrayList<String>();
-        options.add("item 1");
-        options.add(TEST_STRING_VALUE);
-        options.add("item 3");
-        return options;
-    }
-
     private void addSingleSelectComponents() {
         List<String> options = new ArrayList<String>();
         options.add("item 1");
@@ -102,14 +94,13 @@ public class ComponentElementGetValue extends AbstractTestUI {
     private void addMultiSelectComponents() {
 
         List<MultiSelect<String>> components = new ArrayList<>();
-        components.add(new ListSelect("", createData()));
-        components.add(new CheckBoxGroup("", createData()));
-        components.add(new TwinColSelect("", createData()));
+        components.add(new ListSelect<>("", createData()));
+        components.add(new CheckBoxGroup<>("", createData()));
+        components.add(new TwinColSelect<>("", createData()));
         components.forEach(c -> {
             c.select(TEST_STRING_VALUE);
-            c.addValueChangeListener(event -> {
-                valueChangeLabel.setValue(MULTI_SELECT_VALUE_CHANGE);
-            });
+            c.addValueChangeListener(event -> valueChangeLabel
+                    .setValue(MULTI_SELECT_VALUE_CHANGE));
             addComponent((Component) c);
         });
     }
@@ -126,9 +117,8 @@ public class ComponentElementGetValue extends AbstractTestUI {
             AbstractTextField field = fieldComponents[i];
             field.setValue(TEST_STRING_VALUE);
             String value = FIELD_VALUES[i];
-            field.addValueChangeListener(event -> {
-                valueChangeLabel.setValue(value);
-            });
+            field.addValueChangeListener(
+                    event -> valueChangeLabel.setValue(value));
             addComponent(field);
         }
 
@@ -143,9 +133,8 @@ public class ComponentElementGetValue extends AbstractTestUI {
         DateField df = new DateField();
         df.setDateFormat("yyyy-MM-dd");
         df.setValue(TEST_DATE_VALUE);
-        df.addValueChangeListener(event -> {
-            valueChangeLabel.setValue(DATEFIELD_VALUE_CHANGE);
-        });
+        df.addValueChangeListener(
+                event -> valueChangeLabel.setValue(DATEFIELD_VALUE_CHANGE));
         return df;
     }
 
@@ -159,9 +148,8 @@ public class ComponentElementGetValue extends AbstractTestUI {
     private CheckBox createCheckBox() {
         CheckBox cb = new CheckBox();
         cb.setValue(true);
-        cb.addValueChangeListener(event -> {
-            valueChangeLabel.setValue(CHECKBOX_VALUE_CHANGE);
-        });
+        cb.addValueChangeListener(
+                event -> valueChangeLabel.setValue(CHECKBOX_VALUE_CHANGE));
         return cb;
     }
 

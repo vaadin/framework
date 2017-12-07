@@ -13,7 +13,6 @@ import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.shared.ui.table.CollapseMenuContent;
 import com.vaadin.v7.shared.ui.table.TableConstants;
 import com.vaadin.v7.ui.Table;
@@ -32,7 +31,7 @@ import com.vaadin.v7.ui.Table.RowGenerator;
 import com.vaadin.v7.ui.Table.RowHeaderMode;
 
 public class Tables<T extends Table> extends AbstractSelectTestCase<T>
-        implements ItemClickListener, HeaderClickListener, FooterClickListener,
+        implements HeaderClickListener, FooterClickListener,
         ColumnResizeListener {
 
     protected static final String CATEGORY_ROWS = "Rows";
@@ -855,7 +854,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
                 "Multi - ctrl/shift", new Command<T, SelectMode>() {
 
                     @Override
-                    public void execute(Table t, SelectMode value,
+                    public void execute(T t, SelectMode value,
                             Object data) {
                         switch (value) {
                         case NONE:

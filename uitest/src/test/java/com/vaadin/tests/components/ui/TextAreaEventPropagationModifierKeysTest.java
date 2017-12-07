@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.ui;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -45,7 +46,7 @@ public class TextAreaEventPropagationModifierKeysTest extends MultiBrowserTest {
         builder.perform();
 
         // Should have triggered shortcut
-        Assert.assertEquals("1. Shift-Enter button pressed", getLogRow(0));
+        assertEquals("1. Shift-Enter button pressed", getLogRow(0));
     }
 
     @Test
@@ -64,7 +65,7 @@ public class TextAreaEventPropagationModifierKeysTest extends MultiBrowserTest {
         builder.perform();
 
         // Should have triggered shortcut
-        Assert.assertEquals("1. Ctrl-Enter button pressed", getLogRow(0));
+        assertEquals("1. Ctrl-Enter button pressed", getLogRow(0));
     }
 
     @Override

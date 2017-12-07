@@ -17,9 +17,7 @@ package com.vaadin.tests.push;
 
 import static org.junit.Assert.assertEquals;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.testbench.parallel.TestCategory;
@@ -77,12 +75,6 @@ abstract class PushConfigurationTest extends MultiBrowserTest {
     protected void waitForServerCounterToUpdate() {
         int counter = getServerCounter();
         final int waitCounter = counter + 2;
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                return (getServerCounter() >= waitCounter);
-            }
-        });
+        waitUntil(input -> getServerCounter() >= waitCounter);
     }
 }

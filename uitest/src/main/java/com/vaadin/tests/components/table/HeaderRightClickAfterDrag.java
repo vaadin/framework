@@ -1,5 +1,7 @@
 package com.vaadin.tests.components.table;
 
+import java.util.Locale;
+
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.ContentMode;
@@ -21,20 +23,16 @@ public class HeaderRightClickAfterDrag extends AbstractReindeerTestUI {
 
         table.setPageLength(10);
         table.setColumnReorderingAllowed(true);
-        table.addHeaderClickListener(new Table.HeaderClickListener() {
-            @Override
-            public void headerClick(Table.HeaderClickEvent event) {
-                if (MouseEventDetails.MouseButton.RIGHT
-                        .equals(event.getButton())) {
-                    Window window = new Window("Right-clicked:", new Label(
-                            "<center>" + event.getPropertyId().toString()
-                                    .toUpperCase() + "</center>",
-                            ContentMode.HTML));
-                    window.setPositionX(event.getClientX());
-                    window.setPositionY(event.getClientY());
-                    window.setResizable(false);
-                    addWindow(window);
-                }
+        table.addHeaderClickListener(event -> {
+            if (MouseEventDetails.MouseButton.RIGHT.equals(event.getButton())) {
+                Window window = new Window("Right-clicked:", new Label(
+                        "<center>" + event.getPropertyId().toString()
+                                .toUpperCase(Locale.ROOT) + "</center>",
+                        ContentMode.HTML));
+                window.setPositionX(event.getClientX());
+                window.setPositionY(event.getClientY());
+                window.setResizable(false);
+                addWindow(window);
             }
         });
 

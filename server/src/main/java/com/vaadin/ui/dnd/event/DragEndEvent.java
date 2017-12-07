@@ -16,7 +16,6 @@
 package com.vaadin.ui.dnd.event;
 
 import com.vaadin.shared.ui.dnd.DropEffect;
-import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.dnd.DragSourceExtension;
@@ -62,9 +61,10 @@ public class DragEndEvent<T extends AbstractComponent> extends Component.Event {
      *
      * @return The {@code DataTransfer.dropEffect} parameter of the client side
      * dragend event.
-     * @see DragSourceExtension#setEffectAllowed(EffectAllowed)
+     * @see DragSourceExtension#setEffectAllowed(com.vaadin.shared.ui.dnd.EffectAllowed)
+     *      DragSourceExtension#setEffectAllowed(EffectAllowed)
      * @see DropTargetExtension#setDropEffect(DropEffect)
-     * @see DropTargetExtension#setDropCriteria(String)
+     * @see DropTargetExtension#setDropCriteriaScript(String)
      */
     public DropEffect getDropEffect() {
         return dropEffect;

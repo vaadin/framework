@@ -157,7 +157,7 @@ public class ServerRpcHandler implements Serializable {
         }
 
         /**
-         * Checks if this is a request to resynchronize the client side
+         * Checks if this is a request to resynchronize the client side.
          *
          * @return true if this is a resynchronization request, false otherwise
          */
@@ -166,7 +166,7 @@ public class ServerRpcHandler implements Serializable {
         }
 
         /**
-         * Gets the id of the client to server message
+         * Gets the id of the client to server message.
          *
          * @since 7.6
          * @return the server message id
@@ -190,7 +190,7 @@ public class ServerRpcHandler implements Serializable {
         }
 
         /**
-         * Gets the widget set version reported by the client
+         * Gets the widget set version reported by the client.
          *
          * @since 7.6
          * @return The widget set version reported by the client or null if the
@@ -429,7 +429,7 @@ public class ServerRpcHandler implements Serializable {
     }
 
     /**
-     * Handles the given RPC method invocation for the given connector
+     * Handles the given RPC method invocation for the given connector.
      *
      * @since 7.7
      * @param ui
@@ -452,7 +452,7 @@ public class ServerRpcHandler implements Serializable {
 
     /**
      * Handles the given Legacy variable change RPC method invocation for the
-     * given connector
+     * given connector.
      *
      * @since 7.7
      * @param ui
@@ -501,8 +501,7 @@ public class ServerRpcHandler implements Serializable {
             ConnectorTracker connectorTracker, JsonArray invocationsJson,
             int lastSyncIdSeenByClient) {
         int invocationCount = invocationsJson.length();
-        ArrayList<MethodInvocation> invocations = new ArrayList<>(
-                invocationCount);
+        List<MethodInvocation> invocations = new ArrayList<>(invocationCount);
 
         MethodInvocation previousInvocation = null;
         // parse JSON to MethodInvocations
@@ -591,10 +590,12 @@ public class ServerRpcHandler implements Serializable {
              * corresponding to the received method invocation has been
              * registered.
              */
-            getLogger().warning("Ignoring RPC call to " + interfaceName + "."
+            String message = "Ignoring RPC call to " + interfaceName + "."
                     + methodName + " in connector "
                     + connector.getClass().getName() + "(" + connectorId
-                    + ") as no RPC implementation is registered");
+                    + ") as no RPC implementation is registered";
+            assert rpcManager != null : message;
+            getLogger().warning(message);
             return null;
         }
 

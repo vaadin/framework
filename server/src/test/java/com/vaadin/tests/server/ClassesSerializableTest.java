@@ -1,5 +1,7 @@
 package com.vaadin.tests.server;
 
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -19,7 +21,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.jar.JarEntry;
@@ -27,7 +28,6 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.Component;
@@ -101,9 +101,8 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.themes\\.valoutil\\.BodyStyleName", //
             "com\\.vaadin\\.server\\.communication\\.JSR356WebsocketInitializer.*", //
             "com\\.vaadin\\.screenshotbrowser\\.ScreenshotBrowser.*", //
-            "com\\.vaadin\\.osgi.*",//
-            "com\\.vaadin\\.server\\.osgi.*"
-    };
+            "com\\.vaadin\\.osgi.*", //
+            "com\\.vaadin\\.server\\.osgi.*" };
 
     /**
      * Tests that all the relevant classes and interfaces under
@@ -122,7 +121,7 @@ public class ClassesSerializableTest {
 
         ArrayList<Field> nonSerializableFunctionFields = new ArrayList<>();
 
-        ArrayList<Class<?>> nonSerializableClasses = new ArrayList<>();
+        List<Class<?>> nonSerializableClasses = new ArrayList<>();
         for (String className : classes) {
             Class<?> cls = Class.forName(className);
             // Don't add classes that have a @Ignore annotation on the class
@@ -131,7 +130,7 @@ public class ClassesSerializableTest {
             }
 
             // report fields that use lambda types that won't be serializable
-            // (also in syntehtic classes)
+            // (also in synthetic classes)
             Stream.of(cls.getDeclaredFields())
                     .filter(field -> isFunctionalType(field.getGenericType()))
                     .forEach(nonSerializableFunctionFields::add);
@@ -209,22 +208,20 @@ public class ClassesSerializableTest {
     }
 
     private void failSerializableFields(
-            ArrayList<Field> nonSerializableFunctionFields) {
+            List<Field> nonSerializableFunctionFields) {
         String nonSerializableString = nonSerializableFunctionFields.stream()
                 .map(field -> String.format("%s.%s",
                         field.getDeclaringClass().getName(), field.getName()))
                 .collect(Collectors.joining(", "));
 
-        Assert.fail("Fields with functional types that are not serializable: "
+        fail("Fields with functional types that are not serializable: "
                 + nonSerializableString);
     }
 
     private void failSerializableClasses(
-            ArrayList<Class<?>> nonSerializableClasses) {
+            List<Class<?>> nonSerializableClasses) {
         String nonSerializableString = "";
-        Iterator<Class<?>> it = nonSerializableClasses.iterator();
-        while (it.hasNext()) {
-            Class<?> c = it.next();
+        for (Class<?> c : nonSerializableClasses) {
             nonSerializableString += ", " + c.getName();
             if (c.isAnonymousClass()) {
                 nonSerializableString += "(super: ";
@@ -237,9 +234,8 @@ public class ClassesSerializableTest {
                 nonSerializableString += ")";
             }
         }
-        Assert.fail(
-                "Serializable not implemented by the following classes and interfaces: "
-                        + nonSerializableString);
+        fail("Serializable not implemented by the following classes and interfaces: "
+                + nonSerializableString);
 
     }
 
@@ -271,7 +267,7 @@ public class ClassesSerializableTest {
      *
      * @return List of class path segment strings
      */
-    private final static List<String> getRawClasspathEntries() {
+    private static final List<String> getRawClasspathEntries() {
         // try to keep the order of the classpath
         List<String> locations = new ArrayList<>();
 
@@ -382,7 +378,7 @@ public class ClassesSerializableTest {
      *            File representing the directory to scan
      * @return collection of fully qualified class names in the directory
      */
-    private final static Collection<String> findClassesInDirectory(
+    private static final Collection<String> findClassesInDirectory(
             String parentPackage, File parent) {
         if (parent.isHidden()
                 || parent.getPath().contains(File.separator + ".")) {

@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.elements;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -189,7 +190,7 @@ public abstract class ElementComponentGetCaptionBaseTest
     private void testCaption(AbstractComponentElement elem, int caption_index) {
         String actual = elem.getCaption();
         String expected = ElementComponentGetCaptionBase.DEFAULT_CAPTIONS[caption_index];
-        Assert.assertTrue("Error with class:" + elem.getAttribute("class"),
+        assertTrue("Error with class:" + elem.getAttribute("class"),
                 expected.equals(actual));
     }
 }

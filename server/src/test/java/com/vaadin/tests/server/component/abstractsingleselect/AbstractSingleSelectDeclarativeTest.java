@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.tests.design.DeclarativeTestBaseBase;
@@ -64,7 +63,7 @@ public abstract class AbstractSingleSelectDeclarativeTest<T extends AbstractSing
         component.setSelectedItem("bar");
 
         DesignContext context = readComponentAndCompare(design, component);
-        Assert.assertEquals(type,
+        assertEquals(type,
                 context.getCustomAttributes(context.getRootComponent())
                         .get(attribute));
         context = new DesignContext();
@@ -93,7 +92,7 @@ public abstract class AbstractSingleSelectDeclarativeTest<T extends AbstractSing
         component.setValue("bar");
 
         DesignContext context = readComponentAndCompare(design, component);
-        Assert.assertEquals(type,
+        assertEquals(type,
                 context.getCustomAttributes(context.getRootComponent())
                         .get(attribute));
         context = new DesignContext();

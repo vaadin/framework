@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -40,22 +42,23 @@ public class JavaScriptRenderersTest extends MultiBrowserTest {
         GridCellElement cell_2_2 = grid.getCell(2, 2);
 
         // Verify render functionality
-        Assert.assertEquals("Bean(2, 0)", cell_1_1.getText());
+        assertEquals("Bean(2, 0)", cell_1_1.getText());
 
-        Assert.assertEquals("string2", cell_2_2.getText());
+        assertEquals("string2", cell_2_2.getText());
 
         // Verify init functionality
-        Assert.assertEquals("1", cell_1_1.getAttribute("column"));
+        assertEquals("1", cell_1_1.getAttribute("column"));
 
         // Verify onbrowserevent
         cell_1_1.click();
-        Assert.assertTrue(
-                cell_1_1.getText().startsWith("Clicked 1 with key 2 at"));
+        assertTrue(cell_1_1.getText().startsWith("Clicked 1 with key 2 at"));
     }
 
     @Test
     public void testJavaScriptRendererDestroy() {
         openTestURL("debug");
+        // make sure the log tab is open
+        openDebugLogTab();
         waitForDebugMessage(
                 "Your JavaScript connector (com_vaadin_tests_components_grid_JavaScriptStringRendererWithDestoryMethod) has a typo. The destory method should be renamed to destroy.");
 
@@ -63,9 +66,9 @@ public class JavaScriptRenderersTest extends MultiBrowserTest {
 
         WebElement log = findElement(By.id("clientLog"));
         String text = log.getText();
-        Assert.assertTrue(text.contains("destory: 19/3"));
-        Assert.assertTrue(text.contains("destroy: 19/2"));
-        Assert.assertTrue(text.contains("destroy: 0/2"));
-        Assert.assertTrue(text.contains("destory: 0/3"));
+        assertTrue(text.contains("destory: 19/3"));
+        assertTrue(text.contains("destroy: 19/2"));
+        assertTrue(text.contains("destroy: 0/2"));
+        assertTrue(text.contains("destory: 0/3"));
     }
 }

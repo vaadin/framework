@@ -16,6 +16,8 @@
 package com.vaadin.v7.data.util.sqlcontainer;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -51,7 +53,7 @@ import com.vaadin.v7.data.util.sqlcontainer.query.generator.OracleGenerator;
  * @deprecated As of 8.0, no replacement available, see {@link DataProvider}.
  */
 @Deprecated
-public class SQLContainer implements Container, Container.Filterable,
+public class SQLContainer implements Container.Filterable,
         Container.Indexed, Container.Sortable, Container.ItemSetChangeNotifier {
 
     /** Query delegate */
@@ -63,7 +65,7 @@ public class SQLContainer implements Container, Container.Filterable,
     private int pageLength = DEFAULT_PAGE_LENGTH;
     public static final int DEFAULT_PAGE_LENGTH = 100;
 
-    /** Number of items to cache = CACHE_RATIO x pageLength */
+    /** Number of items to cache = CACHE_RATIO x pageLength. */
     public static final int CACHE_RATIO = 2;
 
     /** Amount of cache to overlap with previous page */
@@ -126,7 +128,7 @@ public class SQLContainer implements Container, Container.Filterable,
     }
 
     /**
-     * Creates and initializes SQLContainer using the given QueryDelegate
+     * Creates and initializes SQLContainer using the given QueryDelegate.
      *
      * @param delegate
      *            QueryDelegate implementation
@@ -157,7 +159,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     @Override
     public Object addItem() throws UnsupportedOperationException {
-        Object emptyKey[] = new Object[queryDelegate.getPrimaryKeyColumns()
+        Object[] emptyKey = new Object[queryDelegate.getPrimaryKeyColumns()
                 .size()];
         RowId itemId = new TemporaryRowId(emptyKey);
         // Create new empty column properties for the row item.
@@ -311,7 +313,7 @@ public class SQLContainer implements Container, Container.Filterable,
     @Override
     public Collection<?> getItemIds() {
         updateCount();
-        ArrayList<RowId> ids = new ArrayList<RowId>();
+        List<RowId> ids = new ArrayList<RowId>();
         ResultSet rs = null;
         try {
             // Load ALL rows :(
@@ -540,7 +542,7 @@ public class SQLContainer implements Container, Container.Filterable,
      * {@inheritDoc}
      */
     public void removeContainerFilters(Object propertyId) {
-        ArrayList<Filter> toRemove = new ArrayList<Filter>();
+        List<Filter> toRemove = new ArrayList<Filter>();
         for (Filter f : filters) {
             if (f.appliesToProperty(propertyId)) {
                 toRemove.add(f);
@@ -1320,7 +1322,7 @@ public class SQLContainer implements Container, Container.Filterable,
     }
 
     private List<RowItem> getFilteredAddedItems() {
-        ArrayList<RowItem> filtered = new ArrayList<RowItem>(addedItems);
+        List<RowItem> filtered = new ArrayList<RowItem>(addedItems);
         if (filters != null && !filters.isEmpty()) {
             for (RowItem item : addedItems) {
                 if (!itemPassesFilters(item)) {
@@ -1431,7 +1433,7 @@ public class SQLContainer implements Container, Container.Filterable,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(Container.ItemSetChangeListener listener) {
@@ -1449,7 +1451,7 @@ public class SQLContainer implements Container, Container.Filterable,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(Container.ItemSetChangeListener listener) {
@@ -1458,11 +1460,10 @@ public class SQLContainer implements Container, Container.Filterable,
 
     protected void fireContentsChange() {
         if (itemSetChangeListeners != null) {
-            final Object[] l = itemSetChangeListeners.toArray();
             final Container.ItemSetChangeEvent event = new SQLContainer.ItemSetChangeEvent(
                     this);
-            for (int i = 0; i < l.length; i++) {
-                ((Container.ItemSetChangeListener) l[i])
+            for (Object l : itemSetChangeListeners.toArray()) {
+                ((Container.ItemSetChangeListener) l)
                         .containerItemSetChange(event);
             }
         }
@@ -1491,7 +1492,7 @@ public class SQLContainer implements Container, Container.Filterable,
     /**************************************************/
 
     /**
-     * Adds a RowIdChangeListener to the QueryDelegate
+     * Adds a RowIdChangeListener to the QueryDelegate.
      *
      * @param listener
      */
@@ -1505,14 +1506,14 @@ public class SQLContainer implements Container, Container.Filterable,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addRowIdChangeListener(RowIdChangeListener)}
-     **/
+     */
     @Deprecated
     public void addListener(RowIdChangeListener listener) {
         addRowIdChangeListener(listener);
     }
 
     /**
-     * Removes a RowIdChangeListener from the QueryDelegate
+     * Removes a RowIdChangeListener from the QueryDelegate.
      *
      * @param listener
      */
@@ -1526,7 +1527,7 @@ public class SQLContainer implements Container, Container.Filterable,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeRowIdChangeListener(RowIdChangeListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(RowIdChangeListener listener) {
         removeRowIdChangeListener(listener);
@@ -1682,12 +1683,11 @@ public class SQLContainer implements Container, Container.Filterable,
         return refdCont.getItem(getReferencedItemId(itemId, refdCont));
     }
 
-    private void writeObject(java.io.ObjectOutputStream out)
-            throws IOException {
+    private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
     }
 
-    private void readObject(java.io.ObjectInputStream in)
+    private void readObject(ObjectInputStream in)
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         if (notificationsEnabled) {

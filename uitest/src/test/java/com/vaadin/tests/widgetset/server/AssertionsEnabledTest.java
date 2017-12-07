@@ -1,6 +1,8 @@
 package com.vaadin.tests.widgetset.server;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
@@ -18,12 +20,12 @@ public class AssertionsEnabledTest extends SingleBrowserTest {
 
         // If assertions are disabled, the AssertionFailureWidget will add a
         // label to the UI.
-        Assert.assertFalse(
+        assertFalse(
                 "Label with classname " + FAILING_CLASSNAME
                         + " should not exist",
                 isElementPresent(By.className(FAILING_CLASSNAME)));
 
-        Assert.assertTrue("Assertion error Notification is not present",
+        assertTrue("Assertion error Notification is not present",
                 isElementPresent(NotificationElement.class));
     }
 

@@ -129,7 +129,8 @@ public abstract class ThemeTest extends MultiBrowserTest {
     private void testNotification(int id, String identifier)
             throws IOException {
         $(ButtonElement.class).id("notifButt" + id).click();
-        waitForElementPresent(By.className("v-Notification"));
+        // For some reason, this seems to be more reliable on IE11
+        waitUntil(driver -> isElementPresent(NotificationElement.class), 10);
         compareScreen(identifier);
         $(NotificationElement.class).first().close();
     }

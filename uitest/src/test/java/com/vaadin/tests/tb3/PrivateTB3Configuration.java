@@ -16,6 +16,8 @@
 
 package com.vaadin.tests.tb3;
 
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,9 +26,9 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Calendar;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.Properties;
 
-import org.junit.Assert;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -92,9 +94,8 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         String allowRunLocally = getProperty(ALLOW_RUN_LOCALLY_PROPERTY);
         if ((allowRunLocally == null || !allowRunLocally.equals("" + true))
                 && getClass().getAnnotation(RunLocally.class) != null) {
-            Assert.fail(
-                    "@RunLocally annotation is not allowed by default in framework tests. "
-                            + "See file uitest/eclipse-run-selected-test.properties for more information.");
+            fail("@RunLocally annotation is not allowed by default in framework tests. "
+                    + "See file uitest/eclipse-run-selected-test.properties for more information.");
         }
 
         super.setup();
@@ -131,8 +132,9 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     protected static DesiredCapabilities getRunLocallyCapabilities() {
         VaadinBrowserFactory factory = new VaadinBrowserFactory();
         try {
-            return factory.create(Browser.valueOf(properties
-                    .getProperty(RUN_LOCALLY_PROPERTY).toUpperCase()));
+            return factory.create(
+                    Browser.valueOf(properties.getProperty(RUN_LOCALLY_PROPERTY)
+                            .toUpperCase(Locale.ROOT)));
         } catch (Exception e) {
             System.err.println(e.getMessage());
             System.err.println("Falling back to FireFox");
@@ -211,7 +213,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     public static String getConfiguredDeploymentHostname() {
         String hostName = getProperty(HOSTNAME_PROPERTY);
 
-        if (hostName == null || "".equals(hostName)) {
+        if (hostName == null || hostName.isEmpty()) {
             hostName = findAutoHostname();
         }
 
@@ -232,7 +234,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         String portString = getProperty(PORT_PROPERTY);
 
         int port = 8888;
-        if (portString != null && !"".equals(portString)) {
+        if (portString != null && !portString.isEmpty()) {
             port = Integer.parseInt(portString);
         }
 

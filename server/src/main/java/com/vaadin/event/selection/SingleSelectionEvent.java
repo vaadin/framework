@@ -20,7 +20,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
-import com.vaadin.data.SelectionModel;
 import com.vaadin.ui.AbstractSingleSelect;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.SingleSelect;
@@ -83,7 +82,8 @@ public class SingleSelectionEvent<T> extends ValueChangeEvent<T>
      *
      * @return the selected item or an empty optional if deselected
      *
-     * @see SelectionModel.Single#getSelectedItem()
+     * @see com.vaadin.data.SelectionModel.Single#getSelectedItem()
+     *      SelectionModel.Single#getSelectedItem()
      */
     public Optional<T> getSelectedItem() {
         return Optional.ofNullable(getValue());

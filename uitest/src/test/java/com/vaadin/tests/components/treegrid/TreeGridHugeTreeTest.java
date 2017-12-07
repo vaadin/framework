@@ -1,7 +1,8 @@
 package com.vaadin.tests.components.treegrid;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -86,7 +87,7 @@ public class TreeGridHugeTreeTest extends SingleBrowserTest {
             String[] cellTexts) {
         int index = startRowIndex;
         for (String cellText : cellTexts) {
-            Assert.assertEquals(cellText,
+            assertEquals(cellText,
                     grid.getRow(index).getCell(cellIndex).getText());
             index++;
         }

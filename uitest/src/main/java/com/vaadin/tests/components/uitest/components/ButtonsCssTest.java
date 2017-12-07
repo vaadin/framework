@@ -29,7 +29,7 @@ public class ButtonsCssTest extends GridLayout {
         addComponent(b);
 
         b = new Button("Button with icon");
-        b.setIcon(new ThemeResource(parent.ICON_URL));
+        b.setIcon(new ThemeResource(TestSampler.ICON_URL));
         b.setId("button" + debugIdCounter++);
         addComponent(b);
 
@@ -53,7 +53,7 @@ public class ButtonsCssTest extends GridLayout {
         addComponent(cb);
 
         cb = new CheckBox("Checkbox with icon");
-        cb.setIcon(new ThemeResource(parent.ICON_URL));
+        cb.setIcon(new ThemeResource(TestSampler.ICON_URL));
         cb.setId("button" + debugIdCounter++);
         addComponent(cb);
 
@@ -69,11 +69,11 @@ public class ButtonsCssTest extends GridLayout {
         createButtonWith("Tall", ChameleonTheme.BUTTON_TALL, null);
         createButtonWith("Borderless", ChameleonTheme.BUTTON_BORDERLESS, null);
         createButtonWith("Icn top", ChameleonTheme.BUTTON_ICON_ON_TOP,
-                parent.ICON_URL);
+                TestSampler.ICON_URL);
         createButtonWith("Icn right", ChameleonTheme.BUTTON_ICON_ON_RIGHT,
-                parent.ICON_URL);
+                TestSampler.ICON_URL);
         createButtonWith("Icon only", ChameleonTheme.BUTTON_ICON_ONLY,
-                parent.ICON_URL);
+                TestSampler.ICON_URL);
         createButtonWith("Down", ChameleonTheme.BUTTON_DOWN, null);
 
     }

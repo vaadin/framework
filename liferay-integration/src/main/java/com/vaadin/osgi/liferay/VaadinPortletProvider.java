@@ -21,6 +21,9 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.log.LogService;
 import org.osgi.util.tracker.ServiceTracker;
 
 import com.vaadin.osgi.resources.OsgiVaadinResources;
@@ -37,11 +40,12 @@ import com.vaadin.ui.UI;
  *
  * @since 8.1
  */
-@Component(immediate = true)
+@Component
 public class VaadinPortletProvider {
 
     private ServiceTracker<UI, ServiceObjects<UI>> serviceTracker;
     private PortletUIServiceTrackerCustomizer portletUIServiceTrackerCustomizer;
+    private LogService logService;
 
     @Activate
     void activate(ComponentContext componentContext) throws Exception {
@@ -49,10 +53,19 @@ public class VaadinPortletProvider {
         VaadinResourceService service = OsgiVaadinResources.getService();
 
         portletUIServiceTrackerCustomizer = new PortletUIServiceTrackerCustomizer(
-                service);
+                service, logService);
         serviceTracker = new ServiceTracker<UI, ServiceObjects<UI>>(
                 bundleContext, UI.class, portletUIServiceTrackerCustomizer);
         serviceTracker.open();
+    }
+
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL)
+    void setLogService(LogService logService) {
+        this.logService = logService;
+    }
+
+    void unsetLogService(LogService logService) {
+        this.logService = null;
     }
 
     @Deactivate
@@ -62,6 +75,5 @@ public class VaadinPortletProvider {
             portletUIServiceTrackerCustomizer.cleanPortletRegistrations();
             portletUIServiceTrackerCustomizer = null;
         }
-
     }
 }

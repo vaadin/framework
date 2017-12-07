@@ -62,10 +62,11 @@ public class SharedState implements Serializable {
     public Map<String, URLReference> resources = new HashMap<>();
 
     public boolean enabled = true;
+
     /**
      * A set of event identifiers with registered listeners.
      */
     @NoLayout
-    public Set<String> registeredEventListeners = null;
+    public Set<String> registeredEventListeners;
 
 }

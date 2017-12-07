@@ -15,7 +15,7 @@
         location="${uitest.dir}/target/${module.name}-${vaadin.version}.war" />
     <!--todo automate version number -->
     <property name="result.jboss6.war"
-        location="${uitest.dir}/target/${module.name}-8.1-SNAPSHOT-jboss6.war" />
+        location="${uitest.dir}/target/${module.name}-8.2-SNAPSHOT-jboss6.war" />
 
     <!-- Need to give a default value to keep Ivy happy -->
     <property name="vaadin.build.repository" value="http://maven.vaadin.com/vaadin-prereleases"/>

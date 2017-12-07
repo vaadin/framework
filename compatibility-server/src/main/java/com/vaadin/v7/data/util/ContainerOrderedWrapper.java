@@ -19,9 +19,9 @@ package com.vaadin.v7.data.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.v7.data.Container;
@@ -57,16 +57,16 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     private final Container container;
 
     /**
-     * Ordering information, ie. the mapping from Item ID to the next item ID.
+     * Ordering information, i.e. the mapping from Item ID to the next item ID.
      * The last item id should not be present
      */
-    private Hashtable<Object, Object> next;
+    private Map<Object, Object> next;
 
     /**
      * Reverse ordering information for convenience and performance reasons. The
      * first item id should not be present
      */
-    private Hashtable<Object, Object> prev;
+    private Map<Object, Object> prev;
 
     /**
      * ID of the first Item in the container.
@@ -79,7 +79,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     private Object last;
 
     /**
-     * Is the wrapped container ordered by itself, ie. does it implement the
+     * Is the wrapped container ordered by itself, i.e. does it implement the
      * Container.Ordered interface by itself? If it does, this class will use
      * the methods of the underlying container directly.
      */
@@ -225,16 +225,14 @@ public class ContainerOrderedWrapper implements Container.Ordered,
 
             // Filter out all the missing items
             final LinkedList<?> l = new LinkedList<Object>(next.keySet());
-            for (final Iterator<?> i = l.iterator(); i.hasNext();) {
-                final Object id = i.next();
+            for (final Object id : l) {
                 if (!container.containsId(id)) {
                     removeFromOrderWrapper(id);
                 }
             }
 
             // Adds missing items
-            for (final Iterator<?> i = ids.iterator(); i.hasNext();) {
-                final Object id = i.next();
+            for (final Object id : ids) {
                 if (!next.containsKey(id) && last != id) {
                     addToOrderWrapper(id);
                 }
@@ -552,7 +550,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(Container.ItemSetChangeListener listener) {
@@ -577,7 +575,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(Container.ItemSetChangeListener listener) {
@@ -602,7 +600,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addPropertySetChangeListener(Container.PropertySetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(Container.PropertySetChangeListener listener) {
@@ -627,7 +625,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removePropertySetChangeListener(Container.PropertySetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(Container.PropertySetChangeListener listener) {

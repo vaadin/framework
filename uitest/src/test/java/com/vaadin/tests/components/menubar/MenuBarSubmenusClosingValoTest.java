@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.menubar;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -46,7 +47,7 @@ public class MenuBarSubmenusClosingValoTest extends MultiBrowserTest {
         menu.sendKeys(Keys.ARROW_RIGHT);
 
         int count = driver.findElements(By.className("v-menubar-popup")).size();
-        Assert.assertTrue("The count of open popups should be one", count == 1);
+        assertTrue("The count of open popups should be one", count == 1);
     }
 
     @Test
@@ -67,6 +68,6 @@ public class MenuBarSubmenusClosingValoTest extends MultiBrowserTest {
         waitForElementPresent(By.className("v-menubar-popup"));
 
         int count = driver.findElements(By.className("v-menubar-popup")).size();
-        Assert.assertTrue("The count of open popups should be one", count == 1);
+        assertTrue("The count of open popups should be one", count == 1);
     }
 }

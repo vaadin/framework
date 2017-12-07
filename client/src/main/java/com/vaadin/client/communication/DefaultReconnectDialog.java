@@ -16,13 +16,11 @@
 package com.vaadin.client.communication;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.BodyElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -32,7 +30,7 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.VOverlay;
 
 /**
- * The default implementation of the reconnect dialog
+ * The default implementation of the reconnect dialog.
  *
  * @since 7.6
  * @author Vaadin Ltd
@@ -81,12 +79,9 @@ public class DefaultReconnectDialog extends VOverlay
 
         // Click to refresh after giving up
         if (!reconnecting) {
-            clickHandler = addDomHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    // refresh
-                    WidgetUtil.redirect(null);
-                }
+            clickHandler = addDomHandler(event -> {
+                // refresh
+                WidgetUtil.redirect(null);
             }, ClickEvent.getType());
         } else {
             if (clickHandler != null) {
@@ -113,15 +108,10 @@ public class DefaultReconnectDialog extends VOverlay
         getElement().getStyle().setVisibility(Visibility.HIDDEN);
         setStyleName(STYLE_RECONNECTING, true);
 
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-            @Override
-            public void execute() {
-                getElement().getStyle().setVisibility(Visibility.VISIBLE);
-                setStyleName(STYLE_RECONNECTING, false);
-                hide();
-
-            }
+        Scheduler.get().scheduleDeferred(() -> {
+            getElement().getStyle().setVisibility(Visibility.VISIBLE);
+            setStyleName(STYLE_RECONNECTING, false);
+            hide();
         });
     }
 }

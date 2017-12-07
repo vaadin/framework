@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.ui.dnd.criteria.Payload;
 
 /**
  * State class containing parameters for DragSourceExtension.
@@ -75,4 +76,10 @@ public class DragSourceState extends SharedState {
      * Used to store data in the {@code DataTransfer} object for the drag event.
      */
     public Map<String, String> data = new HashMap<>();
+
+    /**
+     * Payload for comparing against acceptance criteria. Transferred in the
+     * {@code DataTransfer} object as data type.
+     */
+    public Map<String, Payload> payload = new HashMap<>();
 }

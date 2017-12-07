@@ -93,19 +93,19 @@ public class LocaleTest {
         assertTrue(
                 "The element should not have a locale specification, found locale "
                         + eb1.attr("locale"),
-                "".equals(eb1.attr("locale")));
+                        eb1.attr("locale").isEmpty());
         Element eb2 = ehLayout.child(1);
         assertEquals("Wrong locale information.", "en_US", eb2.attr("locale"));
         Element ehLayout2 = evLayout.child(1);
         assertTrue(
                 "The element should not have a locale specification, found locale "
                         + ehLayout2.attr("locale"),
-                "".equals(ehLayout2.attr("locale")));
+                        ehLayout2.attr("locale").isEmpty());
         Element el1 = ehLayout2.child(0);
         assertTrue(
                 "The element should not have a locale specification, found locale "
                         + el1.attr("locale"),
-                "".equals(el1.attr("locale")));
+                        el1.attr("locale").isEmpty());
         Element el2 = ehLayout2.child(1);
         assertEquals("Wrong locale information.", "en_CA", el2.attr("locale"));
     }

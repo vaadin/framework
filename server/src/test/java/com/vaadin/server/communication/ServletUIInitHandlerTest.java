@@ -15,6 +15,8 @@
  */
 package com.vaadin.server.communication;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,13 +26,10 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.server.DefaultDeploymentConfiguration;
-import com.vaadin.server.ErrorEvent;
-import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.MockServletConfig;
 import com.vaadin.server.UIClassSelectionEvent;
@@ -120,12 +119,7 @@ public class ServletUIInitHandlerTest {
             }
         };
 
-        ui.setErrorHandler(new ErrorHandler() {
-            @Override
-            public void error(ErrorEvent event) {
-                errorHandlerCalls.incrementAndGet();
-            }
-        });
+        ui.setErrorHandler(event -> errorHandlerCalls.incrementAndGet());
 
         CommunicationMock mock = new CommunicationMock(ui);
         VaadinRequest initRequest = mock.createInitRequest();
@@ -145,9 +139,9 @@ public class ServletUIInitHandlerTest {
                     }
                 });
 
-        Assert.assertEquals(1, pre.getAndIncrement());
-        Assert.assertEquals(1, errorHandlerCalls.getAndIncrement());
-        Assert.assertEquals(mock.session, ui.getSession());
+        assertEquals(1, pre.getAndIncrement());
+        assertEquals(1, errorHandlerCalls.getAndIncrement());
+        assertEquals(mock.session, ui.getSession());
     }
 
     @Test
@@ -180,9 +174,9 @@ public class ServletUIInitHandlerTest {
                     }
                 });
 
-        Assert.assertEquals(1, pre.getAndIncrement());
+        assertEquals(1, pre.getAndIncrement());
         // Default error handler only logs the exception
-        Assert.assertEquals(mock.session, ui.getSession());
+        assertEquals(mock.session, ui.getSession());
     }
 
 }

@@ -1,10 +1,15 @@
 package com.vaadin.tests.components.treegrid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.TreeDataProvider;
+import com.vaadin.tests.data.bean.Person;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TreeGrid;
 import com.vaadin.ui.renderers.TextRenderer;
 
@@ -14,6 +19,7 @@ public class TreeGridTest {
     private boolean expandEventFired = false;
     private boolean collapseEventFired = false;
 
+    @Test
     public void testChangeRendererOfHierarchyColumn() {
         treeGrid.addColumn(Object::toString).setId("foo");
         treeGrid.setHierarchyColumn("foo");
@@ -29,17 +35,34 @@ public class TreeGridTest {
         treeData.addItem("Foo", "Baz");
         treeGrid.setDataProvider(new TreeDataProvider<>(treeData));
 
-        treeGrid.addExpandListener(e -> expandEventFired = true);
-        treeGrid.addCollapseListener(e -> collapseEventFired = true);
+        treeGrid.addExpandListener(event -> expandEventFired = true);
+        treeGrid.addCollapseListener(event -> collapseEventFired = true);
 
         // Test expand event
-        Assert.assertFalse(expandEventFired);
+        assertFalse(expandEventFired);
         treeGrid.expand("Foo");
-        Assert.assertTrue("Expand event not fired", expandEventFired);
+        assertTrue("Item not expanded", treeGrid.isExpanded("Foo"));
+        assertTrue("Expand event not fired", expandEventFired);
 
         // Test collapse event
-        Assert.assertFalse(collapseEventFired);
+        assertFalse(collapseEventFired);
         treeGrid.collapse("Foo");
-        Assert.assertTrue("Collapse event not fired", collapseEventFired);
+        assertFalse("Item not collapsed", treeGrid.isExpanded("Foo"));
+        assertTrue("Collapse event not fired", collapseEventFired);
+    }
+
+    @Test
+    public void testSetAndGetHierarchyColumn() {
+        Column<String, String> column = treeGrid.addColumn(Object::toString)
+                .setId("foo");
+        treeGrid.setHierarchyColumn("foo");
+        assertEquals("Hierarchy column was not correctly returned", column,
+                treeGrid.getHierarchyColumn());
+    }
+
+    @Test
+    public void testBeanTypeConstructor() {
+        TreeGrid<Person> treeGrid = new TreeGrid<>(Person.class);
+        assertEquals(Person.class, treeGrid.getBeanType());
     }
 }

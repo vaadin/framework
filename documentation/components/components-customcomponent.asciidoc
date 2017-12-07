@@ -22,8 +22,6 @@ The benefit of wrapping a layout composite is mainly encapsulation - hiding the
 implementation details of the composition. Otherwise, a user of the composite
 could rely on implementation details, which would create an unwanted dependency.
 
-IMPORTANT: The [classname]#Composite# component is currently being developed and only available in the Framework 8.1 prerelease versions, starting from 8.1.0.alpha6.
-
 To create a composite, you need to inherit [classname]#Composite# or
 [classname]#CustomComponent# and set the __composition root__ component in the
 constructor. The composition root is typically a layout component that contains

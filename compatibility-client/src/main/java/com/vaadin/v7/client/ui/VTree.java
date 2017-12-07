@@ -19,9 +19,9 @@ package com.vaadin.v7.client.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.aria.client.ExpandedValue;
@@ -138,13 +138,13 @@ public class VTree extends FocusElementPanel
     /** For internal use only. May be removed or replaced in the future. */
     public MultiSelectMode multiSelectMode = MultiSelectMode.DEFAULT;
 
-    private final HashMap<String, TreeNode> keyToNode = new HashMap<String, TreeNode>();
+    private final Map<String, TreeNode> keyToNode = new HashMap<String, TreeNode>();
 
     /**
      * This map contains captions and icon urls for actions like: * "33_c" ->
      * "Edit" * "33_i" -> "http://dom.com/edit.png"
      */
-    private final HashMap<String, String> actionMap = new HashMap<String, String>();
+    private final Map<String, String> actionMap = new HashMap<String, String>();
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean immediate;
@@ -326,7 +326,7 @@ public class VTree extends FocusElementPanel
      * @return A list of all root {@link TreeNode}s.
      */
     protected List<TreeNode> getRootNodes() {
-        ArrayList<TreeNode> rootNodes = new ArrayList<TreeNode>();
+        List<TreeNode> rootNodes = new ArrayList<TreeNode>();
         for (int i = 0; i < body.getWidgetCount(); i++) {
             rootNodes.add((TreeNode) body.getWidget(i));
         }
@@ -459,7 +459,7 @@ public class VTree extends FocusElementPanel
     public void setSelected(TreeNode treeNode, boolean selected) {
         if (selected) {
             if (!isMultiselect) {
-                while (selectedIds.size() > 0) {
+                while (!selectedIds.isEmpty()) {
                     final String id = selectedIds.iterator().next();
                     final TreeNode oldSelection = getNodeByKey(id);
                     if (oldSelection != null) {
@@ -520,7 +520,7 @@ public class VTree extends FocusElementPanel
     }
 
     /**
-     * Is a node selected in the tree
+     * Is a node selected in the tree.
      *
      * @param treeNode
      *            The node to check
@@ -730,8 +730,9 @@ public class VTree extends FocusElementPanel
             }
 
             final boolean inCaption = isCaptionElement(target);
-            if (inCaption && client.hasEventListeners(VTree.this,
-                    TreeConstants.ITEM_CLICK_EVENT_ID)
+            if (inCaption
+                    && client.hasEventListeners(VTree.this,
+                            TreeConstants.ITEM_CLICK_EVENT_ID)
 
                     && (type == Event.ONDBLCLICK || type == Event.ONMOUSEUP)) {
                 fireClick(event);
@@ -1006,7 +1007,7 @@ public class VTree extends FocusElementPanel
         }
 
         /**
-         * Returns the children of the node
+         * Returns the children of the node.
          *
          * @return A set of tree nodes
          */
@@ -1014,9 +1015,8 @@ public class VTree extends FocusElementPanel
             List<TreeNode> nodes = new LinkedList<TreeNode>();
 
             if (!isLeaf() && isChildrenLoaded()) {
-                Iterator<Widget> iter = childNodeContainer.iterator();
-                while (iter.hasNext()) {
-                    TreeNode node = (TreeNode) iter.next();
+                for (Widget w : childNodeContainer) {
+                    TreeNode node = (TreeNode) w;
                     nodes.add(node);
                 }
             }
@@ -1067,7 +1067,7 @@ public class VTree extends FocusElementPanel
         }
 
         /**
-         * Travels up the hierarchy looking for this node
+         * Travels up the hierarchy looking for this node.
          *
          * @param child
          *            The child which grandparent this is or is not
@@ -1149,7 +1149,7 @@ public class VTree extends FocusElementPanel
         }
 
         /**
-         * Scrolls the caption into view
+         * Scrolls the caption into view.
          */
         public void scrollIntoView() {
             WidgetUtil.scrollIntoViewVertically(nodeCaptionDiv);
@@ -1189,7 +1189,7 @@ public class VTree extends FocusElementPanel
     }
 
     /**
-     * Deselects all items in the tree
+     * Deselects all items in the tree.
      */
     public void deselectAll() {
         for (String key : selectedIds) {
@@ -1487,10 +1487,8 @@ public class VTree extends FocusElementPanel
             endNode = temp;
         }
 
-        Iterator<TreeNode> childIter = children.iterator();
         boolean startFound = false;
-        while (childIter.hasNext()) {
-            TreeNode node = childIter.next();
+        for (TreeNode node : children) {
             if (node == startNode) {
                 startFound = true;
             }
@@ -1512,7 +1510,7 @@ public class VTree extends FocusElementPanel
     }
 
     /**
-     * Returns the first common parent of two nodes
+     * Returns the first common parent of two nodes.
      *
      * @param node1
      *            The first node
@@ -1562,7 +1560,7 @@ public class VTree extends FocusElementPanel
     }
 
     /**
-     * Sets the node currently in focus
+     * Sets the node currently in focus.
      *
      * @param node
      *            The node to focus or null to remove the focus completely
@@ -1592,8 +1590,8 @@ public class VTree extends FocusElementPanel
              * problem, that the newly selected item is announced too often with
              * a screen reader.
              *
-             * Behaviour is different when using the Tree with and without
-             * screen reader.
+             * Behavior is different when using the Tree with and without screen
+             * reader.
              */
             if (node.key.equals(lastNodeKey)) {
                 Roles.getTreeRole().setAriaActivedescendantProperty(
@@ -1624,7 +1622,7 @@ public class VTree extends FocusElementPanel
     }
 
     /**
-     * Focuses a node and scrolls it into view
+     * Focuses a node and scrolls it into view.
      *
      * @param node
      *            The node to focus
@@ -1710,7 +1708,7 @@ public class VTree extends FocusElementPanel
     }
 
     /**
-     * Handles the keyboard navigation
+     * Handles the keyboard navigation.
      *
      * @param keycode
      *            The keycode of the pressed key
@@ -1727,15 +1725,13 @@ public class VTree extends FocusElementPanel
             TreeNode node = null;
             // If node is open and has children then move in to the children
             if (!focusedNode.isLeaf() && focusedNode.getState()
-                    && focusedNode.getChildren().size() > 0) {
+                    && !focusedNode.getChildren().isEmpty()) {
                 node = focusedNode.getChildren().get(0);
-            }
-
-            // Else move down to the next sibling
-            else {
+            } else {
+                // Move down to the next sibling
                 node = getNextSibling(focusedNode);
                 if (node == null) {
-                    // Else jump to the parent and try to select the next
+                    // Jump to the parent and try to select the next
                     // sibling there
                     TreeNode current = focusedNode;
                     while (node == null && current.getParentNode() != null) {
@@ -1910,8 +1906,7 @@ public class VTree extends FocusElementPanel
      * @return The bottom most child
      */
     private TreeNode getLastVisibleChildInTree(TreeNode root) {
-        if (root.isLeaf() || !root.getState()
-                || root.getChildren().size() == 0) {
+        if (root.isLeaf() || !root.getState() || root.getChildren().isEmpty()) {
             return root;
         }
         List<TreeNode> children = root.getChildren();
@@ -1975,7 +1970,7 @@ public class VTree extends FocusElementPanel
      */
     private native JavaScriptObject applyDisableTextSelectionIEHack()
     /*-{
-            return function(){ return false; };
+            return function() { return false; };
     }-*/;
 
     /**
@@ -2077,8 +2072,8 @@ public class VTree extends FocusElementPanel
         return KeyCodes.KEY_END;
     }
 
-    private final String SUBPART_NODE_PREFIX = "n";
-    private final String EXPAND_IDENTIFIER = "expand";
+    private static final String SUBPART_NODE_PREFIX = "n";
+    private static final String EXPAND_IDENTIFIER = "expand";
 
     /*
      * In webkit, focus may have been requested for this component but not yet
@@ -2179,7 +2174,7 @@ public class VTree extends FocusElementPanel
             isExpandCollapse = true;
         }
 
-        ArrayList<Integer> positions = new ArrayList<Integer>();
+        List<Integer> positions = new ArrayList<Integer>();
         while (treeNode.getParentNode() != null) {
             positions.add(0,
                     treeNode.getParentNode().getChildren().indexOf(treeNode));

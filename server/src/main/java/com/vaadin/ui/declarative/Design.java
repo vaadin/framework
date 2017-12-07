@@ -15,6 +15,8 @@
  */
 package com.vaadin.ui.declarative;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +46,7 @@ import com.vaadin.ui.Composite;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreatedEvent;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Design is used for reading a component hierarchy from an html string or input
@@ -65,8 +68,6 @@ import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
  * @author Vaadin Ltd
  */
 public class Design implements Serializable {
-
-    private static final String UTF8 = "UTF-8";
 
     /**
      * Callback for creating instances of a given component class when reading
@@ -175,7 +176,7 @@ public class Design implements Serializable {
                             + " which is not a Vaadin Component class";
 
             try {
-                return componentClass.newInstance();
+                return ReflectTools.createInstance(componentClass);
             } catch (Exception e) {
                 throw new DesignException(
                         "Could not create component " + fullyQualifiedClassName,
@@ -209,7 +210,7 @@ public class Design implements Serializable {
     }
 
     /**
-     * Default implementation of {@link ComponentMapper},
+     * Default implementation of {@link ComponentMapper}.
      *
      * @since 7.5.0
      */
@@ -264,7 +265,7 @@ public class Design implements Serializable {
             String prefix = context.getPackagePrefix(packageName);
             if (prefix == null) {
                 prefix = packageName.replace('.', '_')
-                        .toLowerCase(Locale.ENGLISH);
+                        .toLowerCase(Locale.ROOT);
                 context.addPackagePrefix(prefix, packageName);
             }
             prefix += "-";
@@ -301,7 +302,7 @@ public class Design implements Serializable {
                 Character c = className.charAt(i);
                 if (Character.isUpperCase(c)) {
                     if (i > 0) {
-                        result.append("-");
+                        result.append('-');
                     }
                     result.append(Character.toLowerCase(c));
                 } else {
@@ -391,7 +392,8 @@ public class Design implements Serializable {
      */
     private static Document parse(InputStream html) {
         try {
-            Document doc = Jsoup.parse(html, UTF8, "", Parser.htmlParser());
+            Document doc = Jsoup.parse(html, UTF_8.name(), "",
+                    Parser.htmlParser());
             return doc;
         } catch (IOException e) {
             throw new DesignException("The html document cannot be parsed.");
@@ -488,9 +490,8 @@ public class Design implements Serializable {
             // create listener for component creations that binds the created
             // components to the componentRoot instance fields
             ComponentCreationListener creationListener = (
-                    ComponentCreatedEvent event) -> {
-                binder.bindField(event.getComponent(), event.getLocalId());
-            };
+                    ComponentCreatedEvent event) -> binder.bindField(
+                            event.getComponent(), event.getLocalId());
             designContext.addComponentCreationListener(creationListener);
 
             // create subtree
@@ -739,7 +740,7 @@ public class Design implements Serializable {
     }
 
     /**
-     * Loads a design from the given input stream
+     * Loads a design from the given input stream.
      *
      * @param design
      *            The stream to read the design from
@@ -807,7 +808,7 @@ public class Design implements Serializable {
         doc.outputSettings().indentAmount(4);
         doc.outputSettings().syntax(Syntax.html);
         doc.outputSettings().prettyPrint(true);
-        outputStream.write(doc.html().getBytes(UTF8));
+        outputStream.write(doc.html().getBytes(UTF_8));
     }
 
     private Design() {

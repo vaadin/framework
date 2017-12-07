@@ -17,7 +17,7 @@ public class GridLayoutComboBoxZoomOut extends AbstractTestCase {
 
         Label description = new Label(
                 "Open this application in Chrome, zoom out (cmd + \"-\") and "
-                        + "open the ComboBox for weird behaviour.");
+                        + "open the ComboBox for weird behavior.");
         mainWindow.addComponent(description);
 
         Layout formLayout = new GridLayout(2, 1);

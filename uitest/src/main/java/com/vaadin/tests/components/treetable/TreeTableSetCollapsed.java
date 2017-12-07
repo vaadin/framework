@@ -2,7 +2,6 @@ package com.vaadin.tests.components.treetable;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.ui.TreeTable;
 
 public class TreeTableSetCollapsed extends TestBase {
@@ -11,12 +10,7 @@ public class TreeTableSetCollapsed extends TestBase {
     protected void setup() {
         createTreeTableAndPopulate();
         addComponent(new Button("Create another TreeTable",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        createTreeTableAndPopulate();
-                    }
-                }));
+                event -> createTreeTableAndPopulate()));
     }
 
     private void createTreeTableAndPopulate() {

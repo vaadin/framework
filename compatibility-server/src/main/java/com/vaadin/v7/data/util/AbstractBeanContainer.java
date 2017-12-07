@@ -18,7 +18,6 @@ package com.vaadin.v7.data.util;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -711,7 +710,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /**
      * @deprecated As of 7.0, replaced by {@link #addPropertySetChangeListener}
-     **/
+     */
     @Deprecated
     @Override
     public void addListener(Container.PropertySetChangeListener listener) {
@@ -727,7 +726,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removePropertySetChangeListener(Container.PropertySetChangeListener)}
-     **/
+     */
     @Deprecated
     @Override
     public void removeListener(Container.PropertySetChangeListener listener) {
@@ -846,9 +845,8 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
         model.remove(propertyId);
 
         // If remove the Property from all Items
-        for (final Iterator<IDTYPE> i = getAllItemIds().iterator(); i
-                .hasNext();) {
-            getUnfilteredItem(i.next()).removeItemProperty(propertyId);
+        for (final IDTYPE id : getAllItemIds()) {
+            getUnfilteredItem(id).removeItemProperty(propertyId);
         }
 
         // Sends a change event

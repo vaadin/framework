@@ -20,9 +20,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -32,6 +34,7 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.widgets.FocusableFlowPanelComposite;
 import com.vaadin.shared.Registration;
@@ -101,6 +104,28 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         }
     }
 
+    /**
+     * Returns the JsonObject used to populate the RadioButton widget that
+     * contains given Element.
+     *
+     * @since 8.2
+     * @param element
+     *            the element to search for
+     * @return the related JsonObject; {@code null} if not found
+     */
+    public JsonObject getItem(Element element) {
+        // The HTML populated in updateItem does not match RadioButton directly,
+        // which is why tryGetItem is also attempted on the parent element
+        return tryGetItem(element)
+                .orElse(tryGetItem(element.getParentElement()).orElse(null));
+    }
+
+    private Optional<JsonObject> tryGetItem(Element element) {
+        return optionsToItems.entrySet().stream()
+                .filter(entry -> entry.getKey().getElement().equals(element))
+                .map(entry -> entry.getValue()).findFirst();
+    }
+
     private void remove(Widget widget) {
         getWidget().remove(widget);
         JsonObject item = optionsToItems.remove(widget);
@@ -119,7 +144,7 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         }
 
         String iconUrl = item.getString(ListingJsonConstants.JSONKEY_ITEM_ICON);
-        if (iconUrl != null && iconUrl.length() != 0) {
+        if (iconUrl != null && !iconUrl.isEmpty()) {
             Icon icon = client.getIcon(iconUrl);
             itemHtml = icon.getElement().getString() + itemHtml;
         }
@@ -131,6 +156,10 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
                 .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
         boolean enabled = optionEnabled && !isReadonly() && isEnabled();
         button.setEnabled(enabled);
+        // #9258 apply the v-disabled class when disabled for UX
+        button.setStyleName(StyleConstants.DISABLED,
+                !isEnabled() || !optionEnabled);
+
         String key = item.getString(DataCommunicatorConstants.KEY);
 
         if (requireInitialization) {
@@ -181,9 +210,12 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
                 .entrySet()) {
             RadioButton radioButton = entry.getKey();
             JsonObject value = entry.getValue();
-            Boolean isOptionEnabled = !value
+            boolean optionEnabled = !value
                     .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
-            radioButton.setEnabled(radioButtonEnabled && isOptionEnabled);
+            radioButton.setEnabled(radioButtonEnabled && optionEnabled);
+            // #9258 apply the v-disabled class when disabled for UX
+            radioButton.setStyleName(StyleConstants.DISABLED,
+                    !isEnabled() || !optionEnabled);
         }
     }
 
@@ -227,9 +259,13 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
     }
 
     public void selectItemKey(String selectedItemKey) {
-        RadioButton radioButton = keyToOptions.get(selectedItemKey);
-        if (radioButton != null) {// Items might not be loaded yet
-            radioButton.setValue(true);
+        if (selectedItemKey != null) {
+            RadioButton radioButton = keyToOptions.get(selectedItemKey);
+            if (radioButton != null) { // Items might not be loaded yet
+                radioButton.setValue(true);
+            }
+        } else {
+            keyToOptions.values().forEach(button -> button.setValue(false));
         }
     }
 }

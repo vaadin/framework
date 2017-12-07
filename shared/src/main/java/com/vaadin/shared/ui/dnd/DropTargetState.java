@@ -15,7 +15,11 @@
  */
 package com.vaadin.shared.ui.dnd;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.ui.dnd.criteria.Criterion;
 
 /**
  * State class containing parameters for DropTargetExtension.
@@ -25,12 +29,23 @@ import com.vaadin.shared.communication.SharedState;
  */
 public class DropTargetState extends SharedState {
     /**
-     * {@code DataTransfer.dropEffect} parameter for the drag event
+     * {@code DataTransfer.dropEffect} parameter for the drag event.
      */
     public DropEffect dropEffect;
 
     /**
-     * Criteria script to allow drop event on the element
+     * Criteria script to allow drop event on the element.
      */
-    public String dropCriteria;
+    public String criteriaScript;
+
+    /**
+     * List of criteria to compare against the payload.
+     */
+    public List<Criterion> criteria = new ArrayList<>();
+
+    /**
+     * Declares whether any or all of the given criteria should match the
+     * payload.
+     */
+    public Criterion.Match criteriaMatch = Criterion.Match.ANY;
 }

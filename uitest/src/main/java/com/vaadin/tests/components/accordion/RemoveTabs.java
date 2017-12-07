@@ -1,14 +1,12 @@
 package com.vaadin.tests.components.accordion;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 
@@ -46,36 +44,16 @@ public class RemoveTabs extends TestBase {
         getLayout().addComponent(accordion);
 
         closeCurrent = new Button("Close current tab");
-        closeCurrent.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                closeCurrentTab();
-            }
-        });
+        closeCurrent.addClickListener(event -> closeCurrentTab());
 
         closeFirst = new Button("close first tab");
-        closeFirst.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                closeFirstTab();
-            }
-        });
+        closeFirst.addClickListener(event -> closeFirstTab());
 
         closeLast = new Button("close last tab");
-        closeLast.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                closeLastTab();
-            }
-        });
+        closeLast.addClickListener(event -> closeLastTab());
 
         reorderTabs = new Button("reorder");
-        reorderTabs.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                reorder();
-            }
-        });
+        reorderTabs.addClickListener(event -> reorder());
 
         getLayout().addComponent(closeFirst);
         getLayout().addComponent(closeLast);
@@ -96,11 +74,9 @@ public class RemoveTabs extends TestBase {
     }
 
     private void closeLastTab() {
-        Iterator<Component> i = accordion.iterator();
         Component last = null;
-        while (i.hasNext()) {
-            last = i.next();
-
+        for (Component c : accordion) {
+            last = c;
         }
         accordion.removeComponent(last);
     }
@@ -110,9 +86,7 @@ public class RemoveTabs extends TestBase {
 
         if (container != null) {
             List<Component> c = new ArrayList<>();
-            Iterator<Component> i = container.iterator();
-            while (i.hasNext()) {
-                Component comp = i.next();
+            for (Component comp : container) {
                 c.add(comp);
             }
             container.removeAllComponents();

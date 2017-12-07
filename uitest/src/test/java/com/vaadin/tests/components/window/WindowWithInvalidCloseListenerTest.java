@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.window;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -13,7 +14,7 @@ public class WindowWithInvalidCloseListenerTest extends MultiBrowserTest {
         openTestURL();
         $(WindowElement.class).first()
                 .findElement(By.className("v-window-closebox")).click();
-        Assert.assertFalse("Window found when there should be none.",
+        assertFalse("Window found when there should be none.",
                 $(WindowElement.class).exists());
     }
 }

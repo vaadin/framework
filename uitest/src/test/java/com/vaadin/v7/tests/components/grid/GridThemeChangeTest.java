@@ -15,9 +15,10 @@
  */
 package com.vaadin.v7.tests.components.grid;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -47,7 +48,7 @@ public class GridThemeChangeTest extends MultiBrowserTest {
         grid = $(GridElement.class).first();
         int valoHeight = grid.getRow(0).getSize().getHeight();
 
-        Assert.assertTrue(
+        assertTrue(
                 "Row height should increase when changing from Reindeer to Valo",
                 valoHeight > reindeerHeight);
     }
