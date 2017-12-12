@@ -17,7 +17,7 @@
     <url>http://vaadin.com</url>
 
     <properties>
-        <vaadin.spring.version>2.0.1</vaadin.spring.version>
+        <vaadin.spring.version>3.0.0.alpha1</vaadin.spring.version>
         <vaadin.testbench.version>5.1.1</vaadin.testbench.version>
         <vaadin.cdi.version>2.0.0</vaadin.cdi.version>
         <vaadin.context-menu.version>2.0.0</vaadin.context-menu.version>
