@@ -2566,7 +2566,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * <p>
      * This method can only be used for a <code>Grid</code> created using
      * {@link Grid#Grid(Class)} or {@link #withPropertySet(PropertySet)}.
-     *
+     * You can specify a nested property, for example 
+     * {@code "address.streetAddress.postalCode"}.
+     * 
      * @param propertyName
      *            the property name of the new column, not <code>null</code>
      * @return the newly added column, not <code>null</code>
