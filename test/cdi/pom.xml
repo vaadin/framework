@@ -18,7 +18,6 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-cdi</artifactId>
-            <version>3.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>

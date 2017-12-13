@@ -6,11 +6,10 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import com.vaadin.cdi.AfterViewChange;
-import com.vaadin.cdi.CDIUI;
+import com.vaadin.cdi.CDINavigator;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.test.cdi.MyCDINavigator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
@@ -26,14 +25,7 @@ public abstract class BaseUI extends UI {
 
     @Inject
     /* This should be automatic */
-    private MyCDINavigator navigator;
-
-    @Override
-    public String getUiRootPath() {
-        // FIXME: Should be handled by CDI plug-in
-        return super.getUiRootPath() + "/"
-                + getClass().getAnnotation(CDIUI.class).value();
-    }
+    private CDINavigator navigator;
 
     @Override
     protected void init(VaadinRequest request) {

@@ -28,7 +28,7 @@ import com.vaadin.testbench.parallel.ParallelTest;
 @RunLocally(Browser.PHANTOMJS)
 public class VaadinCDISmokeIT extends ParallelTest {
 
-    private static String BASE_URL = "http://localhost:8080/";
+    private static final String BASE_URL = "http://localhost:8080/";
 
     @Rule
     public ScreenshotOnFailureRule rule = new ScreenshotOnFailureRule(this,
@@ -56,11 +56,9 @@ public class VaadinCDISmokeIT extends ParallelTest {
     public void testAlwaysNewViewIsRecrated() {
         getDriver().navigate().to(BASE_URL);
         navigateAndGetLogContent("new");
-        assertNavigationNotification("new");
 
         // A new navigation event should happen when navigating to view again
         navigateAndGetLogContent("new");
-        assertNavigationNotification("new");
 
         assertEquals("GreetingService should've been only called once.",
                 String.format(GreetingView.CALL_COUNT_FORMAT, 1),
@@ -73,15 +71,13 @@ public class VaadinCDISmokeIT extends ParallelTest {
 
         getDriver().navigate().to(BASE_URL);
         navigateAndGetLogContent("param");
-        assertNavigationNotification("param");
 
         assertEquals("Greeting service was not called with empty parameter.",
                 service.getGreeting(""), $(CssLayoutElement.class).id("log")
                         .$(LabelElement.class).first().getText());
 
         // Navigation event is fired with same view and different parameters
-        navigateAndGetLogContent("param/foo");
-        assertNavigationNotification("param");
+        navigateAndGetLogContent("param", "foo");
 
         assertEquals("Greeting service was not called with correct parameters.",
                 service.getGreeting("foo"), $(CssLayoutElement.class).id("log")
@@ -97,16 +93,14 @@ public class VaadinCDISmokeIT extends ParallelTest {
         GreetingService service = new GreetingService();
 
         getDriver().navigate().to(BASE_URL);
-        navigateAndGetLogContent("name/foo");
-        assertNavigationNotification("name");
+        navigateAndGetLogContent("name", "foo");
 
         assertEquals("Greeting service was not called with 'foo' parameter.",
                 service.getGreeting("foo"), $(CssLayoutElement.class).id("log")
                         .$(LabelElement.class).first().getText());
 
         // Navigation event fired with same view and different parameters
-        navigateAndGetLogContent("name/bar");
-        assertNavigationNotification("name");
+        navigateAndGetLogContent("name", "bar");
 
         assertEquals("GreetingService should've been only called twice.",
                 String.format(GreetingView.CALL_COUNT_FORMAT, 2),
@@ -174,30 +168,24 @@ public class VaadinCDISmokeIT extends ParallelTest {
     }
 
     private void assertNavigationNotification(String string) {
-        // Wait animation
-        sleep();
+        waitUntil(e -> isElementPresent(NotificationElement.class));
 
-        assertTrue(isElementPresent(NotificationElement.class));
         NotificationElement notification = $(NotificationElement.class).first();
         assertEquals(String.format(RootPathUI.NAVIGATION_TEXT, string),
                 notification.getText());
 
         // Close all notifications.
-        $(NotificationElement.class).all().forEach(NotificationElement::close);
-    }
-
-    /**
-     * Sleep method for waiting animations.
-     */
-    private void sleep() {
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
+        while (isElementPresent(NotificationElement.class)) {
+            $(NotificationElement.class).first().close();
         }
     }
 
     private String navigateAndGetLogContent(String viewName) {
         return navigateAndGetLogContent(viewName, "", new GreetingService());
+    }
+
+    private String navigateAndGetLogContent(String viewName, String parameter) {
+        return navigateAndGetLogContent(viewName, parameter, new GreetingService());
     }
 
     private String navigateAndGetLogContent(String viewName, String parameter,

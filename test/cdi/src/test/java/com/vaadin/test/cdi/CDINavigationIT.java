@@ -20,7 +20,7 @@ import com.vaadin.testbench.parallel.ParallelTest;
 @RunLocally(Browser.PHANTOMJS)
 public class CDINavigationIT extends ParallelTest {
 
-    protected static String BASE_URL = "http://localhost:8080";
+    protected static final String BASE_URL = "http://localhost:8080";
 
     @Override
     public void setup() throws Exception {

@@ -19,7 +19,7 @@
     <properties>
         <vaadin.spring.version>2.0.1</vaadin.spring.version>
         <vaadin.testbench.version>5.1.1</vaadin.testbench.version>
-        <vaadin.cdi.version>2.0.0</vaadin.cdi.version>
+        <vaadin.cdi.version>3.0.0.alpha2</vaadin.cdi.version>
         <vaadin.context-menu.version>2.0.0</vaadin.context-menu.version>
     </properties>
 
