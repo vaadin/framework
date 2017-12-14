@@ -2566,8 +2566,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * <p>
      * This method can only be used for a <code>Grid</code> created using
      * {@link Grid#Grid(Class)} or {@link #withPropertySet(PropertySet)}.
-     * You can specify a nested property, for example 
-     * {@code "address.streetAddress.postalCode"}.
+     * <p>
+     * You can add columns for nested properties with dot notation, eg.
+     * <code>"property.nestedProperty"</code>
      * 
      * @param propertyName
      *            the property name of the new column, not <code>null</code>
@@ -2585,6 +2586,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * <p>
      * This method can only be used for a <code>Grid</code> created using
      * {@link Grid#Grid(Class)} or {@link #withPropertySet(PropertySet)}.
+     * <p>
+     * You can add columns for nested properties with dot notation, eg.
+     * <code>"property.nestedProperty"</code>
+
      *
      * @param propertyName
      *            the property name of the new column, not <code>null</code>
