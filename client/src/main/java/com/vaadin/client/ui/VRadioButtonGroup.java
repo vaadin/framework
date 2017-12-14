@@ -24,9 +24,11 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasEnabled;
@@ -267,5 +269,32 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         } else {
             keyToOptions.values().forEach(button -> button.setValue(false));
         }
+    }
+
+    /**
+     * Set focus to the selected radio button (or first radio button if there is
+     * no selection).
+     */
+    @Override
+    public void focus() {
+        // If focus is set on creation, need to wait until options are populated
+        Scheduler.get().scheduleDeferred(new Command() {
+            @Override
+            public void execute() {
+                // if there's a selected radio button, focus it
+                for (String key : keyToOptions.keySet()) {
+                    RadioButton radioButton = keyToOptions.get(key);
+                    if (radioButton != null && radioButton.getValue()) {
+                        radioButton.setFocus(true);
+                        return;
+                    }
+                }
+                // otherwise focus the first one
+                if (getWidget().getWidgetCount() > 0) {
+                    RadioButton first = (RadioButton) getWidget().getWidget(0);
+                    first.setFocus(true);
+                }
+            }
+        });
     }
 }
