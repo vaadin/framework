@@ -18,9 +18,9 @@ package com.vaadin.tests.themes.valo;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.VerticalLayoutElement;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class LayoutComponentGroupTest extends SingleBrowserTestPhantomJS2 {
+public class LayoutComponentGroupTest extends SingleBrowserTest {
 
     @Test
     public void renderedWithoutRoundedBordersInTheMiddle() throws Exception {

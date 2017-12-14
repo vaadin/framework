@@ -22,10 +22,10 @@ import org.junit.Test;
 
 import com.vaadin.testbench.elements.FormLayoutElement;
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class RelativeSizeInUndefinedCssLayoutTest
-        extends SingleBrowserTestPhantomJS2 {
+        extends SingleBrowserTest {
 
     @Test
     public void relativeSizeInUndefinedCssLayout() {

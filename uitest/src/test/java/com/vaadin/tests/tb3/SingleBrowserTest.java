@@ -29,6 +29,6 @@ public abstract class SingleBrowserTest extends PrivateTB3Configuration {
             return Collections.singletonList(getRunLocallyCapabilities());
         }
         return Collections
-                .singletonList(Browser.PHANTOMJS.getDesiredCapabilities());
+                .singletonList(Browser.CHROME.getDesiredCapabilities());
     }
 }
