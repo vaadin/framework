@@ -99,10 +99,6 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
     @Before
     public void setupScreenComparisonParameters() {
         screenshotFailures = new ArrayList<>();
-
-        Parameters.setScreenshotErrorDirectory(getScreenshotErrorDirectory());
-        Parameters.setScreenshotReferenceDirectory(
-                getScreenshotReferenceDirectory());
     }
 
     /**
@@ -253,8 +249,10 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
     private File getErrorFileFromReference(File referenceFile) {
 
         String absolutePath = referenceFile.getAbsolutePath();
-        String screenshotReferenceDirectory = getScreenshotReferenceDirectory();
-        String screenshotErrorDirectory = getScreenshotErrorDirectory();
+        String screenshotReferenceDirectory = Parameters
+                .getScreenshotReferenceDirectory();
+        String screenshotErrorDirectory = Parameters
+                .getScreenshotErrorDirectory();
         // We throw an exception to safeguard against accidental reference
         // deletion. See (#14446)
         if (!absolutePath.contains(screenshotReferenceDirectory)) {
@@ -326,39 +324,6 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
         }
 
         return exactVersionFile;
-    }
-
-    /**
-     * @return the base directory of 'reference' and 'errors' screenshots
-     */
-    protected abstract String getScreenshotDirectory();
-
-    /**
-     * @return the base directory of 'reference' and 'errors' screenshots with a
-     *         trailing file separator
-     */
-    private String getScreenshotDirectoryWithTrailingSeparator() {
-        String screenshotDirectory = getScreenshotDirectory();
-        if (!screenshotDirectory.endsWith(File.separator)) {
-            screenshotDirectory += File.separator;
-        }
-        return screenshotDirectory;
-    }
-
-    /**
-     * @return the directory where reference images are stored (the 'reference'
-     *         folder inside the screenshot directory)
-     */
-    private String getScreenshotReferenceDirectory() {
-        return getScreenshotDirectoryWithTrailingSeparator() + "reference";
-    }
-
-    /**
-     * @return the directory where comparison error images should be created
-     *         (the 'errors' folder inside the screenshot directory)
-     */
-    private String getScreenshotErrorDirectory() {
-        return getScreenshotDirectoryWithTrailingSeparator() + "errors";
     }
 
     /**
@@ -449,7 +414,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      */
     private String getScreenshotReferenceName(String identifier,
             Integer versionOverride, Platform platformOverride) {
-        return getScreenshotReferenceDirectory() + File.separator
+        return Parameters.getScreenshotReferenceDirectory() + File.separator
                 + getScreenshotBaseName() + "_"
                 + getUniqueIdentifier(versionOverride, platformOverride) + "_"
                 + identifier + ".png";
@@ -508,8 +473,8 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      */
     private String getScreenshotErrorBaseName() {
         return getScreenshotReferenceName("dummy", null)
-                .replace(getScreenshotReferenceDirectory(),
-                        getScreenshotErrorDirectory())
+                .replace(Parameters.getScreenshotReferenceDirectory(),
+                        Parameters.getScreenshotErrorDirectory())
                 .replace("_dummy.png", "");
     }
 
@@ -521,7 +486,8 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
     public void cleanErrorDirectory() {
         // Remove any screenshots for this test from the error directory
         // before running it. Leave unrelated files as-is
-        File errorDirectory = new File(getScreenshotErrorDirectory());
+        File errorDirectory = new File(
+                Parameters.getScreenshotErrorDirectory());
 
         // Create errors directory if it does not exist
         if (!errorDirectory.exists()) {

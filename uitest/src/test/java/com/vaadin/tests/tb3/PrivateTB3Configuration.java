@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -32,6 +33,7 @@ import java.util.Properties;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.Parameters;
 import com.vaadin.testbench.annotations.BrowserFactory;
 import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.annotations.RunOnHub;
@@ -51,7 +53,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     /**
      *
      */
-    public static final String SCREENSHOT_DIRECTORY = "com.vaadin.testbench.screenshot.directory";
+    private static final String SCREENSHOT_DIRECTORY = "com.vaadin.testbench.screenshot.directory";
     private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
     private static final String RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.runLocally";
     private static final String ALLOW_RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.allowRunLocally";
@@ -82,6 +84,30 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                 if (properties.containsKey(PHANTOMJS_PATH)) {
                     System.setProperty(PHANTOMJS_PATH,
                             properties.getProperty(PHANTOMJS_PATH));
+                }
+
+                if (properties.containsKey(SCREENSHOT_DIRECTORY)) {
+                    String root = properties.getProperty(SCREENSHOT_DIRECTORY);
+                    String reference = Paths.get(root, "reference").toString();
+                    String errors = Paths.get(root, "errors").toString();
+                    Parameters.setScreenshotReferenceDirectory(reference);
+                    Parameters.setScreenshotErrorDirectory(errors);
+                } else {
+                    // Attempt to pass specific values to Parameters based on
+                    // real property name
+                    final String base = Parameters.class.getName() + ".";
+                    if (properties.containsKey(
+                            base + "screenshotReferenceDirectory")) {
+                        Parameters.setScreenshotReferenceDirectory(
+                                properties.getProperty(
+                                        base + "screenshotReferenceDirectory"));
+                    }
+                    if (properties
+                            .containsKey(base + "screenshotErrorDirectory")) {
+                        Parameters.setScreenshotErrorDirectory(
+                                properties.getProperty(
+                                        base + "screenshotErrorDirectory"));
+                    }
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -149,16 +175,6 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         }
 
         return property;
-    }
-
-    @Override
-    protected String getScreenshotDirectory() {
-        String screenshotDirectory = getProperty(SCREENSHOT_DIRECTORY);
-        if (screenshotDirectory == null) {
-            throw new RuntimeException("No screenshot directory defined. Use -D"
-                    + SCREENSHOT_DIRECTORY + "=<path>");
-        }
-        return screenshotDirectory;
     }
 
     @Override

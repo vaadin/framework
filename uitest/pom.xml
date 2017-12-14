@@ -314,7 +314,8 @@
                     <skip>${skip.uitest.failsafe}</skip>
                     <systemPropertyVariables>
                         <!-- Static path for screenshots pointing to submodule -->
-                        <com.vaadin.testbench.screenshot.directory>${project.parent.basedir}/tests/screenshots</com.vaadin.testbench.screenshot.directory>
+                        <com.vaadin.testbench.Parameters.screenshotReferenceDirectory>${project.basedir}/reference-screenshots</com.vaadin.testbench.Parameters.screenshotReferenceDirectory>
+                        <com.vaadin.testbench.Parameters.screenshotErrorDirectory>${project.build.directory}</com.vaadin.testbench.Parameters.screenshotErrorDirectory>
 
                         <!-- Optional properties for the test build -->
                         <vaadin.testbench.developer.license>${vaadin.testbench.developer.license}</vaadin.testbench.developer.license>
