@@ -264,24 +264,6 @@
             </plugin>
 
             <plugin>
-                <groupId>com.github.klieber</groupId>
-                <artifactId>phantomjs-maven-plugin</artifactId>
-                <configuration>
-                    <skip>${skip.uitest.failsafe}</skip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>install</goal>
-                        </goals>
-                        <configuration>
-                            <version>${phantomjs.version}</version>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
@@ -324,9 +306,6 @@
                         <browsers.exclude>${browsers.exclude}</browsers.exclude>
                         <categories.include>${categories.include}</categories.include>
                         <categories.exclude>${categories.exclude}</categories.exclude>
-                        <useLocalWebDriver>${useLocalWebDriver}</useLocalWebDriver>
-                        <!-- PhantomJS binary downloaded by phantomjs-maven-plugin -->
-<!--                        <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path> -->
                     </systemPropertyVariables>
                     <includes>
                         <include>**/AllTB3Tests.java</include>
@@ -461,7 +440,6 @@
                     </plugins>
                 </pluginManagement>
             </build>
-
         </profile>
         <profile>
             <id>measurements</id>
