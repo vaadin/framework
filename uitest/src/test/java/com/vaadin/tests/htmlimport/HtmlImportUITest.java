@@ -34,24 +34,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class HtmlImportUITest extends MultiBrowserTest {
 
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-
-        List<DesiredCapabilities> browsers = getBrowsersExcludingPhantomJS();
-        browsers.add(PHANTOMJS2());
-
-        return browsers.stream().filter(dc -> {
-            // Won't work on Firefox 24, will work when testing is done on a
-            // modern Firefox
-            if (BrowserUtil.isFirefox(dc) && dc.getVersion().equals("24")) {
-                return false;
-            }
-
-            return true;
-
-        }).collect(Collectors.toList());
-    }
-
     @Test
     public void importsLoadedAfterJs() {
         openTestURL();

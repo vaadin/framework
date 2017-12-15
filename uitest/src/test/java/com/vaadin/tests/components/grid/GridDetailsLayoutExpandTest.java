@@ -39,15 +39,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 @TestCategory("grid")
 public class GridDetailsLayoutExpandTest extends MultiBrowserTest {
 
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsersToTest = super.getBrowsersToTest();
-        // for some reason PhantomJS doesn't find the label even if it detects
-        // the presence
-        browsersToTest.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-        return browsersToTest;
-    }
-
     @Test
     public void testLabelWidths() {
         openTestURL();

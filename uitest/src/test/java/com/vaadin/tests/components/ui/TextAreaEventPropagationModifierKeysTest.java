@@ -72,7 +72,7 @@ public class TextAreaEventPropagationModifierKeysTest extends MultiBrowserTest {
     public List<DesiredCapabilities> getBrowsersToTest() {
         // Firefox can't handle ctrl.
         // IE11 has issues with shift and ctrl
-        return getBrowserCapabilities(Browser.CHROME, Browser.PHANTOMJS);
+        return getBrowserCapabilities(Browser.CHROME);
     }
 
     @Override

@@ -315,13 +315,4 @@ public class ValoThemeUITest extends MultiBrowserTest {
     protected boolean usePersistentHoverForIE() {
         return false;
     }
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsersToTest = getBrowserCapabilities(
-                Browser.IE11, Browser.FIREFOX, Browser.CHROME);
-        browsersToTest.add(PHANTOMJS2());
-        return browsersToTest;
-    }
-
 }

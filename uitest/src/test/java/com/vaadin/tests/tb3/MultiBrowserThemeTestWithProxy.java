@@ -52,11 +52,4 @@ public abstract class MultiBrowserThemeTestWithProxy
         params.add("theme=" + theme);
         super.openTestURL(uiClass, params.toArray(new String[params.size()]));
     }
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsersToTest = getBrowsersExcludingPhantomJS();
-        browsersToTest.add(PHANTOMJS2());
-        return browsersToTest;
-    }
 }

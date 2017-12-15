@@ -90,15 +90,6 @@ public class GridLayoutDetailsRowResizeTest extends MultiBrowserTest {
 
     @Test
     public void testMultipleDetailsRows() {
-        if (Browser.PHANTOMJS.name()
-                .equalsIgnoreCase(getDesiredCapabilities().getBrowserName())) {
-            // For some inexplicable reason PhantomJS fails to click that
-            // button, even if similar button clicks work just fine in other
-            // tests. Didn't disable PhantomJS altogether so that the other test
-            // at least could work in the initial pre-merge regression check.
-            return;
-        }
-
         setDebug(true);
         openTestURL();
         waitForElementPresent(By.className("v-grid"));

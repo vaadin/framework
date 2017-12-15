@@ -27,14 +27,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("grid")
 public class GridSortingIndicatorsTest extends MultiBrowserTest {
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsers = getBrowsersExcludingPhantomJS();
-        browsers.add(PHANTOMJS2());
-        return browsers;
-    }
-
     @Test
     public void testSortingIndicators() throws IOException {
         openTestURL();
