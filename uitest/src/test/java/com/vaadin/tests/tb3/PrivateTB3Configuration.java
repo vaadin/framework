@@ -86,10 +86,11 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                             properties.getProperty(PHANTOMJS_PATH));
                 }
 
-                if (properties.containsKey(SCREENSHOT_DIRECTORY)) {
-                    String root = properties.getProperty(SCREENSHOT_DIRECTORY);
-                    String reference = Paths.get(root, "reference").toString();
-                    String errors = Paths.get(root, "errors").toString();
+                String dir = System.getProperty(SCREENSHOT_DIRECTORY,
+                        properties.getProperty(SCREENSHOT_DIRECTORY));
+                if (dir != null && !dir.isEmpty()) {
+                    String reference = Paths.get(dir, "reference").toString();
+                    String errors = Paths.get(dir, "errors").toString();
                     Parameters.setScreenshotReferenceDirectory(reference);
                     Parameters.setScreenshotErrorDirectory(errors);
                 } else {
