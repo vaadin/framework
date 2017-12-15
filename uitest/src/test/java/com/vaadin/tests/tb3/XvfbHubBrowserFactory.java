@@ -12,8 +12,6 @@ public class XvfbHubBrowserFactory extends DefaultBrowserFactory {
         switch (browser) {
         case IE11:
             return super.create(browser);
-        case PHANTOMJS:
-            return create(browser, "2", Platform.LINUX);
         case CHROME:
             return create(browser, "", Platform.ANY);
         case FIREFOX:
