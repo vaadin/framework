@@ -86,6 +86,17 @@ public class Tree<T> extends Composite
     private static final Method ITEM_CLICK_METHOD = ReflectTools
             .findMethod(ItemClickListener.class, "itemClick", ItemClick.class);
     private Registration contextClickRegistration = null;
+    
+     /**
+     * Setting the default scroll behavior
+     *
+     * @see ScrollType
+     * @see ScrollDestination
+     * @since 8.2
+     */
+
+    private ScrollType scrollType = ScrollType.SCROLL;
+    private ScrollDestination scrollDestination = ScrollDestination.ANY;
 
     /**
      * A listener for item click events.
@@ -355,6 +366,10 @@ public class Tree<T> extends Composite
     public HierarchicalDataProvider<T, ?> getDataProvider() {
         return treeGrid.getDataProvider();
     }
+    
+    public HierarchicalDataCommunicator<T> getDataCommunicator() {
+        return treeGrid.getDataCommunicator();
+    }
 
     @Override
     public void setDataProvider(DataProvider<T, ?> dataProvider) {
@@ -490,7 +505,8 @@ public class Tree<T> extends Composite
 
     /**
      * This method is a shorthand that delegates to the currently set selection
-     * model.
+     * model. Depending on user defined scroll type and destination the currently
+     * selected model will also be focused.
      *
      * @param item
      *            item to select
@@ -500,6 +516,10 @@ public class Tree<T> extends Composite
      */
     public void select(T item) {
         treeGrid.select(item);
+        
+        if(scrollType.equals(ScrollType.SCROLL)) {
+        	scrollTo(getDataCommunicator().getHierarchyMapper().getIndexOf(item).get(), getScrollDestination());
+        } 
     }
 
     /**
@@ -838,6 +858,22 @@ public class Tree<T> extends Composite
     @Override
     public void setComponentError(ErrorMessage componentError) {
         treeGrid.setComponentError(componentError);
+    }
+
+    public ScrollType getScrollType() {
+    	return this.scrollType;
+    }
+    
+    public void setScrollType(ScrollType scrollType) {
+    	this.scrollType = scrollType;
+    }
+    
+    public ScrollDestination getScrollDestination() {
+    	return this.scrollDestination;
+    }
+    
+    public void setScrollDestination(ScrollDestination scrollDestination) {
+    	this.scrollDestination = scrollDestination;
     }
 
     /**
