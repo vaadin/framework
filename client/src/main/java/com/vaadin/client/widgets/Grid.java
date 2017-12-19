@@ -5888,9 +5888,17 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         @Override
                         public void onComplete() {
                             dragEnded();
-
                             col.setWidth(width);
-                            fireEvent(new ColumnResizeEvent<T>(col));
+
+                            // Need to wait for column width recalculation
+                            // scheduled by setWidth() before firing the event
+                            Scheduler.get().scheduleDeferred(
+                                    new ScheduledCommand() {
+                                        @Override
+                                        public void execute() {
+                                            fireEvent(new ColumnResizeEvent<T>(col));
+                                        }
+                                    });
                         }
                     };
 
