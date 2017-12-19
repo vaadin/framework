@@ -23,6 +23,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.components.grid.basicfeatures.element.CustomGridElement;
 
@@ -74,4 +75,33 @@ public class GridColumnResizeModeTest extends GridBasicFeaturesTest {
 
     }
 
+
+    @Test
+    public void testSimpleResizeModeMultipleDrag() throws Exception {
+        CustomGridElement grid = getGridElement();
+
+        List<WebElement> handles = grid
+                .findElements(By.className("v-grid-column-resize-handle"));
+        WebElement handle = handles.get(1);
+
+        GridCellElement cell = grid.getHeaderCell(0, 1);
+
+        int initialWidth = cell.getSize().getWidth();
+
+        selectMenuPath("Component", "Columns", "Simple resize mode");
+        sleep(250);
+
+        drag(handle, 100);
+        sleep(500);
+        Assert.assertEquals(initialWidth + 100, cell.getSize().getWidth());
+
+        drag(handle, -100);
+        sleep(500);
+        Assert.assertEquals(initialWidth, cell.getSize().getWidth());
+    }
+
+    private void drag(WebElement handle, int xOffset) {
+        new Actions(getDriver()).moveToElement(handle).clickAndHold()
+                .moveByOffset(xOffset, 0).release().perform();
+    }
 }
