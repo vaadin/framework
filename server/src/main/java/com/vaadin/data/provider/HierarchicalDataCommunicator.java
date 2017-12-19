@@ -327,7 +327,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      *
      * @return the hierarchy mapper used by this data communicator
      */
-    protected HierarchyMapper<T, ?> getHierarchyMapper() {
+    public HierarchyMapper<T, ?> getHierarchyMapper() {
         return mapper;
     }
 }
