@@ -8,7 +8,7 @@ public enum ScrollType {
 	SCROLL,
 	
 	/**
-	 *Disables automatic scrolling to the secleced object in the grid.
+	 *Disables automatic scrolling to the selected object in the grid.
 	*/
 	NOSCROLL
 
