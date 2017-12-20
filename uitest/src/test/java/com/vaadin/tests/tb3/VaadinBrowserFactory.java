@@ -35,8 +35,6 @@ public class VaadinBrowserFactory extends DefaultBrowserFactory {
         if (browserFactoryClass != null
                 && !browserFactoryClass.trim().isEmpty()) {
             if (delegate == null) {
-                getLogger()
-                        .info("Using browser factory " + browserFactoryClass);
                 try {
                     delegate = (TestBenchBrowserFactory) getClass()
                             .getClassLoader().loadClass(browserFactoryClass)

@@ -15,6 +15,9 @@
         <skip.uitest.failsafe>true</skip.uitest.failsafe>
         <!-- Don't care about coding style for tests -->
         <sonar.skip>true</sonar.skip>
+        
+        <!-- Browser Factory for TestBench testing, use empty string for default -->
+        <browser.factory>com.vaadin.tests.tb3.XvfbHubBrowserFactory</browser.factory>
     </properties>
 
     <url>https://vaadin.com/</url>
@@ -302,6 +305,7 @@
                         <!-- Optional properties for the test build -->
                         <vaadin.testbench.developer.license>${vaadin.testbench.developer.license}</vaadin.testbench.developer.license>
                         <com.vaadin.testbench.max.retries>${com.vaadin.testbench.max.retries}</com.vaadin.testbench.max.retries>
+                        <browser.factory>${browser.factory}</browser.factory>
                         <browsers.include>${browsers.include}</browsers.include>
                         <browsers.exclude>${browsers.exclude}</browsers.exclude>
                         <categories.include>${categories.include}</categories.include>
