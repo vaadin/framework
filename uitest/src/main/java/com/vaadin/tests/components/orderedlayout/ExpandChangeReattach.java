@@ -51,7 +51,7 @@ public class ExpandChangeReattach extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(10489);
+        return 10489;
     }
 
 }

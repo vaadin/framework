@@ -95,7 +95,7 @@ public class GridCellFocusOnResetSizeWidget
         @Override
         public String getValue(String[] row) {
             int index = grid.getColumns().indexOf(this);
-            return "<span>" + String.valueOf(row[index]) + "</span>";
+            return "<span>" + row[index] + "</span>";
         }
     }
 

@@ -46,7 +46,7 @@ public class ButtonEnterWithWindowShortcut extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(5433);
+        return 5433;
     }
 
 }

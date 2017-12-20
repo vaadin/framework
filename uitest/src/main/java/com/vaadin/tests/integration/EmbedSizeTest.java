@@ -37,7 +37,7 @@ public class EmbedSizeTest extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(7923);
+        return 7923;
     }
 
 }

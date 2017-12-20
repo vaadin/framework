@@ -102,7 +102,7 @@ public class LazyInitUIs extends AbstractTestUIProvider {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(7883); // + #7882 + #7884
+        return 7883; // + #7882 + #7884
     }
 
 }

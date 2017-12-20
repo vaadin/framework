@@ -26,7 +26,7 @@ public class AddNonRenderedRow extends TestBase {
     }
 
     private void addRow() {
-        table.addItem(new Object[] { Integer.valueOf(++index) }, null);
+        table.addItem(new Object[] { ++index }, null);
         // table.refreshRowCache();
     }
 
@@ -37,6 +37,6 @@ public class AddNonRenderedRow extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8077);
+        return 8077;
     }
 }

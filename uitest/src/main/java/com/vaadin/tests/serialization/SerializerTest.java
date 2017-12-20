@@ -103,11 +103,11 @@ public class SerializerTest extends AbstractReindeerTestUI {
         state.intObjectValue = Integer.valueOf(42);
         state.intArray = new int[] { 5, 7 };
 
-        rpc.sendLong(577431841358l, Long.valueOf(0),
-                new long[] { -57841235865l, 57 });
-        state.longValue = 577431841359l;
-        state.longObjectValue = Long.valueOf(577431841360l);
-        state.longArray = new long[] { -57841235865l, 57 };
+        rpc.sendLong(577431841358L, Long.valueOf(0),
+                new long[] { -57841235865L, 57 });
+        state.longValue = 577431841359L;
+        state.longObjectValue = Long.valueOf(577431841360L);
+        state.longArray = new long[] { -57841235865L, 57 };
 
         rpc.sendFloat(3.14159f, Float.valueOf(Math.nextUp(1)),
                 new float[] { 57, 0, -12 });

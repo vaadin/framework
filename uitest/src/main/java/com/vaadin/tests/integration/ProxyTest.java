@@ -144,7 +144,7 @@ public class ProxyTest extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(6771);
+        return 6771;
     }
 
 }

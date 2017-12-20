@@ -397,7 +397,7 @@ public class BeanBinderTest
                 .withConverter(Integer::valueOf, String::valueOf).bind("age");
         binder.setBean(item);
 
-        ageField.setValue(String.valueOf(20));
+        ageField.setValue("20");
         assertEquals(20, item.getAge());
     }
 

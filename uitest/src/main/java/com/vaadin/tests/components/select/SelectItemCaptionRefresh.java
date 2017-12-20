@@ -27,7 +27,7 @@ public class SelectItemCaptionRefresh extends AbstractReindeerTestUI {
     Select select;
 
     Button.ClickListener clickListener = new Button.ClickListener() {
-        Integer i = Integer.valueOf(0);
+        Integer i = 0;
 
         @Override
         public void buttonClick(final ClickEvent event) {

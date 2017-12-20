@@ -26,6 +26,6 @@ public class RefreshStatePreserve extends AbstractTestUIWithLog {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8068);
+        return 8068;
     }
 }

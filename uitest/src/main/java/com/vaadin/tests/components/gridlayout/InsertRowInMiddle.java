@@ -44,7 +44,7 @@ public class InsertRowInMiddle extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(10097);
+        return 10097;
     }
 
 }

@@ -911,7 +911,6 @@ public class ConnectorBundleLoaderFactory extends Generator {
             w.print("return ");
 
             if (hasPrimitiveReturnType) {
-                // Integer.valueOf(expression);
                 w.print("@%s::valueOf(%s)(",
                         returnType.isPrimitive().getQualifiedBoxedSourceName(),
                         returnType.getJNISignature());

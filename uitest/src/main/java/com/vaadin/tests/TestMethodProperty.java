@@ -32,7 +32,7 @@ public class TestMethodProperty {
 
         public Integer getInteger() {
             System.out.println("getInteger");
-            return Integer.valueOf(integer);
+            return integer;
         }
 
         public void setInt(int i) {

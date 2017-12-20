@@ -56,7 +56,7 @@ public class ProgressBar extends AbstractField<Float> {
      *            the initial progress value
      */
     public ProgressBar(float progress) {
-        setValue(Float.valueOf(progress));
+        setValue(progress);
     }
 
     /**
@@ -153,7 +153,7 @@ public class ProgressBar extends AbstractField<Float> {
     protected void setInternalValue(Float newValue) {
         super.setInternalValue(newValue);
         if (newValue == null) {
-            newValue = Float.valueOf(0);
+            newValue = 0F;
         }
         getState().state = newValue;
     }

@@ -63,7 +63,7 @@ public class GridLayoutSpanExpansion extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(5868);
+        return 5868;
     }
 
 }

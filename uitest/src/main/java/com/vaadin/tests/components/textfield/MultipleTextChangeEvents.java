@@ -49,6 +49,6 @@ public class MultipleTextChangeEvents extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8035);
+        return 8035;
     }
 }

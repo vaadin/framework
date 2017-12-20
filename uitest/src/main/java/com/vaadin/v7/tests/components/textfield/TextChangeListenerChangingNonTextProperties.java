@@ -46,7 +46,7 @@ public class TextChangeListenerChangingNonTextProperties extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(6588);
+        return 6588;
     }
 
 }

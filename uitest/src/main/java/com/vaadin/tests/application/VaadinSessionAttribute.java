@@ -27,8 +27,8 @@ public class VaadinSessionAttribute extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        getSession().setAttribute(ATTR_NAME, Integer.valueOf(42));
-        getSession().setAttribute(Integer.class, Integer.valueOf(42 * 2));
+        getSession().setAttribute(ATTR_NAME, 42);
+        getSession().setAttribute(Integer.class, 42 * 2);
 
         addComponent(
                 new Button("Show attribute values", event -> {
@@ -47,7 +47,7 @@ public class VaadinSessionAttribute extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(9514);
+        return 9514;
     }
 
 }

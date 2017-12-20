@@ -31,7 +31,7 @@ public class SliderValueFromDataSource extends AbstractReindeerTestUI {
         slider.setWidth("200px");
         Binder<TestBean> binder = new Binder<>();
         binder.forField(slider).bind(
-                b -> Double.valueOf(b.getFloatValue() * 10.0),
+                b -> b.getFloatValue() * 10.0D,
                 (b, doubleValue) -> item.getItemProperty("floatValue")
                         .setValue((float) (doubleValue / 10.0)));
         binder.setBean(bean);

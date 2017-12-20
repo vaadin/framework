@@ -307,9 +307,9 @@ public class JsonCodec implements Serializable {
         } else if (value.getType() == JsonType.NULL) {
             return null;
         } else if (targetType == byte.class || targetType == Byte.class) {
-            return Byte.valueOf((byte) value.asNumber());
+            return (byte) value.asNumber();
         } else if (targetType == char.class || targetType == Character.class) {
-            return Character.valueOf(value.asString().charAt(0));
+            return value.asString().charAt(0);
         } else if (targetType instanceof Class<?>
                 && ((Class<?>) targetType).isArray()) {
             // Legacy Object[] and String[] handled elsewhere, this takes care

@@ -182,8 +182,7 @@ public class DefaultItemSorter implements ItemSorter {
         for (int i = 0; i < propertyId.length; i++) {
             if (sortable.contains(propertyId[i])) {
                 ids.add(propertyId[i]);
-                orders.add(Boolean
-                        .valueOf(i < ascending.length ? ascending[i] : true));
+                orders.add(i < ascending.length ? ascending[i] : true);
             }
         }
 

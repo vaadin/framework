@@ -43,12 +43,12 @@ public class EncoderResultDisplayConnector extends AbstractExtensionConnector {
         reporter = getRpcProxy(ReportRpc.class);
 
         reportEncode("My string");
-        reportEncode(Character.valueOf('v'));
-        reportEncode(Byte.valueOf((byte) 1));
-        reportEncode(Integer.valueOf(3));
-        reportEncode(Long.valueOf(Integer.MAX_VALUE + 1l));
-        reportEncode(Float.valueOf((float) 1.1));
-        reportEncode(Double.valueOf("2.2"));
+        reportEncode('v');
+        reportEncode((byte) 1);
+        reportEncode(3);
+        reportEncode((long) (Integer.MAX_VALUE + 1L));
+        reportEncode((float) 1.1);
+        reportEncode(2.2D);
 
         reportEncode(new String[] { "One", "Two" });
         reportEncode("List", Arrays.asList("Three", "Four"),

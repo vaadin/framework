@@ -22,7 +22,7 @@ public class ProgrammaticUnselectInRange extends TestBase {
         table.setPageLength(5);
 
         for (int i = 0; i < 5; i++) {
-            Integer value = Integer.valueOf(i + 1);
+            int value = i + 1;
             table.addItem(new Object[] { value }, value);
         }
         table.addValueChangeListener(event -> updateSelectionLabel());
@@ -30,13 +30,13 @@ public class ProgrammaticUnselectInRange extends TestBase {
         addComponent(table);
         addComponent(selectionLabel);
         addComponent(new Button("Deselect item 2",
-                event -> table.unselect(Integer.valueOf(2))));
+                event -> table.unselect(2)));
 
         updateSelectionLabel();
     }
 
     private void updateSelectionLabel() {
-        if (table.isSelected(Integer.valueOf(2))) {
+        if (table.isSelected(2)) {
             selectionLabel.setValue("Item 2 is selected");
         } else {
             selectionLabel.setValue("Item 2 is not selected");

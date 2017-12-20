@@ -96,11 +96,9 @@ public abstract class AbstractLayoutTest<T extends AbstractLayout>
 
             for (String option : options.keySet()) {
                 createClickAction(option, componentAlignmentCategory,
-                        setComponentAlignment, Integer.valueOf(i),
+                        setComponentAlignment, i,
                         options.get(option));
             }
-
         }
-
     }
 }

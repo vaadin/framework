@@ -115,7 +115,7 @@ public class BrowserPopupExtensionTest extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(9513);
+        return 9513;
     }
 
 }

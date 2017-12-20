@@ -82,7 +82,7 @@ public class BootstrapModifyUI extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(9274);
+        return 9274;
     }
 
 }

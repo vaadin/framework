@@ -185,7 +185,7 @@ public class BasicJavaScriptComponent extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8888);
+        return 8888;
     }
 
 }

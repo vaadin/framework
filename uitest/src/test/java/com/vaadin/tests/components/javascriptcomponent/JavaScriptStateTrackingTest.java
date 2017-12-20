@@ -49,9 +49,9 @@ public class JavaScriptStateTrackingTest extends SingleBrowserTest {
             String expectedField2) {
         assertEquals(String.valueOf(expectedCounter),
                 findElement(By.id("counter")).getText());
-        assertEquals(String.valueOf(expectedField1),
+        assertEquals(expectedField1,
                 findElement(By.id("field1")).getText());
-        assertEquals(String.valueOf(expectedField2),
+        assertEquals(expectedField2,
                 findElement(By.id("field2")).getText());
     }
 }

@@ -148,7 +148,7 @@ public class TrackMessageSizeUI extends AbstractTestUIWithLog {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(12468);
+        return 12468;
     }
 
 }

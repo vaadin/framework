@@ -206,7 +206,7 @@ public class CSSInjectWithColorpicker extends UI {
             // inject the new font size as a style. We need .v-app to
             // override Vaadin's default styles here
             styles.add(".v-app .v-textarea.text-label { font-size:"
-                    + String.valueOf(fontSize) + "px; }");
+                    + fontSize + "px; }");
         });
 
         return select;

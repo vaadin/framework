@@ -22,7 +22,7 @@ public class ComponentIncludedInCustomWidgetset extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(7885);
+        return 7885;
     }
 
 }

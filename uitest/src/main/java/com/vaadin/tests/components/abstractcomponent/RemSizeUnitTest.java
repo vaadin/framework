@@ -38,7 +38,7 @@ public class RemSizeUnitTest extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(11279);
+        return 11279;
     }
 
 }

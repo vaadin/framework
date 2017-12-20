@@ -169,9 +169,9 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         assertColumnsAreSortedAs(getSortInfo(10, 1, SortDirection.ASCENDING));
 
         for (int i = 0; i < 5; ++i) {
-            Integer firstRow = Integer
+            int firstRow = Integer
                     .valueOf(grid.getCell(i + 1, 10).getText());
-            Integer secondRow = Integer.valueOf(grid.getCell(i, 10).getText());
+            int secondRow = Integer.valueOf(grid.getCell(i, 10).getText());
             assertGreater(
                     "Grid is not sorted by Column 10 using ascending direction",
                     firstRow, secondRow);

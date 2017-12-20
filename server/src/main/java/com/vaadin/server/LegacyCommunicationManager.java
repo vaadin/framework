@@ -227,7 +227,7 @@ public class LegacyCommunicationManager implements Serializable {
      */
     @Deprecated
     public ClientCache getClientCache(UI uI) {
-        Integer uiId = Integer.valueOf(uI.getUIId());
+        int uiId = uI.getUIId();
         ClientCache cache = uiToClientCache.get(uiId);
         if (cache == null) {
             cache = new ClientCache();

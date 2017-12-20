@@ -36,7 +36,7 @@ public class AppResource404 extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(6702);
+        return 6702;
     }
 
 }

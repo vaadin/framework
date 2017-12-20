@@ -228,14 +228,14 @@ public class LayoutManager {
             ManagedLayout layout) {
         Integer count = layoutCounts.get(layout.getConnectorId());
         if (count == null) {
-            count = Integer.valueOf(0);
+            count = 0;
         } else {
-            count = Integer.valueOf(count.intValue() + 1);
+            count++;
         }
         layoutCounts.put(layout.getConnectorId(), count);
-        if (count.intValue() > 2) {
+        if (count > 2) {
             getLogger().severe(Util.getConnectorString(layout)
-                    + " has been layouted " + count.intValue() + " times");
+                    + " has been layouted " + count + " times");
         }
     }
 

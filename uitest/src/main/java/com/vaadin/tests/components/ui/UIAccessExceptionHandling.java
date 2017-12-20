@@ -122,7 +122,7 @@ public class UIAccessExceptionHandling extends AbstractTestUIWithLog
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(12703);
+        return 12703;
     }
 
 }

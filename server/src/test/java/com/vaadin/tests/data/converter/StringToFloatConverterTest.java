@@ -30,7 +30,7 @@ public class StringToFloatConverterTest extends AbstractStringConverterTest {
 
     @Test
     public void testValueConversion() {
-        assertValue(Float.valueOf(10),
+        assertValue(10F,
                 getConverter().convertToModel("10", new ValueContext()));
     }
 

@@ -89,7 +89,7 @@ public class CloseUI extends AbstractTestUIWithLog {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(9859);
+        return 9859;
     }
 
     @Override

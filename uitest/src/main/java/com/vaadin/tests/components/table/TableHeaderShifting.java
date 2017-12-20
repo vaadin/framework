@@ -27,7 +27,7 @@ public class TableHeaderShifting extends TestBase {
         t.addContainerProperty("name", String.class, "NA");
 
         for (Integer i = 0; i < COLS; i++) {
-            t.addContainerProperty(i, Integer.class, Integer.valueOf(0));
+            t.addContainerProperty(i, Integer.class, 0);
         }
         t.addItem("1").getItemProperty("name").setValue("Ares");
         t.addItem("2").getItemProperty("name").setValue("Bob");

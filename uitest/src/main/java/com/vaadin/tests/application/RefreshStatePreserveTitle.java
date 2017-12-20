@@ -22,6 +22,6 @@ public class RefreshStatePreserveTitle extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(11054);
+        return 11054;
     }
 }

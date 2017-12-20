@@ -36,7 +36,7 @@ public class ReplaceComponentUI extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(9826);
+        return 9826;
     }
 
 }

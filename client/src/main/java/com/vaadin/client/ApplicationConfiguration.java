@@ -530,7 +530,7 @@ public class ApplicationConfiguration implements EntryPoint {
         Class<? extends ServerConnector> type = classes.get(tag);
         if (type == null && !classes.containsKey(tag)) {
             // Initialize if not already loaded
-            Integer currentTag = Integer.valueOf(tag);
+            Integer currentTag = tag;
             while (type == null && currentTag != null) {
                 String serverSideClassNameForTag = getServerSideClassNameForTag(
                         currentTag);
@@ -561,7 +561,7 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     private boolean isExtensionType(int tag) {
-        Integer currentTag = Integer.valueOf(tag);
+        Integer currentTag = tag;
         while (currentTag != null) {
             String serverSideClassNameForTag = getServerSideClassNameForTag(
                     currentTag);

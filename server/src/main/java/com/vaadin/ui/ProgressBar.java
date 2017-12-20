@@ -50,7 +50,7 @@ public class ProgressBar extends AbstractComponent {
      *            the initial progress value
      */
     public ProgressBar(float progress) {
-        setValue(Float.valueOf(progress));
+        setValue(progress);
     }
 
     /**

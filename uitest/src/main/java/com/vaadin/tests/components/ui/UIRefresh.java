@@ -44,6 +44,6 @@ public class UIRefresh extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(12191);
+        return 12191;
     }
 }

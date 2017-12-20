@@ -89,7 +89,7 @@ public class TableUnregisterComponent extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf("7541");
+        return 7541;
     }
 
 }

@@ -34,6 +34,6 @@ public class UIInitTest extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(3067);
+        return 3067;
     }
 }

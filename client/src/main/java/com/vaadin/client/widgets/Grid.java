@@ -2960,7 +2960,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         @Override
         public Boolean getValue(T row) {
-            return Boolean.valueOf(isSelected(row));
+            return isSelected(row);
         }
 
         @Override
@@ -9120,8 +9120,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             return;
         }
 
-        Integer rowIndexInteger = Integer.valueOf(rowIndex);
-
         /*
          * We want to prevent opening a details row twice, so any subsequent
          * openings (or closings) of details is a NOOP.
@@ -9142,10 +9140,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         boolean isVisible = isDetailsVisible(rowIndex);
         if (visible && !isVisible) {
             escalator.getBody().setSpacer(rowIndex, DETAILS_ROW_INITIAL_HEIGHT);
-            visibleDetails.add(rowIndexInteger);
+            visibleDetails.add(rowIndex);
         } else if (!visible && isVisible) {
             escalator.getBody().setSpacer(rowIndex, -1);
-            visibleDetails.remove(rowIndexInteger);
+            visibleDetails.remove(rowIndex);
         }
     }
 
@@ -9159,7 +9157,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * @see #setDetailsVisible(int, boolean)
      */
     public boolean isDetailsVisible(int rowIndex) {
-        return visibleDetails.contains(Integer.valueOf(rowIndex));
+        return visibleDetails.contains(rowIndex);
     }
 
     /**

@@ -40,7 +40,7 @@ public class ComboBoxMouseSelectEnter extends AbstractReindeerTestUI {
         comboBox.setEmptySelectionAllowed(true);
 
         comboBox.addValueChangeListener(
-                event -> label.setValue(String.valueOf(event.getValue())));
+                event -> label.setValue(event.getValue()));
 
         addComponents(comboBox);
         addComponent(label);

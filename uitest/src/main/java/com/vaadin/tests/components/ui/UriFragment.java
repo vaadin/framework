@@ -55,7 +55,7 @@ public class UriFragment extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8048);
+        return 8048;
     }
 
 }

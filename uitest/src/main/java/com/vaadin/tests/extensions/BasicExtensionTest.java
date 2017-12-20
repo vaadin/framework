@@ -44,7 +44,7 @@ public class BasicExtensionTest extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(6690);
+        return 6690;
     }
 
 }

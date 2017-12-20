@@ -233,7 +233,7 @@ public class GridBasicClientFeaturesWidget
             }
 
             d = datarow.get(col++);
-            d.value = Integer.valueOf(row);
+            d.value = row;
 
             d = datarow.get(col++);
             d.value = new Date(timestamp);
@@ -244,10 +244,10 @@ public class GridBasicClientFeaturesWidget
             d.value = "<b>" + row + "</b>";
 
             d = datarow.get(col++);
-            d.value = Integer.valueOf(rand.nextInt());
+            d.value = rand.nextInt();
 
             d = datarow.get(col++);
-            d.value = Integer.valueOf(rand.nextInt(5));
+            d.value = rand.nextInt(5);
         }
 
         return dataList;

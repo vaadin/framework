@@ -276,7 +276,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             }
 
             ds.addContainerProperty(getColumnProperty(col++), Integer.class,
-                    Integer.valueOf(0));
+                    0);
             ds.addContainerProperty(getColumnProperty(col++), Date.class,
                     new Date());
             ds.addContainerProperty(getColumnProperty(col++), String.class, "");
@@ -292,7 +292,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             rand.setSeed(13334);
             long timestamp = 0;
             for (int row = 0; row < ROWS; row++) {
-                Item item = ds.addItem(Integer.valueOf(row));
+                Item item = ds.addItem(row);
                 int col = 0;
                 for (; col < COLUMNS - MANUALLY_FORMATTED_COLUMNS; col++) {
                     item.getItemProperty(getColumnProperty(col))
@@ -301,7 +301,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 item.getItemProperty(getColumnProperty(1)).setReadOnly(true);
 
                 item.getItemProperty(getColumnProperty(col++))
-                        .setValue(Integer.valueOf(row));
+                        .setValue(row);
                 item.getItemProperty(getColumnProperty(col++))
                         .setValue(new Date(timestamp));
                 // a bit over a day, just to get variation
@@ -515,10 +515,9 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 });
 
         LinkedHashMap<String, Integer> selectionLimits = new LinkedHashMap<>();
-        selectionLimits.put("2", Integer.valueOf(2));
-        selectionLimits.put("1000", Integer.valueOf(1000));
-        selectionLimits.put("Integer.MAX_VALUE",
-                Integer.valueOf(Integer.MAX_VALUE));
+        selectionLimits.put("2", 2);
+        selectionLimits.put("1000", 1000);
+        selectionLimits.put("Integer.MAX_VALUE", Integer.MAX_VALUE);
         createSelectAction("Selection limit", "State", selectionLimits, "1000",
                 new Command<Grid, Integer>() {
                     @Override
@@ -689,7 +688,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         LinkedHashMap<String, Integer> frozenOptions = new LinkedHashMap<>();
         for (int i = -1; i <= COLUMNS; i++) {
-            frozenOptions.put(String.valueOf(i), Integer.valueOf(i));
+            frozenOptions.put(String.valueOf(i), i);
         }
         /*
          * This line below is a workaround for a FF24 bug regarding submenu
@@ -707,7 +706,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         LinkedHashMap<String, Integer> containerDelayValues = new LinkedHashMap<>();
         for (int delay : new int[] { 0, 500, 2000, 10000 }) {
             containerDelayValues.put(String.valueOf(delay),
-                    Integer.valueOf(delay));
+                    delay);
         }
 
         createSelectAction("Container delay", "State", containerDelayValues,
@@ -1328,7 +1327,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         itemProperty.setValue("newcell: " + i);
                     } else if (Integer.class.isAssignableFrom(type)) {
                         Property<Integer> itemProperty = getProperty(item, i);
-                        itemProperty.setValue(Integer.valueOf(i));
+                        itemProperty.setValue(i);
                     } else {
                         // let the default value be taken implicitly.
                     }

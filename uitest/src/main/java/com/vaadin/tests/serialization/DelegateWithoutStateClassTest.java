@@ -39,7 +39,7 @@ public class DelegateWithoutStateClassTest extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(9561);
+        return 9561;
     }
 
 }

@@ -192,7 +192,7 @@ public abstract class AbstractTextFieldTest<T extends AbstractTextField>
         createCategory(subCategory, category);
         for (int i = 0; i < 20; i++) {
             createClickAction(String.valueOf(i), subCategory,
-                    setCursorPositionCommand, Integer.valueOf(i));
+                    setCursorPositionCommand, i);
         }
 
     }

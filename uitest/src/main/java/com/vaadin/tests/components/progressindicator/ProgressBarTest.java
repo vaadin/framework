@@ -103,7 +103,7 @@ public class ProgressBarTest extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(11925);
+        return 11925;
     }
 
 }

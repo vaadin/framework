@@ -31,7 +31,7 @@ public class MinimalWidthColumns extends AbstractTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(15118);
+        return 15118;
     }
 
     @Override

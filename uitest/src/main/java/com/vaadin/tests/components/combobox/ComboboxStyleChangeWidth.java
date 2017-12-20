@@ -52,7 +52,7 @@ public class ComboboxStyleChangeWidth extends AbstractTestUIWithLog {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(13444);
+        return 13444;
     }
 
 }

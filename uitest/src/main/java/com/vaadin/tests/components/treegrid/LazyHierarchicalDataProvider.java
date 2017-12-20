@@ -25,8 +25,8 @@ public class LazyHierarchicalDataProvider extends
             HierarchicalQuery<HierarchicalTestBean, Void> query) {
 
         Optional<Integer> count = query.getParentOptional()
-                .flatMap(parent -> Optional.of(Integer.valueOf(
-                        (internalHasChildren(parent) ? nodesPerLevel : 0))));
+                .flatMap(parent -> Optional.of(
+                        (internalHasChildren(parent) ? nodesPerLevel : 0)));
 
         return count.orElse(nodesPerLevel);
     }

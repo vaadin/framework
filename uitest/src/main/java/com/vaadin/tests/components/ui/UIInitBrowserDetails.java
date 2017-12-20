@@ -54,6 +54,6 @@ public class UIInitBrowserDetails extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(9037);
+        return 9037;
     }
 }

@@ -558,7 +558,7 @@ public class MessageHandler {
                 }
 
                 getLogger().info(" Processing time was "
-                        + String.valueOf(lastProcessingTime) + "ms");
+                        + lastProcessingTime + "ms");
                 getLogger().info(
                         "Referenced paintables: " + getConnectorMap().size());
 

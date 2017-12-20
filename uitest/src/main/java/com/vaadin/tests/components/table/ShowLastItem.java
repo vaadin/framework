@@ -22,7 +22,7 @@ public class ShowLastItem extends AbstractReindeerTestUI {
 
         for (int i = 0; i < 20; i++) {
             table.addItem(i).getItemProperty("Col")
-                    .setValue("row " + String.valueOf(i));
+                    .setValue("row " + i);
         }
 
         Button addItemBtn = new Button("Add item", event -> {

@@ -34,7 +34,7 @@ public class HierarchyAfterAnalyzeLayouts extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(11067);
+        return 11067;
     }
 
 }

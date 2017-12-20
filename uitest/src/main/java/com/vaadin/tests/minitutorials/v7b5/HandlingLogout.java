@@ -51,14 +51,8 @@ public class HandlingLogout extends AbstractReindeerTestUI {
     }
 
     @Override
-    protected String getTestDescription() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(9646);
+        return 9646;
     }
 
 }

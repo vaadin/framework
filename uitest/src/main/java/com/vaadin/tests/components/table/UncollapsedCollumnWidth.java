@@ -32,7 +32,7 @@ public class UncollapsedCollumnWidth extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(7012);
+        return 7012;
     }
 
 }

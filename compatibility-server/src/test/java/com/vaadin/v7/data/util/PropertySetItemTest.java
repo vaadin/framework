@@ -426,12 +426,12 @@ public class PropertySetItemTest {
 
         item.addItemProperty(ID1, prop1);
 
-        assertEquals(String.valueOf(prop1.getValue()), item.toString());
+        assertEquals(prop1.getValue(), item.toString());
 
         item.addItemProperty(ID2, prop2);
 
-        assertEquals(String.valueOf(prop1.getValue()) + " "
-                + String.valueOf(prop2.getValue()), item.toString());
+        assertEquals(prop1.getValue() + " "
+                + prop2.getValue(), item.toString());
     }
 
 }

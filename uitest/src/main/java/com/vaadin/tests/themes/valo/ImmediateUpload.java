@@ -63,7 +63,7 @@ public class ImmediateUpload extends AbstractTestUI {
      */
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(14238);
+        return 14238;
     }
 
 }

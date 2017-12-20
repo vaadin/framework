@@ -191,7 +191,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
 
         // No existing UI found - go on by creating and initializing one
 
-        Integer uiId = Integer.valueOf(session.getNextUIid());
+        int uiId = session.getNextUIid();
 
         // Explicit Class.cast to detect if the UIProvider does something
         // unexpected
@@ -221,7 +221,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
 
         Exception initException = null;
         try {
-            ui.doInit(request, uiId.intValue(), embedId);
+            ui.doInit(request, uiId, embedId);
         } catch (Exception e) {
             initException = e;
         }

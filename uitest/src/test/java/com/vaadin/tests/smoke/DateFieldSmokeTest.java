@@ -41,7 +41,7 @@ public class DateFieldSmokeTest extends MultiBrowserTest {
         PopupDateFieldElement popup = $(PopupDateFieldElement.class).first();
         assertEquals("12/28/16", popup.getValue());
         InlineDateFieldElement inline = $(InlineDateFieldElement.class).first();
-        assertEquals(String.valueOf(29),
+        assertEquals("29",
                 inline.findElement(By.className(
                         "v-inline-datefield-calendarpanel-day-selected"))
                         .getText());

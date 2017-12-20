@@ -25,7 +25,7 @@ public class VerifyBrowserVersion extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(7655);
+        return 7655;
     }
 
 }

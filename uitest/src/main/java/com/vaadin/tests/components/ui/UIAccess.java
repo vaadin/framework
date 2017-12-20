@@ -290,7 +290,7 @@ public class UIAccess extends AbstractTestUIWithLog {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(11897);
+        return 11897;
     }
 
 }

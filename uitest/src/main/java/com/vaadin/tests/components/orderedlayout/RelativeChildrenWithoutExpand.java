@@ -45,6 +45,6 @@ public class RelativeChildrenWithoutExpand extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(10222);
+        return 10222;
     }
 }

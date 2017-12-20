@@ -240,31 +240,31 @@ public class DateTimeService {
             e = rangeEnd;
             s = rangeStart;
         }
-        long start = s.getYear() * 10000000000l;
-        long end = e.getYear() * 10000000000l;
-        long target = date.getYear() * 10000000000l;
+        long start = s.getYear() * 10000000000L;
+        long end = e.getYear() * 10000000000L;
+        long target = date.getYear() * 10000000000L;
 
         if (resolution == DateResolution.YEAR) {
             return (start <= target && end >= target);
         }
-        start += s.getMonth() * 100000000l;
-        end += e.getMonth() * 100000000l;
-        target += date.getMonth() * 100000000l;
+        start += s.getMonth() * 100000000L;
+        end += e.getMonth() * 100000000L;
+        target += date.getMonth() * 100000000L;
         if (resolution == DateResolution.MONTH) {
             return (start <= target && end >= target);
         }
-        start += s.getDate() * 1000000l;
-        end += e.getDate() * 1000000l;
-        target += date.getDate() * 1000000l;
+        start += s.getDate() * 1000000L;
+        end += e.getDate() * 1000000L;
+        target += date.getDate() * 1000000L;
         if (resolution == DateResolution.DAY) {
             return (start <= target && end >= target);
         }
-        start += s.getHours() * 10000l;
-        end += e.getHours() * 10000l;
-        target += date.getHours() * 10000l;
-        start += s.getMinutes() * 100l;
-        end += e.getMinutes() * 100l;
-        target += date.getMinutes() * 100l;
+        start += s.getHours() * 10000L;
+        end += e.getHours() * 10000L;
+        target += date.getHours() * 10000L;
+        start += s.getMinutes() * 100L;
+        end += e.getMinutes() * 100L;
+        target += date.getMinutes() * 100L;
         start += s.getSeconds();
         end += e.getSeconds();
         target += date.getSeconds();
