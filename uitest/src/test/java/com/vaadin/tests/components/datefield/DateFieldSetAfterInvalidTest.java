@@ -67,10 +67,10 @@ public class DateFieldSetAfterInvalidTest extends MultiBrowserTest {
     }
 
     private void assertErrorIndicator() {
-        assertElementPresent(ERROR_INDICATOR_BY);
+        waitUntil(input -> isElementPresent(ERROR_INDICATOR_BY));
     }
 
     private void assertNoErrorIndicator() {
-        assertElementNotPresent(ERROR_INDICATOR_BY);
+        waitUntilNot(input -> isElementPresent(ERROR_INDICATOR_BY));
     }
 }

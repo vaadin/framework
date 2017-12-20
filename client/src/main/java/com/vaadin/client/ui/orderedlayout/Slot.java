@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
@@ -36,6 +37,8 @@ import com.vaadin.client.ui.FontIcon;
 import com.vaadin.client.ui.HasErrorIndicatorElement;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ImageIcon;
+import com.vaadin.client.ui.Orphanable;
+import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.ui.ErrorLevel;
@@ -161,7 +164,6 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
                 lm.addElementResizeListener(getSpacingElement(),
                         spacingResizeListener);
             }
-
         }
     }
 
@@ -185,7 +187,6 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
                 lm.removeElementResizeListener(getSpacingElement(),
                         spacingResizeListener);
             }
-
         }
     }
 
@@ -529,6 +530,29 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
             String error, ErrorLevel errorLevel, boolean showError,
             boolean required, boolean enabled, boolean captionAsHtml) {
 
+        Widget widget = getWidget();
+
+        if (widget instanceof Orphanable) {
+            ((Orphanable) widget).beforeOrphaned();
+
+            Scheduler.get().scheduleFixedDelay(() -> {
+                doSetCaption(captionText, icon, styles, error, errorLevel,
+                        showError, required, enabled, captionAsHtml);
+
+                ((Orphanable) widget).afterAdoption();
+                return false;
+            }, 500);
+
+        } else {
+            doSetCaption(captionText, icon, styles, error, errorLevel,
+                    showError, required, enabled, captionAsHtml);
+        }
+    }
+
+    private void doSetCaption(String captionText, Icon icon,
+            List<String> styles, String error, ErrorLevel errorLevel,
+            boolean showError, boolean required, boolean enabled,
+            boolean captionAsHtml) {
         // TODO place for optimization: check if any of these have changed
         // since last time, and only run those changes
 
@@ -682,6 +706,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
                 focusTimer.run();
             }
         }
+        AriaHelper.bindCaption(getWidget(), getCaptionElement());
     }
 
     /**
