@@ -1,8 +1,7 @@
 package com.vaadin.tests.smoke;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -50,33 +49,33 @@ public class CalendarSmokeTest extends MultiBrowserTest {
         String firstDayOfCurrentWeek = getVisibleFirstDay();
         getCalendar().next();
         String firstDayOfNextWeek = getVisibleFirstDay();
-        assertThat("Week didn't change.", firstDayOfCurrentWeek,
-                is(not(firstDayOfNextWeek)));
+        assertNotEquals("Week didn't change.", firstDayOfNextWeek,
+                firstDayOfCurrentWeek);
         reload();
 
         openDayView();
         String currentDay = getVisibleFirstDay();
         getCalendar().next();
         String nextDay = getVisibleFirstDay();
-        assertThat("Day didn't change.", currentDay, is(not(nextDay)));
+        assertNotEquals("Day didn't change.", nextDay, currentDay);
         reload();
 
         openDayView();
         currentDay = getVisibleFirstDay();
         getCalendar().back();
         String previousDay = getVisibleFirstDay();
-        assertThat("Day didn't change.", currentDay, is(not(previousDay)));
+        assertNotEquals("Day didn't change.", previousDay, currentDay);
         reload();
 
         WebElement dayWithEvents = getFirstDayWithEvents();
-        assertThat("Incorrect event count.",
-                getVisibleEvents(dayWithEvents).size(), is(2));
+        assertEquals("Incorrect event count.", 2,
+                getVisibleEvents(dayWithEvents).size());
         toggleExpandEvents(dayWithEvents).click();
-        assertThat("Incorrect event count.",
-                getVisibleEvents(dayWithEvents).size(), is(4));
+        assertEquals("Incorrect event count.", 4,
+                getVisibleEvents(dayWithEvents).size());
         toggleExpandEvents(dayWithEvents).click();
-        assertThat("Incorrect event count.",
-                getVisibleEvents(dayWithEvents).size(), is(2));
+        assertEquals("Incorrect event count.", 2,
+                getVisibleEvents(dayWithEvents).size());
     }
 
     private CalendarElement getCalendar() {

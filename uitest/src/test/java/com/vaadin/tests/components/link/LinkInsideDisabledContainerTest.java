@@ -1,8 +1,7 @@
 package com.vaadin.tests.components.link;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.util.regex.Matcher;
@@ -33,10 +32,10 @@ public class LinkInsideDisabledContainerTest extends MultiBrowserTest {
 
         clickLink();
         assertTrue(isLinkEnabled());
-        assertThat(clicksOnLink(), is(1));
+        assertEquals(1, clicksOnLink());
 
         clickLink();
-        assertThat(clicksOnLink(), is(2));
+        assertEquals(2, clicksOnLink());
 
     }
 
@@ -49,7 +48,7 @@ public class LinkInsideDisabledContainerTest extends MultiBrowserTest {
         clickLink();
 
         assertFalse(isLinkEnabled());
-        assertThat(clicksOnLink(), is(0));
+        assertEquals(0, clicksOnLink());
     }
 
     @Test
@@ -59,18 +58,17 @@ public class LinkInsideDisabledContainerTest extends MultiBrowserTest {
         toggleLinkEnabledStatus();
         clickLink();
         assertFalse(isLinkEnabled());
-        assertThat(clicksOnLink(), is(0));
+        assertEquals(0, clicksOnLink());
 
         disableContainer();
         clickLink();
         assertFalse(isLinkEnabled());
-        assertThat(clicksOnLink(), is(0));
+        assertEquals(0, clicksOnLink());
 
         enableContainer();
         clickLink();
         assertFalse(isLinkEnabled());
-        assertThat(clicksOnLink(), is(0));
-
+        assertEquals(0, clicksOnLink());
     }
 
     @Test
@@ -79,18 +77,17 @@ public class LinkInsideDisabledContainerTest extends MultiBrowserTest {
 
         clickLink();
         assertTrue(isLinkEnabled());
-        assertThat(clicksOnLink(), is(1));
+        assertEquals(1, clicksOnLink());
 
         disableContainer();
         clickLink();
         assertFalse(isLinkEnabled());
-        assertThat(clicksOnLink(), is(1));
+        assertEquals(1, clicksOnLink());
 
         enableContainer();
         clickLink();
         assertTrue(isLinkEnabled());
-        assertThat(clicksOnLink(), is(2));
-
+        assertEquals(2, clicksOnLink());
     }
 
     private void disableContainer() {
@@ -128,12 +125,11 @@ public class LinkInsideDisabledContainerTest extends MultiBrowserTest {
         return $(LinkElement.class).first().isEnabled();
     }
 
-    private Integer clicksOnLink() {
-
+    private int clicksOnLink() {
         if (!getLogs().isEmpty()) {
             Matcher m = CLICK_MATCHER.matcher(getLogRow(0));
             if (m.find()) {
-                return Integer.valueOf(m.group(1));
+                return Integer.parseInt(m.group(1));
             }
         }
         return 0;

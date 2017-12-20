@@ -64,7 +64,6 @@ public class ActionsOnDetachedComponentsTest extends MultiBrowserTest {
         assertElementPresent(By.id("layer-B"));
         assertThat(getLogRow(0), endsWith("btn-A"));
         assertThat(getLogRow(1), not(endsWith("btn-B")));
-
     }
 
     @Test

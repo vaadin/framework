@@ -1,10 +1,6 @@
 package com.vaadin.v7.data.util.sqlcontainer;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -12,6 +8,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -140,7 +137,7 @@ public class SQLContainerTableQueryTest {
 
     @Test
     public void nonExistingPropertyDoesNotHaveType() {
-        assertThat(container.getType("adsf"), is(nullValue()));
+        assertNull(container.getType("adsf"));
     }
 
     @Test
@@ -150,20 +147,19 @@ public class SQLContainerTableQueryTest {
 
     @Test
     public void propertyIsFetchedForExistingItem() {
-        assertThat(container.getContainerProperty(existingItemId, NAME)
-                .getValue().toString(), is("Kalle"));
+        assertEquals("Kalle",
+                container.getContainerProperty(existingItemId, NAME).getValue()
+                        .toString());
     }
 
     @Test
     public void containerDoesNotContainPropertyForExistingItem() {
-        assertThat(container.getContainerProperty(existingItemId, "asdf"),
-                is(nullValue()));
+        assertNull(container.getContainerProperty(existingItemId, "asdf"));
     }
 
     @Test
     public void containerDoesNotContainExistingPropertyForNonExistingItem() {
-        assertThat(container.getContainerProperty(nonExistingItemId, NAME),
-                is(nullValue()));
+        assertNull(container.getContainerProperty(nonExistingItemId, NAME));
     }
 
     @Test
@@ -172,7 +168,7 @@ public class SQLContainerTableQueryTest {
                 (Collection<? extends String>) container
                         .getContainerPropertyIds());
 
-        assertThat(propertyIds.size(), is(numberOfPropertiesInContainer));
+        assertEquals(numberOfPropertiesInContainer, propertyIds.size());
         assertThat(propertyIds, hasItems(ID, NAME, AGE));
     }
 
@@ -180,8 +176,7 @@ public class SQLContainerTableQueryTest {
     public void existingItemIsFetched() {
         Item item = container.getItem(existingItemId);
 
-        assertThat(item.getItemProperty(NAME).getValue().toString(),
-                is("Kalle"));
+        assertEquals("Kalle", item.getItemProperty(NAME).getValue().toString());
     }
 
     @Test
@@ -192,7 +187,7 @@ public class SQLContainerTableQueryTest {
         container.commit();
 
         Item item = getItem(container.lastItemId());
-        assertThat(item.getItemProperty(NAME).getValue().toString(), is("foo"));
+        assertEquals("foo", item.getItemProperty(NAME).getValue().toString());
     }
 
     @Test
@@ -201,8 +196,8 @@ public class SQLContainerTableQueryTest {
 
         container.refresh();
 
-        assertThat(getItem(existingItemId).getItemProperty(NAME).getValue()
-                .toString(), is("foo"));
+        assertEquals("foo", getItem(existingItemId).getItemProperty(NAME)
+                .getValue().toString());
     }
 
     @Test
@@ -211,10 +206,9 @@ public class SQLContainerTableQueryTest {
 
         Item item = container.getItem(getRowId(1337));
 
-        assertThat((Integer) item.getItemProperty(ID).getValue(),
-                is(equalTo(1337 + offset)));
-        assertThat(item.getItemProperty(NAME).getValue().toString(),
-                is("Person 1337"));
+        assertEquals(1337 + offset, item.getItemProperty(ID).getValue());
+        assertEquals("Person 1337",
+                item.getItemProperty(NAME).getValue().toString());
     }
 
     @Test

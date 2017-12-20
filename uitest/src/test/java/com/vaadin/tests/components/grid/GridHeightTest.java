@@ -16,8 +16,8 @@
 package com.vaadin.tests.components.grid;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.number.IsCloseTo.closeTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.util.HashMap;
@@ -117,8 +117,8 @@ public class GridHeightTest extends MultiBrowserTest {
                 int afterHeight = grid.getSize().getHeight();
                 try {
                     // check height with details row closed again
-                    assertThat("Unexpected Grid Height", afterHeight,
-                            is(initialHeight));
+                    assertEquals("Unexpected Grid Height", initialHeight,
+                            afterHeight);
                 } catch (AssertionError e) {
                     errors.put(e, new Object[] { gridHeight, gridWidth,
                             detailsRowHeight, "closed" });

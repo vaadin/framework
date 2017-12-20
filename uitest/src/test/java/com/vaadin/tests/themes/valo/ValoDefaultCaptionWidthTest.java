@@ -16,7 +16,6 @@
 package com.vaadin.tests.themes.valo;
 
 import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
 
@@ -40,7 +39,7 @@ public class ValoDefaultCaptionWidthTest extends DefaultCaptionWidthTest {
         // Make sure that implicit width is less than one that will be
         // explicitly set by the test
         assertThat("Width of color picker is overridden by "
-                + "default caption feature", width, is(lessThan(148)));
+                + "default caption feature", width, lessThan(148));
     }
 
     @Override
@@ -53,6 +52,6 @@ public class ValoDefaultCaptionWidthTest extends DefaultCaptionWidthTest {
         assertThat(
                 "Width of color picker is overridden by "
                         + "default caption feature",
-                width, is(greaterThan(149)));
+                width, greaterThan(149));
     }
 }

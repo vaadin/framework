@@ -132,7 +132,7 @@ public class TabSheetTest {
         assertEquals(tab2, tabSheet.getTab(1));
         assertEquals(tab3, tabSheet.getTab(2));
 
-        assertEquals(null, tabSheet.getTab(3));
+        assertNull(tabSheet.getTab(3));
     }
 
     @Test
@@ -213,7 +213,7 @@ public class TabSheetTest {
         assertFalse(tab1.isEnabled());
         assertTrue(tab2.isEnabled());
         assertEquals("description", tab1.getDescription());
-        assertEquals(null, tab2.getDescription());
+        assertNull(tab2.getDescription());
         assertEquals(3, tabSheet.getComponentCount());
         assertEquals(1, tabSheet.getTabPosition(tabSheet.getTab(lbl1)));
         assertEquals(0, tabSheet.getTabPosition(tabSheet.getTab(lbl2)));

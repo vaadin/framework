@@ -1,6 +1,7 @@
 package com.vaadin.v7.tests.server.component.abstractfield;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
@@ -68,9 +69,8 @@ public class AbsFieldValueConversionErrorTest {
             tf.validate();
             fail();
         } catch (InvalidValueException e) {
-            assertEquals(null, e.getMessage());
+            assertNull(e.getMessage());
         }
-
     }
 
     @Test

@@ -1,7 +1,8 @@
 package com.vaadin.tests.components.grid;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -48,21 +49,21 @@ public class GridDisabledMultiselectTest extends MultiBrowserTest {
 
         setMultiselect();
 
-        assertThat(getSelectAllCheckBox().isEnabled(), is(false));
-        assertThat(getFirstSelectCheckBox().isEnabled(), is(false));
+        assertFalse(getSelectAllCheckBox().isEnabled());
+        assertFalse(getFirstSelectCheckBox().isEnabled());
     }
 
     @Test
     public void checkBoxesAreDisabledAfterDisabled() {
         setMultiselect();
 
-        assertThat(getSelectAllCheckBox().isEnabled(), is(true));
-        assertThat(getFirstSelectCheckBox().isEnabled(), is(true));
+        assertTrue(getSelectAllCheckBox().isEnabled());
+        assertTrue(getFirstSelectCheckBox().isEnabled());
 
         disable();
 
-        assertThat(getSelectAllCheckBox().isEnabled(), is(false));
-        assertThat(getFirstSelectCheckBox().isEnabled(), is(false));
+        assertFalse(getSelectAllCheckBox().isEnabled());
+        assertFalse(getFirstSelectCheckBox().isEnabled());
     }
 
     @Test
@@ -75,6 +76,6 @@ public class GridDisabledMultiselectTest extends MultiBrowserTest {
         new Actions(driver).moveToElement(firstCheckBoxSpan, 1, 1).click()
                 .perform();
 
-        assertThat(getFirstSelectCheckBox().isSelected(), is(false));
+        assertFalse(getFirstSelectCheckBox().isSelected());
     }
 }

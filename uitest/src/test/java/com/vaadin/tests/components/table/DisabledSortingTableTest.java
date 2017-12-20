@@ -1,15 +1,14 @@
 package com.vaadin.tests.components.table;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DisabledSortingTableTest extends MultiBrowserTest {
@@ -51,7 +50,7 @@ public class DisabledSortingTableTest extends MultiBrowserTest {
     }
 
     private void assertThatFirstCellHasText(String text) {
-        assertThat(getTable().getCell(0, 0).getText(), is(text));
+        assertEquals(text, getTable().getCell(0, 0).getText());
     }
 
     private void sortByEmptyArray() {

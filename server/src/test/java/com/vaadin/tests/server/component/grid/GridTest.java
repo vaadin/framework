@@ -182,7 +182,7 @@ public class GridTest {
         assertNotNull(event);
         assertFalse(event.isUserOriginated());
         assertEquals(Optional.empty(), event.getFirstSelectedItem());
-        assertEquals(0, event.getAllSelectedItems().size());
+        assertTrue(event.getAllSelectedItems().isEmpty());
     }
 
     @Test
@@ -231,7 +231,7 @@ public class GridTest {
         assertNotNull(event);
         assertFalse(event.isUserOriginated());
         assertEquals(Optional.empty(), event.getFirstSelectedItem());
-        assertEquals(0, event.getAllSelectedItems().size());
+        assertTrue(event.getAllSelectedItems().isEmpty());
     }
 
     @Test
@@ -289,7 +289,7 @@ public class GridTest {
 
         grid.clearSortOrder();
 
-        assertEquals(0, grid.getSortOrder().size());
+        assertTrue(grid.getSortOrder().isEmpty());
     }
 
     @Test
@@ -325,7 +325,7 @@ public class GridTest {
         list.clear();
         fired.set(false);
         grid.clearSortOrder();
-        assertEquals(0, list.size());
+        assertTrue(list.isEmpty());
         assertTrue(fired.get());
     }
 

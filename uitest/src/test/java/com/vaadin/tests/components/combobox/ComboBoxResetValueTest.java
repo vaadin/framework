@@ -15,14 +15,13 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
-import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ComboBoxResetValueTest extends MultiBrowserTest {
@@ -89,18 +88,18 @@ public class ComboBoxResetValueTest extends MultiBrowserTest {
         comboBoxWithNullNotAllowed.sendKeys("1", Keys.TAB);
         comboBoxWithNullNotAllowed.sendKeys(Keys.BACK_SPACE, Keys.TAB);
 
-        assertThat("Selection changed when it shouldn't have.",
-                comboBoxWithNullNotAllowed.getText(), is("1"));
+        assertEquals("Selection changed when it shouldn't have.", "1",
+                comboBoxWithNullNotAllowed.getText());
     }
 
     private void assertThatNullSelectionItemSelected(ComboBoxElement comboBox) {
-        assertThat("Null selection item not selected.", comboBox.getText(),
-                is(ComboBoxResetValue.EMPTY_VALUE));
+        assertEquals("Null selection item not selected.",
+                ComboBoxResetValue.EMPTY_VALUE, comboBox.getText());
     }
 
     private void assertThatSelectionIsEmpty(ComboBoxElement comboBox) {
-        assertThat("Something selected when should be empty.",
-                comboBox.getText(), is(""));
+        assertEquals("Something selected when should be empty.", "",
+                comboBox.getText());
     }
 
     private void clickResetButton() {

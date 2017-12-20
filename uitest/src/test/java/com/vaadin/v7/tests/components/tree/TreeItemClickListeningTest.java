@@ -15,7 +15,7 @@
  */
 package com.vaadin.v7.tests.components.tree;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -43,7 +43,7 @@ public class TreeItemClickListeningTest extends MultiBrowserTest {
     }
 
     private void assertEventFired(String text) {
-        assertThat(String.format("Couldn't find text '%s' from the log.", text),
+        assertTrue(String.format("Couldn't find text '%s' from the log.", text),
                 logContainsText(text));
     }
 

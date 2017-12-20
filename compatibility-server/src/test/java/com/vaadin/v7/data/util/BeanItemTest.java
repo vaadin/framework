@@ -2,6 +2,7 @@ package com.vaadin.v7.data.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Constructor;
@@ -364,14 +365,14 @@ public class BeanItemTest {
         BeanItem<MyClass> item = new BeanItem<MyClass>(new MyClass("bean1"));
 
         assertEquals(6, item.getItemPropertyIds().size());
-        assertEquals(null, item.getItemProperty("myname"));
+        assertNull(item.getItemProperty("myname"));
 
         item.addItemProperty("myname", pd.createProperty(item.getBean()));
         assertEquals(7, item.getItemPropertyIds().size());
         assertEquals("bean1", item.getItemProperty("myname").getValue());
         item.removeItemProperty("myname");
         assertEquals(6, item.getItemPropertyIds().size());
-        assertEquals(null, item.getItemProperty("myname"));
+        assertNull(item.getItemProperty("myname"));
     }
 
     @Test

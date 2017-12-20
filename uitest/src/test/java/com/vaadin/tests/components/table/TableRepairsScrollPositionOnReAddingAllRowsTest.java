@@ -15,8 +15,8 @@
  */
 package com.vaadin.tests.components.table;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.number.IsCloseTo.closeTo;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;

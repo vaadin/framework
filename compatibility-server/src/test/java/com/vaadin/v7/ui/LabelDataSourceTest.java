@@ -60,7 +60,7 @@ public class LabelDataSourceTest {
         label.setPropertyDataSource(null);
         assertEquals(STRING_DS_VALUE, label.getState().text);
         assertEquals(STRING_DS_VALUE, label.getValue());
-        assertEquals(null, label.getPropertyDataSource());
+        assertNull(label.getPropertyDataSource());
         label.setValue("foo");
         assertEquals("foo", label.getState().text);
         assertEquals("foo", label.getValue());

@@ -15,9 +15,7 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNotEquals;
 
 import org.junit.Test;
 
@@ -39,7 +37,7 @@ public class TextFieldBevelTest extends MultiBrowserTest {
         openTestUrlWithoutBevel();
         String boxShadowWithoutBevel = getBoxShadow();
 
-        assertThat(boxShadowWithBevel, is(not(boxShadowWithoutBevel)));
+        assertNotEquals(boxShadowWithoutBevel, boxShadowWithBevel);
     }
 
     private void openTestUrlWithoutBevel() {

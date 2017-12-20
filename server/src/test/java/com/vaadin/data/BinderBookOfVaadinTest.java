@@ -199,7 +199,7 @@ public class BinderBookOfVaadinTest {
 
         field.setValue("abc@vaadin.com");
         status = binder.validate();
-        assertEquals(0, status.getBeanValidationErrors().size());
+        assertTrue(status.getBeanValidationErrors().isEmpty());
         assertNull(field.getErrorMessage());
     }
 
@@ -221,7 +221,7 @@ public class BinderBookOfVaadinTest {
 
         field.setValue("long last name");
         status = binder.validate();
-        assertEquals(0, status.getFieldValidationErrors().size());
+        assertTrue(status.getFieldValidationErrors().isEmpty());
         assertNull(field.getErrorMessage());
     }
 
@@ -254,7 +254,7 @@ public class BinderBookOfVaadinTest {
 
         field.setValue("abc@acme.com");
         status = binder.validate();
-        assertEquals(0, status.getFieldValidationErrors().size());
+        assertTrue(status.getFieldValidationErrors().isEmpty());
         assertNull(field.getErrorMessage());
     }
 
@@ -622,7 +622,7 @@ public class BinderBookOfVaadinTest {
         yearOfBirth.setValue("2001");
 
         BinderValidationStatus<?> status = binder.validate();
-        assertEquals(0, status.getFieldValidationErrors().size());
+        assertTrue(status.getFieldValidationErrors().isEmpty());
         assertEquals(1, status.getBeanValidationErrors().size());
         assertEquals(message,
                 status.getBeanValidationErrors().get(0).getErrorMessage());
@@ -642,7 +642,7 @@ public class BinderBookOfVaadinTest {
 
         status = binder.validate();
         assertEquals(2, status.getBeanValidationResults().size());
-        assertEquals(0, status.getFieldValidationErrors().size());
+        assertTrue(status.getFieldValidationErrors().isEmpty());
         assertEquals(2, status.getBeanValidationErrors().size());
 
         // only first error is shown
@@ -697,7 +697,7 @@ public class BinderBookOfVaadinTest {
         yearOfBirth.setValue("2002");
 
         status = binder.validate();
-        assertEquals(0, status.getFieldValidationErrors().size());
+        assertTrue(status.getFieldValidationErrors().isEmpty());
         assertEquals(1, status.getBeanValidationErrors().size());
         assertEquals(message,
                 status.getBeanValidationErrors().get(0).getErrorMessage());
@@ -710,8 +710,8 @@ public class BinderBookOfVaadinTest {
         status = binder.validate();
         assertTrue(status.isOk());
         assertFalse(status.hasErrors());
-        assertEquals(0, status.getFieldValidationErrors().size());
-        assertEquals(0, status.getBeanValidationErrors().size());
+        assertTrue(status.getFieldValidationErrors().isEmpty());
+        assertTrue(status.getBeanValidationErrors().isEmpty());
 
         assertEquals("", formStatusLabel.getValue());
 
@@ -719,7 +719,7 @@ public class BinderBookOfVaadinTest {
         yearOfBirth.setValue("2000");
 
         status = binder.validate();
-        assertEquals(0, status.getFieldValidationErrors().size());
+        assertTrue(status.getFieldValidationErrors().isEmpty());
         assertEquals(2, status.getBeanValidationErrors().size());
 
         assertEquals(message + "\n" + message2, formStatusLabel.getValue());

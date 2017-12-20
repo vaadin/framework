@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.components.abstractfield;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.Keys;
@@ -75,7 +74,7 @@ public class ShortcutAddAndRemoveTest extends MultiBrowserTest {
     }
 
     private void assertLastLogRowIs(String expected) {
-        assertThat(getLogRow(0), is(expected));
+        assertEquals(expected, getLogRow(0));
     }
 
     private void sendEnter(AbstractComponentElement target) {

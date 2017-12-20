@@ -1,8 +1,8 @@
 package com.vaadin.tests.server.component.slider;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
@@ -18,8 +18,8 @@ public class SliderTest {
         slider.setMax(100);
         slider.setMin(101);
 
-        assertThat(slider.getMin(), is(101.0));
-        assertThat(slider.getMax(), is(101.0));
+        assertEquals(101.0, slider.getMin(), 0);
+        assertEquals(101.0, slider.getMax(), 0);
     }
 
     @Test
@@ -29,8 +29,8 @@ public class SliderTest {
         slider.setMin(50);
         slider.setMax(10);
 
-        assertThat(slider.getMax(), is(10.0));
-        assertThat(slider.getMin(), is(10.0));
+        assertEquals(10.0, slider.getMax(), 0);
+        assertEquals(10.0, slider.getMin(), 0);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class SliderTest {
 
         slider.setValue(5.0);
 
-        assertThat(slider.getValue(), is(5.0));
+        assertEquals(5.0, slider.getValue(), 0);
     }
 
     @Test
@@ -74,16 +74,16 @@ public class SliderTest {
 
         slider.setValue(99.01234567891234567890123456789);
 
-        assertThat(slider.getValue(), is(99.01234567891234567890123456789));
+        assertEquals(99.01234567891234567890123456789, slider.getValue(), 0);
     }
 
     @Test
     public void doublesCanBeUsedAsLimits() {
         Slider slider = new Slider(1.5, 2.5, 1);
 
-        assertThat(slider.getMin(), is(1.5));
-        assertThat(slider.getValue(), is(1.5));
-        assertThat(slider.getMax(), is(2.5));
+        assertEquals(1.5, slider.getMin(), 0);
+        assertEquals(1.5, slider.getValue().doubleValue(), 0);
+        assertEquals(2.5, slider.getMax(), 0);
     }
 
     @Test
@@ -92,7 +92,7 @@ public class SliderTest {
 
         Slider s = new Slider(minValue, minValue + 1, 0);
 
-        assertThat(s.getValue(), is(minValue));
+        assertEquals(minValue, s.getValue(), 0);
     }
 
     @Test
@@ -101,7 +101,7 @@ public class SliderTest {
 
         slider.setValue(-0.4);
 
-        assertThat(slider.getValue(), is(-0.0));
+        assertEquals(-0.0, slider.getValue(), 0);
     }
 
     @Test
@@ -110,9 +110,9 @@ public class SliderTest {
 
         slider.setValue(1.0);
 
-        assertThat(slider.getValue(), is(1.0));
-        assertThat(slider.getMin(), is(1.0));
-        assertThat(slider.getMax(), is(2.0));
+        assertEquals(1.0, slider.getValue(), 0);
+        assertEquals(1.0, slider.getMin(), 0);
+        assertEquals(2.0, slider.getMax(), 0);
     }
 
     @Test
@@ -121,7 +121,7 @@ public class SliderTest {
 
         slider.setValue(1.2);
 
-        assertThat(slider.getValue(), is(1.2));
+        assertEquals(1.2, slider.getValue(), 0);
     }
 
     @Test
@@ -130,6 +130,6 @@ public class SliderTest {
 
         slider.setValue(1.2345);
 
-        assertThat(slider.getValue(), is(1.23));
+        assertEquals(1.23, slider.getValue(), 0);
     }
 }

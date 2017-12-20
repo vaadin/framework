@@ -15,8 +15,7 @@
  */
 package com.vaadin.v7.tests.components.tree;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -49,9 +48,8 @@ public class TreeItemSelectionWithoutImmediateTest extends MultiBrowserTest {
             treeItem = getTreeNode(String.format(
                     TreeItemSelectionWithoutImmediate.MENU_ITEM_TEMPLATE, i));
 
-            assertThat("Clicked element should be selected",
-                    selectedElement.getText().equals(treeItem.getText()),
-                    is(true));
+            assertEquals("Clicked element should be selected",
+                    treeItem.getText(), selectedElement.getText());
         }
     }
 

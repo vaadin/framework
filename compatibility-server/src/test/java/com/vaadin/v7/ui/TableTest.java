@@ -18,6 +18,7 @@ package com.vaadin.v7.ui;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
@@ -52,7 +53,7 @@ public class TableTest {
         assertEquals(first, table.getValue());
         assertFalse(table.isEmpty());
         table.clear();
-        assertEquals(null, table.getValue());
+        assertNull(table.getValue());
         assertTrue(table.isEmpty());
     }
 

@@ -1,10 +1,9 @@
 package com.vaadin.shared.util;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Locale;
@@ -15,27 +14,27 @@ public class SharedUtilTest {
 
     @Test
     public void trailingSlashIsTrimmed() {
-        assertThat(SharedUtil.trimTrailingSlashes("/path/"), is("/path"));
+        assertEquals("/path", SharedUtil.trimTrailingSlashes("/path/"));
     }
 
     @Test
     public void noTrailingSlashForTrimming() {
-        assertThat(SharedUtil.trimTrailingSlashes("/path"), is("/path"));
+        assertEquals("/path", SharedUtil.trimTrailingSlashes("/path"));
     }
 
     @Test
     public void trailingSlashesAreTrimmed() {
-        assertThat(SharedUtil.trimTrailingSlashes("/path///"), is("/path"));
+        assertEquals("/path", SharedUtil.trimTrailingSlashes("/path///"));
     }
 
     @Test
     public void emptyStringIsHandled() {
-        assertThat(SharedUtil.trimTrailingSlashes(""), is(""));
+        assertEquals("", SharedUtil.trimTrailingSlashes(""));
     }
 
     @Test
     public void rootSlashIsTrimmed() {
-        assertThat(SharedUtil.trimTrailingSlashes("/"), is(""));
+        assertEquals("", SharedUtil.trimTrailingSlashes("/"));
     }
 
     @Test
@@ -94,7 +93,7 @@ public class SharedUtilTest {
 
     @Test
     public void dashSeparatedToCamelCase() {
-        assertEquals(null, SharedUtil.dashSeparatedToCamelCase(null));
+        assertNull(SharedUtil.dashSeparatedToCamelCase(null));
         assertEquals("", SharedUtil.dashSeparatedToCamelCase(""));
         assertEquals("foo", SharedUtil.dashSeparatedToCamelCase("foo"));
         assertEquals("fooBar", SharedUtil.dashSeparatedToCamelCase("foo-bar"));

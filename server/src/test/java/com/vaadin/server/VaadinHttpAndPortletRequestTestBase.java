@@ -15,12 +15,12 @@
  */
 package com.vaadin.server;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.portlet.PortletRequest;
@@ -55,7 +55,7 @@ public abstract class VaadinHttpAndPortletRequestTestBase<T extends VaadinHttpAn
 
         String parameter = sut.getParameter("foo");
 
-        assertThat(parameter, is("bar"));
+        assertEquals("bar", parameter);
     }
 
     @Test
@@ -65,7 +65,7 @@ public abstract class VaadinHttpAndPortletRequestTestBase<T extends VaadinHttpAn
 
         String parameter = sut.getParameter("foo");
 
-        assertThat(parameter, is("bar"));
+        assertEquals("bar", parameter);
     }
 
     @Test
@@ -74,7 +74,7 @@ public abstract class VaadinHttpAndPortletRequestTestBase<T extends VaadinHttpAn
 
         String remoteAddr = sut.getRemoteAddr();
 
-        assertThat(remoteAddr, is("foo"));
+        assertEquals("foo", remoteAddr);
     }
 
     @Test
@@ -83,7 +83,7 @@ public abstract class VaadinHttpAndPortletRequestTestBase<T extends VaadinHttpAn
 
         String remoteHost = sut.getRemoteHost();
 
-        assertThat(remoteHost, is("foo"));
+        assertEquals("foo", remoteHost);
     }
 
     @Test
@@ -92,7 +92,7 @@ public abstract class VaadinHttpAndPortletRequestTestBase<T extends VaadinHttpAn
 
         int remotePort = sut.getRemotePort();
 
-        assertThat(remotePort, is(12345));
+        assertEquals(12345, remotePort);
     }
 
     @Test
@@ -101,7 +101,7 @@ public abstract class VaadinHttpAndPortletRequestTestBase<T extends VaadinHttpAn
 
         String header = sut.getHeader("foo");
 
-        assertThat(header, is("bar"));
+        assertEquals("bar", header);
     }
 
     @Test
@@ -111,7 +111,7 @@ public abstract class VaadinHttpAndPortletRequestTestBase<T extends VaadinHttpAn
 
         Enumeration<String> actualHeaderNames = sut.getHeaderNames();
 
-        assertThat(actualHeaderNames, is(expectedHeaderNames));
+        assertEquals(expectedHeaderNames, actualHeaderNames);
     }
 
     @Test
@@ -121,16 +121,16 @@ public abstract class VaadinHttpAndPortletRequestTestBase<T extends VaadinHttpAn
 
         Enumeration<String> actualHeaders = sut.getHeaders("foo");
 
-        assertThat(actualHeaders, is(expectedHeaders));
+        assertEquals(expectedHeaders, actualHeaders);
     }
 
     @Test
     public void parameterMapIsFetchedFromServletRequest() {
-        Map expectedParameterMap = mock(Map.class);
+        Map<String, String[]> expectedParameterMap = new HashMap<>();
         when(servletRequest.getParameterMap()).thenReturn(expectedParameterMap);
 
         Map<String, String[]> actualParameterMap = sut.getParameterMap();
 
-        assertThat(actualParameterMap, is(expectedParameterMap));
+        assertEquals(expectedParameterMap, actualParameterMap);
     }
 }

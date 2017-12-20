@@ -15,8 +15,8 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -63,8 +63,8 @@ public class ComboBoxOnSmallScreenTest extends MultiBrowserTest {
         final int cbTop = combobox.getLocation().y;
         final int cbBottom = cbTop + combobox.getSize().getHeight();
 
-        assertThat("Popup overlay overlaps with the textbox",
-                popupTop >= cbBottom || popupBottom <= cbTop, is(true));
+        assertTrue("Popup overlay overlaps with the textbox",
+                popupTop >= cbBottom || popupBottom <= cbTop);
     }
 
     @Test
@@ -73,8 +73,8 @@ public class ComboBoxOnSmallScreenTest extends MultiBrowserTest {
         final int popupBottom = popupTop + popup.getSize().getHeight();
         final int rootHeight = findElement(By.tagName("body")).getSize().height;
 
-        assertThat("Popup overlay out of the screen",
-                popupTop < 0 || popupBottom > rootHeight, is(false));
+        assertFalse("Popup overlay out of the screen",
+                popupTop < 0 || popupBottom > rootHeight);
     }
 
     private Window getWindow() {

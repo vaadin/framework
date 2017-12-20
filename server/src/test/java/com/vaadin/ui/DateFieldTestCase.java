@@ -1,8 +1,5 @@
 package com.vaadin.ui;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -27,7 +24,7 @@ public class DateFieldTestCase {
     public void rangeStartIsSetToNull() {
         dateField.setRangeStart(null);
 
-        assertThat(dateField.getRangeStart(), is(nullValue()));
+        assertNull(dateField.getRangeStart());
     }
 
     @Test
@@ -48,7 +45,7 @@ public class DateFieldTestCase {
     public void rangeEndIsSetToNull() {
         dateField.setRangeEnd(null);
 
-        assertThat(dateField.getRangeEnd(), is(nullValue()));
+        assertNull(dateField.getRangeEnd());
     }
 
     @Test

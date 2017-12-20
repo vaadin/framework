@@ -63,7 +63,7 @@ public class PropertySetItemTest {
     public void testEmptyItem() {
         PropertysetItem item = createPropertySetItem();
         assertNotNull(item.getItemPropertyIds());
-        assertEquals(0, item.getItemPropertyIds().size());
+        assertTrue(item.getItemPropertyIds().isEmpty());
     }
 
     @Test
@@ -148,7 +148,7 @@ public class PropertySetItemTest {
         item.addItemProperty(ID1, prop1);
         item.removeItemProperty(ID1);
 
-        assertEquals(0, item.getItemPropertyIds().size());
+        assertTrue(item.getItemPropertyIds().isEmpty());
         assertNull(item.getItemProperty(ID1));
     }
 

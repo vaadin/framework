@@ -1,7 +1,6 @@
 package com.vaadin.tests.themes;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.net.HttpURLConnection;
@@ -35,7 +34,7 @@ public class FaviconTest extends SingleBrowserTest {
     }
 
     private void assertThatThemeHasFavicon(String theme) {
-        assertThat(getResponseCode(theme), is(200));
+        assertEquals(200, getResponseCode(theme));
     }
 
     private int getResponseCode(String theme) {

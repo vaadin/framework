@@ -15,9 +15,8 @@
  */
 package com.vaadin.tests.components.ui;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -57,13 +56,13 @@ public class TimeoutRedirectResetsOnActivityTest extends MultiBrowserTest {
 
         Thread.sleep(originalExpireTime - startedTime - waitBeforeActivity);
 
-        assertThat(driver.getCurrentUrl(), is(getTestUrl()));
+        assertEquals(getTestUrl(), driver.getCurrentUrl());
 
         testBench().disableWaitForVaadin();
         Thread.sleep(
                 actualExpireTime - originalExpireTime + communicationOverhead);
 
-        assertThat(driver.getCurrentUrl(), is(not(getTestUrl())));
+        assertNotEquals(getTestUrl(), driver.getCurrentUrl());
     }
 
     private long getTime(String id) {

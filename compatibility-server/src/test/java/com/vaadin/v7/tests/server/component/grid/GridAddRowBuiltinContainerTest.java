@@ -16,6 +16,7 @@
 package com.vaadin.v7.tests.server.component.grid;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import org.junit.Before;
@@ -64,7 +65,7 @@ public class GridAddRowBuiltinContainerTest {
         // cast to Object to distinguish from a null varargs array
         Object itemId = grid.addRow((Object) null);
 
-        assertEquals(null, container.getItem(itemId).getItemProperty("myColumn")
+        assertNull(container.getItem(itemId).getItemProperty("myColumn")
                 .getValue());
     }
 

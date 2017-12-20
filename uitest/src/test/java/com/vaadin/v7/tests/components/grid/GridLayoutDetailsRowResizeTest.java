@@ -16,8 +16,8 @@
 package com.vaadin.v7.tests.components.grid;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 import static org.hamcrest.number.IsCloseTo.closeTo;
+import static org.junit.Assert.assertEquals;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -100,7 +100,7 @@ public class GridLayoutDetailsRowResizeTest extends MultiBrowserTest {
 
         List<ButtonElement> buttons = $(ButtonElement.class)
                 .caption("Toggle visibility").all();
-        assertThat("Unexpected amount of details rows.", buttons.size(), is(3));
+        assertEquals("Unexpected amount of details rows.", 3, buttons.size());
 
         Map<ButtonElement, Integer> positions = new LinkedHashMap<ButtonElement, Integer>();
         Map<Integer, ButtonElement> ordered = new TreeMap<Integer, ButtonElement>();

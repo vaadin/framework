@@ -531,7 +531,7 @@ public class NavigatorTest {
 
         navigator.navigateTo("test2");
         assertEquals("", view2.getParams());
-        assertEquals(null, view1.getParams());
+        assertNull(view1.getParams());
         navigator.navigateTo("");
         assertEquals("", view1.getParams());
         navigator.navigateTo("test1/params");

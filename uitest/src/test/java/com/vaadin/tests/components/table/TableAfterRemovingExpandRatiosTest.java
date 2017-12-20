@@ -15,9 +15,8 @@
  */
 package com.vaadin.tests.components.table;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import java.util.List;
 
@@ -60,14 +59,14 @@ public class TableAfterRemovingExpandRatiosTest extends MultiBrowserTest {
     public void testRemovingExpandRatios() {
 
         clickAndWait(expandButton);
-        assertThat("Column widths should not be equal after expanding",
-                initialHeader.getSize().getWidth(),
-                not(expandedHeader.getSize().getWidth()));
+        assertNotEquals("Column widths should not be equal after expanding",
+                expandedHeader.getSize().getWidth(),
+                initialHeader.getSize().getWidth());
 
         clickAndWait(unExpandButton);
-        assertThat("Column widths should be equal after unexpanding",
-                initialHeader.getSize().getWidth(),
-                is(expandedHeader.getSize().getWidth()));
+        assertEquals("Column widths should be equal after unexpanding",
+                expandedHeader.getSize().getWidth(),
+                initialHeader.getSize().getWidth());
     }
 
     @Test
@@ -78,10 +77,10 @@ public class TableAfterRemovingExpandRatiosTest extends MultiBrowserTest {
         clickAndWait(expandButton);
         clickAndWait(addItemButton);
         clickAndWait(unExpandButton);
-        assertThat(
+        assertEquals(
                 "Column widths should be equal after adding item and unexpanding",
-                initialHeader.getSize().getWidth(),
-                is(expandedHeader.getSize().getWidth()));
+                expandedHeader.getSize().getWidth(),
+                initialHeader.getSize().getWidth());
     }
 
     private void clickAndWait(WebElement elem) {

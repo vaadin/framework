@@ -17,6 +17,7 @@ package com.vaadin.tests.components.window;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -81,7 +82,7 @@ public class ExtraWindowShownWaiAriaTest extends MultiBrowserTest {
         List<CheckBoxElement> checkBoxes = $(CheckBoxElement.class).all();
         WebElement input = checkBoxes.get(1).findElement(By.tagName("input"));
         // ensure that not checked yet
-        assertEquals(null, input.getAttribute("checked"));
+        assertNull(input.getAttribute("checked"));
         input.click();
         // ensure that checked now
         assertEquals("true", input.getAttribute("checked"));

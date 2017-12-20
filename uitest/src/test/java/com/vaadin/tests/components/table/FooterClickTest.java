@@ -15,8 +15,8 @@
  */
 package com.vaadin.tests.components.table;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -24,8 +24,8 @@ import java.util.Arrays;
 import org.junit.Test;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -100,7 +100,7 @@ public class FooterClickTest extends MultiBrowserTest {
     }
 
     private void assertAnyLogText(String... texts) {
-        assertThat(String.format(
+        assertTrue(String.format(
                 "Correct log text was not found, expected any of %s",
                 Arrays.asList(texts)), logContainsAnyText(texts));
     }

@@ -15,8 +15,7 @@
  */
 package com.vaadin.server;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
@@ -96,7 +95,7 @@ public class VaadinPortletServiceTest {
 
         String location = getStaticFileLocation();
 
-        assertThat(location, is("prefs"));
+        assertEquals("prefs", location);
     }
 
     @Test
@@ -107,7 +106,7 @@ public class VaadinPortletServiceTest {
 
         String location = getStaticFileLocation();
 
-        assertThat(location, is("conf"));
+        assertEquals("conf", location);
     }
 
     @Test
@@ -118,7 +117,7 @@ public class VaadinPortletServiceTest {
 
         String location = getStaticFileLocation();
 
-        assertThat(location, is("/html"));
+        assertEquals("/html", location);
     }
 
     @Test
@@ -127,7 +126,7 @@ public class VaadinPortletServiceTest {
 
         String staticFileLocation = getStaticFileLocation();
 
-        assertThat(staticFileLocation, is("/content"));
+        assertEquals("/content", staticFileLocation);
     }
 
     @Test
@@ -136,7 +135,7 @@ public class VaadinPortletServiceTest {
 
         String theme = getTheme();
 
-        assertThat(theme, is("foobar"));
+        assertEquals("foobar", theme);
     }
 
     @Test
@@ -145,7 +144,7 @@ public class VaadinPortletServiceTest {
 
         String theme = getTheme();
 
-        assertThat(theme, is(Constants.DEFAULT_THEME_NAME));
+        assertEquals(Constants.DEFAULT_THEME_NAME, theme);
     }
 
     private String getWidgetset() {
@@ -159,7 +158,7 @@ public class VaadinPortletServiceTest {
 
         String widgetset = getWidgetset();
 
-        assertThat(widgetset, is(Constants.DEFAULT_WIDGETSET));
+        assertEquals(Constants.DEFAULT_WIDGETSET, widgetset);
     }
 
     @Test
@@ -169,7 +168,7 @@ public class VaadinPortletServiceTest {
 
         String widgetset = getWidgetset();
 
-        assertThat(widgetset, is("bar"));
+        assertEquals("bar", widgetset);
     }
 
     @Test
@@ -179,7 +178,7 @@ public class VaadinPortletServiceTest {
 
         String widgetset = getWidgetset();
 
-        assertThat(widgetset, is(Constants.DEFAULT_WIDGETSET));
+        assertEquals(Constants.DEFAULT_WIDGETSET, widgetset);
     }
 
     @Test
@@ -190,8 +189,7 @@ public class VaadinPortletServiceTest {
 
         String widgetset = getWidgetset();
 
-        assertThat(widgetset,
-                is("com.vaadin.portal.gwt.PortalDefaultWidgetSet"));
+        assertEquals("com.vaadin.portal.gwt.PortalDefaultWidgetSet", widgetset);
     }
 
     @Test

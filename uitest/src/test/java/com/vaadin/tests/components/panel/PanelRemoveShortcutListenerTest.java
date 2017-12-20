@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.components.panel;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
@@ -62,10 +61,9 @@ public class PanelRemoveShortcutListenerTest extends MultiBrowserTest {
 
     @Test
     public void testToggleWithShortcut() {
-        assertThat(
+        assertEquals("No shortcut effects (press 'A')",
                 panel.findElement(By.className("v-panel-caption"))
-                        .findElement(By.tagName("span")).getText(),
-                is("No shortcut effects (press 'A')"));
+                        .findElement(By.tagName("span")).getText());
 
         attemptShortcut("A on");
         attemptShortcut("A off");
@@ -83,8 +81,8 @@ public class PanelRemoveShortcutListenerTest extends MultiBrowserTest {
         // add a bit more delay to make sure the caption doesn't change later
         sleep(2000);
 
-        assertThat(panel.findElement(By.className("v-panel-caption"))
-                .findElement(By.tagName("span")).getText(), is("A on"));
+        assertEquals("A on", panel.findElement(By.className("v-panel-caption"))
+                .findElement(By.tagName("span")).getText());
     }
 
     private void attemptShortcut(final String expectedCaption) {

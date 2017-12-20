@@ -1,7 +1,7 @@
 package com.vaadin.tests.tooltip;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -17,9 +17,8 @@ public class MenuBarTooltipTest extends MultiBrowserTest {
 
     @Test
     public void toolTipShouldBeOnTopOfMenuItem() {
-        String[] themes = { ValoTheme.THEME_NAME,
-                Reindeer.THEME_NAME, Runo.THEME_NAME,
-                ChameleonTheme.THEME_NAME };
+        String[] themes = { ValoTheme.THEME_NAME, Reindeer.THEME_NAME,
+                Runo.THEME_NAME, ChameleonTheme.THEME_NAME };
 
         for (String theme : themes) {
             assertZIndices(theme);

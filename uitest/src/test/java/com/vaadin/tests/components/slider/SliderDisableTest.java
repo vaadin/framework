@@ -16,9 +16,9 @@
 package com.vaadin.tests.components.slider;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 
@@ -38,12 +38,12 @@ public class SliderDisableTest extends MultiBrowserTest {
 
         moveSlider(112);
         String expectedPosition = getSliderHandlePosition();
-        assertThat(expectedPosition, is(not(originalPosition)));
+        assertNotEquals(originalPosition, expectedPosition);
 
         hitButton("disableButton");
 
         assertSliderIsDisabled();
-        assertThat(getSliderHandlePosition(), is(expectedPosition));
+        assertEquals(expectedPosition, getSliderHandlePosition());
     }
 
     private void assertSliderIsDisabled() {

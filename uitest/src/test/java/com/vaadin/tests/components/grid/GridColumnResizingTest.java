@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -35,11 +36,11 @@ public class GridColumnResizingTest extends MultiBrowserTest {
         ButtonElement toggleResizableButton = $(ButtonElement.class).get(4);
         GridCellElement cell = getGrid().getHeaderCell(0, 0);
 
-        assertEquals(true, cell.isElementPresent(
+        assertTrue(cell.isElementPresent(
                 By.cssSelector("div.v-grid-column-resize-handle")));
 
         toggleResizableButton.click();
-        assertEquals(false, cell.isElementPresent(
+        assertFalse(cell.isElementPresent(
                 By.cssSelector("div.v-grid-column-resize-handle")));
     }
 

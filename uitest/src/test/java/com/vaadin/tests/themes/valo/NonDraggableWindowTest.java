@@ -1,7 +1,6 @@
 package com.vaadin.tests.themes.valo;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -17,6 +16,6 @@ public class NonDraggableWindowTest extends MultiBrowserTest {
 
         WebElement header = findElement(By.className("v-window-header"));
 
-        assertThat(header.getCssValue("cursor"), is("default"));
+        assertEquals("default", header.getCssValue("cursor"));
     }
 }

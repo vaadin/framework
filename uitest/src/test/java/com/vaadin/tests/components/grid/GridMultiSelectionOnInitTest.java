@@ -15,8 +15,6 @@
  */
 package com.vaadin.tests.components.grid;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -27,8 +25,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -55,7 +53,7 @@ public class GridMultiSelectionOnInitTest extends MultiBrowserTest {
 
         WebElement selectAllCheckbox = selectAllCell
                 .findElement(By.cssSelector("input"));
-        assertThat(selectAllCheckbox.isSelected(), is(true));
+        assertTrue(selectAllCheckbox.isSelected());
     }
 
     @Test

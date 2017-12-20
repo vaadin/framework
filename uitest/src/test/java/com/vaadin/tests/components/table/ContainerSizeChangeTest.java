@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.table;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -41,8 +40,8 @@ public class ContainerSizeChangeTest extends MultiBrowserTest {
     }
 
     private void assertThatRowExists(TableElement table, int rowIndex) {
-        assertThat(table.getCell(rowIndex, 0).getText(),
-                is(String.format("a %s", rowIndex)));
+        assertEquals(String.format("a %s", rowIndex),
+                table.getCell(rowIndex, 0).getText());
     }
 
     private void assertRowDoesNotExist(TableElement table, int rowIndex) {

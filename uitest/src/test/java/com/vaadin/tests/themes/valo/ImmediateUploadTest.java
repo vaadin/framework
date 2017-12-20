@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
@@ -56,28 +55,28 @@ public class ImmediateUploadTest extends MultiBrowserTest {
     public void normalUploadButtonIsVisible() {
         WebElement button = getUploadButton("upload");
 
-        assertThat(button.getCssValue("display"), is("block"));
+        assertEquals("block", button.getCssValue("display"));
     }
 
     @Test
     public void fileInputIsVisibleForNormalUpload() {
         WebElement input = getUploadFileInput("upload");
 
-        assertThat(input.getCssValue("position"), is("static"));
+        assertEquals("static", input.getCssValue("position"));
     }
 
     @Test
     public void immediateUploadButtonIsVisible() {
         WebElement button = getUploadButton("immediateupload");
 
-        assertThat(button.getCssValue("display"), is("block"));
+        assertEquals("block", button.getCssValue("display"));
     }
 
     @Test
     public void fileInputIsNotVisibleForImmediateUpload() {
         WebElement input = getUploadFileInput("immediateupload");
 
-        assertThat(input.getCssValue("position"), is("absolute"));
+        assertEquals("absolute", input.getCssValue("position"));
     }
 
     @Test
@@ -87,6 +86,6 @@ public class ImmediateUploadTest extends MultiBrowserTest {
         // input.click() and then verifying if the upload window is opened
         // would be better but couldn't figure a way to do that. screenshots
         // don't show the upload window, not at least in firefox.
-        assertThat(input.getCssValue("z-index"), is("-1"));
+        assertEquals("-1", input.getCssValue("z-index"));
     }
 }

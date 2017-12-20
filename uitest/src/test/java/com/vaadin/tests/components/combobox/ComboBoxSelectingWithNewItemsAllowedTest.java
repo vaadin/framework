@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.Keys;
@@ -257,7 +256,7 @@ public class ComboBoxSelectingWithNewItemsAllowedTest extends MultiBrowserTest {
 
     private void assertThatSelectedValueIs(final String value,
             final String labelValue) {
-        assertThat(comboBoxElement.getText(), is(value));
+        assertEquals(value, comboBoxElement.getText());
 
         waitUntil(new ExpectedCondition<Boolean>() {
             private String actualValue;
@@ -280,8 +279,8 @@ public class ComboBoxSelectingWithNewItemsAllowedTest extends MultiBrowserTest {
     private void assertInitialItemCount() {
         // wait for a bit in case the count is updating
         sleep(1000);
-        assertThat("Wrong initial item count.", labelElement.getText(),
-                is("2600"));
+        assertEquals("Wrong initial item count.", "2600",
+                labelElement.getText());
     }
 
     private void assertOneMoreThanInitial() {

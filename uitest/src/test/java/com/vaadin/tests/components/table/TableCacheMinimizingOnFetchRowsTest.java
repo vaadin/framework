@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.components.table;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -27,7 +27,6 @@ public class TableCacheMinimizingOnFetchRowsTest extends MultiBrowserTest {
 
     @Test
     public void testCacheSize() throws InterruptedException {
-
         openTestURL();
 
         scrollToBottomOfTable();
@@ -36,9 +35,8 @@ public class TableCacheMinimizingOnFetchRowsTest extends MultiBrowserTest {
         String logtext1 = "requested 60 rows";
         String logtext2 = "requested 61 rows";
 
-        assertThat("Requested cached rows did not match expected",
+        assertTrue("Requested cached rows did not match expected",
                 logContainsText(logtext1) || logContainsText(logtext2));
-
     }
 
     private void scrollToBottomOfTable() {

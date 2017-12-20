@@ -50,10 +50,10 @@ public class GridStaticSectionTest extends Grid {
         assertEquals(1, getHeaderRowCount());
         removeHeaderRow(0);
         assertEquals(0, getHeaderRowCount());
-        assertEquals(null, getDefaultHeaderRow());
+        assertNull(getDefaultHeaderRow());
         HeaderRow row = appendHeaderRow();
         assertEquals(1, getHeaderRowCount());
-        assertEquals(null, getDefaultHeaderRow());
+        assertNull(getDefaultHeaderRow());
         setDefaultHeaderRow(row);
         assertEquals(row, getDefaultHeaderRow());
     }

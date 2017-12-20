@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.combobox;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -222,7 +220,7 @@ public class ComboBoxSelectingTest extends MultiBrowserTest {
 
     private void assertThatSelectedValueIs(final String value,
             final String labelValue) {
-        assertThat(comboBoxElement.getText(), is(value));
+        assertEquals(value, comboBoxElement.getText());
 
         waitUntil(new ExpectedCondition<Boolean>() {
             private String actualValue;

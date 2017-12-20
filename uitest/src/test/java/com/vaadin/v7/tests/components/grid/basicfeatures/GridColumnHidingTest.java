@@ -123,8 +123,8 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         assertNotNull("no event fired", webElement);
         assertEquals(1, counter);
         assertEquals(2, columnIndex);
-        assertEquals(false, userOriginated);
-        assertEquals(true, hidden);
+        assertFalse(userOriginated);
+        assertTrue(hidden);
 
         toggleHideColumnAPI(2);
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
@@ -139,8 +139,8 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         assertNotNull("no event fired", webElement);
         assertEquals(2, counter);
         assertEquals(2, columnIndex);
-        assertEquals(false, userOriginated);
-        assertEquals(false, hidden);
+        assertFalse(userOriginated);
+        assertFalse(hidden);
     }
 
     @Test
@@ -166,8 +166,8 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         assertNotNull("no event fired", webElement);
         assertEquals(1, counter);
         assertEquals(2, columnIndex);
-        assertEquals(true, userOriginated);
-        assertEquals(true, hidden);
+        assertTrue(userOriginated);
+        assertTrue(hidden);
 
         getColumnHidingToggle(2).click();
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
@@ -182,8 +182,8 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         assertNotNull("no event fired", webElement);
         assertEquals(2, counter);
         assertEquals(2, columnIndex);
-        assertEquals(true, userOriginated);
-        assertEquals(false, hidden);
+        assertTrue(userOriginated);
+        assertFalse(hidden);
     }
 
     @Test
@@ -854,7 +854,7 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
 
         clickSidebarOpenButton();
         // All columns hidden
-        assertEquals(0, getGridHeaderRowCells().size());
+        assertTrue(getGridHeaderRowCells().isEmpty());
         clickSidebarOpenButton();
         for (int i = 0; i < colCount; i++) {
             getColumnHidingToggle(i).click();

@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.datefield;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -21,7 +20,7 @@ public class DateFieldDayResolutionOffsetTest extends MultiBrowserTest {
         select2ndOfSeptember();
 
         LabelElement dateValue = $(LabelElement.class).id("dateValue");
-        assertThat(dateValue.getText(), is("09/02/2014 00:00:00"));
+        assertEquals("09/02/2014 00:00:00", dateValue.getText());
     }
 
     private void select2ndOfSeptember() {

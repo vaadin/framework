@@ -16,6 +16,7 @@
 package com.vaadin.tests.server.component.gridlayout;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.assertNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -333,15 +334,15 @@ public class GridLayoutDeclarativeTest
                 + "</vaadin-grid-layout>";
         DesignContext context = Design
                 .read(new ByteArrayInputStream(design.getBytes(UTF_8)), null);
-        assertEquals(null, context.getCustomAttributes(
+        assertNull(context.getCustomAttributes(
                 context.getComponentByLocalId("marginComponent")));
-        assertEquals(null, context.getCustomAttributes(
+        assertNull(context.getCustomAttributes(
                 context.getComponentByLocalId("marginLeftComponent")));
-        assertEquals(null, context.getCustomAttributes(
+        assertNull(context.getCustomAttributes(
                 context.getComponentByLocalId("marginRightComponent")));
-        assertEquals(null, context.getCustomAttributes(
+        assertNull(context.getCustomAttributes(
                 context.getComponentByLocalId("marginTopComponent")));
-        assertEquals(null, context.getCustomAttributes(
+        assertNull(context.getCustomAttributes(
                 context.getComponentByLocalId("marginBottomComponent")));
     }
 

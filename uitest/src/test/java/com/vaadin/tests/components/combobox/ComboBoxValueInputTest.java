@@ -15,8 +15,8 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.List;
 
@@ -68,34 +68,34 @@ public class ComboBoxValueInputTest extends MultiBrowserTest {
     public void defaultComboBoxClearsInputOnInvalidValue() {
         ComboBoxElement comboBox = getComboBox("default");
 
-        assertThat(getComboBoxValue(comboBox), is(""));
+        assertEquals("", getComboBoxValue(comboBox));
 
         comboBox.selectByText("Value 1");
         sendKeysToComboBox(comboBox, "abc");
 
         removeFocusFromComboBoxes();
 
-        assertThat(getComboBoxValue(comboBox), is("Value 1"));
+        assertEquals("Value 1", getComboBoxValue(comboBox));
         assertThatComboBoxSuggestionsAreHidden(comboBox);
     }
 
     private void assertThatComboBoxSuggestionsAreHidden(
             ComboBoxElement comboBox) {
-        assertThat(comboBox.isElementPresent(By.vaadin("#popup")), is(false));
+        assertFalse(comboBox.isElementPresent(By.vaadin("#popup")));
     }
 
     @Test
     public void comboBoxWithPromptClearsInputOnInvalidValue() {
         ComboBoxElement comboBox = getComboBox("default-prompt");
 
-        assertThat(getComboBoxValue(comboBox), is("Please select"));
+        assertEquals("Please select", getComboBoxValue(comboBox));
 
         comboBox.selectByText("Value 2");
         sendKeysToComboBox(comboBox, "def");
 
         removeFocusFromComboBoxes();
 
-        assertThat(getComboBoxValue(comboBox), is("Value 2"));
+        assertEquals("Value 2", getComboBoxValue(comboBox));
         assertThatComboBoxSuggestionsAreHidden(comboBox);
     }
 
@@ -103,13 +103,13 @@ public class ComboBoxValueInputTest extends MultiBrowserTest {
     public void comboBoxWithNullItemClearsInputOnInvalidValue() {
         ComboBoxElement comboBox = getComboBox("null");
 
-        assertThat(getComboBoxValue(comboBox), is("Null item"));
+        assertEquals("Null item", getComboBoxValue(comboBox));
 
         sendKeysToComboBox(comboBox, "ghi");
 
         removeFocusFromComboBoxes();
 
-        assertThat(getComboBoxValue(comboBox), is("Null item"));
+        assertEquals("Null item", getComboBoxValue(comboBox));
         assertThatComboBoxSuggestionsAreHidden(comboBox);
     }
 
@@ -117,13 +117,13 @@ public class ComboBoxValueInputTest extends MultiBrowserTest {
     public void comboBoxWithNullItemAndPromptClearsInputOnInvalidValue() {
         ComboBoxElement comboBox = getComboBox("null-prompt");
 
-        assertThat(getComboBoxValue(comboBox), is("Null item"));
+        assertEquals("Null item", getComboBoxValue(comboBox));
 
         sendKeysToComboBox(comboBox, "jkl");
 
         removeFocusFromComboBoxes();
 
-        assertThat(getComboBoxValue(comboBox), is("Null item"));
+        assertEquals("Null item", getComboBoxValue(comboBox));
         assertThatComboBoxSuggestionsAreHidden(comboBox);
 
     }
@@ -132,7 +132,7 @@ public class ComboBoxValueInputTest extends MultiBrowserTest {
     public void comboBoxWithFilteringOffClearsInputOnInvalidValue() {
         ComboBoxElement comboBox = getComboBox("filtering-off");
 
-        assertThat(getComboBoxValue(comboBox), is(""));
+        assertEquals("", getComboBoxValue(comboBox));
 
         // selectByText doesn't work when filtering is off.
         comboBox.openPopup();
@@ -144,7 +144,7 @@ public class ComboBoxValueInputTest extends MultiBrowserTest {
 
         removeFocusFromComboBoxes();
 
-        assertThat(getComboBoxValue(comboBox), is("Value 1"));
+        assertEquals("Value 1", getComboBoxValue(comboBox));
         assertThatComboBoxSuggestionsAreHidden(comboBox);
     }
 }

@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.tooltip;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.Keys;
@@ -59,8 +58,8 @@ public class TooltipConfigurationTest extends TooltipTest {
         selectAndType(maxWidth, "100");
 
         testBenchElement(longTooltip).showTooltip();
-        assertThat(getDriver().findElement(By.className("popupContent"))
-                .getSize().getWidth(), is(100));
+        assertEquals(100, getDriver().findElement(By.className("popupContent"))
+                .getSize().getWidth());
     }
 
     private void selectAndType(WebElement element, String value) {

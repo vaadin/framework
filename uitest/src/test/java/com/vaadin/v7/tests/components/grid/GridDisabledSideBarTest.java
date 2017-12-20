@@ -1,7 +1,7 @@
 package com.vaadin.v7.tests.components.grid;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 

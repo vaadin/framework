@@ -1,7 +1,7 @@
 package com.vaadin.tests.tooltip;
 
 import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
@@ -35,8 +35,8 @@ public class StationaryTooltipTest extends MultiBrowserTest {
         moveMouseToButtonBottomRightCorner(mouse);
         int actualTooltipLocationX = getTooltipLocationX();
 
-        assertThat(actualTooltipLocationX, is(greaterThan(0)));
-        assertThat(actualTooltipLocationX, is(originalTooltipLocationX));
+        assertThat(actualTooltipLocationX, greaterThan(0));
+        assertEquals(originalTooltipLocationX, actualTooltipLocationX);
     }
 
     private Coordinates getButtonCoordinates() {

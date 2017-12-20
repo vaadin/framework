@@ -16,9 +16,8 @@
 package com.vaadin.tests.design.nested;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
@@ -41,31 +40,31 @@ public class ReadNestedTemplatesTest {
 
     @Test
     public void rootContainsOneChild() {
-        assertThat(root.getComponentCount(), is(1));
+        assertEquals(1, root.getComponentCount());
         assertThat(root.iterator().next(),
                 instanceOf(MyExtendedChildDesign.class));
     }
 
     @Test
     public void rootContainsTwoGrandChildren() {
-        assertThat(root.childDesign.getComponentCount(), is(2));
+        assertEquals(2, root.childDesign.getComponentCount());
     }
 
     @Test
     public void childComponentIsNotNull() {
-        assertThat(root.childDesign, is(not(nullValue())));
+        assertNotNull(root.childDesign);
     }
 
     @Test
     public void childLabelIsNotNull() {
-        assertThat(root.childDesign.childLabel, is(not(nullValue())));
-        assertThat(root.childDesign.childLabel.getValue(), is("test content"));
+        assertNotNull(root.childDesign.childLabel);
+        assertEquals("test content", root.childDesign.childLabel.getValue());
     }
 
     @Test
     public void childCustomComponentsIsNotNull() {
-        assertThat(root.childDesign.childCustomComponent, is(not(nullValue())));
-        assertThat(root.childDesign.childCustomComponent.getCaption(),
-                is("custom content"));
+        assertNotNull(root.childDesign.childCustomComponent);
+        assertEquals("custom content",
+                root.childDesign.childCustomComponent.getCaption());
     }
 }

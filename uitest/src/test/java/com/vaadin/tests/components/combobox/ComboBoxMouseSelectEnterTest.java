@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
@@ -52,13 +51,13 @@ public class ComboBoxMouseSelectEnterTest extends MultiBrowserTest {
         comboBoxElement.sendKeys(Keys.DOWN, Keys.DOWN);
         String selectedItemText = findElement(
                 By.className("gwt-MenuItem-selected")).getText();
-        assertThat("Item selected by arrows should be a1", selectedItemText,
-                is("a1"));
+        assertEquals("Item selected by arrows should be a1", "a1",
+                selectedItemText);
         new Actions(driver).moveToElement(getWebElementForItem("a5")).build()
                 .perform();
         comboBoxElement.sendKeys(getReturn());
-        assertThat("Item selected by mouse should be a5",
-                comboBoxElement.getText(), is("a5"));
+        assertEquals("Item selected by mouse should be a5", "a5",
+                comboBoxElement.getText());
         checkLabelValue("a5");
     }
 

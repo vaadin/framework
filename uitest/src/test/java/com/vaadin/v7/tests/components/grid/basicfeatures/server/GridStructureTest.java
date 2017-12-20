@@ -15,8 +15,6 @@
  */
 package com.vaadin.v7.tests.components.grid.basicfeatures.server;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -105,7 +103,7 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         sleep(1000);
 
         // Check that row is loaded
-        assertThat(getGridElement().getCell(11, 0).getText(), not("..."));
+        assertNotEquals("...", getGridElement().getCell(11, 0).getText());
     }
 
     @Test
