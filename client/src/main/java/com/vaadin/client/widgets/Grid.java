@@ -109,6 +109,8 @@ import com.vaadin.client.widget.escalator.Spacer;
 import com.vaadin.client.widget.escalator.SpacerUpdater;
 import com.vaadin.client.widget.escalator.events.RowHeightChangedEvent;
 import com.vaadin.client.widget.escalator.events.RowHeightChangedHandler;
+import com.vaadin.client.widget.escalator.events.SpacerVisibilityChangedEvent;
+import com.vaadin.client.widget.escalator.events.SpacerVisibilityChangedHandler;
 import com.vaadin.client.widget.grid.AutoScroller;
 import com.vaadin.client.widget.grid.AutoScroller.AutoScrollerCallback;
 import com.vaadin.client.widget.grid.AutoScroller.ScrollAxis;
@@ -8461,6 +8463,18 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     public HandlerRegistration addRowHeightChangedHandler(
             RowHeightChangedHandler handler) {
         return escalator.addHandler(handler, RowHeightChangedEvent.TYPE);
+    }
+
+    /**
+     * Adds a spacer visibility changed handler to the underlying escalator.
+     *
+     * @param handler
+     *         the handler to be called when a spacer's visibility changes
+     * @return the registration object with which the handler can be removed
+     */
+    public HandlerRegistration addSpacerVisibilityChangedHandler(
+            SpacerVisibilityChangedHandler handler) {
+        return escalator.addHandler(handler, SpacerVisibilityChangedEvent.TYPE);
     }
 
     /**
