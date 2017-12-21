@@ -24,6 +24,7 @@ import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ComboBoxCombinedWithEnterShortcutTest extends MultiBrowserTest {
+
     @Test
     public void testKeyboardSelection() throws InterruptedException {
         openTestURL();

@@ -38,7 +38,6 @@ import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ListingJsonConstants;
 import com.vaadin.shared.ui.optiongroup.RadioButtonGroupState;
-import com.vaadin.ui.components.grid.DescriptionGenerator;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
 
@@ -301,7 +300,7 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
         Element elem = super.writeItem(design, item, context);
 
         if (!getItemEnabledProvider().test(item)) {
-            elem.attr("disabled", "");
+            elem.attr("disabled", true);
         }
 
         if (isHtmlContentAllowed()) {

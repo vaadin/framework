@@ -42,6 +42,7 @@ public class TooltipInfo {
      * Constructs a new tooltip info instance.
      */
     public TooltipInfo() {
+        this("", ContentMode.PREFORMATTED);
     }
 
     /**

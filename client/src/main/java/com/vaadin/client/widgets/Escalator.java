@@ -1197,7 +1197,7 @@ public class Escalator extends Widget
          * @param element     element that should get the role attribute
          * @param role        role to be added
          *
-         * @since
+         * @since 8.2
          */
         public void updateRole(final Element element, AriaGridRole role) {
             element.setAttribute("role", role.getName());
@@ -1207,7 +1207,7 @@ public class Escalator extends Widget
     /**
      * Holds the currently used aria roles within the grid for rows and cells.
      *
-     * @since
+     * @since 8.2
      */
     public enum AriaGridRole {
 
@@ -1290,7 +1290,7 @@ public class Escalator extends Widget
          *
          * @return the role attribute for the element to represent cells
          *
-         * @since
+         * @since 8.2
          */
         protected AriaGridRole getCellElementRole() {
             return AriaGridRole.GRIDCELL;
@@ -1304,7 +1304,7 @@ public class Escalator extends Widget
          *
          * @return the role attribute for the element to represent rows
          *
-         * @since
+         * @since 8.2
          */
         protected AriaGridRole getRowElementRole() {
             return AriaGridRole.ROW;

@@ -262,6 +262,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              *            a plain text caption
              */
             public void setText(String text) {
+                detach();
                 this.content = text;
                 this.type = GridStaticCellType.TEXT;
                 section.requestSectionRefresh();
@@ -340,6 +341,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              *            The html content of the cell
              */
             public void setHtml(String html) {
+                detach();
+
                 this.content = html;
                 this.type = GridStaticCellType.HTML;
                 section.requestSectionRefresh();
@@ -377,10 +380,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     return;
                 }
 
-                if (this.content instanceof Widget) {
-                    // Old widget in the cell, detach it first
-                    section.getGrid().detachWidget((Widget) this.content);
-                }
+                detach();
                 this.content = widget;
                 this.type = GridStaticCellType.WIDGET;
                 section.requestSectionRefresh();
@@ -1030,9 +1030,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              * refresh in the end.
              */
             Scheduler.get().scheduleFinally(() -> {
-                    if (markAsDirty) {
-                        markAsDirty = false;
-                        getGrid().refreshFooter();
+                if (markAsDirty) {
+                    markAsDirty = false;
+                    getGrid().refreshFooter();
                 }
             });
         }
@@ -1659,7 +1659,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 grid.refreshBody();
                 HeaderCell cell = grid.getDefaultHeaderRow()
                         .getCell(grid.selectionColumn);
-                if (cell.getType() == GridStaticCellType.WIDGET) { // if lazy provider, then no checkbox
+                // if lazy provider, then no checkbox
+                if (cell.getType() == GridStaticCellType.WIDGET) {
                     CheckBox checkBox = (CheckBox) grid.getDefaultHeaderRow()
                             .getCell(grid.selectionColumn).getWidget();
                     checkBox.setEnabled(isEnabled);
@@ -2913,7 +2914,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 selectAllCheckBox = GWT.create(CheckBox.class);
                 selectAllCheckBox.setStylePrimaryName(
                         getStylePrimaryName() + SELECT_ALL_CHECKBOX_CLASSNAME);
-                // label of checkbox should only be visible for assistive devices
+                // label of checkbox should only be visible for assistive
+                // devices
                 selectAllCheckBox.addStyleName("v-assistive-device-only-label");
                 selectAllCheckBox.addValueChangeHandler(event -> {
                     selected = event.getValue();
@@ -3060,7 +3062,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (selectAllCheckBoxVisible) {
                 selectionCell.setWidget(selectAllCheckBox);
             } else {
-                selectAllCheckBox.removeFromParent();
                 selectionCell.setText("");
             }
         }
@@ -3307,11 +3308,26 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             assert !(currentDataAvailable.isEmpty() && dataSource
                     .isWaitingForData()) : "Trying to calculate column widths without data while data is still being fetched.";
 
+            // Make SelectAllCheckbox visible
+            getSelectionColumn().ifPresent(col -> {
+                HeaderCell headerCell = getDefaultHeaderRow().getCell(col);
+                if (headerCell.getType().equals(GridStaticCellType.WIDGET)) {
+                    // SelectAllCheckbox is present already
+                    return;
+                }
+                headerCell.setWidget(col.selectAllCheckBox);
+                refreshHeader(); // Paint.
+            });
+
             if (columnsAreGuaranteedToBeWiderThanGrid()) {
                 applyColumnWidths();
             } else {
                 applyColumnWidthsWithExpansion();
             }
+
+            // Hide the SelectAllCheckbox if needed
+            getSelectionColumn()
+                    .ifPresent(SelectionColumn::doSetSelectAllCheckBoxVisible);
 
             // Update latest width to prevent recalculate on height change.
             lastCalculatedInnerWidth = escalator.getInnerWidth();
@@ -3842,11 +3858,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                             && event.getKeyCode() == KeyCodes.KEY_ENTER) {
                         final MenuItem item = getSelectedItem();
                         super.onBrowserEvent(event);
-                        Scheduler.get()
-                                .scheduleDeferred(() -> {
-                                    selectItem(item);
-                                    focus();
-                                });
+                        Scheduler.get().scheduleDeferred(() -> {
+                            selectItem(item);
+                            focus();
+                        });
 
                     } else {
                         super.onBrowserEvent(event);
@@ -4030,12 +4045,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         private MenuItem createToggle(final Column<?, T> column) {
-            MenuItem toggle = new MenuItem(createHTML(column), true,
-                    () -> {
-                        hidingColumn = true;
-                        column.setHidden(!column.isHidden(), true);
-                        hidingColumn = false;
-                    });
+            MenuItem toggle = new MenuItem(createHTML(column), true, () -> {
+                hidingColumn = true;
+                column.setHidden(!column.isHidden(), true);
+                hidingColumn = false;
+            });
             toggle.addStyleName("column-hiding-toggle");
             columnToHidingToggleMap.put(column, toggle);
             return toggle;
@@ -4840,7 +4854,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *            The header aria-label for this column
          * @return the column itself
          *
-         * @since
+         * @since 8.2
          */
         public Column<C, T> setAssistiveCaption(String caption) {
             if (!Objects.equals(this.assistiveCaption, caption)) {
@@ -4852,12 +4866,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             return this;
         }
+
         /**
          * Returns the current header aria-label for this column.
          *
          * @return the header aria-label string
          *
-         * @since
+         * @since 8.2
          */
         public String getAssistiveCaption() {
             return assistiveCaption;
@@ -5989,13 +6004,15 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             final Column<?, T> column = getVisibleColumn(cell.getColumn());
 
             if (column.getAssistiveCaption() != null) {
-                cellElement.setAttribute("aria-label", column.getAssistiveCaption());
+                cellElement.setAttribute("aria-label",
+                        column.getAssistiveCaption());
             } else {
                 cellElement.removeAttribute("aria-label");
             }
         }
 
-        private void addSortingIndicatorsToHeaderRow(HeaderRow headerRow, FlyweightCell cell) {
+        private void addSortingIndicatorsToHeaderRow(HeaderRow headerRow,
+                FlyweightCell cell) {
 
             Element cellElement = cell.getElement();
 
@@ -6168,14 +6185,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         escalator.addScrollHandler(event -> fireEvent(new ScrollEvent()));
 
-        escalator.addRowVisibilityChangeHandler(
-                event -> {
-                    if (dataSource != null && dataSource.size() != 0) {
-                        dataSource.ensureAvailability(
-                                event.getFirstVisibleRow(),
-                                event.getVisibleRowCount());
-                    }
-                });
+        escalator.addRowVisibilityChangeHandler(event -> {
+            if (dataSource != null && dataSource.size() != 0) {
+                dataSource.ensureAvailability(event.getFirstVisibleRow(),
+                        event.getVisibleRowCount());
+            }
+        });
 
         // Default action on SelectionEvents. Refresh the body so changed
         // become visible.
@@ -8893,21 +8908,21 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * Delay calculation to be deferred so Escalator can do it's magic.
          */
         Scheduler.get().scheduleFinally(() -> {
-                if (escalator
-                        .getInnerWidth() != autoColumnWidthsRecalculator.lastCalculatedInnerWidth) {
-                    recalculateColumnWidths();
-                }
+            if (escalator
+                    .getInnerWidth() != autoColumnWidthsRecalculator.lastCalculatedInnerWidth) {
+                recalculateColumnWidths();
+            }
 
-                // Vertical resizing could make editor positioning invalid so it
-                // needs to be recalculated on resize
-                if (isEditorActive()) {
-                    editor.updateVerticalScrollPosition();
-                }
+            // Vertical resizing could make editor positioning invalid so it
+            // needs to be recalculated on resize
+            if (isEditorActive()) {
+                editor.updateVerticalScrollPosition();
+            }
 
-                // if there is a resize, we need to refresh the body to avoid an
-                // off-by-one error which occurs when the user scrolls all the
-                // way to the bottom.
-                refreshBody();
+            // if there is a resize, we need to refresh the body to avoid an
+            // off-by-one error which occurs when the user scrolls all the
+            // way to the bottom.
+            refreshBody();
         });
     }
 

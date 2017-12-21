@@ -158,7 +158,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         /**
          * Get a string that represents this item. This is used in the text box.
          */
-
         @Override
         public String getReplacementString() {
             return caption;
@@ -449,12 +448,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             }
             // We don't need to show arrows or statusbar if there is
             // only one page
-            if (getTotalSuggestionsIncludingNullSelectionItem() <= pageLength
-                    || pageLength == 0) {
-                setPagingEnabled(false);
-            } else {
-                setPagingEnabled(true);
-            }
+            setPagingEnabled(
+                    getTotalSuggestionsIncludingNullSelectionItem() > pageLength
+                            && pageLength > 0);
             setPrevButtonActive(first > 1);
             setNextButtonActive(last < matches);
 
@@ -520,7 +516,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 up.setClassName(
                         VComboBox.this.getStylePrimaryName() + "-prevpage-off");
             }
-
         }
 
         /**
@@ -591,7 +586,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
             // Set the text.
             setText(suggestion.getReplacementString());
-
         }
 
         /*
@@ -1025,7 +1019,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 }
             }
         }
-
     }
 
     /**
@@ -1074,9 +1067,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 final int pixels = getPreferredHeight()
                         / currentSuggestions.size() * pageItemsCount;
                 return pixels + "px";
-            } else {
-                return "";
             }
+            return "";
         }
 
         /**
@@ -1397,7 +1389,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 super.setSelectionRange(0, 0);
             }
         }
-
     }
 
     /**
@@ -1773,7 +1764,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     private static double getMarginBorderPaddingWidth(Element element) {
         final ComputedStyle s = new ComputedStyle(element);
         return s.getMarginWidth() + s.getBorderWidth() + s.getPaddingWidth();
-
     }
 
     /*
@@ -1788,7 +1778,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         super.onBrowserEvent(event);
 
         if (event.getTypeInt() == Event.ONPASTE) {
-            if (textInputEnabled) {
+            if (textInputEnabled && connector.isEnabled()) {
                 filterOptions(currentPage);
             }
         }
@@ -1923,12 +1913,10 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                     true);
         }
 
-        if (textInputEnabled == textInputAllowed) {
-            return;
+        if (textInputEnabled != textInputAllowed) {
+            textInputEnabled = textInputAllowed;
+            updateReadOnly();
         }
-
-        textInputEnabled = textInputAllowed;
-        updateReadOnly();
     }
 
     /**
@@ -2300,7 +2288,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             event.stopPropagation();
             break;
         }
-
     }
 
     /*

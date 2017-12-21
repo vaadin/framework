@@ -43,7 +43,7 @@ public class FocusAndBlurListeners extends TestBase {
         AbstractDateField<?, ?> df = new TestDateField("DateField");
         l.addComponent(df);
 
-        ComboBox cb = new ComboBox("ComboBox");
+        ComboBox<String> cb = new ComboBox<>("ComboBox");
         l.addComponent(cb);
 
         Button btn = new Button("Button");
@@ -91,7 +91,6 @@ public class FocusAndBlurListeners extends TestBase {
         ogm.addBlurListener(blurListener);
 
         l.addComponent(messages);
-
     }
 
     private OptionGroup createOptionGroup(String caption) {

@@ -59,7 +59,6 @@ import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.tree.TreeMultiSelectionModelState;
 import com.vaadin.shared.ui.tree.TreeRendererState;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.components.grid.DescriptionGenerator;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.components.grid.NoSelectionModel;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
@@ -253,6 +252,7 @@ public class Tree<T> extends Composite
 
     /**
      * Create inner {@link TreeGrid} object. May be overridden in subclasses.
+     *
      * @return new {@link TreeGrid}
      */
     protected TreeGrid<T> createTreeGrid() {
@@ -972,7 +972,7 @@ public class Tree<T> extends Composite
         }
 
         if (getSelectionModel().isSelected(item)) {
-            itemElement.attr("selected", "");
+            itemElement.attr("selected", true);
         }
 
         Resource icon = getItemIconGenerator().apply(item);

@@ -15,7 +15,6 @@
  */
 package com.vaadin.v7.tests.server.component.grid.declarative;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.Container;

@@ -333,7 +333,7 @@ public class ReflectTools implements Serializable {
      * @return the first non-synthetic method
      * @throws IllegalStateException
      *             if the specified class does not have found method
-     * @since
+     * @since 8.2
      */
     public static Method getMethod(Class<?> listenerClass) {
         for (Method m : listenerClass.getDeclaredMethods()) {

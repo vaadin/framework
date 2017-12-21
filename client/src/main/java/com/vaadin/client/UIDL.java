@@ -311,7 +311,7 @@ public final class UIDL extends JavaScriptObject implements Iterable<Object> {
      * </p>
      *
      * @return an iterator for iterating over UIDL children
-     * @since
+     * @since 8.2
      */
     @Override
     public Iterator<Object> iterator() {

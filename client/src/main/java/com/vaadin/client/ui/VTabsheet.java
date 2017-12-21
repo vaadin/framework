@@ -787,6 +787,21 @@ public class VTabsheet extends VTabsheetBase
     private String currentStyle;
 
     /**
+     * For internal use only. May be renamed or removed in a future release.
+     *
+     * @param tabIndex
+     *            tabulator index for the active tab of the tab sheet
+     * @since 8.1.7
+     */
+    public void setTabIndex(int tabIndex) {
+        tabulatorIndex = tabIndex;
+        Tab activeTab = getActiveTab();
+        if (activeTab != null) {
+            activeTab.setTabulatorIndex(tabIndex);
+        }
+    }
+
+    /**
      * @return Whether the tab could be selected or not.
      */
     private boolean canSelectTab(final int tabIndex) {
