@@ -65,7 +65,7 @@
                 a number of new features and bug fixes, as listed in the <a
                 href="#enhancements">list of enhancements</a> and <a
                 href="#changelog">change log</a> below.
-		The API in this alpha version is not considered final and may change based on your feedback.
+<!--		The API in this alpha version is not considered final and may change based on your feedback. -->
 	</p>
 
         <!-- ================================================================ -->
@@ -83,19 +83,20 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Separate row heights for header, body and footer in Grid</li>
-            <li>Support for item descriptions (tooltips) in CheckBoxGroup, RadioButtonGroup and Tree</li>
-            <li>Binder supports removing bindings</li>
-            <li>Binding builder methods do not have to be chained</li>
-            <li>Bean validation failures will revert changes in Binder</li>
-            <li>Notification supports CloseListener</li>
-            <li>Tree now has methods to scroll it programmatically</li>
-            <li>The browser time zone can be obtained from WebBrowser if the browser supports it</li>
-            <li>AbstractDateField now supports formatting of time zone information</li>
-            <li>PushState based navigation support</li>
+            <li>HTML5 History.PushState based navigation support</li>
+            <li>Separate row heights for header, body and footer in <tt>Grid</tt></li>
+            <li>Support for item descriptions (tooltips) in <tt>CheckBoxGroup</tt>, <tt>RadioButtonGroup</tt> and <tt>Tree</tt></li>
+            <li><tt>Binder</tt> supports removing bindings</li>
+            <li><tt>Binding</tt> builder methods do not have to be chained</li>
+            <li>Bean validation failures will revert changes in <tt>Binder</tt></li>
+            <li><tt>GridRowDragger</tt> has been added for making it easy to have DnD reordering of <tt>Grid</tt>'s rows or dragging rows between two grids.
+            <li><tt>Notification</tt> supports <tt>CloseListener</tt></li>
+            <li><tt>Tree</tt> now has methods to scroll it programmatically</li>
+            <li>The browser time zone can be obtained from <tt>WebBrowser</tt> if the browser supports it</li>
+            <li><tt>AbstractDateField</tt> now supports formatting of time zone information</li>
             <li>Grid WAI-ARIA support has been improved (aria-sort added)</li>
-            <li>Client side ErrorLevel support</li>
-            <li>VaadinService, VaadinServlet and VaadinServletService have protected no-args constructors to make DI integrations simpler</li>
+            <li>Client side <tt>ErrorLevel</tt> support</li>
+            <li><tt>VaadinService</tt>, <tt>VaadinServlet</tt> and <tt>VaadinServletService</tt> have protected no-args constructors to make DI integrations simpler</li>
         </ul>
 
         </p>
