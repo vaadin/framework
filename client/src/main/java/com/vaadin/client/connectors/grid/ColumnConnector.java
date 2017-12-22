@@ -108,6 +108,7 @@ public class ColumnConnector extends AbstractExtensionConnector {
 
         // Initially set a renderer
         updateRenderer();
+        updateHidden();
 
         getParent().addColumn(column, getState().internalId);
 

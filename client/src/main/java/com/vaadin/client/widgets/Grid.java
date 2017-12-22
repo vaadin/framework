@@ -5131,6 +5131,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         private void setHidden(boolean hidden, boolean userOriginated) {
             if (this.hidden != hidden) {
+                if (grid == null) {
+                    // Not yet attached so just update the flag so that a column
+                    // can initially be hidden
+                    this.hidden = hidden;
+                    return;
+                }
                 if (hidden) {
                     grid.escalator.getColumnConfiguration().removeColumns(
                             grid.getVisibleColumns().indexOf(this), 1);
