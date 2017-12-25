@@ -140,6 +140,13 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
 
         /**
+         * Marks all currently active data objects to be dropped.
+         */
+        public void dropAllActiveData() {
+            activeData.forEach(this::dropActiveData);
+        }
+        
+        /**
          * Marks a data object identified by given key string to be dropped.
          *
          * @param key
@@ -151,6 +158,19 @@ public class DataCommunicator<T> extends AbstractExtension {
             }
         }
 
+        /**
+         * Returns whether given data object is marked as dropped.
+         *
+         * @param dataObject
+         *            the item to show details for
+         *
+         * @return {@code true} if marked as dropped
+         *         {@code false} if not
+         */
+        public boolean isDropped(T dataObject) {
+            return droppedData.contains(getKeyMapper().key(dataObject));
+        }
+        
         /**
          * Returns all currently active data mapped by their id from
          * DataProvider.
@@ -329,6 +349,10 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
 
         if (initial || reset) {
+            if (reset) {
+                handler.dropAllActiveData();
+            }
+            
             rpc.reset(getDataProviderSize());
         }
 

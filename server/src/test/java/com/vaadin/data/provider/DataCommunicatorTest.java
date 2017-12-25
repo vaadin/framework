@@ -4,18 +4,21 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.Future;
 
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.vaadin.data.provider.DataCommunicator.ActiveDataHandler;
 import com.vaadin.server.MockVaadinSession;
 import com.vaadin.server.SerializableConsumer;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.UI;
 
@@ -30,6 +33,7 @@ import elemental.json.JsonObject;
 public class DataCommunicatorTest {
 
     private static final Object TEST_OBJECT = new Object();
+    private static final Object TEST_OBJECT_TWO = new Object();
 
     public static class TestUI extends UI {
 
@@ -61,7 +65,8 @@ public class DataCommunicatorTest {
         private Registration registration;
 
         public TestDataProvider() {
-            super(Collections.singleton(TEST_OBJECT));
+            super(new ArrayList());
+            addItem(TEST_OBJECT);
         }
 
         @Override
@@ -81,6 +86,18 @@ public class DataCommunicatorTest {
             return registration != null;
         }
 
+        public void setItem(Object item) {
+            clear();
+            addItem(item);
+        }
+
+        public void clear() {
+            getItems().clear();
+        }
+
+        public void addItem(Object item) {
+            getItems().add(item);
+        }
     }
 
     private static class TestDataCommunicator extends DataCommunicator<Object> {
@@ -183,6 +200,51 @@ public class DataCommunicatorTest {
                 generator.generated);
     }
 
+    @Test
+    public void refreshDataProviderRemovesOldObjectsFromActiveDataHandler() {
+        session.lock();
+
+        UI ui = new TestUI(session);
+
+        TestDataProvider dataProvider = new TestDataProvider();
+
+        TestDataCommunicator communicator = new TestDataCommunicator();
+        communicator.setDataProvider(dataProvider, null);
+
+        communicator.extend(ui);
+        communicator.beforeClientResponse(true);
+
+        DataKeyMapper keyMapper = communicator.getKeyMapper();
+        assertTrue("Object not mapped by key mapper",
+                keyMapper.has(TEST_OBJECT));
+
+        ActiveDataHandler handler = communicator.getActiveDataHandler();
+        assertTrue("Object not amongst active data",
+                handler.getActiveData().containsKey(TEST_OBJECT));
+
+        dataProvider.setItem(TEST_OBJECT_TWO);
+        dataProvider.refreshAll();
+
+        communicator.beforeClientResponse(false);
+
+        //assert that test object is marked as removed
+        assertTrue("Object not marked as dropped", 
+                handler.isDropped(TEST_OBJECT));
+
+        communicator.setPushRows(Range.between(0, communicator.getMinPushSize()));
+        communicator.beforeClientResponse(false);
+
+        assertFalse("Object still mapped by key mapper", 
+                keyMapper.has(TEST_OBJECT));
+        assertTrue("Object not mapped by key mapper", 
+                keyMapper.has(TEST_OBJECT_TWO));
+
+        assertFalse("Object still amongst active data", 
+                handler.getActiveData().containsKey(TEST_OBJECT));
+        assertTrue("Object not amongst active data", 
+                handler.getActiveData().containsKey(TEST_OBJECT_TWO));
+    }
+    
     @Test
     public void testDestroyData() {
         session.lock();
