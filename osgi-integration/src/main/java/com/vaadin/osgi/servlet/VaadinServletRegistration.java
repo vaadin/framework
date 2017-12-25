@@ -36,8 +36,11 @@ import org.osgi.service.log.LogService;
 import com.vaadin.osgi.resources.OsgiVaadinResources;
 import com.vaadin.osgi.resources.OsgiVaadinResources.ResourceBundleInactiveException;
 import com.vaadin.osgi.resources.VaadinResourceService;
+import com.vaadin.osgi.servlet.ds.OsgiUIProvider;
+import com.vaadin.osgi.servlet.ds.OsgiVaadinServlet;
 import com.vaadin.server.Constants;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.ui.UI;
 
 /**
  * This component tracks {@link VaadinServlet} registrations, configures them
@@ -52,7 +55,6 @@ import com.vaadin.server.VaadinServlet;
 public class VaadinServletRegistration {
     private final Map<ServiceReference<VaadinServlet>, ServiceRegistration<Servlet>> registeredServlets = Collections
             .synchronizedMap(new LinkedHashMap<>());
-
     private static final String MISSING_ANNOTATION_MESSAGE_FORMAT = "The property '%s' must be set in a '%s' without the '%s' annotation!";
     private static final String URL_PATTERNS_NOT_SET_MESSAGE_FORMAT = "The property '%s' must be set when the 'urlPatterns' attribute is not set!";
 
@@ -63,6 +65,8 @@ public class VaadinServletRegistration {
 
     private LogService logService;
 
+    private OsgiUIProvider uiProvider = new OsgiUIProvider();
+
     @Reference(cardinality = ReferenceCardinality.MULTIPLE, service = VaadinServlet.class, policy = ReferencePolicy.DYNAMIC)
     void bindVaadinServlet(VaadinServlet servlet, ServiceReference<VaadinServlet> reference)
             throws ResourceBundleInactiveException {
@@ -70,42 +74,50 @@ public class VaadinServletRegistration {
 
         Hashtable<String, Object> properties = getProperties(reference);
 
-        WebServlet annotation = servlet.getClass()
-                .getAnnotation(WebServlet.class);
+        WebServlet annotation = servlet.getClass().getAnnotation(WebServlet.class);
 
         if (!validateSettings(annotation, properties)) {
             return;
         }
-
         properties.put(VAADIN_RESOURCES_PARAM, getResourcePath());
         if (annotation != null) {
-            properties.put(
-                    HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_ASYNC_SUPPORTED,
+            properties.put(HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_ASYNC_SUPPORTED,
                     Boolean.toString(annotation.asyncSupported()));
         }
-
         // We register the Http Whiteboard servlet using the context of
         // the bundle which registered the Vaadin Servlet, not our own
         BundleContext bundleContext = reference.getBundle().getBundleContext();
-        ServiceRegistration<Servlet> servletRegistration = bundleContext
-                .registerService(Servlet.class, servlet, properties);
+        if (servlet instanceof OsgiVaadinServlet) {
+            ((OsgiVaadinServlet) servlet).setUIProvider(uiProvider);
+        } else {
+            log(LogService.LOG_WARNING,
+                    "The servlet is not an instance of OsgiVaadinServlet. If you are using Declarative Services in your UI your dependencies will not work");
+        }
+
+        ServiceRegistration<Servlet> servletRegistration = bundleContext.registerService(Servlet.class, servlet,
+                properties);
 
         registeredServlets.put(reference, servletRegistration);
     }
 
-    private boolean validateSettings(WebServlet annotation,
-            Hashtable<String, Object> properties) {
+    @Reference(cardinality = ReferenceCardinality.MULTIPLE, service = UI.class, policy = ReferencePolicy.DYNAMIC)
+    void bindUI(UI ui, ServiceReference<UI> reference) {
+        BundleContext context = reference.getBundle().getBundleContext();
+        uiProvider.bindUI(ui, context.getServiceObjects(reference));
+    }
+
+    void unbindUI(UI ui) {
+        uiProvider.unbindUI(ui);
+    }
+
+    private boolean validateSettings(WebServlet annotation, Hashtable<String, Object> properties) {
         if (!properties.containsKey(SERVLET_PATTERN)) {
             if (annotation == null) {
-                log(LogService.LOG_ERROR,
-                        String.format(MISSING_ANNOTATION_MESSAGE_FORMAT,
-                                SERVLET_PATTERN,
-                                VaadinServlet.class.getSimpleName(),
-                                WebServlet.class.getName()));
+                log(LogService.LOG_ERROR, String.format(MISSING_ANNOTATION_MESSAGE_FORMAT, SERVLET_PATTERN,
+                        VaadinServlet.class.getSimpleName(), WebServlet.class.getName()));
                 return false;
             } else if (annotation.urlPatterns().length == 0) {
-                log(LogService.LOG_ERROR, String.format(
-                        URL_PATTERNS_NOT_SET_MESSAGE_FORMAT, SERVLET_PATTERN));
+                log(LogService.LOG_ERROR, String.format(URL_PATTERNS_NOT_SET_MESSAGE_FORMAT, SERVLET_PATTERN));
                 return false;
             }
         }
@@ -124,8 +136,7 @@ public class VaadinServletRegistration {
     }
 
     void unbindVaadinServlet(ServiceReference<VaadinServlet> reference) {
-        ServiceRegistration<?> servletRegistration = registeredServlets
-                .remove(reference);
+        ServiceRegistration<?> servletRegistration = registeredServlets.remove(reference);
         if (servletRegistration != null) {
             try {
                 servletRegistration.unregister();
@@ -141,14 +152,15 @@ public class VaadinServletRegistration {
     @Reference(cardinality = ReferenceCardinality.OPTIONAL)
     void setLogService(LogService logService) {
         this.logService = logService;
+        uiProvider.setLogService(logService);
     }
 
     void unsetLogService(LogService logService) {
         this.logService = null;
+        uiProvider.setLogService(null);
     }
 
-    private Hashtable<String, Object> getProperties(
-            ServiceReference<VaadinServlet> reference) {
+    private Hashtable<String, Object> getProperties(ServiceReference<VaadinServlet> reference) {
         Hashtable<String, Object> properties = new Hashtable<>();
         for (String key : reference.getPropertyKeys()) {
             properties.put(key, reference.getProperty(key));
