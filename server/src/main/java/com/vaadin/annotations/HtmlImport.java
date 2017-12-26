@@ -54,7 +54,7 @@ import com.vaadin.server.ClientConnector;
  * Example:
  * <code>@HtmlImport("frontend://paper-slider/paper-slider.html")</code> on the
  * class com.example.MyConnector would load the file
- * {@literal http://host.com/VAADIN/es[56]/paper-slider/paper-slider.html}
+ * {@literal http://host.com/VAADIN/frontend/es[56]/paper-slider/paper-slider.html}
  * before the {@code init()} method of the client side connector is invoked.
  *
  * @author Vaadin Ltd
