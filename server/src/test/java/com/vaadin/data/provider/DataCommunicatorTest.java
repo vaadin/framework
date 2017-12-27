@@ -228,23 +228,23 @@ public class DataCommunicatorTest {
         communicator.beforeClientResponse(false);
 
         //assert that test object is marked as removed
-        assertTrue("Object not marked as dropped", 
+        assertTrue("Object not marked as dropped",
                 handler.isDropped(TEST_OBJECT));
 
         communicator.setPushRows(Range.between(0, communicator.getMinPushSize()));
         communicator.beforeClientResponse(false);
 
-        assertFalse("Object still mapped by key mapper", 
+        assertFalse("Object still mapped by key mapper",
                 keyMapper.has(TEST_OBJECT));
-        assertTrue("Object not mapped by key mapper", 
+        assertTrue("Object not mapped by key mapper",
                 keyMapper.has(TEST_OBJECT_TWO));
 
-        assertFalse("Object still amongst active data", 
+        assertFalse("Object still amongst active data",
                 handler.getActiveData().containsKey(TEST_OBJECT));
-        assertTrue("Object not amongst active data", 
+        assertTrue("Object not amongst active data",
                 handler.getActiveData().containsKey(TEST_OBJECT_TWO));
     }
-    
+
     @Test
     public void testDestroyData() {
         session.lock();
