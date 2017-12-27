@@ -242,7 +242,7 @@ public class DataCommunicatorTest {
 
         //assert that test object is marked as removed
         assertTrue("Object not marked as dropped",
-                handler.isDropped(TEST_OBJECT));
+                handler.getDroppedData().containsKey(TEST_OBJECT));
 
         communicator.setPushRows(Range.between(0, communicator.getMinPushSize()));
         communicator.beforeClientResponse(false);

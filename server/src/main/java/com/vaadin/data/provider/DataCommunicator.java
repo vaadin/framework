@@ -160,16 +160,14 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
 
         /**
-         * Returns whether given data object is marked as dropped.
+         * Returns all dropped data mapped by their id from DataProvider.
          *
-         * @param dataObject
-         *            the item to show details for
-         *
-         * @return {@code true} if marked as dropped
-         *         {@code false} if not
+         * @return map of ids to dropped data objects
          */
-        public boolean isDropped(T dataObject) {
-            return droppedData.contains(getKeyMapper().key(dataObject));
+        protected Map<Object, T> getDroppedData() {
+            Function<T, Object> getId = getDataProvider()::getId;
+            return droppedData.stream().map(getKeyMapper()::get)
+                    .collect(Collectors.toMap(getId, i -> i));
         }
 
         /**
