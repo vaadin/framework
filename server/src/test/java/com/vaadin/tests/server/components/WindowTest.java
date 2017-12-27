@@ -39,15 +39,12 @@ public class WindowTest {
         Registration windowCloseListenerRegistration = window
                 .addCloseListener(cl);
         sendClose(window);
-        System.out.println("window: " + window);
         // Ensure listener was called once
         EasyMock.verify(cl);
 
-        System.out.println("window: " + window);
         // Remove the listener and send close event -> should not end up in
         // listener
         windowCloseListenerRegistration.remove();
-        System.out.println("window: " + window);
         sendClose(window);
         System.out.println("end.");
         // Ensure listener still has been called only once

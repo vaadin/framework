@@ -282,7 +282,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private void bringToFront(boolean notifyListeners) {
-        
         int curIndex = getWindowOrder();
         if (curIndex + 1 < windowOrder.size()) {
             windowOrder.remove(this);

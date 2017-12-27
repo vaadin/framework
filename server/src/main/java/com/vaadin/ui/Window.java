@@ -13,6 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.vaadin.ui;
 
 import java.io.Serializable;
@@ -55,25 +56,29 @@ import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.util.ReflectTools;
 
 /**
- * A component that represents a floating popup window that can be added to a {@link UI}. A window is added to a {@code UI} using
+ * A component that represents a floating popup window that can be added to a
+ * {@link UI}. A window is added to a {@code UI} using
  * {@link UI#addWindow(Window)}.
  * <p>
- * The contents of a window is set using {@link #setContent(Component)} or by using the {@link #Window(String, Component)} constructor.
+ * The contents of a window is set using {@link #setContent(Component)} or by
+ * using the {@link #Window(String, Component)} constructor.
  * </p>
  * <p>
- * A window can be positioned on the screen using absolute coordinates (pixels) or set to be centered using {@link #center()}
+ * A window can be positioned on the screen using absolute coordinates (pixels)
+ * or set to be centered using {@link #center()}
  * </p>
  * <p>
  * The caption is displayed in the window header.
  * </p>
  * <p>
- * In Vaadin versions prior to 7.0.0, Window was also used as application level windows. This function is now covered by the {@link UI} class.
+ * In Vaadin versions prior to 7.0.0, Window was also used as application level
+ * windows. This function is now covered by the {@link UI} class.
  * </p>
  *
  * @author Vaadin Ltd.
  * @since 3.0
  */
-@SuppressWarnings({"serial", "deprecation"})
+@SuppressWarnings({ "serial", "deprecation" })
 public class Window extends Panel
         implements FocusNotifier, BlurNotifier {
 
@@ -106,9 +111,11 @@ public class Window extends Panel
     private List<CloseShortcut> closeShortcuts = new ArrayList<>(4);
 
     /**
-     * Used to keep the window order position. Order position for unattached window is {@code -1}.
+     * Used to keep the window order position. Order position for unattached
+     * window is {@code -1}.
      * <p>
-     * Window with greatest order position value is on the top and window with 0 position value is on the bottom.
+     * Window with greatest order position value is on the top and window with 0
+     * position value is on the bottom.
      */
     private int orderPosition = -1;
 
@@ -122,7 +129,8 @@ public class Window extends Panel
     /**
      * Creates a new, empty window with a given title.
      *
-     * @param caption the title of the window.
+     * @param caption
+     *            the title of the window.
      */
     public Window(String caption) {
         this(caption, null);
@@ -131,8 +139,10 @@ public class Window extends Panel
     /**
      * Creates a new, empty window with the given content and title.
      *
-     * @param caption the title of the window.
-     * @param content the contents of the window
+     * @param caption
+     *            the title of the window.
+     * @param content
+     *            the contents of the window
      */
     public Window(String caption, Component content) {
         super(caption, content);
@@ -148,6 +158,7 @@ public class Window extends Panel
      *
      * @see com.vaadin.ui.Panel#paintContent(com.vaadin.server.PaintTarget)
      */
+
     @Override
     public synchronized void paintContent(PaintTarget target)
             throws PaintException {
@@ -172,7 +183,6 @@ public class Window extends Panel
                 || parent instanceof UI 
                 || (parent instanceof CssLayout && parent.getParent() instanceof WindowDesktop) ) {
             super.setParent(parent);
-//            System.out.println("Windows parent: "+parent.getClass());
             // set the Window behavior
             if (parent instanceof WindowDesktop)
                 getState().topWindow = false;
@@ -187,6 +197,7 @@ public class Window extends Panel
      *
      * @see com.vaadin.ui.Panel#changeVariables(java.lang.Object, java.util.Map)
      */
+
     @Override
     public void changeVariables(Object source, Map<String, Object> variables) {
 
@@ -246,11 +257,13 @@ public class Window extends Panel
      * Method that handles window closing (from UI).
      *
      * <p>
-     * By default, windows are removed from their respective UIs and thus visually closed on browser-side.
+     * By default, windows are removed from their respective UIs and thus
+     * visually closed on browser-side.
      * </p>
      *
      * <p>
-     * To react to a window being closed (after it is closed), register a {@link CloseListener}.
+     * To react to a window being closed (after it is closed), register a
+     * {@link CloseListener}.
      * </p>
      */
     public void close() {
@@ -269,10 +282,11 @@ public class Window extends Panel
     }
 
     /**
-     * Gets the distance of Window left border in pixels from left border of the containing (main window) when the window is in
-     * {@link WindowMode#NORMAL}.
+     * Gets the distance of Window left border in pixels from left border of the
+     * containing (main window) when the window is in {@link WindowMode#NORMAL}.
      *
-     * @return the Distance of Window left border in pixels from left border of the containing (main window).or -1 if unspecified
+     * @return the Distance of Window left border in pixels from left border of
+     *         the containing (main window).or -1 if unspecified
      * @since 4.0.0
      */
     public int getPositionX() {
@@ -280,11 +294,14 @@ public class Window extends Panel
     }
 
     /**
-     * Sets the position of the window on the screen using {@link #setPositionX(int)} and {@link #setPositionY(int)}.
+     * Sets the position of the window on the screen using
+     * {@link #setPositionX(int)} and {@link #setPositionY(int)}.
      *
      * @since 7.5
-     * @param x The new x coordinate for the window
-     * @param y The new y coordinate for the window
+     * @param x
+     *            The new x coordinate for the window
+     * @param y
+     *            The new y coordinate for the window
      */
     public void setPosition(int x, int y) {
         setPositionX(x);
@@ -292,10 +309,13 @@ public class Window extends Panel
     }
 
     /**
-     * Sets the distance of Window left border in pixels from left border of the containing (main window). Has effect only if in
-     * {@link WindowMode#NORMAL} mode.
+     * Sets the distance of Window left border in pixels from left border of the
+     * containing (main window). Has effect only if in {@link WindowMode#NORMAL}
+     * mode.
      *
-     * @param positionX the Distance of Window left border in pixels from left border of the containing (main window). or -1 if unspecified.
+     * @param positionX
+     *            the Distance of Window left border in pixels from left border
+     *            of the containing (main window). or -1 if unspecified.
      * @since 4.0.0
      */
     public void setPositionX(int positionX) {
@@ -304,10 +324,12 @@ public class Window extends Panel
     }
 
     /**
-     * Gets the distance of Window top border in pixels from top border of the containing (main window) when the window is in
-     * {@link WindowMode#NORMAL} state, or when next set to that state.
+     * Gets the distance of Window top border in pixels from top border of the
+     * containing (main window) when the window is in {@link WindowMode#NORMAL}
+     * state, or when next set to that state.
      *
-     * @return Distance of Window top border in pixels from top border of the containing (main window). or -1 if unspecified
+     * @return Distance of Window top border in pixels from top border of the
+     *         containing (main window). or -1 if unspecified
      *
      * @since 4.0.0
      */
@@ -316,10 +338,12 @@ public class Window extends Panel
     }
 
     /**
-     * Returns the position of this window in the order of all open windows for this UI.
+     * Returns the position of this window in the order of all open windows for
+     * this UI.
      * <p>
-     * Window with position 0 is on the bottom, and window with greatest position is at the top. If window has no position (it's not yet attached or
-     * hidden) then position is {@code -1}.
+     * Window with position 0 is on the bottom, and window with greatest
+     * position is at the top. If window has no position (it's not yet attached
+     * or hidden) then position is {@code -1}.
      *
      * @see UI#addWindowOrderUpdateListener(com.vaadin.ui.UI.WindowOrderUpdateListener)
      *
@@ -332,10 +356,13 @@ public class Window extends Panel
     }
 
     /**
-     * Sets the distance of Window top border in pixels from top border of the containing (main window). Has effect only if in
-     * {@link WindowMode#NORMAL} mode.
+     * Sets the distance of Window top border in pixels from top border of the
+     * containing (main window). Has effect only if in {@link WindowMode#NORMAL}
+     * mode.
      *
-     * @param positionY the Distance of Window top border in pixels from top border of the containing (main window). or -1 if unspecified
+     * @param positionY
+     *            the Distance of Window top border in pixels from top border of
+     *            the containing (main window). or -1 if unspecified
      *
      * @since 4.0.0
      */
@@ -345,7 +372,6 @@ public class Window extends Panel
     }
 
     private static final Method WINDOW_CLOSE_METHOD;
-
     static {
         try {
             WINDOW_CLOSE_METHOD = CloseListener.class
@@ -426,8 +452,11 @@ public class Window extends Panel
                         "windowOrderChanged", WindowOrderChangeEvent.class);
 
         /**
-         * Called when the window order position is changed. Use {@link WindowOrderChangeEvent#getWindow()} to get a reference to the {@link Window}
-         * whose order position is changed. Use {@link WindowOrderChangeEvent#getOrder()} to get a new order position.
+         * Called when the window order position is changed. Use
+         * {@link WindowOrderChangeEvent#getWindow()} to get a reference to the
+         * {@link Window} whose order position is changed. Use
+         * {@link WindowOrderChangeEvent#getOrder()} to get a new order
+         * position.
          *
          * @param event
          */
@@ -437,14 +466,17 @@ public class Window extends Panel
     /**
      * Adds a WindowOrderChangeListener to the window.
      * <p>
-     * The WindowOrderChangeEvent is fired when the order position is changed. It can happen when some window (this or other) is brought to front or
+     * The WindowOrderChangeEvent is fired when the order position is changed.
+     * It can happen when some window (this or other) is brought to front or
      * detached.
      * <p>
-     * The other way to listen positions of all windows in UI is {@link UI#addWindowOrderUpdateListener(com.vaadin.ui.UI.WindowOrderUpdateListener)}
+     * The other way to listen positions of all windows in UI is
+     * {@link UI#addWindowOrderUpdateListener(com.vaadin.ui.UI.WindowOrderUpdateListener)}
      *
      * @see UI#addWindowOrderUpdateListener(com.vaadin.ui.UI.WindowOrderUpdateListener)
      *
-     * @param listener the WindowModeChangeListener to add.
+     * @param listener
+     *            the WindowModeChangeListener to add.
      * @since 8.0
      */
     public Registration addWindowOrderChangeListener(
@@ -464,20 +496,25 @@ public class Window extends Panel
     }
 
     /**
-     * An interface used for listening to Window close events. Add the CloseListener to a window and {@link CloseListener#windowClose(CloseEvent)}
-     * will be called whenever the user closes the window.
+     * An interface used for listening to Window close events. Add the
+     * CloseListener to a window and
+     * {@link CloseListener#windowClose(CloseEvent)} will be called whenever the
+     * user closes the window.
      *
      * <p>
-     * Since Vaadin 6.5, removing a window using {@link #removeWindow(Window)} fires the CloseListener.
+     * Since Vaadin 6.5, removing a window using {@link #removeWindow(Window)}
+     * fires the CloseListener.
      * </p>
      */
     @FunctionalInterface
     public interface CloseListener extends Serializable {
-
         /**
-         * Called when the user closes a window. Use {@link CloseEvent#getWindow()} to get a reference to the {@link Window} that was closed.
+         * Called when the user closes a window. Use
+         * {@link CloseEvent#getWindow()} to get a reference to the
+         * {@link Window} that was closed.
          *
-         * @param e The triggered event
+         * @param e
+         *            The triggered event
          */
         public void windowClose(CloseEvent e);
     }
@@ -485,17 +522,22 @@ public class Window extends Panel
     /**
      * Adds a CloseListener to the window.
      *
-     * For a window the CloseListener is fired when the user closes it (clicks on the close button).
+     * For a window the CloseListener is fired when the user closes it (clicks
+     * on the close button).
      *
-     * For a browser level window the CloseListener is fired when the browser level window is closed. Note that closing a browser level window does
-     * not mean it will be destroyed. Also note that Opera does not send events like all other browsers and therefore the close listener might not be
-     * called if Opera is used.
+     * For a browser level window the CloseListener is fired when the browser
+     * level window is closed. Note that closing a browser level window does not
+     * mean it will be destroyed. Also note that Opera does not send events like
+     * all other browsers and therefore the close listener might not be called
+     * if Opera is used.
      *
      * <p>
-     * Since Vaadin 6.5, removing windows using {@link #removeWindow(Window)} does fire the CloseListener.
+     * Since Vaadin 6.5, removing windows using {@link #removeWindow(Window)}
+     * does fire the CloseListener.
      * </p>
      *
-     * @param listener the CloseListener to add, not null
+     * @param listener
+     *            the CloseListener to add, not null
      * @since 8.0
      */
     public Registration addCloseListener(CloseListener listener) {
@@ -509,7 +551,8 @@ public class Window extends Panel
      * For more information on CloseListeners see {@link CloseListener}.
      * </p>
      *
-     * @param listener the CloseListener to remove.
+     * @param listener
+     *            the CloseListener to remove.
      */
     @Deprecated
     public void removeCloseListener(CloseListener listener) {
@@ -560,8 +603,10 @@ public class Window extends Panel
     }
 
     /**
-     * An interface used for listening to Window maximize / restore events. Add the WindowModeChangeListener to a window and
-     * {@link WindowModeChangeListener#windowModeChanged(WindowModeChangeEvent)} will be called whenever the window is maximized (
+     * An interface used for listening to Window maximize / restore events. Add
+     * the WindowModeChangeListener to a window and
+     * {@link WindowModeChangeListener#windowModeChanged(WindowModeChangeEvent)}
+     * will be called whenever the window is maximized (
      * {@link WindowMode#MAXIMIZED}) or restored ({@link WindowMode#NORMAL} ).
      */
     @FunctionalInterface
@@ -572,8 +617,11 @@ public class Window extends Panel
                         WindowModeChangeEvent.class);
 
         /**
-         * Called when the user maximizes / restores a window. Use {@link WindowModeChangeEvent#getWindow()} to get a reference to the {@link Window}
-         * that was maximized / restored. Use {@link WindowModeChangeEvent#getWindowMode()} to get a reference to the new state.
+         * Called when the user maximizes / restores a window. Use
+         * {@link WindowModeChangeEvent#getWindow()} to get a reference to the
+         * {@link Window} that was maximized / restored. Use
+         * {@link WindowModeChangeEvent#getWindowMode()} to get a reference to
+         * the new state.
          *
          * @param event
          */
@@ -583,10 +631,13 @@ public class Window extends Panel
     /**
      * Adds a WindowModeChangeListener to the window.
      *
-     * The WindowModeChangeEvent is fired when the user changed the display state by clicking the maximize/restore button or by double clicking on the
-     * window header. The event is also fired if the state is changed using {@link #setWindowMode(WindowMode)}.
+     * The WindowModeChangeEvent is fired when the user changed the display
+     * state by clicking the maximize/restore button or by double clicking on
+     * the window header. The event is also fired if the state is changed using
+     * {@link #setWindowMode(WindowMode)}.
      *
-     * @param listener the WindowModeChangeListener to add.
+     * @param listener
+     *            the WindowModeChangeListener to add.
      * @since 8.0
      */
     public Registration addWindowModeChangeListener(
@@ -598,7 +649,8 @@ public class Window extends Panel
     /**
      * Removes the WindowModeChangeListener from the window.
      *
-     * @param listener the WindowModeChangeListener to remove.
+     * @param listener
+     *            the WindowModeChangeListener to remove.
      */
     @Deprecated
     public void removeWindowModeChangeListener(
@@ -616,7 +668,6 @@ public class Window extends Panel
      * Method for the resize event.
      */
     private static final Method WINDOW_RESIZE_METHOD;
-
     static {
         try {
             WINDOW_RESIZE_METHOD = ResizeListener.class
@@ -629,7 +680,8 @@ public class Window extends Panel
     }
 
     /**
-     * Resize events are fired whenever the client-side fires a resize-event (e.g. the browser window is resized). The frequency may vary across
+     * Resize events are fired whenever the client-side fires a resize-event
+     * (e.g. the browser window is resized). The frequency may vary across
      * browsers.
      */
     public static class ResizeEvent extends Component.Event {
@@ -659,7 +711,6 @@ public class Window extends Panel
      */
     @FunctionalInterface
     public interface ResizeListener extends Serializable {
-
         public void windowResized(ResizeEvent e);
     }
 
@@ -668,7 +719,8 @@ public class Window extends Panel
      *
      * @see Registration
      *
-     * @param listener the listener to add, not null
+     * @param listener
+     *            the listener to add, not null
      * @return a registration object for removing the listener
      * @since 8.0
      */
@@ -694,15 +746,19 @@ public class Window extends Panel
     }
 
     /**
-     * Used to keep the right order of windows if multiple windows are brought to front in a single changeset. If this is not used, the order is quite
-     * random (depends on the order getting to dirty list. e.g. which window got variable changes).
+     * Used to keep the right order of windows if multiple windows are brought
+     * to front in a single changeset. If this is not used, the order is quite
+     * random (depends on the order getting to dirty list. e.g. which window got
+     * variable changes).
      */
     private Integer bringToFront = null;
 
     /**
-     * If there are currently several windows visible, calling this method makes this window topmost.
+     * If there are currently several windows visible, calling this method makes
+     * this window topmost.
      * <p>
-     * This method can only be called if this window connected a UI. Else an illegal state exception is thrown. Also if there are modal windows and
+     * This method can only be called if this window connected a UI. Else an
+     * illegal state exception is thrown. Also if there are modal windows and
      * this window is not modal, and illegal state exception is thrown.
      * <p>
      */
@@ -728,11 +784,14 @@ public class Window extends Panel
     }
 
     /**
-     * Sets window modality. When a modal window is open, components outside that window cannot be accessed.
+     * Sets window modality. When a modal window is open, components outside
+     * that window cannot be accessed.
      * <p>
-     * Keyboard navigation is restricted by blocking the tab key at the top and bottom of the window by activating the tab stop function internally.
+     * Keyboard navigation is restricted by blocking the tab key at the top and
+     * bottom of the window by activating the tab stop function internally.
      *
-     * @param modal true if modality is to be turned on
+     * @param modal
+     *            true if modality is to be turned on
      */
     public void setModal(boolean modal) {
         getState().modal = modal;
@@ -749,7 +808,8 @@ public class Window extends Panel
     /**
      * Sets window resizable.
      *
-     * @param resizable true if resizability is to be turned on
+     * @param resizable
+     *            true if resizability is to be turned on
      */
     public void setResizable(boolean resizable) {
         getState().resizable = resizable;
@@ -765,37 +825,47 @@ public class Window extends Panel
 
     /**
      *
-     * @return true if a delay is used before recalculating sizes, false if sizes are recalculated immediately.
+     * @return true if a delay is used before recalculating sizes, false if
+     *         sizes are recalculated immediately.
      */
     public boolean isResizeLazy() {
         return getState(false).resizeLazy;
     }
 
     /**
-     * Should resize operations be lazy, i.e. should there be a delay before layout sizes are recalculated. Speeds up resize operations in slow UIs
+     * Should resize operations be lazy, i.e. should there be a delay before
+     * layout sizes are recalculated. Speeds up resize operations in slow UIs
      * with the penalty of slightly decreased usability.
      *
-     * Note, some browser send false resize events for the browser window and are therefore always lazy.
+     * Note, some browser send false resize events for the browser window and
+     * are therefore always lazy.
      *
-     * @param resizeLazy true to use a delay before recalculating sizes, false to calculate immediately.
+     * @param resizeLazy
+     *            true to use a delay before recalculating sizes, false to
+     *            calculate immediately.
      */
     public void setResizeLazy(boolean resizeLazy) {
         getState().resizeLazy = resizeLazy;
     }
 
     /**
-     * Sets this window to be centered relative to its parent window. Affects windows only. If the window is resized as a result of the size of its
-     * content changing, it will keep itself centered as long as its position is not explicitly changed programmatically or by the user.
+     * Sets this window to be centered relative to its parent window. Affects
+     * windows only. If the window is resized as a result of the size of its
+     * content changing, it will keep itself centered as long as its position is
+     * not explicitly changed programmatically or by the user.
      * <p>
-     * <b>NOTE:</b> This method has several issues as currently implemented. Please refer to http://dev.vaadin.com/ticket/8971 for details.
+     * <b>NOTE:</b> This method has several issues as currently implemented.
+     * Please refer to http://dev.vaadin.com/ticket/8971 for details.
      */
     public void center() {
         getState().centered = true;
     }
 
     /**
-     * Returns the closable status of the window. If a window is closable, it typically shows an X in the upper right corner. Clicking on the X sends
-     * a close event to the server. Setting closable to false will remove the X from the window and prevent the user from closing the window.
+     * Returns the closable status of the window. If a window is closable, it
+     * typically shows an X in the upper right corner. Clicking on the X sends a
+     * close event to the server. Setting closable to false will remove the X
+     * from the window and prevent the user from closing the window.
      *
      * @return true if the window can be closed by the user.
      */
@@ -804,10 +874,13 @@ public class Window extends Panel
     }
 
     /**
-     * Sets the closable status for the window. If a window is closable it typically shows an X in the upper right corner. Clicking on the X sends a
-     * close event to the server. Setting closable to false will remove the X from the window and prevent the user from closing the window.
+     * Sets the closable status for the window. If a window is closable it
+     * typically shows an X in the upper right corner. Clicking on the X sends a
+     * close event to the server. Setting closable to false will remove the X
+     * from the window and prevent the user from closing the window.
      *
-     * @param closable determines if the window can be closed by the user.
+     * @param closable
+     *            determines if the window can be closed by the user.
      */
     public void setClosable(boolean closable) {
         if (closable != isClosable()) {
@@ -816,7 +889,8 @@ public class Window extends Panel
     }
 
     /**
-     * Indicates whether a window can be dragged or not. By default a window is draggable.
+     * Indicates whether a window can be dragged or not. By default a window is
+     * draggable.
      *
      * @return {@code true} if window is draggable; {@code false} if not
      */
@@ -825,10 +899,12 @@ public class Window extends Panel
     }
 
     /**
-     * Enables or disables that a window can be dragged (moved) by the user. By default a window is draggable.
+     * Enables or disables that a window can be dragged (moved) by the user. By
+     * default a window is draggable.
      * <p/>
      *
-     * @param draggable true if the window can be dragged by the user
+     * @param draggable
+     *            true if the window can be dragged by the user
      */
     public void setDraggable(boolean draggable) {
         getState().draggable = draggable;
@@ -848,7 +924,8 @@ public class Window extends Panel
      * Sets the mode for the window.
      *
      * @see WindowMode
-     * @param windowMode The new mode
+     * @param windowMode
+     *            The new mode
      */
     public void setWindowMode(WindowMode windowMode) {
         if (windowMode != getWindowMode()) {
@@ -858,20 +935,30 @@ public class Window extends Panel
     }
 
     /**
-     * This is the old way of adding a keyboard shortcut to close a {@link Window} - to preserve compatibility with existing code under the new
-     * functionality, this method now first removes all registered close shortcuts, then adds the default ESCAPE shortcut key, and then attempts to
-     * add the shortcut provided as parameters to this method. This method, and its companion {@link #removeCloseShortcut()}, are now considered
-     * deprecated, as their main function is to preserve exact backwards compatibility with old code. For all new code, use the new keyboard shortcuts
-     * API: {@link #addCloseShortcut(int,int...)},
+     * This is the old way of adding a keyboard shortcut to close a
+     * {@link Window} - to preserve compatibility with existing code under the
+     * new functionality, this method now first removes all registered close
+     * shortcuts, then adds the default ESCAPE shortcut key, and then attempts
+     * to add the shortcut provided as parameters to this method. This method,
+     * and its companion {@link #removeCloseShortcut()}, are now considered
+     * deprecated, as their main function is to preserve exact backwards
+     * compatibility with old code. For all new code, use the new keyboard
+     * shortcuts API: {@link #addCloseShortcut(int,int...)},
      * {@link #removeCloseShortcut(int,int...)},
-     * {@link #removeAllCloseShortcuts()}, {@link #hasCloseShortcut(int,int...)} and {@link #getCloseShortcuts()}.
+     * {@link #removeAllCloseShortcuts()}, {@link #hasCloseShortcut(int,int...)}
+     * and {@link #getCloseShortcuts()}.
      * <p>
-     * Original description: Makes it possible to close the window by pressing the given {@link KeyCode} and (optional) {@link ModifierKey}s.<br/>
-     * Note that this shortcut only reacts while the window has focus, closing itself - if you want to close a window from a UI, use
+     * Original description: Makes it possible to close the window by pressing
+     * the given {@link KeyCode} and (optional) {@link ModifierKey}s.<br/>
+     * Note that this shortcut only reacts while the window has focus, closing
+     * itself - if you want to close a window from a UI, use
      * {@link UI#addAction(com.vaadin.event.Action)} of the UI instead.
      *
-     * @param keyCode the keycode for invoking the shortcut
-     * @param modifiers the (optional) modifiers for invoking the shortcut. Can be set to null to be explicit about not having modifiers.
+     * @param keyCode
+     *            the keycode for invoking the shortcut
+     * @param modifiers
+     *            the (optional) modifiers for invoking the shortcut. Can be set
+     *            to null to be explicit about not having modifiers.
      *
      * @deprecated Use {@link #addCloseShortcut(int, int...)} instead.
      */
@@ -882,13 +969,17 @@ public class Window extends Panel
     }
 
     /**
-     * Removes all keyboard shortcuts previously set with {@link #setCloseShortcut(int, int...)} and {@link #addCloseShortcut(int, int...)}, then adds
-     * the default {@link KeyCode#ESCAPE} shortcut.
+     * Removes all keyboard shortcuts previously set with
+     * {@link #setCloseShortcut(int, int...)} and
+     * {@link #addCloseShortcut(int, int...)}, then adds the default
+     * {@link KeyCode#ESCAPE} shortcut.
      * <p>
-     * This is the old way of removing the (single) keyboard close shortcut, and is retained only for exact backwards compatibility. For all new code,
-     * use the new keyboard shortcuts API: {@link #addCloseShortcut(int,int...)},
+     * This is the old way of removing the (single) keyboard close shortcut, and
+     * is retained only for exact backwards compatibility. For all new code, use
+     * the new keyboard shortcuts API: {@link #addCloseShortcut(int,int...)},
      * {@link #removeCloseShortcut(int,int...)},
-     * {@link #removeAllCloseShortcuts()}, {@link #hasCloseShortcut(int,int...)} and {@link #getCloseShortcuts()}.
+     * {@link #removeAllCloseShortcuts()}, {@link #hasCloseShortcut(int,int...)}
+     * and {@link #getCloseShortcuts()}.
      *
      * @deprecated Use {@link #removeCloseShortcut(int, int...)} instead.
      */
@@ -902,12 +993,15 @@ public class Window extends Panel
     }
 
     /**
-     * Adds a close shortcut - pressing this key while holding down all (if any) modifiers specified while this Window is in focus will close the
-     * Window.
+     * Adds a close shortcut - pressing this key while holding down all (if any)
+     * modifiers specified while this Window is in focus will close the Window.
      *
      * @since 7.6
-     * @param keyCode the keycode for invoking the shortcut
-     * @param modifiers the (optional) modifiers for invoking the shortcut. Can be set to null to be explicit about not having modifiers.
+     * @param keyCode
+     *            the keycode for invoking the shortcut
+     * @param modifiers
+     *            the (optional) modifiers for invoking the shortcut. Can be set
+     *            to null to be explicit about not having modifiers.
      */
     public void addCloseShortcut(int keyCode, int... modifiers) {
 
@@ -923,11 +1017,15 @@ public class Window extends Panel
     }
 
     /**
-     * Removes a close shortcut previously added with {@link #addCloseShortcut(int, int...)}.
+     * Removes a close shortcut previously added with
+     * {@link #addCloseShortcut(int, int...)}.
      *
      * @since 7.6
-     * @param keyCode the keycode for invoking the shortcut
-     * @param modifiers the (optional) modifiers for invoking the shortcut. Can be set to null to be explicit about not having modifiers.
+     * @param keyCode
+     *            the keycode for invoking the shortcut
+     * @param modifiers
+     *            the (optional) modifiers for invoking the shortcut. Can be set
+     *            to null to be explicit about not having modifiers.
      */
     public void removeCloseShortcut(int keyCode, int... modifiers) {
         for (CloseShortcut shortcut : closeShortcuts) {
@@ -940,8 +1038,10 @@ public class Window extends Panel
     }
 
     /**
-     * Removes all close shortcuts. This includes the default ESCAPE shortcut. It is up to the user to add back any and all keyboard close shortcuts
-     * they may require. For more fine-grained control over shortcuts, use {@link #removeCloseShortcut(int, int...)}.
+     * Removes all close shortcuts. This includes the default ESCAPE shortcut.
+     * It is up to the user to add back any and all keyboard close shortcuts
+     * they may require. For more fine-grained control over shortcuts, use
+     * {@link #removeCloseShortcut(int, int...)}.
      *
      * @since 7.6
      */
@@ -956,8 +1056,11 @@ public class Window extends Panel
      * Checks if a close window shortcut key has already been registered.
      *
      * @since 7.6
-     * @param keyCode the keycode for invoking the shortcut
-     * @param modifiers the (optional) modifiers for invoking the shortcut. Can be set to null to be explicit about not having modifiers.
+     * @param keyCode
+     *            the keycode for invoking the shortcut
+     * @param modifiers
+     *            the (optional) modifiers for invoking the shortcut. Can be set
+     *            to null to be explicit about not having modifiers.
      * @return true, if an exactly matching shortcut has been registered.
      */
     public boolean hasCloseShortcut(int keyCode, int... modifiers) {
@@ -970,8 +1073,10 @@ public class Window extends Panel
     }
 
     /**
-     * Returns an unmodifiable collection of {@link CloseShortcut} objects currently registered with this {@link Window}. This method is provided
-     * mainly so that users can implement their own serialization routines. To check if a certain combination of keys has been registered as a close
+     * Returns an unmodifiable collection of {@link CloseShortcut} objects
+     * currently registered with this {@link Window}. This method is provided
+     * mainly so that users can implement their own serialization routines. To
+     * check if a certain combination of keys has been registered as a close
      * shortcut, use the {@link #hasCloseShortcut(int, int...)} method instead.
      *
      * @since 7.6
@@ -982,7 +1087,8 @@ public class Window extends Panel
     }
 
     /**
-     * A {@link ShortcutListener} specifically made to define a keyboard shortcut that closes the window.
+     * A {@link ShortcutListener} specifically made to define a keyboard
+     * shortcut that closes the window.
      *
      * <pre>
      * <code>
@@ -996,14 +1102,16 @@ public class Window extends Panel
      *
      */
     public static class CloseShortcut extends ShortcutListener {
-
         protected Window window;
 
         /**
-         * Creates a keyboard shortcut for closing the given window using the shorthand notation defined in {@link ShortcutAction}.
+         * Creates a keyboard shortcut for closing the given window using the
+         * shorthand notation defined in {@link ShortcutAction}.
          *
-         * @param window to be closed when the shortcut is invoked
-         * @param shorthandCaption the caption with shortcut keycode and modifiers indicated
+         * @param window
+         *            to be closed when the shortcut is invoked
+         * @param shorthandCaption
+         *            the caption with shortcut keycode and modifiers indicated
          */
         public CloseShortcut(Window window, String shorthandCaption) {
             super(shorthandCaption);
@@ -1011,11 +1119,15 @@ public class Window extends Panel
         }
 
         /**
-         * Creates a keyboard shortcut for closing the given window using the given {@link KeyCode} and {@link ModifierKey}s.
+         * Creates a keyboard shortcut for closing the given window using the
+         * given {@link KeyCode} and {@link ModifierKey}s.
          *
-         * @param window to be closed when the shortcut is invoked
-         * @param keyCode KeyCode to react to
-         * @param modifiers optional modifiers for shortcut
+         * @param window
+         *            to be closed when the shortcut is invoked
+         * @param keyCode
+         *            KeyCode to react to
+         * @param modifiers
+         *            optional modifiers for shortcut
          */
         public CloseShortcut(Window window, int keyCode, int... modifiers) {
             super(null, keyCode, modifiers);
@@ -1023,10 +1135,13 @@ public class Window extends Panel
         }
 
         /**
-         * Creates a keyboard shortcut for closing the given window using the given {@link KeyCode}.
+         * Creates a keyboard shortcut for closing the given window using the
+         * given {@link KeyCode}.
          *
-         * @param window to be closed when the shortcut is invoked
-         * @param keyCode KeyCode to react to
+         * @param window
+         *            to be closed when the shortcut is invoked
+         * @param keyCode
+         *            KeyCode to react to
          */
         public CloseShortcut(Window window, int keyCode) {
             this(window, keyCode, null);
@@ -1088,7 +1203,8 @@ public class Window extends Panel
     /**
      * {@inheritDoc}
      *
-     * Cause the window to be brought on top of other windows and gain keyboard focus.
+     * Cause the window to be brought on top of other windows and gain keyboard
+     * focus.
      */
     @Override
     public void focus() {
@@ -1112,10 +1228,12 @@ public class Window extends Panel
     }
 
     /**
-     * Allows to specify which components contain the description for the window. Text contained in these components will be read by assistive devices
-     * when it is opened.
+     * Allows to specify which components contain the description for the
+     * window. Text contained in these components will be read by assistive
+     * devices when it is opened.
      *
-     * @param components the components to use as description
+     * @param components
+     *            the components to use as description
      */
     public void setAssistiveDescription(Component... components) {
         if (components == null) {
@@ -1127,7 +1245,8 @@ public class Window extends Panel
     }
 
     /**
-     * Gets the components that are used as assistive description. Text contained in these components will be read by assistive devices when the
+     * Gets the components that are used as assistive description. Text
+     * contained in these components will be read by assistive devices when the
      * window is opened.
      *
      * @return array of previously set components
@@ -1148,9 +1267,11 @@ public class Window extends Panel
     /**
      * Sets the accessibility prefix for the window caption.
      *
-     * This prefix is read to assistive device users before the window caption, but not visible on the page.
+     * This prefix is read to assistive device users before the window caption,
+     * but not visible on the page.
      *
-     * @param prefix String that is placed before the window caption
+     * @param prefix
+     *            String that is placed before the window caption
      */
     public void setAssistivePrefix(String prefix) {
         getState().assistivePrefix = prefix;
@@ -1159,7 +1280,8 @@ public class Window extends Panel
     /**
      * Gets the accessibility prefix for the window caption.
      *
-     * This prefix is read to assistive device users before the window caption, but not visible on the page.
+     * This prefix is read to assistive device users before the window caption,
+     * but not visible on the page.
      *
      * @return The accessibility prefix
      */
@@ -1170,9 +1292,11 @@ public class Window extends Panel
     /**
      * Sets the accessibility postfix for the window caption.
      *
-     * This postfix is read to assistive device users after the window caption, but not visible on the page.
+     * This postfix is read to assistive device users after the window caption,
+     * but not visible on the page.
      *
-     * @param assistivePostfix String that is placed after the window caption
+     * @param assistivePostfix
+     *            String that is placed after the window caption
      */
     public void setAssistivePostfix(String assistivePostfix) {
         getState().assistivePostfix = assistivePostfix;
@@ -1181,7 +1305,8 @@ public class Window extends Panel
     /**
      * Gets the accessibility postfix for the window caption.
      *
-     * This postfix is read to assistive device users after the window caption, but not visible on the page.
+     * This postfix is read to assistive device users after the window caption,
+     * but not visible on the page.
      *
      * @return The accessibility postfix
      */
@@ -1192,12 +1317,15 @@ public class Window extends Panel
     /**
      * Sets the WAI-ARIA role the window.
      *
-     * This role defines how an assistive device handles a window. Available roles are alertdialog and dialog (@see
-     * <a href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles Model</a>).
+     * This role defines how an assistive device handles a window. Available
+     * roles are alertdialog and dialog (@see
+     * <a href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
+     * Model</a>).
      *
      * The default role is dialog.
      *
-     * @param role WAI-ARIA role to set for the window
+     * @param role
+     *            WAI-ARIA role to set for the window
      */
     public void setAssistiveRole(WindowRole role) {
         getState().role = role;
@@ -1206,8 +1334,10 @@ public class Window extends Panel
     /**
      * Gets the WAI-ARIA role the window.
      *
-     * This role defines how an assistive device handles a window. Available roles are alertdialog and dialog (@see
-     * <a href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles Model</a>).
+     * This role defines how an assistive device handles a window. Available
+     * roles are alertdialog and dialog (@see
+     * <a href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
+     * Model</a>).
      *
      * @return WAI-ARIA role set for the window
      */
@@ -1216,13 +1346,18 @@ public class Window extends Panel
     }
 
     /**
-     * Set if it should be prevented to set the focus to a component outside a non-modal window with the tab key.
+     * Set if it should be prevented to set the focus to a component outside a
+     * non-modal window with the tab key.
      * <p>
-     * This is meant to help users of assistive devices to not leaving the window unintentionally.
+     * This is meant to help users of assistive devices to not leaving the
+     * window unintentionally.
      * <p>
-     * For modal windows, this function is activated automatically, while preserving the stored value of tabStop.
+     * For modal windows, this function is activated automatically, while
+     * preserving the stored value of tabStop.
      *
-     * @param tabStop true to keep the focus inside the window when reaching the top or bottom, false (default) to allow leaving the window
+     * @param tabStop
+     *            true to keep the focus inside the window when reaching the top
+     *            or bottom, false (default) to allow leaving the window
      */
     public void setTabStopEnabled(boolean tabStop) {
         getState().assistiveTabStop = tabStop;
@@ -1231,39 +1366,47 @@ public class Window extends Panel
     /**
      * Get if it is prevented to leave a window with the tab key.
      *
-     * @return true when the focus is limited to inside the window, false when focus can leave the window
+     * @return true when the focus is limited to inside the window, false when
+     *         focus can leave the window
      */
     public boolean isTabStopEnabled() {
         return getState(false).assistiveTabStop;
     }
 
     /**
-     * Sets the message that is provided to users of assistive devices when the user reaches the top of the window when leaving a window with the tab
-     * key is prevented.
+     * Sets the message that is provided to users of assistive devices when the
+     * user reaches the top of the window when leaving a window with the tab key
+     * is prevented.
      * <p>
      * This message is not visible on the screen.
      *
-     * @param topMessage String provided when the user navigates with Shift-Tab keys to the top of the window
+     * @param topMessage
+     *            String provided when the user navigates with Shift-Tab keys to
+     *            the top of the window
      */
     public void setTabStopTopAssistiveText(String topMessage) {
         getState().assistiveTabStopTopText = topMessage;
     }
 
     /**
-     * Sets the message that is provided to users of assistive devices when the user reaches the bottom of the window when leaving a window with the
-     * tab key is prevented.
+     * Sets the message that is provided to users of assistive devices when the
+     * user reaches the bottom of the window when leaving a window with the tab
+     * key is prevented.
      * <p>
      * This message is not visible on the screen.
      *
-     * @param bottomMessage String provided when the user navigates with the Tab key to the bottom of the window
+     * @param bottomMessage
+     *            String provided when the user navigates with the Tab key to
+     *            the bottom of the window
      */
     public void setTabStopBottomAssistiveText(String bottomMessage) {
         getState().assistiveTabStopBottomText = bottomMessage;
     }
 
     /**
-     * Gets the message that is provided to users of assistive devices when the user reaches the top of the window when leaving a window with the tab
-     * key is prevented.
+     * Gets the message that is provided to users of assistive devices when the
+     * user reaches the top of the window when leaving a window with the tab key
+     * is prevented.
      *
      * @return the top message
      */
@@ -1272,8 +1415,9 @@ public class Window extends Panel
     }
 
     /**
-     * Gets the message that is provided to users of assistive devices when the user reaches the bottom of the window when leaving a window with the
-     * tab key is prevented.
+     * Gets the message that is provided to users of assistive devices when the
+     * user reaches the bottom of the window when leaving a window with the tab
+     * key is prevented.
      *
      * @return the bottom message
      */
@@ -1318,15 +1462,22 @@ public class Window extends Panel
     }
 
     /**
-     * Reads the content and possible assistive descriptions from the list of child elements of a design. If an element has an
-     * {@code :assistive-description} attribute, adds the parsed component to the list of components used as the assistive description of this Window.
-     * Otherwise, sets the component as the content of this Window. If there are multiple non-description elements, throws a DesignException.
+     * Reads the content and possible assistive descriptions from the list of
+     * child elements of a design. If an element has an
+     * {@code :assistive-description} attribute, adds the parsed component to
+     * the list of components used as the assistive description of this Window.
+     * Otherwise, sets the component as the content of this Window. If there are
+     * multiple non-description elements, throws a DesignException.
      *
-     * @param children child elements in a design
-     * @param context the DesignContext instance used to parse the design
+     * @param children
+     *            child elements in a design
+     * @param context
+     *            the DesignContext instance used to parse the design
      *
-     * @throws DesignException if there are multiple non-description child elements
-     * @throws DesignException if a child element could not be parsed as a Component
+     * @throws DesignException
+     *             if there are multiple non-description child elements
+     * @throws DesignException
+     *             if a child element could not be parsed as a Component
      *
      * @see #setContent(Component)
      * @see #setAssistiveDescription(Component...)

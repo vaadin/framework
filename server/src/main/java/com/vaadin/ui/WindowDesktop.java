@@ -35,14 +35,12 @@ import java.util.logging.Logger;
 import org.jsoup.nodes.Element;
 
 /**
- *
- * @author Marcelo D. Ré {@literal <marcelo.re@gmail.com>}
+ * A component that represente a Desktop in where a SubWindow 
+ * can be added and float within its limits.
+ * 
+ * @author Marcelo D. RE {@literal <marcelo.re@gmail.com>}
  */
 public class WindowDesktop extends Panel {
-    private final static Logger LOGGER = Logger.getLogger(WindowDesktop.class .getName());
-    static {
-        LOGGER.setLevel(Level.INFO);
-    }
     /**
      * List of windows in this UI.
      */
@@ -50,20 +48,43 @@ public class WindowDesktop extends Panel {
 
     private CssLayout layout = new CssLayout();
     
+    /**
+     * create an empty desktop
+     */
     public WindowDesktop() {
         this.init();
     }
 
+    /**
+     * Creates a new, empty desktop with the given content and title.
+     *
+     * @param content
+     *            the contents of the desktop
+     */
     public WindowDesktop(Component content) {
         super(content);
         this.init();
     }
 
+    /**
+     * Creates a new, empty desktop with the given title.
+     *
+     * @param caption
+     *            the title of the window.
+     */
     public WindowDesktop(String caption) {
         super(caption);
         this.init();
     }
 
+    /**
+     * Creates a new, empty desktop with the given content and title.
+     *
+     * @param caption
+     *            the title of the desktop.
+     * @param content
+     *            the contents of the desktop
+     */
     public WindowDesktop(String caption, Component content) {
         super(caption, content);
         this.init();
@@ -74,12 +95,24 @@ public class WindowDesktop extends Panel {
         this.setContent(layout);
     }
     
+    /**
+     * Add a subwindow to the desktop.
+     *
+     * @param sw
+     *            the subwindow to be added
+     */
     public WindowDesktop addSubWindow(Window sw) {
         this.windows.add(sw);
         this.layout.addComponent(sw);
         return this;
     }
     
+    /**
+     * Remove the window from the desktop
+     *
+     * @param window
+     *            the window to be removed
+     */
     public boolean removeWindow(Window window) {
         if (!windows.remove(window)) {
             // Window window is not a subwindow of this UI.
