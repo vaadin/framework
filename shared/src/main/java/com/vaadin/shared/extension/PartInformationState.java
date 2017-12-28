@@ -13,17 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.extension.filedownloader;
+package com.vaadin.shared.extension;
 
-import com.vaadin.shared.extension.PartInformationState;
+import com.vaadin.shared.communication.SharedState;
 
-/**
- * Shared state for FileDownloader.
- *
- * @author Vaadin Ltd.
- *
- * @since 8.0
- */
-public class FileDownloaderState extends PartInformationState {
+public class PartInformationState extends SharedState {
+
+    /**
+     * Information passed to the widget on the client side, to allow it to
+     * attach to the correct DOM element.
+     */
+    public String partInformation;
 
 }
