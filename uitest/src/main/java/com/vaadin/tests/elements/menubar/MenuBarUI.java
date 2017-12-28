@@ -40,11 +40,12 @@ public class MenuBarUI extends AbstractTestUI {
         MenuBar menuBar = new MenuBar();
         MenuItem file = menuBar.addItem("File" + topLevelItemSuffix, null);
         file.addItem("Open" + secondaryLevelItemSuffix, new MenuBarCommand())
-                .setDescription("Preformatted\ndescription");
+                .setDescription("<b>Preformatted</b>\ndescription");
         file.addItem("Save" + secondaryLevelItemSuffix, new MenuBarCommand())
-                .setDescription("Preformatted\ndescription", ContentMode.PREFORMATTED);
-        file.addItem("Save As.." + secondaryLevelItemSuffix, new MenuBarCommand())
-                .setDescription("plain description, newlines \n are not rendered", ContentMode.TEXT);
+                .setDescription("plain description,\n <b>HTML</b> is visible",
+                        ContentMode.TEXT);
+        file.addItem("Save As.." + secondaryLevelItemSuffix,
+                new MenuBarCommand());
         file.addSeparator();
 
         MenuItem export = file.addItem("Export.." + secondaryLevelItemSuffix,
@@ -56,7 +57,8 @@ public class MenuBarUI extends AbstractTestUI {
 
         file.addSeparator();
         file.addItem("Exit" + secondaryLevelItemSuffix, new MenuBarCommand())
-                .setDescription("<b>I <e>contain</e></b><br/>HTML", ContentMode.HTML);
+                .setDescription("<b>HTML</b><br/>description",
+                        ContentMode.HTML);
 
         MenuItem edit = menuBar.addItem("Edit" + topLevelItemSuffix, null);
         edit.addItem("Copy" + secondaryLevelItemSuffix, new MenuBarCommand());
