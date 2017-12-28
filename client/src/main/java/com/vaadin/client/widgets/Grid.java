@@ -2335,10 +2335,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 // Handle event in widget in grid if column allows it
                 if (grid.isElementInChildWidget(Element.as(target))) {
                     Cell cell = container.getCell(target.cast());
-                    Column<?, ?> column = grid
-                            .getVisibleColumn(cell.getColumn());
-                    if (!column.isWidgetEventsAllowed()) {
-                        return;
+                    if (cell != null) {
+                        Column<?, ?> column = grid
+                                .getVisibleColumn(cell.getColumn());
+                        if (column == null || !column.isWidgetEventsAllowed()) {
+                            return;
+                        }
                     }
                 }
 
@@ -2454,7 +2456,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             Column<?, ?> column = grid.getVisibleColumn(
                     container.getCell(targetElement).getColumn());
             boolean childWidget = grid.isElementInChildWidget(targetElement);
-            boolean handleWidgetEvent = column.isWidgetEventsAllowed();
+            boolean handleWidgetEvent = column != null
+                    && column.isWidgetEventsAllowed();
             return childWidget && !handleWidgetEvent;
         }
 
