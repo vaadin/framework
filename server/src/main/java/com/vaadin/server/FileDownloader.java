@@ -70,6 +70,11 @@ public class FileDownloader extends AbstractExtension {
         super.extend(target);
     }
 
+    public void extend(EventTrigger eventTrigger) {
+        super.extend(eventTrigger.getConnector());
+        getState().partInformation = eventTrigger.getPartInformation();
+    }
+
     /**
      * Gets the resource set for download.
      *
