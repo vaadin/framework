@@ -2451,13 +2451,21 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          */
         protected boolean ignoreEventFromTarget(Grid<?> grid,
                 Element targetElement) {
+            boolean childWidget = grid.isElementInChildWidget(targetElement);
+            boolean handleWidgetEvent = false;
+
             RowContainer container = grid.getEscalator()
                     .findRowContainer(targetElement);
-            Column<?, ?> column = grid.getVisibleColumn(
-                    container.getCell(targetElement).getColumn());
-            boolean childWidget = grid.isElementInChildWidget(targetElement);
-            boolean handleWidgetEvent = column != null
-                    && column.isWidgetEventsAllowed();
+            if (container != null) {
+                Cell cell = container.getCell(targetElement);
+                if (cell != null) {
+                    Column<?, ?> column = grid
+                            .getVisibleColumn(cell.getColumn());
+                    handleWidgetEvent = column != null
+                            && column.isWidgetEventsAllowed();
+                }
+            }
+
             return childWidget && !handleWidgetEvent;
         }
 
@@ -4503,7 +4511,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         .toArray(new Column[reordered.size()]);
                 setColumnOrder(true, array);
                 transferCellFocusOnDrop();
-            } // else no reordering
+            } // else
+              // no
+              // reordering
         }
 
         private void transferCellFocusOnDrop() {
