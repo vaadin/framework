@@ -375,6 +375,18 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
         verifyCheckboxDisabledClassNames(className, true);
     }
 
+    @Test // #3387
+    public void shouldApplySelectedClassToSelectedItems() {
+        openTestURL("theme=valo");
+        selectMenuPath("Component", "Selection", "Toggle Item 5");
+
+        String className = getSelect().getOptionElements().get(5).getAttribute("className");
+        assertTrue("No v-select-option-selected class, was " + className, className.contains("v-select-option-selected"));
+
+        selectMenuPath("Component", "Selection", "Toggle Item 5");
+        className = getSelect().getOptionElements().get(5).getAttribute("className");
+        assertFalse("Extra v-select-option-selected class, was " + className, className.contains("v-select-option-selected"));
+    }
     // needed to make tooltips work in IE tests
     @Override
     protected boolean requireWindowFocusForIE() {
