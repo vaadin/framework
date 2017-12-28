@@ -126,6 +126,11 @@ public class BrowserWindowOpener extends AbstractExtension {
         super.extend(target);
     }
 
+    public void extend(EventTrigger eventTrigger) {
+        super.extend(eventTrigger.getConnector());
+        getState().partInformation = eventTrigger.getPartInformation();
+    }
+
     /**
      * Sets the provided URL {@code url} for this instance. The {@code url} will
      * be opened in a new browser window/tab when the extended component is
