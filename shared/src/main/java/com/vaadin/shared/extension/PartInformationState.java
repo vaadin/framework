@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2018 Vaadin Ltd.
+ * Copyright 2000-2016 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,23 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.shared.extension;
 
-package com.vaadin.shared.ui;
+import com.vaadin.shared.communication.SharedState;
 
-import java.util.HashMap;
-import java.util.Map;
+public class PartInformationState extends SharedState {
 
-import com.vaadin.shared.extension.PartInformationState;
-
-public class BrowserWindowOpenerState extends PartInformationState {
-    public static final String locationResource = "url";
-
-    public String target = "_blank";
-
-    public String features;
-
-    public String uriFragment;
-
-    public Map<String, String> parameters = new HashMap<>();
+    /**
+     * Information passed to the widget on the client side, to allow it to
+     * attach to the correct DOM element.
+     */
+    public String partInformation;
 
 }

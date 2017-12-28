@@ -15,7 +15,7 @@
  */
 package com.vaadin.shared.extension.filedownloader;
 
-import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.extension.PartInformationState;
 
 /**
  * Shared state for FileDownloader.
@@ -24,6 +24,6 @@ import com.vaadin.shared.communication.SharedState;
  *
  * @since 8.0
  */
-public class FileDownloaderState extends SharedState {
+public class FileDownloaderState extends PartInformationState {
 
 }
