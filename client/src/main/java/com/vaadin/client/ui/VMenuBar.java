@@ -16,8 +16,10 @@
 package com.vaadin.client.ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 import com.google.gwt.core.client.GWT;
@@ -46,6 +48,7 @@ import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.LayoutManager;
@@ -53,12 +56,13 @@ import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.extensions.EventTrigger;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
 
-public class VMenuBar extends FocusableFlowPanel
-        implements CloseHandler<PopupPanel>, KeyPressHandler, KeyDownHandler,
-        FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
+public class VMenuBar extends FocusableFlowPanel implements
+        CloseHandler<PopupPanel>, KeyPressHandler, KeyDownHandler, FocusHandler,
+        SubPartAware, MouseOutHandler, MouseOverHandler, EventTrigger {
 
     // The hierarchy of VMenuBar is a bit weird as VMenuBar is the Paintable,
     // used for the root menu but also used for the sub menus.
@@ -116,6 +120,8 @@ public class VMenuBar extends FocusableFlowPanel
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean htmlContentAllowed;
+
+    private Map<Integer, Command> triggers = new HashMap<>();
 
     public VMenuBar() {
         // Create an empty horizontal menubar
@@ -414,9 +420,12 @@ public class VMenuBar extends FocusableFlowPanel
      * @param item
      */
     public void itemClick(CustomMenuItem item) {
-        if (item.getCommand() != null) {
+        boolean triggered = triggerEventIfNeeded(item);
+        if (item.getCommand() != null || triggered) {
             try {
-                item.getCommand().execute();
+                if (item.getCommand() != null) {
+                    item.getCommand().execute();
+                }
             } finally {
                 setSelected(null);
                 if (visibleChildMenu != null) {
@@ -808,6 +817,7 @@ public class VMenuBar extends FocusableFlowPanel
         protected ContentMode contentMode = null;
 
         private String styleName;
+        private int id;
 
         /**
          * Default menu item {@link Widget} constructor for GWT.create().
@@ -1132,8 +1142,7 @@ public class VMenuBar extends FocusableFlowPanel
                 return null;
             }
 
-            return new TooltipInfo(description, contentMode, null,
-                    this);
+            return new TooltipInfo(description, contentMode, null, this);
         }
 
         /**
@@ -1163,6 +1172,14 @@ public class VMenuBar extends FocusableFlowPanel
                 return getSubMenu().getSubPartName(subElement);
             }
             return null;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
         }
 
     }
@@ -1641,6 +1658,7 @@ public class VMenuBar extends FocusableFlowPanel
                 openMenuAndFocusFirstIfPossible(getSelected());
             } else {
                 try {
+                    boolean triggered = triggerEventIfNeeded(getSelected());
                     final Command command = getSelected().getCommand();
                     if (command != null) {
                         command.execute();
@@ -1653,10 +1671,7 @@ public class VMenuBar extends FocusableFlowPanel
                     // not leave menu to visible ("hover open") mode
                     menuVisible = false;
 
-                    VMenuBar root = this;
-                    while (root.getParentMenu() != null) {
-                        root = root.getParentMenu();
-                    }
+                    VMenuBar root = getRoot();
                     root.ignoreFocus = true;
                     root.getElement().focus();
                     root.ignoreFocus = false;
@@ -1665,6 +1680,15 @@ public class VMenuBar extends FocusableFlowPanel
             return true;
         }
 
+        return false;
+    }
+
+    private boolean triggerEventIfNeeded(CustomMenuItem item) {
+        Command command = getTriggers().get(item.getId());
+        if (command != null) {
+            command.execute();
+            return true;
+        }
         return false;
     }
 
@@ -1876,4 +1900,36 @@ public class VMenuBar extends FocusableFlowPanel
     public void onMouseOut(MouseOutEvent event) {
         LazyCloser.schedule();
     }
+
+    private VMenuBar getRoot() {
+        VMenuBar root = this;
+
+        while (root.getParentMenu() != null) {
+            root = root.getParentMenu();
+        }
+
+        return root;
+    }
+
+    @Override
+    public HandlerRegistration addTrigger(Command command,
+            String partInformation) {
+        if (partInformation == null || partInformation.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "The 'partInformation' parameter must contain the menu item id");
+        }
+
+        int menuItemId = Integer.parseInt(partInformation);
+        getTriggers().put(menuItemId, command);
+        return () -> {
+            if (getTriggers().get(menuItemId) == command) {
+                getTriggers().remove(menuItemId);
+            }
+        };
+    }
+
+    private Map<Integer, Command> getTriggers() {
+        return getRoot().triggers;
+    }
+
 }

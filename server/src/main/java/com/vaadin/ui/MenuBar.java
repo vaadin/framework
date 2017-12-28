@@ -28,6 +28,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
+import com.vaadin.server.AbstractClientConnector;
+import com.vaadin.server.EventTrigger;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
@@ -214,6 +216,21 @@ public class MenuBar extends AbstractComponent
     public MenuBar() {
         menuItems = new ArrayList<>();
         setMoreMenuItem(null);
+    }
+
+    /**
+     * Adds a new menu item to the menu bar
+     * <p>
+     * Clicking on this menu item has no effect. Use
+     * {@link #addItem(String, Command)} or {@link MenuItem#setCommand(Command)}
+     * to assign an action to the menu item.
+     *
+     * @param caption
+     *            the text for the menu item
+     * @throws IllegalArgumentException
+     */
+    public MenuBar.MenuItem addItem(String caption) {
+        return addItem(caption, null, null);
     }
 
     /**
@@ -452,7 +469,7 @@ public class MenuBar extends AbstractComponent
      * multiple MenuItems to a MenuItem and create a sub-menu.
      *
      */
-    public class MenuItem implements Serializable {
+    public class MenuItem implements Serializable, EventTrigger {
 
         /** Private members * */
         private final int itsId;
@@ -519,6 +536,20 @@ public class MenuBar extends AbstractComponent
             MenuItem item = addItemBefore("", null, null, itemToAddBefore);
             item.setSeparator(true);
             return item;
+        }
+
+        /**
+         * Add a new menu item inside this menu item, creating a sub-menu.
+         * <p>
+         * Clicking on the new item has no effect. Use
+         * {@link #addItem(String, Command)} or {@link #setCommand(Command)} to
+         * assign an action to the menu item.
+         *
+         * @param caption
+         *            the text for the menu item
+         */
+        public MenuBar.MenuItem addItem(String caption) {
+            return addItem(caption, null, null);
         }
 
         /**
@@ -990,6 +1021,26 @@ public class MenuBar extends AbstractComponent
         public void setChecked(boolean checked) {
             this.checked = checked;
             markAsDirty();
+        }
+
+        /**
+         * Gets the menu bar this item is part of.
+         *
+         * @return the menu bar this item is attached to
+         * @since
+         */
+        public MenuBar getMenuBar() {
+            return MenuBar.this;
+        }
+
+        @Override
+        public AbstractClientConnector getConnector() {
+            return getMenuBar();
+        }
+
+        @Override
+        public String getPartInformation() {
+            return String.valueOf(getId());
         }
     }
 
