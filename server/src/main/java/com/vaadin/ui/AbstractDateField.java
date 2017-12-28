@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -801,5 +802,72 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                 return getRangeValidator().apply(value, context);
             }
         };
+    }
+
+    /**
+     * <p>
+     * Sets a custom style name for the given date's calendar cell. Setting the
+     * style name will override any previous style names that have been set for
+     * that date, but can contain several actual style names separated by space.
+     * Setting the custom style name {@code null} will only remove the previous
+     * custom style name.
+     * </p>
+     * <p>
+     * This logic is entirely separate from {@link #setStyleName(String)}
+     * </p>
+     * <p>
+     * Usage examples: <br>
+     * {@code setDateStyle(LocalDate.now(), "teststyle");} <br>
+     * {@code setDateStyle(LocalDate.now(), "teststyle1 teststyle2");}
+     * </p>
+     *
+     * @param date
+     *            which date cell to modify
+     * @param styleName
+     *            the custom style name(s) for given date, {@code null} to clear
+     *            custom style name(s)
+     */
+    public void setDateStyle(LocalDate date, String styleName) {
+        if (date != null) {
+            if (styleName != null) {
+                getState().dateStyles.put(date.toString(), styleName);
+            } else {
+                getState().dateStyles.remove(date.toString());
+            }
+        }
+    }
+
+    /**
+     * Returns the custom style name that corresponds with the given date's
+     * calendar cell.
+     *
+     * @param date
+     *            which date cell's custom style name(s) to return
+     * @return the corresponding style name(s), if any, {@code null} otherwise
+     *
+     * @see {@link #setDateStyle(LocalDate, String)}
+     */
+    public String getDateStyle(LocalDate date) {
+        if (date == null) {
+            return null;
+        }
+        return getState(false).dateStyles.get(date.toString());
+    }
+
+    /**
+     * Returns a map from dates to custom style names in each date's calendar
+     * cell.
+     *
+     * @return map from dates to custom style names in each date's calendar cell
+     *
+     * @see {@link #setDateStyle(LocalDate, String)}
+     */
+    public Map<LocalDate, String> getDateStyles() {
+        HashMap<LocalDate, String> hashMap = new HashMap<>();
+        for (Entry<String, String> entry : getState(false).dateStyles
+                .entrySet()) {
+            hashMap.put(LocalDate.parse(entry.getKey()), entry.getValue());
+        }
+        return hashMap;
     }
 }

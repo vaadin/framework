@@ -23,6 +23,7 @@ import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.VAbstractCalendarPanel;
 import com.vaadin.client.ui.VAbstractCalendarPanel.FocusChangeListener;
@@ -125,6 +126,7 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
         getWidget().setRangeStart(nullSafeDateClone(getState().rangeStart));
         getWidget().setRangeEnd(nullSafeDateClone(getState().rangeEnd));
 
+        getWidget().calendar.setDateStyles(getState().dateStyles);
         getWidget().calendar
                 .setDateTimeService(getWidget().getDateTimeService());
         getWidget().calendar
@@ -192,6 +194,16 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
         }
         getWidget().popup.setStyleName(
                 getWidget().getStylePrimaryName() + "-popup" + styleName, add);
+    }
+
+    @OnStateChange("dateStyles")
+    void dateStylesUpdated() {
+        VAbstractPopupCalendar<PANEL, R> widget = getWidget();
+        widget.calendar.setDateStyles(getState().dateStyles);
+        // Update text field if locale already set
+        if (widget.getCurrentLocale() != null) {
+            widget.buildDate();
+        }
     }
 
 }
