@@ -59,7 +59,6 @@ import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.tree.TreeMultiSelectionModelState;
 import com.vaadin.shared.ui.tree.TreeRendererState;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.components.grid.DescriptionGenerator;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.components.grid.NoSelectionModel;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
@@ -249,7 +248,17 @@ public class Tree<T> extends Composite
         }
     }
 
-    private TreeGrid<T> treeGrid = new TreeGrid<>();
+    private TreeGrid<T> treeGrid = createTreeGrid();
+
+    /**
+     * Create inner {@link TreeGrid} object. May be overridden in subclasses.
+     *
+     * @return new {@link TreeGrid}
+     */
+    protected TreeGrid<T> createTreeGrid() {
+        return new TreeGrid<>();
+    }
+
     private ItemCaptionGenerator<T> captionGenerator = String::valueOf;
     private IconGenerator<T> iconProvider = t -> null;
     private final TreeRenderer renderer;
@@ -275,20 +284,21 @@ public class Tree<T> extends Composite
         treeGrid.setHeightUndefined();
         treeGrid.setHeightMode(HeightMode.UNDEFINED);
 
-        treeGrid.addExpandListener(e -> {
-            fireExpandEvent(e.getExpandedItem(), e.isUserOriginated());
+        treeGrid.addExpandListener(event -> {
+            fireExpandEvent(event.getExpandedItem(), event.isUserOriginated());
             if (autoRecalculateWidth) {
                 treeGrid.recalculateColumnWidths();
             }
         });
-        treeGrid.addCollapseListener(e -> {
-            fireCollapseEvent(e.getCollapsedItem(), e.isUserOriginated());
+        treeGrid.addCollapseListener(event -> {
+            fireCollapseEvent(event.getCollapsedItem(),
+                    event.isUserOriginated());
             if (autoRecalculateWidth) {
                 treeGrid.recalculateColumnWidths();
             }
         });
-        treeGrid.addItemClickListener(e -> fireEvent(
-                new ItemClick<>(this, e.getItem(), e.getMouseEventDetails())));
+        treeGrid.addItemClickListener(event -> fireEvent(new ItemClick<>(this,
+                event.getItem(), event.getMouseEventDetails())));
     }
 
     /**
@@ -962,7 +972,7 @@ public class Tree<T> extends Composite
         }
 
         if (getSelectionModel().isSelected(item)) {
-            itemElement.attr("selected", "");
+            itemElement.attr("selected", true);
         }
 
         Resource icon = getItemIconGenerator().apply(item);
@@ -1181,7 +1191,7 @@ public class Tree<T> extends Composite
 
     /**
      * Scrolls to the beginning of the first data row.
-     * 
+     *
      * @since 8.2
      */
     public void scrollToStart() {
@@ -1190,7 +1200,7 @@ public class Tree<T> extends Composite
 
     /**
      * Scrolls to the end of the last data row.
-     * 
+     *
      * @since 8.2
      */
     public void scrollToEnd() {

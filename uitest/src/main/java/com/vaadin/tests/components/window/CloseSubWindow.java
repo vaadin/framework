@@ -3,12 +3,8 @@ package com.vaadin.tests.components.window;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.CloseEvent;
-import com.vaadin.ui.Window.CloseListener;
 
 public class CloseSubWindow extends AbstractTestUIWithLog {
 
@@ -16,12 +12,9 @@ public class CloseSubWindow extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
         Button openWindowButton = new Button("Open sub-window");
         openWindowButton.setId("opensub");
-        openWindowButton.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Window sub = createClosableSubWindow("Sub-window");
-                getUI().addWindow(sub);
-            }
+        openWindowButton.addClickListener(event -> {
+            Window sub = createClosableSubWindow("Sub-window");
+            getUI().addWindow(sub);
         });
 
         addComponent(openWindowButton);
@@ -36,29 +29,15 @@ public class CloseSubWindow extends AbstractTestUIWithLog {
         window.setClosable(true);
 
         Button closeButton = new Button("Close");
-        closeButton.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                event.getButton().findAncestor(Window.class).close();
-            }
-        });
+        closeButton.addClickListener(
+                event -> event.getButton().findAncestor(Window.class).close());
         layout.addComponent(closeButton);
 
         Button removeButton = new Button("Remove from UI");
-        removeButton.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                getUI().removeWindow(window);
-            }
-        });
+        removeButton.addClickListener(event -> getUI().removeWindow(window));
         layout.addComponent(removeButton);
 
-        window.addCloseListener(new CloseListener() {
-            @Override
-            public void windowClose(CloseEvent e) {
-                log("Window '" + title + "' closed");
-            }
-        });
+        window.addCloseListener(event -> log("Window '" + title + "' closed"));
 
         return window;
     }

@@ -375,7 +375,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addValueChangeListener(Property.ValueChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(Property.ValueChangeListener listener) {
@@ -399,7 +399,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeValueChangeListener(Property.ValueChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(Property.ValueChangeListener listener) {
@@ -505,7 +505,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
      */
     private String stripTags(String xml) {
 
-        final StringBuffer res = new StringBuffer();
+        final StringBuilder res = new StringBuilder();
 
         int processed = 0;
         final int xmlLen = xml.length();

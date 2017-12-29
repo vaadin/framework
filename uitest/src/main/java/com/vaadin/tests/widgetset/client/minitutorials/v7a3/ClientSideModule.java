@@ -17,8 +17,6 @@
 package com.vaadin.tests.widgetset.client.minitutorials.v7a3;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -38,14 +36,11 @@ public class ClientSideModule implements EntryPoint {
         vp.add(button);
         RootPanel.get().add(vp);
 
-        button.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                if ("GWT User".equals(nameField.getText())) {
-                    Window.alert("User OK");
-                } else {
-                    Window.alert("Unauthorized user");
-                }
+        button.addClickHandler(event -> {
+            if ("GWT User".equals(nameField.getText())) {
+                Window.alert("User OK");
+            } else {
+                Window.alert("Unauthorized user");
             }
         });
     }

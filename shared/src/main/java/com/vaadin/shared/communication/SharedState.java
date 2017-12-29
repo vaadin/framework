@@ -19,6 +19,7 @@ package com.vaadin.shared.communication;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.annotations.NoLayout;
@@ -63,12 +64,9 @@ public class SharedState implements Serializable {
     public boolean enabled = true;
 
     /**
-     * A Map of event identifiers with registered listeners, {@code key} is
-     * event identifier, {@code value} is the listeners count.
-     * 
-     * @since
+     * A set of event identifiers with registered listeners.
      */
     @NoLayout
-    public Map<String, Integer> registeredEventListeners;
+    public Set<String> registeredEventListeners;
 
 }

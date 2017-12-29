@@ -34,7 +34,6 @@ import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
@@ -153,12 +152,7 @@ public class Dragging extends VerticalLayout implements View {
         buttonLayout.setSpacing(false);
         buttonLayout.setMargin(false);
         final Button button = new Button("Button");
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                Notification.show("Button clicked");
-            }
-        });
+        button.addClickListener(event -> Notification.show("Button clicked"));
         buttonLayout.addComponent(button);
         buttonLayout.setComponentAlignment(button, Alignment.MIDDLE_CENTER);
         components.add(buttonLayout);

@@ -311,7 +311,7 @@ public final class UIDL extends JavaScriptObject implements Iterable<Object> {
      * </p>
      *
      * @return an iterator for iterating over UIDL children
-     * @since
+     * @since 8.2
      */
     @Override
     public Iterator<Object> iterator() {
@@ -362,13 +362,13 @@ public final class UIDL extends JavaScriptObject implements Iterable<Object> {
     private native int typeOfChild(int index)
     /*-{
         var t = typeof this[index + 2];
-        if(t == "object") {
-            if(typeof(t.length) == "number") {
+        if (t == "object") {
+            if (typeof(t.length) == "number") {
                 return 1;
-            } else {
-                return 2;
             }
-        } else if (t == "string") {
+            return 2;
+        }
+        if (t == "string") {
             return 0;
         }
         return -1;
@@ -509,7 +509,7 @@ public final class UIDL extends JavaScriptObject implements Iterable<Object> {
         /*-{
             var buf = new Array();
             var self = this;
-            for(j in self) {
+            for (j in self) {
                 buf.push("<");
                 buf.push(j);
                 buf.push(">");

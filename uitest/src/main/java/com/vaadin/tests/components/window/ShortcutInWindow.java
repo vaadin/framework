@@ -45,7 +45,7 @@ public class ShortcutInWindow extends AbstractTestUIWithLog {
             ValueChangeMode m = ValueChangeMode.values()[i];
             toggle.setCaption(m.toString());
             name.setValueChangeMode(m);
-            log("New ValueChangeMode: " + m.toString());
+            log("New ValueChangeMode: " + m);
         });
         final Button submit = new Button("Submit",
                 (e) -> log("Submitted value: " + name.getValue()));

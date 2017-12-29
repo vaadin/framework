@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.jar.Manifest;
 
 public class ManifestWriter {
-    StringBuffer buffer = new StringBuffer();
+    StringBuilder buffer = new StringBuilder();
 
     public ManifestWriter() {
     }

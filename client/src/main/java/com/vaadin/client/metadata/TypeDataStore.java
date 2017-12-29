@@ -348,7 +348,7 @@ public class TypeDataStore {
             String baseClassName, String superClassName)
     /*-{
         var parentType = typeData[superClassName];
-        if (parentType !== undefined ){
+        if (parentType !== undefined ) {
             var ctor = function () {};
             ctor.prototype = parentType;
             typeData[baseClassName] = new ctor;
@@ -406,7 +406,7 @@ public class TypeDataStore {
             JavaScriptObject typeData, String beanName)
     /*-{
         var names = [];
-        for(var name in typeData[beanName]) {
+        for (var name in typeData[beanName]) {
             names.push(name);
         }
         return names;

@@ -25,6 +25,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.SimpleManagedLayout;
@@ -51,21 +52,22 @@ public class MenuBarConnector extends AbstractComponentConnector
             return;
         }
 
-        getWidget().htmlContentAllowed = uidl
+        VMenuBar widget = getWidget();
+        widget.htmlContentAllowed = uidl
                 .hasAttribute(MenuBarConstants.HTML_CONTENT_ALLOWED);
 
-        getWidget().openRootOnHover = uidl
+        widget.openRootOnHover = uidl
                 .getBooleanAttribute(MenuBarConstants.OPEN_ROOT_MENU_ON_HOWER);
 
-        getWidget().enabled = isEnabled();
+        widget.enabled = isEnabled();
 
         // For future connections
-        getWidget().client = client;
-        getWidget().uidlId = uidl.getId();
+        widget.client = client;
+        widget.uidlId = uidl.getId();
 
         // Empty the menu every time it receives new information
-        if (!getWidget().getItems().isEmpty()) {
-            getWidget().clearItems();
+        if (!widget.getItems().isEmpty()) {
+            widget.clearItems();
         }
 
         UIDL options = uidl.getChildUIDL(0);
@@ -73,7 +75,7 @@ public class MenuBarConnector extends AbstractComponentConnector
         if (null != getState()
                 && !ComponentStateUtil.isUndefinedWidth(getState())) {
             UIDL moreItemUIDL = options.getChildUIDL(0);
-            StringBuffer itemHTML = new StringBuffer();
+            StringBuilder itemHTML = new StringBuilder();
 
             if (moreItemUIDL.hasAttribute("icon")) {
                 Icon icon = client
@@ -89,21 +91,21 @@ public class MenuBarConnector extends AbstractComponentConnector
             }
             itemHTML.append(moreItemText);
 
-            getWidget().moreItem = GWT.create(VMenuBar.CustomMenuItem.class);
-            getWidget().moreItem.setHTML(itemHTML.toString());
-            getWidget().moreItem.setCommand(VMenuBar.emptyCommand);
+            widget.moreItem = GWT.create(VMenuBar.CustomMenuItem.class);
+            widget.moreItem.setHTML(itemHTML.toString());
+            widget.moreItem.setCommand(VMenuBar.emptyCommand);
 
-            getWidget().collapsedRootItems = new VMenuBar(true, getWidget());
-            getWidget().moreItem.setSubMenu(getWidget().collapsedRootItems);
-            getWidget().moreItem.addStyleName(
-                    getWidget().getStylePrimaryName() + "-more-menuitem");
+            widget.collapsedRootItems = new VMenuBar(true, widget);
+            widget.moreItem.setSubMenu(widget.collapsedRootItems);
+            widget.moreItem.addStyleName(
+                    widget.getStylePrimaryName() + "-more-menuitem");
         }
 
         UIDL uidlItems = uidl.getChildUIDL(1);
         Iterator<Object> itr = uidlItems.iterator();
         Stack<Iterator<Object>> iteratorStack = new Stack<>();
         Stack<VMenuBar> menuStack = new Stack<>();
-        VMenuBar currentMenu = getWidget();
+        VMenuBar currentMenu = widget;
 
         while (itr.hasNext()) {
             UIDL item = (UIDL) itr.next();
@@ -115,23 +117,18 @@ public class MenuBarConnector extends AbstractComponentConnector
             boolean itemIsCheckable = item
                     .hasAttribute(MenuBarConstants.ATTRIBUTE_CHECKED);
 
-            String itemHTML = getWidget().buildItemHTML(item);
+            String itemHTML = widget.buildItemHTML(item);
 
             Command cmd = null;
             if (!item.hasAttribute("separator")) {
                 if (itemHasCommand || itemIsCheckable) {
                     // Construct a command that fires onMenuClick(int) with the
                     // item's id-number
-                    cmd = new Command() {
-                        @Override
-                        public void execute() {
-                            getWidget().hostReference.onMenuClick(itemId);
-                        }
-                    };
+                    cmd = () -> widget.hostReference.onMenuClick(itemId);
                 }
             }
 
-            currentItem = currentMenu.addItem(itemHTML.toString(), cmd);
+            currentItem = currentMenu.addItem(itemHTML, cmd);
             currentItem.updateFromUIDL(item, client);
 
             if (item.getChildCount() > 0) {
@@ -217,5 +214,20 @@ public class MenuBarConnector extends AbstractComponentConnector
          * is used.
          */
         return true;
+    }
+
+    @OnStateChange("enabled")
+    void updateEnabled() {
+        if (getState().enabled) {
+            getWidget().getElement().removeAttribute("aria-disabled");
+        } else {
+            getWidget().getElement().setAttribute("aria-disabled", "true");
+        }
+    }
+
+    @OnStateChange("tabIndex")
+    void updateTabIndex() {
+        getWidget().getElement().setAttribute("tabindex",
+                String.valueOf(getState().tabIndex));
     }
 }

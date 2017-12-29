@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,6 +25,7 @@ import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.data.validator.NotEmptyValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.ErrorMessage;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.TextField;
@@ -490,7 +492,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         ErrorMessage errorMessage = textField.getErrorMessage();
         assertNotNull(errorMessage);
         assertEquals("foobar", errorMessage.getFormattedHtmlMessage());
-        // validation is done for the whole bean at once.
+        // validation is done for all changed bindings once.
         assertEquals(1, invokes.get());
 
         textField.setValue("value");
@@ -604,6 +606,31 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         assertFalse(nameField.isReadOnly());
         assertFalse(ageField.isReadOnly());
+    }
+
+    @Test
+    public void setReadonlyShouldIgnoreBindingsWithNullSetter() {
+        binder.bind(nameField, Person::getFirstName, null);
+        binder.forField(ageField)
+            .withConverter(new StringToIntegerConverter(""))
+            .bind(Person::getAge, Person::setAge);
+
+        binder.setReadOnly(true);
+        assertFalse("Name field should be ignored and not be readonly", nameField.isReadOnly());
+        assertTrue("Age field should be readonly", ageField.isReadOnly());
+
+        binder.setReadOnly(false);
+        assertFalse("Name field should be ignored and remain not readonly", nameField.isReadOnly());
+        assertFalse("Age field should not be readonly", ageField.isReadOnly());
+
+        nameField.setReadOnly(false);
+        binder.setReadOnly(false);
+        assertFalse("Name field should be ignored and remain not readonly", nameField.isReadOnly());
+        assertFalse("Age field should not be readonly", ageField.isReadOnly());
+
+        binder.setReadOnly(true);
+        assertFalse("Name field should be ignored and remain not readonly", nameField.isReadOnly());
+        assertTrue("Age field should be readonly", ageField.isReadOnly());
     }
 
     @Test
@@ -891,9 +918,8 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .withConverter(new StringToIntegerConverter(ageError))
                 .bind(Person::getAge, Person::setAge);
 
-        binder.setValidationStatusHandler(status -> {
-            status.notifyBindingValidationStatusHandlers();
-        });
+        binder.setValidationStatusHandler(
+                status -> status.notifyBindingValidationStatusHandlers());
 
         String initialName = item.getFirstName();
         int initialAge = item.getAge();
@@ -941,5 +967,81 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         assertEquals("Binding still affects bean even after unbind",
                 ageBeforeUnbind, String.valueOf(item.getAge()));
+    }
+
+    @Test
+    public void info_validator_not_considered_error() {
+        String infoMessage = "Young";
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter("Can't convert"))
+                .withValidator(i -> i > 5, infoMessage, ErrorLevel.INFO)
+                .bind(Person::getAge, Person::setAge);
+
+        binder.setBean(item);
+        ageField.setValue("3");
+        Assert.assertEquals(infoMessage,
+                ageField.getComponentError().getFormattedHtmlMessage());
+        Assert.assertEquals(ErrorLevel.INFO,
+                ageField.getComponentError().getErrorLevel());
+
+        Assert.assertEquals(3, item.getAge());
+    }
+
+    @Test
+    public void two_asRequired_fields_without_initial_values() {
+        binder.forField(nameField).asRequired("Empty name").bind(p -> "",
+                (p, s) -> {
+                });
+        binder.forField(ageField).asRequired("Empty age").bind(p -> "",
+                (p, s) -> {
+                });
+
+        binder.setBean(item);
+        assertNull("Initially there should be no errors",
+                nameField.getComponentError());
+        assertNull("Initially there should be no errors",
+                ageField.getComponentError());
+
+        nameField.setValue("Foo");
+        assertNull("Name with a value should not be an error",
+                nameField.getComponentError());
+        assertNull(
+                "Age field should not be in error, since it has not been modified.",
+                ageField.getComponentError());
+
+        nameField.setValue("");
+        assertNotNull("Empty name should now be in error.",
+                nameField.getComponentError());
+        assertNull("Age field should still be ok.",
+                ageField.getComponentError());
+    }
+
+    @Test
+    public void refreshValueFromBean() {
+        Binding<Person, String> binding = binder.bind(nameField,
+                Person::getFirstName, Person::setFirstName);
+
+        binder.readBean(item);
+
+        assertEquals("Name should be read from the item", item.getFirstName(),
+                nameField.getValue());
+
+        nameField.setValue("foo");
+
+        assertNotEquals("Name should be different from the item",
+                item.getFirstName(), nameField.getValue());
+
+        binding.read(item);
+
+        assertEquals("Name should be read again from the item",
+                item.getFirstName(), nameField.getValue());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void remove_binding_from_different_binder() {
+        Binder<Person> anotherBinder = new Binder<>();
+        Binding<Person, String> binding = anotherBinder.bind(nameField,
+                Person::getFirstName, Person::setFirstName);
+        binder.removeBinding(binding);
     }
 }

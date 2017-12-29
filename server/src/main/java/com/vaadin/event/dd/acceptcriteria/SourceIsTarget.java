@@ -23,7 +23,7 @@ import com.vaadin.ui.Component;
 
 /**
  *
- * A criterion that ensures the drag source is the same as drop target. Eg.
+ * A criterion that ensures the drag source is the same as drop target. E.g.
  * {code Tree} or {@code Table} could support only re-ordering of items, but no
  * {@link Transferable}s coming outside.
  * <p>
@@ -35,7 +35,7 @@ import com.vaadin.ui.Component;
 public class SourceIsTarget extends ClientSideCriterion {
 
     private static final long serialVersionUID = -451399314705532584L;
-    private static final SourceIsTarget instance = new SourceIsTarget();
+    private static final SourceIsTarget INSTANCE = new SourceIsTarget();
 
     private SourceIsTarget() {
     }
@@ -52,7 +52,7 @@ public class SourceIsTarget extends ClientSideCriterion {
     }
 
     public static synchronized SourceIsTarget get() {
-        return instance;
+        return INSTANCE;
     }
 
 }

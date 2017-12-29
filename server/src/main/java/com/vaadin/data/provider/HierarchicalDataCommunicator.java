@@ -66,7 +66,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     }
 
     @Override
-    protected List<T> fetchItemsWithRange(int offset, int limit) {
+    public List<T> fetchItemsWithRange(int offset, int limit) {
         // Instead of adding logic to this class, delegate request to the
         // separate object handling hierarchies.
         return mapper.fetchItems(Range.withLength(offset, limit))
@@ -101,7 +101,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         if (mapper != null) {
             removeDataGenerator(mapper);
         }
-        mapper = new HierarchyMapper<>(dataProvider);
+        mapper = createHierarchyMapper(dataProvider);
 
         // Set up mapper for requests
         mapper.setBackEndSorting(getBackEndSorting());
@@ -113,6 +113,18 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         addDataGenerator(mapper);
 
         return consumer;
+    }
+
+    /**
+     * Create new {@code HierarchyMapper} for the given data provider.
+     * May be overridden in subclasses.
+     *
+     * @param dataProvider the data provider
+     * @param <F> Query type
+     * @return new {@link HierarchyMapper}
+     */
+    protected <F> HierarchyMapper<T, F> createHierarchyMapper(HierarchicalDataProvider<T, F> dataProvider) {
+        return new HierarchyMapper<>(dataProvider);
     }
 
     /**
@@ -310,4 +322,12 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         super.setFilter(filter);
     }
 
+    /**
+     * Returns the {@code HierarchyMapper} used by this data communicator.
+     *
+     * @return the hierarchy mapper used by this data communicator
+     */
+    protected HierarchyMapper<T, ?> getHierarchyMapper() {
+        return mapper;
+    }
 }

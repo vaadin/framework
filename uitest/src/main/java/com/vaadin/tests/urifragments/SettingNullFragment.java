@@ -4,7 +4,6 @@ import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 
 @SuppressWarnings("serial")
 public class SettingNullFragment extends AbstractReindeerTestUI {
@@ -23,19 +22,11 @@ public class SettingNullFragment extends AbstractReindeerTestUI {
         Button button2 = new Button("Set Null Fragment");
         button2.setId(BUTTON_NULL_FRAGMENT_ID);
 
-        button1.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Page.getCurrent().setUriFragment(FRAG_1_URI);
-            }
-        });
+        button1.addClickListener(
+                event -> Page.getCurrent().setUriFragment(FRAG_1_URI));
 
-        button2.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Page.getCurrent().setUriFragment(null);
-            }
-        });
+        button2.addClickListener(
+                event -> Page.getCurrent().setUriFragment(null));
 
         getLayout().addComponent(button1);
         getLayout().addComponent(button2);

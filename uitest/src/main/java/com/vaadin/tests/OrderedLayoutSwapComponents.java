@@ -21,7 +21,6 @@ import java.util.List;
 
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -72,37 +71,31 @@ public class OrderedLayoutSwapComponents extends CustomComponent {
             ol.setId(name.replaceAll(" ", ""));
             ol.addComponent(new Label(name));
             up = new Button("up");
-            up.addClickListener(new Button.ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    int newIndex = order.indexOf(MyComponent.this) - 1;
-                    MyComponent old = order.get(newIndex);
-                    main.replaceComponent(old, MyComponent.this);
-                    order.remove(MyComponent.this);
-                    order.add(newIndex, MyComponent.this);
-                    if (newIndex == 0) {
-                        MyComponent.this.setMode(FIRST);
-                    } else {
-                        MyComponent.this.setMode(69);
-                    }
+            up.addClickListener(event -> {
+                int newIndex = order.indexOf(this) - 1;
+                MyComponent old = order.get(newIndex);
+                main.replaceComponent(old, this);
+                order.remove(this);
+                order.add(newIndex, this);
+                if (newIndex == 0) {
+                    setMode(FIRST);
+                } else {
+                    setMode(69);
                 }
             });
             ol.addComponent(up);
 
             down = new Button("down");
-            down.addClickListener(new Button.ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    int newIndex = order.indexOf(MyComponent.this) + 1;
-                    MyComponent old = order.get(newIndex);
-                    main.replaceComponent(old, MyComponent.this);
-                    order.remove(MyComponent.this);
-                    order.add(newIndex, MyComponent.this);
-                    if (newIndex == order.size() - 1) {
-                        MyComponent.this.setMode(LAST);
-                    } else {
-                        MyComponent.this.setMode(69);
-                    }
+            down.addClickListener(event -> {
+                int newIndex = order.indexOf(MyComponent.this) + 1;
+                MyComponent old = order.get(newIndex);
+                main.replaceComponent(old, MyComponent.this);
+                order.remove(MyComponent.this);
+                order.add(newIndex, MyComponent.this);
+                if (newIndex == order.size() - 1) {
+                    MyComponent.this.setMode(LAST);
+                } else {
+                    MyComponent.this.setMode(69);
                 }
             });
             ol.addComponent(down);

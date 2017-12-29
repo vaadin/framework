@@ -2,7 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.ui.Table;
 
 public class UncollapsedCollumnWidth extends TestBase {
@@ -22,12 +21,8 @@ public class UncollapsedCollumnWidth extends TestBase {
         table.addItem(new Object[] { "Cell 1", "Cell 2" }, new Object());
 
         addComponent(table);
-        addComponent(new Button("Uncollapse col2", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setColumnCollapsed("Col2", false);
-            }
-        }));
+        addComponent(new Button("Uncollapse col2",
+                event -> table.setColumnCollapsed("Col2", false)));
     }
 
     @Override

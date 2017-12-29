@@ -97,7 +97,7 @@ public class CalendarSmokeTest extends MultiBrowserTest {
 
     private WebElement getFirstDayWithEvents() {
         for (WebElement monthDay : getCalendar().getMonthDays()) {
-            if (getVisibleEvents(monthDay).size() > 0) {
+            if (!getVisibleEvents(monthDay).isEmpty()) {
                 return monthDay;
             }
         }

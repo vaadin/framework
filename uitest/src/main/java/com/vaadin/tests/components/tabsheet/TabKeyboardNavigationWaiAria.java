@@ -6,8 +6,6 @@ import java.util.List;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TabSheet;
@@ -30,18 +28,8 @@ public class TabKeyboardNavigationWaiAria extends AbstractReindeerTestUI {
             addTab();
         }
 
-        Button addTab = new Button("Add a tab", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                addTab();
-            }
-        });
-        Button focus = new Button("Focus tabsheet", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                ts.focus();
-            }
-        });
+        Button addTab = new Button("Add a tab", event -> addTab());
+        Button focus = new Button("Focus tabsheet", event -> ts.focus());
 
         addComponent(addTab);
         addComponent(focus);

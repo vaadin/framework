@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Locale;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -142,7 +143,9 @@ public class GridComponentsTest extends MultiBrowserTest {
         GridRowElement row = $(GridElement.class).first().getRow(i);
         assertEquals("Label text did not match", string,
                 row.getCell(0).getText());
-        row.findElement(By.id(string.replace(' ', '_').toLowerCase())).click();
+        row.findElement(
+                By.id(string.replace(' ', '_').toLowerCase(Locale.ROOT)))
+                .click();
         // IE 11 is slow, need to wait for the notification.
         waitUntil(driver -> isElementPresent(NotificationElement.class), 10);
         assertTrue("Notification should contain given text",

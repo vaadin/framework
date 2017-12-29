@@ -17,6 +17,7 @@
 package com.vaadin.v7.client.ui;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.aria.client.SelectedValue;
@@ -53,7 +54,6 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DateTimeService;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.FocusableFlexTable;
 import com.vaadin.client.ui.SubPartAware;
@@ -69,12 +69,12 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
         /**
          * Called when calendar user triggers a submitting operation in calendar
-         * panel. Eg. clicking on day or hitting enter.
+         * panel. E.g. clicking on day or hitting enter.
          */
         void onSubmit();
 
         /**
-         * On eg. ESC key.
+         * On e.g. ESC key.
          */
         void onCancel();
     }
@@ -238,7 +238,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      *            one of the days currently visible.
      */
     private void focusDay(Date date) {
-        // Only used when calender body is present
+        // Only used when calendar body is present
         if (resolution.getCalendarField() > Resolution.MONTH
                 .getCalendarField()) {
             if (focusedDay != null) {
@@ -331,7 +331,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
             selectDate(focusedDate);
         } else {
-            VConsole.log("Trying to select a the focused date which is NULL!");
+            getLogger().info("Trying to select a the focused date which is NULL!");
         }
     }
 
@@ -1632,7 +1632,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * TimeSelector is a widget consisting of list boxes that modifie the Date
+     * TimeSelector is a widget consisting of list boxes that modify the Date
      * object that is given for.
      *
      */
@@ -1955,7 +1955,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * The submit listener is called when the user selects a value from the
-     * calender either by clicking the day or selects it by keyboard.
+     * calendar either by clicking the day or selects it by keyboard.
      *
      * @param submitListener
      *            The listener to trigger
@@ -2246,5 +2246,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 renderCalendar();
             }
         }
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(VCalendarPanel.class.getName());
     }
 }

@@ -23,11 +23,13 @@ import com.vaadin.event.selection.SingleSelectionEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DescriptionGenerator;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.SelectionMode;
@@ -91,7 +93,7 @@ public class GridBasics extends AbstractTestUIWithLog {
                     }
                     log("Columns reordered, userOriginated: "
                             + event.isUserOriginated());
-                    log("Column order: " + columnCaptions.toString());
+                    log("Column order: " + columnCaptions);
                 });
                 log("Registered a column reorder listener.");
             }
@@ -125,7 +127,7 @@ public class GridBasics extends AbstractTestUIWithLog {
 
             cssLayout
                     .addComponent(new Button("Press me",
-                            e -> Notification.show("You clicked on the "
+                            event -> Notification.show("You clicked on the "
                                     + "button in the details for " + "row "
                                     + dataObj.getRowNumber())));
             return cssLayout;
@@ -256,8 +258,7 @@ public class GridBasics extends AbstractTestUIWithLog {
     private void onSingleSelect(SingleSelectionEvent<DataObject> event) {
         log("SingleSelectionEvent: Selected: "
                 + (event.getSelectedItem().isPresent()
-                        ? event.getSelectedItem().get().toString()
-                        : "none"));
+                        ? event.getSelectedItem().get().toString() : "none"));
     }
 
     private void onMultiSelect(MultiSelectionEvent<DataObject> event) {
@@ -268,8 +269,7 @@ public class GridBasics extends AbstractTestUIWithLog {
         String addedRow = firstAdded.isPresent() ? firstAdded.get().toString()
                 : "none";
         String removedRow = firstRemoved.isPresent()
-                ? firstRemoved.get().toString()
-                : "none";
+                ? firstRemoved.get().toString() : "none";
         log("SelectionEvent: Added " + addedRow + ", Removed " + removedRow);
     }
 
@@ -363,11 +363,9 @@ public class GridBasics extends AbstractTestUIWithLog {
         }
         columnsMenu.addItem("Clear sort", item -> grid.clearSortOrder());
 
-        columnsMenu
-                .addItem("Simple resize mode",
-                        item -> grid.setColumnResizeMode(
-                                item.isChecked() ? ColumnResizeMode.SIMPLE
-                                        : ColumnResizeMode.ANIMATED))
+        columnsMenu.addItem("Simple resize mode",
+                item -> grid.setColumnResizeMode(item.isChecked()
+                        ? ColumnResizeMode.SIMPLE : ColumnResizeMode.ANIMATED))
                 .setCheckable(true);
     }
 
@@ -378,10 +376,10 @@ public class GridBasics extends AbstractTestUIWithLog {
                 3.67, 4.00, 4.33, 4.67)
                 .forEach(d -> addGridMethodMenu(heightByRows,
                         df.format(d) + " rows", d, grid::setHeightByRows));
-        sizeMenu.addItem("HeightMode Row", item -> {
-            grid.setHeightMode(
-                    item.isChecked() ? HeightMode.ROW : HeightMode.CSS);
-        }).setCheckable(true);
+        sizeMenu.addItem("HeightMode Row",
+                item -> grid.setHeightMode(
+                        item.isChecked() ? HeightMode.ROW : HeightMode.CSS))
+                .setCheckable(true);
 
         MenuItem heightMenu = sizeMenu.addItem("Height", null);
         Stream.of(50, 100, 200, 400).map(i -> i + "px").forEach(
@@ -405,18 +403,10 @@ public class GridBasics extends AbstractTestUIWithLog {
         }
         createRowStyleMenu(stateMenu.addItem("Row style generator", null));
         createCellStyleMenu(stateMenu.addItem("Cell style generator", null));
-        stateMenu.addItem("Row description generator",
-                item -> grid.setDescriptionGenerator(item.isChecked()
-                        ? t -> "Row tooltip for row " + t.getRowNumber()
-                        : null))
-                .setCheckable(true);
-        stateMenu.addItem("Cell description generator",
-                item -> grid.getColumns().stream().findFirst().ifPresent(
-                        c -> c.setDescriptionGenerator(item.isChecked()
-                                ? t -> "Cell tooltip for row "
-                                        + t.getRowNumber() + ", Column 0"
-                                : null)))
-                .setCheckable(true);
+        createRowDescriptionMenu(
+                stateMenu.addItem("Row description generator", null));
+        createCellDescriptionMenu(
+                stateMenu.addItem("Cell description generator", null));
         stateMenu.addItem("Item click listener", new Command() {
 
             private Registration registration = null;
@@ -425,12 +415,12 @@ public class GridBasics extends AbstractTestUIWithLog {
             public void menuSelected(MenuItem selectedItem) {
                 removeRegistration();
                 if (selectedItem.isChecked()) {
-                    registration = grid.addItemClickListener(e -> {
-                        grid.setDetailsVisible(e.getItem(),
-                                !grid.isDetailsVisible(e.getItem()));
-                        log("Item click on row " + e.getItem().getRowNumber()
-                                + ", Column '" + e.getColumn().getCaption()
-                                + "'");
+                    registration = grid.addItemClickListener(event -> {
+                        grid.setDetailsVisible(event.getItem(),
+                                !grid.isDetailsVisible(event.getItem()));
+                        log("Item click on row "
+                                + event.getItem().getRowNumber() + ", Column '"
+                                + event.getColumn().getCaption() + "'");
                     });
                     log("Registered an item click listener.");
                 }
@@ -471,13 +461,50 @@ public class GridBasics extends AbstractTestUIWithLog {
                 .setCheckable(true);
 
         MenuItem enableItem = stateMenu.addItem("Enabled",
-                e -> grid.setEnabled(e.isChecked()));
+                event -> grid.setEnabled(event.isChecked()));
         enableItem.setCheckable(true);
         enableItem.setChecked(true);
 
         createSelectionMenu(stateMenu);
 
         stateMenu.addItem("Set focus", item -> grid.focus());
+    }
+
+    private void createRowDescriptionMenu(MenuItem rowDescriptionMenu) {
+        DescriptionGenerator<DataObject> description = t -> "Row tooltip for row <b>"
+                + t.getRowNumber() + "</b>";
+        DescriptionGenerator<DataObject> halfEmpty = t -> t.getRowNumber()
+                % 2 == 0 ? description.apply(t) : null;
+
+        addGridMethodMenu(rowDescriptionMenu, "Remove descriptions", null,
+                g -> grid.setDescriptionGenerator(null));
+        addGridMethodMenu(rowDescriptionMenu, "Preformatted", description,
+                generator -> grid.setDescriptionGenerator(generator));
+        addGridMethodMenu(rowDescriptionMenu, "HTML", description,
+                generator -> grid.setDescriptionGenerator(generator,
+                        ContentMode.HTML));
+        addGridMethodMenu(rowDescriptionMenu, "Even rows HTML", halfEmpty,
+                generator -> grid.setDescriptionGenerator(generator,
+                        ContentMode.HTML));
+    }
+
+    private void createCellDescriptionMenu(MenuItem cellDescriptionMenu) {
+        Column<DataObject, ?> column = grid.getColumns().get(0);
+        DescriptionGenerator<DataObject> description = t -> "Cell tooltip for row <b>"
+                + t.getRowNumber() + "</b>, " + column.getCaption();
+        DescriptionGenerator<DataObject> halfEmpty = t -> t.getRowNumber()
+                % 2 == 0 ? description.apply(t) : null;
+
+        addGridMethodMenu(cellDescriptionMenu, "Remove descriptions", null,
+                g -> column.setDescriptionGenerator(null));
+        addGridMethodMenu(cellDescriptionMenu, "Preformatted", description,
+                generator -> column.setDescriptionGenerator(generator));
+        addGridMethodMenu(cellDescriptionMenu, "HTML", description,
+                generator -> column.setDescriptionGenerator(generator,
+                        ContentMode.HTML));
+        addGridMethodMenu(cellDescriptionMenu, "Even rows HTML", halfEmpty,
+                generator -> column.setDescriptionGenerator(generator,
+                        ContentMode.HTML));
     }
 
     private void createRowStyleMenu(MenuItem rowStyleMenu) {
@@ -514,7 +541,8 @@ public class GridBasics extends AbstractTestUIWithLog {
                 sg -> grid.getColumns().forEach(c -> c.setStyleGenerator(t -> {
                     if (t.getRowNumber() % 4 == 1) {
                         return null;
-                    } else if (t.getRowNumber() % 4 == 3
+                    }
+                    if (t.getRowNumber() % 4 == 3
                             && c.getCaption().equals("Column 1")) {
                         return null;
                     }
@@ -539,9 +567,8 @@ public class GridBasics extends AbstractTestUIWithLog {
                 grid.getSelectionModel().select(item);
             }
         });
-        rowMenu.addItem("Deselect all", menuItem -> {
-            grid.getSelectionModel().deselectAll();
-        });
+        rowMenu.addItem("Deselect all",
+                menuItem -> grid.getSelectionModel().deselectAll());
 
         MenuItem rowHeight = rowMenu.addItem("Body Row Height", null);
         Stream.of(-1, 20, 50, 100).forEach(i -> rowHeight.addItem("" + i,
@@ -559,9 +586,7 @@ public class GridBasics extends AbstractTestUIWithLog {
                             .addSingleSelectionListener(this::onSingleSelect);
             grid.asSingleSelect().setReadOnly(isUserSelectionDisallowed);
         });
-        selectionModelItem.addItem("multi", menuItem -> {
-            switchToMultiSelect();
-        });
+        selectionModelItem.addItem("multi", menuItem -> switchToMultiSelect());
         selectionModelItem.addItem("none", menuItem -> {
             selectionListenerRegistration.remove();
             grid.setSelectionMode(SelectionMode.NONE);
@@ -629,24 +654,18 @@ public class GridBasics extends AbstractTestUIWithLog {
                 row.getCell(column).setText("Header cell " + i++);
             }
         });
-        headerMenu.addItem("Remove first header row", menuItem -> {
-            grid.removeHeaderRow(0);
-        });
-        headerMenu.addItem("Set first row as default", menuItem -> {
-            grid.setDefaultHeaderRow(grid.getHeaderRow(0));
-        });
-        headerMenu.addItem("Set no default row", menuItem -> {
-            grid.setDefaultHeaderRow(null);
-        });
-        headerMenu.addItem("Merge Header Cells [0,0..1]", menuItem -> {
-            mergeHeaderСells(0, "0+1", 0, 1);
-        });
-        headerMenu.addItem("Merge Header Cells [1,1..3]", menuItem -> {
-            mergeHeaderСells(1, "1+2+3", 1, 2, 3);
-        });
-        headerMenu.addItem("Merge Header Cells [0,6..7]", menuItem -> {
-            mergeHeaderСells(0, "6+7", 6, 7);
-        });
+        headerMenu.addItem("Remove first header row",
+                menuItem -> grid.removeHeaderRow(0));
+        headerMenu.addItem("Set first row as default",
+                menuItem -> grid.setDefaultHeaderRow(grid.getHeaderRow(0)));
+        headerMenu.addItem("Set no default row",
+                menuItem -> grid.setDefaultHeaderRow(null));
+        headerMenu.addItem("Merge Header Cells [0,0..1]",
+                menuItem -> mergeHeaderСells(0, "0+1", 0, 1));
+        headerMenu.addItem("Merge Header Cells [1,1..3]",
+                menuItem -> mergeHeaderСells(1, "1+2+3", 1, 2, 3));
+        headerMenu.addItem("Merge Header Cells [0,6..7]",
+                menuItem -> mergeHeaderСells(0, "6+7", 6, 7));
 
         MenuItem rowHeight = headerMenu.addItem("Header Row Height", null);
         Stream.of(-1, 20, 50, 100).forEach(i -> rowHeight.addItem("" + i,
@@ -702,18 +721,14 @@ public class GridBasics extends AbstractTestUIWithLog {
                 row.getCell(column).setText("Footer cell " + i++);
             }
         });
-        footerMenu.addItem("Remove first footer row", menuItem -> {
-            grid.removeFooterRow(0);
-        });
-        footerMenu.addItem("Merge Footer Cells [0,0..1]", menuItem -> {
-            mergeFooterСells(0, "0+1", 0, 1);
-        });
-        footerMenu.addItem("Merge Footer Cells [1,1..3]", menuItem -> {
-            mergeFooterСells(1, "1+2+3", 1, 2, 3);
-        });
-        footerMenu.addItem("Merge Footer Cells [0,6..7]", menuItem -> {
-            mergeFooterСells(0, "6+7", 6, 7);
-        });
+        footerMenu.addItem("Remove first footer row",
+                menuItem -> grid.removeFooterRow(0));
+        footerMenu.addItem("Merge Footer Cells [0,0..1]",
+                menuItem -> mergeFooterСells(0, "0+1", 0, 1));
+        footerMenu.addItem("Merge Footer Cells [1,1..3]",
+                menuItem -> mergeFooterСells(1, "1+2+3", 1, 2, 3));
+        footerMenu.addItem("Merge Footer Cells [0,6..7]",
+                menuItem -> mergeFooterСells(0, "6+7", 6, 7));
 
         MenuItem rowHeight = footerMenu.addItem("Footer Row Height", null);
         Stream.of(-1, 20, 50, 100).forEach(i -> rowHeight.addItem("" + i,
@@ -763,10 +778,15 @@ public class GridBasics extends AbstractTestUIWithLog {
         editorMenu.addItem("Save", i -> grid.getEditor().save());
         editorMenu.addItem("Cancel edit", i -> grid.getEditor().cancel());
 
+        Stream.of(0, 5, 100).forEach(i -> editorMenu.addItem("Edit row " + i,
+                menuItem -> grid.getEditor().editRow(i)));
+        editorMenu.addItem("Edit last row", menuItem -> grid.getEditor()
+                .editRow(grid.getDataCommunicator().getDataProviderSize() - 1));
+
         editorMenu.addItem("Change save caption",
-                e -> grid.getEditor().setSaveCaption("ǝʌɐS"));
+                event -> grid.getEditor().setSaveCaption("ǝʌɐS"));
         editorMenu.addItem("Change cancel caption",
-                e -> grid.getEditor().setCancelCaption("ʃǝɔuɐↃ"));
+                event -> grid.getEditor().setCancelCaption("ʃǝɔuɐↃ"));
 
     }
 

@@ -31,15 +31,12 @@ public class GridInWindow extends AbstractTestUIWithLog {
         grid.addRow("Close and reopen and it vanishes");
 
         Button popupButton = new Button("Open PopUp",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        Window subWindow = new Window("Sub-window");
-                        subWindow.setContent(grid);
-                        subWindow.setWidth(600, Unit.PIXELS);
-                        subWindow.setWidth(400, Unit.PIXELS);
-                        getUI().addWindow(subWindow);
-                    }
+                event -> {
+                    Window subWindow = new Window("Sub-window");
+                    subWindow.setContent(grid);
+                    subWindow.setWidth(600, Unit.PIXELS);
+                    subWindow.setWidth(400, Unit.PIXELS);
+                    getUI().addWindow(subWindow);
                 });
 
         addComponent(popupButton);

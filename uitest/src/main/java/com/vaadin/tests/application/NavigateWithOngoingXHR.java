@@ -16,69 +16,59 @@
 
 package com.vaadin.tests.application;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinResponse;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Link;
 import com.vaadin.v7.shared.ui.progressindicator.ProgressIndicatorServerRpc;
 import com.vaadin.v7.ui.ProgressIndicator;
 
 public class NavigateWithOngoingXHR extends AbstractReindeerTestUI {
-    private final RequestHandler slowRequestHandler = new RequestHandler() {
-        @Override
-        public boolean handleRequest(VaadinSession session,
-                VaadinRequest request, VaadinResponse response)
-                throws IOException {
-            if ("/slowRequestHandler".equals(request.getPathInfo())) {
-                // Make the navigation request last longer to keep the
-                // communication error visible
-                // System.out.println("Got slow content request");
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if (request.getParameter("download") != null) {
-                    response.setHeader("Content-Disposition", "attachment");
-                }
-
-                response.setContentType("text/plain");
-                PrintWriter writer = response.getWriter();
-                writer.println("Loaded slowly");
-                writer.close();
-
-                // System.out.println("Finished slow content request");
-
-                return true;
+    private final RequestHandler slowRequestHandler = (session, request,
+            response) -> {
+        if ("/slowRequestHandler".equals(request.getPathInfo())) {
+            // Make the navigation request last longer to keep the
+            // communication error visible
+            // System.out.println("Got slow content request");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            return false;
+
+            if (request.getParameter("download") != null) {
+                response.setHeader("Content-Disposition", "attachment");
+            }
+
+            response.setContentType("text/plain");
+            PrintWriter writer = response.getWriter();
+            writer.println("Loaded slowly");
+            writer.close();
+
+            // System.out.println("Finished slow content request");
+
+            return true;
         }
+        return false;
     };
 
     @Override
     protected void setup(VaadinRequest request) {
         addComponent(new ProgressIndicator() {
             {
-                registerRpc(new ProgressIndicatorServerRpc() {
-                    @Override
-                    public void poll() {
-                        // System.out.println("Pausing poll request");
-                        try {
-                            // Make the XHR request last longer to make it
-                            // easier to click the link at the right moment.
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        // System.out.println("Continuing poll request");
+                registerRpc((ProgressIndicatorServerRpc) () -> {
+                    // System.out.println("Pausing poll request");
+                    try {
+                        // Make the XHR request last longer to make it
+                        // easier to click the link at the right moment.
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
+                    // System.out.println("Continuing poll request");
                 });
                 setPollingInterval(3000);
             }

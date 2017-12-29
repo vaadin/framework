@@ -605,7 +605,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             }
         }
 
-        if (!isNullSelectionAllowed() && s.size() < 1) {
+        if (!isNullSelectionAllowed() && s.isEmpty()) {
             // empty selection not allowed, keep old value
             markAsDirty();
             return;
@@ -1081,7 +1081,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addExpandListener(ExpandListener)}
-     **/
+     */
     @Deprecated
     public void addListener(ExpandListener listener) {
         addExpandListener(listener);
@@ -1101,7 +1101,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeExpandListener(ExpandListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(ExpandListener listener) {
         removeExpandListener(listener);
@@ -1187,7 +1187,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addCollapseListener(CollapseListener)}
-     **/
+     */
     @Deprecated
     public void addListener(CollapseListener listener) {
         addCollapseListener(listener);
@@ -1207,7 +1207,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeCollapseListener(CollapseListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(CollapseListener listener) {
         removeCollapseListener(listener);
@@ -1363,7 +1363,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addItemClickListener(ItemClickListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(ItemClickListener listener) {
@@ -1379,7 +1379,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeItemClickListener(ItemClickListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(ItemClickListener listener) {

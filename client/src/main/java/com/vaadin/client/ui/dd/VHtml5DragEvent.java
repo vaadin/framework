@@ -51,7 +51,7 @@ public class VHtml5DragEvent extends NativeEvent {
      */
     public final native String getFileAsString(int index)
     /*-{
-        if(this.dataTransfer.files.length > 0 && this.dataTransfer.files[0].getAsText) {
+        if (this.dataTransfer.files.length > 0 && this.dataTransfer.files[0].getAsText) {
             return this.dataTransfer.files[index].getAsText("UTF-8");
         }
         return null;
@@ -61,7 +61,7 @@ public class VHtml5DragEvent extends NativeEvent {
     /*-{
         try {
             this.dataTransfer.dropEffect = effect;
-        } catch (e){}
+        } catch (e) {}
      }-*/;
 
     public final native String getEffectAllowed()
@@ -101,15 +101,15 @@ public class VHtml5DragEvent extends NativeEvent {
                 }
             }
         }
-    
+
         // Zero sized files without a type are also likely to be folders
         var file = this.dataTransfer.files[fileIndex];
         if (file.size == 0 && !file.type) {
             return false;
         }
-    
+
         // TODO Make it detect folders on all browsers
-    
+
         return true;
     }-*/;
 

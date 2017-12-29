@@ -19,7 +19,6 @@ package com.vaadin.tests.components.textfield;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 
@@ -47,20 +46,12 @@ public class TextFieldEmptyingPrompt extends AbstractReindeerTestUI {
         addComponent(label);
 
         textField.setPlaceholder(RANDOM_PROMPT);
-        textField.addValueChangeListener(listener -> {
-            label.setValue("Textfield value: " + listener.getValue());
-        });
+        textField.addValueChangeListener(listener -> label
+                .setValue("Textfield value: " + listener.getValue()));
         addComponent(textField);
 
         Button button = new Button("Click To Remove Prompt");
-        button.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-
-                textField.setPlaceholder("");
-            }
-        });
+        button.addClickListener(event -> textField.setPlaceholder(""));
         addComponent(button);
     }
 }

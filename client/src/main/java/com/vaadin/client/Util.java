@@ -1249,8 +1249,7 @@ public class Util {
     private static HasChildMeasurementHintConnector getPossibleChildMeasurementHintParentConnector(
             ComponentConnector candidate) {
         ServerConnector parent = candidate.getParent();
-        if (parent != null
-                && parent instanceof HasChildMeasurementHintConnector) {
+        if (parent instanceof HasChildMeasurementHintConnector) {
             return (HasChildMeasurementHintConnector) parent;
         }
         return null;

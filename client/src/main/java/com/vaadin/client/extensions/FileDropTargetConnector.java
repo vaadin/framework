@@ -80,7 +80,7 @@ public class FileDropTargetConnector extends DropTargetExtensionConnector {
      */
     private void uploadNextFile() {
         Scheduler.get().scheduleDeferred(() -> {
-            if (!uploading && uploadUrls.size() > 0) {
+            if (!uploading && !uploadUrls.isEmpty()) {
                 uploading = true;
                 String nextId = uploadUrls.keySet().stream().findAny().get();
 
@@ -124,7 +124,7 @@ public class FileDropTargetConnector extends DropTargetExtensionConnector {
             }
 
             // Request a list of upload URLs for the dropped files
-            if (fileParams.size() > 0) {
+            if (!fileParams.isEmpty()) {
                 getRpcProxy(FileDropTargetRpc.class).drop(fileParams);
             }
 
@@ -197,7 +197,8 @@ public class FileDropTargetConnector extends DropTargetExtensionConnector {
         protected FileUploadXHR() {
         }
 
-        public final native void postFile(File file) /*-{
+        public final native void postFile(File file)
+        /*-{
             this.setRequestHeader('Content-Type', 'multipart/form-data');
             this.send(file);
         }-*/;

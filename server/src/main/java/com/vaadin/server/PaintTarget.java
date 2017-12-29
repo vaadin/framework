@@ -187,7 +187,7 @@ public interface PaintTarget extends Serializable {
     public void addAttribute(String name, Resource value) throws PaintException;
 
     /**
-     * Adds details about {@link StreamVariable} to the UIDL stream. Eg. in web
+     * Adds details about {@link StreamVariable} to the UIDL stream. E.g. in web
      * terminals Receivers are typically rendered for the client side as URLs,
      * where the client side implementation can do an http post request.
      * <p>
@@ -282,7 +282,7 @@ public interface PaintTarget extends Serializable {
      * before any content is written.
      *
      * TODO: specify how the map is added
-     * 
+     *
      * @param name
      * @param value
      * @throws PaintException

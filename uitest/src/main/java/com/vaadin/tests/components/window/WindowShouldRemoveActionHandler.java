@@ -10,8 +10,6 @@ import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.v7.ui.TextField;
@@ -37,30 +35,9 @@ public class WindowShouldRemoveActionHandler extends AbstractReindeerTestUI {
         state.setId("state");
         addComponents(state, new TextField());
 
-        addButton("Add an action handler", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                add();
-            }
-
-        });
-        addButton("Add another action handler", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                addAnother();
-            }
-
-        });
-        addButton("Remove an action handler", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                remove();
-            }
-
-        });
+        addButton("Add an action handler", event -> add());
+        addButton("Add another action handler", event -> addAnother());
+        addButton("Remove an action handler", event -> remove());
     }
 
     public void remove() {

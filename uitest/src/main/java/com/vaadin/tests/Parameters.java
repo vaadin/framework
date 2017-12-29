@@ -70,8 +70,7 @@ public class Parameters extends com.vaadin.server.LegacyApplication
             layout.addComponent(
                     new Link(u2.toString(), new ExternalResource(u2)));
         } catch (final Exception e) {
-            System.out.println(
-                    "Couldn't get hostname for this machine: " + e.toString());
+            System.out.println("Couldn't get hostname for this machine: " + e);
             e.printStackTrace();
         }
 

@@ -3,7 +3,6 @@ package com.vaadin.tests.components.window;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.ui.Table;
 
 public class DownloadAndUpdate extends TestBase {
@@ -11,12 +10,8 @@ public class DownloadAndUpdate extends TestBase {
     @Override
     protected void setup() {
         addComponent(
-                new Button("Download and update", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        downloadAndUpdate();
-                    }
-                }));
+                new Button("Download and update",
+                        event -> downloadAndUpdate()));
     }
 
     protected void downloadAndUpdate() {

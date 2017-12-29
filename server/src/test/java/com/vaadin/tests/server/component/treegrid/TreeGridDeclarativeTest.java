@@ -2,8 +2,6 @@ package com.vaadin.tests.server.component.treegrid;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.junit.Assert;
-
 import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.data.provider.TreeDataProvider;
@@ -78,7 +76,7 @@ public class TreeGridDeclarativeTest
                 .size(new HierarchicalQuery<>(null, person6.toString())));
         testWrite(design, grid, true);
     }
-    
+
 
     @Override
     public void valueSerialization() throws InstantiationException,

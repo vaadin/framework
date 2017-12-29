@@ -2,8 +2,6 @@ package com.vaadin.tests.components.popupview;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.PopupView;
 import com.vaadin.v7.ui.TextField;
@@ -18,14 +16,8 @@ public class PopupViewNullValues extends TestBase {
         try {
             pv[0] = new PopupView("Popupview 1 - no component", null);
             addComponent(pv[0]);
-            b[0] = new Button("Open popupview 1", new ClickListener() {
-
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    pv[0].setPopupVisible(true);
-                }
-
-            });
+            b[0] = new Button("Open popupview 1",
+                    event -> pv[0].setPopupVisible(true));
         } catch (Exception e) {
             getMainWindow().showNotification(
                     "Error, 'null content' should not throw an exception at this point",
@@ -36,14 +28,8 @@ public class PopupViewNullValues extends TestBase {
             pv[1] = new PopupView(null,
                     new TextField("Empty html, contains component"));
             addComponent(pv[1]);
-            b[1] = new Button("Open popupview 2", new ClickListener() {
-
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    pv[1].setPopupVisible(true);
-                }
-
-            });
+            b[1] = new Button("Open popupview 2",
+                    event -> pv[1].setPopupVisible(true));
         } catch (Exception e) {
             getMainWindow().showNotification(
                     "Error, 'null html', should not throw an exception at this point",
@@ -53,14 +39,8 @@ public class PopupViewNullValues extends TestBase {
         try {
             pv[2] = new PopupView(null, null);
             addComponent(pv[2]);
-            b[2] = new Button("Open popupview 3", new ClickListener() {
-
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    pv[2].setPopupVisible(true);
-                }
-
-            });
+            b[2] = new Button("Open popupview 3",
+                    event -> pv[2].setPopupVisible(true));
         } catch (Exception e) {
             getMainWindow().showNotification(
                     "Error, 'null html, null content', should not throw an exception at this point",
@@ -70,14 +50,8 @@ public class PopupViewNullValues extends TestBase {
             pv[3] = new PopupView("Popupview 4 - has component",
                     new TextField("This is the content of popupview 4"));
             addComponent(pv[3]);
-            b[3] = new Button("Open popupview 4", new ClickListener() {
-
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    pv[3].setPopupVisible(true);
-                }
-
-            });
+            b[3] = new Button("Open popupview 4",
+                    event -> pv[3].setPopupVisible(true));
         } catch (Exception e) {
             getMainWindow().showNotification(
                     "Error, 'null html, null content', should not throw an exception at this point",

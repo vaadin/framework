@@ -104,7 +104,7 @@ public class EventRouter implements MethodEventSource {
      *             unless {@code method} has exactly one match in {@code target}
      * @throws NullPointerException
      *             if {@code target} is {@code null}
-     * @since
+     * @since 8.2
      */
     public Registration addListener(Class<?> eventType, Object target,
             Method method, String eventIdentifier, SharedState state) {
@@ -120,9 +120,10 @@ public class EventRouter implements MethodEventSource {
                 .addRegisteredEventListener(state, eventIdentifier);
 
         return () -> {
-            registration.remove();
-
             listenerList.remove(listenerMethod);
+            if (!hasListeners(eventType)) {
+                registration.remove();
+            }
         };
     }
 
@@ -164,7 +165,7 @@ public class EventRouter implements MethodEventSource {
     }
 
     /*
-     * Removes the event listener methods matching the given given paramaters.
+     * Removes the event listener methods matching the given given parameters.
      * Don't add a JavaDoc comment here, we use the default documentation from
      * implemented interface.
      */
@@ -313,5 +314,4 @@ public class EventRouter implements MethodEventSource {
         }
         return listeners;
     }
-
 }

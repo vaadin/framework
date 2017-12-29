@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.ui;
 
-import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Label;
@@ -9,14 +8,9 @@ public class UIInitException extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        setErrorHandler(new ErrorHandler() {
-            @Override
-            public void error(com.vaadin.server.ErrorEvent event) {
-                addComponent(new Label("An exception occurred: "
-                        + event.getThrowable().getMessage()));
-
-            }
-        });
+        setErrorHandler(
+                event -> addComponent(new Label("An exception occurred: "
+                        + event.getThrowable().getMessage())));
         throw new RuntimeException("Catch me if you can");
     }
 

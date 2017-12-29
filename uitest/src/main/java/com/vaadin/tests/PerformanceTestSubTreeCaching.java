@@ -20,7 +20,6 @@ import java.util.Date;
 
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -50,21 +49,11 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
         setCompositionRoot(main);
         addInfo();
 
-        Button b = new Button("start test", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                startTest();
-            }
-        });
+        Button b = new Button("start test", event -> startTest());
         b.setDescription(
                 "Push this button to start test. A test label will be rendered above existing components.");
         main.addComponent(b);
-        b = new Button("end test", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                endTest();
-            }
-        });
+        b = new Button("end test", event -> endTest());
         b.setDescription(
                 "Push this button as soon as test componenet is rendered.");
         main.addComponent(b);

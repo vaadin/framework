@@ -5,7 +5,6 @@ import java.util.Arrays;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.ui.Select;
 import com.vaadin.v7.ui.TextField;
 
@@ -19,22 +18,12 @@ public class FocusFromShortcutAction extends TestBase {
 
         addComponent(select);
         addComponent(text);
-        Button focusText = new Button("Focus text", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                text.focus();
-            }
-        });
+        Button focusText = new Button("Focus text", event -> text.focus());
         focusText.setClickShortcut(KeyCode.T, ModifierKey.ALT);
 
         addComponent(focusText);
         Button focusSelect = new Button("Focus select",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        select.focus();
-                    }
-                });
+                event -> select.focus());
         focusSelect.setClickShortcut(KeyCode.S, ModifierKey.ALT);
         addComponent(focusSelect);
     }

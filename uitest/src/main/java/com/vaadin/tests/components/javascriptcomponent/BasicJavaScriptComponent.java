@@ -33,7 +33,6 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.JavaScriptFunction;
 
@@ -173,12 +172,8 @@ public class BasicJavaScriptComponent extends AbstractReindeerTestUI {
         addComponent(c);
 
         Button removeButton = new Button("Remove component",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        removeComponent(c);
-                    }
-                });
+                event -> removeComponent(c));
+
         removeButton.setId("RemoveButton");
         addComponent(removeButton);
     }

@@ -18,7 +18,6 @@ package com.vaadin.ui.components.grid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.vaadin.data.provider.DataGenerator;
@@ -44,6 +43,7 @@ import elemental.json.JsonObject;
  *            The Grid bean type.
  * @author Vaadin Ltd.
  * @since 8.1
+ * @see GridRowDragger
  */
 public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
 
@@ -61,7 +61,7 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
     /**
      * Default drag data generator for Grid. It creates a list of row values
      * separated by a tabulator character ({@code \t}).
-     * 
+     *
      * <pre>
      * "column1_value\tcolumn2_value\t ... columnN_value"
      * </pre>
@@ -97,6 +97,16 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
                 defaultGridGenerator);
     }
 
+    /**
+     * Gets the grid this extension has been attached to.
+     *
+     * @return the grid for this extension
+     * @since 8.2
+     */
+    public Grid<T> getGrid() {
+        return getParent();
+    }
+
     @Override
     protected void registerDragSourceRpc() {
         registerRpc(new GridDragSourceRpc() {
@@ -126,7 +136,8 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
     /**
      * Collects the dragged items of a Grid given the list of item keys.
      */
-    private Set<T> getDraggedItems(Grid<T> grid, List<String> draggedItemKeys) {
+    private List<T> getDraggedItems(Grid<T> grid,
+            List<String> draggedItemKeys) {
         if (draggedItemKeys == null || draggedItemKeys.isEmpty()) {
             throw new IllegalStateException(
                     "The drag event does not contain dragged items");
@@ -134,7 +145,7 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
 
         return draggedItemKeys.stream()
                 .map(key -> grid.getDataCommunicator().getKeyMapper().get(key))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     /**
@@ -149,9 +160,8 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
     private void generateDragData(T item, JsonObject jsonObject) {
         JsonObject generatedValues = Json.createObject();
 
-        generatorFunctions.forEach((type, generator) -> {
-            generatedValues.put(type, generator.apply(item));
-        });
+        generatorFunctions.forEach((type, generator) -> generatedValues
+                .put(type, generator.apply(item)));
 
         jsonObject.put(GridDragSourceState.JSONKEY_DRAG_DATA, generatedValues);
     }
@@ -164,7 +174,7 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
      * type} data.
      * <p>
      * Example, building a JSON object that contains the item's values:
-     * 
+     *
      * <pre>
      *     dragSourceExtension.setDragDataGenerator("application/json", item ->
      * {

@@ -54,7 +54,7 @@ public class NativeSelectConnector
     protected void init() {
         super.init();
         selectionChangeRegistration = getWidget().getListBox()
-                .addChangeHandler(e -> selectionRpc
+                .addChangeHandler(event -> selectionRpc
                         .select(getWidget().getListBox().getSelectedValue()));
     }
 

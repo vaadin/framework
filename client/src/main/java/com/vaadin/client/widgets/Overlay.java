@@ -238,12 +238,7 @@ public class Overlay extends PopupPanel {
                 if (left < 0) {
                     // Would move left of screen, shrink to fit in window
                     setOuterWidthThroughWidget(windowRight - windowLeft);
-                    runOnClose.add(new Command() {
-                        @Override
-                        public void execute() {
-                            getWidget().setWidth("");
-                        }
-                    });
+                    runOnClose.add(() -> getWidget().setWidth(""));
                     left = 0;
                 }
             }
@@ -259,12 +254,7 @@ public class Overlay extends PopupPanel {
                 if (top < 0) {
                     // Would move above screen, shrink to fit in window
                     setOuterHeightThroughWidget(windowBottom - windowTop);
-                    runOnClose.add(new Command() {
-                        @Override
-                        public void execute() {
-                            getWidget().setHeight("");
-                        }
-                    });
+                    runOnClose.add(() -> getWidget().setHeight(""));
                     top = 0;
                 }
             }
@@ -357,10 +347,10 @@ public class Overlay extends PopupPanel {
         try {
             var b = $wnd.document.body;
             var cstyle = b.currentStyle ? b.currentStyle : getComputedStyle(b);
-            if(cstyle && cstyle.position == 'relative') {
+            if (cstyle && cstyle.position == 'relative') {
                 return b.getBoundingClientRect()[axis];
             }
-        } catch(e){}
+        } catch(e) {}
         return 0;
     }-*/;
 

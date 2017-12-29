@@ -8,11 +8,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.Upload.FailedEvent;
-import com.vaadin.ui.Upload.FailedListener;
 import com.vaadin.ui.Upload.Receiver;
-import com.vaadin.ui.Upload.SucceededEvent;
-import com.vaadin.ui.Upload.SucceededListener;
 
 public class TestFileUpload extends TestBase implements Receiver {
 
@@ -31,27 +27,19 @@ public class TestFileUpload extends TestBase implements Receiver {
             }
         });
         u.setId("UPL");
-        u.addFailedListener(new FailedListener() {
+        u.addFailedListener(event -> {
+            String hash = DigestUtils.md5Hex(baos.toByteArray());
 
-            @Override
-            public void uploadFailed(FailedEvent event) {
-                String hash = DigestUtils.md5Hex(baos.toByteArray());
-
-                log.log("<span style=\"color: red;\">Upload failed. Name: "
-                        + event.getFilename() + ", Size: " + baos.size()
-                        + ", md5: " + hash + "</span>");
-                baos.reset();
-            }
+            log.log("<span style=\"color: red;\">Upload failed. Name: "
+                    + event.getFilename() + ", Size: " + baos.size() + ", md5: "
+                    + hash + "</span>");
+            baos.reset();
         });
-        u.addSucceededListener(new SucceededListener() {
-
-            @Override
-            public void uploadSucceeded(SucceededEvent event) {
-                String hash = DigestUtils.md5Hex(baos.toByteArray());
-                log.log("Upload finished. Name: " + event.getFilename()
-                        + ", Size: " + baos.size() + ", md5: " + hash);
-                baos.reset();
-            }
+        u.addSucceededListener(event -> {
+            String hash = DigestUtils.md5Hex(baos.toByteArray());
+            log.log("Upload finished. Name: " + event.getFilename() + ", Size: "
+                    + baos.size() + ", md5: " + hash);
+            baos.reset();
         });
         u.setImmediateMode(false);
 

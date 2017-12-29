@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import com.vaadin.annotations.PropertyId;
@@ -1065,7 +1066,7 @@ public class FieldGroup implements Serializable {
     }
 
     protected static String minifyFieldName(String fieldName) {
-        return fieldName.toLowerCase().replace("_", "");
+        return fieldName.toLowerCase(Locale.ROOT).replace("_", "");
     }
 
     /**

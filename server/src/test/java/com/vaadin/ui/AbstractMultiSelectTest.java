@@ -397,7 +397,7 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
     }
 
     private void verifyValueChangeEvents() {
-        if (oldValues.size() > 0) {
+        if (!oldValues.isEmpty()) {
             assertTrue(oldValues.get(0).isEmpty());
             assertEquals(values.size(), oldValues.size());
             for (int i = 0; i < oldValues.size() - 1; i++) {

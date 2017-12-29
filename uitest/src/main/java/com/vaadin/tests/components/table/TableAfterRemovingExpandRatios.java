@@ -23,8 +23,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.v7.ui.Table;
@@ -65,14 +63,9 @@ public class TableAfterRemovingExpandRatios extends AbstractReindeerTestUI {
 
     private NativeButton createSetExpandRatiosButton(final Table table) {
         NativeButton button = new NativeButton("Set expand",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        table.setColumnExpandRatio("column1", 1.0f);
-                        table.setColumnExpandRatio("column2", 3.0f);
-
-                    }
+                event -> {
+                    table.setColumnExpandRatio("column1", 1.0f);
+                    table.setColumnExpandRatio("column2", 3.0f);
                 });
         button.setId("expand-button");
         return button;
@@ -80,13 +73,9 @@ public class TableAfterRemovingExpandRatios extends AbstractReindeerTestUI {
 
     private NativeButton createUnsetExpandRatiosButton(final Table table) {
         NativeButton button = new NativeButton("Unset expand",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        table.setColumnExpandRatio("column1", -1);
-                        table.setColumnExpandRatio("column2", -1);
-                    }
+                event -> {
+                    table.setColumnExpandRatio("column1", -1);
+                    table.setColumnExpandRatio("column2", -1);
                 });
         button.setId("unexpand-button");
         return button;
@@ -94,13 +83,7 @@ public class TableAfterRemovingExpandRatios extends AbstractReindeerTestUI {
 
     private NativeButton createAddItemButton(final Table table) {
         NativeButton button = new NativeButton("Add item",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        table.addItem();
-                    }
-                });
+                event -> table.addItem());
         button.setId("add-button");
         return button;
 

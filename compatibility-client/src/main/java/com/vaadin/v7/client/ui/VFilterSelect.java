@@ -21,7 +21,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -72,7 +74,6 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.Field;
 import com.vaadin.client.ui.Icon;
@@ -136,7 +137,7 @@ public class VFilterSelect extends Composite
 
         @Override
         public String getDisplayString() {
-            final StringBuffer sb = new StringBuffer();
+            final StringBuilder sb = new StringBuilder();
             final Icon icon = client
                     .getIcon(client.translateVaadinUri(untranslatedIconUri));
             if (icon != null) {
@@ -256,12 +257,12 @@ public class VFilterSelect extends Composite
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-        
+
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-        
+
                 @com.vaadin.v7.client.ui.VFilterSelect.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e, e.deltaMode);
             });
         }-*/;
@@ -934,7 +935,7 @@ public class VFilterSelect extends Composite
         private void setTdWidth(Node parent, int width) {
             for (int i = 0; i < parent.getChildCount(); i++) {
                 Node child = parent.getChild(i);
-                if ("td".equals(child.getNodeName().toLowerCase())) {
+                if ("td".equals(child.getNodeName().toLowerCase(Locale.ROOT))) {
                     ((Element) child).getStyle().setWidth(width, Unit.PX);
                 } else {
                     setTdWidth(child, width);
@@ -1069,7 +1070,7 @@ public class VFilterSelect extends Composite
          * Gets the preferred height of the menu including pageItemsCount items.
          */
         String getPreferredHeight(int pageItemsCount) {
-            if (currentSuggestions.size() > 0) {
+            if (!currentSuggestions.isEmpty()) {
                 final int pixels = (getPreferredHeight()
                         / currentSuggestions.size()) * pageItemsCount;
                 return pixels + "px";
@@ -1204,10 +1205,11 @@ public class VFilterSelect extends Composite
                 }
             } else if (item != null && !"".equals(lastFilter)
                     && (filteringmode == FilteringMode.CONTAINS
-                            ? item.getText().toLowerCase()
-                                    .contains(lastFilter.toLowerCase())
-                            : item.getText().toLowerCase()
-                                    .startsWith(lastFilter.toLowerCase()))) {
+                            ? item.getText().toLowerCase(Locale.ROOT).contains(
+                                    lastFilter.toLowerCase(Locale.ROOT))
+                            : item.getText().toLowerCase(Locale.ROOT)
+                                    .startsWith(lastFilter
+                                            .toLowerCase(Locale.ROOT)))) {
                 doItemAction(item, true);
             } else {
                 // currentSuggestion has key="" for nullselection
@@ -1298,7 +1300,7 @@ public class VFilterSelect extends Composite
          */
         int getItemOffsetHeight() {
             List<MenuItem> items = getItems();
-            return items != null && items.size() > 0
+            return items != null && !items.isEmpty()
                     ? items.get(0).getOffsetHeight()
                     : 0;
         }
@@ -1308,7 +1310,7 @@ public class VFilterSelect extends Composite
          */
         int getItemOffsetWidth() {
             List<MenuItem> items = getItems();
-            return items != null && items.size() > 0
+            return items != null && !items.isEmpty()
                     ? items.get(0).getOffsetWidth()
                     : 0;
         }
@@ -2046,7 +2048,7 @@ public class VFilterSelect extends Composite
 
     private void debug(String string) {
         if (enableDebug) {
-            VConsole.error(string);
+            getLogger().severe(string);
         }
     }
 
@@ -2303,12 +2305,12 @@ public class VFilterSelect extends Composite
      */
     public native int minWidth(String captions)
     /*-{
-        if(!captions || captions.length <= 0)
+        if (!captions || captions.length <= 0)
                 return 0;
         captions = captions.split("|");
         var d = $wnd.document.createElement("div");
         var html = "";
-        for(var i=0; i < captions.length; i++) {
+        for (var i=0; i < captions.length; i++) {
                 html += "<div>" + captions[i] + "</div>";
                 // TODO apply same CSS classname as in suggestionmenu
         }
@@ -2658,4 +2660,7 @@ public class VFilterSelect extends Composite
         return explicitSelectedCaption;
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(VFilterSelect.class.getName());
+    }
 }

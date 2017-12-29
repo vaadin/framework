@@ -19,15 +19,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -44,7 +41,6 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.VCaptionWrapper;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.popupview.VisibilityChangeEvent;
@@ -94,15 +90,12 @@ public class VPopupView extends HTML
         popup.setWidget(loading);
 
         // When we click to open the popup...
-        addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                if (isEnabled()) {
-                    preparePopup(popup);
-                    showPopup(popup);
-                    center();
-                    fireEvent(new VisibilityChangeEvent(true));
-                }
+        addClickHandler(event -> {
+            if (isEnabled()) {
+                preparePopup(popup);
+                showPopup(popup);
+                center();
+                fireEvent(new VisibilityChangeEvent(true));
             }
         });
 
@@ -193,7 +186,7 @@ public class VPopupView extends HTML
 
     private static native void nativeBlur(Element e)
     /*-{
-        if(e && e.blur) {
+        if (e && e.blur) {
             e.blur();
         }
     }-*/;
@@ -250,13 +243,11 @@ public class VPopupView extends HTML
             // Delegate popup keyboard events to the relevant handler. The
             // events do not propagate automatically because the popup is
             // directly attached to the RootPanel.
-            addDomHandler(new KeyDownHandler() {
-                @Override
-                public void onKeyDown(KeyDownEvent event) {
-                    if (shortcutActionHandler != null) {
-                        shortcutActionHandler.handleKeyboardEvent(
-                                Event.as(event.getNativeEvent()));
-                    }
+            addDomHandler(event -> {
+                if (shortcutActionHandler != null) {
+                    shortcutActionHandler
+                            .handleKeyboardEvent(
+                                    Event.as(event.getNativeEvent()));
                 }
             }, KeyDownEvent.getType());
         }
@@ -301,7 +292,7 @@ public class VPopupView extends HTML
 
         @Override
         public void hide(boolean autoClosed) {
-            VConsole.log("Hiding popupview");
+            getLogger().info("Hiding popupview");
             syncChildren();
             clearPopupComponentConnector();
             hasHadMouseOver = false;
@@ -326,16 +317,13 @@ public class VPopupView extends HTML
              * could be no shortcutActionHandler set yet. So let's postpone
              * search of shortcutActionHandler.
              */
-            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    try {
-                        if (shortcutActionHandler == null) {
-                            shortcutActionHandler = findShortcutActionHandler();
-                        }
-                    } finally {
-                        popupShowInProgress = false;
+            Scheduler.get().scheduleDeferred(() -> {
+                try {
+                    if (shortcutActionHandler == null) {
+                        shortcutActionHandler = findShortcutActionHandler();
                     }
+                } finally {
+                    popupShowInProgress = false;
                 }
             });
         }
@@ -442,4 +430,7 @@ public class VPopupView extends HTML
         return popupShowInProgress;
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(VPopupView.class.getName());
+    }
 }

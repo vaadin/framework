@@ -95,7 +95,7 @@ binder.bind(nameField,
 == Validating and Converting User Input
 
 `Binder` supports checking the validity of the user's input and converting the values between the type used in business objects and the bound UI components.
-These to concepts go hand in hand since validation can be based on a converted value, and being able to convert a value is a kind of validation.
+These two concepts go hand in hand since validation can be based on a converted value, and being able to convert a value is a kind of validation.
 
 [[datamodel.forms.validation]]
 === Validation
@@ -506,27 +506,26 @@ We can also define our own status handler to provide a custom way of handling st
 // in order to display generated error messages separated by a <br> tag
 formStatusLabel.setContentMode(ContentMode.HTML);
 
-BinderValidationStatusHandler defaultHandler = binder.getValidationStatusHandler();
+BinderValidationStatusHandler<Person> defaultHandler = binder.getValidationStatusHandler();
 
 binder.setValidationStatusHandler(status -> {
     // create an error message on failed bean level validations
-    List<Result<?>> errors = status.getBeanValidationErrors();
+    List<ValidationResult> errors = status.getBeanValidationErrors();
 
     // collect all bean level error messages into a single string,
     // separating each message with a <br> tag
-    String errorMessage = errors.stream().map(Result::getMessage)
-        .map(o -> o.get())
-        // sanitize the individual error strings to avoid code injection
-        // since we are displaying the resulting string as HTML
-        .map(errorString -> Jsoup.clean(errorString, Whitelist.simpleText()))
-        .collect(Collectors.joining("<br>"));
+    String errorMessage = errors.stream().map(ValidationResult::getErrorMessage)
+            // sanitize the individual error strings to avoid code injection
+            // since we are displaying the resulting string as HTML
+            .map(errorString -> Jsoup.clean(errorString, Whitelist.simpleText()))
+            .collect(Collectors.joining("<br>"));
 
     // finally, display all bean level validation errors in a single label
     formStatusLabel.setValue(errorMessage);
     formStatusLabel.setVisible(!errorMessage.isEmpty());
 
     // Let the default handler show messages for each field
-    defaultHandler.accept(status);
+    defaultHandler.statusChange(status);
 });
 ----
 

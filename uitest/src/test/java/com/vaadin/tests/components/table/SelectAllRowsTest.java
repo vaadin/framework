@@ -24,15 +24,13 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -95,14 +93,11 @@ public class SelectAllRowsTest extends MultiBrowserTest {
     }
 
     private void waitUntilRowIsVisible(final int row) {
-        waitUntil(new ExpectedCondition<Object>() {
-            @Override
-            public Object apply(WebDriver input) {
-                try {
-                    return getTable().getCell(row, 0) != null;
-                } catch (NoSuchElementException e) {
-                    return false;
-                }
+        waitUntil(input -> {
+            try {
+                return getTable().getCell(row, 0) != null;
+            } catch (NoSuchElementException e) {
+                return false;
             }
         });
     }

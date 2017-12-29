@@ -4,9 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-test</artifactId>
-        <version>8.2-SNAPSHOT</version>
-        <relativePath>../..</relativePath>
+        <artifactId>vaadin-servlet-containers-test</artifactId>
+        <version>8.3-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-test-karaf</artifactId>
     <packaging>pom</packaging>

@@ -16,6 +16,8 @@
 package com.vaadin.shared.ui.datefield;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.annotations.NoLayout;
@@ -50,8 +52,64 @@ public class AbstractDateFieldState extends AbstractFieldState {
     /**
      * The JSON used to construct a TimeZone on the client side, can be
      * {@code null}.
-     * 
+     *
      * @since 8.2
      */
     public String timeZoneJSON;
+
+    /**
+     * The used Locale, can be {@code null}.
+     *
+     * @since 8.2
+     */
+    public String locale;
+
+    /**
+     * Overridden date format string, can be {@code null} if default formatting
+     * of the components locale is used.
+     *
+     * @since 8.2
+     */
+    public String format;
+
+    /**
+     * Whether the date/time interpretation is lenient.
+     *
+     * @since 8.2
+     */
+    public boolean lenient;
+
+    /**
+     * The map of {@code Resolution}s which are currently used by the component.
+     *
+     * The key is the resolution name e.g. "HOUR", "MINUTE", with possibly
+     * prefixed by "default-".
+     *
+     * The value can be {@code null}
+     *
+     * @since 8.2
+     */
+    public Map<String, Integer> resolutions = new HashMap<>();
+
+    /**
+     * Determines if week numbers are shown in the date selector.
+     *
+     * @since 8.2
+     */
+    public boolean showISOWeekNumbers;
+
+    /**
+     * Was the last entered string parsable? If this flag is false, datefields
+     * internal validator does not pass.
+     *
+     * @since 8.2
+     */
+    public boolean parsable = true;
+
+    /**
+     * Map of custom style names that correspond with given dates. Each date
+     * must be set to midnight for the handling logic to work correctly.
+     */
+    public Map<String, String> dateStyles = new HashMap<String, String>();
+
 }

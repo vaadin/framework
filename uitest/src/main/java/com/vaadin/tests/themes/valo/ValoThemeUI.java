@@ -36,8 +36,6 @@ import com.vaadin.server.WebBrowser;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -51,8 +49,6 @@ import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Container.Hierarchical;
 import com.vaadin.v7.data.Item;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.util.HierarchicalContainer;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.NativeSelect;
@@ -163,7 +159,6 @@ public class ValoThemeUI extends UI {
                 menu.removeStyleName("valo-menu-visible");
             }
         });
-
     }
 
     private boolean browserCantRenderFontsConsistently() {
@@ -242,14 +237,11 @@ public class ValoThemeUI extends UI {
         menu.addComponent(top);
         menu.addComponent(createThemeSelect());
 
-        Button showMenu = new Button("Menu", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (menu.getStyleName().contains("valo-menu-visible")) {
-                    menu.removeStyleName("valo-menu-visible");
-                } else {
-                    menu.addStyleName("valo-menu-visible");
-                }
+        Button showMenu = new Button("Menu", event -> {
+            if (menu.getStyleName().contains("valo-menu-visible")) {
+                menu.removeStyleName("valo-menu-visible");
+            } else {
+                menu.addStyleName("valo-menu-visible");
             }
         });
         showMenu.addStyleName(ValoTheme.BUTTON_PRIMARY);
@@ -313,12 +305,8 @@ public class ValoThemeUI extends UI {
                 label.setSizeUndefined();
                 menuItemsLayout.addComponent(label);
             }
-            Button b = new Button(item.getValue(), new ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    navigator.navigateTo(item.getKey());
-                }
-            });
+            Button b = new Button(item.getValue(),
+                    event -> navigator.navigateTo(item.getKey()));
             if (count == 2) {
                 b.setCaption(b.getCaption()
                         + " <span class=\"valo-menu-badge\">123</span>");
@@ -359,12 +347,7 @@ public class ValoThemeUI extends UI {
         }
 
         ns.setValue("tests-valo");
-        ns.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setTheme((String) ns.getValue());
-            }
-        });
+        ns.addValueChangeListener(event -> setTheme((String) ns.getValue()));
         return ns;
     }
 

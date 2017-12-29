@@ -380,39 +380,6 @@ public class AutoScroller {
         }
     }
 
-    /**
-     * This handler makes sure that pointer movements are handled.
-     * <p>
-     * Essentially, a native preview handler is registered (so that selection
-     * gestures can happen outside of the selection column). The handler itself
-     * makes sure that it's detached when the pointer is "lifted".
-     */
-    private final NativePreviewHandler scrollPreviewHandler = new NativePreviewHandler() {
-        @Override
-        public void onPreviewNativeEvent(final NativePreviewEvent event) {
-            if (autoScroller == null) {
-                stop();
-                return;
-            }
-
-            final NativeEvent nativeEvent = event.getNativeEvent();
-            int pageY = 0;
-            int pageX = 0;
-            switch (event.getTypeInt()) {
-            case Event.ONMOUSEMOVE:
-            case Event.ONTOUCHMOVE:
-                pageY = WidgetUtil.getTouchOrMouseClientY(nativeEvent);
-                pageX = WidgetUtil.getTouchOrMouseClientX(nativeEvent);
-                autoScroller.updatePointerCoords(pageX, pageY);
-                break;
-            case Event.ONMOUSEUP:
-            case Event.ONTOUCHEND:
-            case Event.ONTOUCHCANCEL:
-                stop();
-                break;
-            }
-        }
-    };
     /** The registration info for {@link #scrollPreviewHandler} */
     private HandlerRegistration handlerRegistration;
 
@@ -440,6 +407,37 @@ public class AutoScroller {
     private AutoScrollingFrame autoScroller;
 
     private AutoScrollerCallback callback;
+
+    /**
+     * This handler makes sure that pointer movements are handled.
+     * <p>
+     * Essentially, a native preview handler is registered (so that selection
+     * gestures can happen outside of the selection column). The handler itself
+     * makes sure that it's detached when the pointer is "lifted".
+     */
+    private final NativePreviewHandler scrollPreviewHandler = event -> {
+        if (autoScroller == null) {
+            stop();
+            return;
+        }
+
+        final NativeEvent nativeEvent = event.getNativeEvent();
+        int pageY = 0;
+        int pageX = 0;
+        switch (event.getTypeInt()) {
+        case Event.ONMOUSEMOVE:
+        case Event.ONTOUCHMOVE:
+            pageY = WidgetUtil.getTouchOrMouseClientY(nativeEvent);
+            pageX = WidgetUtil.getTouchOrMouseClientX(nativeEvent);
+            autoScroller.updatePointerCoords(pageX, pageY);
+            break;
+        case Event.ONMOUSEUP:
+        case Event.ONTOUCHEND:
+        case Event.ONTOUCHCANCEL:
+            stop();
+            break;
+        }
+    };
 
     /**
      * Creates a new instance for scrolling the given grid.

@@ -17,8 +17,8 @@
 package com.vaadin.client.ui;
 
 import java.util.List;
+import java.util.logging.Logger;
 
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.HasScrollHandlers;
 import com.google.gwt.event.dom.client.ScrollEvent;
@@ -36,7 +36,6 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Profiler;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
@@ -51,7 +50,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
         com.google.gwt.user.client.ui.Focusable, HasResizeHandlers,
         HasScrollHandlers {
 
-    private static int MONITOR_PARENT_TIMER_INTERVAL = 1000;
+    private static final int MONITOR_PARENT_TIMER_INTERVAL = 1000;
 
     /** For internal use only. May be removed or replaced in the future. */
     public String id;
@@ -97,14 +96,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
     private TouchScrollHandler touchScrollHandler;
 
     private VLazyExecutor delayedResizeExecutor = new VLazyExecutor(200,
-            new ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    performSizeCheck();
-                }
-
-            });
+            () -> performSizeCheck());
 
     private Element storedFocus;
 
@@ -192,14 +184,14 @@ public class VUI extends SimplePanel implements ResizeHandler,
             changed = true;
             connector.getLayoutManager().reportOuterWidth(connector,
                     newWindowWidth);
-            VConsole.log("New window width: " + windowWidth);
+            getLogger().info("New window width: " + windowWidth);
         }
         if (windowHeight != newWindowHeight) {
             windowHeight = newWindowHeight;
             changed = true;
             connector.getLayoutManager().reportOuterHeight(connector,
                     newWindowHeight);
-            VConsole.log("New window height: " + windowHeight);
+            getLogger().info("New window height: " + windowHeight);
         }
         Element parentElement = getElement().getParentElement();
         if (isMonitoringParentSize() && parentElement != null) {
@@ -209,12 +201,12 @@ public class VUI extends SimplePanel implements ResizeHandler,
             if (parentWidth != newParentWidth) {
                 parentWidth = newParentWidth;
                 changed = true;
-                VConsole.log("New parent width: " + parentWidth);
+                getLogger().info("New parent width: " + parentWidth);
             }
             if (parentHeight != newParentHeight) {
                 parentHeight = newParentHeight;
                 changed = true;
-                VConsole.log("New parent height: " + parentHeight);
+                getLogger().info("New parent height: " + parentHeight);
             }
         }
         if (changed) {
@@ -225,7 +217,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
              * should shrink as the content's size is fixed and would thus not
              * automatically shrink.)
              */
-            VConsole.log(
+            getLogger().info(
                     "Running layout functions due to window or parent resize");
 
             // update size to avoid (most) redundant re-layout passes
@@ -345,8 +337,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
 
     private static native void loadAppIdListFromDOM(List<String> list)
     /*-{
-         var j;
-         for(j in $wnd.vaadin.vaadinConfigurations) {
+         for (var j in $wnd.vaadin.vaadinConfigurations) {
             // $entry not needed as function is not exported
             list.@java.util.Collection::add(Ljava/lang/Object;)(j);
          }
@@ -363,7 +354,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
     }
 
     /**
-     * Ensures the widget is scrollable eg. after style name changes.
+     * Ensures the widget is scrollable e.g. after style name changes.
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */
@@ -428,4 +419,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
         }
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(VUI.class.getName());
+    }
 }

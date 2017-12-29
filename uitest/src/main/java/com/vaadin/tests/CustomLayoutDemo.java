@@ -18,7 +18,6 @@ package com.vaadin.tests;
 
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.CustomLayout;
@@ -56,13 +55,7 @@ public class CustomLayoutDemo extends com.vaadin.server.LegacyApplication
     private final PasswordField loginPwd = new PasswordField("Password");
 
     private final Button loginButton = new Button("Login",
-            new Button.ClickListener() {
-
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    loginClicked();
-                }
-            });
+            event -> loginClicked());
 
     private final Tree menu = new Tree();
 
@@ -126,7 +119,7 @@ public class CustomLayoutDemo extends com.vaadin.server.LegacyApplication
     public void loginClicked() {
         username.setVisible(false);
         loginPwd.setVisible(false);
-        if (username.getValue().toString().length() < 1) {
+        if (username.getValue().length() < 1) {
             username.setValue("Anonymous");
         }
         mainLayout.replaceComponent(loginButton,

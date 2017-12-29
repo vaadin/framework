@@ -22,9 +22,9 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.dnd.criteria.ComparisonOperator;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.EffectAllowed;
+import com.vaadin.shared.ui.dnd.criteria.ComparisonOperator;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
@@ -126,15 +126,13 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
         dragSource.setPayload("card_value", cardValue);
 
         // Add listeners
-        dragSource.addDragStartListener(event -> {
-            log(event.getComponent().getValue() + " dragstart, effectsAllowed="
-                    + event.getEffectAllowed());
-        });
+        dragSource.addDragStartListener(event -> log(
+                event.getComponent().getValue() + " dragstart, effectsAllowed="
+                        + event.getEffectAllowed()));
 
-        dragSource.addDragEndListener(event -> {
-            log(event.getComponent().getValue() + " dragend, dropEffect="
-                    + event.getDropEffect());
-        });
+        dragSource
+                .addDragEndListener(event -> log(event.getComponent().getValue()
+                        + " dragend, dropEffect=" + event.getDropEffect()));
 
         sources.add(dragSource);
     }
@@ -145,28 +143,27 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
                 target);
 
         // Cards can be dropped onto others with smaller value
-        dropTarget.setDropCriterion("card_value", ComparisonOperator.SMALLER_THAN,
-                cardValue);
+        dropTarget.setDropCriterion("card_value",
+                ComparisonOperator.SMALLER_THAN, cardValue);
 
         // Add listener
-        dropTarget.addDropListener(event -> {
-            event.getDragSourceExtension().ifPresent(dragSource -> {
-                if (dragSource.getParent() instanceof Label) {
-                    Label source = (Label) dragSource.getParent();
+        dropTarget.addDropListener(event -> event.getDragSourceExtension()
+                .ifPresent(dragSource -> {
+                    if (dragSource.getParent() instanceof Label) {
+                        Label source = (Label) dragSource.getParent();
 
-                    // Swap source and target components
-                    desk.replaceComponent(target, source);
+                        // Swap source and target components
+                        desk.replaceComponent(target, source);
 
-                    log(event.getComponent().getValue() + " drop received "
-                            + source.getValue() + ", dropEffect="
-                            + event.getDropEffect() + ", mouseEventDetails="
-                            + event.getMouseEventDetails());
-                } else {
-                    log(event.getComponent().getValue()
-                            + " drop received something else than card");
-                }
-            });
-        });
+                        log(event.getComponent().getValue() + " drop received "
+                                + source.getValue() + ", dropEffect="
+                                + event.getDropEffect() + ", mouseEventDetails="
+                                + event.getMouseEventDetails());
+                    } else {
+                        log(event.getComponent().getValue()
+                                + " drop received something else than card");
+                    }
+                }));
 
         targets.add(dropTarget);
     }

@@ -16,7 +16,6 @@
 
 package com.vaadin.v7.ui;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -1096,7 +1095,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addValueChangeListener(Property.ValueChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(Property.ValueChangeListener listener) {
@@ -1120,7 +1119,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeValueChangeListener(Property.ValueChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(Property.ValueChangeListener listener) {
@@ -1183,7 +1182,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      */
     @Deprecated
     public static class ReadOnlyStatusChangeEvent extends Component.Event
-            implements Property.ReadOnlyStatusChangeEvent, Serializable {
+            implements Property.ReadOnlyStatusChangeEvent {
 
         /**
          * New instance of text change event.
@@ -1221,7 +1220,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addReadOnlyStatusChangeListener(Property.ReadOnlyStatusChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(Property.ReadOnlyStatusChangeListener listener) {
@@ -1243,7 +1242,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeReadOnlyStatusChangeListener(Property.ReadOnlyStatusChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(Property.ReadOnlyStatusChangeListener listener) {

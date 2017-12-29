@@ -34,12 +34,12 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.widgets.FocusableFlowPanelComposite;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.ListingJsonConstants;
-
 import elemental.json.JsonObject;
 
 /**
@@ -53,6 +53,7 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
 
     public static final String CLASSNAME = "v-select-optiongroup";
     public static final String CLASSNAME_OPTION = "v-select-option";
+    public static final String CLASSNAME_OPTION_SELECTED = "v-select-option-selected";
 
     private final Map<RadioButton, JsonObject> optionsToItems;
     private final Map<String, RadioButton> keyToOptions;
@@ -121,8 +122,8 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
 
     private Optional<JsonObject> tryGetItem(Element element) {
         return optionsToItems.entrySet().stream()
-                .filter(e -> e.getKey().getElement().equals(element))
-                .map(e -> e.getValue()).findFirst();
+                .filter(entry -> entry.getKey().getElement().equals(element))
+                .map(entry -> entry.getValue()).findFirst();
     }
 
     private void remove(Widget widget) {
@@ -149,12 +150,15 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         }
 
         button.setHTML(itemHtml);
-        button.setValue(
-                item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
         boolean optionEnabled = !item
                 .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
         boolean enabled = optionEnabled && !isReadonly() && isEnabled();
         button.setEnabled(enabled);
+        // #9258 apply the v-disabled class when disabled for UX
+        button.setStyleName(StyleConstants.DISABLED,
+                !isEnabled() || !optionEnabled);
+        updateItemSelection(button, item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
+
         String key = item.getString(DataCommunicatorConstants.KEY);
 
         if (requireInitialization) {
@@ -205,9 +209,12 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
                 .entrySet()) {
             RadioButton radioButton = entry.getKey();
             JsonObject value = entry.getValue();
-            Boolean isOptionEnabled = !value
+            boolean optionEnabled = !value
                     .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
-            radioButton.setEnabled(radioButtonEnabled && isOptionEnabled);
+            radioButton.setEnabled(radioButtonEnabled && optionEnabled);
+            // #9258 apply the v-disabled class when disabled for UX
+            radioButton.setStyleName(StyleConstants.DISABLED,
+                    !isEnabled() || !optionEnabled);
         }
     }
 
@@ -251,13 +258,19 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
     }
 
     public void selectItemKey(String selectedItemKey) {
+        // At most one item could be selected so reset all radio buttons
+        // before applying current selection
+        keyToOptions.values().forEach(button -> updateItemSelection(button, false));
         if (selectedItemKey != null) {
             RadioButton radioButton = keyToOptions.get(selectedItemKey);
             if (radioButton != null) { // Items might not be loaded yet
-                radioButton.setValue(true);
+                updateItemSelection(radioButton, true);
             }
-        } else {
-            keyToOptions.values().forEach(button -> button.setValue(false));
         }
+    }
+
+    protected void updateItemSelection(RadioButton radioButton, boolean value) {
+        radioButton.setValue(value);
+        radioButton.setStyleName(CLASSNAME_OPTION_SELECTED, value);
     }
 }

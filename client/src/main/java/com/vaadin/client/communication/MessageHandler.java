@@ -31,7 +31,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
@@ -248,12 +247,7 @@ public class MessageHandler {
                 .getApplicationState() == ApplicationState.INITIALIZING) {
             // Application is starting up for the first time
             connection.setApplicationRunning(true);
-            connection.executeWhenCSSLoaded(new Command() {
-                @Override
-                public void execute() {
-                    handleJSON(json);
-                }
-            });
+            connection.executeWhenCSSLoaded(() -> handleJSON(json));
         } else {
             getLogger().warning(
                     "Ignored received message because application has already been stopped");
@@ -574,12 +568,9 @@ public class MessageHandler {
                 ConnectorBundleLoader.get().ensureDeferredBundleLoaded();
 
                 if (Profiler.isEnabled()) {
-                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                        @Override
-                        public void execute() {
-                            Profiler.logTimings();
-                            Profiler.reset();
-                        }
+                    Scheduler.get().scheduleDeferred(() -> {
+                        Profiler.logTimings();
+                        Profiler.reset();
                     });
                 }
             }

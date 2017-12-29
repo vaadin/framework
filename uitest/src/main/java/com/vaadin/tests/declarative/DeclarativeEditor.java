@@ -34,8 +34,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.v7.data.Property.ReadOnlyException;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.Property.ValueChangeNotifier;
 
 public class DeclarativeEditor extends UI {
@@ -107,12 +105,7 @@ public class DeclarativeEditor extends UI {
     private void addValueChangeListeners(Component component) {
         if (component instanceof ValueChangeNotifier) {
             ((ValueChangeNotifier) component)
-                    .addValueChangeListener(new ValueChangeListener() {
-                        @Override
-                        public void valueChange(ValueChangeEvent event) {
-                            updateCode();
-                        }
-                    });
+                    .addValueChangeListener(event -> updateCode());
         }
 
         if (component instanceof HasComponents) {
@@ -120,7 +113,6 @@ public class DeclarativeEditor extends UI {
                 addValueChangeListeners(c);
             }
         }
-
     }
 
 }

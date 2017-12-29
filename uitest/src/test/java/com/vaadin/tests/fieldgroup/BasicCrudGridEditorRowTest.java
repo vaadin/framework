@@ -19,6 +19,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Locale;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -105,7 +107,8 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
         // Open editor row
         new Actions(getDriver()).doubleClick(cell).perform();
 
-        String attribute = grid.getEditor().getAttribute("style").toLowerCase();
+        String attribute = grid.getEditor().getAttribute("style")
+                .toLowerCase(Locale.ROOT);
         assertFalse("Style should not contain top.",
                 attribute.contains("top:"));
     }

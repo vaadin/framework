@@ -462,9 +462,9 @@ public class GridElement extends AbstractComponentElement {
         Optional<WebElement> toggleButton = getDriver()
                 .findElement(By.className("v-grid-sidebar-content"))
                 .findElements(By.className("column-hiding-toggle")).stream()
-                .filter(e -> e.getText().equals(toggleCaption)).findAny();
+                .filter(element -> element.getText().equals(toggleCaption)).findAny();
         if (toggleButton.isPresent()) {
-            toggleButton.ifPresent(e -> e.click());
+            toggleButton.ifPresent(element -> element.click());
         } else {
             throw new IllegalArgumentException(
                     "No column hiding toggle with caption '" + toggleCaption
@@ -496,35 +496,29 @@ public class GridElement extends AbstractComponentElement {
      * @return an iterable of all the data rows in the grid.
      */
     public Iterable<GridRowElement> getRows() {
-        return new Iterable<GridElement.GridRowElement>() {
+        return () -> new Iterator<GridElement.GridRowElement>() {
+            int nextIndex = 0;
+
             @Override
-            public Iterator<GridRowElement> iterator() {
-                return new Iterator<GridElement.GridRowElement>() {
-                    int nextIndex = 0;
-
-                    @Override
-                    public GridRowElement next() {
-                        return getRow(nextIndex++);
-                    }
-
-                    @Override
-                    public boolean hasNext() {
-                        try {
-                            getRow(nextIndex);
-                            return true;
-                        } catch (Exception e) {
-                            return false;
-                        }
-                    }
-
-                    @Override
-                    public void remove() {
-                        throw new UnsupportedOperationException(
-                                "remove not supported");
-                    }
-
-                };
+            public GridRowElement next() {
+                return getRow(nextIndex++);
             }
+
+            @Override
+            public boolean hasNext() {
+                try {
+                    getRow(nextIndex);
+                    return true;
+                } catch (Exception e) {
+                    return false;
+                }
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("remove not supported");
+            }
+
         };
     }
 }

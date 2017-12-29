@@ -80,6 +80,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.AbstractGridExtensionState;
 import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.shared.ui.grid.ColumnState;
@@ -96,7 +97,6 @@ import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.ui.components.grid.ColumnReorderListener;
 import com.vaadin.ui.components.grid.ColumnResizeListener;
 import com.vaadin.ui.components.grid.ColumnVisibilityChangeListener;
-import com.vaadin.ui.components.grid.DescriptionGenerator;
 import com.vaadin.ui.components.grid.DetailsGenerator;
 import com.vaadin.ui.components.grid.Editor;
 import com.vaadin.ui.components.grid.EditorImpl;
@@ -403,12 +403,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * <p>
      * Usage:
-     * 
+     *
      * <pre>
      * grid.addContextClickListener(event -&gt; Notification.show(
      *         ((GridContextClickEvent&lt;Person&gt;) event).getItem() + " Clicked"));
      * </pre>
-     * 
+     *
      * @param <T>
      *            the grid bean type
      */
@@ -836,9 +836,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             String id = getId();
             if (id == null) {
                 return Stream.empty();
-            } else {
-                return Stream.of(new QuerySortOrder(id, direction));
             }
+            return Stream.of(new QuerySortOrder(id, direction));
         };
 
         private SerializableComparator<T> comparator;
@@ -977,10 +976,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         private static int compareMaybeComparables(Object a, Object b) {
             if (hasCommonComparableBaseType(a, b)) {
                 return compareComparables(a, b);
-            } else {
-                return compareComparables(Objects.toString(a, ""),
-                        Objects.toString(b, ""));
             }
+            return compareComparables(Objects.toString(a, ""),
+                    Objects.toString(b, ""));
         }
 
         private static boolean hasCommonComparableBaseType(Object a, Object b) {
@@ -1006,7 +1004,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             return false;
         }
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({ "unchecked", "rawtypes" })
         private static int compareComparables(Object a, Object b) {
             return ((Comparator) Comparator
                     .nullsLast(Comparator.naturalOrder())).compare(a, b);
@@ -1020,20 +1018,19 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             if (valueA instanceof Comparable
                     && valueA.getClass().isInstance(valueB)) {
                 return ((Comparable<Number>) valueA).compareTo(valueB);
-            } else if (valueA.equals(valueB)) {
-                return 0;
-            } else {
-                // Fall back to comparing based on potentially truncated values
-                int compare = Long.compare(valueA.longValue(),
-                        valueB.longValue());
-                if (compare == 0) {
-                    // This might still produce 0 even though the values are not
-                    // equals, but there's nothing more we can do about that
-                    compare = Double.compare(valueA.doubleValue(),
-                            valueB.doubleValue());
-                }
-                return compare;
             }
+            if (valueA.equals(valueB)) {
+                return 0;
+            }
+            // Fall back to comparing based on potentially truncated values
+            int compare = Long.compare(valueA.longValue(), valueB.longValue());
+            if (compare == 0) {
+                // This might still produce 0 even though the values are not
+                // equals, but there's nothing more we can do about that
+                compare = Double.compare(valueA.doubleValue(),
+                        valueB.doubleValue());
+            }
+            return compare;
         }
 
         @SuppressWarnings("unchecked")
@@ -1160,8 +1157,14 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             }
             this.userId = id;
             getGrid().setColumnId(id, this);
+            updateSortable();
 
             return this;
+        }
+
+        private void updateSortable() {
+            setSortable(getGrid().getDataProvider().isInMemory()
+                    || getSortOrder(SortDirection.ASCENDING).count() != 0);
         }
 
         /**
@@ -1178,6 +1181,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         /**
          * Sets whether the user can sort this column or not.
+         * <p>
+         * By default, a grid using a in-memory data provider has its columns
+         * sortable by default. For a backend data provider, the columns are not
+         * sortable by default.
          *
          * @param sortable
          *            {@code true} if the column can be sorted by the user;
@@ -1197,6 +1204,36 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          */
         public boolean isSortable() {
             return getState(false).sortable;
+        }
+
+        /**
+         * Sets the header aria-label for this column.
+         *
+         * @param caption
+         *            the header aria-label, null removes the aria-label from
+         *            this column
+         *
+         * @return this column
+         *
+         * @since 8.2
+         */
+        public Column<T, V> setAssistiveCaption(String caption) {
+            if (Objects.equals(caption, getAssistiveCaption())) {
+                return this;
+            }
+            getState().assistiveCaption = caption;
+            return this;
+        }
+
+        /**
+         * Gets the header caption for this column.
+         *
+         * @return header caption
+         *
+         * @since 8.2
+         */
+        public String getAssistiveCaption() {
+            return getState(false).assistiveCaption;
         }
 
         /**
@@ -1350,16 +1387,43 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         /**
          * Sets the description generator that is used for generating
-         * descriptions for cells in this column.
+         * descriptions for cells in this column. This method uses the
+         * {@link ContentMode#PREFORMATTED} content mode.
+         *
+         * @see #setDescriptionGenerator(DescriptionGenerator, ContentMode)
          *
          * @param cellDescriptionGenerator
-         *            the cell description generator to set, or
-         *            <code>null</code> to remove a previously set generator
+         *            the cell description generator to set, or {@code null} to
+         *            remove a previously set generator
          * @return this column
          */
         public Column<T, V> setDescriptionGenerator(
                 DescriptionGenerator<T> cellDescriptionGenerator) {
+            return setDescriptionGenerator(cellDescriptionGenerator,
+                    ContentMode.PREFORMATTED);
+        }
+
+        /**
+         * Sets the description generator that is used for generating
+         * descriptions for cells in this column. This method uses the given
+         * content mode.
+         *
+         * @see #setDescriptionGenerator(DescriptionGenerator)
+         *
+         * @param cellDescriptionGenerator
+         *            the cell description generator to set, or {@code null} to
+         *            remove a previously set generator
+         * @param tooltipContentMode
+         *            the content mode for tooltips
+         * @return this column
+         *
+         * @since 8.2
+         */
+        public Column<T, V> setDescriptionGenerator(
+                DescriptionGenerator<T> cellDescriptionGenerator,
+                ContentMode tooltipContentMode) {
             this.descriptionGenerator = cellDescriptionGenerator;
+            getState().tooltipContentMode = tooltipContentMode;
             getGrid().getDataCommunicator().reset();
             return this;
         }
@@ -1966,7 +2030,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
             // Remove old renderer
             Connector oldRenderer = getState().renderer;
-            if (oldRenderer != null && oldRenderer instanceof Extension) {
+            if (oldRenderer instanceof Extension) {
                 removeExtension((Extension) oldRenderer);
             }
 
@@ -2127,6 +2191,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             if (design.hasAttr("hiding-toggle-caption")) {
                 setHidingToggleCaption(DesignAttributeHandler.readAttribute(
                         "hiding-toggle-caption", attributes, String.class));
+            }
+            if (design.hasAttr("assistive-caption")) {
+                setAssistiveCaption(DesignAttributeHandler.readAttribute(
+                        "assistive-caption", attributes, String.class));
             }
 
             // Read size info where necessary.
@@ -2498,7 +2566,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * <p>
      * This method can only be used for a <code>Grid</code> created using
      * {@link Grid#Grid(Class)} or {@link #withPropertySet(PropertySet)}.
-     *
+     * <p>
+     * You can add columns for nested properties with dot notation, eg.
+     * <code>"property.nestedProperty"</code>
+     * 
      * @param propertyName
      *            the property name of the new column, not <code>null</code>
      * @return the newly added column, not <code>null</code>
@@ -2515,6 +2586,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * <p>
      * This method can only be used for a <code>Grid</code> created using
      * {@link Grid#Grid(Class)} or {@link #withPropertySet(PropertySet)}.
+     * <p>
+     * You can add columns for nested properties with dot notation, eg.
+     * <code>"property.nestedProperty"</code>
+
      *
      * @param propertyName
      *            the property name of the new column, not <code>null</code>
@@ -2540,9 +2615,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         if (!renderer.getPresentationType()
                 .isAssignableFrom(definition.getType())) {
-            throw new IllegalArgumentException(renderer.toString()
-                    + " cannot be used with a property of type "
-                    + definition.getType().getName());
+            throw new IllegalArgumentException(
+                    renderer + " cannot be used with a property of type "
+                            + definition.getType().getName());
         }
 
         @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -2714,6 +2789,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         if (getDefaultHeaderRow() != null) {
             getDefaultHeaderRow().getCell(column).setText(column.getCaption());
         }
+
+        column.updateSortable();
     }
 
     /**
@@ -2721,6 +2798,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @param column
      *            the column to remove
+     *
+     * @throws IllegalArgumentException
+     *             if the column is not a valid one
      */
     public void removeColumn(Column<T, ?> column) {
         if (columnSet.remove(column)) {
@@ -2738,6 +2818,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             if (displayIndex < getFrozenColumnCount()) {
                 setFrozenColumnCount(getFrozenColumnCount() - 1);
             }
+        } else {
+            throw new IllegalArgumentException("Column with id "
+                    + column.getId() + " cannot be removed from the grid");
         }
     }
 
@@ -2935,10 +3018,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         if (rows <= 0.0d) {
             throw new IllegalArgumentException(
                     "More than zero rows must be shown.");
-        } else if (Double.isInfinite(rows)) {
+        }
+        if (Double.isInfinite(rows)) {
             throw new IllegalArgumentException(
                     "Grid doesn't support infinite heights");
-        } else if (Double.isNaN(rows)) {
+        }
+        if (Double.isNaN(rows)) {
             throw new IllegalArgumentException("NaN is not a valid row count");
         }
         getState().heightMode = HeightMode.ROW;
@@ -3018,7 +3103,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Note that all header, body and footer rows get the same height if
      * explicitly set. In automatic mode, each section is calculated separately
      * based on an empty row of that type.
-     * 
+     *
      * @see #setBodyRowHeight(double)
      * @see #setHeaderRowHeight(double)
      * @see #setFooterRowHeight(double)
@@ -3036,7 +3121,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Sets the height of a body row. If -1 (default), the row height is
      * calculated based on the theme for an empty row before the Grid is
      * displayed.
-     * 
+     *
      * @param rowHeight
      *            The height of a row in pixels or -1 for automatic calculation
      * @since 8.2
@@ -3153,7 +3238,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Sets the description generator that is used for generating descriptions
-     * for rows.
+     * for rows. This method uses the {@link ContentMode#PREFORMATTED} content
+     * mode.
+     *
+     * @see #setDescriptionGenerator(DescriptionGenerator, ContentMode)
      *
      * @param descriptionGenerator
      *            the row description generator to set, or <code>null</code> to
@@ -3161,7 +3249,29 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public void setDescriptionGenerator(
             DescriptionGenerator<T> descriptionGenerator) {
+        setDescriptionGenerator(descriptionGenerator, ContentMode.PREFORMATTED);
+    }
+
+    /**
+     * Sets the description generator that is used for generating descriptions
+     * for rows. This method uses the given content mode.
+     *
+     * @see #setDescriptionGenerator(DescriptionGenerator)
+     *
+     * @param descriptionGenerator
+     *            the row description generator to set, or {@code null} to
+     *            remove a previously set generator
+     * @param contentMode
+     *            the content mode for row tooltips
+     *
+     * @since 8.2
+     */
+    public void setDescriptionGenerator(
+            DescriptionGenerator<T> descriptionGenerator,
+            ContentMode contentMode) {
+        Objects.requireNonNull(contentMode, "contentMode cannot be null");
         this.descriptionGenerator = descriptionGenerator;
+        getState().rowDescriptionContentMode = contentMode;
         getDataCommunicator().reset();
     }
 
@@ -3293,10 +3403,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Sets the visibility of the Header in this Grid.
-     * 
+     *
      * @param headerVisible
      *            {@code true} if visible; {@code false} if not
-     * 
+     *
      * @since 8.1.1
      */
     public void setHeaderVisible(boolean headerVisible) {
@@ -3305,9 +3415,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Gets the visibility of the Header in this Grid.
-     * 
+     *
      * @return {@code true} if visible; {@code false} if not
-     * 
+     *
      * @since 8.1.1
      */
     public boolean isHeaderVisible() {
@@ -3466,10 +3576,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Sets the visibility of the Footer in this Grid.
-     * 
+     *
      * @param footerVisible
      *            {@code true} if visible; {@code false} if not
-     * 
+     *
      * @since 8.1.1
      */
     public void setFooterVisible(boolean footerVisible) {
@@ -3478,9 +3588,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Gets the visibility of the Footer in this Grid.
-     * 
+     *
      * @return {@code true} if visible; {@code false} if not
-     * 
+     *
      * @since 8.1.1
      */
     public boolean isFooterVisible() {
@@ -3651,7 +3761,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                         "setColumnOrder should not be called "
                                 + "with columns that are not in the grid.");
             }
-
         });
 
         List<String> stateColumnOrder = getState().columnOrder;
@@ -3763,7 +3872,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         } else {
             addExtension(selectionModel);
         }
-
     }
 
     /**
@@ -4259,7 +4367,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     protected T deserializeDeclarativeRepresentation(String item) {
         if (item == null) {
             return super.deserializeDeclarativeRepresentation(
-                    new String(UUID.randomUUID().toString()));
+                    UUID.randomUUID().toString());
         }
         return super.deserializeDeclarativeRepresentation(new String(item));
     }
@@ -4269,7 +4377,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         SelectionMode selectionMode = getSelectionMode();
         if (SelectionMode.SINGLE.equals(selectionMode)) {
             return asSingleSelect().isReadOnly();
-        } else if (SelectionMode.MULTI.equals(selectionMode)) {
+        }
+        if (SelectionMode.MULTI.equals(selectionMode)) {
             return asMultiSelect().isReadOnly();
         }
         return false;
@@ -4437,7 +4546,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         Element tableRow = container.appendElement("tr");
         tableRow.attr("item", serializeDeclarativeRepresentation(item));
         if (getSelectionModel().isSelected(item)) {
-            tableRow.attr("selected", "");
+            tableRow.attr("selected", true);
         }
         for (Column<T, ?> column : getColumns()) {
             Object value = column.valueProvider.apply(item);
@@ -4572,16 +4681,23 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @return the comparator based on column sorting information.
      */
     protected SerializableComparator<T> createSortingComparator() {
+        /*
+         * thenComparing is defined to return a serializable comparator as long
+         * as both original comparators are also serializable
+         */
         BinaryOperator<SerializableComparator<T>> operator = (comparator1,
-                comparator2) -> {
-            /*
-             * thenComparing is defined to return a serializable comparator as
-             * long as both original comparators are also serializable
-             */
-            return comparator1.thenComparing(comparator2)::compare;
-        };
+                comparator2) -> comparator1.thenComparing(comparator2)::compare;
         return sortOrder.stream().map(
                 order -> order.getSorted().getComparator(order.getDirection()))
                 .reduce((x, y) -> 0, operator);
     }
+
+    @Override
+    protected void internalSetDataProvider(DataProvider<T, ?> dataProvider) {
+        super.internalSetDataProvider(dataProvider);
+        for (Column<T, ?> column : getColumns()) {
+            column.updateSortable();
+        }
+    }
+
 }

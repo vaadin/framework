@@ -53,43 +53,44 @@ public abstract class TabsheetBaseConnector
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
+        VTabsheetBase widget = getWidget();
         // Update member references
-        getWidget().setEnabled(isEnabled());
+        widget.setEnabled(isEnabled());
 
         // Widgets in the TabSheet before update
         List<Widget> oldWidgets = new ArrayList<>();
-        for (Iterator<Widget> iterator = getWidget()
+        for (Iterator<Widget> iterator = widget
                 .getWidgetIterator(); iterator.hasNext();) {
             oldWidgets.add(iterator.next());
         }
 
         // Clear previous values
-        getWidget().clearTabKeys();
+        widget.clearTabKeys();
 
         int index = 0;
         for (TabState tab : getState().tabs) {
             final String key = tab.key;
             final boolean selected = key.equals(getState().selected);
 
-            getWidget().addTabKey(key, !tab.enabled && tab.visible);
+            widget.addTabKey(key, !tab.enabled && tab.visible);
 
             if (selected) {
-                getWidget().setActiveTabIndex(index);
+                widget.setActiveTabIndex(index);
             }
-            getWidget().renderTab(tab, index);
+            widget.renderTab(tab, index);
             if (selected) {
-                getWidget().selectTab(index);
+                widget.selectTab(index);
             }
             index++;
         }
 
-        int tabCount = getWidget().getTabCount();
+        int tabCount = widget.getTabCount();
         while (tabCount-- > index) {
-            getWidget().removeTab(index);
+            widget.removeTab(index);
         }
 
-        for (int i = 0; i < getWidget().getTabCount(); i++) {
-            ComponentConnector p = getWidget().getTab(i);
+        for (int i = 0; i < widget.getTabCount(); i++) {
+            ComponentConnector p = widget.getTab(i);
             // null for PlaceHolder widgets
             if (p != null) {
                 oldWidgets.remove(p.getWidget());

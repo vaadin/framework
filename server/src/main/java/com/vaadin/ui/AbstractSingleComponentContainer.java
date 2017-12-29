@@ -323,9 +323,8 @@ public abstract class AbstractSingleComponentContainer extends AbstractComponent
     protected void readDesignChildren(Elements children,
             DesignContext context) {
         if (children.size() > 1) {
-            throw new DesignException(
-                    "The container of type " + getClass().toString()
-                            + " can have only one child component.");
+            throw new DesignException("The container of type " + getClass()
+                    + " can have only one child component.");
         } else if (children.size() == 1) {
             setContent(context.readDesign(children.first()));
         }

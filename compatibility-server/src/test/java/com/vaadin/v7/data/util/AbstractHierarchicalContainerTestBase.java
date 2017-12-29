@@ -73,7 +73,7 @@ public abstract class AbstractHierarchicalContainerTestBase
                 Collection<?> children = container.getChildren(rootId);
                 assertNotNull(rootId + " should have children", children);
                 assertTrue(rootId + " should have children",
-                        (children.size() > 0));
+                        !children.isEmpty());
                 // getParent
                 for (Object childId : children) {
                     assertEquals(container.getParent(childId), rootId);
@@ -136,7 +136,7 @@ public abstract class AbstractHierarchicalContainerTestBase
         if (!container.areChildrenAllowed(itemId)) {
             // If no children is allowed the item should have no children
             assertFalse(container.hasChildren(itemId));
-            assertTrue(children == null || children.size() == 0);
+            assertTrue(children == null || children.isEmpty());
 
             return;
         }

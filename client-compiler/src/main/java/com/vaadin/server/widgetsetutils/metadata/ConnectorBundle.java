@@ -60,21 +60,11 @@ public class ConnectorBundle {
 
     static final String OLD_RENDERER_CONNECTOR_NAME = "com.vaadin.v7.client.connectors.AbstractRendererConnector";
 
-    public static final Comparator<JClassType> jClassComparator = new Comparator<JClassType>() {
-        @Override
-        public int compare(JClassType o1, JClassType o2) {
-            return o1.getQualifiedSourceName()
-                    .compareTo(o2.getQualifiedSourceName());
-        }
-    };
+    public static final Comparator<JClassType> jClassComparator = (o1, o2) -> o1
+            .getQualifiedSourceName().compareTo(o2.getQualifiedSourceName());
 
-    public static final Comparator<JMethod> jMethodComparator = new Comparator<JMethod>() {
-        @Override
-        public int compare(JMethod o1, JMethod o2) {
-            return o1.getReadableDeclaration()
-                    .compareTo(o2.getReadableDeclaration());
-        }
-    };
+    public static final Comparator<JMethod> jMethodComparator = (o1, o2) -> o1
+            .getReadableDeclaration().compareTo(o2.getReadableDeclaration());
 
     private final String name;
     private final ConnectorBundle previousBundle;
@@ -85,12 +75,7 @@ public class ConnectorBundle {
     private final Set<JType> needsSerializeSupport = new HashSet<>();
 
     private final Map<JType, GeneratedSerializer> serializers = new TreeMap<>(
-            new Comparator<JType>() {
-                @Override
-                public int compare(JType o1, JType o2) {
-                    return o1.toString().compareTo(o2.toString());
-                }
-            });
+            (o1, o2) -> o1.toString().compareTo(o2.toString()));
 
     private final Map<JClassType, Map<JMethod, Set<MethodAttribute>>> methodAttributes = new TreeMap<>(
             jClassComparator);

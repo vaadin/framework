@@ -5,8 +5,7 @@
     <parent>
         <artifactId>vaadin-test-karaf</artifactId>
         <groupId>com.vaadin</groupId>
-        <relativePath>..</relativePath>
-        <version>8.2-SNAPSHOT</version>
+        <version>8.3-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

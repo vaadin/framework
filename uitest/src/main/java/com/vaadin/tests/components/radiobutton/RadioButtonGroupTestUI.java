@@ -16,13 +16,15 @@
 package com.vaadin.tests.components.radiobutton;
 
 import java.util.LinkedHashMap;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.tests.components.abstractlisting.AbstractListingTestUI;
+import com.vaadin.ui.DescriptionGenerator;
 import com.vaadin.ui.ItemCaptionGenerator;
 import com.vaadin.ui.RadioButtonGroup;
-import com.vaadin.ui.components.grid.DescriptionGenerator;
 
 /**
  * Test UI for RadioButtonGroup component
@@ -48,6 +50,7 @@ public class RadioButtonGroupTestUI
         createItemIconGeneratorMenu();
         createItemCaptionGeneratorMenu();
         createItemDescriptionGeneratorMenu();
+        createItemEnabledProviderMenu();
     }
 
     protected void createSelectionMenu() {
@@ -84,8 +87,7 @@ public class RadioButtonGroupTestUI
         LinkedHashMap<String, ItemCaptionGenerator<Object>> options = new LinkedHashMap<>();
         options.put("Null Caption Generator", item -> null);
         options.put("Default Caption Generator", item -> item.toString());
-        options.put("Custom Caption Generator",
-                item -> item.toString() + " Caption");
+        options.put("Custom Caption Generator", item -> item + " Caption");
 
         createSelectAction("Item Caption Generator", "Item Caption Generator",
                 options, "None", (radioButtonGroup, captionGenerator, data) -> {
@@ -99,12 +101,24 @@ public class RadioButtonGroupTestUI
         options.put("Null Description Generator", item -> null);
         options.put("Default Description Generator", item -> item.toString());
         options.put("Custom Description Generator",
-                item -> item.toString() + " Description");
+                item -> item + " Description");
 
         createSelectAction("Item Description Generator",
                 "Item Description Generator", options, "None",
                 (radioButtonGroup, generator, data) -> {
                     radioButtonGroup.setItemDescriptionGenerator(generator);
+                }, true);
+    }
+
+    private void createItemEnabledProviderMenu() {
+        LinkedHashMap<String, SerializablePredicate<Object>> options = new LinkedHashMap<>();
+        options.put("Disable Item 0", o -> !Objects.equals(o, "Item 0"));
+        options.put("Disable Item 3", o -> !Objects.equals(o, "Item 3"));
+        options.put("Disable Item 5", o -> !Objects.equals(o, "Item 5"));
+
+        createSelectAction("Item Enabled Provider", "Item Enabled Provider",
+                options, "None", (radioButtonGroup, generator, data) -> {
+                    radioButtonGroup.setItemEnabledProvider(generator);
                     radioButtonGroup.getDataProvider().refreshAll();
                 }, true);
     }
@@ -120,7 +134,7 @@ public class RadioButtonGroupTestUI
     protected void createListenerMenu() {
         createListenerAction("Selection listener", "Listeners",
                 c -> c.addSelectionListener(
-                        e -> log("Selected: " + e.getSelectedItem())));
+                        event -> log("Selected: " + event.getSelectedItem())));
     }
 
     private int getIndex(Object item) {

@@ -44,9 +44,9 @@ public class TextAreaConnector extends AbstractTextFieldConnector {
     protected void init() {
         super.init();
         getWidget().addChangeHandler(event -> sendValueChange());
-        getWidget().addDomHandler(event -> {
-            getValueChangeHandler().scheduleValueChange();
-        }, InputEvent.getType());
+        getWidget().addDomHandler(
+                event -> getValueChangeHandler().scheduleValueChange(),
+                InputEvent.getType());
 
         getWidget().addMouseUpHandler(new ResizeMouseUpHandler());
     }

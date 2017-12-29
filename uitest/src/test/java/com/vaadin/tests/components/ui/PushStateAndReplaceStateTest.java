@@ -5,8 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.net.URI;
 
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -50,13 +48,7 @@ public class PushStateAndReplaceStateTest extends MultiBrowserTest {
 
     private void assertUri(String uri) {
         final String expectedText = "Current Location: " + uri;
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                return expectedText.equals(getLocationLabelValue());
-            }
-        });
+        waitUntil(input -> expectedText.equals(getLocationLabelValue()));
 
         assertEquals(uri, driver.getCurrentUrl());
     }

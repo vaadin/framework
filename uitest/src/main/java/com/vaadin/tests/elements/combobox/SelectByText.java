@@ -53,11 +53,8 @@ public class SelectByText extends AbstractTestUI {
         combobox.setItems(options);
 
         layout.addComponent(combobox);
-        combobox.addValueChangeListener(e -> {
-            layout.addComponent(
-                    new Label("Value is now '" + e.getValue() + "'"));
-        });
-
+        combobox.addValueChangeListener(event -> layout.addComponent(
+                new Label("Value is now '" + event.getValue() + "'")));
     }
 
     @Override

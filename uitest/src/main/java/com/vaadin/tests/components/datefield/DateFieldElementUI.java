@@ -6,6 +6,7 @@ import java.util.Locale;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.InlineDateField;
 
@@ -18,34 +19,42 @@ public class DateFieldElementUI extends AbstractReindeerTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
+        getPage().getStyles()
+                .add(".v-inline-datefield .teststyle { background: yellow; }");
+        getPage().getStyles()
+                .add(".v-datefield-popup .teststyle { background: yellow; }");
+
         log.setNumberLogRows(false);
         DateField df = new DateField();
-        df.addValueChangeListener(event -> {
-            log("Default date field value set to " + event.getValue());
-        });
+        df.addValueChangeListener(event -> log(
+                "Default date field value set to " + event.getValue()));
         addComponent(df);
         InlineDateField inlineDateField = new InlineDateField();
-        inlineDateField.addValueChangeListener(event -> {
-            log("Default inline date field value set to " + event.getValue());
-        });
+        inlineDateField.addValueChangeListener(event -> log(
+                "Default inline date field value set to " + event.getValue()));
         addComponent(inlineDateField);
 
         DateField finnishDatefield = new DateField("Finnish");
         finnishDatefield.setId("fi");
         finnishDatefield.setLocale(new Locale("fi", "FI"));
         finnishDatefield.setValue(TEST_DATE_TIME);
-        finnishDatefield.addValueChangeListener(event -> {
-            log("Finnish date field value set to " + event.getValue());
-        });
+        finnishDatefield.addValueChangeListener(event -> log(
+                "Finnish date field value set to " + event.getValue()));
         addComponent(finnishDatefield);
         DateField usDatefield = new DateField("US");
         usDatefield.setId("us");
         usDatefield.setLocale(Locale.US);
         usDatefield.setValue(TEST_DATE_TIME);
-        usDatefield.addValueChangeListener(event -> {
-            log("US date field value set to " + event.getValue());
-        });
+        usDatefield.addValueChangeListener(
+                event -> log("US date field value set to " + event.getValue()));
         addComponent(usDatefield);
+
+        addComponent(new Button("Add date styles", e -> {
+            inlineDateField.setDateStyle(LocalDate.now(), "teststyle");
+            finnishDatefield.setDateStyle(LocalDate.of(2017, 12, 1),
+                    "teststyle");
+            usDatefield.setDateStyle(LocalDate.of(2017, 12, 1), "teststyle");
+        }));
     }
 
     @Override

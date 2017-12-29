@@ -6,7 +6,6 @@ import java.util.List;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.data.util.BeanContainer;
 import com.vaadin.v7.ui.Table;
 
@@ -42,12 +41,8 @@ public class TableCacheMinimizingOnFetchRows extends AbstractTestUIWithLog {
         table.setWidth("800px");
 
         Button button = new Button("scroll down");
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setCurrentPageFirstItemIndex(table.size());
-            }
-        });
+        button.addClickListener(
+                event -> table.setCurrentPageFirstItemIndex(table.size()));
 
         addComponent(table);
         addComponent(button);

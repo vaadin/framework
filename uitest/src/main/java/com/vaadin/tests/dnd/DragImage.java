@@ -38,9 +38,7 @@ public class DragImage extends AbstractTestUIWithLog {
 
             layout1.addComponents(label, new Label("spacer"));
 
-            styles.add(new StringBuilder(".").append(position)
-                    .append(" { position: ").append(position).append(";}")
-                    .toString());
+            styles.add("." + position + " { position: " + position + ";}");
         });
 
         HorizontalLayout layout2 = new HorizontalLayout();
@@ -52,9 +50,7 @@ public class DragImage extends AbstractTestUIWithLog {
                     .setDragImage(new ThemeResource(TestSampler.ICON_URL));
             layout2.addComponents(label, new Label("spacer"));
 
-            styles.add(new StringBuilder(".").append(position)
-                    .append(" { position: ").append(position).append(";}")
-                    .toString());
+            styles.add("." + position + " { position: " + position + ";}");
         });
 
         // #9261 grid row like element that safari can't show the drag image for

@@ -14,9 +14,8 @@ public class ConfigurableRichTextAreaUI
     @Override
     protected void createActions() {
         super.createActions();
-        createClickAction("Select all", CATEGORY_FEATURES, (rta, a, b) -> {
-            rta.selectAll();
-        }, null);
+        createClickAction("Select all", CATEGORY_FEATURES,
+                (rta, a, b) -> rta.selectAll(), null);
     }
 
 }

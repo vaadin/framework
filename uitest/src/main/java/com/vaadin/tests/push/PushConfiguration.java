@@ -23,7 +23,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
 public class PushConfiguration extends AbstractReindeerTestUI {
@@ -36,12 +35,9 @@ public class PushConfiguration extends AbstractReindeerTestUI {
 
         @Override
         public void run() {
-            access(new Runnable() {
-                @Override
-                public void run() {
-                    counter2++;
-                    serverCounterLabel.setValue("" + counter2);
-                }
+            access(() -> {
+                counter2++;
+                serverCounterLabel.setValue("" + counter2);
             });
         }
     };
@@ -60,13 +56,8 @@ public class PushConfiguration extends AbstractReindeerTestUI {
                 .setCaption("Client counter (click 'increment' to update):");
         addComponent(clientCounterLabel);
 
-        addComponent(new Button("Increment", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                clientCounterLabel.setValue("" + counter++);
-            }
-        }));
+        addComponent(new Button("Increment",
+                event -> clientCounterLabel.setValue("" + counter++)));
 
         spacer();
 
@@ -75,13 +66,9 @@ public class PushConfiguration extends AbstractReindeerTestUI {
                 "Server counter (updates each 1s by server thread) :");
         addComponent(serverCounterLabel);
 
-        addComponent(new Button("Reset", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                counter2 = 0;
-                serverCounterLabel.setValue("0");
-            }
+        addComponent(new Button("Reset", event ->{
+            counter2 = 0;
+            serverCounterLabel.setValue("0");
         }));
     }
 

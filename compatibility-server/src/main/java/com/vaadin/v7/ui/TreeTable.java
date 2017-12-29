@@ -226,7 +226,7 @@ public class TreeTable extends Table implements Hierarchical {
 
         @Override
         public Object lastItemId() {
-            if (getPreOrder().size() > 0) {
+            if (!getPreOrder().isEmpty()) {
                 return getPreOrder().get(getPreOrder().size() - 1);
             } else {
                 return null;
@@ -783,7 +783,7 @@ public class TreeTable extends Table implements Hierarchical {
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addExpandListener(ExpandListener)}
-     **/
+     */
     @Deprecated
     public void addListener(ExpandListener listener) {
         addExpandListener(listener);
@@ -803,7 +803,7 @@ public class TreeTable extends Table implements Hierarchical {
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeExpandListener(ExpandListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(ExpandListener listener) {
         removeExpandListener(listener);
@@ -833,7 +833,7 @@ public class TreeTable extends Table implements Hierarchical {
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addCollapseListener(CollapseListener)}
-     **/
+     */
     @Deprecated
     public void addListener(CollapseListener listener) {
         addCollapseListener(listener);
@@ -853,7 +853,7 @@ public class TreeTable extends Table implements Hierarchical {
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeCollapseListener(CollapseListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(CollapseListener listener) {
         removeCollapseListener(listener);

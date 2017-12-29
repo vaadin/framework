@@ -16,7 +16,6 @@
 package com.vaadin.tests.widgetset.client.extension;
 
 import com.google.gwt.event.dom.client.ContextMenuEvent;
-import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -32,13 +31,9 @@ public class BrowserContextMenuExtensionConnector
 
     @Override
     protected void extend(ServerConnector target) {
-        getParent().getWidget().addDomHandler(new ContextMenuHandler() {
-
-            @Override
-            public void onContextMenu(ContextMenuEvent event) {
-                // Stop context click events from propagating.
-                event.stopPropagation();
-            }
+        getParent().getWidget().addDomHandler(event -> {
+            // Stop context click events from propagating.
+            event.stopPropagation();
         }, ContextMenuEvent.getType());
     }
 

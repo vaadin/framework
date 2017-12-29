@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.components.datefield;
 
+import java.util.Locale;
+
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.datefield.DateTimeResolution;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
@@ -41,13 +43,12 @@ public class DateTimeFieldChangeResolution extends AbstractReindeerTestUI {
         HorizontalLayout hlayout = new HorizontalLayout();
         addComponent(hlayout);
         for (final DateTimeResolution value : DateTimeResolution.values()) {
-            String resolutionString = value.toString().toLowerCase();
+            String resolutionString = value.toString().toLowerCase(Locale.ROOT);
             Button button = new Button(resolutionString);
             button.addClickListener(event -> dateField.setResolution(value));
             button.setId(BUTTON_BASE_ID + resolutionString);
             hlayout.addComponent(button);
         }
-
     }
 
     @Override

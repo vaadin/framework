@@ -1,9 +1,10 @@
 package com.vaadin.tests.themes;
 
+import java.util.Locale;
+
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
@@ -100,12 +101,8 @@ public class ButtonsTest extends com.vaadin.server.LegacyApplication {
         b.setTabIndex(1);
         main.addComponent(b);
 
-        Button c = new Button("toggle enabled", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                b.setEnabled(!b.isEnabled());
-            }
-        });
+        Button c = new Button("toggle enabled",
+                event -> b.setEnabled(!b.isEnabled()));
         main.addComponent(c);
     }
 
@@ -125,7 +122,7 @@ public class ButtonsTest extends com.vaadin.server.LegacyApplication {
             } else {
                 b = new Button(style + " style");
             }
-            b.setStyleName(style.toLowerCase());
+            b.setStyleName(style.toLowerCase(Locale.ROOT));
             if (icon) {
                 b.setIcon(new ThemeResource("../runo/icons/"
                         + (largeIcons ? "64" : "16") + "/document.png"));

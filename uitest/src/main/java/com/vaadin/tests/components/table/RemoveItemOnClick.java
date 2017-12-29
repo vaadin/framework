@@ -19,8 +19,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Table;
 
@@ -37,12 +35,8 @@ public class RemoveItemOnClick extends AbstractReindeerTestUI {
         table.setPageLength(20);
         table.setSelectable(true);
         table.setImmediate(true);
-        table.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                table.removeItem(table.getValue());
-            }
-        });
+        table.addValueChangeListener(
+                event -> table.removeItem(table.getValue()));
         addComponent(table);
     }
 

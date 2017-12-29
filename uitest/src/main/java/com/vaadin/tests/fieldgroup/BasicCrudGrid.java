@@ -18,8 +18,6 @@ package com.vaadin.tests.fieldgroup;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.BeanItem;
-import com.vaadin.v7.event.SelectionEvent;
-import com.vaadin.v7.event.SelectionEvent.SelectionListener;
 import com.vaadin.v7.ui.Grid;
 
 public class BasicCrudGrid extends AbstractBasicCrud {
@@ -35,14 +33,10 @@ public class BasicCrudGrid extends AbstractBasicCrud {
 
         grid.setColumnOrder((Object[]) columns);
         grid.removeColumn("salary");
-        grid.addSelectionListener(new SelectionListener() {
-
-            @Override
-            public void select(SelectionEvent event) {
-                Item item = grid.getContainerDataSource()
-                        .getItem(grid.getSelectedRow());
-                form.edit((BeanItem<ComplexPerson>) item);
-            }
+        grid.addSelectionListener(event -> {
+            Item item = grid.getContainerDataSource()
+                    .getItem(grid.getSelectedRow());
+            form.edit((BeanItem<ComplexPerson>) item);
         });
 
         grid.setSizeFull();

@@ -4,9 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-test</artifactId>
-        <version>8.2-SNAPSHOT</version>
-        <relativePath>../..</relativePath>
+        <artifactId>vaadin-servlet-containers-test</artifactId>
+        <version>8.3-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-test-generic-integration</artifactId>
     <name>vaadin-test-generic-integration</name>
@@ -15,51 +14,42 @@
         <jetty.skip>true</jetty.skip>
     </properties>
 
+    <!-- This module exists only to run the Ant based server tests.
+         It will be removed in the future. -->
+
     <dependencies>
-
-        <!-- Project modules -->
         <dependency>
             <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-compatibility-server</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-compatibility-client-compiled</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-compatibility-themes</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-client-compiled</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-push</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-testbench-api</artifactId>
-            <scope>test</scope>
+            <artifactId>vaadin-test-server-ui</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
-
     <build>
-
         <plugins>
-            <!--TODO run this on different servers -->
+            <!-- Extract test classes for ant script to use -->
             <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>${jetty.version}</version>
-                <configuration>
-                    <webApp>
-                        <contextPath>/demo</contextPath>
-                    </webApp>
-                </configuration>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-tests</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.vaadin</groupId>
+                                    <artifactId>vaadin-test-server-tests</artifactId>
+                                    <version>${project.version}</version>
+                                    <includes>**/*.class</includes>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
+                        </configuration>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>

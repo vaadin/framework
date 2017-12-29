@@ -17,8 +17,11 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,7 +31,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -44,6 +46,7 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
@@ -52,7 +55,6 @@ import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DateTimeService;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.util.SharedUtil;
 
@@ -76,12 +78,12 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
         /**
          * Called when calendar user triggers a submitting operation in calendar
-         * panel. Eg. clicking on day or hitting enter.
+         * panel. E.g. clicking on day or hitting enter.
          */
         void onSubmit();
 
         /**
-         * On eg. ESC key.
+         * On e.g. ESC key.
          */
         void onCancel();
     }
@@ -125,43 +127,6 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     private static final String CN_OUTSIDE_RANGE = "outside-range";
 
-    /**
-     * Represents a click handler for when a user selects a value by using the
-     * mouse
-     */
-    private ClickHandler dayClickHandler = new ClickHandler() {
-        /*
-         * (non-Javadoc)
-         *
-         * @see
-         * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt
-         * .event.dom.client.ClickEvent)
-         */
-        @Override
-        public void onClick(ClickEvent event) {
-            if (!isEnabled() || isReadonly()) {
-                return;
-            }
-
-            Date newDate = ((Day) event.getSource()).getDate();
-            if (!isDateInsideRange(newDate,
-                    getResolution(VAbstractCalendarPanel.this::isDay))) {
-                return;
-            }
-            if (newDate.getMonth() != displayedMonth.getMonth()
-                    || newDate.getYear() != displayedMonth.getYear()) {
-                // If an off-month date was clicked, we must change the
-                // displayed month and re-render the calendar (#8931)
-                displayedMonth.setMonth(newDate.getMonth());
-                displayedMonth.setYear(newDate.getYear());
-                renderCalendar();
-            }
-            focusDay(newDate);
-            selectFocused();
-            onSubmit();
-        }
-    };
-
     private VEventButton prevYear;
 
     private VEventButton nextYear;
@@ -202,6 +167,36 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     private boolean initialRenderDone = false;
 
+    /**
+     * Represents a click handler for when a user selects a value by using the
+     * mouse
+     */
+    private ClickHandler dayClickHandler = event -> {
+        if (!isEnabled() || isReadonly()) {
+            return;
+        }
+
+        Date newDate = ((Day) event.getSource()).getDate();
+        if (!isDateInsideRange(newDate,
+                getResolution(VAbstractCalendarPanel.this::isDay))) {
+            return;
+        }
+        if (newDate.getMonth() != displayedMonth.getMonth()
+                || newDate.getYear() != displayedMonth.getYear()) {
+            // If an off-month date was clicked, we must change the
+            // displayed month and re-render the calendar (#8931)
+            displayedMonth.setMonth(newDate.getMonth());
+            displayedMonth.setYear(newDate.getYear());
+            renderCalendar();
+        }
+        focusDay(newDate);
+        selectFocused();
+        onSubmit();
+    };
+
+    private Map<String, String> dateStyles = new HashMap<String, String>();
+    private DateTimeFormat df = DateTimeFormat.getFormat("yyyy-MM-dd");
+
     public VAbstractCalendarPanel() {
         getElement().setId(DOM.createUniqueId());
         setStyleName(VDateField.CLASSNAME + "-calendarpanel");
@@ -234,7 +229,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      *            one of the days currently visible.
      */
     private void focusDay(Date date) {
-        // Only used when calender body is present
+        // Only used when calendar body is present
         if (acceptDayFocus()) {
             if (focusedDay != null) {
                 focusedDay.removeStyleDependentName(CN_FOCUSED);
@@ -247,8 +242,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                     int cellCount = days.getCellCount(i);
                     for (int j = 0; j < cellCount; j++) {
                         Widget widget = days.getWidget(i, j);
-                        if (widget != null
-                                && widget instanceof VAbstractCalendarPanel.Day) {
+                        if (widget instanceof VAbstractCalendarPanel.Day) {
                             Day curday = (Day) widget;
                             if (curday.getDate().equals(date)) {
                                 curday.addStyleDependentName(CN_FOCUSED);
@@ -358,8 +352,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             int cellCount = days.getCellCount(i);
             for (int j = 0; j < cellCount; j++) {
                 Widget widget = days.getWidget(i, j);
-                if (widget != null
-                        && widget instanceof VAbstractCalendarPanel.Day) {
+                if (widget instanceof VAbstractCalendarPanel.Day) {
                     Day curday = (Day) widget;
                     if (curday.getDate().equals(date)) {
                         curday.addStyleDependentName(CN_SELECTED);
@@ -405,7 +398,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
             selectDate(focusedDate);
         } else {
-            VConsole.log("Trying to select a the focused date which is NULL!");
+            getLogger().info("Trying to select a the focused date which is NULL!");
         }
     }
 
@@ -456,6 +449,13 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             // Dynamic updates to the stylename needs to render the calendar to
             // update the inner element stylenames
             renderCalendar();
+        }
+    }
+
+    public void setDateStyles(Map<String, String> dateStyles) {
+        this.dateStyles.clear();
+        if (dateStyles != null) {
+            this.dateStyles.putAll(dateStyles);
         }
     }
 
@@ -785,10 +785,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         // Print weekday names
         final int firstDay = getDateTimeService().getFirstDayOfWeek();
         for (int i = 0; i < 7; i++) {
-            int day = i + firstDay;
-            if (day > 6) {
-                day = 0;
-            }
+            int day = (i + firstDay) % 7;
             if (isBelowMonth(getResolution())) {
                 days.setHTML(headerRow, firstWeekdayColumn + i, "<strong>"
                         + getDateTimeService().getShortDay(day) + "</strong>");
@@ -848,6 +845,10 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 }
                 if (curr.getMonth() != displayedMonth.getMonth()) {
                     day.addStyleDependentName(CN_OFFMONTH);
+                }
+                String dayDateString = df.format(dayDate);
+                if (dateStyles.containsKey(dayDateString)) {
+                    day.addStyleName(dateStyles.get(dayDateString));
                 }
 
                 days.setWidget(weekOfMonth, firstWeekdayColumn + dayOfWeek,
@@ -1155,9 +1156,6 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      *
      * @param sender
      *            The component that was clicked
-     * @param updateVariable
-     *            Should the value field be updated
-     *
      */
     private void processClickEvent(Widget sender) {
         if (!isEnabled() || isReadonly()) {
@@ -1775,7 +1773,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     /**
      * The submit listener is called when the user selects a value from the
-     * calender either by clicking the day or selects it by keyboard.
+     * calendar either by clicking the day or selects it by keyboard.
      *
      * @param submitListener
      *            The listener to trigger
@@ -2016,7 +2014,6 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 renderCalendar();
             }
         }
-
     }
 
     /**
@@ -2035,5 +2032,9 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 renderCalendar();
             }
         }
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(VAbstractCalendarPanel.class.getName());
     }
 }

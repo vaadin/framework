@@ -17,6 +17,8 @@ package com.vaadin.v7.tests.components.grid.basicfeatures.client;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Locale;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -88,8 +90,8 @@ public abstract class GridStaticSectionTest
 
         // IE 8 returns tags as upper case while other browsers do not, make the
         // comparison non-casesensive
-        html = html.toLowerCase();
-        text = text.toLowerCase();
+        html = html.toLowerCase(Locale.ROOT);
+        text = text.toLowerCase(Locale.ROOT);
 
         // IE 8 returns attributes without quotes, make the comparison without
         // quotes

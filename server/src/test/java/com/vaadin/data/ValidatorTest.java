@@ -61,7 +61,8 @@ public class ValidatorTest extends ValidatorTestBase {
 
                     if (locale.getLanguage().equals("fi")) {
                         return finnishError;
-                    } else if (locale.getLanguage().equals("en")) {
+                    }
+                    if (locale.getLanguage().equals("en")) {
                         return englishError;
                     }
                     return notTranslatableError;

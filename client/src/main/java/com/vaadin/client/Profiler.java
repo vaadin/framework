@@ -19,7 +19,6 @@ package com.vaadin.client;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -47,7 +46,7 @@ public class Profiler {
 
     private static RelativeTimeSupplier RELATIVE_TIME_SUPPLIER;
 
-    private static final String evtGroup = "VaadinProfiler";
+    private static final String EVT_GROUP = "VaadinProfiler";
 
     private static ProfilerResultConsumer consumer;
 
@@ -290,7 +289,7 @@ public class Profiler {
 
         private native String getEvtGroup()
         /*-{
-            return this.evtGroup;
+            return this.EVT_GROUP;
         }-*/;
 
         private native double getMillis()
@@ -325,7 +324,7 @@ public class Profiler {
 
         public final String getEventName() {
             String group = getEvtGroup();
-            if (evtGroup.equals(group)) {
+            if (EVT_GROUP.equals(group)) {
                 return getSubSystem();
             } else {
                 return group + "." + getSubSystem();
@@ -387,7 +386,7 @@ public class Profiler {
     private static final native void logGwtEvent(String name, String type)
     /*-{
         $wnd.__gwtStatsEvent({
-            evtGroup: @com.vaadin.client.Profiler::evtGroup,
+            evtGroup: @com.vaadin.client.Profiler::EVT_GROUP,
             moduleName: @com.google.gwt.core.client.GWT::getModuleName()(),
             millis: (new Date).getTime(),
             sessionId: undefined,
@@ -463,7 +462,7 @@ public class Profiler {
         Set<Node> extendedTimeNodes = new HashSet<>();
         for (int i = 0; i < gwtStatsEvents.length(); i++) {
             GwtStatsEvent gwtStatsEvent = gwtStatsEvents.get(i);
-            if (!evtGroup.equals(gwtStatsEvent.getEvtGroup())) {
+            if (!EVT_GROUP.equals(gwtStatsEvent.getEvtGroup())) {
                 // Only log our own events to avoid problems with events which
                 // are not of type start+end
                 continue;
@@ -538,12 +537,8 @@ public class Profiler {
         rootNode.sumUpTotals(totals);
 
         List<Node> totalList = new ArrayList<>(totals.values());
-        Collections.sort(totalList, new Comparator<Node>() {
-            @Override
-            public int compare(Node o1, Node o2) {
-                return (int) (o2.getTimeSpent() - o1.getTimeSpent());
-            }
-        });
+        Collections.sort(totalList,
+                (o1, o2) -> (int) (o2.getTimeSpent() - o1.getTimeSpent()));
 
         if (getConsumer() != null) {
             getConsumer().addProfilerData(stack.getFirst(), totalList);

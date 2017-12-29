@@ -17,7 +17,9 @@ package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArrayString;
@@ -25,12 +27,8 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.event.dom.client.TouchStartHandler;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -43,12 +41,10 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.dd.DDUtil;
 import com.vaadin.client.ui.dd.VAbstractDropHandler;
-import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VDropHandler;
@@ -85,47 +81,33 @@ public class VDragAndDropWrapper extends VCustomComponent
         hookHtml5Events(getElement());
         setStyleName(CLASSNAME);
 
-        addDomHandler(new MouseDownHandler() {
-
-            @Override
-            public void onMouseDown(final MouseDownEvent event) {
-                if (getConnector().isEnabled()
-                        && event.getNativeEvent()
-                                .getButton() == Event.BUTTON_LEFT
-                        && startDrag(event.getNativeEvent())) {
-                    event.preventDefault(); // prevent text selection
-                    startX = event.getClientX();
-                    startY = event.getClientY();
-                }
+        addDomHandler(event -> {
+            if (getConnector().isEnabled()
+                    && event.getNativeEvent().getButton() == Event.BUTTON_LEFT
+                    && startDrag(event.getNativeEvent())) {
+                event.preventDefault(); // prevent text selection
+                startX = event.getClientX();
+                startY = event.getClientY();
             }
         }, MouseDownEvent.getType());
 
-        addDomHandler(new MouseUpHandler() {
-
-            @Override
-            public void onMouseUp(final MouseUpEvent event) {
-                final int deltaX = Math.abs(event.getClientX() - startX);
-                final int deltaY = Math.abs(event.getClientY() - startY);
-                if ((deltaX + deltaY) < MIN_PX_DELTA) {
-                    Element clickedElement = WidgetUtil.getElementFromPoint(
-                            event.getClientX(), event.getClientY());
-                    clickedElement.focus();
-                }
+        addDomHandler(event -> {
+            final int deltaX = Math.abs(event.getClientX() - startX);
+            final int deltaY = Math.abs(event.getClientY() - startY);
+            if ((deltaX + deltaY) < MIN_PX_DELTA) {
+                Element clickedElement = WidgetUtil.getElementFromPoint(
+                        event.getClientX(), event.getClientY());
+                clickedElement.focus();
             }
-
         }, MouseUpEvent.getType());
 
-        addDomHandler(new TouchStartHandler() {
-
-            @Override
-            public void onTouchStart(TouchStartEvent event) {
-                if (getConnector().isEnabled()
-                        && startDrag(event.getNativeEvent())) {
-                    /*
-                     * Dont let eg. panel start scrolling.
-                     */
-                    event.stopPropagation();
-                }
+        addDomHandler(event -> {
+            if (getConnector().isEnabled()
+                    && startDrag(event.getNativeEvent())) {
+                /*
+                 * Don't let e.g. panel start scrolling.
+                 */
+                event.stopPropagation();
             }
         }, TouchStartEvent.getType());
 
@@ -206,10 +188,10 @@ public class VDragAndDropWrapper extends VCustomComponent
             if (dragStartElement == null) {
                 dragStartElement = getDragStartElement();
                 dragStartElement.setPropertyBoolean(DRAGGABLE, true);
-                VConsole.log("draggable = "
+                getLogger().info("draggable = "
                         + dragStartElement.getPropertyBoolean(DRAGGABLE));
                 hookHtml5DragStart(dragStartElement);
-                VConsole.log("drag start listeners hooked.");
+                getLogger().info("drag start listeners hooked.");
             }
         } else {
             dragStartElement = null;
@@ -225,48 +207,37 @@ public class VDragAndDropWrapper extends VCustomComponent
 
     private boolean uploading;
 
-    private final ReadyStateChangeHandler readyStateChangeHandler = new ReadyStateChangeHandler() {
-
-        @Override
-        public void onReadyStateChange(XMLHttpRequest xhr) {
-            if (xhr.getReadyState() == XMLHttpRequest.DONE) {
-                // #19616 Notify the upload handler that the request is complete
-                // and let it poll the server for changes.
-                uploadHandler.uploadDone();
-                uploading = false;
-                startNextUpload();
-                xhr.clearOnReadyStateChange();
-            }
+    private final ReadyStateChangeHandler readyStateChangeHandler = xhr -> {
+        if (xhr.getReadyState() == XMLHttpRequest.DONE) {
+            // #19616 Notify the upload handler that the request is complete
+            // and let it poll the server for changes.
+            uploadHandler.uploadDone();
+            uploading = false;
+            startNextUpload();
+            xhr.clearOnReadyStateChange();
         }
     };
     private Timer dragleavetimer;
 
     /** For internal use only. May be removed or replaced in the future. */
     public void startNextUpload() {
-        Scheduler.get().scheduleDeferred(new Command() {
+        Scheduler.get().scheduleDeferred(() -> {
+            if (!uploading) {
+                if (!fileIds.isEmpty()) {
 
-            @Override
-            public void execute() {
-                if (!uploading) {
-                    if (fileIds.size() > 0) {
-
-                        uploading = true;
-                        final Integer fileId = fileIds.remove(0);
-                        VHtml5File file = files.remove(0);
-                        final String receiverUrl = client.translateVaadinUri(
-                                fileIdToReceiver.remove(fileId.toString()));
-                        ExtendedXHR extendedXHR = (ExtendedXHR) ExtendedXHR
-                                .create();
-                        extendedXHR
-                                .setOnReadyStateChange(readyStateChangeHandler);
-                        extendedXHR.open("POST", receiverUrl);
-                        extendedXHR.postFile(file);
-                    }
+                    uploading = true;
+                    final Integer fileId = fileIds.remove(0);
+                    VHtml5File file = files.remove(0);
+                    final String receiverUrl = client.translateVaadinUri(
+                            fileIdToReceiver.remove(fileId.toString()));
+                    ExtendedXHR extendedXHR = (ExtendedXHR) ExtendedXHR
+                            .create();
+                    extendedXHR.setOnReadyStateChange(readyStateChangeHandler);
+                    extendedXHR.open("POST", receiverUrl);
+                    extendedXHR.postFile(file);
                 }
-
             }
         });
-
     }
 
     public boolean html5DragStart(VHtml5DragEvent event) {
@@ -310,7 +281,7 @@ public class VDragAndDropWrapper extends VCustomComponent
                 event.preventDefault();
                 event.stopPropagation();
             } catch (Exception e) {
-                // VConsole.log("IE9 fails");
+                // getLogger().info("IE9 fails");
             }
             return false;
         } catch (Exception e) {
@@ -345,7 +316,7 @@ public class VDragAndDropWrapper extends VCustomComponent
                 event.preventDefault();
                 event.stopPropagation();
             } catch (Exception e) {
-                // VConsole.log("IE9 fails");
+                // getLogger().info("IE9 fails");
             }
             return false;
         } catch (Exception e) {
@@ -384,7 +355,7 @@ public class VDragAndDropWrapper extends VCustomComponent
             event.preventDefault();
             event.stopPropagation();
         } catch (Exception e) {
-            // VConsole.log("IE9 fails");
+            // getLogger().info("IE9 fails");
         }
         return false;
     }
@@ -416,7 +387,7 @@ public class VDragAndDropWrapper extends VCustomComponent
                 if (event.isFile(i)) {
                     final int fileId = filecounter++;
                     final VHtml5File file = event.getFile(i);
-                    VConsole.log("Preparing to upload file " + file.getName()
+                    getLogger().info("Preparing to upload file " + file.getName()
                             + " with id " + fileId + ", size="
                             + file.getSize());
                     transferable.setData("fi" + fileIndex, "" + fileId);
@@ -437,7 +408,7 @@ public class VDragAndDropWrapper extends VCustomComponent
                 event.preventDefault();
                 event.stopPropagation();
             } catch (Exception e) {
-                // VConsole.log("IE9 fails");
+                // getLogger().info("IE9 fails");
             }
             return false;
         } catch (Exception e) {
@@ -466,11 +437,11 @@ public class VDragAndDropWrapper extends VCustomComponent
 
         public final native void postFile(VHtml5File file)
         /*-{
-        
+
             this.setRequestHeader('Content-Type', 'multipart/form-data');
             // Seems like IE10 will loose the file if we don't keep a reference to it...
             this.fileBeingUploaded = file;
-        
+
             this.send(file);
         }-*/;
 
@@ -531,13 +502,7 @@ public class VDragAndDropWrapper extends VCustomComponent
             boolean detailsChanged = updateDropDetails(drag);
             if (detailsChanged) {
                 currentlyValid = false;
-                validate(new VAcceptCallback() {
-
-                    @Override
-                    public void accepted(VDragEvent event) {
-                        dragAccepted(drag);
-                    }
-                }, drag);
+                validate(event -> dragAccepted(drag), drag);
             }
         }
 
@@ -626,19 +591,19 @@ public class VDragAndDropWrapper extends VCustomComponent
     protected native void hookHtml5Events(com.google.gwt.user.client.Element el)
     /*-{
             var me = this;
-    
+
             el.addEventListener("dragenter",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-    
+
             el.addEventListener("dragleave",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-    
+
             el.addEventListener("dragover",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragOver(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-    
+
             el.addEventListener("drop",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
@@ -672,11 +637,11 @@ public class VDragAndDropWrapper extends VCustomComponent
     protected void deEmphasis(boolean doLayout) {
         if (emphasizedVDrop != null) {
             VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE, false);
-            VDragAndDropWrapper.setStyleName(getElement(),
-                    OVER_STYLE + "-" + emphasizedVDrop.toString().toLowerCase(),
+            VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
+                    + emphasizedVDrop.toString().toLowerCase(Locale.ROOT),
                     false);
-            VDragAndDropWrapper.setStyleName(getElement(),
-                    OVER_STYLE + "-" + emphasizedHDrop.toString().toLowerCase(),
+            VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
+                    + emphasizedHDrop.toString().toLowerCase(Locale.ROOT),
                     false);
         }
         if (doLayout) {
@@ -692,10 +657,10 @@ public class VDragAndDropWrapper extends VCustomComponent
         deEmphasis(false);
         VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE, true);
         VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
-                + verticalDropLocation.toString().toLowerCase(), true);
-        VDragAndDropWrapper.setStyleName(getElement(),
-                OVER_STYLE + "-"
-                        + horizontalDropLocation.toString().toLowerCase(),
+                + verticalDropLocation.toString().toLowerCase(Locale.ROOT),
+                true);
+        VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
+                + horizontalDropLocation.toString().toLowerCase(Locale.ROOT),
                 true);
         emphasizedVDrop = verticalDropLocation;
         emphasizedHDrop = horizontalDropLocation;
@@ -736,4 +701,7 @@ public class VDragAndDropWrapper extends VCustomComponent
 
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(VDragAndDropWrapper.class.getName());
+    }
 }

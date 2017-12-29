@@ -45,9 +45,9 @@ import com.vaadin.osgi.resources.VaadinResourceService;
 /**
  * Tracks {@link OsgiVaadinWidgetset} and {@link OsgiVaadinTheme} registration
  * and uses {@link HttpService} to register them.
- * 
+ *
  * @author Vaadin Ltd.
- * 
+ *
  * @since 8.1
  */
 @Component(immediate = true)
@@ -67,8 +67,9 @@ public class VaadinResourceTrackerComponent {
         BundleContext context = bundle.getBundleContext();
 
         OsgiVaadinTheme theme = context.getService(themeRef);
-        if (theme == null)
+        if (theme == null) {
             return;
+        }
 
         VaadinResourceService resourceService = OsgiVaadinResources
                 .getService();
@@ -105,8 +106,9 @@ public class VaadinResourceTrackerComponent {
         BundleContext context = bundle.getBundleContext();
 
         OsgiVaadinWidgetset widgetset = context.getService(widgetsetRef);
-        if (widgetset == null)
+        if (widgetset == null) {
             return;
+        }
 
         VaadinResourceService service = OsgiVaadinResources.getService();
         try {

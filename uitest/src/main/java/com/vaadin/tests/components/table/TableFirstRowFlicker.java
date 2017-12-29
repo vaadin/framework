@@ -27,11 +27,7 @@ public class TableFirstRowFlicker extends LegacyApplication {
         ((VerticalLayout) mainWindow.getContent()).setExpandRatio(t, 1);
 
         // Button button = new Button("Refresh");
-        // button.addListener(new Button.ClickListener() {
-        // public void buttonClick(ClickEvent event) {
-        // t.refreshRowCache();
-        // }
-        // });
+        // button.addListener(event -> t.refreshRowCache());
         // mainWindow.addComponent(button);
 
         ProgressIndicator pi = new ProgressIndicator();

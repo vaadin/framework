@@ -256,8 +256,8 @@ public class FileUploadHandler implements RequestHandler {
                 .indexOf(ServletPortletHelper.UPLOAD_URL_PREFIX)
                 + ServletPortletHelper.UPLOAD_URL_PREFIX.length();
         String uppUri = pathInfo.substring(startOfData);
-        String[] parts = uppUri.split("/", 4); // 0= UIid, 1 = cid, 2= name, 3
-                                               // = sec key
+        // 0= UIid, 1= cid, 2= name, 3= sec key
+        String[] parts = uppUri.split("/", 4);
         String uiId = parts[0];
         String connectorId = parts[1];
         String variableName = parts[2];
@@ -430,7 +430,7 @@ public class FileUploadHandler implements RequestHandler {
         try {
             return Long.parseLong(request.getHeader("Content-Length"));
         } catch (NumberFormatException e) {
-            return -1l;
+            return -1;
         }
     }
 
@@ -694,9 +694,7 @@ public class FileUploadHandler implements RequestHandler {
 
     private void cleanStreamVariable(VaadinSession session, final UI ui,
             final ClientConnector owner, final String variableName) {
-        session.accessSynchronously(() -> {
-            ui.getConnectorTracker().cleanStreamVariable(owner.getConnectorId(),
-                    variableName);
-        });
+        session.accessSynchronously(() -> ui.getConnectorTracker()
+                .cleanStreamVariable(owner.getConnectorId(), variableName));
     }
 }

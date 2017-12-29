@@ -85,23 +85,23 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        VPanel panel = getWidget();
         if (isRealUpdate(uidl)) {
 
             // Handle caption displaying and style names, prior generics.
             // Affects size calculations
 
             // Restore default stylenames
-            getWidget().contentNode.setClassName(VPanel.CLASSNAME + "-content");
-            getWidget().bottomDecoration
+            panel.contentNode.setClassName(VPanel.CLASSNAME + "-content");
+            panel.bottomDecoration
                     .setClassName(VPanel.CLASSNAME + "-deco");
-            getWidget().captionNode.setClassName(VPanel.CLASSNAME + "-caption");
-            boolean hasCaption = false;
-            if (getState().caption != null && !getState().caption.isEmpty()) {
-                getWidget().setCaption(getState().caption);
-                hasCaption = true;
+            panel.captionNode.setClassName(VPanel.CLASSNAME + "-caption");
+            boolean hasCaption = hasCaption();
+            if (hasCaption) {
+                panel.setCaption(getState().caption);
             } else {
-                getWidget().setCaption("");
-                getWidget().captionNode
+                panel.setCaption("");
+                panel.captionNode
                         .setClassName(VPanel.CLASSNAME + "-nocaption");
             }
 
@@ -121,11 +121,11 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
                     decoClass += " " + decoBaseClass + "-" + style;
                 }
             }
-            getWidget().captionNode.setClassName(captionClass);
-            getWidget().contentNode.setClassName(contentClass);
-            getWidget().bottomDecoration.setClassName(decoClass);
+            panel.captionNode.setClassName(captionClass);
+            panel.contentNode.setClassName(contentClass);
+            panel.bottomDecoration.setClassName(decoClass);
 
-            getWidget().makeScrollable();
+            panel.makeScrollable();
         }
 
         if (!isRealUpdate(uidl)) {
@@ -134,13 +134,13 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
 
         clickEventHandler.handleEventHandlerRegistration();
 
-        getWidget().client = client;
-        getWidget().id = uidl.getId();
+        panel.client = client;
+        panel.id = uidl.getId();
 
         if (getIconUri() != null) {
-            getWidget().setIconUri(getIconUri(), client);
+            panel.setIconUri(getIconUri(), client);
         } else {
-            getWidget().setIconUri(null, client);
+            panel.setIconUri(null, client);
         }
 
         // We may have actions attached to this panel
@@ -149,29 +149,38 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
             for (int i = 0; i < cnt; i++) {
                 UIDL childUidl = uidl.getChildUIDL(i);
                 if (childUidl.getTag().equals("actions")) {
-                    if (getWidget().shortcutHandler == null) {
-                        getWidget().shortcutHandler = new ShortcutActionHandler(
+                    if (panel.shortcutHandler == null) {
+                        panel.shortcutHandler = new ShortcutActionHandler(
                                 getConnectorId(), client);
                     }
-                    getWidget().shortcutHandler.updateActionMap(childUidl);
+                    panel.shortcutHandler.updateActionMap(childUidl);
                 }
             }
         }
 
-        if (getState().scrollTop != getWidget().scrollTop) {
+        if (getState().scrollTop != panel.scrollTop) {
             // Sizes are not yet up to date, so changing the scroll position
             // is deferred to after the layout phase
             uidlScrollTop = getState().scrollTop;
         }
 
-        if (getState().scrollLeft != getWidget().scrollLeft) {
+        if (getState().scrollLeft != panel.scrollLeft) {
             // Sizes are not yet up to date, so changing the scroll position
             // is deferred to after the layout phase
             uidlScrollLeft = getState().scrollLeft;
         }
 
         // And apply tab index
-        getWidget().contentNode.setTabIndex(getState().tabIndex);
+        panel.contentNode.setTabIndex(getState().tabIndex);
+    }
+
+    /**
+     * Detects if caption div should be visible.
+     *
+     * @return {@code true} if caption div should be shown
+     */
+    protected boolean hasCaption() {
+        return getState().caption != null && !getState().caption.isEmpty();
     }
 
     @Override

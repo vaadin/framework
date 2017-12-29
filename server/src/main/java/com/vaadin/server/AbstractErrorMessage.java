@@ -121,7 +121,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
             break;
         }
         // if no message, combine the messages of all children
-        if (null == result && null != getCauses() && getCauses().size() > 0) {
+        if (null == result && null != getCauses() && !getCauses().isEmpty()) {
             StringBuilder sb = new StringBuilder();
             for (ErrorMessage cause : getCauses()) {
                 String childMessage = cause.getFormattedHtmlMessage();
