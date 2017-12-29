@@ -311,21 +311,28 @@ public class BeanBinderTest
     }
 
     @Test
+    public void bindReadOnlyPropertyShouldMarkFieldAsReadonly() {
+        binder.bind(nameField, "readOnlyProperty");
+
+        assertTrue("Name field should be readonly", nameField.isReadOnly());
+    }
+
+    @Test
     public void setReadonlyShouldIgnoreBindingsForReadOnlyProperties() {
         binder.bind(nameField, "readOnlyProperty");
 
         binder.setReadOnly(true);
-        assertFalse("Name field should be ignored and not be readonly", nameField.isReadOnly());
+        assertTrue("Name field should be ignored and be readonly", nameField.isReadOnly());
 
         binder.setReadOnly(false);
-        assertFalse("Name field should be ignored and not be readonly", nameField.isReadOnly());
+        assertTrue("Name field should be ignored and be readonly", nameField.isReadOnly());
 
-        nameField.setReadOnly(true);
+        nameField.setReadOnly(false);
         binder.setReadOnly(true);
-        assertTrue("Name field should be ignored and be readonly", nameField.isReadOnly());
+        assertFalse("Name field should be ignored and not be readonly", nameField.isReadOnly());
 
         binder.setReadOnly(false);
-        assertTrue("Name field should be ignored and be readonly", nameField.isReadOnly());
+        assertFalse("Name field should be ignored and not be readonly", nameField.isReadOnly());
     }
 
     @Test
