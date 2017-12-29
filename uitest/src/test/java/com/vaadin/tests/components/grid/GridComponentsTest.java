@@ -9,6 +9,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
@@ -137,6 +138,19 @@ public class GridComponentsTest extends MultiBrowserTest {
         assertFalse("Second header should not contain a component",
                 grid.getHeaderCell(0, 1).isElementPresent(LabelElement.class));
         assertEquals("Other Components", grid.getHeaderCell(0, 1).getText());
+    }
+
+    @Test
+    public void testSelectRowByClickingLabel() {
+        openTestURL();
+
+        GridElement grid = $(GridElement.class).first();
+        assertFalse("Row should not be initially selected",
+                grid.getRow(0).isSelected());
+
+        grid.getCell(0, 0).$(LabelElement.class).first().click(10, 10,
+                new Keys[0]);
+        assertTrue("Row should be selected", grid.getRow(0).isSelected());
     }
 
     private void assertRowExists(int i, String string) {

@@ -30,6 +30,7 @@ public class ColumnState extends AbstractGridExtensionState {
     public String internalId;
     public boolean sortable = false;
     public boolean editable = false;
+    public boolean widgetEventsAllowed = false;
 
     /** The assistive device caption for the column. */
     public String assistiveCaption;
@@ -81,5 +82,4 @@ public class ColumnState extends AbstractGridExtensionState {
      * @since 8.2
      */
     public ContentMode tooltipContentMode;
-
 }
