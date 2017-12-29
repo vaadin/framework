@@ -2057,7 +2057,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         /**
          * Sets whether Grid should handle events in this Column from Components
-         * and Widgets rendered by certain Renderers.
+         * and Widgets rendered by certain Renderers. By default the events are
+         * not handled.
          * <p>
          * <strong>Note:</strong> Enabling this feature will for example select
          * a row when a component is clicked. For example in the case of a
@@ -2622,8 +2623,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * <p>
      * You can add columns for nested properties with dot notation, eg.
      * <code>"property.nestedProperty"</code>
-
      *
+     * 
      * @param propertyName
      *            the property name of the new column, not <code>null</code>
      * @param renderer

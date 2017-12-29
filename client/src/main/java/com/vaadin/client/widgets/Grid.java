@@ -2332,7 +2332,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     section = Section.BODY;
                 }
 
-                // Handle event in widget in grid if column allows it
+                // Don't handle event of child widget unless the column has been
+                // explicitly permitted to do so
                 if (grid.isElementInChildWidget(Element.as(target))) {
                     Cell cell = container.getCell(target.cast());
                     if (cell != null) {
