@@ -53,7 +53,7 @@ import com.vaadin.shared.ui.notification.NotificationState;
  * message whenever you want to make the message a little more noticeable.</li>
  * <li>TYPE_ERROR_MESSAGE requires to user to click it before disappearing, and
  * can be used for critical messages.</li>
- * <li>TYPE_TRAY_NOTIFICATION is shown for a while in the lower left corner of
+ * <li>TYPE_TRAY_NOTIFICATION is shown for a while in the lower right corner of
  * the window, and can be used for "convenience notifications" that do not have
  * to be noticed immediately, and should not interfere with the current task -
  * for instance to show "You have a new message in your inbox" while the user is

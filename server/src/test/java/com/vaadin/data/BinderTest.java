@@ -609,6 +609,31 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     }
 
     @Test
+    public void setReadonlyShouldIgnoreBindingsWithNullSetter() {
+        binder.bind(nameField, Person::getFirstName, null);
+        binder.forField(ageField)
+            .withConverter(new StringToIntegerConverter(""))
+            .bind(Person::getAge, Person::setAge);
+
+        binder.setReadOnly(true);
+        assertFalse("Name field should be ignored and not be readonly", nameField.isReadOnly());
+        assertTrue("Age field should be readonly", ageField.isReadOnly());
+
+        binder.setReadOnly(false);
+        assertFalse("Name field should be ignored and remain not readonly", nameField.isReadOnly());
+        assertFalse("Age field should not be readonly", ageField.isReadOnly());
+
+        nameField.setReadOnly(false);
+        binder.setReadOnly(false);
+        assertFalse("Name field should be ignored and remain not readonly", nameField.isReadOnly());
+        assertFalse("Age field should not be readonly", ageField.isReadOnly());
+
+        binder.setReadOnly(true);
+        assertFalse("Name field should be ignored and remain not readonly", nameField.isReadOnly());
+        assertTrue("Age field should be readonly", ageField.isReadOnly());
+    }
+
+    @Test
     public void isValidTest_bound_binder() {
         binder.forField(nameField)
                 .withValidator(Validator.from(

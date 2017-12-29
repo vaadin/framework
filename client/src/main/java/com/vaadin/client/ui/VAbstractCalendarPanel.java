@@ -17,7 +17,9 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -44,6 +46,7 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
@@ -190,6 +193,9 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         selectFocused();
         onSubmit();
     };
+
+    private Map<String, String> dateStyles = new HashMap<String, String>();
+    private DateTimeFormat df = DateTimeFormat.getFormat("yyyy-MM-dd");
 
     public VAbstractCalendarPanel() {
         getElement().setId(DOM.createUniqueId());
@@ -443,6 +449,13 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             // Dynamic updates to the stylename needs to render the calendar to
             // update the inner element stylenames
             renderCalendar();
+        }
+    }
+
+    public void setDateStyles(Map<String, String> dateStyles) {
+        this.dateStyles.clear();
+        if (dateStyles != null) {
+            this.dateStyles.putAll(dateStyles);
         }
     }
 
@@ -832,6 +845,10 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 }
                 if (curr.getMonth() != displayedMonth.getMonth()) {
                     day.addStyleDependentName(CN_OFFMONTH);
+                }
+                String dayDateString = df.format(dayDate);
+                if (dateStyles.containsKey(dayDateString)) {
+                    day.addStyleName(dateStyles.get(dayDateString));
                 }
 
                 days.setWidget(weekOfMonth, firstWeekdayColumn + dayOfWeek,

@@ -87,7 +87,8 @@ Each check box will have the [literal]#++v-checkbox++# style, borrowed from the
 [classname]#CheckBox# component, and each radio button the
 [literal]#++v-radiobutton++# style. Both the radio buttons and check boxes will
 also have the [literal]#++v-select-option++# style that allows styling
-regardless of the option type. Disabled items have additionally the
+regardless of the option type and additionally [literal]#++v-select-option-selected++#
+when the item is selected. Disabled items have additionally the
 [literal]#++v-disabled++# style.
 
 
