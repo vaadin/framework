@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEvent;
+import com.vaadin.event.HasUserOriginated;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
@@ -125,8 +126,9 @@ public class Notification extends AbstractExtension {
      *
      * @since 8.2
      */
-    private NotificationServerRpc rpc = () -> fireEvent(
-            new CloseEvent(Notification.this));
+    private NotificationServerRpc rpc = () -> {
+        close(true);
+    };
 
     /**
      * Creates a "humanized" notification message.
@@ -391,6 +393,37 @@ public class Notification extends AbstractExtension {
         extend(page.getUI());
     }
 
+    /**
+     * Hides the notification.
+     * <p>
+     * If the notification is not shown, does nothing.
+     *
+     * @since
+     */
+    public void close() {
+        close(false);
+    }
+
+    /**
+     * Hides the notification.
+     * <p>
+     * If the notification is not shown, does nothing.
+     *
+     * @param userOriginated
+     *            <code>true</code> if the notification is hidden because of the
+     *            user clicking on it, <code>false</code> if the notification
+     *            was closed from the server
+     * @since
+     */
+    protected void close(boolean userOriginated) {
+        if (!isAttached()) {
+            return;
+        }
+
+        remove();
+        fireEvent(new CloseEvent(this, userOriginated));
+    }
+
     @Override
     protected NotificationState getState() {
         return (NotificationState) super.getState();
@@ -498,13 +531,21 @@ public class Notification extends AbstractExtension {
      *
      * @since 8.2
      */
-    public static class CloseEvent extends ConnectorEvent {
+    public static class CloseEvent extends ConnectorEvent
+            implements HasUserOriginated {
+
+        private boolean userOriginated;
 
         /**
          * @param source
          */
         public CloseEvent(Notification source) {
+            this(source, true);
+        }
+
+        public CloseEvent(Notification source, boolean userOriginated) {
             super(source);
+            this.userOriginated = userOriginated;
         }
 
         /**
@@ -514,6 +555,11 @@ public class Notification extends AbstractExtension {
          */
         public Notification getNotification() {
             return (Notification) getSource();
+        }
+
+        @Override
+        public boolean isUserOriginated() {
+            return userOriginated;
         }
     }
 
