@@ -1,14 +1,19 @@
 package com.vaadin.tests.elements.notification;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 
-public class NotificationGetTypeAndDescription extends AbstractTestUI {
+@Widgetset("com.vaadin.DefaultWidgetSet")
+public class NotificationGetTypeAndDescription extends AbstractTestUIWithLog {
 
     private static final Type[] types = { Type.WARNING_MESSAGE,
             Type.ERROR_MESSAGE, Type.HUMANIZED_MESSAGE,
@@ -34,6 +39,19 @@ public class NotificationGetTypeAndDescription extends AbstractTestUI {
         btn.setId("showid");
         btn.addClickListener(event -> Notification.show("test"));
         addComponent(btn);
+
+        Button hide = new Button("Hide all notifications");
+        hide.setId("hide");
+        hide.addClickListener(event -> {
+            List<Notification> notifications = new ArrayList<>();
+            getAllChildrenIterable(getUI()).forEach(conn -> {
+                if (conn instanceof Notification) {
+                    notifications.add((Notification) conn);
+                }
+            });
+            notifications.forEach(Notification::hide);
+        });
+        addComponent(hide);
     }
 
     @Override
@@ -55,8 +73,12 @@ public class NotificationGetTypeAndDescription extends AbstractTestUI {
 
         @Override
         public void buttonClick(ClickEvent event) {
-            Notification.show(captions[index], descriptions[index],
-                    types[index]);
+            Notification n = Notification.show(captions[index],
+                    descriptions[index], types[index]);
+            n.addCloseListener(e -> {
+                log("Notification (" + descriptions[index] + ") closed "
+                        + (e.isUserOriginated() ? "by user" : "from server"));
+            });
         }
 
     }
