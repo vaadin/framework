@@ -805,6 +805,7 @@ public class VMenuBar extends FocusableFlowPanel
         protected boolean checked = false;
         protected boolean selected = false;
         protected String description = null;
+        protected ContentMode contentMode = null;
 
         private String styleName;
 
@@ -1114,15 +1115,24 @@ public class VMenuBar extends FocusableFlowPanel
                         MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION);
             }
 
+            if (uidl.hasAttribute(
+                    MenuBarConstants.ATTRIBUTE_ITEM_CONTENT_MODE)) {
+                String contentModeString = uidl.getStringAttribute(
+                        MenuBarConstants.ATTRIBUTE_ITEM_CONTENT_MODE);
+                contentMode = ContentMode.valueOf(contentModeString);
+            } else {
+                contentMode = ContentMode.PREFORMATTED;
+            }
+
             updateStyleNames();
         }
 
         public TooltipInfo getTooltip() {
-            if (description == null) {
+            if (description == null || contentMode == null) {
                 return null;
             }
 
-            return new TooltipInfo(description, ContentMode.PREFORMATTED, null,
+            return new TooltipInfo(description, contentMode, null,
                     this);
         }
 

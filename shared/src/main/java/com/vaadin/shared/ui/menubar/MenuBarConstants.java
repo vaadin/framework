@@ -24,6 +24,8 @@ public class MenuBarConstants implements Serializable {
     @Deprecated
     public static final String ATTRIBUTE_ITEM_DESCRIPTION = "description";
     @Deprecated
+    public static final String ATTRIBUTE_ITEM_CONTENT_MODE = "contentmode";
+    @Deprecated
     public static final String ATTRIBUTE_ITEM_ICON = "icon";
     @Deprecated
     public static final String ATTRIBUTE_ITEM_DISABLED = "disabled";
