@@ -83,51 +83,27 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Separate row heights for header, body and footer in Grid</li>
-            <li>Support for item descriptions (tooltips) in CheckBoxGroup, RadioButtonGroup and Tree</li>
-            <li>Binder supports removing bindings</li>
-            <li>Binding builder methods do not have to be chained</li>
-            <li>Bean validation failures will revert changes in Binder</li>
-            <li>Notification supports CloseListener</li>
-            <li>Tree now has methods to scroll it programmatically</li>
-            <li>The browser time zone can be obtained from WebBrowser if the browser supports it</li>
-            <li>AbstractDateField now supports formatting of time zone information</li>
-            <li>PushState based navigation support</li>
-            <li>Grid WAI-ARIA support has been improved (aria-sort added)</li>
-            <li>Client side ErrorLevel support</li>
-            <li>VaadinService, VaadinServlet and VaadinServletService have protected no-args constructors to make DI integrations simpler</li>
+            <li><tt>DateField</tt> components support setting styling for individual dates</li>
+            <li><tt>RadioButtonGroup</tt> and <tt>CheckBoxGroup</tt> have style name <tt>selected</tt> on selected items</li>
+            <li><tt>Grid</tt> supports handling events from <tt>Components</tt> in <tt>Column</tt>.</li>
+            <li><tt>MenuBar</tt> supports different content modes for tool-tips in <tt>MenuItems</tt></li>
         </ul>
 
         </p>
 
         <p>
-            For enhancements introduced in Vaadin Framework 8.1, see the <a
-                href="http://vaadin.com/download/release/8.1/8.1.0/release-notes.html">Release
-                Notes for Vaadin Framework 8.1.0</a>.
+            For enhancements introduced in Vaadin Framework 8.2, see the <a
+                href="http://vaadin.com/download/release/8.2/8.2.0/release-notes.html">Release
+                Notes for Vaadin Framework 8.2.0</a>.
             For migrating from previous framework versions, see <a href="#incompatible">the list of incompatible changes</a> and <a href="#migrating">how to migrate
             to Vaadin Framework 8</a>.
         </p>
 
         <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h2>
 
-        <li>Row height in <tt>Grid</tt> is replaced with separate header, body and footer row heights</li>
-        <li><tt>GridState</tt> variable <tt>rowHeight</tt> has been replaced by three variables.</li>
-        <li><tt>Button</tt> has a new constructor that may cause constructor calls with null as first parameter to be ambiguous.</li>
-        <li><tt>DataCommunicator</tt> methods <tt>getDataProviderSize</tt> and <tt>fetchItemsWithRange</tt> are now <tt>public</tt>, not <tt>protected</tt>.</li>
-        <li><tt>Binder</tt> method <tt>getBindings</tt> now returns a Collection, not a Set.</li>
-        <li><tt>Binder</tt> protected method <tt>handleError</tt> now takes a <tt>ValidationResult</tt>, not <tt>String</tt>.</li>
-        <li><tt>BindingBuilder</tt> now works like a proper builder. Adding a converter will not mark Binding as <tt>bound</tt> allowing chaining to the same object.</li>
-        <li><tt>ErrorLevel</tt> is removed from <tt>ErrorMessage</tt> and now <tt>com.vaadin.shared.ui.ErrorLevel</tt> should be used.</li>
-        <li>Error indicators are now <tt>&lt;span class="v-errorindicator"&gt;&lt;/span&gt;</tt> elements.</li>
-        <li><tt>Embedded</tt> is not a <tt>LegacyComponent</tt> anymore.</li>
-        <li><tt>Notification</tt> method <tt>show</tt> returns <tt>Notification</tt>, instead of <tt>void</tt>.</li>
-        <li>The client side <tt>SelectionModel</tt> interface has a new method <tt>isMultiSelectionAllowed</tt>.</li>
-        <li><tt>AbstractDateField</tt> is not a <tt>LegacyComponent</tt> anymore.</li>
-        <li><tt>AbstractDateField</tt>.<tt>formatDate</tt> is now abstract.</li>
-        <li><tt>VAbstractTextualDate</tt>.<tt>updateDateVariables()</tt> is now <tt>updateBufferedResolutions()</tt> and <tt>updateAndSendBufferedValues()</tt>.</li>
-        <li>For <tt>GridDragStartEvent</tt> and <tt>GridDragEndEvent</tt> classes, the method <tt>getDraggedItems</tt> now returns a <tt>List</tt> instead of a <tt>Set</tt>, with the first-to-last item ordering from client side.</li>
+        <li><tt>BindingBuilder</tt> will now automatically mark bound field <i>read-only</i> when bound to a read-only property or a <tt>null</tt> setter.</li>
 
-        <h2>For incompatible or behavior-altering changes in 8.1, please see <a href="https://vaadin.com/download/release/8.1/8.1.0/release-notes.html#incompatible">8.1 release notes</a></h2>
+        <h2>For incompatible or behavior-altering changes in 8.2, please see <a href="https://vaadin.com/download/release/8.2/8.2.0/release-notes.html#incompatible">8.2 release notes</a></h2>
         
                 
         <h3 id="knownissues">Known Issues and Limitations</h3>
