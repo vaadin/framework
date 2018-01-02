@@ -57,6 +57,7 @@ import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
 import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderRow;
+import com.vaadin.client.widgets.Grid.StaticSection.StaticCell;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
@@ -444,6 +445,8 @@ public class GridConnector extends AbstractListingConnector
                     "unexpected cell type: " + cellState.type);
         }
         cell.setStyleName(cellState.styleName);
+        cell.setDescription(cellState.description);
+        cell.setDescriptionContentMode(cellState.descriptionContentMode);
     }
 
     /**
@@ -620,7 +623,10 @@ public class GridConnector extends AbstractListingConnector
 
         if (cell != null) {
             JsonObject row = cell.getRow();
-
+            TooltipInfo tooltip = getHeaderFooterTooltip(cell);
+            if (tooltip != null) {
+                return tooltip;
+            }
             if (row != null && (row.hasKey(GridState.JSONKEY_ROWDESCRIPTION)
                     || row.hasKey(GridState.JSONKEY_CELLDESCRIPTION))) {
 
@@ -647,6 +653,28 @@ public class GridConnector extends AbstractListingConnector
         if (super.hasTooltip()) {
             return super.getTooltipInfo(element);
         }
+        return null;
+    }
+
+    private TooltipInfo getHeaderFooterTooltip(CellReference cell) {
+        Section section = Section.BODY;
+        if (cell instanceof EventCellReference) {
+            // Header or footer
+            section = ((EventCellReference) cell).getSection();
+        }
+        StaticCell staticCell = null;
+        if (section == Section.HEADER) {
+            staticCell = getWidget().getHeaderRow(cell.getRowIndex())
+                    .getCell(getWidget().getColumn(cell.getColumnIndex()));
+        } else if (section == Section.FOOTER) {
+            staticCell = getWidget().getFooterRow(cell.getRowIndex())
+                    .getCell(getWidget().getColumn(cell.getColumnIndex()));
+        }
+        if (staticCell != null && staticCell.getDescription() != null) {
+            return new TooltipInfo(staticCell.getDescription(),
+                    staticCell.getDescriptionContentMode());
+        }
+
         return null;
     }
 
