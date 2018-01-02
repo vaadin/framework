@@ -420,7 +420,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      *
      * @param textFocus
      *            the focus of the {@link #text}
-     * @since
+     * @since 8.3
      */
     protected void checkGroupFocus(boolean textFocus) {
         boolean newGroupFocus = textFocus | hasChildFocus();
@@ -444,7 +444,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      *
      * @return {@code true} if any of the child component has focus,
      *         {@code false} otherwise
-     * @since
+     * @since 8.3
      */
     protected boolean hasChildFocus() {
         return false;

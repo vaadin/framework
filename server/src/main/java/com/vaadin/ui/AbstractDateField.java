@@ -826,6 +826,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @param styleName
      *            the custom style name(s) for given date, {@code null} to clear
      *            custom style name(s)
+     *
+     * @since 8.3
      */
     public void setDateStyle(LocalDate date, String styleName) {
         if (date != null) {
@@ -846,6 +848,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @return the corresponding style name(s), if any, {@code null} otherwise
      *
      * @see {@link #setDateStyle(LocalDate, String)}
+     * @since 8.3
      */
     public String getDateStyle(LocalDate date) {
         if (date == null) {
@@ -861,6 +864,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @return map from dates to custom style names in each date's calendar cell
      *
      * @see {@link #setDateStyle(LocalDate, String)}
+     * @since 8.3
      */
     public Map<LocalDate, String> getDateStyles() {
         HashMap<LocalDate, String> hashMap = new HashMap<>();
