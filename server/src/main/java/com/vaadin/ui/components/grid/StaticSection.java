@@ -35,6 +35,7 @@ import java.util.stream.Stream;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.ui.grid.SectionState.CellState;
@@ -614,6 +615,83 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
 
         void detach() {
             removeComponentIfPresent();
+        }
+
+        /**
+         * Gets the tooltip for the cell.
+         * <p>
+         * The tooltip is shown in the mode returned by
+         * {@link #getDescriptionContentMode()}.
+         *
+         * @since
+         */
+        public String getDescription() {
+            return cellState.description;
+        }
+
+        /**
+         * Sets the tooltip for the cell.
+         * <p>
+         * By default, tooltips are shown as plain text. For HTML tooltips, see
+         * {@link #setDescription(String, ContentMode)} or
+         * {@link #setDescriptionContentMode(ContentMode)}.
+         *
+         * @param description
+         *            the tooltip to show when hovering the cell
+         * @since
+         */
+        public void setDescription(String description) {
+            cellState.description = description;
+        }
+
+        /**
+         * Sets the tooltip for the cell to be shown with the given content
+         * mode.
+         * <p>
+         * For HTML tooltips, use {@link ContentMode#HTML} (remember to ensure
+         * that the HTML is safe to use if it originates from a user).
+         * <p>
+         * For plain text tooltips (the default), use {@link ContentMode#TEXT}
+         *
+         * @param description
+         *            the tooltip to show when hovering the cell
+         * @param descriptionContentMode
+         *            the content mode to use for the tooltip (HTML or plain
+         *            text)
+         * @since
+         */
+        public void setDescription(String description,
+                ContentMode descriptionContentMode) {
+            setDescription(description);
+            setDescriptionContentMode(descriptionContentMode);
+        }
+
+        /**
+         * Gets the content mode for the tooltip.
+         * <p>
+         * The content mode determines if the tooltip is shown as plain text
+         * ({@link ContentMode#TEXT}) or as HTML({@link ContentMode#HTML}).
+         *
+         * @return the content mode for the tooltip
+         * @since
+         */
+        public ContentMode getDescriptionContentMode() {
+            return cellState.descriptionContentMode;
+        }
+
+        /**
+         * Sets the content mode for the tooltip.
+         * <p>
+         * The content mode determines if the tooltip is shown as plain text
+         * ({@link ContentMode#TEXT}) or as HTML({@link ContentMode#HTML}).
+         *
+         * @param descriptionContentMode
+         *            the content mode for the tooltip
+         * @since
+         */
+        public void setDescriptionContentMode(
+                ContentMode descriptionContentMode) {
+            cellState.descriptionContentMode = descriptionContentMode;
         }
     }
 
