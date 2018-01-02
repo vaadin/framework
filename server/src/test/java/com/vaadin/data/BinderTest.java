@@ -1049,6 +1049,13 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.removeBinding(binding);
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void bindWithNullSetterSetReadWrite() {
+        Binding<Person, String> binding = binder.bind(nameField,
+                Person::getFirstName, null);
+        binding.setReadOnly(false);
+    }
+
     @Test
     public void bindWithNullSetterShouldMarkFieldAsReadonly() {
         Binding<Person, String> nameBinding = binder.bind(nameField,
@@ -1059,11 +1066,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         assertTrue("Name field should be readonly", nameField.isReadOnly());
         assertFalse("Age field should not be readonly", ageField.isReadOnly());
-
         assertTrue("Binding should be marked readonly",
-                nameBinding.isReadOnly());
-        nameBinding.setReadOnly(false);
-        assertTrue("Binding should still be marked readonly",
                 nameBinding.isReadOnly());
     }
 
@@ -1079,6 +1082,5 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binding.setReadOnly(true);
         assertTrue("Binding should be readonly", binding.isReadOnly());
         assertTrue("Name field should be readonly", nameField.isReadOnly());
-
     }
 }
