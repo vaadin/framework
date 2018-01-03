@@ -247,6 +247,16 @@ public class WebBrowser implements Serializable {
     }
 
     /**
+     * Gets the complete browser version as string.
+     *
+     * @return the complete browser version or {@code null} if unknown
+     */
+    public String getBrowserVersion() {
+        return browserDetails != null ? browserDetails.getBrowserVersion()
+                : null;
+    }
+
+    /**
      * Tests whether the user is using Linux.
      *
      * @return true if the user is using Linux, false if the user is not using

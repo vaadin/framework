@@ -510,6 +510,15 @@ public class BrowserInfo {
     }
 
     /**
+     * Gets the complete browser version as string.
+     *
+     * @return the complete browser version or {@code null} if unknown
+     */
+    public String getBrowserVersion() {
+        return browserDetails.getBrowserVersion();
+    }
+
+    /**
      * Checks if the browser version is newer or equal to the given major+minor
      * version.
      *
