@@ -26,7 +26,7 @@ public class MyEntryPoint implements EntryPoint {
     @Override
     public void onModuleLoad() {
         // Create a button widget
-        Button button = new Button();
+        VButton button = new VButton();
         button.setText("Click me!");
         button.addClickHandler(new ClickHandler() {
             @Override
