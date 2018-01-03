@@ -399,7 +399,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             selectDate(focusedDate);
         } else {
             getLogger()
-                    .info("Trying to select a the focused date which is NULL!");
+                    .info("Trying to select the focused date which is NULL!");
         }
     }
 
@@ -457,7 +457,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * Sets the style names for dates.
      *
      * @param dateStyles
-     *            the map of date strings to style name
+     *            the map of date string to style name
      *
      * @since 8.3
      */
