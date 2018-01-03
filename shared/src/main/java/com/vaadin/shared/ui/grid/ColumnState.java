@@ -30,6 +30,13 @@ public class ColumnState extends AbstractGridExtensionState {
     public String internalId;
     public boolean sortable = false;
     public boolean editable = false;
+
+    /**
+     * Sets whether Grid should handle events from Widgets from this column or
+     * not.
+     * 
+     * @since 8.3
+     */
     public boolean widgetEventsAllowed = false;
 
     /** The assistive device caption for the column. */

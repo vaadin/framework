@@ -5548,6 +5548,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * 
          * @return {@code true} to handle events from widgets; {@code false} to
          *         not
+         * @since 8.3
          */
         public boolean isWidgetEventsAllowed() {
             return widgetEventsAllowed;
@@ -5559,6 +5560,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * @param widgetEventsAllowed
          *            {@code true} to let grid handle events from widgets;
          *            {@code false} to not
+         *
+         * @since 8.3
          */
         public void setWidgetEventsAllowed(boolean widgetEventsAllowed) {
             this.widgetEventsAllowed = widgetEventsAllowed;

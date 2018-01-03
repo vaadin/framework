@@ -157,7 +157,8 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         // #9258 apply the v-disabled class when disabled for UX
         button.setStyleName(StyleConstants.DISABLED,
                 !isEnabled() || !optionEnabled);
-        updateItemSelection(button, item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
+        updateItemSelection(button,
+                item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
 
         String key = item.getString(DataCommunicatorConstants.KEY);
 
@@ -260,7 +261,8 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
     public void selectItemKey(String selectedItemKey) {
         // At most one item could be selected so reset all radio buttons
         // before applying current selection
-        keyToOptions.values().forEach(button -> updateItemSelection(button, false));
+        keyToOptions.values()
+                .forEach(button -> updateItemSelection(button, false));
         if (selectedItemKey != null) {
             RadioButton radioButton = keyToOptions.get(selectedItemKey);
             if (radioButton != null) { // Items might not be loaded yet
@@ -269,6 +271,14 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         }
     }
 
+    /**
+     * Updates the selected state of a radio button.
+     * 
+     * @param radioButton
+     *            the radio button to update
+     * @param value
+     *            {@code true} if selected; {@code false} if not
+     */
     protected void updateItemSelection(RadioButton radioButton, boolean value) {
         radioButton.setValue(value);
         radioButton.setStyleName(CLASSNAME_OPTION_SELECTED, value);

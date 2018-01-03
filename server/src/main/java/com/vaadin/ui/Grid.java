@@ -2068,6 +2068,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param widgetEventsAllowed
          *            {@code true} to handle events; {@code false} to not
          * @return this column
+         * @since 8.3
          */
         public Column<T, V> setWidgetEventsAllowed(
                 boolean widgetEventsAllowed) {
@@ -2084,6 +2085,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @see #setWidgetEventsAllowed(boolean)
          * 
          * @return {@code true} if handling events; {@code false} if not
+         * @since 8.3
          */
         public boolean isWidgetEventsAllowed() {
             return getState(false).widgetEventsAllowed;
