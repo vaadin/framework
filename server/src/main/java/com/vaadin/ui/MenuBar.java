@@ -47,7 +47,7 @@ import com.vaadin.ui.declarative.DesignContext;
  */
 @SuppressWarnings("serial")
 public class MenuBar extends AbstractComponent
-        implements LegacyComponent, Focusable {
+implements LegacyComponent, Focusable {
 
     // Items of the top-level menu
     private final List<MenuItem> menuItems;
@@ -144,10 +144,11 @@ public class MenuBar extends AbstractComponent
                         description);
             }
 
-            ContentMode contentMode = item.getContentMode();
+            ContentMode contentMode = item.getDescriptionContentMode();
             // If the contentMode is equal to ContentMode.PREFORMATTED, we don't add any attribute.
             if (contentMode != null && contentMode != ContentMode.PREFORMATTED) {
-                target.addAttribute(MenuBarConstants.ATTRIBUTE_ITEM_CONTENT_MODE,
+                target.addAttribute(
+                        MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION_CONTENT_MODE,
                         contentMode.name());
             }
 
@@ -466,7 +467,7 @@ public class MenuBar extends AbstractComponent
         private boolean isSeparator = false;
         private String styleName;
         private String description;
-        private ContentMode contentMode = ContentMode.PREFORMATTED;
+        private ContentMode descriptionContentMode = ContentMode.PREFORMATTED;
         private boolean checkable = false;
         private boolean checked = false;
 
@@ -595,7 +596,7 @@ public class MenuBar extends AbstractComponent
          */
         public MenuBar.MenuItem addItemBefore(String caption, Resource icon,
                 MenuBar.Command command, MenuBar.MenuItem itemToAddBefore)
-                throws IllegalStateException {
+                        throws IllegalStateException {
             if (isCheckable()) {
                 throw new IllegalStateException(
                         "A checkable item cannot have children");
@@ -825,7 +826,7 @@ public class MenuBar extends AbstractComponent
          */
         public void setDescription(String description, ContentMode mode) {
             this.description = description;
-            this.contentMode = mode;
+            this.descriptionContentMode = mode;
             markAsDirty();
         }
 
@@ -902,8 +903,8 @@ public class MenuBar extends AbstractComponent
          * @see ContentMode
          * @since 8.3
          */
-        public ContentMode getContentMode() {
-            return contentMode;
+        public ContentMode getDescriptionContentMode() {
+            return descriptionContentMode;
         }
 
         /**
@@ -1035,9 +1036,9 @@ public class MenuBar extends AbstractComponent
         DesignAttributeHandler.writeAttribute("description", attr,
                 item.getDescription(), def.getDescription(), String.class,
                 context);
-        DesignAttributeHandler.writeAttribute("contentmode", attr,
-                item.getContentMode().name(), def.getContentMode().name(), String.class,
-                context);
+        DesignAttributeHandler.writeAttribute("descriptioncontentmode", attr,
+                item.getDescriptionContentMode().name(),
+                def.getDescriptionContentMode().name(), String.class, context);
         DesignAttributeHandler.writeAttribute("style-name", attr,
                 item.getStyleName(), def.getStyleName(), String.class, context);
 
@@ -1098,8 +1099,9 @@ public class MenuBar extends AbstractComponent
         }
         if (menuElement.hasAttr("description")) {
             String description = DesignAttributeHandler.readAttribute("description", attr, String.class);
-            if (menuElement.hasAttr("contentmode")) {
-                String contentModeString = DesignAttributeHandler.readAttribute("contentmode", attr, String.class);
+            if (menuElement.hasAttr("descriptioncontentmode")) {
+                String contentModeString = DesignAttributeHandler.readAttribute(
+                        "descriptioncontentmode", attr, String.class);
                 menu.setDescription(description, ContentMode.valueOf(contentModeString));
             } else {
                 menu.setDescription(description);
