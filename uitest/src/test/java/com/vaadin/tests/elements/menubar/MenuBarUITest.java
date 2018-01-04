@@ -31,6 +31,11 @@ import com.vaadin.testbench.elements.MenuBarElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class MenuBarUITest extends MultiBrowserTest {
+    
+    @Override
+    protected boolean requireWindowFocusForIE() {
+        return true;
+    }
 
     @Before
     public void init() {
