@@ -33,8 +33,6 @@ public class TableScrollsOnRefresh extends AbstractTestUIWithLog {
         setContent(vl);
         table.setContainerDataSource(container);
         populateContainer();
-        // table.refreshRowCache();
-
     }
 
     private void populateContainer() {
