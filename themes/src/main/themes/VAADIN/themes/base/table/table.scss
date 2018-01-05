@@ -137,6 +137,7 @@
 }
 .#{$primaryStyleName}-body {
 	border: 1px solid #aaa;
+	overflow-anchor: none; /* In Chrome 56+ */
 }
 .#{$primaryStyleName}-row-spacer {
 	height: 10px;
