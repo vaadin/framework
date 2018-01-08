@@ -23,6 +23,7 @@ import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAdjuster;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -822,7 +823,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * </p>
      *
      * @param date
-     *            which date cell to modify
+     *            which date cell to modify, not {@code null}
      * @param styleName
      *            the custom style name(s) for given date, {@code null} to clear
      *            custom style name(s)
@@ -830,12 +831,11 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @since 8.3
      */
     public void setDateStyle(LocalDate date, String styleName) {
-        if (date != null) {
-            if (styleName != null) {
-                getState().dateStyles.put(date.toString(), styleName);
-            } else {
-                getState().dateStyles.remove(date.toString());
-            }
+        Objects.requireNonNull(date, "Date cannot be null");
+        if (styleName != null) {
+            getState().dateStyles.put(date.toString(), styleName);
+        } else {
+            getState().dateStyles.remove(date.toString());
         }
     }
 
@@ -844,16 +844,16 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * calendar cell.
      *
      * @param date
-     *            which date cell's custom style name(s) to return
+     *            which date cell's custom style name(s) to return, not
+     *            {@code null}
      * @return the corresponding style name(s), if any, {@code null} otherwise
      *
-     * @see {@link #setDateStyle(LocalDate, String)}
+     * @see #setDateStyle(LocalDate, String)
      * @since 8.3
      */
     public String getDateStyle(LocalDate date) {
-        if (date == null) {
-            return null;
-        }
+        Objects.requireNonNull(date, "Date cannot be null");
+
         return getState(false).dateStyles.get(date.toString());
     }
 
@@ -861,9 +861,10 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * Returns a map from dates to custom style names in each date's calendar
      * cell.
      *
-     * @return map from dates to custom style names in each date's calendar cell
+     * @return unmodifiable map from dates to custom style names in each date's
+     *         calendar cell
      *
-     * @see {@link #setDateStyle(LocalDate, String)}
+     * @see #setDateStyle(LocalDate, String)
      * @since 8.3
      */
     public Map<LocalDate, String> getDateStyles() {
@@ -872,6 +873,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                 .entrySet()) {
             hashMap.put(LocalDate.parse(entry.getKey()), entry.getValue());
         }
-        return hashMap;
+        return Collections.unmodifiableMap(hashMap);
     }
 }
