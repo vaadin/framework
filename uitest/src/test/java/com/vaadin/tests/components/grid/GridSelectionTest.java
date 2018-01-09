@@ -445,6 +445,24 @@ public class GridSelectionTest extends GridBasicsTest {
 
     }
 
+    @Test
+    public void spaceKeyOnSelectionCheckboxShouldToggleRowSelection() {
+        openTestURL();
+        setSelectionModelMulti();
+
+        getSelectionCheckbox(1).sendKeys(Keys.SPACE);
+        assertSelected(1);
+
+        getSelectionCheckbox(2).sendKeys(Keys.SPACE);
+        assertSelected(1, 2);
+
+        getSelectionCheckbox(2).sendKeys(Keys.SPACE);
+        assertSelected(1);
+
+        getSelectionCheckbox(1).sendKeys(Keys.SPACE);
+        assertSelected();
+    }
+
     private void assertSelected(Integer... selected) {
         GridElement grid = getGridElement();
         HashSet<Integer> expected = new HashSet<Integer>(
