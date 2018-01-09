@@ -30,6 +30,9 @@ import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
@@ -39,6 +42,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.renderers.ClickableRenderer;
 import com.vaadin.client.widget.grid.CellReference;
@@ -81,7 +85,7 @@ public class MultiSelectionRenderer<T>
      */
     private final class CheckBoxEventHandler
             implements MouseDownHandler, TouchStartHandler, ClickHandler,
-            GridEnabledHandler, GridSelectionAllowedHandler {
+            GridEnabledHandler, GridSelectionAllowedHandler, KeyUpHandler {
         private final CheckBox checkBox;
 
         /**
@@ -112,6 +116,17 @@ public class MultiSelectionRenderer<T>
         @Override
         public void onClick(ClickEvent event) {
             // Clicking is already handled with MultiSelectionRenderer
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        @Override
+        public void onKeyUp(KeyUpEvent event) {
+            if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE || !checkBox.isEnabled()) {
+                return;
+            }
+            int logicalRow = getLogicalRowIndex(grid, checkBox.getElement());
+            setSelected(logicalRow, !isSelected(logicalRow));
             event.preventDefault();
             event.stopPropagation();
         }
@@ -608,11 +623,13 @@ public class MultiSelectionRenderer<T>
         checkBox.sinkBitlessEvent(BrowserEvents.MOUSEDOWN);
         checkBox.sinkBitlessEvent(BrowserEvents.TOUCHSTART);
         checkBox.sinkBitlessEvent(BrowserEvents.CLICK);
+        checkBox.sinkBitlessEvent(BrowserEvents.KEYUP);
 
         // Add handlers
         checkBox.addMouseDownHandler(handler);
         checkBox.addTouchStartHandler(handler);
         checkBox.addClickHandler(handler);
+        checkBox.addKeyUpHandler(handler);
         grid.addEnabledHandler(handler);
         grid.addSelectionAllowedHandler(handler);
 
