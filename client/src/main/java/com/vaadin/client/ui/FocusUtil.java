@@ -128,7 +128,7 @@ public class FocusUtil {
             String classes = element.getAttribute("class");
             if (classes == null || !classes.toLowerCase().contains("disabled")) {
                 element.focus();
-                break;
+                return;
             }
         }
     }

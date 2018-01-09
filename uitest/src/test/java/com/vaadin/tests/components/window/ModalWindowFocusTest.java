@@ -57,8 +57,8 @@ public class ModalWindowFocusTest extends MultiBrowserTest {
         assertTrue("Second window should be opened",
                 findElements(By.id("windowButton")).size() == 1);
 
-        pressEscAndWait();
-        pressEscAndWait();
+        pressKeyAndWait(Keys.ESCAPE);
+        pressKeyAndWait(Keys.ESCAPE);
         assertTrue("All windows should be closed",
                 findElements(By.className("v-window")).size() == 0);
 
@@ -84,9 +84,9 @@ public class ModalWindowFocusTest extends MultiBrowserTest {
         assertTrue("Third window should be opened",
                 findElements(By.id("window3")).size() == 1);
 
-        pressEscAndWait();
-        pressEscAndWait();
-        pressEscAndWait();
+        pressKeyAndWait(Keys.ESCAPE);
+        pressKeyAndWait(Keys.ESCAPE);
+        pressKeyAndWait(Keys.ESCAPE);
         assertTrue("All windows should be closed",
                 findElements(By.className("v-window")).size() == 0);
 
@@ -104,19 +104,15 @@ public class ModalWindowFocusTest extends MultiBrowserTest {
         WebElement button = findElement(By.id("modalWindowButton"));
         button.click();
         waitForElementPresent(By.id("focusfield"));
-        pressTabAndWait();
+        pressKeyAndWait(Keys.TAB);
         TextFieldElement tfe = $(TextFieldElement.class).id("focusfield");
         assertTrue("First TextField should have received focus",
                 "this has been focused".equals(tfe.getValue()));
     }
 
-    private void pressEscAndWait() {
-        new Actions(driver).sendKeys(Keys.ESCAPE).build().perform();
+    private void pressKeyAndWait(Keys key) {
+        new Actions(driver).sendKeys(key).build().perform();
         sleep(100);
     }
 
-    private void pressTabAndWait() {
-        new Actions(driver).sendKeys(Keys.TAB).build().perform();
-        sleep(100);
-    }
 }
