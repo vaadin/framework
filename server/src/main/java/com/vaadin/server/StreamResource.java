@@ -143,7 +143,7 @@ public class StreamResource implements ConnectorResource {
         final DownloadStream ds = new DownloadStream(ss.getStream(),
                 getMIMEType(), getFilename());
         ds.setBufferSize(getBufferSize());
-        ds.setCacheTime(cacheTime);
+        ds.setCacheTime(getCacheTime());
         return ds;
     }
 

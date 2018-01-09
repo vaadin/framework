@@ -40,21 +40,13 @@ public class LinkInsideDisabledContainer extends AbstractTestUIWithLog {
         layout.addComponent(vlayout);
 
         Button toggleLinkButton = new Button("enable/disable link");
-        toggleLinkButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                link.setEnabled(!link.isEnabled());
-            }
-        });
+        toggleLinkButton
+                .addClickListener(event -> link.setEnabled(!link.isEnabled()));
         layout.addComponent(toggleLinkButton);
 
         Button toggleContainerButton = new Button("enable/disable container");
-        toggleContainerButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                vlayout.setEnabled(!vlayout.isEnabled());
-            }
-        });
+        toggleContainerButton.addClickListener(
+                event -> vlayout.setEnabled(!vlayout.isEnabled()));
         layout.addComponent(toggleContainerButton);
         addComponent(layout);
     }

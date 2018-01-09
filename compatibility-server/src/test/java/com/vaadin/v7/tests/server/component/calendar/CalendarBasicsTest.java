@@ -24,7 +24,6 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.ui.Calendar;

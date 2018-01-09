@@ -6,8 +6,6 @@ import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HasChildMeasurementHint.ChildMeasurementHint;
 import com.vaadin.ui.HorizontalLayout;
@@ -48,30 +46,21 @@ public class TableChildMeasurementHint extends AbstractReindeerTestUI {
         table3.setChildMeasurementHint(ChildMeasurementHint.MEASURE_NEVER);
 
         buttonLayout
-                .addComponent(new Button("Show table1", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        layout.addComponent(table1);
-                        table1.focus();
-                    }
+                .addComponent(new Button("Show table1", event -> {
+                    layout.addComponent(table1);
+                    table1.focus();
                 }));
         buttonLayout
-                .addComponent(new Button("Show table2", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        layout.removeComponent(table1);
-                        layout.addComponent(table2);
-                        table2.focus();
-                    }
+                .addComponent(new Button("Show table2", event -> {
+                    layout.removeComponent(table1);
+                    layout.addComponent(table2);
+                    table2.focus();
                 }));
         buttonLayout
-                .addComponent(new Button("Show table3", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        layout.removeComponent(table2);
-                        layout.addComponent(table3);
-                        table3.focus();
-                    }
+                .addComponent(new Button("Show table3", event -> {
+                    layout.removeComponent(table2);
+                    layout.addComponent(table3);
+                    table3.focus();
                 }));
 
     }

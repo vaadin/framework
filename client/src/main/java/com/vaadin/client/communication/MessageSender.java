@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.user.client.Command;
 import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.RequestStartingEvent;
@@ -199,26 +198,23 @@ public class MessageSender {
             push = GWT.create(PushConnection.class);
             push.init(connection, pushState);
         } else if (!enabled && push != null && push.isActive()) {
-            push.disconnect(new Command() {
-                @Override
-                public void execute() {
-                    push = null;
-                    /*
-                     * If push has been enabled again while we were waiting for
-                     * the old connection to disconnect, now is the right time
-                     * to open a new connection
-                     */
-                    if (pushState.mode.isEnabled()) {
-                        setPushEnabled(true);
-                    }
+            push.disconnect(() -> {
+                push = null;
+                /*
+                 * If push has been enabled again while we were waiting for the
+                 * old connection to disconnect, now is the right time to open a
+                 * new connection
+                 */
+                if (pushState.mode.isEnabled()) {
+                    setPushEnabled(true);
+                }
 
-                    /*
-                     * Send anything that was enqueued while we waited for the
-                     * connection to close
-                     */
-                    if (getServerRpcQueue().isFlushPending()) {
-                        getServerRpcQueue().flush();
-                    }
+                /*
+                 * Send anything that was enqueued while we waited for the
+                 * connection to close
+                 */
+                if (getServerRpcQueue().isFlushPending()) {
+                    getServerRpcQueue().flush();
                 }
             });
         }
@@ -250,21 +246,18 @@ public class MessageSender {
         }
 
         // deferring to avoid flickering
-        Scheduler.get().scheduleDeferred(new Command() {
-            @Override
-            public void execute() {
-                if (!connection.isApplicationRunning() || !(hasActiveRequest()
-                        || getServerRpcQueue().isFlushPending())) {
-                    getLoadingIndicator().hide();
+        Scheduler.get().scheduleDeferred(() -> {
+            if (!connection.isApplicationRunning() || !(hasActiveRequest()
+                    || getServerRpcQueue().isFlushPending())) {
+                getLoadingIndicator().hide();
 
-                    // If on Liferay and session expiration management is in
-                    // use, extend session duration on each request.
-                    // Doing it here rather than before the request to improve
-                    // responsiveness.
-                    // Postponed until the end of the next request if other
-                    // requests still pending.
-                    extendLiferaySession();
-                }
+                // If on Liferay and session expiration management is in
+                // use, extend session duration on each request.
+                // Doing it here rather than before the request to improve
+                // responsiveness.
+                // Postponed until the end of the next request if other
+                // requests still pending.
+                extendLiferaySession();
             }
         });
         connection.fireEvent(new ResponseHandlingEndedEvent(connection));

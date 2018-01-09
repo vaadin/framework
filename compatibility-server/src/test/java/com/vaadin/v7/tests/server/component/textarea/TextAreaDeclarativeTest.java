@@ -19,7 +19,6 @@ import java.io.IOException;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.tests.design.DeclarativeTestBase;

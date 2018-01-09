@@ -161,9 +161,7 @@ public class BeanPropertySetTest {
         PropertyDefinition<FatherAndSon, ?> definition = BeanPropertySet
                 .get(FatherAndSon.class).getProperty("father.firstName")
                 .orElseThrow(RuntimeException::new);
-
         ValueProvider<FatherAndSon, ?> getter = definition.getGetter();
-
         getter.apply(new FatherAndSon("Jon", "Doe", null, null));
     }
 

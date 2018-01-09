@@ -56,20 +56,16 @@ public class AddSelectionToRemovedRange extends AbstractReindeerTestUI {
         layout.addComponent(table);
 
         Button button = new Button("Remove");
-        button.addClickListener(new Button.ClickListener() {
+        button.addClickListener(event -> {
+            Set<Integer> selected = (Set<Integer>) table.getValue();
 
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                Set<Integer> selected = (Set<Integer>) table.getValue();
-
-                for (Integer item : selected) {
-                    if (null == item) {
-                        new Notification("ERROR",
-                                "Table value has null in Set of selected items!",
-                                Type.ERROR_MESSAGE).show(getPage());
-                    }
-                    table.removeItem(item);
+            for (Integer item : selected) {
+                if (null == item) {
+                    new Notification("ERROR",
+                            "Table value has null in Set of selected items!",
+                            Type.ERROR_MESSAGE).show(getPage());
                 }
+                table.removeItem(item);
             }
         });
 

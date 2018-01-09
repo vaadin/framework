@@ -39,12 +39,9 @@ public class GridLayoutExpand extends GridBaseLayoutTestUI {
                     final float e2) {
                 super();
                 setCaption("Expand ratio: " + e1 * 100 + " /" + e2 * 100);
-                addClickListener(new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        layout.setColumnExpandRatio(i1, e1);
-                        layout.setColumnExpandRatio(i2, e2);
-                    }
+                addClickListener(event -> {
+                    layout.setColumnExpandRatio(i1, e1);
+                    layout.setColumnExpandRatio(i2, e2);
                 });
             }
         }

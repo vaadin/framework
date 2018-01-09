@@ -60,7 +60,7 @@ public class AbstractDateFieldState extends AbstractFieldState {
     /**
      * The used Locale, can be {@code null}.
      *
-     * @since
+     * @since 8.2
      */
     public String locale;
 
@@ -68,14 +68,14 @@ public class AbstractDateFieldState extends AbstractFieldState {
      * Overridden date format string, can be {@code null} if default formatting
      * of the components locale is used.
      *
-     * @since
+     * @since 8.2
      */
     public String format;
 
     /**
      * Whether the date/time interpretation is lenient.
      *
-     * @since
+     * @since 8.2
      */
     public boolean lenient;
 
@@ -87,14 +87,14 @@ public class AbstractDateFieldState extends AbstractFieldState {
      *
      * The value can be {@code null}
      *
-     * @since
+     * @since 8.2
      */
     public Map<String, Integer> resolutions = new HashMap<>();
 
     /**
      * Determines if week numbers are shown in the date selector.
      *
-     * @since
+     * @since 8.2
      */
     public boolean showISOWeekNumbers;
 
@@ -102,8 +102,16 @@ public class AbstractDateFieldState extends AbstractFieldState {
      * Was the last entered string parsable? If this flag is false, datefields
      * internal validator does not pass.
      *
-     * @since
+     * @since 8.2
      */
     public boolean parsable = true;
+
+    /**
+     * Map of custom style names that correspond with given dates. Each date
+     * must be set to midnight for the handling logic to work correctly.
+     * 
+     * @since 8.3
+     */
+    public Map<String, String> dateStyles = new HashMap<String, String>();
 
 }

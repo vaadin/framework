@@ -19,7 +19,6 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
 public class HelloWorldExtensionTest extends AbstractReindeerTestUI {
@@ -30,12 +29,8 @@ public class HelloWorldExtensionTest extends AbstractReindeerTestUI {
         extension.setGreeting("Kind words");
         addExtension(extension);
 
-        addComponent(new Button("Greet again", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                extension.greetAgain();
-            }
-        }));
+        addComponent(
+                new Button("Greet again", event -> extension.greetAgain()));
     }
 
     @Override

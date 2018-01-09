@@ -80,6 +80,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.AbstractGridExtensionState;
 import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.shared.ui.grid.ColumnState;
@@ -96,7 +97,6 @@ import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.ui.components.grid.ColumnReorderListener;
 import com.vaadin.ui.components.grid.ColumnResizeListener;
 import com.vaadin.ui.components.grid.ColumnVisibilityChangeListener;
-import com.vaadin.ui.components.grid.DescriptionGenerator;
 import com.vaadin.ui.components.grid.DetailsGenerator;
 import com.vaadin.ui.components.grid.Editor;
 import com.vaadin.ui.components.grid.EditorImpl;
@@ -1181,6 +1181,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         /**
          * Sets whether the user can sort this column or not.
+         * <p>
+         * By default, a grid using a in-memory data provider has its columns
+         * sortable by default. For a backend data provider, the columns are not
+         * sortable by default.
          *
          * @param sortable
          *            {@code true} if the column can be sorted by the user;
@@ -1206,12 +1210,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * Sets the header aria-label for this column.
          *
          * @param caption
-         *            the header aria-label, null removes
-         *            the aria-label from this column
+         *            the header aria-label, null removes the aria-label from
+         *            this column
          *
          * @return this column
          *
-         * @since
+         * @since 8.2
          */
         public Column<T, V> setAssistiveCaption(String caption) {
             if (Objects.equals(caption, getAssistiveCaption())) {
@@ -1226,7 +1230,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @return header caption
          *
-         * @since
+         * @since 8.2
          */
         public String getAssistiveCaption() {
             return getState(false).assistiveCaption;
@@ -1383,16 +1387,43 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         /**
          * Sets the description generator that is used for generating
-         * descriptions for cells in this column.
+         * descriptions for cells in this column. This method uses the
+         * {@link ContentMode#PREFORMATTED} content mode.
+         *
+         * @see #setDescriptionGenerator(DescriptionGenerator, ContentMode)
          *
          * @param cellDescriptionGenerator
-         *            the cell description generator to set, or
-         *            <code>null</code> to remove a previously set generator
+         *            the cell description generator to set, or {@code null} to
+         *            remove a previously set generator
          * @return this column
          */
         public Column<T, V> setDescriptionGenerator(
                 DescriptionGenerator<T> cellDescriptionGenerator) {
+            return setDescriptionGenerator(cellDescriptionGenerator,
+                    ContentMode.PREFORMATTED);
+        }
+
+        /**
+         * Sets the description generator that is used for generating
+         * descriptions for cells in this column. This method uses the given
+         * content mode.
+         *
+         * @see #setDescriptionGenerator(DescriptionGenerator)
+         *
+         * @param cellDescriptionGenerator
+         *            the cell description generator to set, or {@code null} to
+         *            remove a previously set generator
+         * @param tooltipContentMode
+         *            the content mode for tooltips
+         * @return this column
+         *
+         * @since 8.2
+         */
+        public Column<T, V> setDescriptionGenerator(
+                DescriptionGenerator<T> cellDescriptionGenerator,
+                ContentMode tooltipContentMode) {
             this.descriptionGenerator = cellDescriptionGenerator;
+            getState().tooltipContentMode = tooltipContentMode;
             getGrid().getDataCommunicator().reset();
             return this;
         }
@@ -2025,6 +2056,42 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         /**
+         * Sets whether Grid should handle events in this Column from Components
+         * and Widgets rendered by certain Renderers. By default the events are
+         * not handled.
+         * <p>
+         * <strong>Note:</strong> Enabling this feature will for example select
+         * a row when a component is clicked. For example in the case of a
+         * {@link ComboBox} or {@link TextField} it might be problematic as the
+         * component gets re-rendered and might lose focus.
+         * 
+         * @param widgetEventsAllowed
+         *            {@code true} to handle events; {@code false} to not
+         * @return this column
+         * @since 8.3
+         */
+        public Column<T, V> setWidgetEventsAllowed(
+                boolean widgetEventsAllowed) {
+            if (getState(false).widgetEventsAllowed != widgetEventsAllowed) {
+                getState().widgetEventsAllowed = widgetEventsAllowed;
+            }
+            return this;
+        }
+
+        /**
+         * Gets whether Grid is handling the events in this Column from
+         * Component and Widgets.
+         * 
+         * @see #setWidgetEventsAllowed(boolean)
+         * 
+         * @return {@code true} if handling events; {@code false} if not
+         * @since 8.3
+         */
+        public boolean isWidgetEventsAllowed() {
+            return getState(false).widgetEventsAllowed;
+        }
+
+        /**
          * Gets the grid that this column belongs to.
          *
          * @return the grid that this column belongs to, or <code>null</code> if
@@ -2535,7 +2602,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * <p>
      * This method can only be used for a <code>Grid</code> created using
      * {@link Grid#Grid(Class)} or {@link #withPropertySet(PropertySet)}.
-     *
+     * <p>
+     * You can add columns for nested properties with dot notation, eg.
+     * <code>"property.nestedProperty"</code>
+     * 
      * @param propertyName
      *            the property name of the new column, not <code>null</code>
      * @return the newly added column, not <code>null</code>
@@ -2552,7 +2622,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * <p>
      * This method can only be used for a <code>Grid</code> created using
      * {@link Grid#Grid(Class)} or {@link #withPropertySet(PropertySet)}.
+     * <p>
+     * You can add columns for nested properties with dot notation, eg.
+     * <code>"property.nestedProperty"</code>
      *
+     * 
      * @param propertyName
      *            the property name of the new column, not <code>null</code>
      * @param renderer
@@ -3200,7 +3274,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Sets the description generator that is used for generating descriptions
-     * for rows.
+     * for rows. This method uses the {@link ContentMode#PREFORMATTED} content
+     * mode.
+     *
+     * @see #setDescriptionGenerator(DescriptionGenerator, ContentMode)
      *
      * @param descriptionGenerator
      *            the row description generator to set, or <code>null</code> to
@@ -3208,7 +3285,29 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public void setDescriptionGenerator(
             DescriptionGenerator<T> descriptionGenerator) {
+        setDescriptionGenerator(descriptionGenerator, ContentMode.PREFORMATTED);
+    }
+
+    /**
+     * Sets the description generator that is used for generating descriptions
+     * for rows. This method uses the given content mode.
+     *
+     * @see #setDescriptionGenerator(DescriptionGenerator)
+     *
+     * @param descriptionGenerator
+     *            the row description generator to set, or {@code null} to
+     *            remove a previously set generator
+     * @param contentMode
+     *            the content mode for row tooltips
+     *
+     * @since 8.2
+     */
+    public void setDescriptionGenerator(
+            DescriptionGenerator<T> descriptionGenerator,
+            ContentMode contentMode) {
+        Objects.requireNonNull(contentMode, "contentMode cannot be null");
         this.descriptionGenerator = descriptionGenerator;
+        getState().rowDescriptionContentMode = contentMode;
         getDataCommunicator().reset();
     }
 
@@ -4483,7 +4582,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         Element tableRow = container.appendElement("tr");
         tableRow.attr("item", serializeDeclarativeRepresentation(item));
         if (getSelectionModel().isSelected(item)) {
-            tableRow.attr("selected", "");
+            tableRow.attr("selected", true);
         }
         for (Column<T, ?> column : getColumns()) {
             Object value = column.valueProvider.apply(item);
@@ -4623,8 +4722,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * as both original comparators are also serializable
          */
         BinaryOperator<SerializableComparator<T>> operator = (comparator1,
-                comparator2) ->
-        comparator1.thenComparing(comparator2)::compare;
+                comparator2) -> comparator1.thenComparing(comparator2)::compare;
         return sortOrder.stream().map(
                 order -> order.getSorted().getComparator(order.getDirection()))
                 .reduce((x, y) -> 0, operator);

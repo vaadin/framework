@@ -64,11 +64,21 @@ public interface PropertyDefinition<T, V> extends Serializable {
     public Class<?> getPropertyHolderType();
 
     /**
-     * Gets the name of this property.
+     * Gets the full name of this property.
      *
      * @return the property name, not <code>null</code>
      */
     public String getName();
+
+    /**
+     * Gets the top level name of this property.
+     * 
+     * @return the top level property name, not <code>null</code>
+     * @since 8.3
+     */
+    public default String getTopLevelName() {
+        return getName();
+    }
 
     /**
      * Gets the human readable caption to show for this property.

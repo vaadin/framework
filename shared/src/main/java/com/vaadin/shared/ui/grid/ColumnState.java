@@ -16,6 +16,7 @@
 package com.vaadin.shared.ui.grid;
 
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.ui.ContentMode;
 
 /**
  * Shared state for a Grid column.
@@ -29,6 +30,14 @@ public class ColumnState extends AbstractGridExtensionState {
     public String internalId;
     public boolean sortable = false;
     public boolean editable = false;
+
+    /**
+     * Sets whether Grid should handle events from Widgets from this column or
+     * not.
+     * 
+     * @since 8.3
+     */
+    public boolean widgetEventsAllowed = false;
 
     /** The assistive device caption for the column. */
     public String assistiveCaption;
@@ -74,4 +83,10 @@ public class ColumnState extends AbstractGridExtensionState {
      */
     public boolean minimumWidthFromContent = true;
 
+    /**
+     * The content mode for tooltips.
+     *
+     * @since 8.2
+     */
+    public ContentMode tooltipContentMode;
 }

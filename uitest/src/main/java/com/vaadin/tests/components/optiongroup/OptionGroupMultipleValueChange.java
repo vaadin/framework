@@ -3,8 +3,6 @@ package com.vaadin.tests.components.optiongroup;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.ui.OptionGroup;
 
 public class OptionGroupMultipleValueChange extends TestBase {
@@ -32,13 +30,9 @@ public class OptionGroupMultipleValueChange extends TestBase {
         events.setWidth(null);
         addComponent(events);
 
-        og.addListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                String s = "ValueChange: " + event.getProperty().getValue();
-                events.setValue(events.getValue() + "\n" + s);
-            }
+        og.addValueChangeListener(event -> {
+            String s = "ValueChange: " + event.getProperty().getValue();
+            events.setValue(events.getValue() + "\n" + s);
         });
     }
 }

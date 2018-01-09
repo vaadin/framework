@@ -21,8 +21,6 @@ import com.vaadin.shared.ui.PreloadMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Audio;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Video;
 
@@ -36,22 +34,8 @@ public class Media extends TestBase {
         v.setWidth("560px");
         v.setHeight("320px");
         addComponent(v);
-        addComponent(new Button("Play video", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                v.play();
-            }
-
-        }));
-        addComponent(new Button("Pause video", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                v.pause();
-            }
-
-        }));
+        addComponent(new Button("Play video", event -> v.play()));
+        addComponent(new Button("Pause video", event -> v.pause()));
         final CheckBox loop = new CheckBox("Loop");
         loop.addValueChangeListener(event -> v.setLoop(event.getValue()));
         addComponent(loop);
@@ -62,22 +46,8 @@ public class Media extends TestBase {
                 "http://www.sample-videos.com/audio/mp3/crowd-cheering.mp3"));
         addComponent(a);
 
-        addComponent(new Button("Play audio", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                a.play();
-            }
-
-        }));
-        addComponent(new Button("Pause audio", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                a.pause();
-            }
-
-        }));
+        addComponent(new Button("Play audio", event -> a.play()));
+        addComponent(new Button("Pause audio", event -> a.pause()));
     }
 
     @Override

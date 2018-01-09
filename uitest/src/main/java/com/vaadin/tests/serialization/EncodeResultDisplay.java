@@ -21,7 +21,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.client.EncoderResultDisplayConnector;
-import com.vaadin.tests.widgetset.client.EncoderResultDisplayConnector.ReportRpc;
 
 @Widgetset(TestingWidgetSet.NAME)
 public class EncodeResultDisplay extends AbstractTestUIWithLog {
@@ -41,12 +40,9 @@ public class EncodeResultDisplay extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         log.setNumberLogRows(false);
-        new EncoderResultDisplayExtension(new ReportRpc() {
-            @Override
-            public void report(String name, String encodedValue) {
-                log(name + ": " + encodedValue);
-            }
-        }).extend(this);
+        new EncoderResultDisplayExtension(
+                (name, encodedValue) -> log(name + ": " + encodedValue))
+                        .extend(this);
     }
 
     @Override

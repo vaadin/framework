@@ -17,8 +17,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.ui.Table;
 
 /**
@@ -49,13 +47,10 @@ public class FocusOnSelectedItem extends AbstractReindeerTestUI {
         }
         addComponent(table);
 
-        addButton("Select", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setValue("Item 198");
-                table.setCurrentPageFirstItemId("Item 198");
-                table.focus();
-            }
+        addButton("Select", event -> {
+            table.setValue("Item 198");
+            table.setCurrentPageFirstItemId("Item 198");
+            table.focus();
         });
     }
 

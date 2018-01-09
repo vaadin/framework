@@ -2,7 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.data.Property;
@@ -43,14 +42,7 @@ public class TableCacheBuildEfficiency extends TestBase {
 
         table.addContainerProperty("foo", String.class, "bar");
 
-        Button b = new Button("Click to add row", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.addItem();
-
-            }
-        });
+        Button b = new Button("Click to add row", event -> table.addItem());
 
         getLayout().addComponent(table);
         getLayout().addComponent(b);

@@ -340,14 +340,8 @@ public class Button extends AbstractFocusable
      * @param listener
      *            the Listener to be removed.
      *
-     * @deprecated As of 8.0, replaced by {@link Registration#remove()} in the
-     *             registration object returned from
-     *             {@link #addClickListener(ClickListener)}.
      */
-    @Deprecated
     public void removeClickListener(ClickListener listener) {
-        removeListener(ClickEvent.class, listener,
-                ClickListener.BUTTON_CLICK_METHOD);
     }
 
     /**

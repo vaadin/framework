@@ -19,8 +19,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.fieldgroup.ComplexPerson;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.ui.Table;
 
 public class TableColumnWidthsAndSorting extends AbstractTestUIWithLog {
@@ -35,13 +33,8 @@ public class TableColumnWidthsAndSorting extends AbstractTestUIWithLog {
         t.setSelectable(true);
         addComponent(t);
 
-        Button b = new Button("Sort according to gender", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                t.sort(new Object[] { "gender" }, new boolean[] { true });
-            }
-        });
+        Button b = new Button("Sort according to gender", event -> t
+                .sort(new Object[] { "gender" }, new boolean[] { true }));
 
         addComponent(b);
     }

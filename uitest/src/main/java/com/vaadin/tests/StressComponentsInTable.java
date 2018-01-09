@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.Vector;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.Table;
@@ -47,16 +46,10 @@ public class StressComponentsInTable extends CustomComponent {
             for (int j = 0; j < cols; j++) {
                 content.add(rndString());
             }
-            content.add(new Button("b" + i, new Button.ClickListener() {
-
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    Button b = event.getButton();
-                    System.out
-                            .println(b.getCaption() + " click: " + new Date());
-                    System.out.println(b.getUI().getSession());
-
-                }
+            content.add(new Button("b" + i, event -> {
+                Button b = event.getButton();
+                System.out.println(b.getCaption() + " click: " + new Date());
+                System.out.println(b.getUI().getSession());
             }));
             t.addItem(content.toArray(), "" + i);
         }

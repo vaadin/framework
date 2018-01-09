@@ -24,8 +24,6 @@ import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
@@ -39,27 +37,14 @@ public class TestForBasicApplicationLayout extends CustomComponent {
 
     private final Button click;
     private final Button click2;
-    private final TabSheet tab;
+    private final TabSheet tab = new TabSheet();
 
     public TestForBasicApplicationLayout() {
 
-        click = new Button("Set height -1", new ClickListener() {
+        click = new Button("Set height -1", event -> tab.setHeight(null));
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                tab.setHeight(null);
-            }
-
-        });
-
-        click2 = new Button("Set height 100%", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                tab.setHeight(100, TabSheet.UNITS_PERCENTAGE);
-            }
-
-        });
+        click2 = new Button("Set height 100%",
+                event -> tab.setHeight(100, TabSheet.UNITS_PERCENTAGE));
 
         final HorizontalSplitPanel sp = new HorizontalSplitPanel();
         sp.setSplitPosition(290, Sizeable.UNITS_PIXELS);
@@ -72,7 +57,6 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         final Panel p = new Panel("Accordion Panel", pl);
         p.setSizeFull();
 
-        tab = new TabSheet();
         tab.setSizeFull();
 
         VerticalLayout reportLayout = new VerticalLayout();

@@ -17,11 +17,8 @@ package com.vaadin.tests.declarative;
 
 import com.vaadin.annotations.DesignRoot;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.fieldgroup.FieldGroup;
 import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.v7.data.util.BeanItemContainer;
@@ -47,46 +44,18 @@ public class PotusCrud extends VerticalLayout {
     private void init() {
         initTable();
         initForm();
-        addNew.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                doAdd();
-            }
-        });
+        addNew.addClickListener(event -> doAdd());
     }
 
     private void initTable() {
         potusList.setContainerDataSource(potusContainer);
-        potusList.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                doEdit();
-            }
-        });
+        potusList.addValueChangeListener(event -> doEdit());
     }
 
     private void initForm() {
-        potusForm.save.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                doSave();
-            }
-
-        });
-        potusForm.delete.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                doDelete();
-            }
-        });
-        potusForm.revert.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                doRevert();
-            }
-        });
+        potusForm.save.addClickListener(evenet -> doSave());
+        potusForm.delete.addClickListener(event -> doDelete());
+        potusForm.revert.addClickListener(event -> doRevert());
         fg = new FieldGroup();
     }
 

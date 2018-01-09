@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -291,9 +292,117 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
         }
     }
 
+    @Test // #9258
+    public void disabled_correctClassNamesApplied() {
+        openTestURL("theme=valo");
+        selectMenuPath("Component", "State", "Enabled");
+
+        List<WebElement> options = getSelect().findElements(By.tagName("span"));
+        Assert.assertTrue(options.size() > 0);
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(className -> verifyCheckboxDisabledClassNames(
+                        className, true));
+
+        selectMenuPath("Component", "State", "Enabled");
+
+        options = getSelect().findElements(By.tagName("span"));
+        Assert.assertTrue(options.size() > 0);
+        verifyCheckboxDisabledClassNames(
+                options.remove(10).getAttribute("className"), true);
+
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(className -> verifyCheckboxDisabledClassNames(
+                        className, false));
+    }
+
+    @Test // #9258
+    public void itemDisabledWithEnabledProvider_correctClassNamesApplied() {
+        openTestURL("theme=valo");
+
+        List<WebElement> options = getSelect().findElements(By.tagName("span"));
+
+        Assert.assertTrue(options.size() > 0);
+        verifyCheckboxDisabledClassNames(
+                options.remove(10).getAttribute("className"), true);
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(cs -> verifyCheckboxDisabledClassNames(cs, false));
+
+        selectMenuPath("Component", "Item Enabled Provider",
+                "Item Enabled Provider", "Disable Item 0");
+
+        options = getSelect().findElements(By.tagName("span"));
+        String className = options.get(0).getAttribute("className");
+        verifyCheckboxDisabledClassNames(className, true);
+        verifyCheckboxDisabledClassNames(
+                options.remove(10).getAttribute("className"), false);
+
+        selectMenuPath("Component", "Item Enabled Provider",
+                "Item Enabled Provider", "Disable Item 3");
+
+        className = getSelect().findElements(By.tagName("span")).get(0)
+                .getAttribute("className");
+        verifyCheckboxDisabledClassNames(className, false);
+
+        className = getSelect().findElements(By.tagName("span")).get(3)
+                .getAttribute("className");
+        verifyCheckboxDisabledClassNames(className, true);
+
+        selectMenuPath("Component", "State", "Enabled");
+
+        options = getSelect().findElements(By.tagName("span"));
+
+        Assert.assertTrue(options.size() > 0);
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(cs -> verifyCheckboxDisabledClassNames(cs, true));
+
+        selectMenuPath("Component", "Item Enabled Provider",
+                "Item Enabled Provider", "Disable Item 5");
+
+        options = getSelect().findElements(By.tagName("span"));
+
+        Assert.assertTrue(options.size() > 0);
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(cs -> verifyCheckboxDisabledClassNames(cs, true));
+
+        selectMenuPath("Component", "State", "Enabled");
+
+        options = getSelect().findElements(By.tagName("span"));
+        className = options.remove(5).getAttribute("className");
+
+        Assert.assertTrue(options.size() > 0);
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(cs -> verifyCheckboxDisabledClassNames(cs, false));
+        verifyCheckboxDisabledClassNames(className, true);
+    }
+
+    @Test // #3387
+    public void shouldApplySelectedClassToSelectedItems() {
+        openTestURL("theme=valo");
+        selectMenuPath("Component", "Selection", "Toggle Item 5");
+
+        String className = getSelect().getOptionElements().get(5).getAttribute("className");
+        assertTrue("No v-select-option-selected class, was " + className, className.contains("v-select-option-selected"));
+
+        selectMenuPath("Component", "Selection", "Toggle Item 5");
+        className = getSelect().getOptionElements().get(5).getAttribute("className");
+        assertFalse("Extra v-select-option-selected class, was " + className, className.contains("v-select-option-selected"));
+    }
     // needed to make tooltips work in IE tests
     @Override
     protected boolean requireWindowFocusForIE() {
         return true;
+    }
+
+    private static void verifyCheckboxDisabledClassNames(String className,
+            boolean disabled) {
+        Assert.assertEquals(
+                disabled ? "No"
+                        : "Extra" + " v-checkbox-disabled class, was "
+                                + className,
+                disabled, className.contains("v-checkbox-disabled"));
+        Assert.assertEquals(
+                disabled ? "No"
+                        : "Extra" + " v-disabled class, was " + className,
+                disabled, className.contains("v-disabled"));
     }
 }

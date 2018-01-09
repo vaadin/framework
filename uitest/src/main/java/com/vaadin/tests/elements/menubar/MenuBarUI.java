@@ -16,6 +16,7 @@
 package com.vaadin.tests.elements.menubar;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
@@ -38,8 +39,11 @@ public class MenuBarUI extends AbstractTestUI {
             String secondaryLevelItemSuffix) {
         MenuBar menuBar = new MenuBar();
         MenuItem file = menuBar.addItem("File" + topLevelItemSuffix, null);
-        file.addItem("Open" + secondaryLevelItemSuffix, new MenuBarCommand());
-        file.addItem("Save" + secondaryLevelItemSuffix, new MenuBarCommand());
+        file.addItem("Open" + secondaryLevelItemSuffix, new MenuBarCommand())
+                .setDescription("<b>Preformatted</b>\ndescription");
+        file.addItem("Save" + secondaryLevelItemSuffix, new MenuBarCommand())
+                .setDescription("plain description,\n <b>HTML</b> is visible",
+                        ContentMode.TEXT);
         file.addItem("Save As.." + secondaryLevelItemSuffix,
                 new MenuBarCommand());
         file.addSeparator();
@@ -52,7 +56,9 @@ public class MenuBarUI extends AbstractTestUI {
                 new MenuBarCommand());
 
         file.addSeparator();
-        file.addItem("Exit" + secondaryLevelItemSuffix, new MenuBarCommand());
+        file.addItem("Exit" + secondaryLevelItemSuffix, new MenuBarCommand())
+                .setDescription("<b>HTML</b><br/>description",
+                        ContentMode.HTML);
 
         MenuItem edit = menuBar.addItem("Edit" + topLevelItemSuffix, null);
         edit.addItem("Copy" + secondaryLevelItemSuffix, new MenuBarCommand());

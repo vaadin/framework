@@ -16,13 +16,15 @@
 package com.vaadin.tests.components.radiobutton;
 
 import java.util.LinkedHashMap;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.tests.components.abstractlisting.AbstractListingTestUI;
+import com.vaadin.ui.DescriptionGenerator;
 import com.vaadin.ui.ItemCaptionGenerator;
 import com.vaadin.ui.RadioButtonGroup;
-import com.vaadin.ui.components.grid.DescriptionGenerator;
 
 /**
  * Test UI for RadioButtonGroup component
@@ -48,6 +50,7 @@ public class RadioButtonGroupTestUI
         createItemIconGeneratorMenu();
         createItemCaptionGeneratorMenu();
         createItemDescriptionGeneratorMenu();
+        createItemEnabledProviderMenu();
     }
 
     protected void createSelectionMenu() {
@@ -104,6 +107,18 @@ public class RadioButtonGroupTestUI
                 "Item Description Generator", options, "None",
                 (radioButtonGroup, generator, data) -> {
                     radioButtonGroup.setItemDescriptionGenerator(generator);
+                }, true);
+    }
+
+    private void createItemEnabledProviderMenu() {
+        LinkedHashMap<String, SerializablePredicate<Object>> options = new LinkedHashMap<>();
+        options.put("Disable Item 0", o -> !Objects.equals(o, "Item 0"));
+        options.put("Disable Item 3", o -> !Objects.equals(o, "Item 3"));
+        options.put("Disable Item 5", o -> !Objects.equals(o, "Item 5"));
+
+        createSelectAction("Item Enabled Provider", "Item Enabled Provider",
+                options, "None", (radioButtonGroup, generator, data) -> {
+                    radioButtonGroup.setItemEnabledProvider(generator);
                     radioButtonGroup.getDataProvider().refreshAll();
                 }, true);
     }

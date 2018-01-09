@@ -259,12 +259,9 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
     @Override
     public void onKeyPress(KeyPressEvent event) {
         if (maxLength >= 0) {
-            Scheduler.get().scheduleDeferred(new Command() {
-                @Override
-                public void execute() {
-                    if (rta.getHTML().length() > maxLength) {
-                        rta.setHTML(rta.getHTML().substring(0, maxLength));
-                    }
+            Scheduler.get().scheduleDeferred(() -> {
+                if (rta.getHTML().length() > maxLength) {
+                    rta.setHTML(rta.getHTML().substring(0, maxLength));
                 }
             });
         }

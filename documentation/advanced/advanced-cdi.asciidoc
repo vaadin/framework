@@ -54,7 +54,7 @@ Reference Implementation]
 
 * link:http://cdi-spec.org/[CDI Specification]
 
-* link:https://vaadin.com/wiki?p_p_id=36&amp;p_p_lifecycle=0&amp;p_p_state=normal&amp;p_p_mode=view&amp;p_p_col_id=row-1&amp;p_p_col_pos=1&amp;p_p_col_count=3&amp;p_r_p_185834411_title=Vaadin+CDI&amp;p_r_p_185834411_nodeName=vaadin.com+wiki&amp;_36_struts_action=%2Fwiki%2Fview[Vaadin
+* link:https://vaadin.com/docs/v8/framework/articles/VaadinCDI.html[Vaadin
 CDI Tutorial]
 
 endif::web[]

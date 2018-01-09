@@ -52,11 +52,4 @@ abstract class AbstractSpringUI extends UI {
                 event -> getUI().getNavigator().navigateTo(viewName));
         return button;
     }
-
-    @Override
-    public String getUiRootPath() {
-        // FIXME: Should be handled by Spring plug-in
-        return super.getUiRootPath() + "/"
-                + getClass().getAnnotation(SpringUI.class).path();
-    }
 }

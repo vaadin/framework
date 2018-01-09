@@ -771,7 +771,7 @@ public class TableQuery extends AbstractTransactionalQuery
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addRowIdChangeListener(QueryDelegate.RowIdChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(RowIdChangeListener listener) {
@@ -791,7 +791,7 @@ public class TableQuery extends AbstractTransactionalQuery
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeRowIdChangeListener(QueryDelegate.RowIdChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(RowIdChangeListener listener) {

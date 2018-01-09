@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-test</artifactId>
-        <version>8.2-SNAPSHOT</version>
+        <version>8.3-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-servlet-containers-test</artifactId>
     <name>vaadin-servlet-containers-test</name>
@@ -237,6 +237,7 @@
             <modules>
                 <module>jsp-integration</module>
                 <module>karaf</module>
+                <module>wildfly11</module>
                 <module>wildfly10</module>
                 <module>wildfly9</module>
                 <module>wildfly8</module>
@@ -265,6 +266,7 @@
         <profile>
             <id>wildfly</id>
             <modules>
+                <module>wildfly11</module>
                 <module>wildfly10</module>
                 <module>wildfly9</module>
                 <module>wildfly8</module>

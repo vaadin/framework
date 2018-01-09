@@ -46,7 +46,7 @@ public class BeanValidationTest {
     public void binderWorksWithoutBeanValidationLib() {
         try {
             Class.forName("javax.validation.Validation");
-            fail();
+            fail("Validation API should not be present");
         } catch (ClassNotFoundException ignored) {
         }
 

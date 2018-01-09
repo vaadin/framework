@@ -17,6 +17,7 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.LiveValue;
@@ -43,7 +44,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComputedStyle;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.VAbstractCalendarPanel.SubmitListener;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.ui.datefield.TextualDateFieldState;
@@ -377,7 +377,6 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * Opens the calendar panel popup.
      */
     public void openCalendarPanel() {
-
         if (!open && !readonly && isEnabled()) {
             open = true;
 
@@ -393,8 +392,10 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
             popup.setWidth("");
             popup.setHeight("");
             popup.setPopupPositionAndShow(new PopupPositionCallback());
+
+            checkGroupFocus(true);
         } else {
-            VConsole.error("Cannot reopen popup, it is already open!");
+            getLogger().severe("Cannot reopen popup, it is already open!");
         }
     }
 
@@ -451,6 +452,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * Sets focus to Calendar panel.
      *
      * @param focus
+     *            {@code true} for {@code focus}, {@code false} for {@code blur}
      */
     public void setFocus(boolean focus) {
         calendar.setFocus(focus);
@@ -683,19 +685,16 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
                 // are in the lower right corner of the screen
                 if (overflow) {
                     return left;
-                } else {
-                    return left + calendarToggle.getOffsetWidth();
                 }
-            } else {
-                int[] margins = style.getMargin();
-                int desiredLeftPosition = calendarToggle.getAbsoluteLeft()
-                        - width - margins[1] - margins[3];
-                if (desiredLeftPosition >= 0) {
-                    return desiredLeftPosition;
-                } else {
-                    return left;
-                }
+                return left + calendarToggle.getOffsetWidth();
             }
+            int[] margins = style.getMargin();
+            int desiredLeftPosition = calendarToggle.getAbsoluteLeft() - width
+                    - margins[1] - margins[3];
+            if (desiredLeftPosition >= 0) {
+                return desiredLeftPosition;
+            }
+            return left;
         }
 
         private boolean positionRightSide() {
@@ -721,4 +720,12 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         }
     }
 
+    @Override
+    protected boolean hasChildFocus() {
+        return open;
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(VAbstractPopupCalendar.class.getName());
+    }
 }

@@ -25,6 +25,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.SimpleManagedLayout;
@@ -123,12 +124,7 @@ public class MenuBarConnector extends AbstractComponentConnector
                 if (itemHasCommand || itemIsCheckable) {
                     // Construct a command that fires onMenuClick(int) with the
                     // item's id-number
-                    cmd = new Command() {
-                        @Override
-                        public void execute() {
-                            widget.hostReference.onMenuClick(itemId);
-                        }
-                    };
+                    cmd = () -> widget.hostReference.onMenuClick(itemId);
                 }
             }
 
@@ -218,5 +214,20 @@ public class MenuBarConnector extends AbstractComponentConnector
          * is used.
          */
         return true;
+    }
+
+    @OnStateChange("enabled")
+    void updateEnabled() {
+        if (getState().enabled) {
+            getWidget().getElement().removeAttribute("aria-disabled");
+        } else {
+            getWidget().getElement().setAttribute("aria-disabled", "true");
+        }
+    }
+
+    @OnStateChange("tabIndex")
+    void updateTabIndex() {
+        getWidget().getElement().setAttribute("tabindex",
+                String.valueOf(getState().tabIndex));
     }
 }

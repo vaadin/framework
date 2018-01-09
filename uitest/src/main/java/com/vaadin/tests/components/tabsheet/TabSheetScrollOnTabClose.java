@@ -18,7 +18,6 @@ package com.vaadin.tests.components.tabsheet;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
@@ -54,13 +53,9 @@ public class TabSheetScrollOnTabClose extends AbstractReindeerTestUI {
         for (int i = 0; i < 10; i++) {
             final String tabCaption = "tab " + i;
             final Button b = new Button("" + i);
-            b.addClickListener(new Button.ClickListener() {
-
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    b.setEnabled(false);
-                    tabSheet.removeTab(getTab(tabSheet, tabCaption));
-                }
+            b.addClickListener(event -> {
+                b.setEnabled(false);
+                tabSheet.removeTab(getTab(tabSheet, tabCaption));
             });
             addComponent(b);
         }
