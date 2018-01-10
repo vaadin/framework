@@ -36,6 +36,8 @@ import com.vaadin.ui.Notification;
 @Connect(value = Notification.class)
 public class NotificationConnector extends AbstractExtensionConnector {
 
+    private VNotification notification;
+
     @Override
     public NotificationState getState() {
         return (NotificationState) super.getState();
@@ -44,21 +46,33 @@ public class NotificationConnector extends AbstractExtensionConnector {
     @Override
     protected void extend(ServerConnector target) {
         NotificationState state = getState();
-        VNotification n = VNotification.showNotification(
-                target.getConnection(),
-                state.caption, state.description,
-                state.htmlContentAllowed, getResourceUrl("icon"),
-                state.styleName, state.position, state.delay);
+        notification = VNotification.showNotification(target.getConnection(),
+                state.caption, state.description, state.htmlContentAllowed,
+                getResourceUrl("icon"), state.styleName, state.position,
+                state.delay);
 
-        n.addCloseHandler(new CloseHandler<PopupPanel>() {
+        notification.addCloseHandler(new CloseHandler<PopupPanel>() {
 
             @Override
             public void onClose(CloseEvent<PopupPanel> event) {
-              NotificationServerRpc rpc =
-                      getRpcProxy(NotificationServerRpc.class);
-              rpc.closed();
+                if (getParent() == null) {
+                    // Unregistered already
+                    return;
+                }
+                NotificationServerRpc rpc = getRpcProxy(
+                        NotificationServerRpc.class);
+                rpc.closed();
+                notification = null;
             }
         });
     }
 
+    @Override
+    public void onUnregister() {
+        super.onUnregister();
+        if (notification != null) {
+            notification.hide();
+            notification = null;
+        }
+    }
 }
