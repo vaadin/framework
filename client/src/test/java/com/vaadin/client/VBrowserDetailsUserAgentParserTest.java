@@ -13,6 +13,7 @@ public class VBrowserDetailsUserAgentParserTest {
     private static final String FIREFOX30_WINDOWS = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.0.6) Gecko/2009011913 Firefox/3.0.6";
     private static final String FIREFOX30_LINUX = "Mozilla/5.0 (X11; U; Linux x86_64; es-ES; rv:1.9.0.12) Gecko/2009070811 Ubuntu/9.04 (jaunty) Firefox/3.0.12";
     private static final String FIREFOX33_ANDROID = "Mozilla/5.0 (Android; Tablet; rv:33.0) Gecko/33.0 Firefox/33.0";
+    private static final String FIREFOX57_ANDROID = "Mozilla/5.0 (Android 8.1.0; Mobile; rv:57.0) Gecko/57.0 Firefox/57.0";
     private static final String FIREFOX35_WINDOWS = "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.1.8) Gecko/20100202 Firefox/3.5.8 (.NET CLR 3.5.30729) FirePHP/0.4";
     private static final String FIREFOX36_WINDOWS = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2) Gecko/20100115 Firefox/3.6 (.NET CLR 3.5.30729)";
     private static final String FIREFOX36B_MAC = "UAString mozilla/5.0 (macintosh; u; intel mac os x 10.6; en-us; rv:1.9.2) gecko/20100115 firefox/3.6";
@@ -42,6 +43,10 @@ public class VBrowserDetailsUserAgentParserTest {
     private static final String IPHONE_IOS_5_1 = "Mozilla/5.0 (iPhone; CPU iPhone OS 5_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9B179 Safari/7534.48.3";
     private static final String IPHONE_IOS_4_0 = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7";
     private static final String IPAD_IOS_4_3_1 = "Mozilla/5.0 (iPad; U; CPU OS 4_3_1 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8G4 Safari/6533.18.5";
+
+    private static final String IPHONE_IOS9_1_FIREFOX = "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) FxiOS/8.3b5826 Mobile/13B143 Safari/601.1.46";
+    private static final String IPHONE_IOS9_1_SAFARI = "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1";
+    private static final String IPHONE_IOS9_1_CHROME = "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1 (KHTML, like Gecko) CriOS/63.0.3239.73 Mobile/13B143 Safari/601.1.46";
 
     // application on the home screen, without Safari in user agent
     private static final String IPHONE_IOS_6_1_HOMESCREEN_SIMULATOR = "Mozilla/5.0 (iPhone; CPU iPhone OS 6_1 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Mobile/10B141";
@@ -258,6 +263,16 @@ public class VBrowserDetailsUserAgentParserTest {
     }
 
     @Test
+    public void testFirefox57Android() {
+        VBrowserDetails bd = new VBrowserDetails(FIREFOX57_ANDROID);
+        assertGecko(bd);
+        assertFirefox(bd);
+        assertBrowserMajorVersion(bd, 57);
+        assertBrowserMinorVersion(bd, 0);
+        assertAndroid(bd, 8, 1);
+    }
+
+    @Test
     public void testFirefox35() {
         VBrowserDetails bd = new VBrowserDetails(FIREFOX35_WINDOWS);
         assertGecko(bd);
@@ -444,6 +459,36 @@ public class VBrowserDetailsUserAgentParserTest {
 
         details = new VBrowserDetails(FIREFOX_SUPPORTED);
         assertFalse(details.isTooOldToFunctionProperly());
+    }
+
+    @Test
+    public void testFirefoxIos() {
+        VBrowserDetails details = new VBrowserDetails(IPHONE_IOS9_1_FIREFOX);
+        assertFirefox(details);
+        assertBrowserMajorVersion(details, 8);
+        assertBrowserMinorVersion(details, 3);
+        assertWebKit(details);
+        assertEngineVersion(details, 601);
+    }
+
+    @Test
+    public void testSafariIos() {
+        VBrowserDetails details = new VBrowserDetails(IPHONE_IOS9_1_SAFARI);
+        assertSafari(details);
+        assertBrowserMajorVersion(details, 9);
+        assertBrowserMinorVersion(details, 0);
+        assertWebKit(details);
+        assertEngineVersion(details, 601);
+    }
+
+    @Test
+    public void testChromeIos() {
+        VBrowserDetails details = new VBrowserDetails(IPHONE_IOS9_1_CHROME);
+        assertChrome(details);
+        assertBrowserMajorVersion(details, 63);
+        assertBrowserMinorVersion(details, 0);
+        assertWebKit(details);
+        assertEngineVersion(details, 601);
     }
 
     /*

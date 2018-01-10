@@ -90,9 +90,10 @@ public class VBrowserDetails implements Serializable {
         isIE = isIE || isTrident;
 
         isPhantomJS = userAgent.indexOf("phantomjs/") != -1;
-        isSafari = !isChrome && !isIE && !isPhantomJS
+        isFirefox = userAgent.indexOf(" firefox/") != -1
+                || userAgent.indexOf("fxios/") != -1;
+        isSafari = !isChrome && !isIE && !isPhantomJS && !isFirefox
                 && userAgent.indexOf("safari") != -1;
-        isFirefox = userAgent.indexOf(" firefox/") != -1;
         if (userAgent.indexOf(" edge/") != -1) {
             isEdge = true;
             isChrome = false;
@@ -163,7 +164,12 @@ public class VBrowserDetails implements Serializable {
                     parseVersionString(ieVersionString);
                 }
             } else if (isFirefox) {
-                int i = userAgent.indexOf(" firefox/") + 9;
+                int i = userAgent.indexOf(" firefox/");
+                if (i != -1) {
+                    i += " firefox/".length();
+                } else {
+                    i = userAgent.indexOf(" fxios/") + " fxios/".length();
+                }
                 parseVersionString(safeSubstring(userAgent, i, i + 5));
             } else if (isChrome) {
                 int i = userAgent.indexOf(" chrome/");
