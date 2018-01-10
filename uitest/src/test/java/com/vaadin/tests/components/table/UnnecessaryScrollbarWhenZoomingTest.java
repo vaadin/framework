@@ -56,9 +56,8 @@ public class UnnecessaryScrollbarWhenZoomingTest extends MultiBrowserTest {
         zoomSetter.resetZoom();
         openTestURL();
         // IE sometimes has trouble waiting long enough.
-        new WebDriverWait(getDriver(), 30)
-                .until(ExpectedConditions.presenceOfElementLocated(
-                        By.cssSelector(".v-table-body-wrapper")));
+        waitUntil(ExpectedConditions.presenceOfElementLocated(
+                By.cssSelector(".v-table-body-wrapper")), 30);
     }
 
     @Test
