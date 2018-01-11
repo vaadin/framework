@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.components.window;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -113,6 +114,21 @@ public class ModalWindowFocusTest extends MultiBrowserTest {
     private void pressKeyAndWait(Keys key) {
         new Actions(driver).sendKeys(key).build().perform();
         sleep(100);
+    }
+
+    @Test
+    public void verifyAriaModalAndRoleAttributes() {
+        waitForElementPresent(By.id("firstButton"));
+        WebElement button = findElement(By.id("firstButton"));
+        button.click();
+
+        waitForElementPresent(By.className("v-window"));
+        WebElement windowElement = findElement(By.className("v-window"));
+        String ariaModal = windowElement.getAttribute("aria-modal");
+        assertEquals("true", ariaModal);
+        String role = windowElement.getAttribute("role");
+        assertEquals("dialog", role);
+
     }
 
 }
