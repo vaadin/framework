@@ -43,7 +43,7 @@ public class VDateTimeFieldCalendar extends
     }
 
     @Override
-    public void updateValueFromPanel() {
+    public void updateBufferedValues() {
         // If field is invisible at the beginning, client can still be null when
         // this function is called.
         if (getClient() == null) {
@@ -72,6 +72,13 @@ public class VDateTimeFieldCalendar extends
                     }
                 }
             }
+        }
+    }
+
+    @Override
+    public void updateValueFromPanel() {
+        updateBufferedValues();
+        if (bufferedResolutions != null) {
             sendBufferedValues();
         }
     }
