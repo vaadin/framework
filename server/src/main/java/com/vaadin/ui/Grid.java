@@ -2056,6 +2056,42 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         /**
+         * Sets whether Grid should handle events in this Column from Components
+         * and Widgets rendered by certain Renderers. By default the events are
+         * not handled.
+         * <p>
+         * <strong>Note:</strong> Enabling this feature will for example select
+         * a row when a component is clicked. For example in the case of a
+         * {@link ComboBox} or {@link TextField} it might be problematic as the
+         * component gets re-rendered and might lose focus.
+         * 
+         * @param widgetEventsAllowed
+         *            {@code true} to handle events; {@code false} to not
+         * @return this column
+         * @since 8.3
+         */
+        public Column<T, V> setWidgetEventsAllowed(
+                boolean widgetEventsAllowed) {
+            if (getState(false).widgetEventsAllowed != widgetEventsAllowed) {
+                getState().widgetEventsAllowed = widgetEventsAllowed;
+            }
+            return this;
+        }
+
+        /**
+         * Gets whether Grid is handling the events in this Column from
+         * Component and Widgets.
+         * 
+         * @see #setWidgetEventsAllowed(boolean)
+         * 
+         * @return {@code true} if handling events; {@code false} if not
+         * @since 8.3
+         */
+        public boolean isWidgetEventsAllowed() {
+            return getState(false).widgetEventsAllowed;
+        }
+
+        /**
          * Gets the grid that this column belongs to.
          *
          * @return the grid that this column belongs to, or <code>null</code> if
@@ -2566,7 +2602,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * <p>
      * This method can only be used for a <code>Grid</code> created using
      * {@link Grid#Grid(Class)} or {@link #withPropertySet(PropertySet)}.
-     *
+     * <p>
+     * You can add columns for nested properties with dot notation, eg.
+     * <code>"property.nestedProperty"</code>
+     * 
      * @param propertyName
      *            the property name of the new column, not <code>null</code>
      * @return the newly added column, not <code>null</code>
@@ -2583,7 +2622,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * <p>
      * This method can only be used for a <code>Grid</code> created using
      * {@link Grid#Grid(Class)} or {@link #withPropertySet(PropertySet)}.
+     * <p>
+     * You can add columns for nested properties with dot notation, eg.
+     * <code>"property.nestedProperty"</code>
      *
+     * 
      * @param propertyName
      *            the property name of the new column, not <code>null</code>
      * @param renderer

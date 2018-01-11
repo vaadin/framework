@@ -8,9 +8,9 @@
     <!-- Hint for WidgetSetBuilder not to automatically update the file -->
     <!-- WS Compiler: manually edited -->
 
-    <inherits name="com.vaadin.Vaadin" />
-
     <inherits name="elemental.Elemental" />
+
+    <inherits name="com.vaadin.Vaadin" />
 
     <inherits name="com.google.gwt.precompress.Precompress" />
 

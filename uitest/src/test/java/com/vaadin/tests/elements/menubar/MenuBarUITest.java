@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.elements.menubar;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -30,6 +31,11 @@ import com.vaadin.testbench.elements.MenuBarElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class MenuBarUITest extends MultiBrowserTest {
+    
+    @Override
+    protected boolean requireWindowFocusForIE() {
+        return true;
+    }
 
     @Before
     public void init() {
@@ -119,6 +125,22 @@ public class MenuBarUITest extends MultiBrowserTest {
         menuBar = $(MenuBarElement.class).first();
         menuBar.clickItem("File");
         assertTrue(isItemVisible("Open"));
+    }
+
+    @Test
+    public void testMenuItemTooltips() {
+        MenuBarElement first = $(MenuBarElement.class).first();
+        first.clickItem("File");
+        assertTooltip("Open", "<b>Preformatted</b>\ndescription");
+        assertTooltip("Save", "plain description, <b>HTML</b> is visible");
+        assertTooltip("Exit", "HTML\ndescription");
+    }
+
+    private void assertTooltip(String menuItem, String expectedTooltipText) {
+        testBenchElement(getMenuElement(menuItem)).showTooltip();
+        assertEquals("Unexpected tooltip when hovering '" + menuItem + "'",
+                expectedTooltipText,
+                findElement(By.className("v-tooltip-text")).getText());
     }
 
     private boolean isItemVisible(String item) {

@@ -46,6 +46,7 @@ public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCa
      * {@link #updateFromUIDL(UIDL, ApplicationConnection)} method as is and
      * customizing only listeners logic.
      */
+    @SuppressWarnings("deprecation")
     protected void updateListeners() {
         VAbstractDateFieldCalendar<PANEL, R> widget = getWidget();
         if (isResolutionMonthOrHigher()) {
@@ -90,6 +91,7 @@ public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCa
         } else {
             widget.calendarPanel.setDate(null);
         }
+        widget.calendarPanel.setDateStyles(getState().dateStyles);
 
         updateListeners();
 
@@ -98,6 +100,7 @@ public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCa
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public VAbstractDateFieldCalendar<PANEL, R> getWidget() {
         return (VAbstractDateFieldCalendar<PANEL, R>) super.getWidget();
     }

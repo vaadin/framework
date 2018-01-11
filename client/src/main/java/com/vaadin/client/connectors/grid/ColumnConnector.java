@@ -108,6 +108,7 @@ public class ColumnConnector extends AbstractExtensionConnector {
 
         // Initially set a renderer
         updateRenderer();
+        updateHidden();
 
         getParent().addColumn(column, getState().internalId);
 
@@ -192,6 +193,11 @@ public class ColumnConnector extends AbstractExtensionConnector {
     @OnStateChange("tooltipContentMode")
     void updateTooltipContentMode() {
         column.setTooltipContentMode(getState().tooltipContentMode);
+    }
+
+    @OnStateChange("widgetEventsAllowed")
+    void updateWidgetEventsAllowed() {
+        column.setWidgetEventsAllowed(getState().widgetEventsAllowed);
     }
 
     @Override

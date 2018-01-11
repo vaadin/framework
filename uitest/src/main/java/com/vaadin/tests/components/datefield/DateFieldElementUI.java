@@ -6,6 +6,7 @@ import java.util.Locale;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.InlineDateField;
 
@@ -18,6 +19,11 @@ public class DateFieldElementUI extends AbstractReindeerTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
+        getPage().getStyles()
+                .add(".v-inline-datefield .teststyle { background: yellow; }");
+        getPage().getStyles()
+                .add(".v-datefield-popup .teststyle { background: yellow; }");
+
         log.setNumberLogRows(false);
         DateField df = new DateField();
         df.addValueChangeListener(event -> log(
@@ -42,6 +48,13 @@ public class DateFieldElementUI extends AbstractReindeerTestUIWithLog {
         usDatefield.addValueChangeListener(
                 event -> log("US date field value set to " + event.getValue()));
         addComponent(usDatefield);
+
+        addComponent(new Button("Add date styles", e -> {
+            inlineDateField.setDateStyle(LocalDate.now(), "teststyle");
+            finnishDatefield.setDateStyle(LocalDate.of(2017, 12, 1),
+                    "teststyle");
+            usDatefield.setDateStyle(LocalDate.of(2017, 12, 1), "teststyle");
+        }));
     }
 
     @Override

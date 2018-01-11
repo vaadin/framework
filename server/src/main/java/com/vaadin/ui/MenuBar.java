@@ -31,6 +31,7 @@ import org.jsoup.parser.Tag;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
 import com.vaadin.shared.ui.menubar.MenuBarState;
 import com.vaadin.ui.Component.Focusable;
@@ -46,7 +47,7 @@ import com.vaadin.ui.declarative.DesignContext;
  */
 @SuppressWarnings("serial")
 public class MenuBar extends AbstractComponent
-        implements LegacyComponent, Focusable {
+implements LegacyComponent, Focusable {
 
     // Items of the top-level menu
     private final List<MenuItem> menuItems;
@@ -142,6 +143,15 @@ public class MenuBar extends AbstractComponent
                 target.addAttribute(MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION,
                         description);
             }
+
+            ContentMode contentMode = item.getDescriptionContentMode();
+            // If the contentMode is equal to ContentMode.PREFORMATTED, we don't add any attribute.
+            if (contentMode != null && contentMode != ContentMode.PREFORMATTED) {
+                target.addAttribute(
+                        MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION_CONTENT_MODE,
+                        contentMode.name());
+            }
+
             if (item.isCheckable()) {
                 // if the "checked" attribute is present (either true or false),
                 // the item is checkable
@@ -457,6 +467,7 @@ public class MenuBar extends AbstractComponent
         private boolean isSeparator = false;
         private String styleName;
         private String description;
+        private ContentMode descriptionContentMode = ContentMode.PREFORMATTED;
         private boolean checkable = false;
         private boolean checked = false;
 
@@ -585,7 +596,7 @@ public class MenuBar extends AbstractComponent
          */
         public MenuBar.MenuItem addItemBefore(String caption, Resource icon,
                 MenuBar.Command command, MenuBar.MenuItem itemToAddBefore)
-                throws IllegalStateException {
+                        throws IllegalStateException {
             if (isCheckable()) {
                 throw new IllegalStateException(
                         "A checkable item cannot have children");
@@ -782,20 +793,46 @@ public class MenuBar extends AbstractComponent
         }
 
         /**
-         * Sets the items's description. See {@link #getDescription()} for more
+         * Analogous method to {@link AbstractComponent#setDescription(String)}.
+         * Sets the item's description. See {@link #getDescription()} for more
          * information on what the description is.
          *
          * @param description
          *            the new description string for the component.
          */
         public void setDescription(String description) {
+            setDescription(description, ContentMode.PREFORMATTED);
+        }
+
+        /**
+         * Analogous method to
+         * {@link AbstractComponent#setDescription(String, ContentMode)}. Sets
+         * the item's description using given content mode. See
+         * {@link #getDescription()} for more information on what the
+         * description is.
+         * <p>
+         * If the content {@code mode} is {@literal ContentMode.HTML} the
+         * description is displayed as HTML in tooltips or directly in certain
+         * components so care should be taken to avoid creating the possibility
+         * for HTML injection and possibly XSS vulnerabilities.
+         *
+         * @see ContentMode
+         *
+         * @param description
+         *            the new description string for the component.
+         * @param mode
+         *            the content mode for the description
+         * @since 8.3
+         */
+        public void setDescription(String description, ContentMode mode) {
             this.description = description;
+            this.descriptionContentMode = mode;
             markAsDirty();
         }
 
         /**
          * <p>
-         * Gets the items's description. The description can be used to briefly
+         * Gets the item's description. The description can be used to briefly
          * describe the state of the item to the user. The description string
          * may contain certain XML tags:
          * </p>
@@ -851,6 +888,23 @@ public class MenuBar extends AbstractComponent
          */
         public String getDescription() {
             return description;
+        }
+
+        /**
+         * Gets the content mode of the description of the menu item. The
+         * description is displayed as the tooltip of the menu item in the UI.
+         * <p>
+         * If no content mode was explicitly set using the
+         * {@link #setDescription(String, ContentMode)} method, the content mode
+         * will be {@link ContentMode#PREFORMATTED}
+         * </p>
+         *
+         * @return the {@link ContentMode} of the description of this menu item
+         * @see ContentMode
+         * @since 8.3
+         */
+        public ContentMode getDescriptionContentMode() {
+            return descriptionContentMode;
         }
 
         /**
@@ -982,6 +1036,9 @@ public class MenuBar extends AbstractComponent
         DesignAttributeHandler.writeAttribute("description", attr,
                 item.getDescription(), def.getDescription(), String.class,
                 context);
+        DesignAttributeHandler.writeAttribute("descriptioncontentmode", attr,
+                item.getDescriptionContentMode().name(),
+                def.getDescriptionContentMode().name(), String.class, context);
         DesignAttributeHandler.writeAttribute("style-name", attr,
                 item.getStyleName(), def.getStyleName(), String.class, context);
 
@@ -1041,8 +1098,14 @@ public class MenuBar extends AbstractComponent
                     attr, boolean.class));
         }
         if (menuElement.hasAttr("description")) {
-            menu.setDescription(DesignAttributeHandler
-                    .readAttribute("description", attr, String.class));
+            String description = DesignAttributeHandler.readAttribute("description", attr, String.class);
+            if (menuElement.hasAttr("descriptioncontentmode")) {
+                String contentModeString = DesignAttributeHandler.readAttribute(
+                        "descriptioncontentmode", attr, String.class);
+                menu.setDescription(description, ContentMode.valueOf(contentModeString));
+            } else {
+                menu.setDescription(description);
+            }
         }
         if (menuElement.hasAttr("style-name")) {
             menu.setStyleName(DesignAttributeHandler.readAttribute("style-name",
