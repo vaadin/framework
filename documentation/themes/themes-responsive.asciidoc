@@ -263,9 +263,7 @@ demonstrates the flexible wrapping technique described in
 demo")))
 ((("TouchKit", "Parking
 demo")))
-The Parking demo for TouchKit, mentioned in
-<<https://demo.vaadin.com/parking/,"Mobile
-Applications with TouchKit">>, uses a responsive theme to adapt to mobile
+<<https://demo.vaadin.com/parking/,"The Parking demo for TouchKit">> uses a responsive theme to adapt to mobile
 devices with different screen sizes and when the screen orientation changes.
 
 endif::web[]
