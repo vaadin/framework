@@ -37,7 +37,7 @@ public class ColumnState extends AbstractGridExtensionState {
      * 
      * @since 8.3
      */
-    public boolean widgetEventsAllowed = false;
+    public boolean handleWidgetEvents = false;
 
     /** The assistive device caption for the column. */
     public String assistiveCaption;
