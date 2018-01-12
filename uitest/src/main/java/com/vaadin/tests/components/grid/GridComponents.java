@@ -27,7 +27,7 @@ public class GridComponents extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
         Grid<String> grid = new Grid<>();
         grid.addComponentColumn(Label::new).setId("label")
-                .setCaption("Column 0").setWidgetEventsAllowed(true);
+                .setCaption("Column 0").setHandleWidgetEvents(true);
         grid.getDefaultHeaderRow().getCell("label")
                 .setComponent(new Label("Label"));
         grid.addComponentColumn(string -> {
