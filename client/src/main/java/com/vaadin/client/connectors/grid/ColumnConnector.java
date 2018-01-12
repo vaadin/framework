@@ -39,7 +39,7 @@ import elemental.json.JsonValue;
 public class ColumnConnector extends AbstractExtensionConnector {
 
     public abstract static class CustomColumn
-            extends Column<Object, JsonObject> {
+    extends Column<Object, JsonObject> {
 
         private final String connectorId;
         private ContentMode tooltipContentMode;
@@ -195,9 +195,9 @@ public class ColumnConnector extends AbstractExtensionConnector {
         column.setTooltipContentMode(getState().tooltipContentMode);
     }
 
-    @OnStateChange("widgetEventsAllowed")
-    void updateWidgetEventsAllowed() {
-        column.setWidgetEventsAllowed(getState().widgetEventsAllowed);
+    @OnStateChange("handleWidgetEvents")
+    void updateHandleWidgetEvents() {
+        column.setHandleWidgetEvents(getState().handleWidgetEvents);
     }
 
     @Override

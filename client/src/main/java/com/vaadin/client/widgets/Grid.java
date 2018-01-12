@@ -2339,7 +2339,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     if (cell != null) {
                         Column<?, ?> column = grid
                                 .getVisibleColumn(cell.getColumn());
-                        if (column == null || !column.isWidgetEventsAllowed()) {
+                        if (column == null || !column.isHandleWidgetEvents()) {
                             return;
                         }
                     }
@@ -2463,7 +2463,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     Column<?, ?> column = grid
                             .getVisibleColumn(cell.getColumn());
                     handleWidgetEvent = column != null
-                            && column.isWidgetEventsAllowed();
+                            && column.isHandleWidgetEvents();
                 }
             }
 
@@ -4762,7 +4762,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         private String hidingToggleCaption = null;
 
-        private boolean widgetEventsAllowed = false;
+        private boolean handleWidgetEvents = false;
 
         private double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
         private double maximumWidthPx = GridConstants.DEFAULT_MAX_WIDTH;
@@ -5550,21 +5550,21 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *         not
          * @since 8.3
          */
-        public boolean isWidgetEventsAllowed() {
-            return widgetEventsAllowed;
+        public boolean isHandleWidgetEvents() {
+            return handleWidgetEvents;
         }
 
         /**
          * Sets whether Grid should handle events from Widgets in this Column.
-         * 
-         * @param widgetEventsAllowed
+         *
+         * @param handleWidgetEvents
          *            {@code true} to let grid handle events from widgets;
          *            {@code false} to not
          *
          * @since 8.3
          */
-        public void setWidgetEventsAllowed(boolean widgetEventsAllowed) {
-            this.widgetEventsAllowed = widgetEventsAllowed;
+        public void setHandleWidgetEvents(boolean handleWidgetEvents) {
+            this.handleWidgetEvents = handleWidgetEvents;
         }
 
     }
