@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.aria.client.SelectedValue;
 import com.google.gwt.dom.client.Element;
@@ -247,6 +248,13 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                             if (curday.getDate().equals(date)) {
                                 curday.addStyleDependentName(CN_FOCUSED);
                                 focusedDay = curday;
+
+                                // Reference focused day from calendar panel
+                                Roles.getGridRole()
+                                        .setAriaActivedescendantProperty(
+                                                getElement(),
+                                                Id.of(curday.getElement()));
+
                                 return;
                             }
                         }
@@ -501,16 +509,25 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             prevMonth.setHTML("&lsaquo;");
             prevMonth.setStyleName("v-button-prevmonth");
 
-            prevMonth.setTabIndex(-1);
-
             nextMonth = new VEventButton();
             nextMonth.setHTML("&rsaquo;");
             nextMonth.setStyleName("v-button-nextmonth");
 
-            nextMonth.setTabIndex(-1);
-
             setWidget(0, 3, nextMonth);
             setWidget(0, 1, prevMonth);
+
+            // TODO: 12/01/2018 API for changing label
+            Roles.getButtonRole().set(prevMonth.getElement());
+            Roles.getButtonRole()
+                    .setTabindexExtraAttribute(prevMonth.getElement(), -1);
+            Roles.getButtonRole().setAriaLabelProperty(prevMonth.getElement(),
+                    "Previous month");
+
+            Roles.getButtonRole().set(nextMonth.getElement());
+            Roles.getButtonRole()
+                    .setTabindexExtraAttribute(nextMonth.getElement(), -1);
+            Roles.getButtonRole()
+                    .setAriaLabelProperty(nextMonth.getElement(), "Next month");
         } else if (prevMonth != null && !needsMonth) {
             // Remove month traverse buttons
             remove(prevMonth);
@@ -525,14 +542,25 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             prevYear.setHTML("&laquo;");
             prevYear.setStyleName("v-button-prevyear");
 
-            prevYear.setTabIndex(-1);
             nextYear = new VEventButton();
             nextYear.setHTML("&raquo;");
             nextYear.setStyleName("v-button-nextyear");
 
-            nextYear.setTabIndex(-1);
             setWidget(0, 0, prevYear);
             setWidget(0, 4, nextYear);
+
+            // TODO: 12/01/2018 API for changing label
+            Roles.getButtonRole().set(prevYear.getElement());
+            Roles.getButtonRole()
+                    .setTabindexExtraAttribute(prevYear.getElement(), -1);
+            Roles.getButtonRole().setAriaLabelProperty(prevYear.getElement(),
+                    "Previous year");
+
+            Roles.getButtonRole().set(nextYear.getElement());
+            Roles.getButtonRole()
+                    .setTabindexExtraAttribute(nextYear.getElement(), -1);
+            Roles.getButtonRole()
+                    .setAriaLabelProperty(nextYear.getElement(), "Next year");
         }
 
         updateControlButtonRangeStyles(needsMonth);
@@ -830,6 +858,10 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 Date dayDate = (Date) curr.clone();
                 Day day = new Day(dayDate);
 
+                // Set ID with prefix of the calendar panel's ID
+                day.getElement().setId(getElement().getId() + "-" + weekOfMonth
+                        + "-" + dayOfWeek);
+
                 day.setStyleName(getDateField().getStylePrimaryName()
                         + "-calendarpanel-day");
 
@@ -850,6 +882,11 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                     focusedDay = day;
                     if (hasFocus) {
                         day.addStyleDependentName(CN_FOCUSED);
+
+                        // Reference focused day from calendar panel
+                        Roles.getGridRole()
+                                .setAriaActivedescendantProperty(getElement(),
+                                        Id.of(day.getElement()));
                     }
                 }
                 if (curr.getMonth() != displayedMonth.getMonth()) {
@@ -1229,7 +1266,6 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 event.getNativeEvent().getShiftKey())) {
             event.preventDefault();
         }
-
     }
 
     /**
