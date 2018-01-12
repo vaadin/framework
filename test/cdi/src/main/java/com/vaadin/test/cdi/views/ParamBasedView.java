@@ -1,8 +1,9 @@
 package com.vaadin.test.cdi.views;
 
 import com.vaadin.cdi.CDIView;
-import com.vaadin.cdi.ViewContextStrategy.ViewNameAndParameters;
+import com.vaadin.cdi.viewcontextstrategy.ViewContextByNameAndParameters;
 
-@CDIView(value = "param", contextStrategy = ViewNameAndParameters.class)
+@CDIView(value = "param")
+@ViewContextByNameAndParameters
 public class ParamBasedView extends GreetingView {
 }
