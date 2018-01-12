@@ -2065,16 +2065,14 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * {@link ComboBox} or {@link TextField} it might be problematic as the
          * component gets re-rendered and might lose focus.
          * 
-         * @param widgetEventsAllowed
+         * @param handleWidgetEvents
          *            {@code true} to handle events; {@code false} to not
          * @return this column
          * @since 8.3
          */
-        public Column<T, V> setWidgetEventsAllowed(
-                boolean widgetEventsAllowed) {
-            if (getState(false).widgetEventsAllowed != widgetEventsAllowed) {
-                getState().widgetEventsAllowed = widgetEventsAllowed;
-            }
+        public Column<T, V> setHandleWidgetEvents(
+                boolean handleWidgetEvents) {
+            getState().handleWidgetEvents = handleWidgetEvents;
             return this;
         }
 
@@ -2082,13 +2080,13 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * Gets whether Grid is handling the events in this Column from
          * Component and Widgets.
          * 
-         * @see #setWidgetEventsAllowed(boolean)
+         * @see #setHandleWidgetEvents(boolean)
          * 
          * @return {@code true} if handling events; {@code false} if not
          * @since 8.3
          */
-        public boolean isWidgetEventsAllowed() {
-            return getState(false).widgetEventsAllowed;
+        public boolean isHandleWidgetEvents() {
+            return getState(false).handleWidgetEvents;
         }
 
         /**
