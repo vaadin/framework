@@ -581,6 +581,10 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         getFlexCellFormatter().setStyleName(0, 1,
                 parent.getStylePrimaryName() + "-calendarpanel-prevmonth");
 
+        // Set ID for reference from focused date
+        getFlexCellFormatter().getElement(0, 2)
+                .setId(getElement().getId() + "-calendarpanel-month");
+
         setHTML(0, 2,
                 "<span class=\"" + parent.getStylePrimaryName()
                         + "-calendarpanel-month\">" + monthName + " " + year
@@ -861,6 +865,13 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 // Set ID with prefix of the calendar panel's ID
                 day.getElement().setId(getElement().getId() + "-" + weekOfMonth
                         + "-" + dayOfWeek);
+
+                // Set assistive label to read focused date and month/year
+                Roles.getButtonRole().set(day.getElement());
+                Roles.getButtonRole()
+                        .setAriaLabelledbyProperty(day.getElement(),
+                                Id.of(day.getElement()),
+                                Id.of(getFlexCellFormatter().getElement(0, 2)));
 
                 day.setStyleName(getDateField().getStylePrimaryName()
                         + "-calendarpanel-day");
