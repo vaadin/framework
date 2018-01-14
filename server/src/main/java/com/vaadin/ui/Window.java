@@ -786,7 +786,7 @@ public class Window extends Panel
      * @since 8.3
      */
     @FunctionalInterface
-    public interface PreCloseListener {
+    public interface PreCloseListener extends Serializable {
         public static final Method beforeWindowCloseMethod = ReflectTools
                 .findMethod(PreCloseListener.class,
                         "beforeWindowClose", PreCloseEvent.class);
