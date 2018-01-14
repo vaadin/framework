@@ -16,25 +16,9 @@
 
 package com.vaadin.ui;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
+import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ConnectorEventListener;
-import com.vaadin.event.FieldEvents.BlurEvent;
-import com.vaadin.event.FieldEvents.BlurListener;
-import com.vaadin.event.FieldEvents.BlurNotifier;
-import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.event.FieldEvents.FocusNotifier;
+import com.vaadin.event.FieldEvents.*;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -54,6 +38,14 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.util.ReflectTools;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.*;
+
+import static com.vaadin.ui.Window.PreCloseListener.beforeWindowCloseMethod;
 
 /**
  * A component that represents a floating popup window that can be added to a
@@ -231,7 +223,7 @@ public class Window extends Panel
             // Closing
             final Boolean close = (Boolean) variables.get("close");
             if (close != null && close.booleanValue()) {
-                close();
+                closeFromClient();
             }
         }
 
@@ -246,6 +238,15 @@ public class Window extends Panel
             fireEvent(new BlurEvent(this));
         }
 
+    }
+
+    protected void closeFromClient() {
+        PreCloseEvent event = new PreCloseEvent(this);
+        fireEvent(event);
+
+        if (!event.isClosePrevented()) {
+            close();
+        }
     }
 
     /**
@@ -736,6 +737,84 @@ public class Window extends Panel
     }
 
     /**
+     * PreCloseEvent is fired whenever the user closes window using close
+     * button or triggers close shortcut. The event is not triggered on
+     * {@link UI#removeWindow(Window)} call.
+     *
+     * @since 8.3
+     */
+    public static class PreCloseEvent extends ConnectorEvent {
+        private boolean preventClose = false;
+
+        public PreCloseEvent(Window window) {
+            super(window);
+        }
+
+        @Override
+        public Window getConnector() {
+            return (Window) super.getConnector();
+        }
+
+        /**
+         * @return true if window close event should be canceled
+         */
+        public boolean isClosePrevented() {
+            return preventClose;
+        }
+
+        /**
+         * Pass true to prevent window close.
+         *
+         * @param preventClose true if window close should be canceled
+         */
+        public void setClosePrevented(boolean preventClose) {
+            this.preventClose = preventClose;
+        }
+    }
+
+    /**
+     * An interface used for listening to Window close events. Add the
+     * PreCloseListener to a window and
+     * {@link PreCloseListener#beforeWindowClose(PreCloseEvent)} will be called
+     * whenever the user closes the window using close button or close shortcut.
+     *
+     * <p>
+     * Implementation of the listener may cancel window close using
+     * {@link PreCloseEvent#setClosePrevented(boolean)} method call.
+     * </p>
+     *
+     * @since 8.3
+     */
+    @FunctionalInterface
+    public interface PreCloseListener {
+        public static final Method beforeWindowCloseMethod = ReflectTools
+                .findMethod(PreCloseListener.class,
+                        "beforeWindowClose", PreCloseEvent.class);
+
+        /**
+         * Called when the window is about to be removed from UI due to close
+         * attempt from client.
+         *
+         * @param event event
+         */
+        public void beforeWindowClose(PreCloseEvent event);
+    }
+
+    /**
+     * Adds a PreCloseListener to the window.
+     *
+     * For a window the PreCloseListener is fired when the user closes it (clicks
+     * on the close button or uses close shortcut).
+     *
+     * @param listener
+     *            the PreCloseListener to add, not null
+     * @since 8.3
+     */
+    public Registration addPreCloseListener(PreCloseListener listener) {
+        return addListener(PreCloseEvent.class, listener, beforeWindowCloseMethod);
+    }
+
+    /**
      * Used to keep the right order of windows if multiple windows are brought
      * to front in a single changeset. If this is not used, the order is quite
      * random (depends on the order getting to dirty list. e.g. which window got
@@ -1140,7 +1219,7 @@ public class Window extends Panel
         @Override
         public void handleAction(Object sender, Object target) {
             if (window.isClosable()) {
-                window.close();
+                window.closeFromClient();
             }
         }
 

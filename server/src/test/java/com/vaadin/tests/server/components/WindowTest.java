@@ -3,6 +3,7 @@ package com.vaadin.tests.server.components;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.ui.Window.*;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,10 +11,6 @@ import org.junit.Test;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.CloseEvent;
-import com.vaadin.ui.Window.CloseListener;
-import com.vaadin.ui.Window.ResizeEvent;
-import com.vaadin.ui.Window.ResizeListener;
 
 public class WindowTest {
 
@@ -51,6 +48,33 @@ public class WindowTest {
         // Ensure listener still has been called only once
         EasyMock.verify(cl);
 
+    }
+
+    @Test
+    public void testPreCloseListener() {
+        PreCloseListener pcl = EasyMock.createMock(PreCloseListener.class);
+
+        // Expectations
+        pcl.beforeWindowClose(EasyMock.isA(PreCloseEvent.class));
+
+        // Start actual test
+        EasyMock.replay(pcl);
+
+        // Add listener and send a close event -> should end up in listener once
+        Registration windowPreCloseListenerRegistration = window
+                .addPreCloseListener(pcl);
+        sendClose(window);
+
+        // Ensure listener was called once
+        EasyMock.verify(pcl);
+
+        // Remove the listener and send close event -> should not end up in
+        // listener
+        windowPreCloseListenerRegistration.remove();
+        sendClose(window);
+
+        // Ensure listener still has been called only once
+        EasyMock.verify(pcl);
     }
 
     @Test

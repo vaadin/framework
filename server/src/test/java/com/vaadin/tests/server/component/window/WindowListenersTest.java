@@ -1,17 +1,13 @@
 package com.vaadin.tests.server.component.window;
 
-import org.junit.Test;
-
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.tests.server.component.AbstractListenerMethodsTestBase;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.CloseEvent;
-import com.vaadin.ui.Window.CloseListener;
-import com.vaadin.ui.Window.ResizeEvent;
-import com.vaadin.ui.Window.ResizeListener;
+import com.vaadin.ui.Window.*;
+import org.junit.Test;
 
 public class WindowListenersTest extends AbstractListenerMethodsTestBase {
 
@@ -37,5 +33,11 @@ public class WindowListenersTest extends AbstractListenerMethodsTestBase {
     public void testCloseListenerAddGetRemove() throws Exception {
         testListenerAddGetRemove(Window.class, CloseEvent.class,
                 CloseListener.class);
+    }
+
+    @Test
+    public void testPreCloseListenerAddGetRemove() throws Exception {
+        testListenerAddGetRemove(Window.class, PreCloseEvent.class,
+                PreCloseListener.class);
     }
 }
