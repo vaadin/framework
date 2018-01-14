@@ -57,6 +57,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
@@ -582,8 +583,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 parent.getStylePrimaryName() + "-calendarpanel-prevmonth");
 
         // Set ID for reference from focused date
-        getFlexCellFormatter().getElement(0, 2)
-                .setId(getElement().getId() + "-calendarpanel-month");
+        AriaHelper.ensureHasId(getFlexCellFormatter().getElement(0, 2));
 
         setHTML(0, 2,
                 "<span class=\"" + parent.getStylePrimaryName()
