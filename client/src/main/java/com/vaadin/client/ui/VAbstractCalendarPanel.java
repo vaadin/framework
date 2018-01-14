@@ -1392,7 +1392,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             renderCalendar();
             return true;
 
-        } else if (keycode == getCloseKey() || keycode == KeyCodes.KEY_TAB) {
+        } else if (keycode == getCloseKey()) {
             onCancel();
 
             // TODO fire close event
