@@ -499,8 +499,10 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      *
      * @param needsMonth
      *            Should the month buttons be visible?
+     * @param needsBody
+     *            indicates whether the calendar body is drawn
      */
-    private void buildCalendarHeader(boolean needsMonth) {
+    private void buildCalendarHeader(boolean needsMonth, boolean needsBody) {
 
         getRowFormatter().addStyleName(0,
                 parent.getStylePrimaryName() + "-calendarpanel-header");
@@ -582,8 +584,15 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         getFlexCellFormatter().setStyleName(0, 1,
                 parent.getStylePrimaryName() + "-calendarpanel-prevmonth");
 
-        // Set ID for reference from focused date
-        AriaHelper.ensureHasId(getFlexCellFormatter().getElement(0, 2));
+        // Set ID to be referenced from focused date or calendar panel
+        Element monthYearElement = getFlexCellFormatter().getElement(0, 2);
+        AriaHelper.ensureHasId(monthYearElement);
+        if (!needsBody) {
+            Roles.getGridRole().setAriaLabelledbyProperty(getElement(),
+                    Id.of(monthYearElement));
+        } else {
+            Roles.getGridRole().removeAriaLabelledbyProperty(getElement());
+        }
 
         setHTML(0, 2,
                 "<span class=\"" + parent.getStylePrimaryName()
@@ -988,7 +997,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
         final boolean needsMonth = !isYear(getResolution());
         boolean needsBody = isBelowMonth(resolution);
-        buildCalendarHeader(needsMonth);
+        buildCalendarHeader(needsMonth, needsBody);
         clearCalendarBody(!needsBody);
         if (needsBody) {
             buildCalendarBody();
