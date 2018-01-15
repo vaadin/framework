@@ -169,6 +169,14 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     private boolean initialRenderDone = false;
 
+    private String prevMonthAssistiveLabel;
+
+    private String nextMonthAssistiveLabel;
+
+    private String prevYearAssistiveLabel;
+
+    private String nextYearAssistiveLabel;
+
     /**
      * Represents a click handler for when a user selects a value by using the
      * mouse
@@ -519,18 +527,13 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             setWidget(0, 3, nextMonth);
             setWidget(0, 1, prevMonth);
 
-            // TODO: 12/01/2018 API for changing label
             Roles.getButtonRole().set(prevMonth.getElement());
             Roles.getButtonRole()
                     .setTabindexExtraAttribute(prevMonth.getElement(), -1);
-            Roles.getButtonRole().setAriaLabelProperty(prevMonth.getElement(),
-                    "Previous month");
 
             Roles.getButtonRole().set(nextMonth.getElement());
             Roles.getButtonRole()
                     .setTabindexExtraAttribute(nextMonth.getElement(), -1);
-            Roles.getButtonRole()
-                    .setAriaLabelProperty(nextMonth.getElement(), "Next month");
         } else if (prevMonth != null && !needsMonth) {
             // Remove month traverse buttons
             remove(prevMonth);
@@ -552,21 +555,18 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             setWidget(0, 0, prevYear);
             setWidget(0, 4, nextYear);
 
-            // TODO: 12/01/2018 API for changing label
             Roles.getButtonRole().set(prevYear.getElement());
             Roles.getButtonRole()
                     .setTabindexExtraAttribute(prevYear.getElement(), -1);
-            Roles.getButtonRole().setAriaLabelProperty(prevYear.getElement(),
-                    "Previous year");
 
             Roles.getButtonRole().set(nextYear.getElement());
             Roles.getButtonRole()
                     .setTabindexExtraAttribute(nextYear.getElement(), -1);
-            Roles.getButtonRole()
-                    .setAriaLabelProperty(nextYear.getElement(), "Next year");
         }
 
         updateControlButtonRangeStyles(needsMonth);
+
+        updateAssistiveLabels();
 
         final String monthName = needsMonth
                 ? getDateTimeService().getMonth(displayedMonth.getMonth())
@@ -2096,6 +2096,77 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 // update the element stylenames
                 renderCalendar();
             }
+        }
+    }
+
+    /**
+     * Set assistive label for the previous year element.
+     *
+     * @param label
+     *         the label to set
+     * @since
+     */
+    public void setAssistiveLabelPreviousYear(String label) {
+        prevYearAssistiveLabel = label;
+    }
+
+    /**
+     * Set assistive label for the next year element.
+     *
+     * @param label
+     *         the label to set
+     * @since
+     */
+    public void setAssistiveLabelNextYear(String label) {
+        nextYearAssistiveLabel = label;
+    }
+
+    /**
+     * Set assistive label for the previous month element.
+     *
+     * @param label
+     *         the label to set
+     * @since
+     */
+    public void setAssistiveLabelPreviousMonth(String label) {
+        prevMonthAssistiveLabel = label;
+    }
+
+    /**
+     * Set assistive label for the next month element.
+     *
+     * @param label
+     *         the label to set
+     * @since
+     */
+    public void setAssistiveLabelNextMonth(String label) {
+        nextMonthAssistiveLabel = label;
+    }
+
+    /**
+     * Updates assistive labels of the navigation elements.
+     *
+     * @since
+     */
+    public void updateAssistiveLabels() {
+        if (prevMonth != null) {
+            Roles.getButtonRole().setAriaLabelProperty(prevMonth.getElement(),
+                    prevMonthAssistiveLabel);
+        }
+
+        if (nextMonth != null) {
+            Roles.getButtonRole().setAriaLabelProperty(nextMonth.getElement(),
+                    nextMonthAssistiveLabel);
+        }
+
+        if (prevYear != null) {
+            Roles.getButtonRole().setAriaLabelProperty(prevYear.getElement(),
+                    prevYearAssistiveLabel);
+        }
+
+        if (nextYear != null) {
+            Roles.getButtonRole().setAriaLabelProperty(nextYear.getElement(),
+                    nextYearAssistiveLabel);
         }
     }
 
