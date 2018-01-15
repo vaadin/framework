@@ -98,16 +98,55 @@ public class GridColumnResizeModeTest extends GridBasicsTest {
         sleep(250);
 
         drag(handle, 100);
-        sleep(500);
         Assert.assertEquals(initialWidth + 100, cell.getSize().getWidth());
 
         drag(handle, -100);
-        sleep(500);
         Assert.assertEquals(initialWidth, cell.getSize().getWidth());
+    }
+
+    @Test
+    public void testResizeReportedWidth() {
+        GridElement grid = getGridElement();
+
+        selectMenuPath("Component", "Columns", "Add resize listener");
+        sleep(250);
+
+        List<WebElement> handles = grid
+                .findElements(By.className("v-grid-column-resize-handle"));
+        WebElement handle = handles.get(1);
+
+        GridCellElement cell = grid.getHeaderCell(0, 1);
+
+        // ANIMATED resize mode
+        drag(handle, 100);
+        assertTrue(getLogRow(0).contains(
+                "Column resized: caption=Column 1, width=" + cell.getSize()
+                        .getWidth()));
+
+        drag(handle, -100);
+        assertTrue(getLogRow(0).contains(
+                "Column resized: caption=Column 1, width=" + cell.getSize()
+                        .getWidth()));
+
+        // SIMPLE resize mode
+        selectMenuPath("Component", "Columns", "Simple resize mode");
+        sleep(250);
+
+        drag(handle, 100);
+        assertTrue(getLogRow(0).contains(
+                "Column resized: caption=Column 1, width=" + cell.getSize()
+                        .getWidth()));
+
+        drag(handle, -100);
+        assertTrue(getLogRow(0).contains(
+                "Column resized: caption=Column 1, width=" + cell.getSize()
+                        .getWidth()));
     }
 
     private void drag(WebElement handle, int xOffset) {
         new Actions(getDriver()).moveToElement(handle).clickAndHold()
-                .moveByOffset(xOffset, 0).release().perform();
+                .moveByOffset(20, 0).moveByOffset(xOffset - 20, 0).release()
+                .perform();
+        sleep(250);
     }
 }
