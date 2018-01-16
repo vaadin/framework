@@ -18,7 +18,6 @@ public class DateFieldAriaTest extends SingleBrowserTest {
 
         DateFieldElement dateField = $(DateFieldElement.class).first();
         dateField.openPopup();
-
         WebElement prevMonthButton = driver
                 .findElement(By.className("v-datefield-popup"))
                 .findElement(By.className("v-button-prevmonth"));
@@ -26,8 +25,14 @@ public class DateFieldAriaTest extends SingleBrowserTest {
         Assert.assertEquals("Previous month",
                 prevMonthButton.getAttribute("aria-label"));
 
+        dateField.openPopup();  // This actually closes the calendar popup
+
         ButtonElement changeLabelsButton = $(ButtonElement.class).first();
         changeLabelsButton.click();
+
+        dateField.openPopup();
+        prevMonthButton = driver.findElement(By.className("v-datefield-popup"))
+                .findElement(By.className("v-button-prevmonth"));
 
         Assert.assertEquals("Navigate to previous month",
                 prevMonthButton.getAttribute("aria-label"));
