@@ -46,6 +46,7 @@ public class RichTextAreaConnector extends AbstractFieldConnector
 
     @Override
     protected void init() {
+        getWidget().client = getConnection();
         getWidget().addBlurHandler(event -> flush());
         getWidget().addInputHandler(
                 () -> valueChangeHandler.scheduleValueChange());
