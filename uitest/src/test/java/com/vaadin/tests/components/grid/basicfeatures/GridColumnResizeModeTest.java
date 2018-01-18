@@ -109,7 +109,6 @@ public class GridColumnResizeModeTest extends GridBasicsTest {
         GridElement grid = getGridElement();
 
         selectMenuPath("Component", "Columns", "Add resize listener");
-        sleep(250);
 
         List<WebElement> handles = grid
                 .findElements(By.className("v-grid-column-resize-handle"));
