@@ -23,9 +23,11 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
@@ -235,4 +237,21 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
                 .remove(selectionChanged);
     }
 
+    /**
+     * Set focus to the first check box.
+     */
+    @Override
+    public void focus() {
+        // If focus is set on creation, need to wait until options are populated
+        Scheduler.get().scheduleDeferred(new Command() {
+            @Override
+            public void execute() {
+                // focus on first item (if found)
+                if (getWidget().getWidgetCount() > 0) {
+                    VCheckBox cb = (VCheckBox) getWidget().getWidget(0);
+                    cb.setFocus(true);
+                }
+            }
+        });
+    }
 }
