@@ -4734,4 +4734,27 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (getEditor().isOpen() && !enabled) {
+            getEditor().cancel();
+        }
+        super.setEnabled(enabled);
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        if (getEditor().isOpen() && !visible) {
+            getEditor().cancel();
+        }
+        super.setVisible(visible);
+    }
+
+    @Override
+    public void detach() {
+        if (getEditor().isOpen()) {
+            getEditor().cancel();
+        }
+        super.detach();
+    }
 }
