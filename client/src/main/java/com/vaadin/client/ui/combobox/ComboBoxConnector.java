@@ -35,6 +35,7 @@ import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.combobox.ComboBoxClientRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxState;
@@ -55,10 +56,27 @@ public class ComboBoxConnector extends AbstractListingConnector
 
     private Registration dataChangeHandlerRegistration;
 
+    /**
+     * new item value that has been sent to server but selection handling hasn't
+     * been performed for it yet
+     */
+    private String pendingNewItemValue = null;
+
     @Override
     protected void init() {
         super.init();
         getWidget().connector = this;
+        registerRpc(ComboBoxClientRpc.class, new ComboBoxClientRpc() {
+            @Override
+            public void newItemNotAdded(String itemValue) {
+                if (itemValue != null && itemValue.equals(pendingNewItemValue)
+                        && isNewItemStillPending()) {
+                    // handled but not added, perform (de-)selection handling
+                    // immediately
+                    completeNewItemHandling();
+                }
+            }
+        });
     }
 
     @Override
@@ -158,6 +176,11 @@ public class ComboBoxConnector extends AbstractListingConnector
      *            user entered string value for the new item
      */
     public void sendNewItem(String itemValue) {
+        if (itemValue != null && !itemValue.equals(pendingNewItemValue)) {
+            // clear any previous handling as outdated
+            clearNewItemHandling();
+        }
+        pendingNewItemValue = itemValue;
         rpc.createNewItem(itemValue);
         getDataReceivedHandler().clearPendingNavigation();
     }
@@ -178,6 +201,19 @@ public class ComboBoxConnector extends AbstractListingConnector
 
             rpc.setFilter(filter);
         }
+    }
+
+    /**
+     * Confirm with the widget that the pending new item value is still pending.
+     *
+     * This method is for internal use only and may be removed in future
+     * versions.
+     *
+     * @return {@code true} if the value is still pending, {@code false} if
+     *         there is no pending value or it doesn't match
+     */
+    private boolean isNewItemStillPending() {
+        return getDataReceivedHandler().isPending(pendingNewItemValue);
     }
 
     /**
@@ -374,6 +410,58 @@ public class ComboBoxConnector extends AbstractListingConnector
             }
         } else if (getWidget().currentPage < 0) {
             getWidget().currentPage = 0;
+        }
+    }
+
+    /**
+     * If previous calls to refreshData haven't sorted out the selection yet,
+     * enforce it.
+     *
+     * This method is for internal use only and may be removed in future
+     * versions.
+     */
+    private void completeNewItemHandling() {
+        // ensure the widget hasn't got a new selection in the meantime
+        if (isNewItemStillPending()) {
+            // mark new item for selection handling on the widget
+            getWidget().suggestionPopup.menu
+                    .markNewItemsHandled(pendingNewItemValue);
+            // clear pending value
+            pendingNewItemValue = null;
+            // trigger the final selection handling
+            refreshData();
+        } else {
+            clearNewItemHandling();
+        }
+    }
+
+    /**
+     * Clears the pending new item value if the widget's pending value no longer
+     * matches.
+     *
+     * This method is for internal use only and may be removed in future
+     * versions.
+     */
+    private void clearNewItemHandling() {
+        // never clear pending value before it has been handled
+        if (!isNewItemStillPending()) {
+            pendingNewItemValue = null;
+        }
+    }
+
+    /**
+     * Clears the new item handling variables if the given value matches the
+     * pending value.
+     *
+     * This method is for internal use only and may be removed in future
+     * versions.
+     *
+     * @param value
+     *            already handled value
+     */
+    public void clearNewItemHandlingIfMatch(String value) {
+        if (value != null && value.equals(pendingNewItemValue)) {
+            pendingNewItemValue = null;
         }
     }
 
