@@ -20,6 +20,8 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 @Widgetset("com.vaadin.DefaultWidgetSet")
@@ -53,6 +55,26 @@ public class ModalWindowFocus extends AbstractReindeerTestUI {
                 addWindow(w3);
             });
         });
+        Button button2 = new Button(
+                "Open unclosable and unresizable modal window");
+        addComponent(button2);
+        button2.setId("modalWindowButton");
+        button2.addClickListener(event -> {
+            Window modalWindow = new Window("Modal window");
+            modalWindow.setModal(true);
+            modalWindow.setClosable(false);
+            modalWindow.setResizable(false);
+            VerticalLayout vl = new VerticalLayout();
+            TextField tf = new TextField("Textfield");
+            tf.setId("focusfield");
+            tf.addFocusListener(e -> tf.setValue("this has been focused"));
+            TextField tf2 = new TextField("Another Textfield");
+            tf2.focus();
+            vl.addComponents(tf, tf2);
+            modalWindow.setContent(vl);
+            addWindow(modalWindow);
+        });
+
     }
 
     @Override
