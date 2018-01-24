@@ -16,23 +16,10 @@
 
 package com.vaadin.ui;
 
-import com.vaadin.event.Action;
-import com.vaadin.event.ActionManager;
-import com.vaadin.event.MouseEvents;
-import com.vaadin.server.PaintException;
-import com.vaadin.server.PaintTarget;
-import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.windowdesktop.WindowDesktopState;
-import com.vaadin.ui.declarative.DesignContext;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.jsoup.nodes.Element;
 
 /**
  * A component that represente a Desktop in where a SubWindow 
@@ -40,12 +27,13 @@ import org.jsoup.nodes.Element;
  * 
  * @author Marcelo D. RE {@literal <marcelo.re@gmail.com>}
  */
-public class WindowDesktop extends Panel {
+public class WindowDesktop extends Composite {
     /**
      * List of windows in this UI.
      */
     private final LinkedHashSet<Window> windows = new LinkedHashSet<>();
 
+    private Panel desktopPanel = new Panel();
     private CssLayout layout = new CssLayout();
     
     /**
@@ -54,45 +42,11 @@ public class WindowDesktop extends Panel {
     public WindowDesktop() {
         this.init();
     }
-
-    /**
-     * Creates a new, empty desktop with the given content and title.
-     *
-     * @param content
-     *            the contents of the desktop
-     */
-    public WindowDesktop(Component content) {
-        super(content);
-        this.init();
-    }
-
-    /**
-     * Creates a new, empty desktop with the given title.
-     *
-     * @param caption
-     *            the title of the window.
-     */
-    public WindowDesktop(String caption) {
-        super(caption);
-        this.init();
-    }
-
-    /**
-     * Creates a new, empty desktop with the given content and title.
-     *
-     * @param caption
-     *            the title of the desktop.
-     * @param content
-     *            the contents of the desktop
-     */
-    public WindowDesktop(String caption, Component content) {
-        super(caption, content);
-        this.init();
-    }
     
     private void init() {
         layout.setSizeFull();
-        this.setContent(layout);
+        desktopPanel.setContent(layout);
+        this.setCompositionRoot(desktopPanel);
     }
     
     /**
@@ -122,7 +76,7 @@ public class WindowDesktop extends Panel {
         markAsDirty();
         window.fireClose();
         this.layout.removeComponent(window);
-        fireComponentDetachEvent(window);
+        desktopPanel.fireComponentDetachEvent(window);
 //        fireWindowOrder(Collections.singletonMap(-1, window));
         return true;
     }
