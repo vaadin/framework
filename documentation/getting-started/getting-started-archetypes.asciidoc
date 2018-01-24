@@ -27,3 +27,5 @@ It has two modules: one for the add-on and another for a demo application.
 
 `vaadin-archetype-liferay-portlet`::
 A portlet development setup for the open-source Liferay portal.
+
+All archetype versions follow the framework version numbers (like `8.2.1`) and use the groupId `com.vaadin`.
