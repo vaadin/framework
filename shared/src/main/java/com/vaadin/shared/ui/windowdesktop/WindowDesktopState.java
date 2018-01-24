@@ -16,7 +16,7 @@
 
 package com.vaadin.shared.ui.windowdesktop;
 
-import com.vaadin.shared.ui.panel.PanelState;
+import com.vaadin.shared.ui.composite.CompositeState;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,9 +24,5 @@ import java.util.logging.Logger;
  *
  * @author Marcelo D. Ré {@literal <marcelo.re@gmail.com>}
  */
-public class WindowDesktopState extends PanelState {
-    private final static Logger LOGGER = Logger.getLogger(WindowDesktopState.class .getName());
-    static {
-        LOGGER.setLevel(Level.INFO);
-    }
+public class WindowDesktopState extends CompositeState {
 }
