@@ -2,7 +2,10 @@ package com.vaadin.tests.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+
+import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
@@ -21,12 +24,14 @@ public class DataProviderRefreshTest extends SingleBrowserTest {
         // Select item before replace
         $(ButtonElement.class).caption("Select old").first().click();
         assertTrue("Row should be selected", grid.getRow(0).isSelected());
+        assertThat(getLogRow(0), containsString("{ Foo, 10 }"));
 
         $(ButtonElement.class).caption("Replace item").first().click();
         assertTrue("Row should still be selected after item replace",
                 grid.getRow(0).isSelected());
         assertEquals("Grid content was not updated.", "{ Bar, 10 }",
                 grid.getCell(0, 0).getText());
+        assertThat(getLogRow(0), containsString("{ Bar, 10 }"));
 
         // Deselect row
         grid.getCell(0, 0).click();
