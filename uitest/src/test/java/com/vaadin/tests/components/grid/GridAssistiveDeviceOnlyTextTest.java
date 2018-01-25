@@ -31,13 +31,13 @@ public class GridAssistiveDeviceOnlyTextTest extends SingleBrowserTest {
     public void checkAssistiveDeviceOnlyText() {
         openTestURL();
 
-        GridElement.GridCellElement selectAllCell = $(GridElement.class).first()
+        GridElement.GridCellElement selectAllCell = $(GridElement.class).id("first")
                 .getHeaderCell(0, 0);
 
         Assert.assertTrue("The select all label should be empty.",
                 selectAllCell.findElement(By.cssSelector("label")).getText().isEmpty());
 
-        selectAllCell = $(GridElement.class).last().getHeaderCell(0, 0);
+        selectAllCell = $(GridElement.class).id("second").getHeaderCell(0, 0);
 
         Assert.assertEquals("The select all label should contain the given string.",
                 "Selects all rows of the table.",

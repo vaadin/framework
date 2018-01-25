@@ -30,20 +30,22 @@ public class GridAssistiveDeviceOnlyText extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid<String> grid = new Grid<>();
-        grid.addColumn(ValueProvider.identity());
-        grid.setItems("a", "b");
+        Grid<String> first = new Grid<>();
+        first.setId("first");
+        first.addColumn(ValueProvider.identity());
+        first.setItems("a", "b");
         // grid.setAssistiveDeviceOnlyText(false); // default
-        grid.setSelectionMode(SelectionMode.MULTI);
+        first.setSelectionMode(SelectionMode.MULTI);
 
-        addComponent(grid);
+        addComponent(first);
 
-        grid = new Grid<>();
-        grid.addColumn(ValueProvider.identity());
-        grid.setItems("a", "b");
-        grid.setAssistiveDeviceOnlyText(true);
-        grid.setSelectionMode(SelectionMode.MULTI);
+        Grid<String> second = new Grid<>();
+        second.setId("second");
+        second.addColumn(ValueProvider.identity());
+        second.setItems("a", "b");
+        second.setAssistiveDeviceOnlyText(true);
+        second.setSelectionMode(SelectionMode.MULTI);
 
-        addComponent(grid);
+        addComponent(second);
     }
 }
