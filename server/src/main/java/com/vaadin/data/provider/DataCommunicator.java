@@ -91,8 +91,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * that are not in the given collection will be cleaned up and
      * {@link DataGenerator#destroyData(Object)} will be called for them.
      */
-    protected class ActiveDataHandler
-            implements DataGenerator<T> {
+    protected class ActiveDataHandler implements DataGenerator<T> {
 
         /**
          * Set of key strings for currently active data objects
@@ -754,16 +753,14 @@ public class DataCommunicator<T> extends AbstractExtension {
     private void attachDataProviderListener() {
         dataProviderUpdateRegistration = getDataProvider()
                 .addDataProviderListener(event -> {
-                    getUI().access(() -> {
-                        if (event instanceof DataRefreshEvent) {
-                            T item = ((DataRefreshEvent<T>) event).getItem();
-                            getKeyMapper().refresh(item);
-                            generators.forEach(g -> g.refreshData(item));
-                            refresh(item);
-                        } else {
-                            hardReset();
-                        }
-                    });
+                    if (event instanceof DataRefreshEvent) {
+                        T item = ((DataRefreshEvent<T>) event).getItem();
+                        getKeyMapper().refresh(item);
+                        generators.forEach(g -> g.refreshData(item));
+                        getUI().access(() -> refresh(item));
+                    } else {
+                        getUI().access(this::hardReset);
+                    }
                 });
     }
 
