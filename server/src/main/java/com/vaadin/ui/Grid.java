@@ -3320,6 +3320,31 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         return descriptionGenerator;
     }
 
+    /**
+     * Returns whether assistive device only text was added. Default value is
+     * <code>false</code>.
+     *
+     * @return true if assistive device only text is used
+     * @since
+     */
+    public boolean isAssistiveDeviceOnlyText() {
+        return getState(false).assistiveDeviceOnlyText;
+}
+
+    /**
+     * Sets whether or not assistive device only text should be added.
+     * Default value is <code>false</code>.
+     *
+     * @param assistiveDeviceOnlyText
+     *            specifies whether assitive device only text should be added
+     * @since
+     */
+    public void setAssistiveDeviceOnlyText(boolean assistiveDeviceOnlyText) {
+        if (isAssistiveDeviceOnlyText() != assistiveDeviceOnlyText) {
+            getState().assistiveDeviceOnlyText = assistiveDeviceOnlyText;
+        }
+    }
+
     //
     // HEADER AND FOOTER
     //

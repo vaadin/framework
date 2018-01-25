@@ -181,4 +181,12 @@ public class GridState extends AbstractSingleSelectState {
      * @since 8.2
      */
     public ContentMode rowDescriptionContentMode;
+
+    /** Whether the the multiselect checkboxes should have assistive device
+     * only text.
+     *
+     * @since
+     */
+    @DelegateToWidget
+    public boolean assistiveDeviceOnlyText;
 }

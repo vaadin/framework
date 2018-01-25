@@ -2939,15 +2939,18 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 selectAllCheckBox = GWT.create(CheckBox.class);
                 selectAllCheckBox.setStylePrimaryName(
                         getStylePrimaryName() + SELECT_ALL_CHECKBOX_CLASSNAME);
-                // label of checkbox should only be visible for assistive
-                // devices
-                selectAllCheckBox.addStyleName("v-assistive-device-only-label");
+
+                if (isAssistiveDeviceOnlyText()) {
+                    // label of checkbox should only be visible for assistive devices
+                    selectAllCheckBox.addStyleName("v-assistive-device-only-label");
+                    selectAllCheckBox.setText("Selects all rows of the table.");
+                }
+
                 selectAllCheckBox.addValueChangeHandler(event -> {
                     selected = event.getValue();
                     fireEvent(new SelectAllEvent<>(getSelectionModel(),
                             selected));
                 });
-                selectAllCheckBox.setText("Selects all rows of the table.");
                 selectAllCheckBox.setValue(selected);
 
                 addHeaderClickHandler(this::onHeaderClickEvent);
@@ -4222,6 +4225,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     private final Set<Integer> reattachVisibleDetails = new HashSet<>();
 
     private boolean columnReorderingAllowed;
+
+    private boolean assistiveDeviceOnlyText;
 
     private ColumnHider columnHider = new ColumnHider();
 
@@ -8644,6 +8649,29 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      */
     public void setColumnReorderingAllowed(boolean columnReorderingAllowed) {
         this.columnReorderingAllowed = columnReorderingAllowed;
+    }
+
+    /**
+     * Returns whether assistive device only text should be shown. Default value is
+     * <code>false</code>.
+     *
+     * @return true if assistive device only text should be added
+     * @since
+     */
+    public boolean isAssistiveDeviceOnlyText() {
+        return assistiveDeviceOnlyText;
+    }
+
+    /**
+     * Sets whether or not assistive device only text should be added.
+     * Default value is <code>false</code>.
+     *
+     * @param assistiveDeviceOnlyText
+     *            specifies whether assitive device only text should be added
+     * @since
+     */
+    public void setAssistiveDeviceOnlyText(boolean assistiveDeviceOnlyText) {
+        this.assistiveDeviceOnlyText = assistiveDeviceOnlyText;
     }
 
     /**
