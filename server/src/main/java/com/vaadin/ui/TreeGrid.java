@@ -352,12 +352,17 @@ public class TreeGrid<T> extends Grid<T>
      * descendant, meaning that {@code expandRecursively(items, 0)} expands only
      * the given items while {@code expandRecursively(items, 2)} expands the
      * given items as well as their children and grandchildren.
+     * <p>
+     * The execution of this method may be slow with large data set or large
+     * {@code depth}.
+     * <p>
+     * This method will <i>not</i> fire events for expanded nodes.
      *
      * @param items
      *            the items to expand recursively
      * @param depth
      *            the maximum depth of recursion
-     * @since
+     * @since 8.4
      */
     public void expandRecursively(Collection<T> items, int depth) {
         expandRecursively(items.stream(), depth);
@@ -371,12 +376,17 @@ public class TreeGrid<T> extends Grid<T>
      * descendant, meaning that {@code expandRecursively(items, 0)} expands only
      * the given items while {@code expandRecursively(items, 2)} expands the
      * given items as well as their children and grandchildren.
+     * <p>
+     * The execution of this method may be slow with large data set or large
+     * {@code depth}.
+     * <p>
+     * This method will <i>not</i> fire events for expanded nodes.
      *
      * @param items
      *            the items to expand recursively
      * @param depth
      *            the maximum depth of recursion
-     * @since
+     * @since 8.4
      */
     public void expandRecursively(Stream<T> items, int depth) {
         if (depth < 0) {
@@ -436,12 +446,17 @@ public class TreeGrid<T> extends Grid<T>
      * descendant, meaning that {@code collapseRecursively(items, 0)} collapses
      * only the given items while {@code collapseRecursively(items, 2)}
      * collapses the given items as well as their children and grandchildren.
+     * <p>
+     * The execution of this method may be slow with large data set or large
+     * {@code depth}.
+     * <p>
+     * This method will <i>not</i> fire events for collapsed nodes.
      *
      * @param items
-     *            the items to expand recursively
+     *            the items to collapse recursively
      * @param depth
      *            the maximum depth of recursion
-     * @since
+     * @since 8.4
      */
     public void collapseRecursively(Collection<T> items, int depth) {
         collapseRecursively(items.stream(), depth);
@@ -455,12 +470,17 @@ public class TreeGrid<T> extends Grid<T>
      * descendant, meaning that {@code collapseRecursively(items, 0)} collapses
      * only the given items while {@code collapseRecursively(items, 2)}
      * collapses the given items as well as their children and grandchildren.
+     * <p>
+     * The execution of this method may be slow with large data set or large
+     * {@code depth}.
+     * <p>
+     * This method will <i>not</i> fire events for collapsed nodes.
      *
      * @param items
-     *            the items to expand recursively
+     *            the items to collapse recursively
      * @param depth
      *            the maximum depth of recursion
-     * @since
+     * @since 8.4
      */
     public void collapseRecursively(Stream<T> items, int depth) {
         if (depth < 0) {
