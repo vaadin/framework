@@ -7164,7 +7164,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         int size = dataSource.size();
         if (size > 0) {
-            getLogger().warning("Setting size from DataSource: " + size);
             escalator.getBody().insertRows(0, size);
         }
     }
