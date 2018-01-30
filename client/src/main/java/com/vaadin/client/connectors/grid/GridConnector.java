@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.google.gwt.core.client.Scheduler;
@@ -231,14 +232,12 @@ public class GridConnector extends AbstractListingConnector
 
             @Override
             public void scrollToStart() {
-                Scheduler.get()
-                        .scheduleFinally(() -> grid.scrollToStart());
+                Scheduler.get().scheduleFinally(() -> grid.scrollToStart());
             }
 
             @Override
             public void scrollToEnd() {
-                Scheduler.get()
-                        .scheduleFinally(() -> grid.scrollToEnd());
+                Scheduler.get().scheduleFinally(() -> grid.scrollToEnd());
                 addDetailsRefreshCallback(() -> {
                     if (rowHasDetails(grid.getDataSource().size() - 1)) {
                         grid.scrollToEnd();
@@ -256,7 +255,8 @@ public class GridConnector extends AbstractListingConnector
         grid.setRowStyleGenerator(rowRef -> {
             JsonObject json = rowRef.getRow();
             return json.hasKey(GridState.JSONKEY_ROWSTYLE)
-                    ? json.getString(GridState.JSONKEY_ROWSTYLE) : null;
+                    ? json.getString(GridState.JSONKEY_ROWSTYLE)
+                    : null;
         });
         grid.setCellStyleGenerator(cellRef -> {
             JsonObject row = cellRef.getRow();
@@ -312,13 +312,10 @@ public class GridConnector extends AbstractListingConnector
         layout();
     }
 
-    @SuppressWarnings("unchecked")
     @OnStateChange("columnOrder")
     void updateColumnOrder() {
-        Scheduler.get()
-                .scheduleFinally(() -> getWidget().setColumnOrder(
-                        getState().columnOrder.stream().map(this::getColumn)
-                                .toArray(size -> new Column[size])));
+        getWidget().setColumnOrder(getState().columnOrder.stream()
+                .map(this::getColumn).toArray(size -> new CustomColumn[size]));
     }
 
     @OnStateChange("columnResizeMode")
@@ -500,9 +497,25 @@ public class GridConnector extends AbstractListingConnector
     public void addColumn(CustomColumn column, String id) {
         assert !columnToIdMap.containsKey(column) && !columnToIdMap
                 .containsValue(id) : "Column with given id already exists.";
-        getWidget().addColumn(column);
         columnToIdMap.put(column, id);
         idToColumn.put(id, column);
+
+        if (columnToIdMap.size() == getState().columnOrder.size()) {
+            // Only add columns when all have been registered.
+            addAllColumns();
+        }
+    }
+
+    /**
+     * Updates the widgets columns to match the map in this connector.
+     */
+    protected void addAllColumns() {
+        List<Column<?, JsonObject>> currentColumn = getWidget().getColumns();
+
+        // Adds all missing columns
+        getWidget().addColumns(columnToIdMap.keySet().stream()
+                .filter(col -> !currentColumn.contains(col))
+                .toArray(size -> new CustomColumn[size]));
     }
 
     /**
@@ -634,7 +647,8 @@ public class GridConnector extends AbstractListingConnector
                     if (cellDescriptions != null
                             && cellDescriptions.hasKey(id)) {
                         return new TooltipInfo(cellDescriptions.getString(id),
-                                ((CustomColumn) column).getTooltipContentMode());
+                                ((CustomColumn) column)
+                                        .getTooltipContentMode());
                     } else if (row.hasKey(GridState.JSONKEY_ROWDESCRIPTION)) {
                         return new TooltipInfo(
                                 row.getString(GridState.JSONKEY_ROWDESCRIPTION),

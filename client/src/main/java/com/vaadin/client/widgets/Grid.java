@@ -5494,7 +5494,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * @see Grid#isEditorActive()
          */
         public Column<C, T> setEditable(boolean editable) {
-            if (editable != this.editable && grid.isEditorActive()) {
+            if (editable != this.editable && grid != null
+                    && grid.isEditorActive()) {
                 throw new IllegalStateException(
                         "Cannot change column editable status while the editor is active");
             }
@@ -6524,10 +6525,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *            the columns to add
      */
     public void addColumns(Column<?, T>... columns) {
-        int count = getColumnCount();
-        for (Column<?, T> column : columns) {
-            addColumn(column, count++);
-        }
+        addColumnsSkipSelectionColumnCheck(Arrays.asList(columns),
+                getVisibleColumns().size());
     }
 
     /**
@@ -6564,45 +6563,42 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     + "before the selection column");
         }
 
-        addColumnSkipSelectionColumnCheck(column, index);
+        addColumnsSkipSelectionColumnCheck(Collections.singleton(column),
+                index);
         return column;
     }
 
-    private void addColumnSkipSelectionColumnCheck(Column<?, T> column,
-            int index) {
-        // Register column with grid
-        columns.add(index, column);
+    private void addColumnsSkipSelectionColumnCheck(
+            Collection<Column<?, T>> columnsToAdd, int startIndex) {
+        columnsToAdd.forEach(col -> {
+            // Register column with grid
+            columns.add(col);
 
-        header.addColumn(column);
-        footer.addColumn(column);
+            header.addColumn(col);
+            footer.addColumn(col);
 
-        // Register this grid instance with the column
-        ((Column<?, T>) column).setGrid(this);
+            // Register this grid instance with the column
+            col.setGrid(this);
+        });
 
-        // Grid knows about hidden columns, Escalator only knows about what is
-        // visible so column indexes do not match
-        if (!column.isHidden()) {
-            int escalatorIndex = index;
-            for (int existingColumn = 0; existingColumn < index; existingColumn++) {
-                if (getColumn(existingColumn).isHidden()) {
-                    escalatorIndex--;
-                }
+        escalator.getColumnConfiguration().insertColumns(startIndex,
+                (int) columnsToAdd.stream().filter(col -> !col.isHidden())
+                        .count());
+
+        columnsToAdd.forEach(col -> {
+            // Reapply column width
+            col.reapplyWidth();
+
+            // Sink all renderer events
+            Set<String> events = new HashSet<>();
+            events.addAll(getConsumedEventsForRenderer(col.getRenderer()));
+
+            if (col.isHidable()) {
+                columnHider.updateColumnHidable(col);
             }
-            escalator.getColumnConfiguration().insertColumns(escalatorIndex, 1);
-        }
 
-        // Reapply column width
-        column.reapplyWidth();
-
-        // Sink all renderer events
-        Set<String> events = new HashSet<>();
-        events.addAll(getConsumedEventsForRenderer(column.getRenderer()));
-
-        if (column.isHidable()) {
-            columnHider.updateColumnHidable(column);
-        }
-
-        sinkEvents(events);
+            sinkEvents(events);
+        });
     }
 
     private void sinkEvents(Collection<String> events) {
@@ -7167,12 +7163,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         assert escalator.getBody().getRowCount() == 0;
 
         int size = dataSource.size();
-        if (size == -1 && isAttached()) {
-            // Exact size is not yet known, start with some reasonable guess
-            // just to get an initial backend request going
-            size = getEscalator().getMaxVisibleRowCount();
-        }
         if (size > 0) {
+            getLogger().warning("Setting size from DataSource: " + size);
             escalator.getBody().insertRows(0, size);
         }
     }
@@ -8021,7 +8013,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             cellFocusHandler.offsetRangeBy(1);
             selectionColumn = new SelectionColumn(selectColumnRenderer);
 
-            addColumnSkipSelectionColumnCheck(selectionColumn, 0);
+            addColumnsSkipSelectionColumnCheck(
+                    Collections.singleton(selectionColumn), 0);
 
             selectionColumn.initDone();
         } else {
