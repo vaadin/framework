@@ -50,6 +50,7 @@ import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializableToIntFunction;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
+import com.vaadin.shared.ui.combobox.ComboBoxClientRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxState;
@@ -105,6 +106,16 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     /**
      * Handler that adds a new item based on user input when the new items
      * allowed mode is active.
+     * <p>
+     * NOTE 1: If the new item is rejected the client must be notified of the
+     * fact via ComboBoxClientRpc or selection handling won't complete.
+     * </p>
+     * <p>
+     * NOTE 2: Selection handling must be completed separately if filtering the
+     * data source with the same value won't include the new item in the initial
+     * list of suggestions. Failing to do so will lead to selection handling
+     * never completing and previous selection remaining on the server.
+     * </p>
      *
      * @since 8.0
      */
@@ -154,9 +165,15 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         @Override
         public void createNewItem(String itemValue) {
             // New option entered
-            if (getNewItemHandler() != null && itemValue != null
-                    && !itemValue.isEmpty()) {
-                getNewItemHandler().accept(itemValue);
+            if (itemValue != null && !itemValue.isEmpty()) {
+                if (getNewItemHandler() != null) {
+                    getNewItemHandler().accept(itemValue);
+                } else {
+                    // selection handling is needed at the client even if
+                    // NewItemHandler is missing
+                    getRpcProxy(ComboBoxClientRpc.class)
+                            .newItemNotAdded(itemValue);
+                }
             }
         }
 
