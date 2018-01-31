@@ -228,11 +228,19 @@ public class VGridLayout extends ComplexPanel {
     }
 
     private int calcRowUsedSpace() {
-        int usedSpace = minRowHeights[0];
+        int usedSpace = 0;
         int verticalSpacing = getVerticalSpacing();
-        for (int i = 1; i < minRowHeights.length; i++) {
+        boolean visibleFound = false;
+        for (int i = 0; i < minRowHeights.length; i++) {
             if (minRowHeights[i] > 0 || !hiddenEmptyRow(i)) {
-                usedSpace += verticalSpacing + minRowHeights[i];
+                if (visibleFound) {
+                    // only include spacing if there already is a visible row
+                    // before this one
+                    usedSpace += verticalSpacing + minRowHeights[i];
+                } else {
+                    usedSpace += minRowHeights[i];
+                    visibleFound = true;
+                }
             }
         }
         return usedSpace;
@@ -289,11 +297,20 @@ public class VGridLayout extends ComplexPanel {
      * Calculates column used space
      */
     private int calcColumnUsedSpace() {
-        int usedSpace = minColumnWidths[0];
+        int usedSpace = 0;
         int horizontalSpacing = getHorizontalSpacing();
-        for (int i = 1; i < minColumnWidths.length; i++) {
+        boolean visibleFound = false;
+        for (int i = 0; i < minColumnWidths.length; i++) {
             if (minColumnWidths[i] > 0 || !hiddenEmptyColumn(i)) {
                 usedSpace += horizontalSpacing + minColumnWidths[i];
+                if (visibleFound) {
+                    // only include spacing if there already is a visible column
+                    // before this one
+                    usedSpace += horizontalSpacing + minColumnWidths[i];
+                } else {
+                    usedSpace += minColumnWidths[i];
+                    visibleFound = true;
+                }
             }
         }
         return usedSpace;
