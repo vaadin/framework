@@ -26,6 +26,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -43,8 +44,8 @@ public class ModalWindowFocusTest extends MultiBrowserTest {
     }
 
     /**
-     * First scenario: press button -> two windows appear, press Esc two times
-     * -> all windows should be closed
+     * First scenario: press first button -> two windows appear, press Esc two
+     * times -> all windows should be closed
      */
     @Test
     public void testModalWindowFocusTwoWindows() throws IOException {
@@ -57,17 +58,17 @@ public class ModalWindowFocusTest extends MultiBrowserTest {
         assertTrue("Second window should be opened",
                 findElements(By.id("windowButton")).size() == 1);
 
-        pressEscAndWait();
-        pressEscAndWait();
+        pressKeyAndWait(Keys.ESCAPE);
+        pressKeyAndWait(Keys.ESCAPE);
         assertTrue("All windows should be closed",
                 findElements(By.className("v-window")).size() == 0);
 
     }
 
     /**
-     * Second scenario: press button -> two windows appear, press button in the
-     * 2nd window -> 3rd window appears on top, press Esc three times -> all
-     * windows should be closed
+     * Second scenario: press first button -> two windows appear, press button
+     * in the 2nd window -> 3rd window appears on top, press Esc three times ->
+     * all windows should be closed
      */
     @Test
     public void testModalWindowFocusPressButtonInWindow() throws IOException {
@@ -84,12 +85,35 @@ public class ModalWindowFocusTest extends MultiBrowserTest {
         assertTrue("Third window should be opened",
                 findElements(By.id("window3")).size() == 1);
 
-        pressEscAndWait();
-        pressEscAndWait();
-        pressEscAndWait();
+        pressKeyAndWait(Keys.ESCAPE);
+        pressKeyAndWait(Keys.ESCAPE);
+        pressKeyAndWait(Keys.ESCAPE);
         assertTrue("All windows should be closed",
                 findElements(By.className("v-window")).size() == 0);
 
+    }
+
+    /**
+     * Third scenario: press second button -> a modal unclosable and
+     * unresizeable window with two text fields opens -> second text field is
+     * automatically focused -> press tab -> the focus rolls around to the top
+     * of the modal window -> the first text field is focused and shows a text
+     */
+    @Test
+    public void testModalWindowWithoutButtonsFocusHandling() {
+        waitForElementPresent(By.id("modalWindowButton"));
+        WebElement button = findElement(By.id("modalWindowButton"));
+        button.click();
+        waitForElementPresent(By.id("focusfield"));
+        pressKeyAndWait(Keys.TAB);
+        TextFieldElement tfe = $(TextFieldElement.class).id("focusfield");
+        assertTrue("First TextField should have received focus",
+                "this has been focused".equals(tfe.getValue()));
+    }
+
+    private void pressKeyAndWait(Keys key) {
+        new Actions(driver).sendKeys(key).build().perform();
+        sleep(100);
     }
 
     @Test
@@ -105,11 +129,6 @@ public class ModalWindowFocusTest extends MultiBrowserTest {
         String role = windowElement.getAttribute("role");
         assertEquals("dialog", role);
 
-    }
-
-    private void pressEscAndWait() {
-        new Actions(driver).sendKeys(Keys.ESCAPE).build().perform();
-        sleep(100);
     }
 
 }
