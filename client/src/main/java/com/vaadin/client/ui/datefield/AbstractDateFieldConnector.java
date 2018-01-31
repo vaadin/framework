@@ -24,11 +24,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.vaadin.client.LocaleNotLoadedException;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
+import com.vaadin.client.ui.VAbstractCalendarPanel;
+import com.vaadin.client.ui.VAbstractPopupCalendar;
 import com.vaadin.client.ui.VDateField;
 import com.vaadin.shared.ui.datefield.AbstractDateFieldServerRpc;
 import com.vaadin.shared.ui.datefield.AbstractDateFieldState;
+import com.vaadin.shared.ui.datefield.AbstractDateFieldState.AccessibleElement;
 
 public abstract class AbstractDateFieldConnector<R extends Enum<R>>
         extends AbstractFieldConnector {
@@ -131,6 +135,36 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
 
         widget.setCurrentDate(getTimeValues());
         widget.setDefaultDate(getDefaultValues());
+    }
+
+    @OnStateChange("assistiveLabels")
+    private void updateAssistiveLabels() {
+        if (getWidget() instanceof VAbstractPopupCalendar) {
+            setAndUpdateAssistiveLabels(
+                    ((VAbstractPopupCalendar) getWidget()).calendar);
+        }
+    }
+
+    /**
+     * Sets assistive labels for the calendar panel's navigation elements, and
+     * updates these labels.
+     *
+     * @param calendar
+     *         the calendar panel for which to set the assistive labels
+     * @since
+     */
+    protected void setAndUpdateAssistiveLabels(
+            VAbstractCalendarPanel calendar) {
+        calendar.setAssistiveLabelPreviousMonth(
+                getState().assistiveLabels.get(AccessibleElement.PREVIOUS_MONTH));
+        calendar.setAssistiveLabelNextMonth(
+                getState().assistiveLabels.get(AccessibleElement.NEXT_MONTH));
+        calendar.setAssistiveLabelPreviousYear(
+                getState().assistiveLabels.get(AccessibleElement.PREVIOUS_YEAR));
+        calendar.setAssistiveLabelNextYear(
+                getState().assistiveLabels.get(AccessibleElement.NEXT_YEAR));
+
+        calendar.updateAssistiveLabels();
     }
 
     private static Logger getLogger() {

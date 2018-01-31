@@ -55,6 +55,7 @@ import com.vaadin.server.UserError;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.datefield.AbstractDateFieldServerRpc;
 import com.vaadin.shared.ui.datefield.AbstractDateFieldState;
+import com.vaadin.shared.ui.datefield.AbstractDateFieldState.AccessibleElement;
 import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -874,5 +875,32 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             hashMap.put(LocalDate.parse(entry.getKey()), entry.getValue());
         }
         return Collections.unmodifiableMap(hashMap);
+    }
+
+    /**
+     * Sets the assistive label for a calendar navigation element. This sets the
+     * {@code aria-label} attribute for the element which is used by screen
+     * reading software.
+     *
+     * @param element
+     *         the element for which to set the label. Not {@code null}.
+     * @param label
+     *         the assistive label to set
+     * @since
+     */
+    public void setAssistiveLabel(AccessibleElement element, String label) {
+        Objects.requireNonNull(element, "Element cannot be null");
+        getState().assistiveLabels.put(element, label);
+    }
+
+    /**
+     * Gets the assistive label of a calendar navigation element.
+     *
+     * @param element
+     *         the element of which to get the assistive label
+     * @since
+     */
+    public void getAssistiveLabel(AccessibleElement element) {
+        getState(false).assistiveLabels.get(element);
     }
 }
