@@ -510,7 +510,7 @@ public class BrowserInfo {
     }
 
     /**
-     * Gets the complete browser version as string.
+     * Gets the complete browser version in form of a string.
      *
      * @return the complete browser version or {@code null} if unknown
      */
