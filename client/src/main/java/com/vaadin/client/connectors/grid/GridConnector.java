@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
@@ -58,6 +57,7 @@ import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
 import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderRow;
+import com.vaadin.client.widgets.Grid.SelectionColumn;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
@@ -314,18 +314,14 @@ public class GridConnector extends AbstractListingConnector
 
     @OnStateChange("columnOrder")
     void updateColumnOrder() {
-        ScheduledCommand command = () -> getWidget().setColumnOrder(
-                getState().columnOrder.stream().map(this::getColumn)
-                        .toArray(size -> new CustomColumn[size]));
-
-        if (getState().columnOrder.size() != columnToIdMap.size()
-                && getState().columnOrder.stream()
-                        .allMatch(idToColumn::containsKey)) {
-            // Column map not up to date, postponed
-            Scheduler.get().scheduleFinally(command);
-        } else {
-            command.execute();
+        if (getState().columnOrder.containsAll(idToColumn.keySet())) {
+            // Only the order has changed, update Grid accordingly
+            getWidget().setColumnOrder(
+                    getState().columnOrder.stream().map(this::getColumn)
+                            .toArray(size -> new CustomColumn[size]));
         }
+        // Column set has changed. Update everything.
+        updateColumns();
     }
 
     @OnStateChange("columnResizeMode")
@@ -510,22 +506,52 @@ public class GridConnector extends AbstractListingConnector
         columnToIdMap.put(column, id);
         idToColumn.put(id, column);
 
-        if (columnToIdMap.size() == getState().columnOrder.size()) {
-            // Only add columns when all have been registered.
-            addAllColumns();
+        if (idToColumn.keySet().containsAll(getState().columnOrder)) {
+            // All columns are available.
+            updateColumns();
         }
     }
 
     /**
      * Updates the widgets columns to match the map in this connector.
      */
-    protected void addAllColumns() {
-        List<Column<?, JsonObject>> currentColumn = getWidget().getColumns();
+    protected void updateColumns() {
+        List<Column<?, JsonObject>> currentColumns = getWidget().getColumns();
 
-        // Adds all missing columns
-        getWidget().addColumns(columnToIdMap.keySet().stream()
-                .filter(col -> !currentColumn.contains(col))
-                .toArray(size -> new CustomColumn[size]));
+        List<CustomColumn> columnOrder = getState().columnOrder.stream()
+                .map(this::getColumn).collect(Collectors.toList());
+
+        if (isOrderCorrect(currentColumns, columnOrder)) {
+            // All up to date
+            return;
+        }
+
+        Grid<JsonObject> grid = getWidget();
+
+        // Remove old column
+        currentColumns.stream()
+                .filter(col -> !(columnOrder.contains(col)
+                        || col instanceof SelectionColumn))
+                .forEach(grid::removeColumn);
+
+        // Add new columns
+        grid.addColumns(columnOrder.stream()
+                .filter(col -> !currentColumns.contains(col))
+                .toArray(CustomColumn[]::new));
+
+        // Make sure order is correct.
+        grid.setColumnOrder(
+                columnOrder.toArray(new CustomColumn[columnOrder.size()]));
+    }
+
+    private boolean isOrderCorrect(List<Column<?, JsonObject>> currentColumns,
+            List<CustomColumn> columnOrder) {
+        if (currentColumns.size() > 0
+                && currentColumns.get(0) instanceof SelectionColumn) {
+            // ignore selection column.
+            currentColumns = currentColumns.subList(1, currentColumns.size());
+        }
+        return currentColumns.equals(columnOrder);
     }
 
     /**
@@ -538,7 +564,8 @@ public class GridConnector extends AbstractListingConnector
     public void removeColumn(CustomColumn column) {
         assert columnToIdMap
                 .containsKey(column) : "Given Column does not exist.";
-        getWidget().removeColumn(column);
+
+        // Remove references to old column. Grid is updated by updateSortOrder.
         String id = columnToIdMap.remove(column);
         idToColumn.remove(id);
     }

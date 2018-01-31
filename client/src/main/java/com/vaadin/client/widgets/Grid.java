@@ -6526,6 +6526,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *            the columns to add
      */
     public void addColumns(Column<?, T>... columns) {
+        if (columns.length == 0) {
+            // Nothing to add.
+            return;
+        }
         addColumnsSkipSelectionColumnCheck(Arrays.asList(columns),
                 getVisibleColumns().size());
     }
