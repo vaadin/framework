@@ -19,7 +19,6 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.RadioButtonGroup;
 
 /**
@@ -31,7 +30,6 @@ public class RadioButtonGroupFocus extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        CheckBox cb = new CheckBox("CB");
         RadioButtonGroup<String> rbg = new RadioButtonGroup<>("Radios");
         rbg.setItems("Test1", "Test2", "Test3");
         rbg.setSelectedItem("Test2");
@@ -40,7 +38,7 @@ public class RadioButtonGroupFocus extends AbstractTestUIWithLog {
         RadioButtonGroup<String> rbg2 = new RadioButtonGroup<>("No selection");
         rbg2.setItems("Foo1", "Foo2", "Foo3");
         Button button = new Button("focus second group", e -> rbg2.focus());
-        addComponents(cb, rbg, rbg2, button);
+        addComponents(rbg, rbg2, button);
     }
 
 }
