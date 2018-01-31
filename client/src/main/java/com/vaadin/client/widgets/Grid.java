@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -6570,9 +6571,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     private void addColumnsSkipSelectionColumnCheck(
             Collection<Column<?, T>> columnsToAdd, int startIndex) {
+        AtomicInteger index = new AtomicInteger(0);
         columnsToAdd.forEach(col -> {
             // Register column with grid
-            columns.add(col);
+            columns.add(startIndex + index.getAndIncrement(), col);
 
             header.addColumn(col);
             footer.addColumn(col);
