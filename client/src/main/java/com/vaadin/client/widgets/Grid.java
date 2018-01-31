@@ -8657,12 +8657,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     private void setColumnOrder(boolean isUserOriginated,
             Column<?, T>... orderedColumns) {
-        List<Column<?, T>> oldOrder = new ArrayList<>(columns);
-        ColumnConfiguration conf = getEscalator().getColumnConfiguration();
-
-        // Trigger ComplexRenderer.destroy for old content
-        conf.removeColumns(0, conf.getColumnCount());
-
         List<Column<?, T>> newOrder = new ArrayList<>();
         if (selectionColumn != null) {
             newOrder.add(selectionColumn);
@@ -8680,15 +8674,28 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         if (columns.size() != newOrder.size()) {
-            columns.removeAll(newOrder);
-            newOrder.addAll(columns);
+            columns.stream().filter(col -> !newOrder.contains(col))
+                    .forEach(newOrder::add);
         }
+
+        if (columns.equals(newOrder)) {
+            // No changes in order.
+            return;
+        }
+
+        // Prepare event for firing
+        ColumnReorderEvent<T> event = new ColumnReorderEvent<>(columns,
+                newOrder, isUserOriginated);
+
+        // Trigger ComplexRenderer.destroy for old content
+        ColumnConfiguration conf = getEscalator().getColumnConfiguration();
+        conf.removeColumns(0, conf.getColumnCount());
+
+        // Update the order
         columns = newOrder;
 
-        List<Column<?, T>> visibleColumns = getVisibleColumns();
-
         // Do ComplexRenderer.init and render new content
-        conf.insertColumns(0, visibleColumns.size());
+        conf.insertColumns(0, getVisibleColumns().size());
 
         // Number of frozen columns should be kept same #16901
         updateFrozenColumns();
@@ -8708,8 +8715,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         columnHider.updateTogglesOrder();
 
-        fireEvent(
-                new ColumnReorderEvent<>(oldOrder, newOrder, isUserOriginated));
+        fireEvent(event);
     }
 
     /**

@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
@@ -314,8 +314,18 @@ public class GridConnector extends AbstractListingConnector
 
     @OnStateChange("columnOrder")
     void updateColumnOrder() {
-        getWidget().setColumnOrder(getState().columnOrder.stream()
-                .map(this::getColumn).toArray(size -> new CustomColumn[size]));
+        ScheduledCommand command = () -> getWidget().setColumnOrder(
+                getState().columnOrder.stream().map(this::getColumn)
+                        .toArray(size -> new CustomColumn[size]));
+
+        if (getState().columnOrder.size() != columnToIdMap.size()
+                && getState().columnOrder.stream()
+                        .allMatch(idToColumn::containsKey)) {
+            // Column map not up to date, postponed
+            Scheduler.get().scheduleFinally(command);
+        } else {
+            command.execute();
+        }
     }
 
     @OnStateChange("columnResizeMode")
@@ -606,7 +616,6 @@ public class GridConnector extends AbstractListingConnector
     @Override
     public void setChildComponents(List<ComponentConnector> children) {
         childComponents = children;
-
     }
 
     @Override
