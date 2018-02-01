@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,11 +15,11 @@
  */
 package com.vaadin.tests.components.grid;
 
-import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.ButtonElement;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -31,16 +31,15 @@ public class GridAssistiveDeviceOnlyTextTest extends SingleBrowserTest {
     public void checkAssistiveDeviceOnlyText() {
         openTestURL();
 
-        GridElement.GridCellElement selectAllCell = $(GridElement.class).id("first")
-                .getHeaderCell(0, 0);
+        assertTrue("The select all cell of the default grid should not contain any text.",
+                getFirstCell("first").getText().isEmpty());
 
-        Assert.assertTrue("The select all label should be empty.",
-                selectAllCell.findElement(By.cssSelector("label")).getText().isEmpty());
+        assertEquals("The select all cell of the aria-enabled grid should contain " +
+                        "the given string.", "Selects all rows of the table.",
+                getFirstCell("seoond").getText());
+    }
 
-        selectAllCell = $(GridElement.class).id("second").getHeaderCell(0, 0);
-
-        Assert.assertEquals("The select all label should contain the given string.",
-                "Selects all rows of the table.",
-                selectAllCell.findElement(By.cssSelector("label")).getText());
+    private GridElement.GridCellElement getFirstCell(String gridId) {
+        return $(GridElement.class).id(gridId).getHeaderCell(0, 0);
     }
 }
