@@ -6661,8 +6661,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     .removeColumns(visibleColumnIndex, 1);
         }
 
-        updateFrozenColumns();
-
         header.removeColumn(column);
         footer.removeColumn(column);
 
@@ -6674,6 +6672,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         if (column.isHidable()) {
             columnHider.removeColumnHidingToggle(column);
         }
+
+        updateFrozenColumns();
     }
 
     /**
@@ -7220,7 +7220,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         // for the escalator the hidden columns are not in the frozen column
         // count, but for grid they are. thus need to convert the index
         for (int i = 0; i < frozenColumnCount; i++) {
-            if (getColumn(i).isHidden()) {
+            if (i >= getColumnCount() || getColumn(i).isHidden()) {
                 numberOfColumns--;
             }
         }
