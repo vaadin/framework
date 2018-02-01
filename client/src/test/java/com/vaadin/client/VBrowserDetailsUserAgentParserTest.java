@@ -498,6 +498,7 @@ public class VBrowserDetailsUserAgentParserTest {
         assertFirefox(details);
         assertBrowserMajorVersion(details, 8);
         assertBrowserMinorVersion(details, 3);
+        assertBrowserVersion(details, "8.3b5826");
         assertWebKit(details);
         assertEngineVersion(details, 601);
     }
@@ -508,6 +509,7 @@ public class VBrowserDetailsUserAgentParserTest {
         assertSafari(details);
         assertBrowserMajorVersion(details, 9);
         assertBrowserMinorVersion(details, 0);
+        assertBrowserVersion(details, "9.0");
         assertWebKit(details);
         assertEngineVersion(details, 601);
     }
@@ -518,6 +520,7 @@ public class VBrowserDetailsUserAgentParserTest {
         assertChrome(details);
         assertBrowserMajorVersion(details, 63);
         assertBrowserMinorVersion(details, 0);
+        assertBrowserVersion(details, "63.0.3239.73");
         assertWebKit(details);
         assertEngineVersion(details, 601);
     }
