@@ -27,7 +27,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class FocusTest extends MultiBrowserTest {
+public abstract class FocusTest extends MultiBrowserTest {
 
     protected boolean isFocusInsideElement(TestBenchElement element) {
         WebElement focused = getFocusedElement();
