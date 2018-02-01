@@ -40,6 +40,7 @@ import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.annotations.OnStateChange;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.connectors.grid.ColumnConnector.CustomColumn;
 import com.vaadin.client.data.DataSource;
@@ -312,16 +313,28 @@ public class GridConnector extends AbstractListingConnector
         layout();
     }
 
-    @OnStateChange("columnOrder")
-    void updateColumnOrder() {
-        if (getState().columnOrder.containsAll(idToColumn.keySet())) {
-            // Only the order has changed, update Grid accordingly
-            getWidget().setColumnOrder(
-                    getState().columnOrder.stream().map(this::getColumn)
-                            .toArray(size -> new CustomColumn[size]));
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+        if (!getState().columnOrder.containsAll(idToColumn.keySet())) {
+            updateColumns();
+        } else if (stateChangeEvent.hasPropertyChanged("columnOrder")) {
+            updateColumnOrder();
         }
-        // Column set has changed. Update everything.
-        updateColumns();
+
+        if (stateChangeEvent.hasPropertyChanged("header")) {
+            updateHeader();
+        }
+        if (stateChangeEvent.hasPropertyChanged("footer")) {
+            updateFooter();
+        }
+    }
+
+    // @OnStateChange("columnOrder")
+    void updateColumnOrder() {
+        getWidget().setColumnOrder(getState().columnOrder.stream()
+                .map(this::getColumn).toArray(size -> new CustomColumn[size]));
     }
 
     @OnStateChange("columnResizeMode")
@@ -332,7 +345,7 @@ public class GridConnector extends AbstractListingConnector
     /**
      * Updates the grid header section on state change.
      */
-    @OnStateChange("header")
+    // @OnStateChange("header")
     void updateHeader() {
         final Grid<JsonObject> grid = getWidget();
         final SectionState state = getState().header;
@@ -452,7 +465,7 @@ public class GridConnector extends AbstractListingConnector
     /**
      * Updates the grid footer section on state change.
      */
-    @OnStateChange("footer")
+    // @OnStateChange("footer")
     void updateFooter() {
         final Grid<JsonObject> grid = getWidget();
         final SectionState state = getState().footer;

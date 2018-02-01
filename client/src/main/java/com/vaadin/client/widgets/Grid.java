@@ -2859,7 +2859,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         public void rowsAddedToBody(Range added) {
             boolean bodyHasFocus = containerWithFocus == escalator.getBody();
             boolean insertionIsAboveFocusedCell = added
-                    .getStart() <= rowWithFocus;
+                    .getStart() < rowWithFocus;
             if (bodyHasFocus && insertionIsAboveFocusedCell) {
                 rowWithFocus += added.length();
                 rowWithFocus = Math.min(rowWithFocus,
