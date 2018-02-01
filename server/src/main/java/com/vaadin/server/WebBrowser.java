@@ -250,7 +250,7 @@ public class WebBrowser implements Serializable {
      * Gets the complete browser version as string. The version is given by the
      * browser through the user agent string and usually consists of
      * dot-separated numbers. Note that the string may contain characters other
-     * than number.
+     * than dots and digits.
      *
      * @return the complete browser version or {@code null} if unknown
      * @since

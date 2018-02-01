@@ -513,7 +513,7 @@ public class BrowserInfo {
      * Gets the complete browser version in form of a string. The version is
      * given by the browser through the user agent string and usually consists
      * of dot-separated numbers. Note that the string may contain characters
-     * other than number.
+     * other than dots and digits.
      *
      * @return the complete browser version or {@code null} if unknown
      * @since
