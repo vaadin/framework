@@ -36,7 +36,7 @@ public class GridAssistiveDeviceOnlyTextTest extends SingleBrowserTest {
 
         assertEquals("The select all cell of the aria-enabled grid should contain " +
                         "the given string.", "Selects all rows of the table.",
-                getFirstCell("seoond").getText());
+                getFirstCell("second").getText());
     }
 
     private GridElement.GridCellElement getFirstCell(String gridId) {
