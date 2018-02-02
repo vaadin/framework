@@ -175,12 +175,12 @@ public class TreeGrid<T> extends Grid<T>
                 userOriginated) -> {
             T item = getDataCommunicator().getKeyMapper().get(rowKey);
             if (collapse && getDataCommunicator().isExpanded(item)) {
-                getDataCommunicator().doCollapse(item, Optional.of(rowIndex));
+                getDataCommunicator().collapse(item, rowIndex);
                 fireCollapseEvent(
                         getDataCommunicator().getKeyMapper().get(rowKey),
                         userOriginated);
             } else if (!collapse && !getDataCommunicator().isExpanded(item)) {
-                getDataCommunicator().doExpand(item, Optional.of(rowIndex));
+                getDataCommunicator().expand(item, rowIndex);
                 fireExpandEvent(
                         getDataCommunicator().getKeyMapper().get(rowKey),
                         userOriginated);
@@ -396,9 +396,7 @@ public class TreeGrid<T> extends Grid<T>
         HierarchicalDataCommunicator<T> communicator = getDataCommunicator();
         items.forEach(item -> {
             if (communicator.hasChildren(item)) {
-                if (!communicator.isExpanded(item)) {
-                    communicator.expand(item);
-                }
+                communicator.expand(item, false);
 
                 expandRecursively(
                         getDataProvider().fetchChildren(
@@ -406,6 +404,8 @@ public class TreeGrid<T> extends Grid<T>
                         depth - 1);
             }
         });
+
+        getDataProvider().refreshAll();
     }
 
     /**
@@ -495,11 +495,11 @@ public class TreeGrid<T> extends Grid<T>
                                 new HierarchicalQuery<>(null, item)),
                         depth - 1);
 
-                if (communicator.isExpanded(item)) {
-                    communicator.collapse(item);
-                }
+                communicator.collapse(item, false);
             }
         });
+
+        getDataProvider().refreshAll();
     }
 
     /**

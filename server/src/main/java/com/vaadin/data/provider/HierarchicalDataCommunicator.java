@@ -156,33 +156,83 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     }
 
     /**
-     * Collapses given item, removing all its subtrees. Calling this method will
-     * have no effect if the row is already collapsed.
+     * Collapses the given item and removes its sub-hierarchy. Calling this
+     * method will have no effect if the row is already collapsed.
      *
      * @param item
      *            the item to collapse
      */
     public void collapse(T item) {
-        if (mapper.isExpanded(item)) {
-            doCollapse(item, mapper.getIndexOf(item));
-        }
+        collapse(item, true);
     }
 
     /**
-     * Collapses given item, removing all its subtrees. Calling this method will
-     * have no effect if the row is already collapsed. The index is provided by
-     * the client-side or calculated from a full data request.
-     *
-     * @see #collapse(Object)
+     * Collapses the given item and removes its sub-hierarchy. Calling this
+     * method will have no effect if the row is already collapsed.
+     * {@code syncAndRefresh} indicates whether the changes should be
+     * synchronised to the client and the data provider be notified.
+     * 
+     * @param item
+     *            the item to collapse
+     * @param syncAndRefresh
+     *            {@code true} if the changes should be synchronised to the
+     *            client and the data provider should be notified of the
+     *            changes, {@code false} otherwise.
+     */
+    public void collapse(T item, boolean syncAndRefresh) {
+        Integer index = syncAndRefresh ? mapper.getIndexOf(item).orElse(null) : null;
+        doCollapse(item, index, syncAndRefresh);
+    }
+
+    /**
+     * Collapses the given item and removes its sub-hierarchy. Calling this
+     * method will have no effect if the row is already collapsed.
      *
      * @param item
      *            the item to collapse
      * @param index
      *            the index of the item
      */
+    public void collapse(T item, Integer index) {
+        doCollapse(item, index, true);
+    }
+
+    /**
+     * Collapses given item and removes its sub-hierarchy. Calling this method
+     * will have no effect if the row is already collapsed. The index is
+     * provided by the client-side or calculated from a full data request.
+     *
+     * 
+     * @param item
+     *            the item to collapse
+     * @param index
+     *            the index of the item
+     * @deprecated Use {@link #collapse(Object, Integer)} instead.
+     */
+    @Deprecated
     public void doCollapse(T item, Optional<Integer> index) {
-        if (mapper.isExpanded(item)) {
-            Range removedRows = mapper.doCollapse(item, index);
+        doCollapse(item, index.orElse(null), true);
+    }
+
+    /**
+     * Collapses the given item and removes its sub-hierarchy. Calling this
+     * method will have no effect if the row is already collapsed. The index is
+     * provided by the client-side or calculated from a full data request.
+     * {@code syncAndRefresh} indicates whether the changes should be
+     * synchronised to the client and the data provider be notified.
+     * 
+     * @param item
+     *            the item to collapse
+     * @param index
+     *            the index of the item
+     * @param syncAndRefresh
+     *            {@code true} if the changes should be synchronised to the
+     *            client and the data provider should be notified of the
+     *            changes, {@code false} otherwise.
+     */
+    private void doCollapse(T item, Integer index, boolean syncAndRefresh) {
+        Range removedRows = mapper.collapse(item, index);
+        if (syncAndRefresh) {
             if (!reset && !removedRows.isEmpty()) {
                 getClientRpc().removeRows(removedRows.getStart(),
                         removedRows.length());
@@ -193,14 +243,76 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
     /**
      * Expands the given item. Calling this method will have no effect if the
-     * row is already expanded.
+     * item is already expanded or if it has no children.
      *
      * @param item
      *            the item to expand
      */
     public void expand(T item) {
-        if (!mapper.isExpanded(item) && mapper.hasChildren(item)) {
-            doExpand(item, mapper.getIndexOf(item));
+        expand(item, true);
+    }
+
+    /**
+     * Expands the given item. Calling this method will have no effect if the
+     * item is already expanded or if it has no children. {@code syncAndRefresh}
+     * indicates whether the changes should be synchronised to the client and
+     * the data provider be notified.
+     *
+     * @param item
+     *            the item to expand
+     * @param syncAndRefresh
+     *            {@code true} if the changes should be synchronised to the
+     *            client and the data provider should be notified of the
+     *            changes, {@code
+     *         false} otherwise.
+     */
+    public void expand(T item, boolean syncAndRefresh) {
+        Integer index = syncAndRefresh ? mapper.getIndexOf(item).orElse(null) : null;
+        doExpand(item, index, syncAndRefresh);
+    }
+
+    /**
+     * Expands the given item at the given index. Calling this method will have
+     * no effect if the item is already expanded.
+     *
+     * @param item
+     *            the item to expand
+     * @param index
+     *            the index of the item
+     */
+    public void expand(T item, Integer index) {
+        doExpand(item, index, true);
+    }
+
+    /**
+     * Expands the given item. Calling this method will have no effect if the
+     * item is already expanded or if it has no children. The index is provided
+     * by the client-side or calculated from a full data request.
+     * {@code syncAndRefresh} indicates whether the changes should be
+     * synchronised to the client and the data provider be notified.
+     *
+     * @param item
+     *            the item to expand
+     * @param index
+     *            the index of the item
+     * @param syncAndRefresh
+     *            {@code true} if the changes should be synchronised to the
+     *            client and the data provider should be notified of the
+     *            changes, {@code false} otherwise.
+     */
+    private void doExpand(T item, Integer index, boolean syncAndRefresh) {
+        Range addedRows = mapper.expand(item, index);
+        if (syncAndRefresh) {
+            if (!reset && !addedRows.isEmpty()) {
+                getClientRpc()
+                        .insertRows(addedRows.getStart(), addedRows.length());
+                Stream<T> children = mapper
+                        .fetchItems(item,
+                                Range.withLength(0, addedRows.length()));
+                pushData(addedRows.getStart(),
+                        children.collect(Collectors.toList()));
+            }
+            refresh(item);
         }
     }
 
@@ -209,25 +321,16 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      * effect if the row is already expanded. The index is provided by the
      * client-side or calculated from a full data request.
      *
-     * @see #expand(Object)
-     *
      * @param item
      *            the item to expand
      * @param index
      *            the index of the item
+     * @see #expand(Object)
+     * @deprecated use {@link #expand(Object, Integer)} instead
      */
+    @Deprecated
     public void doExpand(T item, Optional<Integer> index) {
-        if (!mapper.isExpanded(item)) {
-            Range addedRows = mapper.doExpand(item, index);
-            if (!reset && !addedRows.isEmpty()) {
-                int start = addedRows.getStart();
-                getClientRpc().insertRows(start, addedRows.length());
-                Stream<T> children = mapper.fetchItems(item,
-                        Range.withLength(0, addedRows.length()));
-                pushData(start, children.collect(Collectors.toList()));
-            }
-            refresh(item);
-        }
+        expand(item, index.orElse(null));
     }
 
     /**
