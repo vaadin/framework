@@ -104,7 +104,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
         private final String key;
         private final String caption;
-        private String untranslatedIconUri;
+        private String iconUrl;
         private String style;
 
         /**
@@ -117,15 +117,15 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
          *            item caption
          * @param style
          *            item style name, can be empty string
-         * @param untranslatedIconUri
-         *            icon URI or null
+         * @param iconUrl
+         *            icon URL or {@code null}
          */
         public ComboBoxSuggestion(String key, String caption, String style,
-                String untranslatedIconUri) {
+                String iconUrl) {
             this.key = key;
             this.caption = caption;
             this.style = style;
-            this.untranslatedIconUri = untranslatedIconUri;
+            this.iconUrl = iconUrl;
         }
 
         /**
@@ -133,13 +133,11 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
          * contains an image tag with the rows icon (if an icon has been
          * specified) and the caption of the item
          */
-
         @Override
         public String getDisplayString() {
             final StringBuilder sb = new StringBuilder();
             ApplicationConnection client = connector.getConnection();
-            final Icon icon = client
-                    .getIcon(client.translateVaadinUri(untranslatedIconUri));
+            final Icon icon = client.getIcon(iconUrl);
             if (icon != null) {
                 sb.append(icon.getElement().getString());
             }
@@ -175,11 +173,10 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         /**
          * Get the URI of the icon. Used when constructing the displayed option.
          *
-         * @return real (translated) icon URI or null if none
+         * @return real (translated) icon URI or {@code null} if none
          */
         public String getIconUri() {
-            ApplicationConnection client = connector.getConnection();
-            return client.translateVaadinUri(untranslatedIconUri);
+            return iconUrl;
         }
 
         /**
@@ -218,8 +215,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                     || caption != null && !caption.equals(other.caption)) {
                 return false;
             }
-            if (!SharedUtil.equals(untranslatedIconUri,
-                    other.untranslatedIconUri)) {
+            if (!SharedUtil.equals(iconUrl, other.iconUrl)) {
                 return false;
             }
             if (!SharedUtil.equals(style, other.style)) {
@@ -236,8 +232,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             result = prime * result + ((key == null) ? 0 : key.hashCode());
             result = prime * result
                     + ((caption == null) ? 0 : caption.hashCode());
-            result = prime * result + ((untranslatedIconUri == null) ? 0
-                    : untranslatedIconUri.hashCode());
+            result = prime * result
+                    + ((iconUrl == null) ? 0 : iconUrl.hashCode());
             result = prime * result + ((style == null) ? 0 : style.hashCode());
             return result;
         }
