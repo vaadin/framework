@@ -263,6 +263,19 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     }
 
     /**
+     * Update buffered values {@link #bufferedDateString} and
+     * {@link #bufferedResolutions} that will be sent to the server.
+     * <p>
+     * This method should NOT send values to the server.
+     * <p>
+     * This method can be implemented by subclasses to update buffered values
+     * from component values.
+     *
+     * @since
+     */
+    public abstract void updateBufferedValues();
+
+    /**
      * Sends the {@link #bufferedDateString} and {@link #bufferedResolutions} to
      * the server, and clears their values.
      *

@@ -167,6 +167,13 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
         calendar.updateAssistiveLabels();
     }
 
+    @Override
+    public void flush() {
+        super.flush();
+        getWidget().updateBufferedValues();
+        getWidget().sendBufferedValues();
+    }
+
     private static Logger getLogger() {
         return Logger.getLogger(AbstractDateFieldConnector.class.getName());
     }
