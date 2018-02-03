@@ -107,8 +107,7 @@ public class MSSQLGenerator extends DefaultSQLGenerator {
                 generateOrderBy(query, o, orderBys.indexOf(o) == 0);
             }
         }
-        query.append(") AS rownum, ").append(toSelect).append(" FROM ")
-                .append(tableName);
+        query.append(") AS rownum, " + toSelect + " FROM ").append(tableName);
         if (filters != null) {
             query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
         }
