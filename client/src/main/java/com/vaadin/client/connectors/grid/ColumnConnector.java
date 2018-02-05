@@ -166,7 +166,7 @@ public class ColumnConnector extends AbstractExtensionConnector {
             // If the grid itself was unregistered there is no point in spending
             // time to remove columns (and have problems with frozen columns)
             // before throwing everything away
-            parent.removeColumn(column);
+            parent.removeColumnMapping(column);
             parent = null;
         }
         column = null;
