@@ -55,6 +55,8 @@ import elemental.json.JsonObject;
 public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
         implements FocusNotifier, BlurNotifier, HasDataProvider<T> {
 
+    public static final String DEFAULT_EMPTY_SELECTION_CAPTION = "No Selection";
+
     private SerializablePredicate<T> itemEnabledProvider = item -> true;
     private DescriptionGenerator<T> descriptionGenerator = item -> null;
 
@@ -102,7 +104,7 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
      */
     public RadioButtonGroup() {
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
-
+        setEmptySelectionCaption(DEFAULT_EMPTY_SELECTION_CAPTION);
         addDataGenerator(new DataGenerator<T>() {
             @Override
             public void generateData(T data, JsonObject jsonObject) {

@@ -496,65 +496,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     /**
-     * Returns whether the user is allowed to select nothing in the combo box.
-     *
-     * @return true if empty selection is allowed, false otherwise
-     * @since 8.0
-     */
-    public boolean isEmptySelectionAllowed() {
-        return getState(false).emptySelectionAllowed;
-    }
-
-    /**
-     * Sets whether the user is allowed to select nothing in the combo box. When
-     * true, a special empty item is shown to the user.
-     *
-     * @param emptySelectionAllowed
-     *            true to allow not selecting anything, false to require
-     *            selection
-     * @since 8.0
-     */
-    public void setEmptySelectionAllowed(boolean emptySelectionAllowed) {
-        getState().emptySelectionAllowed = emptySelectionAllowed;
-    }
-
-    /**
-     * Returns the empty selection caption.
-     * <p>
-     * The empty string {@code ""} is the default empty selection caption.
-     *
-     * @see #setEmptySelectionAllowed(boolean)
-     * @see #isEmptySelectionAllowed()
-     * @see #setEmptySelectionCaption(String)
-     * @see #isSelected(Object)
-     *
-     * @return the empty selection caption, not {@code null}
-     * @since 8.0
-     */
-    public String getEmptySelectionCaption() {
-        return getState(false).emptySelectionCaption;
-    }
-
-    /**
-     * Sets the empty selection caption.
-     * <p>
-     * The empty string {@code ""} is the default empty selection caption.
-     * <p>
-     * If empty selection is allowed via the
-     * {@link #setEmptySelectionAllowed(boolean)} method (it is by default) then
-     * the empty item will be shown with the given caption.
-     *
-     * @param caption
-     *            the caption to set, not {@code null}
-     * @see #isSelected(Object)
-     * @since 8.0
-     */
-    public void setEmptySelectionCaption(String caption) {
-        Objects.nonNull(caption);
-        getState().emptySelectionCaption = caption;
-    }
-
-    /**
      * Sets the suggestion pop-up's width as a CSS string. By using relative
      * units (e.g. "50%") it's possible to set the popup's width relative to the
      * ComboBox itself.

@@ -25,6 +25,17 @@ import com.vaadin.shared.ui.abstractlisting.AbstractListingState;
  * @since 8.0
  */
 public class AbstractSingleSelectState extends AbstractListingState {
+    /**
+     * True to allow selecting nothing (a special empty selection item is shown
+     * at the beginning of the list), false not to allow empty selection by the
+     * user.
+     */
+    public boolean emptySelectionAllowed = true;
+
+    /**
+     * Caption for item which represents empty selection.
+     */
+    public String emptySelectionCaption = "";
 
     /**
      * The key of the currently selected item or {@code null} if no item is
