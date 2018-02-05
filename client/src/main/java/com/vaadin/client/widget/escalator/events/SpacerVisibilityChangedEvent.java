@@ -66,7 +66,7 @@ public class SpacerVisibilityChangedEvent extends GwtEvent<SpacerVisibilityChang
      * @return {@code true} if the spacer element is shown, {@code false} if the
      * spacer element is hidden
      */
-    public boolean isVisible() {
+    public boolean isSpacerVisible() {
         return visible;
     }
 

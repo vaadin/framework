@@ -8505,6 +8505,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * @param handler
      *         the handler to be called when a spacer's visibility changes
      * @return the registration object with which the handler can be removed
+     * @since
      */
     public HandlerRegistration addSpacerVisibilityChangedHandler(
             SpacerVisibilityChangedHandler handler) {

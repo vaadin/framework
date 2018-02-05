@@ -193,7 +193,7 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
         // When details element is shown, remeasure it in the layout phase
         spacerVisibilityChangeRegistration = getParent().getWidget()
                 .addSpacerVisibilityChangedHandler(event -> {
-                    if (event.isVisible()) {
+                    if (event.isSpacerVisible()) {
                         String id = indexToDetailConnectorId
                                 .get(event.getRowIndex());
                         ComponentConnector connector = (ComponentConnector) ConnectorMap
