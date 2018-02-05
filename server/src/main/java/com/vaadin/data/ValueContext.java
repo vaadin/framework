@@ -156,7 +156,6 @@ public class ValueContext implements Serializable {
      * @return the optional of {@code HasValue}
      * @since 8.1
      */
-    @SuppressWarnings("unused")
     public Optional<HasValue<?>> getHasValue() {
         return Optional.ofNullable(hasValue);
     }
