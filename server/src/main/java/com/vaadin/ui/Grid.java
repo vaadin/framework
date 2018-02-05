@@ -56,6 +56,7 @@ import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.GridSortOrder;
 import com.vaadin.data.provider.GridSortOrderBuilder;
+import com.vaadin.data.provider.InMemoryDataProvider;
 import com.vaadin.data.provider.Query;
 import com.vaadin.data.provider.QuerySortOrder;
 import com.vaadin.event.ConnectorEvent;
@@ -840,6 +841,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             return Stream.of(new QuerySortOrder(id, direction));
         };
 
+        private boolean sortable = true;
         private SerializableComparator<T> comparator;
         private StyleGenerator<T> styleGenerator = item -> null;
         private DescriptionGenerator<T> descriptionGenerator;
@@ -1163,8 +1165,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         private void updateSortable() {
-            setSortable(getGrid().getDataProvider().isInMemory()
-                    || getSortOrder(SortDirection.ASCENDING).count() != 0);
+            boolean inMemory = getGrid().getDataProvider().isInMemory();
+            boolean hasSortOrder = getSortOrder(SortDirection.ASCENDING)
+                    .count() != 0;
+
+            getState().sortable = this.sortable && (inMemory || hasSortOrder);
         }
 
         /**
@@ -1180,29 +1185,41 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         /**
-         * Sets whether the user can sort this column or not.
-         * <p>
-         * By default, a grid using a in-memory data provider has its columns
-         * sortable by default. For a backend data provider, the columns are not
-         * sortable by default.
+         * Sets whether the user can sort this column or not. Whether the column
+         * is actually sortable after {@code setSortable(true)} depends on the
+         * {@link DataProvider} and the defined sort order for this column. When
+         * using an {@link InMemoryDataProvider} sorting can be automatic.
          *
          * @param sortable
-         *            {@code true} if the column can be sorted by the user;
-         *            {@code false} if not
+         *            {@code true} to enable sorting for this column;
+         *            {@code false} to disable it
          * @return this column
          */
         public Column<T, V> setSortable(boolean sortable) {
-            getState().sortable = sortable;
+            if (this.sortable != sortable) {
+                this.sortable = sortable;
+                updateSortable();
+            }
             return this;
         }
 
         /**
-         * Gets whether the user can sort this column or not.
+         * Gets whether sorting is enabled for this column.
+         *
+         * @return {@code true} if the sorting is enabled for this column;
+         *         {@code false} if not
+         */
+        public boolean isSortable() {
+            return sortable;
+        }
+
+        /**
+         * Gets whether the user can actually sort this column.
          *
          * @return {@code true} if the column can be sorted by the user;
          *         {@code false} if not
          */
-        public boolean isSortable() {
+        public boolean isSortableByUser() {
             return getState(false).sortable;
         }
 
@@ -2070,8 +2087,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @return this column
          * @since 8.3
          */
-        public Column<T, V> setHandleWidgetEvents(
-                boolean handleWidgetEvents) {
+        public Column<T, V> setHandleWidgetEvents(boolean handleWidgetEvents) {
             getState().handleWidgetEvents = handleWidgetEvents;
             return this;
         }

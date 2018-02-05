@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.easymock.Capture;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,6 +39,7 @@ import com.vaadin.data.ValidationException;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataGenerator;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.GridSortOrder;
 import com.vaadin.data.provider.QuerySortOrder;
 import com.vaadin.data.provider.bov.Person;
@@ -553,7 +555,7 @@ public class GridTest {
     public void setColumnOrder_byColumn_removedColumn() {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("setColumnOrder should not be called "
-                        + "with columns that are not in the grid.");
+                + "with columns that are not in the grid.");
 
         grid.removeColumn(randomColumn);
         grid.setColumnOrder(randomColumn, lengthColumn);
@@ -731,5 +733,41 @@ public class GridTest {
         Grid<Person> grid2 = new Grid<>();
         Column<Person, ?> column1 = grid1.addColumn(ValueProvider.identity());
         grid2.removeColumn(column1);
+    }
+
+    @Test
+    public void testColumnSortable() {
+        Column<String, String> column = grid.addColumn(String::toString);
+
+        // Use in-memory data provider
+        grid.setItems(Collections.emptyList());
+
+        Assert.assertTrue("Column should be initially sortable",
+                column.isSortable());
+        Assert.assertTrue("User should be able to sort the column",
+                column.isSortableByUser());
+
+        column.setSortable(false);
+
+        Assert.assertFalse("Column should not be sortable",
+                column.isSortable());
+        Assert.assertFalse("User should not be able to sort the column",
+                column.isSortableByUser());
+
+        // Use CallBackDataProvider
+        grid.setDataProvider(
+                DataProvider.fromCallbacks(q -> Stream.of(), q -> 0));
+
+        Assert.assertFalse("Column should not be sortable",
+                column.isSortable());
+        Assert.assertFalse("User should not be able to sort the column",
+                column.isSortableByUser());
+
+        column.setSortable(true);
+
+        Assert.assertTrue("Column should be initially sortable",
+                column.isSortable());
+        Assert.assertFalse("User should not be able to sort the column",
+                column.isSortableByUser());
     }
 }
