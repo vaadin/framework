@@ -161,7 +161,7 @@ public interface DataProvider<T, F> extends Serializable {
      * // ComboBox uses String as the filter type
      * DataProvider&lt;Person, String&gt; wrappedProvider = dataProvider
      *         .withConvertedFilter(filterText -&gt; {
-     *             Predicate&lt;Person&gt; predicate = person -&gt; person.getName()
+     *             SerializablePredicate&lt;Person&gt; predicate = person -&gt; person.getName()
      *                     .startsWith(filterText);
      *             return predicate;
      *         });
