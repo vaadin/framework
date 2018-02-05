@@ -331,7 +331,6 @@ public class GridConnector extends AbstractListingConnector
         }
     }
 
-    // @OnStateChange("columnOrder")
     void updateColumnOrder() {
         getWidget().setColumnOrder(getState().columnOrder.stream()
                 .map(this::getColumn).toArray(size -> new CustomColumn[size]));
@@ -345,7 +344,6 @@ public class GridConnector extends AbstractListingConnector
     /**
      * Updates the grid header section on state change.
      */
-    // @OnStateChange("header")
     void updateHeader() {
         final Grid<JsonObject> grid = getWidget();
         final SectionState state = getState().header;
@@ -465,7 +463,6 @@ public class GridConnector extends AbstractListingConnector
     /**
      * Updates the grid footer section on state change.
      */
-    // @OnStateChange("footer")
     void updateFooter() {
         final Grid<JsonObject> grid = getWidget();
         final SectionState state = getState().footer;
@@ -534,7 +531,7 @@ public class GridConnector extends AbstractListingConnector
         List<CustomColumn> columnOrder = getState().columnOrder.stream()
                 .map(this::getColumn).collect(Collectors.toList());
 
-        if (isOrderCorrect(currentColumns, columnOrder)) {
+        if (isColumnOrderCorrect(currentColumns, columnOrder)) {
             // All up to date
             return;
         }
@@ -557,28 +554,27 @@ public class GridConnector extends AbstractListingConnector
                 columnOrder.toArray(new CustomColumn[columnOrder.size()]));
     }
 
-    private boolean isOrderCorrect(List<Column<?, JsonObject>> currentColumns,
-            List<CustomColumn> columnOrder) {
-        if (currentColumns.size() > 0
-                && currentColumns.get(0) instanceof SelectionColumn) {
-            // ignore selection column.
-            currentColumns = currentColumns.subList(1, currentColumns.size());
+    private boolean isColumnOrderCorrect(List<Column<?, JsonObject>> current,
+            List<CustomColumn> order) {
+        List<Column<?, JsonObject>> columnsToCompare = current;
+        if (current.size() > 0 && current.get(0) instanceof SelectionColumn) {
+            // Remove selection column.
+            columnsToCompare = current.subList(1, current.size());
         }
-        return currentColumns.equals(columnOrder);
+        return columnsToCompare.equals(order);
     }
 
     /**
-     * Removes a column from Grid widget. This method also removes communication
-     * id mapping for the column.
+     * Removes the given column from mappings in this Connector.
      *
      * @param column
-     *            column to remove
+     *            column to remove from the mapping
      */
-    public void removeColumn(CustomColumn column) {
+    public void removeColumnMapping(CustomColumn column) {
         assert columnToIdMap
                 .containsKey(column) : "Given Column does not exist.";
 
-        // Remove references to old column. Grid is updated by updateSortOrder.
+        // Remove mapping. Columns are removed from Grid when state changes.
         String id = columnToIdMap.remove(column);
         idToColumn.remove(id);
     }

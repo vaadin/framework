@@ -6575,10 +6575,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     private void addColumnsSkipSelectionColumnCheck(
             Collection<Column<?, T>> columnsToAdd, int startIndex) {
-        AtomicInteger index = new AtomicInteger(0);
+        AtomicInteger index = new AtomicInteger(startIndex);
         columnsToAdd.forEach(col -> {
             // Register column with grid
-            columns.add(startIndex + index.getAndIncrement(), col);
+            columns.add(index.getAndIncrement(), col);
 
             header.addColumn(col);
             footer.addColumn(col);
