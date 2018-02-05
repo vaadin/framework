@@ -146,29 +146,6 @@ public class NativeSelect<T> extends AbstractSingleSelect<T>
     }
 
     /**
-     * Returns whether the user is allowed to select nothing in the combo box.
-     *
-     * @return true if empty selection is allowed, false otherwise
-     * @since 8.0
-     */
-    public boolean isEmptySelectionAllowed() {
-        return getState(false).emptySelectionAllowed;
-    }
-
-    /**
-     * Sets whether the user is allowed to select nothing in the combo box. When
-     * true, a special empty item is shown to the user.
-     *
-     * @param emptySelectionAllowed
-     *            true to allow not selecting anything, false to require
-     *            selection
-     * @since 8.0
-     */
-    public void setEmptySelectionAllowed(boolean emptySelectionAllowed) {
-        getState().emptySelectionAllowed = emptySelectionAllowed;
-    }
-
-    /**
      * Returns the empty selection caption.
      * <p>
      * The empty string {@code ""} is the default empty selection caption.
