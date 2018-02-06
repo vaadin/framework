@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-test</artifactId>
-        <version>8.2-SNAPSHOT</version>
+        <version>8.4-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-test-spring-boot-subcontext</artifactId>
     <packaging>jar</packaging>
@@ -18,7 +18,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <spring.boot.version>1.4.2.RELEASE</spring.boot.version>
         <jetty.skip>true</jetty.skip>
     </properties>
 
@@ -45,7 +44,7 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-parent</artifactId>
+                <artifactId>spring-boot-dependencies</artifactId>
                 <type>pom</type>
                 <scope>import</scope>
                 <version>${spring.boot.version}</version>

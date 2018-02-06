@@ -21,6 +21,7 @@ import java.util.Map;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
@@ -55,6 +56,11 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     private boolean refreshing;
     /* Registration for data change handler. */
     private Registration dataChangeRegistration;
+
+    /**
+     * Handle for the spacer visibility change handler.
+     */
+    private HandlerRegistration spacerVisibilityChangeRegistration;
 
     private final Map<Element, ScheduledCommand> elementToResizeCommand = new HashMap<Element, Scheduler.ScheduledCommand>();
     private final ElementResizeListener detailsRowResizeListener = event -> {
@@ -140,9 +146,12 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                 if (spacerCellBorderHeights != null
                         && !getLayoutManager().isLayoutRunning()
                         && getDetailsComponentConnectorId(rowIndex) != null) {
-                    double height = getLayoutManager().getOuterHeightDouble(
-                            element) + spacerCellBorderHeights;
-                    getWidget().setDetailsHeight(rowIndex, height);
+                    // Measure and set details height if element is visible
+                    if (WidgetUtil.isDisplayed(element)) {
+                        double height = getLayoutManager().getOuterHeightDouble(
+                                element) + spacerCellBorderHeights;
+                        getWidget().setDetailsHeight(rowIndex, height);
+                    }
                 }
             };
         }
@@ -180,6 +189,19 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
         getWidget().setDetailsGenerator(new CustomDetailsGenerator());
         dataChangeRegistration = getWidget().getDataSource()
                 .addDataChangeHandler(new DetailsChangeHandler());
+
+        // When details element is shown, remeasure it in the layout phase
+        spacerVisibilityChangeRegistration = getParent().getWidget()
+                .addSpacerVisibilityChangedHandler(event -> {
+                    if (event.isSpacerVisible()) {
+                        String id = indexToDetailConnectorId
+                                .get(event.getRowIndex());
+                        ComponentConnector connector = (ComponentConnector) ConnectorMap
+                                .get(getConnection()).getConnector(id);
+                        getLayoutManager()
+                                .setNeedsMeasureRecursively(connector);
+                    }
+                });
     }
 
     private void detachIfNeeded(int rowIndex, String id) {
@@ -214,6 +236,8 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
 
         dataChangeRegistration.remove();
         dataChangeRegistration = null;
+
+        spacerVisibilityChangeRegistration.removeHandler();
 
         indexToDetailConnectorId.clear();
     }
