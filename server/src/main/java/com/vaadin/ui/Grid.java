@@ -1208,6 +1208,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @return {@code true} if the sorting is enabled for this column;
          *         {@code false} if not
+         *         
+         * @since 
          */
         public boolean isSortable() {
             return sortable;
