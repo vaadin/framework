@@ -319,4 +319,21 @@ public class GridBasicDetailsTest extends GridBasicsTest {
                 getGridElement().getDetails(0).getText().contains("One"));
     }
 
+    @Test
+    public void detailsSizeCorrectAfterScrolling() {
+        selectMenuPath(DETAILS_GENERATOR_PERSISTING);
+        selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
+
+        // Scroll to request next range
+        getGridElement().scrollToRow(21);
+        getGridElement().scrollToRow(0);
+        assertGreater("Details row should have correct height",
+                getGridElement().getDetails(0).getSize().getHeight(), 30);
+
+        // Scroll outside of cached rows
+        getGridElement().scrollToRow(101);
+        getGridElement().scrollToRow(0);
+        assertGreater("Details row should have correct height",
+                getGridElement().getDetails(0).getSize().getHeight(), 30);
+    }
 }
