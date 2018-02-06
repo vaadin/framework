@@ -274,11 +274,8 @@ others.
 demo")))
 ((("TouchKit", "Parking
 demo")))
-The Parking demo for TouchKit, mentioned in
-<<dummy/../../../mobile/mobile-overview.asciidoc#mobile.overview,"Mobile
-Applications with TouchKit">>, uses a responsive theme to adapt to mobile
+link:https://vaadin.com/docs/v7/touchkit/mobile-installation-parking-demo.html[The Parking demo for TouchKit] uses a responsive theme to adapt to mobile
 devices with different screen sizes and when the screen orientation changes.
-
 endif::web[]
 
 (((range="endofrange", startref="term.themes.responsive")))
