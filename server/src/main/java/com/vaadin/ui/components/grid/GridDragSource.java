@@ -181,9 +181,9 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
      *         StringBuilder builder = new StringBuilder();
      *         builder.append("{");
      *         getParent().getColumns().forEach(column -> {
-     *             builder.append("\"" + column.getCaption() + "\"");
+     *             builder.append("\"").append(column.getCaption()).append("\"");
      *             builder.append(":");
-     *             builder.append("\"" + column.getValueProvider().apply(item) + "\"");
+     *             builder.append("\"").append(column.getValueProvider().apply(item)).append("\"");
      *             builder.append(",");
      *         });
      *         builder.setLength(builder.length() - 1); // Remove last comma

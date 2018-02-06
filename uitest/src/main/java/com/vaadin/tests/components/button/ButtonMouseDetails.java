@@ -12,24 +12,24 @@ public class ButtonMouseDetails extends TestBase {
     private int clickCounter = 1;
 
     private Button.ClickListener clickListener = event -> {
-        StringBuilder str = new StringBuilder(out.getValue());
-        str.append(clickCounter + ":\t");
+        String str = out.getValue();
+        str += clickCounter + ":\t";
 
         // Modifier keys
-        str.append("ctrl=" + event.isCtrlKey() + ",\t");
-        str.append("alt=" + event.isAltKey() + ",\t");
-        str.append("meta=" + event.isMetaKey() + ",\t");
-        str.append("shift=" + event.isShiftKey() + ",\t");
+        str += "ctrl=" + event.isCtrlKey() + ",\t";
+        str += "alt=" + event.isAltKey() + ",\t";
+        str += "meta=" + event.isMetaKey() + ",\t";
+        str += "shift=" + event.isShiftKey() + ",\t";
 
         // Coordinates
-        str.append("X=" + event.getRelativeX() + ",\t");
-        str.append("Y=" + event.getRelativeY() + ",\t");
-        str.append("clientX=" + event.getClientX() + ",\t");
-        str.append("clientY=" + event.getClientY());
+        str += "X=" + event.getRelativeX() + ",\t";
+        str += "Y=" + event.getRelativeY() + ",\t";
+        str += "clientX=" + event.getClientX() + ",\t";
+        str += "clientY=" + event.getClientY();
 
-        str.append("\n");
+        str += '\n';
 
-        out.setValue(str.toString());
+        out.setValue(str);
         clickCounter++;
     };
 

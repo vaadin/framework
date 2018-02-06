@@ -141,34 +141,32 @@ public class WindowCloseShortcuts extends AbstractTestUI {
     //
 
     private String elementToHtml(Element producedElem) {
-        StringBuilder stringBuilder = new StringBuilder();
-        elementToHtml(producedElem, stringBuilder);
-        return stringBuilder.toString();
+        return elementToHtml(producedElem, "");
     }
 
-    private String elementToHtml(Element producedElem, StringBuilder sb) {
+    private String elementToHtml(Element producedElem, String s) {
         List<String> names = new ArrayList<>();
         for (Attribute a : producedElem.attributes().asList()) {
             names.add(a.getKey());
         }
         Collections.sort(names);
 
-        sb.append("<" + producedElem.tagName() + "");
+        s += '<' + producedElem.tagName();
         for (String attrName : names) {
-            sb.append(' ').append(attrName).append('=').append("\'")
-                    .append(producedElem.attr(attrName)).append("\'");
+            s += ' ' + attrName + '=' + '\'' + producedElem.attr(attrName)
+                    + '\'';
         }
-        sb.append('>');
+        s += '>';
         for (Node child : producedElem.childNodes()) {
             if (child instanceof Element) {
-                elementToHtml((Element) child, sb);
+                s = elementToHtml((Element) child, s);
             } else if (child instanceof TextNode) {
                 String text = ((TextNode) child).text();
-                sb.append(text.trim());
+                s += text.trim();
             }
         }
-        sb.append("</").append(producedElem.tagName()).append('>');
-        return sb.toString();
+        s += "</" + producedElem.tagName() + '>';
+        return s;
     }
 
     @Override

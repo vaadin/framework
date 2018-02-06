@@ -59,15 +59,15 @@ public class GridDragAndDrop extends AbstractGridDnD {
 
         // Set data generator
         dragSource.setDragDataGenerator("application/json", person -> {
-            StringBuilder builder = new StringBuilder();
-            builder.append('{');
-            builder.append("\"First Name\":");
-            builder.append("\"" + person.getFirstName() + "\"");
-            builder.append(',');
-            builder.append("\"Last Name\":");
-            builder.append("\"" + person.getLastName() + "\"");
-            builder.append('}');
-            return builder.toString();
+            String str = "";
+            str += '{';
+            str += "\"First Name\":";
+            str += '"' + person.getFirstName() + '"';
+            str += ',';
+            str += "\"Last Name\":";
+            str += '"' + person.getLastName() + '"';
+            str += '}';
+            return str;
         });
 
         // Add drag start listener

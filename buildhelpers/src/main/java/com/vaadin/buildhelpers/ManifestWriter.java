@@ -47,11 +47,11 @@ public class ManifestWriter {
         String remainingValue = value;
         while (linelen + remainingValue.length() > 72) {
             int fitsLine = 72 - linelen;
-            buffer.append(remainingValue.substring(0, fitsLine) + "\n ");
+            buffer.append(remainingValue.substring(0, fitsLine)).append("\n ");
             remainingValue = remainingValue.substring(fitsLine);
             linelen = 1;
         }
-        buffer.append(remainingValue + "\n");
+        buffer.append(remainingValue).append('\n');
     }
 
     /**
