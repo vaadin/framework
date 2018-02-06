@@ -99,6 +99,7 @@ import com.vaadin.shared.ui.grid.GridStaticSectionState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState.CellState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState.RowState;
 import com.vaadin.shared.ui.grid.ScrollDestination;
+import com.vaadin.shared.ui.label.ContentMode;
 
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;
@@ -1325,16 +1326,25 @@ public class GridConnector extends AbstractHasComponentsConnector
                     .getObject(GridState.JSONKEY_CELLDESCRIPTION);
 
             if (cellDescriptions != null && cellDescriptions.hasKey(c.id)) {
-                return new TooltipInfo(cellDescriptions.getString(c.id));
+                return createCellTooltipInfo(cellDescriptions.getString(c.id),
+                        getState().cellTooltipContentMode);
             } else if (row.hasKey(GridState.JSONKEY_ROWDESCRIPTION)) {
-                return new TooltipInfo(
-                        row.getString(GridState.JSONKEY_ROWDESCRIPTION));
+                return createCellTooltipInfo(
+                        row.getString(GridState.JSONKEY_ROWDESCRIPTION),
+                        getState().rowTooltipContentMode);
             } else {
                 return null;
             }
         }
 
         return super.getTooltipInfo(element);
+    }
+
+    private static TooltipInfo createCellTooltipInfo(String text,
+            ContentMode contentMode) {
+        TooltipInfo info = new TooltipInfo(text);
+        info.setContentMode(contentMode);
+        return info;
     }
 
     @Override
