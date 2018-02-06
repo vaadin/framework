@@ -289,7 +289,7 @@ public class Profiler {
 
         private native String getEvtGroup()
         /*-{
-            return this.EVT_GROUP;
+            return this.evtGroup;
         }-*/;
 
         private native double getMillis()

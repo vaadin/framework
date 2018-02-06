@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -76,14 +77,19 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     /** For internal use only. May be removed or replaced in the future. */
     private TimeZone timeZone;
 
+    /**
+     * Specifies whether the group of components has focus or not.
+     */
+    private boolean groupFocus;
+
     public VAbstractTextualDate(R resoluton) {
         super(resoluton);
         text = new TextBox();
         text.addChangeHandler(this);
         text.addFocusHandler(
-                event -> fireBlurFocusEvent(event, true, EventId.FOCUS));
+                event -> fireBlurFocusEvent(event, true));
         text.addBlurHandler(
-                event -> fireBlurFocusEvent(event, false, EventId.BLUR));
+                event -> fireBlurFocusEvent(event, false));
         if (BrowserInfo.get().isIE()) {
             addDomHandler(this, KeyDownEvent.getType());
         }
@@ -221,8 +227,19 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void onChange(ChangeEvent event) {
+        updateBufferedValues();
+        sendBufferedValues();
+    }
+
+    @Override
+    public void updateBufferedValues() {
+        updateDate();
+        bufferedDateString = text.getText();
+        updateBufferedResolutions();
+    }
+
+    private void updateDate() {
         if (!text.getText().isEmpty()) {
             try {
                 String enteredDate = text.getText();
@@ -253,10 +270,6 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             // remove possibly added invalid value indication
             removeStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
         }
-
-        // always send the date string
-        bufferedDateString = text.getText();
-        updateAndSendBufferedValues();
     }
 
     /**
@@ -264,7 +277,10 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * then {@link #sendBufferedValues() sends} the values to the server.
      *
      * @since 8.2
+     * @deprecated Use {@link #updateBufferedResolutions()} and
+     * {@link #sendBufferedValues()} instead.
      */
+    @Deprecated
     protected final void updateAndSendBufferedValues() {
         updateBufferedResolutions();
         sendBufferedValues();
@@ -279,8 +295,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * method.
      *
      * <p>
-     * Note that this method should not send the buffered values, but use
-     * {@link #updateAndSendBufferedValues()} instead
+     * Note that this method should not send the buffered values. For that, use
+     * {@link #sendBufferedValues()}.
      *
      * @since 8.2
      */
@@ -394,27 +410,54 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     }
 
     private void fireBlurFocusEvent(DomEvent<?> event,
-            boolean addFocusStyleName, String eventId) {
+            boolean focus) {
         String styleName = VTextField.CLASSNAME + "-"
                 + VTextField.CLASSNAME_FOCUS;
-        if (addFocusStyleName) {
+        if (focus) {
             text.addStyleName(styleName);
         } else {
             text.removeStyleName(styleName);
         }
-        if (getClient() != null && connector.hasEventListener(eventId)) {
-            // may excessively send events if if focus went to another
-            // sub-component
-            if (EventId.FOCUS.equals(eventId)) {
+
+        Scheduler.get().scheduleDeferred(() -> checkGroupFocus(focus));
+
+        // Needed for tooltip event handling
+        fireEvent(event);
+    }
+
+    /**
+     * Checks if the group focus has changed, and sends to the server if needed.
+     *
+     * @param textFocus
+     *            the focus of the {@link #text}
+     * @since 8.3
+     */
+    protected void checkGroupFocus(boolean textFocus) {
+        boolean newGroupFocus = textFocus | hasChildFocus();
+        if (getClient() != null
+                && connector.hasEventListener(
+                        textFocus ? EventId.FOCUS : EventId.BLUR)
+                && groupFocus != newGroupFocus) {
+
+            if (newGroupFocus) {
                 rpc.focus();
             } else {
                 rpc.blur();
             }
             sendBufferedValues();
+            groupFocus = newGroupFocus;
         }
+    }
 
-        // Needed for tooltip event handling
-        fireEvent(event);
+    /**
+     * Returns whether any of the child components has focus.
+     *
+     * @return {@code true} if any of the child component has focus,
+     *         {@code false} otherwise
+     * @since 8.3
+     */
+    protected boolean hasChildFocus() {
+        return false;
     }
 
     /**
@@ -449,7 +492,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             date = getIsoFormatter().parse(isoDate);
         }
         setDate(date);
-        updateAndSendBufferedValues();
+        updateBufferedResolutions();
+        sendBufferedValues();
     }
 
     /**
@@ -479,4 +523,5 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     private static Logger getLogger() {
         return Logger.getLogger(VAbstractTextualDate.class.getName());
     }
+
 }

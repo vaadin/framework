@@ -57,8 +57,8 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
 
 public class VMenuBar extends FocusableFlowPanel
-        implements CloseHandler<PopupPanel>, KeyPressHandler, KeyDownHandler,
-        FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
+implements CloseHandler<PopupPanel>, KeyPressHandler, KeyDownHandler,
+FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
 
     // The hierarchy of VMenuBar is a bit weird as VMenuBar is the Paintable,
     // used for the root menu but also used for the sub menus.
@@ -793,7 +793,7 @@ public class VMenuBar extends FocusableFlowPanel
      *
      */
     public static class CustomMenuItem extends Widget
-            implements HasHTML, SubPartAware {
+    implements HasHTML, SubPartAware {
 
         protected String html = null;
         protected Command command = null;
@@ -805,6 +805,7 @@ public class VMenuBar extends FocusableFlowPanel
         protected boolean checked = false;
         protected boolean selected = false;
         protected String description = null;
+        protected ContentMode descriptionContentMode = null;
 
         private String styleName;
 
@@ -1114,15 +1115,24 @@ public class VMenuBar extends FocusableFlowPanel
                         MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION);
             }
 
+            if (uidl.hasAttribute(
+                    MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION_CONTENT_MODE)) {
+                String contentModeString = uidl.getStringAttribute(
+                        MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION_CONTENT_MODE);
+                descriptionContentMode = ContentMode.valueOf(contentModeString);
+            } else {
+                descriptionContentMode = ContentMode.PREFORMATTED;
+            }
+
             updateStyleNames();
         }
 
         public TooltipInfo getTooltip() {
-            if (description == null) {
+            if (description == null || descriptionContentMode == null) {
                 return null;
             }
 
-            return new TooltipInfo(description, ContentMode.PREFORMATTED, null,
+            return new TooltipInfo(description, descriptionContentMode, null,
                     this);
         }
 

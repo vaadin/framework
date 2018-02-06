@@ -18,6 +18,8 @@ package com.vaadin.shared;
 import java.io.Serializable;
 import java.util.Locale;
 
+import com.google.gwt.regexp.shared.RegExp;
+
 /**
  * Class that parses the user agent string from the browser and provides
  * information about the browser. Used internally by
@@ -59,6 +61,7 @@ public class VBrowserDetails implements Serializable {
     private float browserEngineVersion = -1;
     private int browserMajorVersion = -1;
     private int browserMinorVersion = -1;
+    private String browserVersion;
 
     private int osMajorVersion = -1;
     private int osMinorVersion = -1;
@@ -90,9 +93,10 @@ public class VBrowserDetails implements Serializable {
         isIE = isIE || isTrident;
 
         isPhantomJS = userAgent.indexOf("phantomjs/") != -1;
-        isSafari = !isChrome && !isIE && !isPhantomJS
+        isFirefox = userAgent.indexOf(" firefox/") != -1
+                || userAgent.indexOf("fxios/") != -1;
+        isSafari = !isChrome && !isIE && !isPhantomJS && !isFirefox
                 && userAgent.indexOf("safari") != -1;
-        isFirefox = userAgent.indexOf(" firefox/") != -1;
         if (userAgent.indexOf(" edge/") != -1) {
             isEdge = true;
             isChrome = false;
@@ -142,29 +146,38 @@ public class VBrowserDetails implements Serializable {
 
         // Browser version
         try {
+            RegExp versionRegExp = RegExp.compile("[\\w\\.]*", "g");
             if (isIE) {
                 if (userAgent.indexOf("msie") == -1) {
                     // IE 11+
                     int rvPos = userAgent.indexOf("rv:");
                     if (rvPos >= 0) {
-                        String tmp = userAgent.substring(rvPos + 3);
-                        tmp = tmp.replaceFirst("(\\.[0-9]+).+", "$1");
-                        parseVersionString(tmp);
+                        int i = rvPos + "rv:".length();
+                        versionRegExp.setLastIndex(i);
+                        browserVersion = versionRegExp.exec(userAgent)
+                                .getGroup(0);
+                        parseVersionString(browserVersion);
                     }
                 } else if (isTrident) {
                     // See
                     // https://msdn.microsoft.com/en-us/library/ms537503(v=vs.85).aspx#TriToken
                     setIEMode((int) browserEngineVersion + 4);
                 } else {
-                    String ieVersionString = userAgent
-                            .substring(userAgent.indexOf("msie ") + 5);
-                    ieVersionString = safeSubstring(ieVersionString, 0,
-                            ieVersionString.indexOf(";"));
-                    parseVersionString(ieVersionString);
+                    int i = userAgent.indexOf("msie ") + 5;
+                    versionRegExp.setLastIndex(i);
+                    browserVersion = versionRegExp.exec(userAgent).getGroup(0);
+                    parseVersionString(browserVersion);
                 }
             } else if (isFirefox) {
-                int i = userAgent.indexOf(" firefox/") + 9;
-                parseVersionString(safeSubstring(userAgent, i, i + 5));
+                int i = userAgent.indexOf(" firefox/");
+                if (i != -1) {
+                    i += " firefox/".length();
+                } else {
+                    i = userAgent.indexOf(" fxios/") + " fxios/".length();
+                }
+                versionRegExp.setLastIndex(i);
+                browserVersion = versionRegExp.exec(userAgent).getGroup(0);
+                parseVersionString(browserVersion);
             } else if (isChrome) {
                 int i = userAgent.indexOf(" chrome/");
                 if (i != -1) {
@@ -172,10 +185,14 @@ public class VBrowserDetails implements Serializable {
                 } else {
                     i = userAgent.indexOf(" crios/") + " crios/".length();
                 }
-                parseVersionString(safeSubstring(userAgent, i, i + 5));
+                versionRegExp.setLastIndex(i);
+                browserVersion = versionRegExp.exec(userAgent).getGroup(0);
+                parseVersionString(browserVersion);
             } else if (isSafari) {
                 int i = userAgent.indexOf(" version/") + 9;
-                parseVersionString(safeSubstring(userAgent, i, i + 5));
+                versionRegExp.setLastIndex(i);
+                browserVersion = versionRegExp.exec(userAgent).getGroup(0);
+                parseVersionString(browserVersion);
             } else if (isOpera) {
                 int i = userAgent.indexOf(" version/");
                 if (i != -1) {
@@ -184,14 +201,20 @@ public class VBrowserDetails implements Serializable {
                 } else {
                     i = userAgent.indexOf("opera/") + 6;
                 }
-                parseVersionString(safeSubstring(userAgent, i, i + 5));
+                versionRegExp.setLastIndex(i);
+                browserVersion = versionRegExp.exec(userAgent).getGroup(0);
+                parseVersionString(browserVersion);
             } else if (isEdge) {
                 int i = userAgent.indexOf(" edge/") + 6;
-                parseVersionString(safeSubstring(userAgent, i, i + 8));
+                versionRegExp.setLastIndex(i);
+                browserVersion = versionRegExp.exec(userAgent).getGroup(0);
+                parseVersionString(browserVersion);
             } else if (isPhantomJS) {
                 String prefix = " phantomjs/";
                 int i = userAgent.indexOf(prefix) + prefix.length();
-                parseVersionString(safeSubstring(userAgent, i, i + 5));
+                versionRegExp.setLastIndex(i);
+                browserVersion = versionRegExp.exec(userAgent).getGroup(0);
+                parseVersionString(browserVersion);
             }
         } catch (Exception e) {
             // Browser version parsing failed
@@ -515,6 +538,15 @@ public class VBrowserDetails implements Serializable {
     }
 
     /**
+     * Gets the complete browser version as string.
+     *
+     * @return the complete browser version or {@code null} if unknown
+     */
+    public final String getBrowserVersion() {
+        return browserVersion;
+    }
+
+    /**
      * Sets the version for IE based on the documentMode. This is used to return
      * the correct the correct IE version when the version from the user agent
      * string and the value of the documentMode property do not match.
@@ -525,6 +557,7 @@ public class VBrowserDetails implements Serializable {
     public void setIEMode(int documentMode) {
         browserMajorVersion = documentMode;
         browserMinorVersion = 0;
+        browserVersion = browserMajorVersion + "." + browserMinorVersion;
     }
 
     /**

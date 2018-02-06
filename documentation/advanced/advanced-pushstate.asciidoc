@@ -1,11 +1,11 @@
 ---
-title: Mananipulating browser history
+title: Manipulating browser history
 order: 11
 layout: page
 ---
 
 [[advanced.pushstate]]
-= Mananipulating browser history
+= Manipulating browser history
 
 A major issue in AJAX applications is that as they run in a single web page.
 Bookmarking the application URL (or more generally the __URI__) can only

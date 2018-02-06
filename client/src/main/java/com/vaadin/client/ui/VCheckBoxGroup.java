@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.widgets.FocusableFlowPanelComposite;
 import com.vaadin.shared.Registration;
@@ -49,6 +50,7 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
 
     public static final String CLASSNAME = "v-select-optiongroup";
     public static final String CLASSNAME_OPTION = "v-select-option";
+    public static final String CLASSNAME_OPTION_SELECTED = "v-select-option-selected";
 
     private final Map<VCheckBox, JsonObject> optionsToItems;
 
@@ -134,6 +136,7 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
         widget.setValue(
                 item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
         setOptionEnabled(widget, item);
+        widget.setStyleName(CLASSNAME_OPTION_SELECTED, widget.getValue());
 
         if (requireInitialization) {
             widget.addStyleName(CLASSNAME_OPTION);
@@ -188,6 +191,9 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
                 .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
         boolean enabled = optionEnabled && !isReadonly() && isEnabled();
         checkBox.setEnabled(enabled);
+        // #9258 apply the v-disabled class when disabled for UX
+        checkBox.setStyleName(StyleConstants.DISABLED,
+                !isEnabled() || !optionEnabled);
     }
 
     public boolean isHtmlContentAllowed() {

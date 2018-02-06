@@ -136,7 +136,7 @@ you should check that the bootstrap script was loaded properly.
 
 [subs="normal"]
 ----
-&lt;script type="text/javascript"&gt;//&lt;![CDATA[
+&lt;script type="text/javascript"&gt;//&lt;!\[CDATA[
   if (!window.vaadin)
       alert("[replaceable]#Failed to load the bootstrap JavaScript:#"+
             "[replaceable]#VAADIN/vaadinBootstrap.js#");
@@ -182,7 +182,7 @@ For example:
       "serviceUrl": "[replaceable]#helloworld#/",
       "widgetset": "[replaceable]#com.example.MyWidgetSet#",
       "theme": "[replaceable]#mytheme#",
-      "versionInfo": {"vaadinVersion": "[replaceable]#7.0.0#"},
+      "versionInfo": {"vaadinVersion": "[replaceable]#8.1.6#"},
       "vaadinDir": "[replaceable]#VAADIN/#",
       "heartbeatInterval": [replaceable]#300#,
       "debug": [replaceable]#true#,
@@ -271,7 +271,7 @@ element.
 	    "serviceUrl": "helloworld/",
 	    "widgetset": "com.example.MyWidgetSet",
 	    "theme": "mytheme",
-	    "versionInfo": {"vaadinVersion": "7.0.0"},
+	    "versionInfo": {"vaadinVersion": "8.1.6"},
 	    "vaadinDir": "VAADIN/",
 	    "heartbeatInterval": 300,
 	    "debug": true,

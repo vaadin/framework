@@ -158,7 +158,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         /**
          * Get a string that represents this item. This is used in the text box.
          */
-
         @Override
         public String getReplacementString() {
             return caption;
@@ -449,12 +448,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             }
             // We don't need to show arrows or statusbar if there is
             // only one page
-            if (getTotalSuggestionsIncludingNullSelectionItem() <= pageLength
-                    || pageLength == 0) {
-                setPagingEnabled(false);
-            } else {
-                setPagingEnabled(true);
-            }
+            setPagingEnabled(
+                    getTotalSuggestionsIncludingNullSelectionItem() > pageLength
+                            && pageLength > 0);
             setPrevButtonActive(first > 1);
             setNextButtonActive(last < matches);
 
@@ -520,7 +516,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 up.setClassName(
                         VComboBox.this.getStylePrimaryName() + "-prevpage-off");
             }
-
         }
 
         /**
@@ -591,7 +586,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
             // Set the text.
             setText(suggestion.getReplacementString());
-
         }
 
         /*
@@ -1025,7 +1019,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 }
             }
         }
-
     }
 
     /**
@@ -1046,6 +1039,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                                 .setPopupPositionAndShow(suggestionPopup);
                     }
                 });
+
+        private String handledNewItem = null;
 
         /**
          * Default constructor
@@ -1074,9 +1069,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 final int pixels = getPreferredHeight()
                         / currentSuggestions.size() * pageItemsCount;
                 return pixels + "px";
-            } else {
-                return "";
             }
+            return "";
         }
 
         /**
@@ -1142,7 +1136,11 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         public void actOnEnteredValueAfterFiltering(String enteredItemValue) {
             debug("VComboBox.SM: doPostFilterSelectedItemAction()");
             final MenuItem item = getSelectedItem();
-
+            boolean handledOnServer = handledNewItem == enteredItemValue;
+            if (handledOnServer) {
+                // clear value to mark it as handled
+                handledNewItem = null;
+            }
             // check for exact match in menu
             int p = getItems().size();
             if (p > 0) {
@@ -1159,13 +1157,17 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                             doItemAction(potentialExactMatch, true);
                         }
                         suggestionPopup.hide();
+                        lastNewItemString = null;
+                        connector.clearNewItemHandlingIfMatch(enteredItemValue);
                         return;
                     }
                 }
             }
-            if ("".equals(enteredItemValue) && nullSelectionAllowed) {
+
+            if (!handledOnServer && "".equals(enteredItemValue)
+                    && nullSelectionAllowed) {
                 onNullSelected();
-            } else if (allowNewItems) {
+            } else if (!handledOnServer && allowNewItems) {
                 if (!enteredItemValue.equals(lastNewItemString)) {
                     // Store last sent new item string to avoid double sends
                     lastNewItemString = enteredItemValue;
@@ -1190,6 +1192,10 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 }
             }
             suggestionPopup.hide();
+
+            if (handledOnServer || !allowNewItems) {
+                lastNewItemString = null;
+            }
         }
 
         private static final String SUBPART_PREFIX = "item";
@@ -1327,6 +1333,10 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 }
             }
         }
+
+        public void markNewItemsHandled(String handledNewItem) {
+            this.handledNewItem = handledNewItem;
+        }
     }
 
     private String getSuggestionKey(MenuItem item) {
@@ -1397,7 +1407,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 super.setSelectionRange(0, 0);
             }
         }
-
     }
 
     /**
@@ -1451,9 +1460,15 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             waitingForFilteringResponse = false;
 
             if (pendingUserInput != null) {
+                boolean pendingHandled = suggestionPopup.menu.handledNewItem == pendingUserInput;
                 suggestionPopup.menu
                         .actOnEnteredValueAfterFiltering(pendingUserInput);
-                pendingUserInput = null;
+                if (!allowNewItems || (pendingHandled
+                        && suggestionPopup.menu.handledNewItem == null)) {
+                    pendingUserInput = null;
+                } else {
+                    waitingForFilteringResponse = true;
+                }
             } else if (popupOpenerClicked) {
                 // make sure the current item is selected in the popup
                 suggestionPopup.menu.highlightSelectedItem();
@@ -1481,6 +1496,10 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             pendingUserInput = value;
             showPopup = false;
             filterOptions(0, value);
+        }
+
+        public boolean isPending(String value) {
+            return value != null && value.equals(pendingUserInput);
         }
 
         /*
@@ -1550,7 +1569,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
          */
         public void serverReplyHandled() {
             popupOpenerClicked = false;
-            lastNewItemString = null;
 
             // if (!initDone) {
             // debug("VComboBox: init done, updating widths");
@@ -1773,7 +1791,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     private static double getMarginBorderPaddingWidth(Element element) {
         final ComputedStyle s = new ComputedStyle(element);
         return s.getMarginWidth() + s.getBorderWidth() + s.getPaddingWidth();
-
     }
 
     /*
@@ -1788,7 +1805,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         super.onBrowserEvent(event);
 
         if (event.getTypeInt() == Event.ONPASTE) {
-            if (textInputEnabled) {
+            if (textInputEnabled && connector.isEnabled()) {
                 filterOptions(currentPage);
             }
         }
@@ -1923,12 +1940,10 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                     true);
         }
 
-        if (textInputEnabled == textInputAllowed) {
-            return;
+        if (textInputEnabled != textInputAllowed) {
+            textInputEnabled = textInputAllowed;
+            updateReadOnly();
         }
-
-        textInputEnabled = textInputAllowed;
-        updateReadOnly();
     }
 
     /**
@@ -2300,7 +2315,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             event.stopPropagation();
             break;
         }
-
     }
 
     /*
@@ -2555,7 +2569,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         // Send new items when clicking out with the mouse.
         if (!readonly) {
             if (textInputEnabled && allowNewItems
-                    && (currentSuggestion == null || tb.getText().equals(
+                    && (currentSuggestion == null || !tb.getText().equals(
                             currentSuggestion.getReplacementString()))) {
                 dataReceivedHandler.reactOnInputWhenReady(tb.getText());
             } else {

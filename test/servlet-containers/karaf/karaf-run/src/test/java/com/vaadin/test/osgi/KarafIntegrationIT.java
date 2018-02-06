@@ -17,6 +17,8 @@ package com.vaadin.test.osgi;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.function.Function;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +28,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.google.common.base.Predicate;
 import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.testbench.elements.TextFieldElement;
 
@@ -52,9 +53,8 @@ public class KarafIntegrationIT extends TestBenchTestCase {
 
     private void runBasicTest(String app1Url, String text) {
         getDriver().navigate().to(app1Url);
-        Predicate<WebDriver> isTrue = driver -> isElementPresent(
-                TextFieldElement.class);
-        new WebDriverWait(getDriver(), 5000).until(isTrue);
+        new WebDriverWait(getDriver(), 5000)
+                .until(driver -> isElementPresent(TextFieldElement.class));
         getDriver().findElement(By.className("v-textfield")).sendKeys(text);
         getDriver().findElement(By.className("v-button")).click();
         String foundText = getDriver().findElement(By.className("v-label"))

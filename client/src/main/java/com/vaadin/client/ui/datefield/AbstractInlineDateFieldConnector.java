@@ -19,6 +19,7 @@ import java.util.Date;
 
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.VAbstractCalendarPanel;
 import com.vaadin.client.ui.VAbstractDateFieldCalendar;
@@ -46,6 +47,7 @@ public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCa
      * {@link #updateFromUIDL(UIDL, ApplicationConnection)} method as is and
      * customizing only listeners logic.
      */
+    @SuppressWarnings("deprecation")
     protected void updateListeners() {
         VAbstractDateFieldCalendar<PANEL, R> widget = getWidget();
         if (isResolutionMonthOrHigher()) {
@@ -90,6 +92,7 @@ public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCa
         } else {
             widget.calendarPanel.setDate(null);
         }
+        widget.calendarPanel.setDateStyles(getState().dateStyles);
 
         updateListeners();
 
@@ -97,7 +100,13 @@ public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCa
         widget.calendarPanel.renderCalendar();
     }
 
+    @OnStateChange("assistiveLabels")
+    private void updateAssistiveLabels() {
+        setAndUpdateAssistiveLabels(getWidget().calendarPanel);
+    }
+
     @Override
+    @SuppressWarnings("unchecked")
     public VAbstractDateFieldCalendar<PANEL, R> getWidget() {
         return (VAbstractDateFieldCalendar<PANEL, R>) super.getWidget();
     }

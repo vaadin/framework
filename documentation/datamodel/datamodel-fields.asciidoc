@@ -55,4 +55,4 @@ This is useful for showing the user that the data is there, even though the user
 
 When editing multiple values from the same business object, you can use `Binder` to simplify how the values of all input fields in a form are handled.
 
-link:datamodel-forms.asciidoc[Binding Data to Forms] describes how this is done.
+<<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms,"Binding Data to Forms">> describes how this is done.
