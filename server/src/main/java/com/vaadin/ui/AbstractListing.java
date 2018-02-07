@@ -183,7 +183,7 @@ public abstract class AbstractListing<T> extends AbstractComponent
      *
      * @return the item caption generator used, not null
      */
-    public ItemCaptionGenerator<T> getItemCaptionGenerator() {
+    protected ItemCaptionGenerator<T> getItemCaptionGenerator() {
         return itemCaptionGenerator;
     }
 
@@ -195,7 +195,7 @@ public abstract class AbstractListing<T> extends AbstractComponent
      * @param itemCaptionGenerator
      *            the item caption provider to use, not null
      */
-    public void setItemCaptionGenerator(
+    protected void setItemCaptionGenerator(
             ItemCaptionGenerator<T> itemCaptionGenerator) {
         Objects.requireNonNull(itemCaptionGenerator,
                 "Item caption generators must not be null");

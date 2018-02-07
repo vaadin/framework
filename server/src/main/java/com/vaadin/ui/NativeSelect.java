@@ -134,17 +134,6 @@ public class NativeSelect<T> extends AbstractSingleSelect<T>
         internalSetDataProvider(dataProvider);
     }
 
-    @Override
-    public void setItemCaptionGenerator(
-            ItemCaptionGenerator<T> itemCaptionGenerator) {
-        super.setItemCaptionGenerator(itemCaptionGenerator);
-    }
-
-    @Override
-    public ItemCaptionGenerator<T> getItemCaptionGenerator() {
-        return super.getItemCaptionGenerator();
-    }
-
     /**
      * Returns the empty selection caption.
      * <p>

@@ -388,6 +388,16 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         getState().emptySelectionAllowed = emptySelectionAllowed;
     }
 
+    @Override
+    public void setItemCaptionGenerator(
+            ItemCaptionGenerator<T> itemCaptionGenerator) {
+        super.setItemCaptionGenerator(itemCaptionGenerator);
+    }
+
+    @Override
+    public ItemCaptionGenerator<T> getItemCaptionGenerator() {
+        return super.getItemCaptionGenerator();
+    }
 
     /**
      * Returns the empty selection caption.
