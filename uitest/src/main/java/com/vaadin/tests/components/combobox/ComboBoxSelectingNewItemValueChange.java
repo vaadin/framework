@@ -16,7 +16,7 @@ import com.vaadin.ui.Notification;
 
 public class ComboBoxSelectingNewItemValueChange extends ComboBoxSelecting {
 
-    private final class CustomComboBox extends ComboBox<String> {
+    final class CustomComboBox extends ComboBox<String> {
         private CustomComboBox(String caption, Collection<String> options) {
             super(caption, options);
         }
@@ -52,28 +52,7 @@ public class ComboBoxSelectingNewItemValueChange extends ComboBoxSelecting {
             }
         });
 
-        comboBox.setNewItemHandler(text -> {
-            if (Boolean.TRUE.equals(delay.getValue())) {
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                }
-            }
-            if (Boolean.TRUE.equals(reject.getValue())) {
-                valueChangeLabel.setValue("item " + text + " discarded");
-                comboBox.getComboBoxClientRpc().newItemNotAdded(text);
-            } else {
-                items.add(text);
-                Collections.sort(items);
-                valueChangeLabel
-                        .setValue("adding new item... count: " + items.size());
-                if (Boolean.TRUE.equals(noSelection.getValue())) {
-                    comboBox.getComboBoxClientRpc().newItemNotAdded(text);
-                }
-                comboBox.getDataProvider().refreshAll();
-            }
-        });
+        configureNewItemHandling();
 
         comboBox.addValueChangeListener(e -> {
             ++valueChangeEventCount;
@@ -108,6 +87,32 @@ public class ComboBoxSelectingNewItemValueChange extends ComboBoxSelecting {
 
         addComponents(comboBox, valueLabel, valueChangeLabel, checkButton,
                 resetButton, delay, reject, noSelection);
+    }
+
+    @SuppressWarnings("deprecation")
+    protected void configureNewItemHandling() {
+        comboBox.setNewItemHandler(text -> {
+            if (Boolean.TRUE.equals(delay.getValue())) {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            if (Boolean.TRUE.equals(reject.getValue())) {
+                valueChangeLabel.setValue("item " + text + " discarded");
+                comboBox.getComboBoxClientRpc().newItemNotAdded(text);
+            } else {
+                items.add(text);
+                Collections.sort(items);
+                valueChangeLabel
+                        .setValue("adding new item... count: " + items.size());
+                if (Boolean.TRUE.equals(noSelection.getValue())) {
+                    comboBox.getComboBoxClientRpc().newItemNotAdded(text);
+                }
+                comboBox.getDataProvider().refreshAll();
+            }
+        });
     }
 
     private void initItems() {
