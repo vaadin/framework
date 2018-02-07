@@ -62,7 +62,7 @@ public class TreeGridExpandCollapseRecursively extends AbstractTestUI {
         Collection<Directory> roots = generateDirectoryStructure(DEPTH);
 
         TreeGrid<Directory> grid = new TreeGrid<>();
-        grid.addColumn(Directory::getName);
+        grid.addColumn(item -> "Item" + item.getName());
 
         grid.setItems(roots, Directory::getSubDirectories);
 
@@ -79,11 +79,15 @@ public class TreeGridExpandCollapseRecursively extends AbstractTestUI {
         return generateDirectories(depth, null, CHILDREN);
     }
 
-    private Collection<Directory> generateDirectories(int depth, Directory parent, int childCount) {
+    private Collection<Directory> generateDirectories(int depth,
+            Directory parent, int childCount) {
         Collection<Directory> dirs = new ArrayList<>();
         if (depth >= 0) {
             for (int i = 0; i < childCount; i++) {
-                Directory dir = new Directory(RandomStringUtils.randomAlphabetic(20), parent);
+                String name = parent != null
+                        ? parent.getName() + "-" + i
+                        : "-" + i;
+                Directory dir = new Directory(name, parent);
                 if (parent != null) {
                     parent.getSubDirectories().add(dir);
                 }
