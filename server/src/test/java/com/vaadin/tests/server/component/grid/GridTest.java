@@ -42,6 +42,7 @@ import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.GridSortOrder;
 import com.vaadin.data.provider.QuerySortOrder;
+import com.vaadin.data.provider.SortOrder;
 import com.vaadin.data.provider.bov.Person;
 import com.vaadin.event.selection.SelectionEvent;
 import com.vaadin.server.SerializableComparator;
@@ -751,7 +752,8 @@ public class GridTest {
 
         Assert.assertFalse("Column should not be sortable",
                 column.isSortable());
-        Assert.assertFalse("User should not be able to sort the column",
+        Assert.assertFalse(
+                "User should not be able to sort the column with in-memory data",
                 column.isSortableByUser());
 
         // Use CallBackDataProvider
@@ -765,9 +767,19 @@ public class GridTest {
 
         column.setSortable(true);
 
-        Assert.assertTrue("Column should be initially sortable",
+        Assert.assertTrue("Column should be marked sortable",
                 column.isSortable());
-        Assert.assertFalse("User should not be able to sort the column",
+        Assert.assertFalse(
+                "User should not be able to sort the column since no sort order is provided",
+                column.isSortableByUser());
+
+        column.setSortProperty("toString");
+
+        Assert.assertTrue("Column should be marked sortable",
+                column.isSortable());
+        Assert.assertFalse(
+                "User should be able to sort the column with the sort order",
                 column.isSortableByUser());
     }
+
 }
