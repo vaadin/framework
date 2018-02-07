@@ -66,7 +66,7 @@ public class VaadinServletRegistration {
     @Reference(cardinality = ReferenceCardinality.MULTIPLE, service = VaadinServlet.class, policy = ReferencePolicy.DYNAMIC)
     void bindVaadinServlet(VaadinServlet servlet, ServiceReference<VaadinServlet> reference)
             throws ResourceBundleInactiveException {
-        log(LogService.LOG_WARNING, "VaadinServlet Registration");
+        log(LogService.LOG_INFO, "VaadinServlet Registration");
 
         Hashtable<String, Object> properties = getProperties(reference);
 
