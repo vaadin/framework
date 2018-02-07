@@ -191,17 +191,6 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
         super.setItemIconGenerator(itemIconGenerator);
     }
 
-    @Override
-    public ItemCaptionGenerator<T> getItemCaptionGenerator() {
-        return super.getItemCaptionGenerator();
-    }
-
-    @Override
-    public void setItemCaptionGenerator(
-            ItemCaptionGenerator<T> itemCaptionGenerator) {
-        super.setItemCaptionGenerator(itemCaptionGenerator);
-    }
-
     /**
      * Returns the item enabled predicate.
      *
