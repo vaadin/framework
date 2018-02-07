@@ -1,16 +1,16 @@
 package com.vaadin.tests.components.treegrid;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
-import org.apache.commons.lang.RandomStringUtils;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.TreeGrid;
 
 @Widgetset("com.vaadin.DefaultWidgetSet")
@@ -66,13 +66,18 @@ public class TreeGridExpandCollapseRecursively extends AbstractTestUI {
 
         grid.setItems(roots, Directory::getSubDirectories);
 
-        HorizontalLayout buttons = new HorizontalLayout();
-        buttons.addComponent(new Button("Expand all", e -> grid
-                .expandRecursively(roots, DEPTH - 1)));
-        buttons.addComponent(new Button("Collapse all", e -> grid
-                .collapseRecursively(roots, DEPTH - 1)));
+        RadioButtonGroup<Integer> depthSelector = new RadioButtonGroup<>(
+                "Depth", Arrays.asList(0, 1, 2, 3));
+        depthSelector.addStyleName("horizontal");
+        depthSelector.setValue(3);
 
-        addComponents(buttons, grid);
+        HorizontalLayout buttons = new HorizontalLayout();
+        buttons.addComponent(new Button("Expand recursively", e -> grid
+                .expandRecursively(roots, depthSelector.getValue())));
+        buttons.addComponent(new Button("Collapse recursively", e -> grid
+                .collapseRecursively(roots, depthSelector.getValue())));
+
+        addComponents(depthSelector, buttons, grid);
     }
 
     private Collection<Directory> generateDirectoryStructure(int depth) {
