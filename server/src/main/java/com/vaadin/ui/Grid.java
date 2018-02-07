@@ -1153,11 +1153,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          */
         public Column<T, V> setId(String id) {
             Objects.requireNonNull(id, "Column identifier cannot be null");
-            if (this.userId != null) {
+            if (userId != null) {
                 throw new IllegalStateException(
                         "Column identifier cannot be changed");
             }
-            this.userId = id;
+
+            userId = id;
             getGrid().setColumnId(id, this);
             updateSortable();
 
@@ -1218,6 +1219,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @return {@code true} if the column can be sorted by the user;
          *         {@code false} if not
+         *
+         * @since
          */
         public boolean isSortableByUser() {
             return getState(false).sortable;
