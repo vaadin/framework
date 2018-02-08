@@ -18,8 +18,6 @@ package com.vaadin.shared;
 import java.io.Serializable;
 import java.util.Locale;
 
-import com.google.gwt.regexp.shared.RegExp;
-
 /**
  * Class that parses the user agent string from the browser and provides
  * information about the browser. Used internally by
@@ -146,16 +144,13 @@ public class VBrowserDetails implements Serializable {
 
         // Browser version
         try {
-            RegExp versionRegExp = RegExp.compile("[\\w\\.]*", "g");
             if (isIE) {
                 if (userAgent.indexOf("msie") == -1) {
                     // IE 11+
                     int rvPos = userAgent.indexOf("rv:");
                     if (rvPos >= 0) {
                         int i = rvPos + "rv:".length();
-                        versionRegExp.setLastIndex(i);
-                        browserVersion = versionRegExp.exec(userAgent)
-                                .getGroup(0);
+                        browserVersion = findBrowserVersion(userAgent, i);
                         parseVersionString(browserVersion);
                     }
                 } else if (isTrident) {
@@ -164,8 +159,7 @@ public class VBrowserDetails implements Serializable {
                     setIEMode((int) browserEngineVersion + 4);
                 } else {
                     int i = userAgent.indexOf("msie ") + 5;
-                    versionRegExp.setLastIndex(i);
-                    browserVersion = versionRegExp.exec(userAgent).getGroup(0);
+                    browserVersion = findBrowserVersion(userAgent, i);
                     parseVersionString(browserVersion);
                 }
             } else if (isFirefox) {
@@ -175,8 +169,7 @@ public class VBrowserDetails implements Serializable {
                 } else {
                     i = userAgent.indexOf(" fxios/") + " fxios/".length();
                 }
-                versionRegExp.setLastIndex(i);
-                browserVersion = versionRegExp.exec(userAgent).getGroup(0);
+                browserVersion = findBrowserVersion(userAgent, i);
                 parseVersionString(browserVersion);
             } else if (isChrome) {
                 int i = userAgent.indexOf(" chrome/");
@@ -185,13 +178,11 @@ public class VBrowserDetails implements Serializable {
                 } else {
                     i = userAgent.indexOf(" crios/") + " crios/".length();
                 }
-                versionRegExp.setLastIndex(i);
-                browserVersion = versionRegExp.exec(userAgent).getGroup(0);
+                browserVersion = findBrowserVersion(userAgent, i);
                 parseVersionString(browserVersion);
             } else if (isSafari) {
                 int i = userAgent.indexOf(" version/") + 9;
-                versionRegExp.setLastIndex(i);
-                browserVersion = versionRegExp.exec(userAgent).getGroup(0);
+                browserVersion = findBrowserVersion(userAgent, i);
                 parseVersionString(browserVersion);
             } else if (isOpera) {
                 int i = userAgent.indexOf(" version/");
@@ -201,19 +192,16 @@ public class VBrowserDetails implements Serializable {
                 } else {
                     i = userAgent.indexOf("opera/") + 6;
                 }
-                versionRegExp.setLastIndex(i);
-                browserVersion = versionRegExp.exec(userAgent).getGroup(0);
+                browserVersion = findBrowserVersion(userAgent, i);
                 parseVersionString(browserVersion);
             } else if (isEdge) {
                 int i = userAgent.indexOf(" edge/") + 6;
-                versionRegExp.setLastIndex(i);
-                browserVersion = versionRegExp.exec(userAgent).getGroup(0);
+                browserVersion = findBrowserVersion(userAgent, i);
                 parseVersionString(browserVersion);
             } else if (isPhantomJS) {
                 String prefix = " phantomjs/";
                 int i = userAgent.indexOf(prefix) + prefix.length();
-                versionRegExp.setLastIndex(i);
-                browserVersion = versionRegExp.exec(userAgent).getGroup(0);
+                browserVersion = findBrowserVersion(userAgent, i);
                 parseVersionString(browserVersion);
             }
         } catch (Exception e) {
@@ -370,6 +358,22 @@ public class VBrowserDetails implements Serializable {
             endIndex = string.length();
         }
         return string.substring(beginIndex, endIndex);
+    }
+
+    private String findBrowserVersion(String userAgent, int startIndex) {
+        int index = startIndex;
+        int length = userAgent.length();
+
+        while (index < length) {
+            char c = userAgent.charAt(index);
+            // Accept letter, digit, underscore and dot characters
+            if (!(Character.isLetter(c) || Character.isDigit(c) || c == '_'
+                    || c == '.')) {
+                break;
+            }
+            index++;
+        }
+        return userAgent.substring(startIndex, index);
     }
 
     /**
