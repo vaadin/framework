@@ -175,12 +175,12 @@ public class TreeGrid<T> extends Grid<T>
                 userOriginated) -> {
             T item = getDataCommunicator().getKeyMapper().get(rowKey);
             if (collapse && getDataCommunicator().isExpanded(item)) {
-                getDataCommunicator().doCollapse(item, Optional.of(rowIndex));
+                getDataCommunicator().collapse(item, rowIndex);
                 fireCollapseEvent(
                         getDataCommunicator().getKeyMapper().get(rowKey),
                         userOriginated);
             } else if (!collapse && !getDataCommunicator().isExpanded(item)) {
-                getDataCommunicator().doExpand(item, Optional.of(rowIndex));
+                getDataCommunicator().expand(item, rowIndex);
                 fireExpandEvent(
                         getDataCommunicator().getKeyMapper().get(rowKey),
                         userOriginated);
@@ -345,6 +345,64 @@ public class TreeGrid<T> extends Grid<T>
     }
 
     /**
+     * Expands the given items and their children recursively until the given
+     * depth.
+     * <p>
+     * {@code depth} describes the maximum distance between a given item and its
+     * descendant, meaning that {@code expandRecursively(items, 0)} expands only
+     * the given items while {@code expandRecursively(items, 2)} expands the
+     * given items as well as their children and grandchildren.
+     * <p>
+     * This method will <i>not</i> fire events for expanded nodes.
+     *
+     * @param items
+     *            the items to expand recursively
+     * @param depth
+     *            the maximum depth of recursion
+     * @since
+     */
+    public void expandRecursively(Collection<T> items, int depth) {
+        expandRecursively(items.stream(), depth);
+    }
+
+    /**
+     * Expands the given items and their children recursively until the given
+     * depth.
+     * <p>
+     * {@code depth} describes the maximum distance between a given item and its
+     * descendant, meaning that {@code expandRecursively(items, 0)} expands only
+     * the given items while {@code expandRecursively(items, 2)} expands the
+     * given items as well as their children and grandchildren.
+     * <p>
+     * This method will <i>not</i> fire events for expanded nodes.
+     *
+     * @param items
+     *            the items to expand recursively
+     * @param depth
+     *            the maximum depth of recursion
+     * @since
+     */
+    public void expandRecursively(Stream<T> items, int depth) {
+        if (depth < 0) {
+            return;
+        }
+
+        HierarchicalDataCommunicator<T> communicator = getDataCommunicator();
+        items.forEach(item -> {
+            if (communicator.hasChildren(item)) {
+                communicator.expand(item, false);
+
+                expandRecursively(
+                        getDataProvider().fetchChildren(
+                                new HierarchicalQuery<>(null, item)),
+                        depth - 1);
+            }
+        });
+
+        getDataProvider().refreshAll();
+    }
+
+    /**
      * Collapse the given items.
      * <p>
      * For items that are already collapsed, does nothing.
@@ -372,6 +430,64 @@ public class TreeGrid<T> extends Grid<T>
                 fireCollapseEvent(item, false);
             }
         });
+    }
+
+    /**
+     * Collapse the given items and their children recursively until the given
+     * depth.
+     * <p>
+     * {@code depth} describes the maximum distance between a given item and its
+     * descendant, meaning that {@code collapseRecursively(items, 0)} collapses
+     * only the given items while {@code collapseRecursively(items, 2)}
+     * collapses the given items as well as their children and grandchildren.
+     * <p>
+     * This method will <i>not</i> fire events for collapsed nodes.
+     *
+     * @param items
+     *            the items to collapse recursively
+     * @param depth
+     *            the maximum depth of recursion
+     * @since
+     */
+    public void collapseRecursively(Collection<T> items, int depth) {
+        collapseRecursively(items.stream(), depth);
+    }
+
+    /**
+     * Collapse the given items and their children recursively until the given
+     * depth.
+     * <p>
+     * {@code depth} describes the maximum distance between a given item and its
+     * descendant, meaning that {@code collapseRecursively(items, 0)} collapses
+     * only the given items while {@code collapseRecursively(items, 2)}
+     * collapses the given items as well as their children and grandchildren.
+     * <p>
+     * This method will <i>not</i> fire events for collapsed nodes.
+     *
+     * @param items
+     *            the items to collapse recursively
+     * @param depth
+     *            the maximum depth of recursion
+     * @since
+     */
+    public void collapseRecursively(Stream<T> items, int depth) {
+        if (depth < 0) {
+            return;
+        }
+
+        HierarchicalDataCommunicator<T> communicator = getDataCommunicator();
+        items.forEach(item -> {
+            if (communicator.hasChildren(item)) {
+                collapseRecursively(
+                        getDataProvider().fetchChildren(
+                                new HierarchicalQuery<>(null, item)),
+                        depth - 1);
+
+                communicator.collapse(item, false);
+            }
+        });
+
+        getDataProvider().refreshAll();
     }
 
     /**

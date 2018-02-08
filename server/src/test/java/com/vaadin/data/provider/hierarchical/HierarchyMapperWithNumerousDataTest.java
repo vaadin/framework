@@ -63,7 +63,7 @@ public class HierarchyMapperWithNumerousDataTest {
     }
 
     private void expand(Node node) {
-        insertRows(mapper.doExpand(node, mapper.getIndexOf(node)));
+        insertRows(mapper.expand(node, mapper.getIndexOf(node).orElse(null)));
     }
 
     public void insertRows(Range range) {

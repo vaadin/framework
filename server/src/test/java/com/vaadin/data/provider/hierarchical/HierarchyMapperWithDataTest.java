@@ -209,11 +209,11 @@ public class HierarchyMapperWithDataTest {
     }
 
     private void expand(Node node) {
-        insertRows(mapper.doExpand(node, mapper.getIndexOf(node)));
+        insertRows(mapper.expand(node, mapper.getIndexOf(node).orElse(null)));
     }
 
     private void collapse(Node node) {
-        removeRows(mapper.doCollapse(node, mapper.getIndexOf(node)));
+        removeRows(mapper.collapse(node, mapper.getIndexOf(node).orElse(null)));
     }
 
     private void verifyFetchIsCorrect(List<Node> expectedResult, Range range) {
