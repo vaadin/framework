@@ -209,6 +209,7 @@ public class Binder<BEAN> implements Serializable {
          * Gets the getter associated with this Binding.
          *
          * @return the getter
+         * @since
          */
         public ValueProvider<BEAN, TARGET> getGetter();
 
@@ -216,6 +217,7 @@ public class Binder<BEAN> implements Serializable {
          * Gets the setter associated with this Binding.
          *
          * @return the setter
+         * @since
          */
         public Setter<BEAN, TARGET> getSetter();
     }
