@@ -176,6 +176,50 @@ public class Binder<BEAN> implements Serializable {
          * @since 8.2
          */
         public void read(BEAN bean);
+
+        /**
+         * Sets the read-only status on for this Binding. Setting a Binding
+         * read-only will mark the field read-only and not write any values from
+         * the fields to the bean.
+         * <p>
+         * This helper method is the preferred way to control the read-only
+         * state of the bound field.
+         *
+         * @param readOnly
+         *            {@code true} to set binding read-only; {@code false} to
+         *            enable writes
+         * @since
+         * @throws IllegalStateException
+         *             if trying to make binding read-write and the setter is
+         *             {@code null}
+         */
+        public void setReadOnly(boolean readOnly);
+
+        /**
+         * Gets the current read-only status for this Binding.
+         * 
+         * @see #setReadOnly(boolean)
+         * 
+         * @return {@code true} if read-only; {@code false} if not
+         * @since
+         */
+        public boolean isReadOnly();
+
+        /**
+         * Gets the getter associated with this Binding.
+         *
+         * @return the getter
+         * @since
+         */
+        public ValueProvider<BEAN, TARGET> getGetter();
+
+        /**
+         * Gets the setter associated with this Binding.
+         *
+         * @return the setter
+         * @since
+         */
+        public Setter<BEAN, TARGET> getSetter();
     }
 
     /**
@@ -229,8 +273,9 @@ public class Binder<BEAN> implements Serializable {
          * </pre>
          *
          * <p>
-         * <strong>Note:</strong> when a {@code null} setter is given the field will be
-         * marked as readonly by invoking ({@link HasValue::setReadOnly}.
+         * <strong>Note:</strong> when a {@code null} setter is given the field
+         * will be marked as read-only by invoking
+         * {@link HasValue#setReadOnly(boolean)}.
          *
          * @param getter
          *            the function to get the value of the property to the
@@ -261,8 +306,9 @@ public class Binder<BEAN> implements Serializable {
          * updated and the binding is said to be <i>read-only</i>.
          *
          * <p>
-         * <strong>Note:</strong> when the binding is <i>read-only</i> the field will be
-         * marked as readonly by invoking ({@link HasValue::setReadOnly}.
+         * <strong>Note:</strong> when the binding is <i>read-only</i> the field
+         * will be marked as read-only by invoking
+         * {@link HasValue#setReadOnly(boolean)}.
          *
          * @param propertyName
          *            the name of the property to bind, not null
@@ -776,7 +822,8 @@ public class Binder<BEAN> implements Serializable {
             ValueProvider<BEAN, ?> getter = definition.getGetter();
             Setter<BEAN, ?> setter = definition.getSetter().orElse(null);
             if (setter == null) {
-                getLogger().fine(() -> propertyName + " does not have an accessible setter");
+                getLogger().fine(() -> propertyName
+                        + " does not have an accessible setter");
             }
 
             BindingBuilder<BEAN, ?> finalBinding = withConverter(
@@ -930,8 +977,10 @@ public class Binder<BEAN> implements Serializable {
         private HasValue<FIELDVALUE> field;
         private final BindingValidationStatusHandler statusHandler;
 
-        private final SerializableFunction<BEAN, TARGET> getter;
+        private final ValueProvider<BEAN, TARGET> getter;
         private final Setter<BEAN, TARGET> setter;
+
+        private boolean readOnly;
 
         // Not final since we temporarily remove listener while changing values
         private Registration onValueChange;
@@ -943,7 +992,7 @@ public class Binder<BEAN> implements Serializable {
         private final Converter<FIELDVALUE, TARGET> converterValidatorChain;
 
         public BindingImpl(BindingBuilderImpl<BEAN, FIELDVALUE, TARGET> builder,
-                SerializableFunction<BEAN, TARGET> getter,
+                ValueProvider<BEAN, TARGET> getter,
                 Setter<BEAN, TARGET> setter) {
             this.binder = builder.getBinder();
             this.field = builder.field;
@@ -955,6 +1004,7 @@ public class Binder<BEAN> implements Serializable {
 
             this.getter = getter;
             this.setter = setter;
+            readOnly = setter == null;
         }
 
         @Override
@@ -1105,7 +1155,7 @@ public class Binder<BEAN> implements Serializable {
             assert bean != null;
 
             Result<TARGET> result = doConversion();
-            if (setter != null) {
+            if (!isReadOnly()) {
                 result.ifOk(value -> setter.accept(bean, value));
             }
             return toValidationStatus(result);
@@ -1130,6 +1180,31 @@ public class Binder<BEAN> implements Serializable {
         public void read(BEAN bean) {
             field.setValue(converterValidatorChain.convertToPresentation(
                     getter.apply(bean), createValueContext()));
+        }
+
+        @Override
+        public void setReadOnly(boolean readOnly) {
+            if (setter == null && !readOnly) {
+                throw new IllegalStateException(
+                        "Binding with a null setter has to be read-only");
+            }
+            this.readOnly = readOnly;
+            getField().setReadOnly(readOnly);
+        }
+
+        @Override
+        public boolean isReadOnly() {
+            return readOnly;
+        }
+
+        @Override
+        public ValueProvider<BEAN, TARGET> getGetter() {
+            return getter;
+        }
+
+        @Override
+        public Setter<BEAN, TARGET> getSetter() {
+            return setter;
         }
     }
 
@@ -1456,8 +1531,8 @@ public class Binder<BEAN> implements Serializable {
      * </pre>
      *
      * <p>
-     * <strong>Note:</strong> when a {@code null} setter is given the field will be
-     * marked as readonly by invoking ({@link HasValue::setReadOnly}.
+     * <strong>Note:</strong> when a {@code null} setter is given the field will
+     * be marked as read-only by invoking {@link HasValue#setReadOnly(boolean)}.
      *
      * @param <FIELDVALUE>
      *            the value type of the field
@@ -2291,22 +2366,19 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Sets the read only state to the given value for all currently bound
-     * fields.
+     * Sets the read only state to the given value for all current bindings.
      * <p>
-     * This is just a shorthand for calling setReadOnly for all currently bound
-     * fields. It means that fields bound after this method call won't be set
-     * read-only.
+     * This is just a shorthand for calling {@link Binding#setReadOnly(boolean)}
+     * for all current bindings. It means that bindings added after this method
+     * call won't be set read-only.
      *
-     * @param fieldsReadOnly
-     *            true to set the fields to read only, false to set them to read
-     *            write
+     * @param readOnly
+     *            {@code true} to set the bindings to read-only, {@code false}
+     *            to set them to read-write
      */
-    public void setReadOnly(boolean fieldsReadOnly) {
-        getBindings().stream()
-            .filter(binding -> Objects.nonNull(binding.setter))
-            .map(BindingImpl::getField)
-                .forEach(field -> field.setReadOnly(fieldsReadOnly));
+    public void setReadOnly(boolean readOnly) {
+        getBindings().stream().filter(binding -> binding.getSetter() != null)
+                .forEach(binding -> binding.setReadOnly(readOnly));
     }
 
     /**
