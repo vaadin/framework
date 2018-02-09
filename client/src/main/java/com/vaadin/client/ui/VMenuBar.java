@@ -1659,7 +1659,7 @@ public class VMenuBar extends FocusableFlowPanel
                 openMenuAndFocusFirstIfPossible(getSelected());
             } else {
                 try {
-                    boolean triggered = triggerEventIfNeeded(getSelected());
+                    triggerEventIfNeeded(getSelected());
                     final Command command = getSelected().getCommand();
                     if (command != null) {
                         command.execute();
@@ -1913,7 +1913,7 @@ public class VMenuBar extends FocusableFlowPanel
     }
 
     @Override
-    public HandlerRegistration addTrigger(Command command,
+    public HandlerRegistration setTrigger(Command command,
             String partInformation) {
         if (partInformation == null || partInformation.isEmpty()) {
             throw new IllegalArgumentException(
