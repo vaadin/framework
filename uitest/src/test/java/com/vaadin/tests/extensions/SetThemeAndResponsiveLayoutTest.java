@@ -44,11 +44,11 @@ public class SetThemeAndResponsiveLayoutTest extends MultiBrowserTest {
         openTestURL();
         // IE sometimes has trouble waiting long enough.
         waitUntil(ExpectedConditions.presenceOfElementLocated(
-                By.cssSelector(".v-csslayout-width-and-height")));
+                By.cssSelector(".v-csslayout-width-and-height")), 30);
         // set the theme programmatically
         $(ButtonElement.class).caption("Set theme").first().click();
         waitUntil(ExpectedConditions
-                .presenceOfElementLocated(By.xpath("//div[@width-range]")));
+                .presenceOfElementLocated(By.xpath("//div[@width-range]")), 30);
 
         // Verify both width-range and height-range.
         assertEquals("600px-",

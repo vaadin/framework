@@ -48,7 +48,7 @@ public class ResponsiveUITest extends MultiBrowserTest {
 
         // IE sometimes has trouble waiting long enough.
         waitUntil(ExpectedConditions.presenceOfElementLocated(
-                By.cssSelector(".v-csslayout-grid.first")));
+                By.cssSelector(".v-csslayout-grid.first")), 30);
 
         assertEquals("401px-600px",
                 $(".v-csslayout-grid.first").getAttribute("width-range"));

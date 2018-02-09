@@ -39,7 +39,7 @@ import elemental.json.JsonValue;
 public class ColumnConnector extends AbstractExtensionConnector {
 
     public abstract static class CustomColumn
-            extends Column<Object, JsonObject> {
+    extends Column<Object, JsonObject> {
 
         private final String connectorId;
         private ContentMode tooltipContentMode;
@@ -108,6 +108,7 @@ public class ColumnConnector extends AbstractExtensionConnector {
 
         // Initially set a renderer
         updateRenderer();
+        updateHidden();
 
         getParent().addColumn(column, getState().internalId);
 
@@ -194,6 +195,11 @@ public class ColumnConnector extends AbstractExtensionConnector {
         column.setTooltipContentMode(getState().tooltipContentMode);
     }
 
+    @OnStateChange("handleWidgetEvents")
+    void updateHandleWidgetEvents() {
+        column.setHandleWidgetEvents(getState().handleWidgetEvents);
+    }
+
     @Override
     public void onUnregister() {
         super.onUnregister();
@@ -201,7 +207,7 @@ public class ColumnConnector extends AbstractExtensionConnector {
             // If the grid itself was unregistered there is no point in spending
             // time to remove columns (and have problems with frozen columns)
             // before throwing everything away
-            parent.removeColumn(column);
+            parent.removeColumnMapping(column);
             parent = null;
         }
         column = null;

@@ -31,6 +31,18 @@ import com.vaadin.shared.annotations.NoLayout;
  */
 public class AbstractDateFieldState extends AbstractFieldState {
 
+    /**
+     * Navigation elements that have assistive label.
+     *
+     * @since
+     */
+    public enum AccessibleElement {
+        PREVIOUS_YEAR,
+        NEXT_YEAR,
+        PREVIOUS_MONTH,
+        NEXT_MONTH
+    }
+
     {
         primaryStyleName = "v-datefield";
     }
@@ -105,5 +117,28 @@ public class AbstractDateFieldState extends AbstractFieldState {
      * @since 8.2
      */
     public boolean parsable = true;
+
+    /**
+     * Map of custom style names that correspond with given dates. Each date
+     * must be set to midnight for the handling logic to work correctly.
+     * 
+     * @since 8.3
+     */
+    public Map<String, String> dateStyles = new HashMap<String, String>();
+
+    /**
+     * Map of elements and their corresponding assistive labels.
+     *
+     * @since
+     */
+    public Map<AccessibleElement, String> assistiveLabels = new HashMap<>();
+
+    // Set default accessive labels
+    {
+        assistiveLabels.put(AccessibleElement.PREVIOUS_YEAR, "Previous year");
+        assistiveLabels.put(AccessibleElement.NEXT_YEAR, "Next year");
+        assistiveLabels.put(AccessibleElement.PREVIOUS_MONTH, "Previous month");
+        assistiveLabels.put(AccessibleElement.NEXT_MONTH, "Next month");
+    }
 
 }

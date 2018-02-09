@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -66,6 +67,27 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
 
         testWrite(design, bar);
         testRead(design, bar);
+    }
+
+    @Test
+    public void testDescriptionContentMode() {
+        String design = "<vaadin-menu-bar plain-text>"
+                + "<menu description=\"This description is implicitly preformatted\">One</menu>"
+                + "<menu description=\"This description\nis explicitly\n\npreformatted\">preformatted</menu>"
+                + "<menu descriptioncontentmode=\"HTML\" description=\"<b>I</b> contain <br/> <e>html</e>\">HTML</menu>"
+                + "<menu descriptioncontentmode=\"TEXT\" description=\"Just plain text\">plain text</menu>"
+                + "</vaadin-menu-bar>";
+        MenuBar menuBar = new MenuBar();
+        menuBar.addItem("One", null).setDescription("This description is implicitly preformatted");
+        menuBar.addItem("preformatted", null)
+                .setDescription("This description\nis explicitly\n\npreformatted", ContentMode.PREFORMATTED);
+        menuBar.addItem("HTML", null)
+                .setDescription("<b>I</b> contain <br/> <e>html</e>", ContentMode.HTML);
+        menuBar.addItem("plain text", null)
+                .setDescription("Just plain text", ContentMode.TEXT);
+
+        testWrite(design, menuBar);
+        testRead(design, menuBar);
     }
 
     @Test
@@ -165,12 +187,13 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
                 actual.isSeparator());
         assertEquals(baseError + "Enabled", expected.isEnabled(),
                 actual.isEnabled());
-
         assertEquals(baseError + "Text", expected.getText(), actual.getText());
         assertEquals(baseError + "Description", expected.getDescription(),
                 actual.getDescription());
         assertEquals(baseError + "Style Name", expected.getStyleName(),
                 actual.getStyleName());
+        assertEquals(baseError + "Content Mode", expected.getDescriptionContentMode(),
+                actual.getDescriptionContentMode());
 
         if (expected.getIcon() != null) {
             assertNotNull(baseError + "Icon was null", actual.getIcon());

@@ -22,7 +22,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.jsoup.nodes.Element;
@@ -50,6 +53,7 @@ import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializableToIntFunction;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
+import com.vaadin.shared.ui.combobox.ComboBoxClientRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxState;
@@ -69,8 +73,8 @@ import elemental.json.JsonObject;
  */
 @SuppressWarnings("serial")
 public class ComboBox<T> extends AbstractSingleSelect<T>
-        implements FieldEvents.BlurNotifier,
-        FieldEvents.FocusNotifier, HasFilterableDataProvider<T, String> {
+        implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier,
+        HasFilterableDataProvider<T, String> {
 
     /**
      * A callback method for fetching items. The callback is provided with a
@@ -105,11 +109,37 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     /**
      * Handler that adds a new item based on user input when the new items
      * allowed mode is active.
+     * <p>
+     * NOTE 1: If the new item is rejected the client must be notified of the
+     * fact via ComboBoxClientRpc or selection handling won't complete.
+     * </p>
+     * <p>
+     * NOTE 2: Selection handling must be completed separately if filtering the
+     * data source with the same value won't include the new item in the initial
+     * list of suggestions. Failing to do so will lead to selection handling
+     * never completing and previous selection remaining on the server.
+     * </p>
      *
      * @since 8.0
+     * @deprecated Since 8.4 replaced by {@link NewItemProvider}.
      */
+    @Deprecated
     @FunctionalInterface
     public interface NewItemHandler extends SerializableConsumer<String> {
+    }
+
+    /**
+     * Provider function that adds a new item based on user input when the new
+     * items allowed mode is active. After the new item handling is complete,
+     * this function should return {@code Optional.of(text)} for the completion
+     * of automatic selection handling. If automatic selection is not wished
+     * for, always return {@code Optional.isEmpty()}.
+     *
+     * @since 8.4
+     */
+    @FunctionalInterface
+    public interface NewItemProvider<T>
+            extends SerializableFunction<String, Optional<T>> {
     }
 
     /**
@@ -154,9 +184,23 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         @Override
         public void createNewItem(String itemValue) {
             // New option entered
-            if (getNewItemHandler() != null && itemValue != null
-                    && !itemValue.isEmpty()) {
-                getNewItemHandler().accept(itemValue);
+            if (itemValue != null && !itemValue.isEmpty()) {
+                if (getNewItemProvider() != null) {
+                    Optional<T> item = getNewItemProvider().apply(itemValue);
+                    if (!item.isPresent()) {
+                        // ensure the client resets the value to previous
+                        // selection
+                        getRpcProxy(ComboBoxClientRpc.class)
+                                .newItemNotAdded(itemValue);
+                    }
+                } else if (getNewItemHandler() != null) {
+                    getNewItemHandler().accept(itemValue);
+                } else {
+                    // selection handling is needed at the client even if
+                    // NewItemHandler is missing
+                    getRpcProxy(ComboBoxClientRpc.class)
+                            .newItemNotAdded(itemValue);
+                }
             }
         }
 
@@ -170,7 +214,13 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     /**
      * Handler for new items entered by the user.
      */
+    @Deprecated
     private NewItemHandler newItemHandler;
+
+    /**
+     * Provider function for new items entered by the user.
+     */
+    private NewItemProvider<T> newItemProvider;
 
     private StyleGenerator<T> itemStyleGenerator = item -> null;
 
@@ -424,9 +474,11 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     /**
      * Returns true if the user can enter text into the field to either filter
-     * the selections or enter a new value if new item handler is set (see
-     * {@link #setNewItemHandler(NewItemHandler)}. If text input is disabled,
-     * the comboBox will work in the same way as a {@link NativeSelect}
+     * the selections or enter a new value if new item provider or handler is
+     * set (see {@link #setNewItemProvider(NewItemProvider)} (recommended) and
+     * {@link #setNewItemHandler(NewItemHandler)} (deprecated)). If text input
+     * is disabled, the comboBox will work in the same way as a
+     * {@link NativeSelect}
      *
      * @return true if text input is allowed
      */
@@ -650,17 +702,42 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     /**
      * Sets the handler that is called when user types a new item. The creation
-     * of new items is allowed when a new item handler has been set.
+     * of new items is allowed when a new item handler has been set. If new item
+     * provider is also set, the new item handler is ignored.
      *
      * @param newItemHandler
      *            handler called for new items, null to only permit the
-     *            selection of existing items
+     *            selection of existing items, all options ignored if new item
+     *            provider is set
      * @since 8.0
+     * @deprecated Since 8.4 use {@link #setNewItemProvider(NewItemProvider)}
+     *             instead.
      */
+    @Deprecated
     public void setNewItemHandler(NewItemHandler newItemHandler) {
+        getLogger().log(Level.WARNING,
+                "NewItemHandler is deprecated. Please use NewItemProvider instead.");
         this.newItemHandler = newItemHandler;
-        getState().allowNewItems = newItemHandler != null;
-        markAsDirty();
+        getState(true).allowNewItems = newItemProvider != null
+                || newItemHandler != null;
+    }
+
+    /**
+     * Sets the provider function that is called when user types a new item. The
+     * creation of new items is allowed when a new item provider has been set.
+     * If a deprecated new item handler is also set it is ignored in favor of
+     * new item provider.
+     *
+     * @param newItemProvider
+     *            provider function that is called for new items, null to only
+     *            permit the selection of existing items or to use a deprecated
+     *            new item handler if set
+     * @since 8.4
+     */
+    public void setNewItemProvider(NewItemProvider<T> newItemProvider) {
+        this.newItemProvider = newItemProvider;
+        getState(true).allowNewItems = newItemProvider != null
+                || newItemHandler != null;
     }
 
     /**
@@ -668,9 +745,22 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * in the data provider).
      *
      * @return new item handler or null if none specified
+     * @deprecated Since 8.4 use {@link #getNewItemProvider()} instead.
      */
+    @Deprecated
     public NewItemHandler getNewItemHandler() {
         return newItemHandler;
+    }
+
+    /**
+     * Returns the provider function that is called when the user enters a new
+     * item (not present in the data provider).
+     *
+     * @since 8.4
+     * @return new item provider or null if none specified
+     */
+    public NewItemProvider<T> getNewItemProvider() {
+        return newItemProvider;
     }
 
     // HasValue methods delegated to the selection model
@@ -853,5 +943,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
          */
         @Override
         public boolean test(String itemCaption, String filterText);
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(ComboBox.class.getName());
     }
 }
