@@ -24,12 +24,6 @@ import com.vaadin.tests.util.LoremIpsum;
 
 public class InterruptUploadTest extends MultiBrowserTest {
 
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        // PhantomJS fails to upload files for unknown reasons
-        return getBrowsersExcludingPhantomJS();
-    }
-
     @Test
     public void testInterruptUpload() throws Exception {
         openTestURL();
