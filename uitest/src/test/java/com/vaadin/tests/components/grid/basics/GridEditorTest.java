@@ -19,6 +19,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -44,7 +46,11 @@ public abstract class GridEditorTest extends GridBasicsTest {
     @Override
     @Before
     public void setUp() {
+        setDebug(true);
         openTestURL();
+
+        minimizeDebugWindow();
+
         selectMenuPath(TOGGLE_EDIT_ENABLED);
     }
 

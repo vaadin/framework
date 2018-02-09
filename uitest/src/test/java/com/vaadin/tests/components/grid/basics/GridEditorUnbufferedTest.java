@@ -112,7 +112,7 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
         String faultyInt = "not a number";
         getEditor().getField(7).sendKeys(faultyInt);
 
-        getGridElement().getCell(6, 7).click();
+        getGridElement().getCell(7, 7).click();
 
         assertEquals("Editor should not move from row 5", "(5, 0)",
                 getEditor().getField(0).getAttribute("value"));
