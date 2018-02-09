@@ -22,6 +22,15 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.shared.extension.PartInformationState;
 
+/**
+ * An abstract extension connector with trigger support. Implementor's
+ * {@link #trigger} method call may be initiated by another {@code Component}
+ * without server round-trip. The class is used to overcome browser security
+ * limitations. For instance, window may not be open with the round-trip.
+ *
+ * @author Vaadin Ltd.
+ * @since
+ */
 public abstract class AbstractEventTriggerExtensionConnector
         extends AbstractExtensionConnector {
 
@@ -46,7 +55,7 @@ public abstract class AbstractEventTriggerExtensionConnector
         if (targetWidget instanceof EventTrigger) {
             String partInformation = getState().partInformation;
             eventHandlerRegistration = ((EventTrigger) targetWidget)
-                    .addTrigger(() -> trigger(), partInformation);
+                    .setTrigger(() -> trigger(), partInformation);
         } else {
             eventHandlerRegistration = targetWidget
                     .addDomHandler(e -> trigger(), ClickEvent.getType());

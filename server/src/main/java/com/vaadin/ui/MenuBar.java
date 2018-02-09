@@ -229,6 +229,8 @@ implements LegacyComponent, Focusable {
      * @param caption
      *            the text for the menu item
      * @throws IllegalArgumentException
+     *
+     * @since
      */
     public MenuBar.MenuItem addItem(String caption) {
         return addItem(caption, null, null);
@@ -548,6 +550,8 @@ implements LegacyComponent, Focusable {
          *
          * @param caption
          *            the text for the menu item
+         *
+         * @since
          */
         public MenuBar.MenuItem addItem(String caption) {
             return addItem(caption, null, null);

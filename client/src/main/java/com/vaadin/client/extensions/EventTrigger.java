@@ -42,15 +42,14 @@ public interface EventTrigger {
      * Adds an appropriate event handler on the correct element inside the
      * widget and invokes the given file downloader when the event occurs.
      *
-     * @param hasTrigger
+     * @param command
      *            The command to execute when the event occurs
      * @param partInformation
      *            Information passed from the server, typically telling which
      *            element to attach the DOM handler to
      * @return a registration handler which can be used to remove the handler
-     * @since
      */
-    public HandlerRegistration addTrigger(Command command,
+    public HandlerRegistration setTrigger(Command command,
             String partInformation);
 
 }
