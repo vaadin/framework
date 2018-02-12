@@ -121,7 +121,7 @@ public class VMenuBar extends FocusableFlowPanel
     /** For internal use only. May be removed or replaced in the future. */
     public boolean htmlContentAllowed;
 
-    private Map<Integer, Command> triggers = new HashMap<>();
+    private Map<String, Command> triggers = new HashMap<>();
 
     public VMenuBar() {
         // Create an empty horizontal menubar
@@ -289,6 +289,7 @@ public class VMenuBar extends FocusableFlowPanel
             remove(child);
         }
         items.clear();
+        getTriggers().clear();
     }
 
     /**
@@ -344,6 +345,7 @@ public class VMenuBar extends FocusableFlowPanel
 
             remove(item);
             items.remove(index);
+            getTriggers().remove(item.getId());
         }
     }
 
@@ -817,7 +819,7 @@ public class VMenuBar extends FocusableFlowPanel
         protected ContentMode descriptionContentMode = null;
 
         private String styleName;
-        private int id;
+        private String id;
 
         /**
          * Default menu item {@link Widget} constructor for GWT.create().
@@ -1176,11 +1178,11 @@ public class VMenuBar extends FocusableFlowPanel
             return null;
         }
 
-        public int getId() {
+        public String getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(String id) {
             this.id = id;
         }
 
@@ -1921,16 +1923,15 @@ public class VMenuBar extends FocusableFlowPanel
                     "The 'partInformation' parameter must contain the menu item id");
         }
 
-        int menuItemId = Integer.parseInt(partInformation);
-        getTriggers().put(menuItemId, command);
+        getTriggers().put(partInformation, command);
         return () -> {
-            if (getTriggers().get(menuItemId) == command) {
-                getTriggers().remove(menuItemId);
+            if (getTriggers().get(partInformation) == command) {
+                getTriggers().remove(partInformation);
             }
         };
     }
 
-    private Map<Integer, Command> getTriggers() {
+    private Map<String, Command> getTriggers() {
         return getRoot().triggers;
     }
 
