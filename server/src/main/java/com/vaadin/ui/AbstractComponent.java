@@ -30,6 +30,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import com.vaadin.annotations.Theme;
+import com.vaadin.ui.themes.ValoTheme;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -224,6 +226,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
         if (style == null || style.isEmpty()) {
             return;
         }
+        if (getState().styles != null && getState().styles.contains(style)) {
+            return;
+        }
         if (style.contains(" ")) {
             // Split space separated style names and add them one by one.
             StringTokenizer tokenizer = new StringTokenizer(style, " ");
@@ -237,9 +242,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
             getState().styles = new ArrayList<>();
         }
         List<String> styles = getState().styles;
-        if (!styles.contains(style)) {
-            styles.add(style);
-        }
+        styles.add(style);
     }
 
     @Override

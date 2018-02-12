@@ -13,22 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.combobox;
+package com.vaadin.client.widget.escalator.events;
 
-import com.vaadin.shared.communication.ClientRpc;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Server to client RPC interface for ComboBox.
+ * Event handler for a spacer visibility changed event.
  *
- * @since 8.3.1
+ * @author Vaadin Ltd
+ * @since
  */
-public interface ComboBoxClientRpc extends ClientRpc {
+public interface SpacerVisibilityChangedHandler extends EventHandler {
 
     /**
-     * Signal the client that attempt to add a new item failed.
+     * Called when a spacer visibility changed event is fired, when a spacer's
+     * visibility changes.
      *
-     * @param itemValue
-     *            user entered string value for the new item
+     * @param event
+     *            the spacer visibility changed event
      */
-    public void newItemNotAdded(String itemValue);
+    public void onSpacerVisibilityChanged(SpacerVisibilityChangedEvent event);
 }

@@ -49,6 +49,7 @@ public class GridLayoutExtraSpacingTest extends MultiBrowserTest {
         // Spacing off, not hiding empty rows/columns
         // There should not be any spacing (red) above the csslayout
         verifySpacingAbove(0, gridLayout, component);
+        verifySpacingBelow(0, gridLayout, component);
 
         CheckBoxElement hideRowsColumnsCheckbox = $(CheckBoxElement.class)
                 .caption("hide empty rows/columns").first();
@@ -57,16 +58,14 @@ public class GridLayoutExtraSpacingTest extends MultiBrowserTest {
         // Spacing off, hiding empty rows/columns
         // There should not be any spacing (red) above the csslayout
         verifySpacingAbove(0, gridLayout, component);
+        verifySpacingBelow(0, gridLayout, component);
 
         check(spacingCheckbox);
         // Spacing on, hiding empty rows/columns
         // There should not be any spacing (red) above or below the csslayout
 
-        // Oh PhantomJs...
-        sleep(100);
-        // FIXME: This should be 0 but there is a bug somewhere
-        // verifySpacingAbove(0, gridLayout, component);
-        verifySpacingBelow(6, gridLayout, component);
+        verifySpacingAbove(0, gridLayout, component);
+        verifySpacingBelow(0, gridLayout, component);
 
     }
 

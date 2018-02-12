@@ -612,24 +612,28 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     public void setReadonlyShouldIgnoreBindingsWithNullSetter() {
         binder.bind(nameField, Person::getFirstName, null);
         binder.forField(ageField)
-            .withConverter(new StringToIntegerConverter(""))
-            .bind(Person::getAge, Person::setAge);
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
 
         binder.setReadOnly(true);
-        assertTrue("Name field should be ignored but should be readonly", nameField.isReadOnly());
+        assertTrue("Name field should be ignored but should be readonly",
+                nameField.isReadOnly());
         assertTrue("Age field should be readonly", ageField.isReadOnly());
 
         binder.setReadOnly(false);
-        assertTrue("Name field should be ignored and should remain readonly", nameField.isReadOnly());
+        assertTrue("Name field should be ignored and should remain readonly",
+                nameField.isReadOnly());
         assertFalse("Age field should not be readonly", ageField.isReadOnly());
 
         nameField.setReadOnly(false);
         binder.setReadOnly(false);
-        assertFalse("Name field should be ignored and remain not readonly", nameField.isReadOnly());
+        assertFalse("Name field should be ignored and remain not readonly",
+                nameField.isReadOnly());
         assertFalse("Age field should not be readonly", ageField.isReadOnly());
 
         binder.setReadOnly(true);
-        assertFalse("Name field should be ignored and remain not readonly", nameField.isReadOnly());
+        assertFalse("Name field should be ignored and remain not readonly",
+                nameField.isReadOnly());
         assertTrue("Age field should be readonly", ageField.isReadOnly());
     }
 
@@ -1045,14 +1049,38 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.removeBinding(binding);
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void bindWithNullSetterSetReadWrite() {
+        Binding<Person, String> binding = binder.bind(nameField,
+                Person::getFirstName, null);
+        binding.setReadOnly(false);
+    }
+
     @Test
     public void bindWithNullSetterShouldMarkFieldAsReadonly() {
-        binder.bind(nameField, Person::getFirstName, null);
+        Binding<Person, String> nameBinding = binder.bind(nameField,
+                Person::getFirstName, null);
         binder.forField(ageField)
-            .withConverter(new StringToIntegerConverter(""))
-            .bind(Person::getAge, Person::setAge);
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
 
         assertTrue("Name field should be readonly", nameField.isReadOnly());
-        assertFalse("Name field should be readonly", ageField.isReadOnly());
+        assertFalse("Age field should not be readonly", ageField.isReadOnly());
+        assertTrue("Binding should be marked readonly",
+                nameBinding.isReadOnly());
+    }
+
+    @Test
+    public void setReadOnly_binding() {
+        Binding<Person, String> binding = binder.bind(nameField,
+                Person::getFirstName, Person::setFirstName);
+
+        assertFalse("Binding should not be readonly", binding.isReadOnly());
+        assertFalse("Name field should not be readonly",
+                nameField.isReadOnly());
+
+        binding.setReadOnly(true);
+        assertTrue("Binding should be readonly", binding.isReadOnly());
+        assertTrue("Name field should be readonly", nameField.isReadOnly());
     }
 }

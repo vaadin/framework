@@ -153,6 +153,8 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
     }
 
     private void sendKeysToInput(CharSequence... keys) {
+        // ensure mouse is located over the ComboBox to avoid hover issues
+        new Actions(getDriver()).moveToElement(comboBoxElement).perform();
         comboBoxElement.sendKeys(keys);
     }
 

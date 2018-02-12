@@ -19,6 +19,7 @@ import java.util.Date;
 
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.VAbstractCalendarPanel;
 import com.vaadin.client.ui.VAbstractDateFieldCalendar;
@@ -97,6 +98,11 @@ public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCa
 
         // Update possible changes
         widget.calendarPanel.renderCalendar();
+    }
+
+    @OnStateChange("assistiveLabels")
+    private void updateAssistiveLabels() {
+        setAndUpdateAssistiveLabels(getWidget().calendarPanel);
     }
 
     @Override
