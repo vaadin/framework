@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -40,6 +41,7 @@ import com.vaadin.client.widgets.FocusableFlowPanelComposite;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.ListingJsonConstants;
+
 import elemental.json.JsonObject;
 
 /**
@@ -272,8 +274,29 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
     }
 
     /**
+     * Set focus to the selected radio button (or first radio button if there is
+     * no selection).
+     */
+    @Override
+    public void focus() {
+        // If focus is set on creation, need to wait until options are populated
+        Scheduler.get().scheduleDeferred(() -> {
+            // if there's a selected radio button, focus it
+            for (String key : keyToOptions.keySet()) {
+                RadioButton radioButton = keyToOptions.get(key);
+                if (radioButton != null && radioButton.getValue()) {
+                    radioButton.setFocus(true);
+                    return;
+                }
+            }
+            // otherwise focus the first enabled child
+            getWidget().focusFirstEnabledChild();
+        });
+    }
+
+    /**
      * Updates the selected state of a radio button.
-     * 
+     *
      * @param radioButton
      *            the radio button to update
      * @param value
@@ -282,5 +305,6 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
     protected void updateItemSelection(RadioButton radioButton, boolean value) {
         radioButton.setValue(value);
         radioButton.setStyleName(CLASSNAME_OPTION_SELECTED, value);
+
     }
 }
