@@ -289,11 +289,8 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
                     return;
                 }
             }
-            // otherwise focus the first one
-            if (getWidget().getWidgetCount() > 0) {
-                RadioButton first = (RadioButton) getWidget().getWidget(0);
-                first.setFocus(true);
-            }
+            // otherwise focus the first enabled child
+            getWidget().focusFirstEnabledChild();
         });
     }
 

@@ -243,11 +243,7 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
     public void focus() {
         // If focus is set on creation, need to wait until options are populated
         Scheduler.get().scheduleDeferred(() -> {
-            // focus on first item (if found)
-            if (getWidget().getWidgetCount() > 0) {
-                VCheckBox cb = (VCheckBox) getWidget().getWidget(0);
-                cb.setFocus(true);
-            }
+            getWidget().focusFirstEnabledChild();
         });
     }
 }
