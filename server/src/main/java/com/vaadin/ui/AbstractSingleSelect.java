@@ -402,7 +402,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     /**
      * Returns the empty selection caption.
      * <p>
-     * The empty string {@code ""} is the default empty selection caption.
+     * Empty string is the default empty selection caption.
      *
      * @see #setEmptySelectionAllowed(boolean)
      * @see #isEmptySelectionAllowed()
@@ -419,7 +419,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     /**
      * Sets the empty selection caption.
      * <p>
-     * The empty string {@code ""} is the default empty selection caption.
+     * Empty string is the default empty selection caption.
      * <p>
      * If empty selection is allowed via the
      * {@link #setEmptySelectionAllowed(boolean)} method (it is by default) then
