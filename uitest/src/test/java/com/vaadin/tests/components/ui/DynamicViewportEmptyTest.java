@@ -22,21 +22,14 @@ import java.util.List;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.testbench.parallel.Browser;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class DynamicViewportEmptyTest extends MultiBrowserTest {
+public class DynamicViewportEmptyTest extends SingleBrowserTest {
 
     @Override
     protected Class<?> getUIClass() {
         return DynamicViewport.class;
-    }
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowserCapabilities(Browser.CHROME);
     }
 
     @Test
