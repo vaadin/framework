@@ -153,6 +153,26 @@ public class ChildFocusAwareFlowPanel extends FocusableFlowPanel
         }
     }
 
+    /**
+     * Put focus in the first child Widget that can be focused and is not
+     * disabled.
+     */
+    public void focusFirstEnabledChild() {
+        for (int i = 0; i < getWidgetCount(); i++) {
+            Widget widget = getWidget(i);
+            if (!(widget instanceof FocusWidget)) {
+                continue;
+            }
+            FocusWidget focusableChild = (FocusWidget) widget;
+            if (focusableChild.isEnabled()) {
+                focusableChild.setFocus(true);
+                break;
+            }
+
+        }
+
+    }
+
     private void addHandlers(Widget widget) {
         if (focusRegistrations.containsKey(widget)) {
             assert blurRegistrations.containsKey(widget);
