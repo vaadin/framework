@@ -17,7 +17,6 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
-import java.util.Objects;
 
 import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.provider.DataProvider;
@@ -132,42 +131,6 @@ public class NativeSelect<T> extends AbstractSingleSelect<T>
     @Override
     public void setDataProvider(DataProvider<T, ?> dataProvider) {
         internalSetDataProvider(dataProvider);
-    }
-
-    /**
-     * Returns the empty selection caption.
-     * <p>
-     * Empty string is the default empty selection caption.
-     *
-     * @see #setEmptySelectionAllowed(boolean)
-     * @see #isEmptySelectionAllowed()
-     * @see #setEmptySelectionCaption(String)
-     * @see #isSelected(Object)
-     *
-     * @return the empty selection caption, not {@code null}
-     * @since 8.0
-     */
-    public String getEmptySelectionCaption() {
-        return getState(false).emptySelectionCaption;
-    }
-
-    /**
-     * Sets the empty selection caption.
-     * <p>
-     * Empty string is the default empty selection caption.
-     * <p>
-     * If empty selection is allowed via the
-     * {@link #setEmptySelectionAllowed(boolean)} method (it is by default) then
-     * the empty item will be shown with the given caption.
-     *
-     * @param caption
-     *            the caption to set, not {@code null}
-     * @see #isSelected(Object)
-     * @since 8.0
-     */
-    public void setEmptySelectionCaption(String caption) {
-        Objects.nonNull(caption);
-        getState().emptySelectionCaption = caption;
     }
 
     /**
