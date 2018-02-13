@@ -100,4 +100,9 @@ public class ComboBoxState extends AbstractSingleSelectState {
      */
     public String selectedItemIcon;
 
+    /**
+     * Filter string that is currently in use in the suggestion listing.
+     */
+    public String currentFilterText;
+
 }
