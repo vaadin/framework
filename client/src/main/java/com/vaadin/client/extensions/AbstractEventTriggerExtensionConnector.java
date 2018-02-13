@@ -40,7 +40,6 @@ public abstract class AbstractEventTriggerExtensionConnector
      * Called whenever a click occurs on the widget (if widget does not
      * implement {@link EventTrigger}) or when the {@link EventTrigger} fires.
      *
-     * @since
      */
     protected abstract void trigger();
 
