@@ -61,6 +61,9 @@ public class LabelTooltipTest extends MultiBrowserTest {
          */
         new Actions(getDriver()).moveByOffset(100, 100).click().perform();
 
+        assertEquals("Tooltip should be empty and hidden.", "",
+                getTooltipElement().getText());
+
         $(LabelElement.class).get(4).showTooltip();
         assertEquals(
                 "Error inside tooltip together with the regular tooltip message.",

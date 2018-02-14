@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TextFieldElement;
@@ -35,10 +36,8 @@ public class WindowAndUIShortcutsTest extends SingleBrowserTest {
         $(ButtonElement.class).caption("Show page").first().click();
         $(ButtonElement.class).caption("Open dialog window").first().click();
 
-        WindowElement window = $(WindowElement.class).first();
-        // for PhantomJS to have the focus in the right place
-        window.click();
-        window.$(TextFieldElement.class).first().sendKeys(Keys.ESCAPE);
+        $(WindowElement.class).$(ButtonElement.class).first()
+                .sendKeys(Keys.ESCAPE);
 
         // Window should have been closed
         assertTrue($(WindowElement.class).all().isEmpty());
@@ -54,7 +53,12 @@ public class WindowAndUIShortcutsTest extends SingleBrowserTest {
 
         WebElement curtain = findElement(
                 By.className("v-window-modalitycurtain"));
-        curtain.sendKeys(Keys.ESCAPE);
+
+        // Click in the curtain next to the window and send escape
+        new Actions(getDriver()).moveToElement(curtain,
+                $(WindowElement.class).first().getSize().getWidth() * 2, 0)
+                .click().sendKeys(Keys.ESCAPE).perform();
+
         // "Close page" should not have been clicked
         assertTrue($(ButtonElement.class).caption("Close page").exists());
 
