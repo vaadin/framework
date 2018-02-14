@@ -59,7 +59,7 @@ public class LabelTooltipTest extends MultiBrowserTest {
         /*
          * Some cases tooltip doesn't disappear without some extra mouse events
          */
-        new Actions(getDriver()).moveByOffset(100, 100).click().perform();
+        $(LabelElement.class).get(1).showTooltip();
 
         assertEquals("Tooltip should be empty and hidden.", "",
                 getTooltipElement().getText());
