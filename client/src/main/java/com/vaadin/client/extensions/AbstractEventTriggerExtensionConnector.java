@@ -55,7 +55,7 @@ public abstract class AbstractEventTriggerExtensionConnector
         if (targetWidget instanceof EventTrigger) {
             String partInformation = getState().partInformation;
             eventHandlerRegistration = ((EventTrigger) targetWidget)
-                    .setTrigger(() -> trigger(), partInformation);
+                    .addTrigger(this::trigger, partInformation);
         } else {
             eventHandlerRegistration = targetWidget
                     .addDomHandler(e -> trigger(), ClickEvent.getType());

@@ -24,11 +24,13 @@ import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileDownloader;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.embedded.EmbeddedPdf;
+import com.vaadin.tests.extensions.EventTriggerExtensionTest;
+import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 
-@Widgetset("com.vaadin.DefaultWidgetSet")
+@Widgetset(TestingWidgetSet.NAME)
 public class MenuBarDownloadBrowserOpenerUI extends AbstractTestUIWithLog {
 
     @Override
@@ -70,6 +72,22 @@ public class MenuBarDownloadBrowserOpenerUI extends AbstractTestUIWithLog {
             bwo.remove();
             bwo2.remove();
         }));
+
+        setupTestExtension(menuBar);
+
+    }
+
+    private void setupTestExtension(MenuBar menuBar) {
+        EventTriggerExtensionTest triggerable1 = new EventTriggerExtensionTest();
+        EventTriggerExtensionTest triggerable2 = new EventTriggerExtensionTest();
+
+        MenuItem testExtension = menuBar.addItem("TestExtension");
+        MenuItem runMe = testExtension.addItem("RunMe");
+        triggerable1.extend(runMe);
+
+        testExtension.addItem("AddTrigger", c -> triggerable2.extend(runMe));
+        testExtension.addItem("RemoveTrigger", c -> triggerable2.remove());
+
     }
 
 }

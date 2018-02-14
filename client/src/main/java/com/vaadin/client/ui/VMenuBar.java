@@ -121,7 +121,7 @@ public class VMenuBar extends FocusableFlowPanel
     /** For internal use only. May be removed or replaced in the future. */
     public boolean htmlContentAllowed;
 
-    private Map<String, Command> triggers = new HashMap<>();
+    private Map<String, List<Command>> triggers = new HashMap<>();
 
     public VMenuBar() {
         // Create an empty horizontal menubar
@@ -289,7 +289,6 @@ public class VMenuBar extends FocusableFlowPanel
             remove(child);
         }
         items.clear();
-        getTriggers().clear();
     }
 
     /**
@@ -345,7 +344,6 @@ public class VMenuBar extends FocusableFlowPanel
 
             remove(item);
             items.remove(index);
-            getTriggers().remove(item.getId());
         }
     }
 
@@ -1687,9 +1685,11 @@ public class VMenuBar extends FocusableFlowPanel
     }
 
     private boolean triggerEventIfNeeded(CustomMenuItem item) {
-        Command command = getTriggers().get(item.getId());
-        if (command != null) {
-            command.execute();
+        List<Command> commands = getTriggers().get(item.getId());
+        if (commands != null) {
+            for (Command command : commands) {
+                command.execute();
+            }
             return true;
         }
         return false;
@@ -1915,22 +1915,23 @@ public class VMenuBar extends FocusableFlowPanel
     }
 
     @Override
-    public HandlerRegistration setTrigger(Command command,
+    public HandlerRegistration addTrigger(Command command,
             String partInformation) {
         if (partInformation == null || partInformation.isEmpty()) {
             throw new IllegalArgumentException(
                     "The 'partInformation' parameter must contain the menu item id");
         }
 
-        getTriggers().put(partInformation, command);
+        getTriggers().computeIfAbsent(partInformation, s-> new ArrayList<>()).add(command);
         return () -> {
-            if (getTriggers().get(partInformation) == command) {
-                getTriggers().remove(partInformation);
+            List<Command> commands = getTriggers().get(partInformation);
+            if (commands != null) {
+                commands.remove(command);
             }
         };
     }
 
-    private Map<String, Command> getTriggers() {
+    private Map<String, List<Command>> getTriggers() {
         return getRoot().triggers;
     }
 
