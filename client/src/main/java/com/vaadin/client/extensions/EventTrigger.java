@@ -49,7 +49,7 @@ public interface EventTrigger {
      *            element to attach the DOM handler to
      * @return a registration handler which can be used to remove the handler
      */
-    public HandlerRegistration setTrigger(Command command,
+    public HandlerRegistration addTrigger(Command command,
             String partInformation);
 
 }
