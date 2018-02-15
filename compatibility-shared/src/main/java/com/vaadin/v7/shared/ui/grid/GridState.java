@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.TabIndexState;
 
 /**
@@ -209,5 +210,19 @@ public class GridState extends TabIndexState {
     /** Whether the columns can be reordered. */
     @DelegateToWidget
     public boolean columnReorderingAllowed;
+
+    /**
+     * The content mode used for cell tooltips.
+     *
+     * @since
+     */
+    public ContentMode cellTooltipContentMode = ContentMode.PREFORMATTED;
+
+    /**
+     * The content mode used for row tooltips.
+     *
+     * @since
+     */
+    public ContentMode rowTooltipContentMode = ContentMode.PREFORMATTED;
 
 }
