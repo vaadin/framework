@@ -10,7 +10,7 @@ Migrating from Vaadin 6 to Vaadin 7
 
 For migration to Vaadin 7.1,  see
 <<MigratingFromVaadin7.0ToVaadin7.1#migrating-from-vaadin-7.0-to-vaadin-7.1,
-"Migrating From Vaadin 7.0 To Vaadin 7.1>>
+Migrating From Vaadin 7.0 To Vaadin 7.1>>
 
 [[getting-started]]
 Getting Started
@@ -181,7 +181,7 @@ In Vaadin 6, Window, Panel and some other components had a *default
 layout* and addComponent() etc. As this often caused confusion and
 caused layout problems when unaware of the implicit layout or forgetting
 to set its layout parameters, Vaadin 7 now requires *explicitly setting
-the content*. See See e.g.
+the content*. See e.g.
 <<CreatingABasicApplication#creating-a-basic-application,Creating
 a basic application>>
 
@@ -236,21 +236,21 @@ form or
 <<AutoGeneratingAFormBasedOnABeanVaadin6StyleForm#
 auto-generating-a-form-based-on-a-bean-vaadin-6-style,creating the fields automatically>>
 
-* <<CreatingATextFieldForIntegerOnlyInputWhenNotUsingADataSource#
+* *<<CreatingATextFieldForIntegerOnlyInputWhenNotUsingADataSource#
 creating-a-textfield-for-integer-only-input-when-not-using-a-data-source,typed
-fields and properties>>
+fields and properties>>*
 
-* <<CreatingYourOwnConverterForString#creating-your-own-converter-for-string-mytype-conversion,
-"converters>>,
+* *<<CreatingYourOwnConverterForString#creating-your-own-converter-for-string-mytype-conversion,
+converters>>*,
 both
 <<ChangingTheDefaultConvertersForAnApplication#changing-the-default-converters-for-an-application,
-"automatic via ConverterFactory>> and
+automatic via ConverterFactory>> and
 <<CreatingATextFieldForIntegerOnlyInputWhenNotUsingADataSource#
 creating-a-textfield-for-integer-only-input-when-not-using-a-data-source,explicitly set>>
 
 * improved *validation* (performed on data model values after
 conversion) - see e.g.
-<<UsingBeanValidationToValidateInput#using-bean-validation-to-validate-input,>bean validation example>>
+<<UsingBeanValidationToValidateInput#using-bean-validation-to-validate-input,bean validation example>>
 
 * and more
 
@@ -310,7 +310,6 @@ optional additional optional parameters before the module name.
 
 If you have optimized your widgetset to limit what components to load
 initially, see
-
 <<OptimizingTheWidgetSet#optimizing-the-widget-set,this tutorial>> and the
 https://vaadin.com/directory/component/widget-set-optimizer[WidgetSet
 Optimizer add-on].
@@ -340,7 +339,7 @@ To take advantage of the new features, see
 <<CreatingAThemeUsingSass#creating-a-theme-using-sass,Creating a theme using Sass>>
 and
 <<CustomizingComponentThemeWithSass#customizing-component-theme-with-sass,
-"Customizing component theme with Sass>>.
+Customizing component theme with Sass>>.
 
 Note that the SCSS theme needs to be *compiled* to CSS before use - in
 development mode, this takes place automatically on the fly whenever the
@@ -366,7 +365,7 @@ The best way to get acquainted with the new navigation features is to
 check the tutorials on
 <<CreatingABookmarkableApplicationWithBackButtonSupport#
 creating-a-bookmarkable-application-with-back-button-support,
-"creating a bookmarkable application>>,
+creating a bookmarkable application>>,
 <<UsingParametersWithViews#using-parameters-with-views,using parameters with views>>,
 <<AccessControlForViews#access-control-for-views,access control for views>> and
 <<ViewChangeConfirmations#view-change-confirmations,view change confirmations>>.
@@ -384,7 +383,7 @@ As ApplicationServlet moved to history and is replaced by
 The most common customizations:
 
 * <<CustomizingTheStartupPageInAnApplication#customizing-the-startup-page-in-an-application,
-"Customizing the bootstrap page in an application>>: JavaScript, headers, ...
+Customizing the bootstrap page in an application>>: JavaScript, headers, ...
 * Add-ons using customized servlets for other purposes (e.g. customizing
 communication between client and server) probably need more extensive
 rework
@@ -416,9 +415,9 @@ server side component Label, but the communication part has been split
 off into LabelConnector. The annotations linking the client side and the
 server side have also changed, now the LabelConnector has an *@Connect*
 annotation linking it to the server side component Label.
-https://vaadin.com/book/vaadin7/-/page/architecture.client-side.html[the
+https://vaadin.com/book/vaadin7/-/page/architecture.client-side.html[The
 book] provides some background and the tutorial on
-<<CreatingASimpleComponent#creating-a-simple-component,Creating a simple 
+<<CreatingASimpleComponent#creating-a-simple-component,creating a simple 
 component>> shows an example.
 
 The connector communicates with the server primarily via shared
@@ -427,10 +426,10 @@ calls **<<SendingEventsFromTheClientToTheServerUsingRPC#
 sending-events-from-the-client-to-the-server-using-RPC,from
 client to server>> and
 <<UsingRPCToSendEventsToTheClient#using-rpc-to-send-events-to-the-client,
-"from server to client>>, with a larger set of supported data types. For
+from server to client>>, with a larger set of supported data types. For
 component containers,
 <<CreatingASimpleComponentContainer#creating-a-simple-component-container,
-"the hierarchy of the contained components is sent separately>>.
+the hierarchy of the contained components is sent separately>>.
 
 The old mechanism with UIDL, *paintContent()* and *changeVariables()* is
 still there for a while to ease migration, but it is recommended to
@@ -447,7 +446,7 @@ components>> without having a widget in a layout) and
 using-a-javascript-library-or-a-style-sheet-in-an-addon,support for 
 JavaScript>>, also for
 <<IntegratingAJavaScriptComponent#integrating-a-javascript-component,
-"implementing components>> and
+implementing components>> and
 <<IntegratingAJavaScriptLibraryAsAnExtension#
 integrating-a-javascript-library-as-an-extension,extensions>>,
 which might simplify the implementation of some components. Shared state
@@ -571,9 +570,9 @@ of *ComponentContainer*.
 For those implementing new component containers or layouts, see the
 related tutorials
 <<CreatingASimpleComponentContainer#creating-a-simple-component-container,
-"Creating a simple component container>> and
+Creating a simple component container>> and
 <<WidgetStylingUsingOnlyCSS#widget-styling-using-only-css,
-"Widget styling using only CSS>>.
+Widget styling using only CSS>>.
 
 [[migration-steps-for-componentcontainers]]
 Migration steps for ComponentContainers
