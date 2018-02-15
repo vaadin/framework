@@ -4,7 +4,7 @@ import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.EventTrigger;
 import com.vaadin.shared.extension.PartInformationState;
 
-public class EventTriggerExtensionTest extends AbstractExtension {
+public class EventTriggerExtension extends AbstractExtension {
 
     @Override
     protected PartInformationState getState() {

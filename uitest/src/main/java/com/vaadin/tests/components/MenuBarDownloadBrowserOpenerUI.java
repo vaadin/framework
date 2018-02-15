@@ -24,7 +24,7 @@ import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileDownloader;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.embedded.EmbeddedPdf;
-import com.vaadin.tests.extensions.EventTriggerExtensionTest;
+import com.vaadin.tests.extensions.EventTriggerExtension;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.MenuBar;
@@ -37,7 +37,7 @@ public class MenuBarDownloadBrowserOpenerUI extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
 
         ConnectorResource downloadResource = new ClassResource(
-                new EmbeddedPdf().getClass(), "test.pdf");
+                EmbeddedPdf.class, "test.pdf");
         ExternalResource openResource = new ExternalResource(
                 "https://vaadin.com");
 
@@ -45,9 +45,7 @@ public class MenuBarDownloadBrowserOpenerUI extends AbstractTestUIWithLog {
         MenuItem download = menuBar.addItem("Download");
         MenuItem saveAsNoLog = download.addItem("Save as without logging...");
         MenuItem saveAsLog = download.addItem("Save as with logging...",
-                item -> {
-                    log("Download triggered");
-                });
+                item -> log("Download triggered"));
         FileDownloader fd = new FileDownloader(downloadResource);
         fd.extend(saveAsNoLog);
         FileDownloader fd2 = new FileDownloader(downloadResource);
@@ -55,9 +53,7 @@ public class MenuBarDownloadBrowserOpenerUI extends AbstractTestUIWithLog {
 
         MenuItem open = menuBar.addItem("Open");
         MenuItem openNoLog = open.addItem("Open without logging...");
-        MenuItem openLog = open.addItem("Open with logging...", item -> {
-            log("Open triggered");
-        });
+        MenuItem openLog = open.addItem("Open with logging...", item -> log("Open triggered"));
 
         BrowserWindowOpener bwo = new BrowserWindowOpener(openResource);
         bwo.extend(openNoLog);
@@ -78,8 +74,8 @@ public class MenuBarDownloadBrowserOpenerUI extends AbstractTestUIWithLog {
     }
 
     private void setupTestExtension(MenuBar menuBar) {
-        EventTriggerExtensionTest triggerable1 = new EventTriggerExtensionTest();
-        EventTriggerExtensionTest triggerable2 = new EventTriggerExtensionTest();
+        EventTriggerExtension triggerable1 = new EventTriggerExtension();
+        EventTriggerExtension triggerable2 = new EventTriggerExtension();
 
         MenuItem testExtension = menuBar.addItem("TestExtension");
         MenuItem runMe = testExtension.addItem("RunMe");
