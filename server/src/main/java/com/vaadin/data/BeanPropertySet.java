@@ -328,8 +328,13 @@ public class BeanPropertySet<T> implements PropertySet<T> {
         }
     }
 
+    private BeanPropertySet(Class<T> beanType, Map<String, PropertyDefinition<T, ?>> definitions) {
+        this.beanType = beanType;
+        this.definitions = new HashMap<>(definitions);
+    }
+
     private BeanPropertySet(Class<T> beanType, boolean checkNestedDefinitions,
-            PropertyFilterDefinition propertyFilterDefinition) {
+                            PropertyFilterDefinition propertyFilterDefinition) {
         this(beanType);
         if (checkNestedDefinitions) {
             Objects.requireNonNull(propertyFilterDefinition,
@@ -402,7 +407,11 @@ public class BeanPropertySet<T> implements PropertySet<T> {
         InstanceKey key = new InstanceKey(beanType, false, 0, null);
         // Cache the reflection results
         return (PropertySet<T>) INSTANCES.computeIfAbsent(key,
-                ignored -> new BeanPropertySet<>(beanType));
+                ignored -> new BeanPropertySet<>(beanType)).copy();
+    }
+
+    private BeanPropertySet<T> copy() {
+        return new BeanPropertySet<>(beanType,definitions);
     }
 
     /**
@@ -427,7 +436,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
                 filterDefinition.getIgnorePackageNamesStartingWith());
         return (PropertySet<T>) INSTANCES.computeIfAbsent(key,
                 k -> new BeanPropertySet<>(beanType, checkNestedDefinitions,
-                        filterDefinition));
+                        filterDefinition)).copy();
     }
 
     @Override
