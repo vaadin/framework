@@ -21,6 +21,5 @@ package com.vaadin.shared.ui.grid.renderers;
  * @author Vaadin
  * @since 8.1
  */
-public class ComponentRendererState extends AbstractRendererState {
-
+public class ComponentRendererState extends ClickableRendererState {
 }

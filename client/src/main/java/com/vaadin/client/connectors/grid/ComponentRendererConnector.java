@@ -15,49 +15,43 @@
  */
 package com.vaadin.client.connectors.grid;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
-import com.vaadin.client.renderers.Renderer;
-import com.vaadin.client.renderers.WidgetRenderer;
-import com.vaadin.client.widget.grid.RendererCellReference;
+import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.connectors.ClickableRendererConnector;
+import com.vaadin.client.renderers.ClickableRenderer;
+import com.vaadin.client.renderers.ComponentRenderer;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.renderers.ComponentRendererState;
-import com.vaadin.ui.renderers.ComponentRenderer;
+import elemental.json.JsonObject;
 
 /**
- * Connector for {@link ComponentRenderer}. The renderer wraps the component
+ * Connector for {@link com.vaadin.ui.renderers.ComponentRenderer}. The renderer wraps the component
  * into a {@link SimplePanel} to allow handling events correctly.
  *
  * @author Vaadin Ltd
  * @since 8.1
  */
-@Connect(ComponentRenderer.class)
+@Connect(com.vaadin.ui.renderers.ComponentRenderer.class)
 public class ComponentRendererConnector
-        extends AbstractGridRendererConnector<String> {
+        extends ClickableRendererConnector<String> {
 
     @Override
-    protected Renderer<String> createRenderer() {
-        return new WidgetRenderer<String, SimplePanel>() {
+    public ComponentRenderer getRenderer() {
+        return (ComponentRenderer) super.getRenderer();
+    }
 
-            @Override
-            public SimplePanel createWidget() {
-                SimplePanel panel = GWT.create(SimplePanel.class);
-                panel.setStyleName("component-wrap");
-                return panel;
-            }
+    @Override
+    protected HandlerRegistration addClickHandler(ClickableRenderer.RendererClickHandler<JsonObject> handler) {
+        return getRenderer().addClickHandler(handler);
+    }
 
+    @Override
+    protected ClickableRenderer<String, SimplePanel> createRenderer() {
+        return new ComponentRenderer() {
             @Override
-            public void render(RendererCellReference cell, String connectorId,
-                    SimplePanel widget) {
-                if (connectorId != null) {
-                    ComponentConnector connector = (ComponentConnector) ConnectorMap
-                            .get(getConnection()).getConnector(connectorId);
-                    widget.setWidget(connector.getWidget());
-                } else if (widget.getWidget() != null) {
-                    widget.remove(widget.getWidget());
-                }
+            public ApplicationConnection getConnectorConnection() {
+                return getConnection();
             }
         };
     }
