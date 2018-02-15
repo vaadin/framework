@@ -724,10 +724,10 @@ public class GridConnector extends AbstractListingConnector
         StaticCell staticCell = null;
         if (section == Section.HEADER) {
             staticCell = getWidget().getHeaderRow(cell.getRowIndex())
-                    .getCell(getWidget().getColumn(cell.getColumnIndex()));
+                    .getCell(cell.getColumn());
         } else if (section == Section.FOOTER) {
             staticCell = getWidget().getFooterRow(cell.getRowIndex())
-                    .getCell(getWidget().getColumn(cell.getColumnIndex()));
+                    .getCell(cell.getColumn());
         }
         if (staticCell != null && staticCell.getDescription() != null) {
             return new TooltipInfo(staticCell.getDescription(),

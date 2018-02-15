@@ -129,12 +129,8 @@ public interface FooterCell extends Serializable {
 
     /**
      * Sets the tooltip for the cell to be shown with the given content mode.
-     * <p>
-     * For HTML tooltips, use {@link ContentMode#HTML} (remember to ensure that
-     * the HTML is safe to use if it originates from a user).
-     * <p>
-     * For plain text tooltips (the default), use {@link ContentMode#TEXT}
      *
+     * @see ContentMode
      * @param description
      *            the tooltip to show when hovering the cell
      * @param descriptionContentMode
@@ -146,10 +142,8 @@ public interface FooterCell extends Serializable {
 
     /**
      * Gets the content mode for the tooltip.
-     * <p>
-     * The content mode determines if the tooltip is shown as plain text
-     * ({@link ContentMode#TEXT}) or as HTML({@link ContentMode#HTML}).
-     *
+
+     * @see ContentMode
      * @return the content mode for the tooltip
      * @since
      */
@@ -157,10 +151,8 @@ public interface FooterCell extends Serializable {
 
     /**
      * Sets the content mode for the tooltip.
-     * <p>
-     * The content mode determines if the tooltip is shown as plain text
-     * ({@link ContentMode#TEXT}) or as HTML({@link ContentMode#HTML}).
      *
+     * @see ContentMode
      * @param descriptionContentMode
      *            the content mode for the tooltip
      * @since
