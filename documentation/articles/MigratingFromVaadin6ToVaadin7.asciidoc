@@ -9,8 +9,8 @@ Migrating from Vaadin 6 to Vaadin 7
 -----------------------------------
 
 For migration to Vaadin 7.1,  see
-link:MigratingFromVaadin7.0ToVaadin7.1.asciidoc[Migrating
-from Vaadin 7.0 to Vaadin 7.1]
+<<MigratingFromVaadin7.0ToVaadin7.1#migrating-from-vaadin-7.0-to-vaadin-7.1,
+"Migrating From Vaadin 7.0 To Vaadin 7.1>>
 
 [[getting-started]]
 Getting Started
@@ -182,8 +182,8 @@ layout* and addComponent() etc. As this often caused confusion and
 caused layout problems when unaware of the implicit layout or forgetting
 to set its layout parameters, Vaadin 7 now requires *explicitly setting
 the content*. See See e.g.
-link:CreatingABasicApplication.asciidoc[Creating
-a basic application]
+<<CreatingABasicApplication#creating-a-basic-application,Creating
+a basic application>>
 
 If you want to minimize the impact of this on the look and theme of an
 old application, you can reproduce the *old structure* simply by setting
@@ -214,8 +214,9 @@ of synchronizing to the Application instance - see the javadoc for
 
 To customize the creation of UIs - for instance to create different UIs
 for mobile and desktop devices -
-*link:CreatingAnApplicationWithDifferentFeaturesForDifferentClients.asciidoc[a
-custom UIProvider]* can be used.
+<<CreatingAnApplicationWithDifferentFeaturesForDifferentClients#creating-
+an-application-with-different-features-for-different-clients,a
+custom UIProvider>> can be used.
 
 [[forms-and-data-binding]]
 Forms and Data Binding
@@ -232,21 +233,24 @@ data binding works mostly as is, version 7 brings something better:
 
 * *FieldGroup* supporting *automated data binding*, whether for a hand-designed
 form or
-link:AutoGeneratingAFormBasedOnABeanVaadin6StyleForm.asciidoc[creating
-the fields automatically]
+<<AutoGeneratingAFormBasedOnABeanVaadin6StyleForm#
+auto-generating-a-form-based-on-a-bean-vaadin-6-style,creating the fields automatically>>
 
-* *link:CreatingATextFieldForIntegerOnlyInputUsingADataSource.asciidoc[typed
-fields and properties]*
+* <<CreatingATextFieldForIntegerOnlyInputWhenNotUsingADataSource#
+creating-a-textfield-for-integer-only-input-when-not-using-a-data-source,typed
+fields and properties>>
 
-* *link:CreatingYourOwnConverterForString.asciidoc[converters]*,
+* <<CreatingYourOwnConverterForString#creating-your-own-converter-for-string-mytype-conversion,
+"converters>>,
 both
-link:ChangingTheDefaultConvertersForAnApplication.asciidoc[automatic
-via ConverterFactory] and
-link:CreatingATextFieldForIntegerOnlyInputWhenNotUsingADataSource.asciidoc[explicitly set]
+<<ChangingTheDefaultConvertersForAnApplication#changing-the-default-converters-for-an-application,
+"automatic via ConverterFactory>> and
+<<CreatingATextFieldForIntegerOnlyInputWhenNotUsingADataSource#
+creating-a-textfield-for-integer-only-input-when-not-using-a-data-source,explicitly set>>
 
 * improved *validation* (performed on data model values after
 conversion) - see e.g.
-link:UsingBeanValidationToValidateInput.asciidoc[bean validation example]
+<<UsingBeanValidationToValidateInput#using-bean-validation-to-validate-input,>bean validation example>>
 
 * and more
 
@@ -306,8 +310,8 @@ optional additional optional parameters before the module name.
 
 If you have optimized your widgetset to limit what components to load
 initially, see
-link:OptimizingTheWidgetSet.asciidoc[this
-tutorial] and the
+
+<<OptimizingTheWidgetSet#optimizing-the-widget-set,this tutorial>> and the
 https://vaadin.com/directory/component/widget-set-optimizer[WidgetSet
 Optimizer add-on].
 
@@ -333,18 +337,18 @@ fully migrating your themes to the SCSS format with a theme name
 selector.
 
 To take advantage of the new features, see
-link:CreatingAThemeUsingSass.asciidoc[Creating
-a theme using sass] and
-link:CustomizingComponentThemeWithSass.asciidoc[Customizing
-component theme with Sass].
+<<CreatingAThemeUsingSass#creating-a-theme-using-sass,Creating a theme using Sass>>
+and
+<<CustomizingComponentThemeWithSass#customizing-component-theme-with-sass,
+"Customizing component theme with Sass>>.
 
 Note that the SCSS theme needs to be *compiled* to CSS before use - in
 development mode, this takes place automatically on the fly whenever the
 theme is loaded, but when moving to production mode, you need to run the
 theme compiler on it to produce a pre-compiled static theme.
 
-link:WidgetStylingUsingOnlyCSS.asciidoc[CSS
-can be used to style components] somewhat more freely than in Vaadin 6.
+<<WidgetStylingUsingOnlyCSS#widget-styling-using-only-css,CSS can be used to style 
+components>> somewhat more freely than in Vaadin 6.
 
 The DOM structure of several layouts has changed, which might require
 changes to themes for layouts. See also the section on layouts below.
@@ -360,14 +364,12 @@ navigate to them.
 
 The best way to get acquainted with the new navigation features is to
 check the tutorials on
-link:CreatingABookmarkableApplicationWithBackButtonSupport.asciidoc[creating
-a bookmarkable application],
-link:UsingParametersWithViews.asciidoc[using
-parameters with views],
-link:AccessControlForViews.asciidoc[access
-control for views] and
-link:ViewChangeConfirmations.asciidoc[view
-change confirmations].
+<<CreatingABookmarkableApplicationWithBackButtonSupport#
+creating-a-bookmarkable-application-with-back-button-support,
+"creating a bookmarkable application>>,
+<<UsingParametersWithViews#using-parameters-with-views,using parameters with views>>,
+<<AccessControlForViews#access-control-for-views,access control for views>> and
+<<ViewChangeConfirmations#view-change-confirmations,view change confirmations>>.
 
 When logging out a user, you can use *Page.setLocation()* to redirect
 the user to a suitable page.
@@ -381,8 +383,8 @@ As ApplicationServlet moved to history and is replaced by
 
 The most common customizations:
 
-* link:CustomizingTheStartupPageInAnApplication.asciidoc[Customizing
-the bootstrap page]: JavaScript, headers, ...
+* <<CustomizingTheStartupPageInAnApplication#customizing-the-startup-page-in-an-application,
+"Customizing the bootstrap page in an application>>: JavaScript, headers, ...
 * Add-ons using customized servlets for other purposes (e.g. customizing
 communication between client and server) probably need more extensive
 rework
@@ -416,18 +418,19 @@ server side have also changed, now the LabelConnector has an *@Connect*
 annotation linking it to the server side component Label.
 https://vaadin.com/book/vaadin7/-/page/architecture.client-side.html[the
 book] provides some background and the tutorial on
-link:CreatingASimpleComponent.asciidoc[creating
-a simple component] shows an example.
+<<CreatingASimpleComponent#creating-a-simple-component,Creating a simple 
+component>> shows an example.
 
 The connector communicates with the server primarily via shared
 state from the server to the client and **RPC
-calls **link:SendingEventsFromTheClientToTheServerUsingRPC.asciidoc[from
-client to server] and
-link:UsingRPCToSendEventsToTheClient.asciidoc[from
-server to client], with a larger set of supported data types. For
+calls **<<SendingEventsFromTheClientToTheServerUsingRPC#
+sending-events-from-the-client-to-the-server-using-RPC,from
+client to server>> and
+<<UsingRPCToSendEventsToTheClient#using-rpc-to-send-events-to-the-client,
+"from server to client>>, with a larger set of supported data types. For
 component containers,
-link:CreatingASimpleComponentContainer.asciidoc[the
-hierarchy of the contained components is sent separately].
+<<CreatingASimpleComponentContainer#creating-a-simple-component-container,
+"the hierarchy of the contained components is sent separately>>.
 
 The old mechanism with UIDL, *paintContent()* and *changeVariables()* is
 still there for a while to ease migration, but it is recommended to
@@ -437,15 +440,16 @@ in much cleaner code. Using the old mechanisms requires implementing
 
 There are also new features such as support for *Extensions* (components
 which
-link:CreatingAUIExtension.asciidoc[extend
-the UI] or
-link:CreatingAComponentExtension.asciidoc[other
-components] without having a widget in a layout) and
-link:UsingAJavaScriptLibraryOrAStyleSheetInAnAddOn.asciidoc[support
-for JavaScript], also for
-link:IntegratingAJavaScriptComponent.asciidoc[implementing
-components] and
-link:IntegratingAJavaScriptLibraryAsAnExtension.asciidoc[extensions],
+<<CreatingAUIExtension#creating-a-ui-extension,extend the UI>> or
+<<CreatingAComponentExtension#creating-a-component-extension,other
+components>> without having a widget in a layout) and
+<<UsingAJavaScriptLibraryOrAStyleSheetInAnAddOn#
+using-a-javascript-library-or-a-style-sheet-in-an-addon,support for 
+JavaScript>>, also for
+<<IntegratingAJavaScriptComponent#integrating-a-javascript-component,
+"implementing components>> and
+<<IntegratingAJavaScriptLibraryAsAnExtension#
+integrating-a-javascript-library-as-an-extension,extensions>>,
 which might simplify the implementation of some components. Shared state
 and RPC can also be used from JavaScript, and there are other techniques
 for client-server communication.
@@ -551,8 +555,8 @@ side component containers, but a few can also affect other developers.
 
 Among the changes affecting others than layout developers, *CssLayout*
 now consists of a single DIV instead of three nested elements, and
-link:WidgetStylingUsingOnlyCSS.asciidoc[CSS
-can be used to do more customization] than in previous Vaadin versions.
+<<WidgetStylingUsingOnlyCSS#widget-styling-using-only-css,CSS
+can be used to do more customization>> than in previous Vaadin versions.
 Also other layouts have changed in terms of their *DOM structure* on the
 client, which might require changes to themes. The interface
 *MarginHandler* is now only implemented by layouts that actually support
@@ -566,10 +570,10 @@ of *ComponentContainer*.
 
 For those implementing new component containers or layouts, see the
 related tutorials
-link:CreatingASimpleComponentContainer.asciidoc[Creating
-a simple component container] and
-link:WidgetStylingUsingOnlyCSS.asciidoc[Widget
-styling using only CSS].
+<<CreatingASimpleComponentContainer#creating-a-simple-component-container,
+"Creating a simple component container>> and
+<<WidgetStylingUsingOnlyCSS#widget-styling-using-only-css,
+"Widget styling using only CSS>>.
 
 [[migration-steps-for-componentcontainers]]
 Migration steps for ComponentContainers
