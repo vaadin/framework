@@ -13,7 +13,7 @@ user belongs to in a Hierarchical Tree.  I used Vaadin's tree and
 hierarchical container components along with information from Vaadin's
 book of examples to create the code below (http://demo.vaadin.com/book-examples-vaadin7/book#component.tree.itemstylegenerator).
 
-See link:img/DmoOrgTreeUI.java[DmoOrgTreeUI.java] for full source code.
+See <<img/DmoOrgTreeUI.java,DmoOrgTreeUI.java>> for full source code.
 
 [source,java]
 ....
