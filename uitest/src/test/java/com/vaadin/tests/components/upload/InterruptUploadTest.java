@@ -35,6 +35,9 @@ public class InterruptUploadTest extends MultiBrowserTest {
 
         $(ButtonElement.class).caption("Cancel").first().click();
 
+        // Wait for 1 second for server to finish up.
+        Thread.sleep(1000);
+
         String expected = " (counting interrupted at ";
         String actual = $(LabelElement.class).caption("Line breaks counted")
                 .first().getText();
