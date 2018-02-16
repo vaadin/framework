@@ -1,6 +1,6 @@
 ---
 title: View Change Confirmations
-order: 80
+order: 54
 layout: page
 ---
 

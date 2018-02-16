@@ -1,6 +1,6 @@
 ---
 title: Using RPC To Send Events To The Client
-order: 71
+order: 56
 layout: page
 ---
 

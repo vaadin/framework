@@ -1,6 +1,6 @@
 ---
 title: Creating A Simple Component
-order: 32
+order: 48
 layout: page
 ---
 

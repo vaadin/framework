@@ -1,6 +1,6 @@
 ---
 title: Customizing Component Theme With SASS
-order: 64
+order: 47
 layout: page
 ---
 

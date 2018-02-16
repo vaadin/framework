@@ -1,6 +1,6 @@
 ---
 title: Creating A Simple Component Container
-order: 70
+order: 49
 layout: page
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: Using Parameters With Views
-order: 14
+order: 36
 layout: page
 ---
 

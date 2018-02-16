@@ -1,6 +1,6 @@
 ---
 title: Creating A Component Extension
-order: 72
+order: 51
 layout: page
 ---
 
