@@ -6,7 +6,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class WindowPreCloseListener extends AbstractTestUIWithLog {
+public class WindowBeforeCloseListener extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -37,10 +37,10 @@ public class WindowPreCloseListener extends AbstractTestUIWithLog {
             log("Window '" + title + "' closed");
         });
 
-        window.addPreCloseListener(event -> {
-            event.setClosePrevented(true);
-
+        window.addWindowBeforeCloseListener(event -> {
             log("Window '" + title + "' close attempt prevented");
+
+            return false;
         });
 
         return window;
@@ -48,6 +48,6 @@ public class WindowPreCloseListener extends AbstractTestUIWithLog {
 
     @Override
     protected String getTestDescription() {
-        return "Try to close window both from code and from client side, and check for close events when PreCloseListener prevents closing.";
+        return "Try to close window both from code and from client side, and check for close events when WindowBeforeCloseListener prevents closing.";
     }
 }

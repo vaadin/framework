@@ -2,7 +2,8 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.WindowElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.SingleBrowserTest;
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -10,8 +11,9 @@ import org.openqa.selenium.Keys;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class WindowPreCloseListenerTest extends MultiBrowserTest {
+public class WindowBeforeCloseListenerTest extends SingleBrowserTest {
 
+    @Before
     @Override
     public void setup() throws Exception {
         super.setup();

@@ -1,16 +1,19 @@
 package com.vaadin.tests.server.components;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.vaadin.ui.Window.*;
+import com.vaadin.shared.Registration;
+import com.vaadin.ui.LegacyWindow;
+import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.CloseEvent;
+import com.vaadin.ui.Window.CloseListener;
+import com.vaadin.ui.Window.ResizeEvent;
+import com.vaadin.ui.Window.ResizeListener;
+import com.vaadin.ui.Window.WindowBeforeCloseListener;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.shared.Registration;
-import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.Window;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WindowTest {
 
@@ -52,17 +55,17 @@ public class WindowTest {
 
     @Test
     public void testPreCloseListener() {
-        PreCloseListener pcl = EasyMock.createMock(PreCloseListener.class);
+        WindowBeforeCloseListener pcl = EasyMock.createMock(WindowBeforeCloseListener.class);
 
         // Expectations
-        pcl.beforeWindowClose(EasyMock.isA(PreCloseEvent.class));
+        pcl.beforeWindowClose(EasyMock.isA(Window.WindowBeforeCloseEvent.class));
 
         // Start actual test
         EasyMock.replay(pcl);
 
         // Add listener and send a close event -> should end up in listener once
         Registration windowPreCloseListenerRegistration = window
-                .addPreCloseListener(pcl);
+                .addWindowBeforeCloseListener(pcl);
         sendClose(window);
 
         // Ensure listener was called once

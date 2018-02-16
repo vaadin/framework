@@ -37,7 +37,7 @@ public class WindowListenersTest extends AbstractListenerMethodsTestBase {
 
     @Test
     public void testPreCloseListenerAddGetRemove() throws Exception {
-        testListenerAddGetRemove(Window.class, PreCloseEvent.class,
-                PreCloseListener.class);
+        testListenerAddGetRemove(Window.class, WindowBeforeCloseEvent.class,
+                WindowBeforeCloseListener.class);
     }
 }
