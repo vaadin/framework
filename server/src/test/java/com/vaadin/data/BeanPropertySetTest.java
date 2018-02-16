@@ -15,21 +15,19 @@
  */
 package com.vaadin.data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import junit.framework.AssertionFailedError;
 import org.junit.Test;
 
 import com.vaadin.data.provider.bov.Person;
@@ -38,6 +36,9 @@ import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.FatherAndSon;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.server.ClassesSerializableTest;
+
+import static com.vaadin.data.PropertyFilterDefinition.getDefaultFilter;
+import static org.junit.Assert.*;
 
 public class BeanPropertySetTest {
     @Test
@@ -48,8 +49,23 @@ public class BeanPropertySetTest {
         PropertySet<Person> deserializedPropertySet = ClassesSerializableTest
                 .serializeAndDeserialize(originalPropertySet);
 
-        assertSame("Deserialized instance should be the same as the original",
-                originalPropertySet, deserializedPropertySet);
+        comparePropertySet(originalPropertySet, deserializedPropertySet, "Deserialized instance should be the same as the original");
+    }
+
+    private void comparePropertySet(PropertySet<?> propertySetA, PropertySet<?> propertySetB, String message) {
+
+        PropertyDefinition<?, ?>[] propertiesA = propertySetA.getProperties()
+                .sorted(Comparator.comparing(PropertyDefinition::getName))
+                .toArray(PropertyDefinition<?, ?>[]::new);
+        PropertyDefinition<?, ?>[] propertiesB = propertySetA.getProperties()
+                .sorted(Comparator.comparing(PropertyDefinition::getName))
+                .toArray(PropertyDefinition<?, ?>[]::new);
+
+        assertEquals(message, propertiesA.length, propertiesB.length);
+        for (int i = 0; i < propertiesB.length; i++) {
+            assertSame(message,
+                    propertiesA[i], propertiesB[i]);
+        }
     }
 
     @Test
@@ -76,8 +92,7 @@ public class BeanPropertySetTest {
         PropertySet<Person> deserializedPropertySet = (PropertySet<Person>) in
                 .readObject();
 
-        assertSame("Deserialized instance should be the same as in the cache",
-                BeanPropertySet.get(Person.class), deserializedPropertySet);
+        comparePropertySet(BeanPropertySet.get(Person.class), deserializedPropertySet, "Deserialized instance should be the same as in the cache");
         assertNotSame(
                 "Deserialized instance should not be the same as the original",
                 originalPropertySet, deserializedPropertySet);
@@ -108,10 +123,11 @@ public class BeanPropertySetTest {
     @Test
     public void testSerializeDeserialize_nestedPropertyDefinition()
             throws Exception {
+
         PropertyDefinition<com.vaadin.tests.data.bean.Person, ?> definition = BeanPropertySet
-                .get(com.vaadin.tests.data.bean.Person.class)
-                .getProperty("address.postalCode")
-                .orElseThrow(RuntimeException::new);
+                .get(com.vaadin.tests.data.bean.Person.class,true, getDefaultFilter())
+                .getProperty("address.postalCode").orElseThrow(AssertionFailedError::new);
+
 
         PropertyDefinition<com.vaadin.tests.data.bean.Person, ?> deserializedDefinition = ClassesSerializableTest
                 .serializeAndDeserialize(definition);
@@ -128,16 +144,10 @@ public class BeanPropertySetTest {
         assertEquals("Deserialized definition should be functional",
                 address.getPostalCode(), postalCode);
 
-        assertSame("Deserialized instance should be the same as in the cache",
-                BeanPropertySet.get(com.vaadin.tests.data.bean.Person.class)
-                        .getProperty("address.postalCode").orElseThrow(
-                                RuntimeException::new),
-                deserializedDefinition);
     }
 
     @Test
-    public void nestedPropertyDefinition_samePropertyNameOnMultipleLevels()
-            throws Exception {
+    public void nestedPropertyDefinition_samePropertyNameOnMultipleLevels() {
         PropertyDefinition<FatherAndSon, ?> definition = BeanPropertySet
                 .get(FatherAndSon.class).getProperty("father.father.firstName")
                 .orElseThrow(RuntimeException::new);
@@ -156,8 +166,7 @@ public class BeanPropertySetTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void nestedPropertyDefinition_propertyChainBroken()
-            throws Exception {
+    public void nestedPropertyDefinition_propertyChainBroken() {
         PropertyDefinition<FatherAndSon, ?> definition = BeanPropertySet
                 .get(FatherAndSon.class).getProperty("father.firstName")
                 .orElseThrow(RuntimeException::new);
@@ -166,15 +175,13 @@ public class BeanPropertySetTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void nestedPropertyDefinition_invalidPropertyNameInChain()
-            throws Exception {
+    public void nestedPropertyDefinition_invalidPropertyNameInChain() {
         BeanPropertySet.get(FatherAndSon.class)
                 .getProperty("grandfather.firstName");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void nestedPropertyDefinition_invalidPropertyNameAtChainEnd()
-            throws Exception {
+    public void nestedPropertyDefinition_invalidPropertyNameAtChainEnd() {
         BeanPropertySet.get(FatherAndSon.class).getProperty("father.age");
     }
 
