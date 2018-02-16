@@ -27,7 +27,8 @@ import org.junit.Test;
  */
 public class GridAssistiveDeviceOnlyTextTest extends SingleBrowserTest {
 
-    @Test
+    // @Test
+    // https://github.com/vaadin/framework/pull/10567#issuecomment-366211475
     public void checkAssistiveDeviceOnlyText() {
         openTestURL();
 
