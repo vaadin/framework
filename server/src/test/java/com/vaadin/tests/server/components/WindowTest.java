@@ -54,11 +54,12 @@ public class WindowTest {
     }
 
     @Test
-    public void testPreCloseListener() {
+    public void testBeforeCloseListener() {
         WindowBeforeCloseListener pcl = EasyMock.createMock(WindowBeforeCloseListener.class);
 
         // Expectations
-        pcl.beforeWindowClose(EasyMock.isA(Window.WindowBeforeCloseEvent.class));
+        EasyMock.expect(pcl.beforeWindowClose(EasyMock.isA(Window
+                .WindowBeforeCloseEvent.class))).andStubReturn(true);
 
         // Start actual test
         EasyMock.replay(pcl);

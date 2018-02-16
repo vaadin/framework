@@ -25,6 +25,7 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.event.MouseEvents.ClickEvent;
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
@@ -52,8 +53,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A component that represents a floating popup window that can be added to a
@@ -110,8 +113,7 @@ public class Window extends Panel
      */
     private List<CloseShortcut> closeShortcuts = new ArrayList<>(4);
 
-    private List<WindowBeforeCloseListener> beforeCloseListeners =
-            new ArrayList<>(2);
+    private LinkedHashSet<WindowBeforeCloseListener> beforeCloseListeners = null;
 
     /**
      * Used to keep the window order position. Order position for unattached
@@ -271,9 +273,11 @@ public class Window extends Panel
         // a copy of the listener list is needed to avoid
         // ConcurrentModificationException as a listener can add/remove
         // listeners
-        for (WindowBeforeCloseListener l : new ArrayList<>(beforeCloseListeners)) {
-            if (!l.beforeWindowClose(event)) {
-                return false;
+        if (beforeCloseListeners != null) {
+            for (WindowBeforeCloseListener l : new ArrayList<>(beforeCloseListeners)) {
+                if (!l.beforeWindowClose(event)) {
+                    return false;
+                }
             }
         }
         return true;
@@ -286,7 +290,7 @@ public class Window extends Panel
      */
     protected void closeFromClient() {
         WindowBeforeCloseEvent event = new WindowBeforeCloseEvent(this);
-        if (!fireBeforeWindowClose(event)) {
+        if (fireBeforeWindowClose(event)) {
             close();
         }
     }
@@ -785,14 +789,18 @@ public class Window extends Panel
      *
      * @since
      */
-    public static class WindowBeforeCloseEvent extends ConnectorEvent {
+    public static class WindowBeforeCloseEvent extends Component.Event {
         public WindowBeforeCloseEvent(Window window) {
             super(window);
         }
 
-        @Override
-        public Window getConnector() {
-            return (Window) super.getConnector();
+        /**
+         * Gets the Window.
+         *
+         * @return the window.
+         */
+        public Window getWindow() {
+            return (Window) getSource();
         }
     }
 
@@ -811,7 +819,7 @@ public class Window extends Panel
      * @since
      */
     @FunctionalInterface
-    public interface WindowBeforeCloseListener extends Serializable {
+    public interface WindowBeforeCloseListener extends SerializableEventListener {
         /**
          * Called when the window is about to be removed from UI due to close
          * attempt from client.
@@ -840,8 +848,20 @@ public class Window extends Panel
      * @since
      */
     public Registration addWindowBeforeCloseListener(WindowBeforeCloseListener listener) {
+        if  (beforeCloseListeners == null) {
+            beforeCloseListeners = new LinkedHashSet<>();
+        }
+
         beforeCloseListeners.add(listener);
-        return () -> beforeCloseListeners.remove(listener);
+
+        return () -> {
+            if (beforeCloseListeners != null) {
+                beforeCloseListeners.remove(listener);
+                if (beforeCloseListeners.isEmpty()) {
+                    beforeCloseListeners = null;
+                }
+            }
+        };
     }
 
     /**
@@ -1653,5 +1673,29 @@ public class Window extends Panel
         result.add("position-x");
         result.add("close-shortcut");
         return result;
+    }
+
+    @Override
+    public Collection<?> getListeners(Class<?> eventType) {
+        if (WindowBeforeCloseEvent.class.isAssignableFrom(eventType)) {
+            if (beforeCloseListeners == null) {
+                return Collections.EMPTY_LIST;
+            } else {
+                return Collections
+                        .unmodifiableCollection(beforeCloseListeners);
+            }
+        } else if (ConnectorEvent.class.isAssignableFrom(eventType)
+                || Component.Event.class.isAssignableFrom(eventType)) {
+            if (beforeCloseListeners == null) {
+                return super.getListeners(eventType);
+            } else {
+                Set<Object> listeners = new LinkedHashSet<>();
+                listeners.addAll(beforeCloseListeners);
+                listeners.addAll(super.getListeners(eventType));
+                return listeners;
+            }
+        }
+
+        return super.getListeners(eventType);
     }
 }
