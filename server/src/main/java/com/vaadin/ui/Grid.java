@@ -2321,6 +2321,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     private final Set<Component> extensionComponents = new HashSet<>();
     private StyleGenerator<T> styleGenerator = item -> null;
     private DescriptionGenerator<T> descriptionGenerator;
+    private RowSelectAssistiveLabelGenerator<T> rowSelectAssistiveLabelGenerator;
 
     private final Header header = new HeaderImpl();
     private final Footer footer = new FooterImpl();
@@ -2461,6 +2462,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 String description = descriptionGenerator.apply(item);
                 if (description != null && !description.isEmpty()) {
                     json.put(GridState.JSONKEY_ROWDESCRIPTION, description);
+                }
+            }
+            if (rowSelectAssistiveLabelGenerator != null) {
+                String rowSelectAssistiveLabel = rowSelectAssistiveLabelGenerator.apply(item, 1 /* placeholder */);
+                if (rowSelectAssistiveLabel != null && !rowSelectAssistiveLabel.isEmpty()) {
+                    json.put(GridState.JSONKEY_ROWSELECTASSISTIVELABEL, rowSelectAssistiveLabel);
                 }
             }
         });
@@ -3306,6 +3313,21 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         Objects.requireNonNull(contentMode, "contentMode cannot be null");
         this.descriptionGenerator = descriptionGenerator;
         getState().rowDescriptionContentMode = contentMode;
+        getDataCommunicator().reset();
+    }
+
+    /**
+     * Sets the row select assistive label generator that is used for assistive device labels
+     * for the multiselect checkboxes.
+     *
+     * @param rowSelectAssistiveLabelGenerator
+     *            the row select assitive label generator to set, or {@code null} to
+     *            remove a previously set generator
+     *
+     * @since
+     */
+    public void setRowSelectAssistiveLabelGenerator(RowSelectAssistiveLabelGenerator<T> rowSelectAssistiveLabelGenerator) {
+        this.rowSelectAssistiveLabelGenerator = rowSelectAssistiveLabelGenerator;
         getDataCommunicator().reset();
     }
 
