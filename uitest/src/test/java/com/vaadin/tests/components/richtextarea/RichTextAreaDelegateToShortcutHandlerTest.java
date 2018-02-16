@@ -22,7 +22,7 @@ public class RichTextAreaDelegateToShortcutHandlerTest extends MultiBrowserTest 
     @Test
     public void shouldDelegateToShortcutActionHandler() {
         openTestURL();
-        
+
         WebElement textAreaEditor = $(RichTextAreaElement.class).first().getEditorIframe();
         textAreaEditor.sendKeys("Test");
         textAreaEditor.sendKeys(Keys.ENTER);
