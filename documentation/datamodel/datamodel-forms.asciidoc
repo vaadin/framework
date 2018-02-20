@@ -91,6 +91,18 @@ binder.bind(nameField,
     }
   });
 ----
+== Binding non-modifiable Data
+
+Non-modifiable data can be also bound to any component or component property with [classname]#ReadOnlyHasValue# helper class.
+For example, `Panel` caption can display a person full name:
+
+[source, java]
+----
+Panel infoPanel = new Panel();
+ReadOnlyHasValue<Person> panelTitle = new ReadOnlyHasValue<String>(
+        person -> infoPanel.setCaption(person.getLastName() + ", " + person.getFirstName()));
+binder.forField(panelTitle).bind(person -> person, null);
+----
 
 == Validating and Converting User Input
 
