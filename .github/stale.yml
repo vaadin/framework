@@ -1,0 +1,17 @@
+daysUntilStale: 274
+daysUntilClose: 30
+exemptLabels:
+ - BFP
+ - Pinned
+staleLabel: Stale
+only: issues
+markComment: >
+  A lot of tickets have been left hanging in the issue tracker through the
+  years. Some of them are still relevant, some of them have been fixed a long
+  time ago and some are no longer valid. To get a better look on what is
+  important and still relevant, we are closing old tickets which have not been
+  touched in a long time.
+  No further work will be done on this ticket. If the ticket  seems to be still
+  actual, please verify the problem existence over latest framework version
+  and then open a new ticket in [vaadin/framework](https://github.com/vaadin/framework)
+  with all the suitable information.
