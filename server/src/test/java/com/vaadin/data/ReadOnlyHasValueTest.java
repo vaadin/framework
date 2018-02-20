@@ -2,13 +2,12 @@ package com.vaadin.data;
 
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Label;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Objects;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class ReadOnlyHasValueTest {
     public static final String SAY_SOMETHING = "Say something";
@@ -53,19 +52,25 @@ public class ReadOnlyHasValueTest {
         Label label = new Label();
         ReadOnlyHasValue<Long> intHasValue = new ReadOnlyHasValue<>(
                 i -> label.setValue(Objects.toString(i, "")));
+
         beanBinder.forField(intHasValue).bind("v");
 
         beanBinder.readBean(new Bean(42));
         assertEquals("42", label.getValue());
         assertEquals(42L, intHasValue.getValue().longValue());
 
+        Registration registration = intHasValue.addValueChangeListener(e -> {
+            assertEquals(42L, e.getOldValue().longValue());
+            assertSame(intHasValue, e.getSource());
+            assertSame(null, e.getComponent());
+            assertSame(null, e.getComponent());
+            assertFalse(e.isUserOriginated());
+        });
         beanBinder.readBean(new Bean(1984));
         assertEquals("1984", label.getValue());
         assertEquals(1984L, intHasValue.getValue().longValue());
 
-        beanBinder.readBean(new Bean(1984));
-        assertEquals("1984", label.getValue());
-        assertEquals(1984L, intHasValue.getValue().longValue());
+        registration.remove();
 
         beanBinder.readBean(null);
         assertEquals("", label.getValue());
