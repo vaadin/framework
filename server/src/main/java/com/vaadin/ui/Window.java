@@ -268,6 +268,7 @@ public class Window extends Panel
      *            window close event (not null, window close not yet performed)
      * @return true if the window close should be allowed, false to silently
      *         block the close operation
+     * @since
      */
     protected boolean fireBeforeWindowClose(WindowBeforeCloseEvent event) {
         // a copy of the listener list is needed to avoid
