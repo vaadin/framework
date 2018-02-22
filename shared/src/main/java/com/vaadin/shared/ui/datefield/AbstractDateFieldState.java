@@ -15,12 +15,12 @@
  */
 package com.vaadin.shared.ui.datefield;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.annotations.NoLayout;
+import com.vaadin.shared.data.date.VaadinDateTime;
 
 /**
  * Shared state for the AbstractDateField component.
@@ -52,14 +52,14 @@ public class AbstractDateFieldState extends AbstractFieldState {
      * date field.
      */
     @NoLayout
-    public Date rangeStart;
+    public VaadinDateTime rangeStart;
 
     /**
      * End range that has been cleared, depending on the resolution of the date
      * field.
      */
     @NoLayout
-    public Date rangeEnd;
+    public VaadinDateTime rangeEnd;
 
     /**
      * The JSON used to construct a TimeZone on the client side, can be

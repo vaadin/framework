@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.ui.datefield.AbstractDateFieldConnector;
+import com.vaadin.shared.data.date.VaadinDateTime;
 import com.vaadin.shared.ui.datefield.AbstractDateFieldServerRpc;
 
 /**
@@ -88,13 +89,13 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * The date that is displayed the date field before a value is selected. If
      * null, display the current date.
      */
-    private Date defaultDate;
+    private VaadinDateTime defaultDate;
 
     /**
      * The date that is selected in the date field. Null if an invalid date is
      * specified.
      */
-    private Date date;
+    private VaadinDateTime date;
 
     /** For internal use only. May be removed or replaced in the future. */
     public DateTimeService dts;
@@ -123,11 +124,11 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
         this.currentLocale = currentLocale;
     }
 
-    public Date getCurrentDate() {
+    public VaadinDateTime getCurrentDate() {
         return date;
     }
 
-    public void setCurrentDate(Date date) {
+    public void setCurrentDate(VaadinDateTime date) {
         this.date = date;
     }
 
@@ -139,7 +140,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      *            opening a popup with no value selected
      * @since 8.1.2
      */
-    public void setDefaultDate(Date date) {
+    public void setDefaultDate(VaadinDateTime date) {
         this.defaultDate = date;
     }
 
@@ -148,7 +149,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * <p>
      * The map contains integer representation of values per resolution. The
      * method should construct a date based on the map and set it via
-     * {@link #setCurrentDate(Date)}
+     * {@link #setCurrentDate(VaadinDateTime)}
      *
      * @param dateValues
      *            a map with date values to convert into a date
@@ -174,7 +175,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * @return the default date
      * @since 8.1.2
      */
-    public Date getDefaultDate() {
+    public VaadinDateTime getDefaultDate() {
         return defaultDate;
     }
 
@@ -225,19 +226,19 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
 
     /**
      * Returns a copy of the current date. Modifying the returned date will not
-     * modify the value of this VDateField. Use {@link #setDate(Date)} to change
+     * modify the value of this VDateField. Use {@link #setDate(VaadinDateTime)} to change
      * the current date.
      * <p>
      * For internal use only. May be removed or replaced in the future.
      *
      * @return A copy of the current date
      */
-    public Date getDate() {
-        Date current = getCurrentDate();
+    public VaadinDateTime getDate() {
+        VaadinDateTime current = getCurrentDate();
         if (current == null) {
             return null;
         } else {
-            return (Date) getCurrentDate().clone();
+            return getCurrentDate();
         }
     }
 
@@ -247,7 +248,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * @param date
      *            The new date to use
      */
-    protected void setDate(Date date) {
+    protected void setDate(VaadinDateTime date) {
         this.date = date;
     }
 
@@ -341,7 +342,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      *            a map with date values to convert into a date
      * @return the date based on the dateValues map
      */
-    protected abstract Date getDate(Map<R, Integer> dateValues);
+    protected abstract VaadinDateTime getDate(Map<R, Integer> dateValues);
 
     /**
      * Returns all available resolutions as an array.

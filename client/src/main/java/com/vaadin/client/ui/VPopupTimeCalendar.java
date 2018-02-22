@@ -22,14 +22,15 @@ import static com.vaadin.shared.ui.datefield.DateTimeResolution.MONTH;
 import static com.vaadin.shared.ui.datefield.DateTimeResolution.SECOND;
 import static com.vaadin.shared.ui.datefield.DateTimeResolution.YEAR;
 
-import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
 import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.LocaleService;
+import com.vaadin.shared.data.date.VaadinDateTime;
 import com.vaadin.shared.ui.datefield.DateTimeResolution;
 
 /**
@@ -65,36 +66,17 @@ public class VPopupTimeCalendar extends
         super.setCurrentResolution(resolution == null ? MINUTE : resolution);
     }
 
-    public static Date makeDate(Map<DateTimeResolution, Integer> dateValues) {
+    public static VaadinDateTime makeDate(Map<DateTimeResolution, Integer> dateValues) {
         if (dateValues.get(YEAR) == null) {
             return null;
         }
-        Date date = new Date(2000 - 1900, 0, 1);
-        Integer year = dateValues.get(YEAR);
-        if (year != null) {
-            date.setYear(year - 1900);
-        }
-        Integer month = dateValues.get(MONTH);
-        if (month != null) {
-            date.setMonth(month - 1);
-        }
-        Integer day = dateValues.get(DAY);
-        if (day != null) {
-            date.setDate(day);
-        }
-        Integer hour = dateValues.get(HOUR);
-        if (hour != null) {
-            date.setHours(hour);
-        }
-        Integer minute = dateValues.get(MINUTE);
-        if (minute != null) {
-            date.setMinutes(minute);
-        }
-        Integer second = dateValues.get(SECOND);
-        if (second != null) {
-            date.setSeconds(second);
-        }
-        return date;
+        int year = dateValues.getOrDefault(DateTimeResolution.YEAR,2000);
+        int month = dateValues.getOrDefault(DateTimeResolution.MONTH,0);
+        int day = dateValues.getOrDefault(DateTimeResolution.DAY,1);
+        int hour = dateValues.getOrDefault(DateTimeResolution.HOUR,0);
+        int minute = dateValues.getOrDefault(DateTimeResolution.MINUTE,0);
+        int second = dateValues.getOrDefault(DateTimeResolution.SECOND,0);
+        return new VaadinDateTime(year, month, day,hour,minute,second);
     }
 
     @Override
@@ -103,47 +85,47 @@ public class VPopupTimeCalendar extends
     }
 
     @Override
-    protected Date getDate(Map<DateTimeResolution, Integer> dateValues) {
+    protected VaadinDateTime getDate(Map<DateTimeResolution, Integer> dateValues) {
         return makeDate(dateValues);
     }
 
     @Override
     protected void updateBufferedResolutions() {
         super.updateBufferedResolutions();
-        Date currentDate = getDate();
+        VaadinDateTime currentDate = getDate();
         if (currentDate != null) {
             DateTimeResolution resolution = getCurrentResolution();
             if (resolution.compareTo(MONTH) <= 0) {
                 bufferedResolutions.put(MONTH, currentDate.getMonth() + 1);
             }
             if (resolution.compareTo(DAY) <= 0) {
-                bufferedResolutions.put(DAY, currentDate.getDate());
+                bufferedResolutions.put(DAY, currentDate.getDay());
             }
             if (resolution.compareTo(HOUR) <= 0) {
-                bufferedResolutions.put(HOUR, currentDate.getHours());
+                bufferedResolutions.put(HOUR, currentDate.getHour());
             }
             if (resolution.compareTo(MINUTE) <= 0) {
-                bufferedResolutions.put(MINUTE, currentDate.getMinutes());
+                bufferedResolutions.put(MINUTE, currentDate.getMinute());
             }
             if (resolution.compareTo(SECOND) <= 0) {
-                bufferedResolutions.put(SECOND, currentDate.getSeconds());
+                bufferedResolutions.put(SECOND, currentDate.getSec());
             }
         }
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public void updateValue(Date newDate) {
-        Date currentDate = getCurrentDate();
+    public void updateValue(VaadinDateTime newDate) {
+        VaadinDateTime currentDate = getCurrentDate();
         super.updateValue(newDate);
         DateTimeResolution resolution = getCurrentResolution();
-        if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
+        if(!Objects.equals(currentDate,newDate)) {
             if (resolution.compareTo(DAY) < 0) {
-                bufferedResolutions.put(HOUR, newDate.getHours());
+                bufferedResolutions.put(HOUR, newDate.getHour());
                 if (resolution.compareTo(HOUR) < 0) {
-                    bufferedResolutions.put(MINUTE, newDate.getMinutes());
+                    bufferedResolutions.put(MINUTE, newDate.getMinute());
                     if (resolution.compareTo(MINUTE) < 0) {
-                        bufferedResolutions.put(SECOND, newDate.getSeconds());
+                        bufferedResolutions.put(SECOND, newDate.getSec());
                     }
                 }
             }

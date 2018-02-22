@@ -24,8 +24,10 @@ import static com.vaadin.shared.ui.datefield.DateTimeResolution.YEAR;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.gwt.core.client.GWT;
+import com.vaadin.shared.data.date.VaadinDateTime;
 import com.vaadin.shared.ui.datefield.DateTimeResolution;
 
 /**
@@ -50,23 +52,24 @@ public class VDateTimeFieldCalendar extends
             return;
         }
 
-        Date date2 = calendarPanel.getDate();
-        Date currentDate = getCurrentDate();
+        VaadinDateTime date2 = calendarPanel.getDate();
+        VaadinDateTime currentDate = getCurrentDate();
         DateTimeResolution resolution = getCurrentResolution();
-        if (currentDate == null || date2.getTime() != currentDate.getTime()) {
-            setCurrentDate((Date) date2.clone());
-            bufferedResolutions.put(YEAR, date2.getYear() + 1900);
+
+        if (!Objects.equals(currentDate,date2)) {
+            setCurrentDate(date2);
+            bufferedResolutions.put(YEAR, date2.getYear());
             if (resolution.compareTo(YEAR) < 0) {
                 bufferedResolutions.put(MONTH, date2.getMonth() + 1);
                 if (resolution.compareTo(MONTH) < 0) {
-                    bufferedResolutions.put(DAY, date2.getDate());
+                    bufferedResolutions.put(DAY, date2.getDay());
                     if (resolution.compareTo(DAY) < 0) {
-                        bufferedResolutions.put(HOUR, date2.getHours());
+                        bufferedResolutions.put(HOUR, date2.getHour());
                         if (resolution.compareTo(HOUR) < 0) {
-                            bufferedResolutions.put(MINUTE, date2.getMinutes());
+                            bufferedResolutions.put(MINUTE, date2.getMinute());
                             if (resolution.compareTo(MINUTE) < 0) {
                                 bufferedResolutions.put(SECOND,
-                                        date2.getSeconds());
+                                        date2.getSec());
                             }
                         }
                     }
@@ -97,7 +100,7 @@ public class VDateTimeFieldCalendar extends
     }
 
     @Override
-    protected Date getDate(Map<DateTimeResolution, Integer> dateValues) {
+    protected VaadinDateTime getDate(Map<DateTimeResolution, Integer> dateValues) {
         return VPopupTimeCalendar.makeDate(dateValues);
     }
 

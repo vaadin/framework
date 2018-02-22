@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.i18n.shared.DateTimeFormat;
+import com.vaadin.shared.data.date.VaadinDateTime;
 import com.vaadin.shared.ui.datefield.DateResolution;
 
 /**
@@ -202,6 +203,12 @@ public class DateTimeService {
         return (int) (date.getTime() - date.getTime() / 1000 * 1000);
     }
 
+    public static int getNumberOfDaysInMonth(VaadinDateTime date) {
+        if (date.getMonth() == 1 && isLeapYear(date.getYear())) {
+            return 29;
+        }
+        return maxDaysInMonth[date.getMonth()];
+    }
     public static int getNumberOfDaysInMonth(Date date) {
         final int month = date.getMonth();
         if (month == 1 && isLeapYear(date)) {
@@ -210,6 +217,11 @@ public class DateTimeService {
         return maxDaysInMonth[month];
     }
 
+    public static boolean isLeapYear(int year) {
+        if((year % 400) == 0) return true;
+        if((year % 100) == 0) return false;
+        return (year % 4) == 0;
+    }
     public static boolean isLeapYear(Date date) {
         // Instantiate the date for 1st March of that year
         final Date firstMarch = new Date(date.getYear(), 2, 1);
@@ -227,6 +239,10 @@ public class DateTimeService {
 
     public static boolean isSameDay(Date d1, Date d2) {
         return (getDayInt(d1) == getDayInt(d2));
+    }
+
+    public static boolean isSameDay(VaadinDateTime d1, VaadinDateTime d2) {
+        return d1.year==d2.year && d1.month==d2.month && d1.day==d2.day;
     }
 
     public static boolean isInRange(Date date, Date rangeStart, Date rangeEnd,

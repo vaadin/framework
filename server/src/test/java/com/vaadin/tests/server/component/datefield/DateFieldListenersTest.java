@@ -11,6 +11,7 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.shared.data.date.VaadinDateTime;
 import com.vaadin.shared.ui.datefield.DateTimeResolution;
 import com.vaadin.tests.server.component.AbstractListenerMethodsTestBase;
 import com.vaadin.ui.AbstractDateField;
@@ -42,12 +43,12 @@ public class DateFieldListenersTest extends AbstractListenerMethodsTestBase {
         }
 
         @Override
-        protected LocalDateTime convertFromDate(Date date) {
+        protected LocalDateTime convertFromDate(VaadinDateTime date) {
             return null;
         }
 
         @Override
-        protected Date convertToDate(LocalDateTime date) {
+        protected VaadinDateTime convertToDate(LocalDateTime date) {
             return null;
         }
 

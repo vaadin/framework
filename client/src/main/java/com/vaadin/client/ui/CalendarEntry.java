@@ -19,42 +19,26 @@ package com.vaadin.client.ui;
 import java.util.Date;
 
 import com.vaadin.client.DateTimeService;
+import com.vaadin.shared.data.date.VaadinDateTime;
 
 public class CalendarEntry {
     private final String styleName;
-    private Date start;
-    private Date end;
+    private VaadinDateTime start;
+    private VaadinDateTime end;
     private String title;
     private String description;
     private boolean notime;
 
     @SuppressWarnings("deprecation")
-    public CalendarEntry(String styleName, Date start, Date end, String title,
+    public CalendarEntry(String styleName, VaadinDateTime start, VaadinDateTime end, String title,
             String description, boolean notime) {
         this.styleName = styleName;
-        if (notime) {
-            Date d = new Date(start.getTime());
-            d.setSeconds(0);
-            d.setMinutes(0);
-            this.start = d;
-            if (end != null) {
-                d = new Date(end.getTime());
-                d.setSeconds(0);
-                d.setMinutes(0);
-                this.end = d;
-            } else {
-                end = start;
-            }
-        } else {
-            this.start = start;
-            this.end = end;
-        }
         this.title = title;
         this.description = description;
         this.notime = notime;
     }
 
-    public CalendarEntry(String styleName, Date start, Date end, String title,
+    public CalendarEntry(String styleName, VaadinDateTime start, VaadinDateTime end, String title,
             String description) {
         this(styleName, start, end, title, description, false);
     }
@@ -63,19 +47,19 @@ public class CalendarEntry {
         return styleName;
     }
 
-    public Date getStart() {
+    public VaadinDateTime getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(VaadinDateTime start) {
         this.start = start;
     }
 
-    public Date getEnd() {
+    public VaadinDateTime getEnd() {
         return end;
     }
 
-    public void setEnd(Date end) {
+    public void setEnd(VaadinDateTime end) {
         this.end = end;
     }
 
@@ -104,29 +88,29 @@ public class CalendarEntry {
     }
 
     @SuppressWarnings("deprecation")
-    public String getStringForDate(Date d) {
+    public String getStringForDate(VaadinDateTime d) {
         // TODO format from DateTimeService
         String s = "";
         if (!notime) {
             if (!DateTimeService.isSameDay(d, start)) {
                 s += (start.getYear() + 1900) + "." + (start.getMonth() + 1)
-                        + "." + start.getDate() + " ";
+                        + "." + start.getDay() + " ";
             }
-            int i = start.getHours();
+            int i = start.getHour();
             s += asTwoDigits(i);
             s += ":";
-            i = start.getMinutes();
+            i = start.getMinute();
             s += asTwoDigits(i);
             if (!start.equals(end)) {
                 s += " - ";
                 if (!DateTimeService.isSameDay(start, end)) {
                     s += (end.getYear() + 1900) + "." + (end.getMonth() + 1)
-                            + "." + end.getDate() + " ";
+                            + "." + end.getDay() + " ";
                 }
-                i = end.getHours();
+                i = end.getHour();
                 s += asTwoDigits(i);
                 s += ":";
-                i = end.getMinutes();
+                i = end.getMinute();
                 s += asTwoDigits(i);
             }
             s += " ";

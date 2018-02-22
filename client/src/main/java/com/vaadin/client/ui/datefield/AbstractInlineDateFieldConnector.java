@@ -23,6 +23,7 @@ import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.VAbstractCalendarPanel;
 import com.vaadin.client.ui.VAbstractDateFieldCalendar;
+import com.vaadin.shared.data.date.VaadinDateTime;
 import com.vaadin.shared.ui.datefield.InlineDateFieldState;
 
 /**
@@ -53,16 +54,16 @@ public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCa
         if (isResolutionMonthOrHigher()) {
             widget.calendarPanel
                     .setFocusChangeListener(date -> {
-                        Date date2 = new Date();
+                        VaadinDateTime date2;
                         if (widget.calendarPanel.getDate() != null) {
-                            date2.setTime(widget.calendarPanel.getDate()
-                                    .getTime());
+                            date2 = widget.calendarPanel.getDate();
+                        } else {
+                            date2 = VaadinDateTime.today();
                         }
                         /*
                          * Update the value of calendarPanel
                          */
-                        date2.setYear(date.getYear());
-                        date2.setMonth(date.getMonth());
+                        date2 = new VaadinDateTime(date.getYear(),date.getYear(),date2.getDay());
                         widget.calendarPanel.setDate(date2);
                         /*
                          * Then update the value from panel to server
@@ -86,9 +87,9 @@ public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCa
                 .setShowISOWeekNumbers(widget.isShowISOWeekNumbers());
         widget.calendarPanel.setDateTimeService(widget.getDateTimeService());
         widget.calendarPanel.setResolution(widget.getCurrentResolution());
-        Date currentDate = widget.getCurrentDate();
+        VaadinDateTime currentDate = widget.getCurrentDate();
         if (currentDate != null) {
-            widget.calendarPanel.setDate(new Date(currentDate.getTime()));
+            widget.calendarPanel.setDate(currentDate);
         } else {
             widget.calendarPanel.setDate(null);
         }

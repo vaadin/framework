@@ -16,6 +16,7 @@
 package com.vaadin.ui;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -27,6 +28,7 @@ import java.util.Map;
 
 import com.vaadin.data.validator.DateTimeRangeValidator;
 import com.vaadin.data.validator.RangeValidator;
+import com.vaadin.shared.data.date.VaadinDateTime;
 import com.vaadin.shared.ui.datefield.AbstractTextualDateFieldState;
 import com.vaadin.shared.ui.datefield.DateTimeResolution;
 
@@ -126,20 +128,19 @@ public abstract class AbstractLocalDateTimeField
     }
 
     @Override
-    protected LocalDateTime convertFromDate(Date date) {
-        if (date == null) {
+    protected LocalDateTime convertFromDate(VaadinDateTime dateTime) {
+        if (dateTime == null) {
             return null;
         }
-        return Instant.ofEpochMilli(date.getTime()).atZone(ZoneOffset.UTC)
-                .toLocalDateTime();
+        return LocalDateTime.of(dateTime.getYear(),dateTime.getMonth() + 1 ,dateTime.getDay(),dateTime.getHour(),dateTime.getMinute(),dateTime.getSec());
     }
 
     @Override
-    protected Date convertToDate(LocalDateTime date) {
-        if (date == null) {
+    protected VaadinDateTime convertToDate(LocalDateTime dateTime) {
+        if (dateTime == null) {
             return null;
         }
-        return Date.from(date.toInstant(ZoneOffset.UTC));
+        return new VaadinDateTime(dateTime.getYear(),dateTime.getMonthValue() - 1 ,dateTime.getDayOfMonth(),dateTime.getHour(),dateTime.getMinute(),dateTime.getSecond());
     }
 
     private LocalDateTime getDate(LocalDateTime date,

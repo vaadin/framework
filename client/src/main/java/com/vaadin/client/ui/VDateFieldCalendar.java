@@ -21,8 +21,10 @@ import static com.vaadin.shared.ui.datefield.DateResolution.YEAR;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.gwt.core.shared.GWT;
+import com.vaadin.shared.data.date.VaadinDateTime;
 import com.vaadin.shared.ui.datefield.DateResolution;
 
 /**
@@ -46,11 +48,11 @@ public class VDateFieldCalendar
             return;
         }
 
-        Date date2 = calendarPanel.getDate();
-        Date currentDate = getCurrentDate();
+        VaadinDateTime date2 = calendarPanel.getDate();
+        VaadinDateTime currentDate = getCurrentDate();
         DateResolution resolution = getCurrentResolution();
-        if (currentDate == null || date2.getTime() != currentDate.getTime()) {
-            setCurrentDate((Date) date2.clone());
+        if (!Objects.equals(currentDate ,date2)) {
+            setCurrentDate(date2);
             bufferedResolutions.put(YEAR,
                     // Java Date uses the year aligned to 1900 (no to zero).
                     // So we should add 1900 to get a correct year aligned to 0.
@@ -58,7 +60,7 @@ public class VDateFieldCalendar
             if (resolution.compareTo(YEAR) < 0) {
                 bufferedResolutions.put(MONTH, date2.getMonth() + 1);
                 if (resolution.compareTo(MONTH) < 0) {
-                    bufferedResolutions.put(DAY, date2.getDate());
+                    bufferedResolutions.put(DAY, date2.getDay());
                 }
             }
         }
@@ -98,7 +100,7 @@ public class VDateFieldCalendar
     }
 
     @Override
-    protected Date getDate(Map<DateResolution, Integer> dateVaules) {
+    protected VaadinDateTime getDate(Map<DateResolution, Integer> dateVaules) {
         return VPopupCalendar.makeDate(dateVaules);
     }
 

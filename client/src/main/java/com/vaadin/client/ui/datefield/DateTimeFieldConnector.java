@@ -20,6 +20,7 @@ import java.util.Date;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.ui.VDateTimeCalendarPanel;
 import com.vaadin.client.ui.VPopupTimeCalendar;
+import com.vaadin.shared.data.date.VaadinDateTime;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.datefield.DateTimeResolution;
 import com.vaadin.shared.ui.datefield.LocalDateTimeFieldState;
@@ -59,7 +60,7 @@ public class DateTimeFieldConnector extends
                 .compareTo(DateTimeResolution.DAY) < 0) {
             widget.calendar
                     .setTimeChangeListener((hour, min, sec, msec) -> {
-                        Date d = widget.getDate();
+                        VaadinDateTime d = widget.getDate();
                         if (d == null) {
                             // date currently null, use the value from
                             // calendarPanel

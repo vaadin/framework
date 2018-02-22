@@ -28,6 +28,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.VAbstractCalendarPanel;
 import com.vaadin.client.ui.VAbstractCalendarPanel.FocusChangeListener;
 import com.vaadin.client.ui.VAbstractPopupCalendar;
+import com.vaadin.shared.data.date.VaadinDateTime;
 import com.vaadin.shared.ui.datefield.TextualDateFieldState;
 
 /**
@@ -85,9 +86,16 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
                 if (isResolutionMonthOrHigher()) {
                     getWidget().updateValue(date);
                     getWidget().buildDate();
-                    Date date2 = getWidget().calendar.getDate();
-                    date2.setYear(date.getYear());
-                    date2.setMonth(date.getMonth());
+                    VaadinDateTime calendarDate = getWidget().calendar.getDate();
+                    VaadinDateTime newDate = new VaadinDateTime(date.getYear(), date.getMonth()
+                            , calendarDate.getDay()
+                            , calendarDate.getHour()
+                            , calendarDate.getMinute()
+                            , calendarDate.getSec(),
+                            calendarDate.resolution
+                    );
+                    getWidget().calendar.setDate(newDate);
+
                 }
             };
         } else {
@@ -123,8 +131,8 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
         super.onStateChanged(stateChangeEvent);
 
         getWidget().setTextFieldEnabled(getState().textFieldEnabled);
-        getWidget().setRangeStart(nullSafeDateClone(getState().rangeStart));
-        getWidget().setRangeEnd(nullSafeDateClone(getState().rangeEnd));
+        getWidget().setRangeStart(getState().rangeStart);
+        getWidget().setRangeEnd(getState().rangeEnd);
 
         getWidget().calendar.setDateStyles(getState().dateStyles);
         getWidget().calendar
@@ -140,7 +148,7 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
                     && getWidget().getCurrentDate() != null) {
                 hasSelectedDate = true;
                 getWidget().calendar
-                        .setDate((Date) getWidget().getCurrentDate().clone());
+                        .setDate(getWidget().getCurrentDate());
             }
             // force re-render when changing resolution only
             getWidget().calendar.renderCalendar(hasSelectedDate);
@@ -165,13 +173,6 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
                 getState().descriptionForAssistiveDevices);
 
         getWidget().setTextFieldTabIndex();
-    }
-
-    private Date nullSafeDateClone(Date date) {
-        if (date != null) {
-            return (Date) date.clone();
-        }
-        return null;
     }
 
     @Override

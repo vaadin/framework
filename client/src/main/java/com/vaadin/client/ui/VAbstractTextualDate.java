@@ -41,6 +41,7 @@ import com.vaadin.client.ui.aria.HandlesAriaCaption;
 import com.vaadin.client.ui.aria.HandlesAriaInvalid;
 import com.vaadin.client.ui.aria.HandlesAriaRequired;
 import com.vaadin.shared.EventId;
+import com.vaadin.shared.data.date.VaadinDateTime;
 
 /**
  * Abstract textual date field base implementation. Provides a text box as an
@@ -184,7 +185,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         removeStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
         // Create the initial text for the textfield
         String dateText;
-        Date currentDate = getDate();
+        VaadinDateTime currentDate = getDate();
         // Always call this to ensure the format ends up in the element
         String formatString = getFormatString();
         if (currentDate != null) {
@@ -301,11 +302,11 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * @since 8.2
      */
     protected void updateBufferedResolutions() {
-        Date currentDate = getDate();
+        VaadinDateTime currentDate = getDate();
         if (currentDate != null) {
             bufferedResolutions.put(
                     getResolutions().filter(this::isYear).findFirst().get(),
-                    currentDate.getYear() + 1900);
+                    currentDate.getYear());
         }
     }
 

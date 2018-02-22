@@ -17,6 +17,7 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Id;
@@ -46,6 +47,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.ui.VAbstractCalendarPanel.SubmitListener;
 import com.vaadin.client.ui.aria.AriaHelper;
+import com.vaadin.shared.data.date.VaadinDateTime;
 import com.vaadin.shared.ui.datefield.TextualDateFieldState;
 
 /**
@@ -213,11 +215,11 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      *            the new {@code Date} to update
      */
     @SuppressWarnings("deprecation")
-    public void updateValue(Date newDate) {
-        Date currentDate = getCurrentDate();
+    public void updateValue(VaadinDateTime newDate) {
+        VaadinDateTime currentDate = getCurrentDate();
         R resolution = getCurrentResolution();
-        if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
-            setCurrentDate((Date) newDate.clone());
+        if (!Objects.equals(currentDate,newDate)) {
+            setCurrentDate(newDate);
             bufferedResolutions.put(calendar.getResolution(calendar::isYear),
                     newDate.getYear() + 1900);
             if (!calendar.isYear(resolution)) {
@@ -227,7 +229,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
                 if (!calendar.isMonth(resolution)) {
                     bufferedResolutions.put(
                             calendar.getResolution(calendar::isDay),
-                            newDate.getDate());
+                            newDate.getDay());
                 }
             }
         }
@@ -381,11 +383,11 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
             open = true;
 
             if (getCurrentDate() != null) {
-                calendar.setDate((Date) getCurrentDate().clone());
+                calendar.setDate(getCurrentDate());
             } else if (getDefaultDate() != null) {
                 calendar.setDate(getDefaultDate());
             } else {
-                calendar.setDate(new Date());
+                calendar.setDate(VaadinDateTime.today());
             }
 
             // clear previous values
@@ -475,8 +477,9 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * @param selectedDate
      *            Date that is currently selected
      */
-    public void setFocusedDate(Date selectedDate) {
-        this.selectedDate.setText(DateTimeFormat.getFormat("dd, MMMM, yyyy")
+    public void setFocusedDate(VaadinDateTime selectedDate) {
+        this.selectedDate.setText(
+                DateTimeFormat.getFormat("dd, MMMM, yyyy")
                 .format(selectedDate));
     }
 
@@ -599,7 +602,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * @param rangeStart
      *            - the allowed range's start date
      */
-    public void setRangeStart(Date rangeStart) {
+    public void setRangeStart(VaadinDateTime rangeStart) {
         calendar.setRangeStart(rangeStart);
     }
 
@@ -610,7 +613,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * @param rangeEnd
      *            - the allowed range's end date
      */
-    public void setRangeEnd(Date rangeEnd) {
+    public void setRangeEnd(VaadinDateTime rangeEnd) {
         calendar.setRangeEnd(rangeEnd);
     }
 

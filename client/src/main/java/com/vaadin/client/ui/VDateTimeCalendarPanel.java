@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.DateTimeService;
+import com.vaadin.shared.data.date.VaadinDateTime;
 import com.vaadin.shared.ui.datefield.DateTimeResolution;
 
 /**
@@ -79,8 +80,6 @@ public class VDateTimeCalendarPanel
         /**
          * Constructs the ListBoxes and updates their value
          *
-         * @param redraw
-         *            Should new instances of the listboxes be created
          */
         private void buildTime() {
             clear();
@@ -125,7 +124,7 @@ public class VDateTimeCalendarPanel
             if (isReadonly()) {
                 int h = 0;
                 if (getDate() != null) {
-                    h = getDate().getHours();
+                    h = getDate().getHour();
                 }
                 if (getDateTimeService().isTwelveHourClock()) {
                     h -= h < 12 ? 0 : 12;
@@ -161,7 +160,7 @@ public class VDateTimeCalendarPanel
                 if (isReadonly()) {
                     int i = 0;
                     if (getDate() != null) {
-                        i = (getDate().getHours() < 12) ? 0 : 1;
+                        i = (getDate().getHour() < 12) ? 0 : 1;
                     }
                     add(new VLabel(ampm.getItemText(i)));
                 } else {
@@ -205,24 +204,24 @@ public class VDateTimeCalendarPanel
          */
         public void updateTimes() {
             if (getDate() == null) {
-                setDate(new Date());
+                setDate(VaadinDateTime.now());
             }
             if (getDateTimeService().isTwelveHourClock()) {
-                int h = getDate().getHours();
+                int h = getDate().getHour();
                 ampm.setSelectedIndex(h < 12 ? 0 : 1);
                 h -= ampm.getSelectedIndex() * 12;
                 hours.setSelectedIndex(h);
             } else {
-                hours.setSelectedIndex(getDate().getHours());
+                hours.setSelectedIndex(getDate().getHour());
             }
             if (getResolution().compareTo(DateTimeResolution.MINUTE) <= 0) {
-                mins.setSelectedIndex(getDate().getMinutes());
+                mins.setSelectedIndex(getDate().getMinute());
             }
             if (getResolution().compareTo(DateTimeResolution.SECOND) <= 0) {
-                sec.setSelectedIndex(getDate().getSeconds());
+                sec.setSelectedIndex(getDate().getSec());
             }
             if (getDateTimeService().isTwelveHourClock()) {
-                ampm.setSelectedIndex(getDate().getHours() < 12 ? 0 : 1);
+                ampm.setSelectedIndex(getDate().getHour() < 12 ? 0 : 1);
             }
 
             hours.setEnabled(isEnabled());
@@ -265,11 +264,10 @@ public class VDateTimeCalendarPanel
                 if (getDateTimeService().isTwelveHourClock()) {
                     h = h + ampm.getSelectedIndex() * 12;
                 }
-                getDate().setHours(h);
+                getDate().setHour(h);
                 if (timeChangeListener != null) {
-                    timeChangeListener.changed(h, getDate().getMinutes(),
-                            getDate().getSeconds(),
-                            DateTimeService.getMilliseconds(getDate()));
+                    timeChangeListener.changed(h, getDate().getMinute(),
+                            getDate().getSec(),0);
                 }
                 event.preventDefault();
                 event.stopPropagation();
@@ -277,9 +275,8 @@ public class VDateTimeCalendarPanel
                 final int m = mins.getSelectedIndex();
                 getDate().setMinutes(m);
                 if (timeChangeListener != null) {
-                    timeChangeListener.changed(getDate().getHours(), m,
-                            getDate().getSeconds(),
-                            DateTimeService.getMilliseconds(getDate()));
+                    timeChangeListener.changed(getDate().getHour(), m,
+                            getDate().getSec(),0);
                 }
                 event.preventDefault();
                 event.stopPropagation();
@@ -287,9 +284,8 @@ public class VDateTimeCalendarPanel
                 final int s = sec.getSelectedIndex();
                 getDate().setSeconds(s);
                 if (timeChangeListener != null) {
-                    timeChangeListener.changed(getDate().getHours(),
-                            getDate().getMinutes(), s,
-                            DateTimeService.getMilliseconds(getDate()));
+                    timeChangeListener.changed(getDate().getHour(),
+                            getDate().getMinute(), s,0);
                 }
                 event.preventDefault();
                 event.stopPropagation();
@@ -298,9 +294,8 @@ public class VDateTimeCalendarPanel
                         + (ampm.getSelectedIndex() * 12);
                 getDate().setHours(h);
                 if (timeChangeListener != null) {
-                    timeChangeListener.changed(h, getDate().getMinutes(),
-                            getDate().getSeconds(),
-                            DateTimeService.getMilliseconds(getDate()));
+                    timeChangeListener.changed(h, getDate().getMinute(),
+                            getDate().getSec(),0);
                 }
                 event.preventDefault();
                 event.stopPropagation();
@@ -330,7 +325,7 @@ public class VDateTimeCalendarPanel
     }
 
     @Override
-    public void setDate(Date currentDate) {
+    public void setDate(VaadinDateTime currentDate) {
         doSetDate(currentDate, isTimeSelectorNeeded() && time == null, () -> {
             if (isTimeSelectorNeeded()) {
                 time.updateTimes();

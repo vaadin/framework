@@ -26,6 +26,7 @@ import java.util.Map;
 
 import com.vaadin.data.validator.DateRangeValidator;
 import com.vaadin.data.validator.RangeValidator;
+import com.vaadin.shared.data.date.VaadinDateTime;
 import com.vaadin.shared.ui.datefield.AbstractTextualDateFieldState;
 import com.vaadin.shared.ui.datefield.DateResolution;
 
@@ -113,20 +114,19 @@ public abstract class AbstractLocalDateField
     }
 
     @Override
-    protected LocalDate convertFromDate(Date date) {
+    protected LocalDate convertFromDate(VaadinDateTime date) {
         if (date == null) {
             return null;
         }
-        return Instant.ofEpochMilli(date.getTime()).atZone(ZoneOffset.UTC)
-                .toLocalDate();
+        return LocalDate.of(date.getYear(),date.getMonth()+1,date.getDay());
     }
 
     @Override
-    protected Date convertToDate(LocalDate date) {
+    protected VaadinDateTime convertToDate(LocalDate date) {
         if (date == null) {
             return null;
         }
-        return Date.from(date.atStartOfDay(ZoneOffset.UTC).toInstant());
+        return new VaadinDateTime(date.getYear(),date.getMonthValue() - 1,date.getDayOfMonth());
     }
 
     private LocalDate getDate(LocalDate date, DateResolution forResolution) {

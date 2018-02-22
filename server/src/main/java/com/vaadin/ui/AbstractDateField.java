@@ -53,6 +53,7 @@ import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.data.date.VaadinDateTime;
 import com.vaadin.shared.ui.datefield.AbstractDateFieldServerRpc;
 import com.vaadin.shared.ui.datefield.AbstractDateFieldState;
 import com.vaadin.shared.ui.datefield.AbstractDateFieldState.AccessibleElement;
@@ -269,7 +270,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *            - the allowed range's start date
      */
     public void setRangeStart(T startDate) {
-        Date date = convertToDate(startDate);
+        VaadinDateTime date = convertToDate(startDate);
         if (date != null && getState().rangeEnd != null
                 && date.after(getState().rangeEnd)) {
             throw new IllegalStateException(
@@ -333,7 +334,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *            resolution)
      */
     public void setRangeEnd(T endDate) {
-        Date date = convertToDate(endDate);
+        VaadinDateTime date = convertToDate(endDate);
         if (date != null && getState().rangeStart != null
                 && getState().rangeStart.after(date)) {
             throw new IllegalStateException(
@@ -760,18 +761,18 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *            a date to convert
      * @return object of type {@code T} representing the {@code date}
      */
-    protected abstract T convertFromDate(Date date);
+    protected abstract T convertFromDate(VaadinDateTime date);
 
     /**
-     * Converts the object of type {@code T} to {@link Date}.
+     * Converts the object of type {@code T} to {@link VaadinDateTime}.
      * <p>
-     * This is the opposite to {@link #convertFromDate(Date)}.
+     * This is the opposite to {@link #convertFromDate(VaadinDateTime)}.
      *
      * @param date
      *            the date of type {@code T}
      * @return converted date of type {@code Date}
      */
-    protected abstract Date convertToDate(T date);
+    protected abstract VaadinDateTime convertToDate(T date);
 
     @SuppressWarnings("unchecked")
     private Stream<R> getResolutions() {

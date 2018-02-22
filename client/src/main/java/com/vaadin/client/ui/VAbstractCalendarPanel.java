@@ -58,6 +58,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.aria.AriaHelper;
+import com.vaadin.shared.data.date.VaadinDateTime;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
@@ -105,7 +106,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * value.
      */
     public interface FocusChangeListener {
-        void focusChanged(Date focusedDate);
+        void focusChanged(VaadinDateTime focusedDate);
     }
 
     /**
@@ -143,7 +144,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     private Timer mouseTimer;
 
-    private Date value;
+    private VaadinDateTime value;
 
     private DateTimeService dateTimeService;
 
@@ -186,7 +187,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             return;
         }
 
-        Date newDate = ((Day) event.getSource()).getDate();
+        VaadinDateTime newDate = ((Day) event.getSource()).getDate();
         if (!isDateInsideRange(newDate,
                 getResolution(VAbstractCalendarPanel.this::isDay))) {
             return;
@@ -238,7 +239,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      *            A Date representing the day of month to be focused. Must be
      *            one of the days currently visible.
      */
-    private void focusDay(Date date) {
+    private void focusDay(VaadinDateTime date) {
         // Only used when calendar body is present
         if (acceptDayFocus()) {
             if (focusedDay != null) {
@@ -246,7 +247,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             }
 
             if (date != null && focusedDate != null) {
-                focusedDate.setTime(date.getTime());
+                focusedDate= date;
                 int rowCount = days.getRowCount();
                 for (int i = 0; i < rowCount; i++) {
                     int cellCount = days.getCellCount(i);
@@ -693,7 +694,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * @param date
      * @return
      */
-    private boolean isDateInsideRange(Date date, R minResolution) {
+    private boolean isDateInsideRange(VaadinDateTime date, R minResolution) {
         assert (date != null);
 
         return isAcceptedByRangeEnd(date, minResolution)
@@ -711,7 +712,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * @param minResolution
      * @return
      */
-    private boolean isAcceptedByRangeStart(Date date, R minResolution) {
+    private boolean isAcceptedByRangeStart(VaadinDateTime date, R minResolution) {
         assert (date != null);
 
         // rangeStart == null means that we accept all values below rangeEnd
@@ -719,8 +720,8 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             return true;
         }
 
-        Date valueDuplicate = (Date) date.clone();
-        Date rangeStartDuplicate = (Date) rangeStart.clone();
+        VaadinDateTime valueDuplicate = date;
+        VaadinDateTime rangeStartDuplicate = (Date) rangeStart.clone();
 
         if (isYear(minResolution)) {
             return valueDuplicate.getYear() >= rangeStartDuplicate.getYear();
@@ -747,7 +748,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * @param minResolution
      * @return
      */
-    private boolean isAcceptedByRangeEnd(Date date, R minResolution) {
+    private boolean isAcceptedByRangeEnd(VaadinDateTime date, R minResolution) {
         assert (date != null);
 
         // rangeEnd == null means that we accept all values above rangeStart
@@ -849,16 +850,14 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
         // Zero out hours, minutes, seconds, and milliseconds to compare dates
         // without time part
-        final Date tmp = new Date();
-        final Date today = new Date(tmp.getYear(), tmp.getMonth(),
-                tmp.getDate());
+        final VaadinDateTime today = VaadinDateTime.today();
 
-        final Date selectedDate = value == null ? null
-                : new Date(value.getYear(), value.getMonth(), value.getDate());
+        final VaadinDateTime selectedDate = value == null ? null
+                : new VaadinDateTime(value.getYear(), value.getMonth(), value.getDay());
 
         final int startWeekDay = getDateTimeService()
                 .getStartWeekDay(displayedMonth);
-        final Date curr = (Date) displayedMonth.clone();
+        final VaadinDateTime curr = displayedMonth;
         // Start from the first day of the week that at least partially belongs
         // to the current month
         curr.setDate(1 - startWeekDay);
@@ -1705,7 +1704,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * @param currentDate
      *            The date to set
      */
-    public void setDate(Date currentDate) {
+    public void setDate(VaadinDateTime currentDate) {
         doSetDate(currentDate, false, () -> {
         });
     }
@@ -1725,7 +1724,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      *            an additional action which will be executed in case
      *            rerendering is not required
      */
-    protected void doSetDate(Date currentDate, boolean needRerender,
+    protected void doSetDate(VaadinDateTime currentDate, boolean needRerender,
             Runnable focusAction) {
         // Check that we are not re-rendering an already active date
         if (currentDate == value && currentDate != null) {
@@ -1739,7 +1738,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             currentDateWasAdjusted = true;
         }
 
-        Date oldDisplayedMonth = displayedMonth;
+        VaadinDateTime oldDisplayedMonth = displayedMonth;
         value = currentDate;
 
         // If current date was adjusted, we will not select any date,
@@ -1769,7 +1768,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             }
         } else {
             focusedDate = new FocusedDate(value.getYear(), value.getMonth(),
-                    value.getDate());
+                    value.getDay());
             displayedMonth = new FocusedDate(value.getYear(), value.getMonth(),
                     1);
         }
@@ -1794,20 +1793,20 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * A widget representing a single day in the calendar panel.
      */
     private class Day extends InlineHTML {
-        private final Date date;
+        private final VaadinDateTime date;
 
-        Day(Date date) {
-            super("" + date.getDate());
+        Day(VaadinDateTime date) {
+            super("" + date.getDay());
             this.date = date;
             addClickHandler(dayClickHandler);
         }
 
-        public Date getDate() {
+        public VaadinDateTime getDate() {
             return date;
         }
     }
 
-    public Date getDate() {
+    public VaadinDateTime getDate() {
         return value;
     }
 
@@ -1914,9 +1913,9 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     private static final String SUBPART_DAY = "day";
     private static final String SUBPART_MONTH_YEAR_HEADER = "header";
 
-    private Date rangeStart;
+    private VaadinDateTime rangeStart;
 
-    private Date rangeEnd;
+    private VaadinDateTime rangeEnd;
 
     @Override
     public String getSubPartName(
@@ -1933,8 +1932,8 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             // Day, find out which dayOfMonth and use that as the identifier
             Day day = WidgetUtil.findWidget(subElement, Day.class);
             if (day != null) {
-                Date date = day.getDate();
-                int id = date.getDate();
+                VaadinDateTime date = day.getDate();
+                int id = date.getDay();
                 // Zero or negative ids map to days of the preceding month,
                 // past-the-end-of-month ids to days of the following month
                 if (date.getMonth() < displayedMonth.getMonth()) {
@@ -2021,37 +2020,10 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * is defined as a live area. That way the screen reader recognizes the
      * change and reads it to the user.
      */
-    public class FocusedDate extends Date {
+    public class FocusedDate extends VaadinDateTime {
 
-        public FocusedDate(int year, int month, int date) {
-            super(year, month, date);
-        }
-
-        @Override
-        public void setTime(long time) {
-            super.setTime(time);
-            setLabel();
-        }
-
-        @Override
-        @Deprecated
-        public void setDate(int date) {
-            super.setDate(date);
-            setLabel();
-        }
-
-        @Override
-        @Deprecated
-        public void setMonth(int month) {
-            super.setMonth(month);
-            setLabel();
-        }
-
-        @Override
-        @Deprecated
-        public void setYear(int year) {
-            super.setYear(year);
-            setLabel();
+        public FocusedDate(int year, int month, int day) {
+            super(year, month, day);
         }
 
         private void setLabel() {
@@ -2070,7 +2042,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * @param newRangeStart
      *            - the allowed range's start date
      */
-    public void setRangeStart(Date newRangeStart) {
+    public void setRangeStart(VaadinDateTime newRangeStart) {
         if (!SharedUtil.equals(rangeStart, newRangeStart)) {
             rangeStart = newRangeStart;
             if (initialRenderDone) {
@@ -2088,7 +2060,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * @param newRangeEnd
      *            - the allowed range's end date
      */
-    public void setRangeEnd(Date newRangeEnd) {
+    public void setRangeEnd(VaadinDateTime newRangeEnd) {
         if (!SharedUtil.equals(rangeEnd, newRangeEnd)) {
             rangeEnd = newRangeEnd;
             if (initialRenderDone) {

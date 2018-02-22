@@ -19,10 +19,10 @@ import static com.vaadin.shared.ui.datefield.DateResolution.DAY;
 import static com.vaadin.shared.ui.datefield.DateResolution.MONTH;
 import static com.vaadin.shared.ui.datefield.DateResolution.YEAR;
 
-import java.util.Date;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.vaadin.shared.data.date.VaadinDateTime;
 import com.vaadin.shared.ui.datefield.DateResolution;
 
 /**
@@ -54,24 +54,14 @@ public class VPopupCalendar
         super.setCurrentResolution(resolution == null ? YEAR : resolution);
     }
 
-    public static Date makeDate(Map<DateResolution, Integer> dateValues) {
+    public static VaadinDateTime makeDate(Map<DateResolution, Integer> dateValues) {
         if (dateValues.get(YEAR) == null) {
             return null;
         }
-        Date date = new Date(2000 - 1900, 0, 1);
-        Integer year = dateValues.get(YEAR);
-        if (year != null) {
-            date.setYear(year - 1900);
-        }
-        Integer month = dateValues.get(MONTH);
-        if (month != null) {
-            date.setMonth(month - 1);
-        }
-        Integer day = dateValues.get(DAY);
-        if (day != null) {
-            date.setDate(day);
-        }
-        return date;
+        int year = dateValues.getOrDefault(YEAR,2000);
+        int month = dateValues.getOrDefault(MONTH,0);
+        int day = dateValues.getOrDefault(DAY,1);
+        return new VaadinDateTime(year, month, day);
     }
 
     @Override
@@ -80,21 +70,21 @@ public class VPopupCalendar
     }
 
     @Override
-    protected Date getDate(Map<DateResolution, Integer> dateValues) {
+    protected VaadinDateTime getDate(Map<DateResolution, Integer> dateValues) {
         return makeDate(dateValues);
     }
 
     @Override
     protected void updateBufferedResolutions() {
         super.updateBufferedResolutions();
-        Date currentDate = getDate();
+        VaadinDateTime currentDate = getDate();
         if (currentDate != null) {
             DateResolution resolution = getCurrentResolution();
             if (resolution.compareTo(MONTH) <= 0) {
                 bufferedResolutions.put(MONTH, currentDate.getMonth() + 1);
             }
             if (resolution.compareTo(DAY) <= 0) {
-                bufferedResolutions.put(DAY, currentDate.getDate());
+                bufferedResolutions.put(DAY, currentDate.getDay());
             }
         }
     }
