@@ -164,7 +164,8 @@ public class UidlRequestHandler extends SynchronizedRequestHandler
         SystemMessages systemMessages = service.getSystemMessages(
                 ServletPortletHelper.findLocale(null, null, request), request);
 
-        service.writeStringResponse(response, JsonConstants.JSON_CONTENT_TYPE,
+        service.writeUncachedStringResponse(response,
+                JsonConstants.JSON_CONTENT_TYPE,
                 VaadinService.createCriticalNotificationJSON(
                         systemMessages.getSessionExpiredCaption(),
                         systemMessages.getSessionExpiredMessage(), null,

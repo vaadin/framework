@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.aria.client.SelectedValue;
 import com.google.gwt.dom.client.Element;
@@ -56,6 +57,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
@@ -167,6 +169,14 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     private boolean initialRenderDone = false;
 
+    private String prevMonthAssistiveLabel;
+
+    private String nextMonthAssistiveLabel;
+
+    private String prevYearAssistiveLabel;
+
+    private String nextYearAssistiveLabel;
+
     /**
      * Represents a click handler for when a user selects a value by using the
      * mouse
@@ -247,6 +257,13 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                             if (curday.getDate().equals(date)) {
                                 curday.addStyleDependentName(CN_FOCUSED);
                                 focusedDay = curday;
+
+                                // Reference focused day from calendar panel
+                                Roles.getGridRole()
+                                        .setAriaActivedescendantProperty(
+                                                getElement(),
+                                                Id.of(curday.getElement()));
+
                                 return;
                             }
                         }
@@ -490,8 +507,10 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      *
      * @param needsMonth
      *            Should the month buttons be visible?
+     * @param needsBody
+     *            indicates whether the calendar body is drawn
      */
-    private void buildCalendarHeader(boolean needsMonth) {
+    private void buildCalendarHeader(boolean needsMonth, boolean needsBody) {
 
         getRowFormatter().addStyleName(0,
                 parent.getStylePrimaryName() + "-calendarpanel-header");
@@ -501,16 +520,20 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             prevMonth.setHTML("&lsaquo;");
             prevMonth.setStyleName("v-button-prevmonth");
 
-            prevMonth.setTabIndex(-1);
-
             nextMonth = new VEventButton();
             nextMonth.setHTML("&rsaquo;");
             nextMonth.setStyleName("v-button-nextmonth");
 
-            nextMonth.setTabIndex(-1);
-
             setWidget(0, 3, nextMonth);
             setWidget(0, 1, prevMonth);
+
+            Roles.getButtonRole().set(prevMonth.getElement());
+            Roles.getButtonRole()
+                    .setTabindexExtraAttribute(prevMonth.getElement(), -1);
+
+            Roles.getButtonRole().set(nextMonth.getElement());
+            Roles.getButtonRole()
+                    .setTabindexExtraAttribute(nextMonth.getElement(), -1);
         } else if (prevMonth != null && !needsMonth) {
             // Remove month traverse buttons
             remove(prevMonth);
@@ -525,17 +548,25 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             prevYear.setHTML("&laquo;");
             prevYear.setStyleName("v-button-prevyear");
 
-            prevYear.setTabIndex(-1);
             nextYear = new VEventButton();
             nextYear.setHTML("&raquo;");
             nextYear.setStyleName("v-button-nextyear");
 
-            nextYear.setTabIndex(-1);
             setWidget(0, 0, prevYear);
             setWidget(0, 4, nextYear);
+
+            Roles.getButtonRole().set(prevYear.getElement());
+            Roles.getButtonRole()
+                    .setTabindexExtraAttribute(prevYear.getElement(), -1);
+
+            Roles.getButtonRole().set(nextYear.getElement());
+            Roles.getButtonRole()
+                    .setTabindexExtraAttribute(nextYear.getElement(), -1);
         }
 
         updateControlButtonRangeStyles(needsMonth);
+
+        updateAssistiveLabels();
 
         final String monthName = needsMonth
                 ? getDateTimeService().getMonth(displayedMonth.getMonth())
@@ -552,6 +583,16 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 parent.getStylePrimaryName() + "-calendarpanel-nextmonth");
         getFlexCellFormatter().setStyleName(0, 1,
                 parent.getStylePrimaryName() + "-calendarpanel-prevmonth");
+
+        // Set ID to be referenced from focused date or calendar panel
+        Element monthYearElement = getFlexCellFormatter().getElement(0, 2);
+        AriaHelper.ensureHasId(monthYearElement);
+        if (!needsBody) {
+            Roles.getGridRole().setAriaLabelledbyProperty(getElement(),
+                    Id.of(monthYearElement));
+        } else {
+            Roles.getGridRole().removeAriaLabelledbyProperty(getElement());
+        }
 
         setHTML(0, 2,
                 "<span class=\"" + parent.getStylePrimaryName()
@@ -830,6 +871,17 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 Date dayDate = (Date) curr.clone();
                 Day day = new Day(dayDate);
 
+                // Set ID with prefix of the calendar panel's ID
+                day.getElement().setId(getElement().getId() + "-" + weekOfMonth
+                        + "-" + dayOfWeek);
+
+                // Set assistive label to read focused date and month/year
+                Roles.getButtonRole().set(day.getElement());
+                Roles.getButtonRole()
+                        .setAriaLabelledbyProperty(day.getElement(),
+                                Id.of(day.getElement()),
+                                Id.of(getFlexCellFormatter().getElement(0, 2)));
+
                 day.setStyleName(getDateField().getStylePrimaryName()
                         + "-calendarpanel-day");
 
@@ -850,6 +902,11 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                     focusedDay = day;
                     if (hasFocus) {
                         day.addStyleDependentName(CN_FOCUSED);
+
+                        // Reference focused day from calendar panel
+                        Roles.getGridRole()
+                                .setAriaActivedescendantProperty(getElement(),
+                                        Id.of(day.getElement()));
                     }
                 }
                 if (curr.getMonth() != displayedMonth.getMonth()) {
@@ -940,7 +997,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
         final boolean needsMonth = !isYear(getResolution());
         boolean needsBody = isBelowMonth(resolution);
-        buildCalendarHeader(needsMonth);
+        buildCalendarHeader(needsMonth, needsBody);
         clearCalendarBody(!needsBody);
         if (needsBody) {
             buildCalendarBody();
@@ -1229,7 +1286,6 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 event.getNativeEvent().getShiftKey())) {
             event.preventDefault();
         }
-
     }
 
     /**
@@ -1345,7 +1401,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             renderCalendar();
             return true;
 
-        } else if (keycode == getCloseKey() || keycode == KeyCodes.KEY_TAB) {
+        } else if (keycode == getCloseKey()) {
             onCancel();
 
             // TODO fire close event
@@ -2040,6 +2096,77 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 // update the element stylenames
                 renderCalendar();
             }
+        }
+    }
+
+    /**
+     * Set assistive label for the previous year element.
+     *
+     * @param label
+     *         the label to set
+     * @since
+     */
+    public void setAssistiveLabelPreviousYear(String label) {
+        prevYearAssistiveLabel = label;
+    }
+
+    /**
+     * Set assistive label for the next year element.
+     *
+     * @param label
+     *         the label to set
+     * @since
+     */
+    public void setAssistiveLabelNextYear(String label) {
+        nextYearAssistiveLabel = label;
+    }
+
+    /**
+     * Set assistive label for the previous month element.
+     *
+     * @param label
+     *         the label to set
+     * @since
+     */
+    public void setAssistiveLabelPreviousMonth(String label) {
+        prevMonthAssistiveLabel = label;
+    }
+
+    /**
+     * Set assistive label for the next month element.
+     *
+     * @param label
+     *         the label to set
+     * @since
+     */
+    public void setAssistiveLabelNextMonth(String label) {
+        nextMonthAssistiveLabel = label;
+    }
+
+    /**
+     * Updates assistive labels of the navigation elements.
+     *
+     * @since
+     */
+    public void updateAssistiveLabels() {
+        if (prevMonth != null) {
+            Roles.getButtonRole().setAriaLabelProperty(prevMonth.getElement(),
+                    prevMonthAssistiveLabel);
+        }
+
+        if (nextMonth != null) {
+            Roles.getButtonRole().setAriaLabelProperty(nextMonth.getElement(),
+                    nextMonthAssistiveLabel);
+        }
+
+        if (prevYear != null) {
+            Roles.getButtonRole().setAriaLabelProperty(prevYear.getElement(),
+                    prevYearAssistiveLabel);
+        }
+
+        if (nextYear != null) {
+            Roles.getButtonRole().setAriaLabelProperty(nextYear.getElement(),
+                    nextYearAssistiveLabel);
         }
     }
 

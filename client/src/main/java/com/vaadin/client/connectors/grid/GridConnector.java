@@ -40,6 +40,7 @@ import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.annotations.OnStateChange;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.connectors.grid.ColumnConnector.CustomColumn;
 import com.vaadin.client.data.DataSource;
@@ -57,6 +58,7 @@ import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
 import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderRow;
+import com.vaadin.client.widgets.Grid.SelectionColumn;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
@@ -231,14 +233,12 @@ public class GridConnector extends AbstractListingConnector
 
             @Override
             public void scrollToStart() {
-                Scheduler.get()
-                        .scheduleFinally(() -> grid.scrollToStart());
+                Scheduler.get().scheduleFinally(() -> grid.scrollToStart());
             }
 
             @Override
             public void scrollToEnd() {
-                Scheduler.get()
-                        .scheduleFinally(() -> grid.scrollToEnd());
+                Scheduler.get().scheduleFinally(() -> grid.scrollToEnd());
                 addDetailsRefreshCallback(() -> {
                     if (rowHasDetails(grid.getDataSource().size() - 1)) {
                         grid.scrollToEnd();
@@ -256,7 +256,8 @@ public class GridConnector extends AbstractListingConnector
         grid.setRowStyleGenerator(rowRef -> {
             JsonObject json = rowRef.getRow();
             return json.hasKey(GridState.JSONKEY_ROWSTYLE)
-                    ? json.getString(GridState.JSONKEY_ROWSTYLE) : null;
+                    ? json.getString(GridState.JSONKEY_ROWSTYLE)
+                    : null;
         });
         grid.setCellStyleGenerator(cellRef -> {
             JsonObject row = cellRef.getRow();
@@ -312,13 +313,27 @@ public class GridConnector extends AbstractListingConnector
         layout();
     }
 
-    @SuppressWarnings("unchecked")
-    @OnStateChange("columnOrder")
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+        if (!getState().columnOrder.containsAll(idToColumn.keySet())) {
+            updateColumns();
+        } else if (stateChangeEvent.hasPropertyChanged("columnOrder")) {
+            updateColumnOrder();
+        }
+
+        if (stateChangeEvent.hasPropertyChanged("header")) {
+            updateHeader();
+        }
+        if (stateChangeEvent.hasPropertyChanged("footer")) {
+            updateFooter();
+        }
+    }
+
     void updateColumnOrder() {
-        Scheduler.get()
-                .scheduleFinally(() -> getWidget().setColumnOrder(
-                        getState().columnOrder.stream().map(this::getColumn)
-                                .toArray(size -> new Column[size])));
+        getWidget().setColumnOrder(getState().columnOrder.stream()
+                .map(this::getColumn).toArray(size -> new CustomColumn[size]));
     }
 
     @OnStateChange("columnResizeMode")
@@ -329,7 +344,6 @@ public class GridConnector extends AbstractListingConnector
     /**
      * Updates the grid header section on state change.
      */
-    @OnStateChange("header")
     void updateHeader() {
         final Grid<JsonObject> grid = getWidget();
         final SectionState state = getState().header;
@@ -449,7 +463,6 @@ public class GridConnector extends AbstractListingConnector
     /**
      * Updates the grid footer section on state change.
      */
-    @OnStateChange("footer")
     void updateFooter() {
         final Grid<JsonObject> grid = getWidget();
         final SectionState state = getState().footer;
@@ -500,22 +513,68 @@ public class GridConnector extends AbstractListingConnector
     public void addColumn(CustomColumn column, String id) {
         assert !columnToIdMap.containsKey(column) && !columnToIdMap
                 .containsValue(id) : "Column with given id already exists.";
-        getWidget().addColumn(column);
         columnToIdMap.put(column, id);
         idToColumn.put(id, column);
+
+        if (idToColumn.keySet().containsAll(getState().columnOrder)) {
+            // All columns are available.
+            updateColumns();
+        }
     }
 
     /**
-     * Removes a column from Grid widget. This method also removes communication
-     * id mapping for the column.
+     * Updates the widgets columns to match the map in this connector.
+     */
+    protected void updateColumns() {
+        List<Column<?, JsonObject>> currentColumns = getWidget().getColumns();
+
+        List<CustomColumn> columnOrder = getState().columnOrder.stream()
+                .map(this::getColumn).collect(Collectors.toList());
+
+        if (isColumnOrderCorrect(currentColumns, columnOrder)) {
+            // All up to date
+            return;
+        }
+
+        Grid<JsonObject> grid = getWidget();
+
+        // Remove old column
+        currentColumns.stream()
+                .filter(col -> !(columnOrder.contains(col)
+                        || col instanceof SelectionColumn))
+                .forEach(grid::removeColumn);
+
+        // Add new columns
+        grid.addColumns(columnOrder.stream()
+                .filter(col -> !currentColumns.contains(col))
+                .toArray(CustomColumn[]::new));
+
+        // Make sure order is correct.
+        grid.setColumnOrder(
+                columnOrder.toArray(new CustomColumn[columnOrder.size()]));
+    }
+
+    private boolean isColumnOrderCorrect(List<Column<?, JsonObject>> current,
+            List<CustomColumn> order) {
+        List<Column<?, JsonObject>> columnsToCompare = current;
+        if (current.size() > 0 && current.get(0) instanceof SelectionColumn) {
+            // Remove selection column.
+            columnsToCompare = current.subList(1, current.size());
+        }
+        return columnsToCompare.equals(order);
+    }
+
+    /**
+     * Removes the given column from mappings in this Connector.
      *
      * @param column
-     *            column to remove
+     *            column to remove from the mapping
      */
-    public void removeColumn(CustomColumn column) {
+    public void removeColumnMapping(CustomColumn column) {
         assert columnToIdMap
                 .containsKey(column) : "Given Column does not exist.";
-        getWidget().removeColumn(column);
+
+        // Remove mapping. Columns are removed from Grid when state changes.
         String id = columnToIdMap.remove(column);
         idToColumn.remove(id);
     }
@@ -593,7 +652,6 @@ public class GridConnector extends AbstractListingConnector
     @Override
     public void setChildComponents(List<ComponentConnector> children) {
         childComponents = children;
-
     }
 
     @Override
@@ -634,7 +692,8 @@ public class GridConnector extends AbstractListingConnector
                     if (cellDescriptions != null
                             && cellDescriptions.hasKey(id)) {
                         return new TooltipInfo(cellDescriptions.getString(id),
-                                ((CustomColumn) column).getTooltipContentMode());
+                                ((CustomColumn) column)
+                                        .getTooltipContentMode());
                     } else if (row.hasKey(GridState.JSONKEY_ROWDESCRIPTION)) {
                         return new TooltipInfo(
                                 row.getString(GridState.JSONKEY_ROWDESCRIPTION),

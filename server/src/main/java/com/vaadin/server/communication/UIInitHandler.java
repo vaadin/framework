@@ -109,15 +109,9 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         // The response was produced without errors so write it to the client
         response.setContentType(JsonConstants.JSON_CONTENT_TYPE);
 
-        // Response might contain sensitive information, so prevent caching
-        // no-store to disallow storing even if cache would be revalidated
-        // must-revalidate to not use stored value even if someone asks for it
-        response.setHeader("Cache-Control",
-                "no-cache, no-store, must-revalidate");
-
-        // Also set legacy values in case of old proxies in between
-        response.setHeader("Pragma", "no-cache");
-        response.setHeader("Expires", "0");
+        // Response might contain sensitive information, so prevent all forms of
+        // caching
+        response.setNoCacheHeaders();
 
         byte[] b = json.getBytes(UTF_8);
         response.setContentLength(b.length);
@@ -228,7 +222,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         session.addUI(ui);
         if (initException != null) {
             ui.getSession().getCommunicationManager()
-                    .handleConnectorRelatedException(ui, initException);
+            .handleConnectorRelatedException(ui, initException);
         }
         // Warn if the window can't be preserved
         if (embedId == null
@@ -316,7 +310,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         String seckey = session.getCsrfToken();
 
         return "\"" + ApplicationConstants.UIDL_SECURITY_TOKEN_ID + "\":\""
-                + seckey + "\",";
+        + seckey + "\",";
     }
 
     /**

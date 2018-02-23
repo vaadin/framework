@@ -82,8 +82,8 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
                         + "<th plain-text column-ids='id'>Id</th></tr>"
                         + "</thead></table></%s>",
                 getComponentTag(),
-                heightMode.toString().toLowerCase(Locale.ROOT),
-                frozenColumns, heightByRows,
+                heightMode.toString().toLowerCase(Locale.ROOT), frozenColumns,
+                heightByRows,
                 SelectionMode.MULTI.toString().toLowerCase(Locale.ROOT),
                 getComponentTag());
 
@@ -169,27 +169,28 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
     public void columnAttributes() {
         Grid<Person> grid = new Grid<>();
 
-        String secondColumnId = "id";
-        Column<Person, String> column1 = grid.addColumn(Person::getFirstName)
-                .setCaption("First Name");
+        String secondColumnId = "sortableColumn";
+        Column<Person, String> notSortableColumn = grid
+                .addColumn(Person::getFirstName).setCaption("First Name");
         Column<Person, String> column2 = grid.addColumn(Person::getLastName)
                 .setId(secondColumnId).setCaption("Id");
 
-        String caption = "test-caption";
-        column1.setCaption(caption);
+        String caption = "not-sortable-column";
+        notSortableColumn.setCaption(caption);
         boolean sortable = false;
-        column1.setSortable(sortable);
+        notSortableColumn.setSortable(sortable);
         boolean editable = true;
-        column1.setEditorComponent(new TextField(), Person::setLastName);
-        column1.setEditable(editable);
+        notSortableColumn.setEditorComponent(new TextField(),
+                Person::setLastName);
+        notSortableColumn.setEditable(editable);
         boolean resizable = false;
-        column1.setResizable(resizable);
+        notSortableColumn.setResizable(resizable);
         boolean hidable = true;
-        column1.setHidable(hidable);
+        notSortableColumn.setHidable(hidable);
         boolean hidden = true;
-        column1.setHidden(hidden);
+        notSortableColumn.setHidden(hidden);
 
-        String hidingToggleCaption = "toggle-caption";
+        String hidingToggleCaption = "sortable-toggle-caption";
         column2.setHidingToggleCaption(hidingToggleCaption);
         double width = 17.3;
         column2.setWidth(width);
@@ -200,20 +201,15 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         int expandRatio = 83;
         column2.setExpandRatio(expandRatio);
 
-
-        String sortableSuffix = "";
-        if (sortable) {
-            sortableSuffix = "='true'";
-        }
         String design = String.format("<%s><table><colgroup>"
-                + "<col column-id='column0' sortable%s editable resizable='%s' hidable hidden>"
-                + "<col column-id='id' sortable hiding-toggle-caption='%s' width='%s' min-width='%s' max-width='%s' expand='%s'>"
+                + "<col column-id='column0' sortable='%s' editable resizable='%s' hidable hidden>"
+                + "<col column-id='sortableColumn' sortable hiding-toggle-caption='%s' width='%s' min-width='%s' max-width='%s' expand='%s'>"
                 + "</colgroup><thead>"
                 + "<tr default><th plain-text column-ids='column0'>%s</th>"
-                + "<th plain-text column-ids='id'>%s</th>" + "</tr></thead>"
-                + "</table></%s>", getComponentTag(), sortableSuffix, resizable,
-                hidingToggleCaption, width, minWidth, maxWidth, expandRatio,
-                caption, "Id", getComponentTag());
+                + "<th plain-text column-ids='sortableColumn'>%s</th>"
+                + "</tr></thead>" + "</table></%s>", getComponentTag(),
+                sortable, resizable, hidingToggleCaption, width, minWidth,
+                maxWidth, expandRatio, caption, "Id", getComponentTag());
 
         testRead(design, grid, true);
         testWrite(design, grid);
@@ -705,7 +701,7 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
             // column.getId() affects .isSortable()
             if ((id1 != null && id2 != null) || (id1 == null && id2 == null)) {
                 assertEquals(baseError + "Sortable", col1.isSortable(),
-                    col2.isSortable());
+                        col2.isSortable());
             }
             assertEquals(baseError + "Editable", col1.isEditable(),
                     col2.isEditable());

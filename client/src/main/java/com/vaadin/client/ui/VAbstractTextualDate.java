@@ -227,8 +227,19 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void onChange(ChangeEvent event) {
+        updateBufferedValues();
+        sendBufferedValues();
+    }
+
+    @Override
+    public void updateBufferedValues() {
+        updateDate();
+        bufferedDateString = text.getText();
+        updateBufferedResolutions();
+    }
+
+    private void updateDate() {
         if (!text.getText().isEmpty()) {
             try {
                 String enteredDate = text.getText();
@@ -259,10 +270,6 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             // remove possibly added invalid value indication
             removeStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
         }
-
-        // always send the date string
-        bufferedDateString = text.getText();
-        updateAndSendBufferedValues();
     }
 
     /**
@@ -270,7 +277,10 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * then {@link #sendBufferedValues() sends} the values to the server.
      *
      * @since 8.2
+     * @deprecated Use {@link #updateBufferedResolutions()} and
+     * {@link #sendBufferedValues()} instead.
      */
+    @Deprecated
     protected final void updateAndSendBufferedValues() {
         updateBufferedResolutions();
         sendBufferedValues();
@@ -285,8 +295,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * method.
      *
      * <p>
-     * Note that this method should not send the buffered values, but use
-     * {@link #updateAndSendBufferedValues()} instead
+     * Note that this method should not send the buffered values. For that, use
+     * {@link #sendBufferedValues()}.
      *
      * @since 8.2
      */
@@ -482,7 +492,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             date = getIsoFormatter().parse(isoDate);
         }
         setDate(date);
-        updateAndSendBufferedValues();
+        updateBufferedResolutions();
+        sendBufferedValues();
     }
 
     /**
