@@ -178,9 +178,11 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     private NativePreviewHandler topEventBlocker;
     private NativePreviewHandler bottomEventBlocker;
+    private NativePreviewHandler modalEventBlocker;
 
     private HandlerRegistration topBlockerRegistration;
     private HandlerRegistration bottomBlockerRegistration;
+    private HandlerRegistration modalBlockerRegistration;
 
     // Prevents leaving the window with the Tab key when true
     private boolean doTabStop;
@@ -264,6 +266,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                     .addNativePreviewHandler(topEventBlocker);
             bottomBlockerRegistration = Event
                     .addNativePreviewHandler(bottomEventBlocker);
+            modalBlockerRegistration = Event
+                    .addNativePreviewHandler(modalEventBlocker);
         }
     }
 
@@ -274,6 +278,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
             bottomBlockerRegistration.removeHandler();
             bottomBlockerRegistration = null;
+
+            modalBlockerRegistration.removeHandler();
+            modalBlockerRegistration = null;
         }
     }
 
@@ -468,6 +475,25 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 nativeEvent.preventDefault();
             }
         };
+
+        // Handle modal window + tabbing when the focus is not inside the
+        // window (custom tab order or tabbing in from browser url bar)
+        modalEventBlocker = event -> {
+            if (!vaadinModality
+                    || getElement().isOrHasChild(WidgetUtil.getFocusedElement())
+                    || (getTopmostWindow() != VWindow.this)) {
+                return;
+            }
+
+            NativeEvent nativeEvent = event.getNativeEvent();
+            if (nativeEvent.getType().equals("keyup")
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB) {
+                nativeEvent.preventDefault();
+                focus();
+
+            }
+        };
+
     }
 
     /**
