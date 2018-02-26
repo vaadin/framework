@@ -15,6 +15,7 @@
  */
 package com.vaadin.testbench.elements;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
@@ -32,5 +33,61 @@ public class RichTextAreaElement extends AbstractFieldElement {
      */
     public WebElement getEditorIframe() {
         return findElement(By.tagName("iframe"));
+    }
+
+    /**
+     * Return value of the field element.
+     *
+     * @return value of the field element
+     * @since
+     */
+    public String getValue() {
+        JavascriptExecutor executor= (JavascriptExecutor)getDriver();
+        return executor.executeScript("" +
+                "var richTextArea = document.getElementsByClassName(\"v-richtextarea\");\n" +
+                "var body = richTextArea[0].querySelector(\"iframe\").contentDocument.body;\n" +
+                "return body.innerHTML;").toString();
+    }
+
+    /**
+     * Set value of the field element.
+     *
+     * @param chars
+     *            new value of the field
+     *@since
+     */
+    public void setValue(CharSequence chars) throws ReadOnlyException {
+        if (isReadOnly()) {
+            throw new ReadOnlyException();
+        }
+        clearElementClientSide();
+        focus();
+        JavascriptExecutor executor= (JavascriptExecutor)getDriver();
+        executor.executeScript("" +
+                "var richTextArea = document.getElementsByClassName(\"v-richtextarea\");\n" +
+                "var body = richTextArea[0].querySelector(\"iframe\").contentDocument.body;\n" +
+                "body.innerHTML=arguments[0]; \n" +
+                "var ev = document.createEvent('HTMLEvents');\n" +
+                "ev.initEvent('change', true, false); \n" +
+                "body.dispatchEvent(ev);", chars);
+    }
+
+    private void clearElementClientSide(){
+        waitForVaadin();
+        JavascriptExecutor executor= (JavascriptExecutor)getDriver();
+        executor.executeScript("" +
+                "var richTextArea = document.getElementsByClassName(\"v-richtextarea\");\n" +
+                "var body = richTextArea[0].querySelector(\"iframe\").contentDocument.body;\n" +
+                "body.innerHTML=\"\"; \n");
+    }
+
+    @Override
+    public void focus(){
+        waitForVaadin();
+        JavascriptExecutor executor= (JavascriptExecutor)getDriver();
+        executor.executeScript("" +
+                "var richTextArea = document.getElementsByClassName(\"v-richtextarea\");\n" +
+                "var body = richTextArea[0].querySelector(\"iframe\").contentDocument.body;\n" +
+                "body.focus();");
     }
 }

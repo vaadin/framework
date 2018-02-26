@@ -19,13 +19,7 @@ import java.time.LocalDate;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.AbstractTextField;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.*;
 
 /**
  *
@@ -53,6 +47,7 @@ public class AbstractTextElementSetValue extends AbstractTestUI {
             addValueChangeListener(comps[i], i);
             addComponent(comps[i]);
             addComponent(eventCountLabels[i]);
+            addComponent(createRichTextArea());
 
         }
 
@@ -80,6 +75,13 @@ public class AbstractTextElementSetValue extends AbstractTestUI {
         df.setValue(INITIAL_DATE);
         return df;
     }
+
+    private RichTextArea createRichTextArea() {
+        RichTextArea rta=new RichTextArea();
+        rta.setValue(INITIAL_VALUE);
+        return rta;
+    }
+
 
     @Override
     protected String getTestDescription() {

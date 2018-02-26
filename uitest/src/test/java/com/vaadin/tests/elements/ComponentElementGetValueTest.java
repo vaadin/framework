@@ -21,21 +21,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
+import com.vaadin.testbench.elements.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.AbstractTextFieldElement;
-import com.vaadin.testbench.elements.CheckBoxElement;
-import com.vaadin.testbench.elements.CheckBoxGroupElement;
-import com.vaadin.testbench.elements.ComboBoxElement;
-import com.vaadin.testbench.elements.DateFieldElement;
-import com.vaadin.testbench.elements.ListSelectElement;
-import com.vaadin.testbench.elements.NativeSelectElement;
-import com.vaadin.testbench.elements.PasswordFieldElement;
-import com.vaadin.testbench.elements.RadioButtonGroupElement;
-import com.vaadin.testbench.elements.TextAreaElement;
-import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.testbench.elements.TwinColSelectElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ComponentElementGetValueTest extends MultiBrowserTest {
@@ -128,6 +117,14 @@ public class ComponentElementGetValueTest extends MultiBrowserTest {
                 .format(ComponentElementGetValue.TEST_DATE_VALUE);
         String actual = df.getValue();
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void checkRichTextArea(){
+        RichTextAreaElement elem= $(RichTextAreaElement.class).first();
+        String expected=ComponentElementGetValue.TESTGET_STRING_VALUE_RICHTEXTAREA;
+        String actual=elem.getValue();
+        assertEquals(expected,actual);
     }
 
     private void checkValue(AbstractTextFieldElement elem) {

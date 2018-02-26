@@ -21,27 +21,12 @@ import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.AbstractTextField;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.CheckBoxGroup;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.MultiSelect;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.RadioButtonGroup;
-import com.vaadin.ui.Slider;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.TwinColSelect;
+import com.vaadin.ui.*;
 
 /**
  * UI test for getValue() method of components: TextField, TextArea,
  * PasswordField, ComboBox, ListSelect, NativeSelect, OptionGroup, CheckBox,
- * DateField, TwinColSelect
+ * DateField, TwinColSelect, RichTextArea
  *
  * @since
  * @author Vaadin Ltd
@@ -52,6 +37,7 @@ public class ComponentElementGetValue extends AbstractTestUI {
     public static final int TEST_SLIDER_VALUE = 42;
     public static final float TEST_FLOAT_VALUE = 0.42f;
     public static final LocalDate TEST_DATE_VALUE = LocalDate.now();
+    public static final String TESTGET_STRING_VALUE_RICHTEXTAREA = "value 4";
     DateField df;
     final Label valueChangeLabel = new Label("Initial value");
 
@@ -121,7 +107,7 @@ public class ComponentElementGetValue extends AbstractTestUI {
                     event -> valueChangeLabel.setValue(value));
             addComponent(field);
         }
-
+        addComponent(createRichTextArea());
         addComponent(createCheckBox());
         addComponent(createSlider());
         addComponent(createDateField());
@@ -151,6 +137,12 @@ public class ComponentElementGetValue extends AbstractTestUI {
         cb.addValueChangeListener(
                 event -> valueChangeLabel.setValue(CHECKBOX_VALUE_CHANGE));
         return cb;
+    }
+
+    private RichTextArea createRichTextArea() {
+        RichTextArea rta=new RichTextArea();
+        rta.setValue(TESTGET_STRING_VALUE_RICHTEXTAREA);
+        return rta;
     }
 
     @Override
