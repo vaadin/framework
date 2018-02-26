@@ -31,7 +31,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,6 +79,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.WidgetUtil.Reference;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
@@ -7303,7 +7303,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     public void scrollToRow(int rowIndex, ScrollDestination destination,
             Runnable callback) {
         waitUntilVisible(rowIndex, destination, () -> {
-            AtomicReference<HandlerRegistration> registration = new AtomicReference<>();
+            Reference<HandlerRegistration> registration = new Reference<>();
             registration.set(addDataAvailableHandler(event -> {
                 if (event.getAvailableRows().contains(rowIndex)) {
                     registration.get().removeHandler();
@@ -7388,7 +7388,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
         }
 
-        AtomicReference<HandlerRegistration> registration = new AtomicReference<>();
+        Reference<HandlerRegistration> registration = new Reference<>();
         registration.set(addScrollHandler(event -> {
             if (escalator.getVisibleRowRange().contains(rowIndex)) {
                 registration.get().removeHandler();
