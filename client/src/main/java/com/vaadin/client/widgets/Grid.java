@@ -26,11 +26,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -1360,7 +1361,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private String styleName = null;
 
         private HandlerRegistration hScrollHandler;
-        private HandlerRegistration vScrollHandler;
 
         private final Button saveButton;
         private final Button cancelButton;
@@ -1603,20 +1603,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
             state = State.ACTIVATING;
 
-            final Escalator escalator = grid.getEscalator();
-            if (escalator.getVisibleRowRange().contains(rowIndex)) {
-                show(rowIndex, columnIndexDOM);
-            } else {
-                vScrollHandler = grid.addScrollHandler(event -> {
-                    if (escalator.getVisibleRowRange().contains(rowIndex)) {
-                        show(rowIndex, columnIndexDOM);
-                        vScrollHandler.removeHandler();
-                    }
-                });
-                grid.scrollToRow(rowIndex,
-                        isBuffered() ? ScrollDestination.MIDDLE
-                                : ScrollDestination.ANY);
-            }
+            grid.scrollToRow(rowIndex,
+                    isBuffered() ? ScrollDestination.MIDDLE
+                            : ScrollDestination.ANY,
+                    () -> show(rowIndex, columnIndexDOM));
         }
 
         /**
@@ -7300,6 +7290,43 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
+     * Helper method for making sure desired row is visible and it is properly
+     * rendered.
+     * 
+     * @param rowIndex
+     *            the row to look for
+     * @param destination
+     *            the desired scroll destination
+     * @param callback
+     *            the callback command to execute when row is available
+     */
+    public void scrollToRow(int rowIndex, ScrollDestination destination,
+            Runnable callback) {
+        waitUntilVisible(rowIndex, destination, () -> {
+            AtomicReference<HandlerRegistration> registration = new AtomicReference<>();
+            registration.set(addDataAvailableHandler(event -> {
+                if (event.getAvailableRows().contains(rowIndex)) {
+                    registration.get().removeHandler();
+                    callback.run();
+                }
+            }));
+        });
+    }
+
+    /**
+     * Helper method for making sure desired row is visible and it is properly
+     * rendered.
+     * 
+     * @param rowIndex
+     *            the row to look for
+     * @param whenRendered
+     *            the callback command to execute when row is available
+     */
+    public void scrollToRow(int rowIndex, Runnable whenRendered) {
+        scrollToRow(rowIndex, ScrollDestination.ANY, whenRendered);
+    }
+
+    /**
      * Scrolls to a certain row using only user-specified parameters.
      * <p>
      * If the details for that row are visible, those will be taken into account
@@ -7334,6 +7361,41 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         escalator.scrollToRowAndSpacer(rowIndex, destination, paddingPx);
+    }
+
+    /**
+     * Helper method for scrolling and making sure row is visible.
+     * 
+     * @param rowIndex
+     *            the row index to make visible
+     * @param destination
+     *            the desired scroll destination
+     * @param whenVisible
+     *            the callback method to call when row is visible
+     */
+    private void waitUntilVisible(int rowIndex, ScrollDestination destination,
+            Runnable whenVisible) {
+        final Escalator escalator = getEscalator();
+        if (escalator.getVisibleRowRange().contains(rowIndex)) {
+            TableRowElement rowElement = escalator.getBody()
+                    .getRowElement(rowIndex);
+            if (rowElement.getAbsoluteTop() >= escalator.getHeader()
+                    .getElement().getAbsoluteBottom()
+                    && rowElement.getAbsoluteBottom() <= escalator.getFooter()
+                            .getElement().getAbsoluteTop()) {
+                whenVisible.run();
+                return;
+            }
+        }
+
+        AtomicReference<HandlerRegistration> registration = new AtomicReference<>();
+        registration.set(addScrollHandler(event -> {
+            if (escalator.getVisibleRowRange().contains(rowIndex)) {
+                registration.get().removeHandler();
+                whenVisible.run();
+            }
+        }));
+        scrollToRow(rowIndex, destination);
     }
 
     /**
@@ -8564,7 +8626,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Adds a spacer visibility changed handler to the underlying escalator.
      *
      * @param handler
-     *         the handler to be called when a spacer's visibility changes
+     *            the handler to be called when a spacer's visibility changes
      * @return the registration object with which the handler can be removed
      * @since
      */
