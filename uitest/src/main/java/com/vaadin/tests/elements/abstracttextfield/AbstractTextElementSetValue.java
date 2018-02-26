@@ -82,7 +82,6 @@ public class AbstractTextElementSetValue extends AbstractTestUI {
         return rta;
     }
 
-
     @Override
     protected String getTestDescription() {
         return "Test type method of AbstractTextField components";
