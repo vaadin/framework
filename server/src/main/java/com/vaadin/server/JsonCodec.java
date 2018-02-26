@@ -446,10 +446,12 @@ public class JsonCodec implements Serializable {
     }
 
     /**
-     * TODO: document
-     * 
+     * Add a custom JSONSerializer for a specific Class.
+     *
      * @param clazz
+     *            Class that should use a custom serializer
      * @param jsonSerializer
+     *            Custom JSONSerializer
      */
     public static void putCustomSerializer(Class<?> clazz,
             JSONSerializer<?> jsonSerializer) {
@@ -457,9 +459,11 @@ public class JsonCodec implements Serializable {
     }
 
     /**
-     * TODO: document
-     * 
+     * Remove from CUSTOM_SERIALIZERS a serializer for a specific class.
+     *
      * @param clazz
+     *            The Class key you want to remove from the CUSTOM_SERIALIZERS
+     *            map
      */
     public static void removeCustomSerializer(Class<?> clazz) {
         CUSTOM_SERIALIZERS.remove(clazz);
