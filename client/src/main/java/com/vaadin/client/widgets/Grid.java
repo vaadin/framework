@@ -7379,10 +7379,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         if (escalator.getVisibleRowRange().contains(rowIndex)) {
             TableRowElement rowElement = escalator.getBody()
                     .getRowElement(rowIndex);
+            long bottomBorder = Math.round(WidgetUtil.getBorderBottomThickness(
+                    rowElement.getFirstChildElement()) + 0.5d);
             if (rowElement.getAbsoluteTop() >= escalator.getHeader()
                     .getElement().getAbsoluteBottom()
                     && rowElement.getAbsoluteBottom() <= escalator.getFooter()
-                            .getElement().getAbsoluteTop()) {
+                            .getElement().getAbsoluteTop() + bottomBorder) {
                 whenVisible.run();
                 return;
             }

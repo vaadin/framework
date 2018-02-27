@@ -2,6 +2,7 @@ package com.vaadin.tests.components.grid;
 
 import java.util.ArrayList;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -9,6 +10,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.TextField;
 
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class GridEditRow extends AbstractTestUI {
 
     private ArrayList<TestBean> items = new ArrayList<>();
