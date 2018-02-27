@@ -196,7 +196,7 @@ public class ComboBoxConnector extends AbstractListingConnector
      *            the current filter string
      */
     protected void setFilter(String filter) {
-        if (!Objects.equals(filter, getWidget().lastFilter)) {
+        if (!Objects.equals(filter, getState().currentFilterText)) {
             getDataReceivedHandler().clearPendingNavigation();
 
             rpc.setFilter(filter);
@@ -243,10 +243,9 @@ public class ComboBoxConnector extends AbstractListingConnector
             page = 0;
         }
         VComboBox widget = getWidget();
-        int adjustment = widget.nullSelectionAllowed && filter.isEmpty()
-                ? 1 : 0;
-        int startIndex = Math.max(0,
-                page * widget.pageLength - adjustment);
+        int adjustment = widget.nullSelectionAllowed && filter.isEmpty() ? 1
+                : 0;
+        int startIndex = Math.max(0, page * widget.pageLength - adjustment);
         int pageLength = widget.pageLength > 0 ? widget.pageLength
                 : getDataSource().size();
         getDataSource().ensureAvailability(startIndex, pageLength);

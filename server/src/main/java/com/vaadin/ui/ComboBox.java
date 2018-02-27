@@ -179,7 +179,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
         @Override
         public void setFilter(String filterText) {
-            currentFilterText = filterText;
+            getState().currentFilterText = filterText;
             filterSlot.accept(filterText);
         }
     };
@@ -190,8 +190,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     private NewItemHandler newItemHandler;
 
     private StyleGenerator<T> itemStyleGenerator = item -> null;
-
-    private String currentFilterText;
 
     private SerializableConsumer<String> filterSlot = filter -> {
         // Just ignore when neither setDataProvider nor setItems has been called
@@ -817,7 +815,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         };
 
         SerializableConsumer<C> providerFilterSlot = internalSetDataProvider(
-                dataProvider, convertOrNull.apply(currentFilterText));
+                dataProvider,
+                convertOrNull.apply(getState(false).currentFilterText));
 
         filterSlot = filter -> providerFilterSlot
                 .accept(convertOrNull.apply(filter));
