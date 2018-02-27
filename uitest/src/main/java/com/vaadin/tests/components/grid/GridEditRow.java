@@ -35,7 +35,6 @@ public class GridEditRow extends AbstractTestUI {
             grid.getDataProvider().refreshAll();
         }));
         getLayout().addComponent(new Button("Add, Select & Edit", event -> {
-            TestBean bean = new TestBean();
             bean = new TestBean();
             items.add(bean);
             grid.getDataProvider().refreshAll();
