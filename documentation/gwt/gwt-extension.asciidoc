@@ -48,7 +48,7 @@ public class CapsLockWarning extends AbstractExtension {
     }
 
     // Or with a static helper
-    public static addTo(PasswordField field) {
+    public static void addTo(PasswordField field) {
         new CapsLockWarning().extend(field);
     }
 }
