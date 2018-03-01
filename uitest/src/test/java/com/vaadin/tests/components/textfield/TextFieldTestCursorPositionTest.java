@@ -2,9 +2,7 @@ package com.vaadin.tests.components.textfield;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.SingleBrowserTest;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import static org.junit.Assert.assertEquals;
@@ -19,8 +17,8 @@ public class TextFieldTestCursorPositionTest extends MultiBrowserTest {
     @Test
     public void testSelection() {
         openTestURL();
-        textFieldCheckCursor =findElement(org.openqa.selenium.By.id(TextFieldTestCursorPosition.CURSOR_POS_TF));
-        textFieldCheckRang=findElement(org.openqa.selenium.By.id(TextFieldTestCursorPosition.RANGE_LENGTH_TF));
+        textFieldCheckCursor =findElement(By.id(TextFieldTestCursorPosition.CURSOR_POS_TF));
+        textFieldCheckRang=findElement(By.id(TextFieldTestCursorPosition.RANGE_LENGTH_TF));
 
         // Range selected correctly
         setSelectionRange();
