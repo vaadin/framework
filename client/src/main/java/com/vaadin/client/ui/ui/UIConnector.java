@@ -199,12 +199,21 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 return JSON.parse(json);
             }-*/;
         });
+ 
+        // Used to avoid choking server with hundreds of resize events when user
+        // changes the window size
+        Timer lazyFlusher = new Timer() {
+			@Override
+			public void run() {
+	            getConnection().getServerRpcQueue().flush();
+			}
+		};
 
         getWidget().addResizeHandler(event -> {
             getRpcProxy(UIServerRpc.class).resize(event.getWidth(),
                     event.getHeight(), Window.getClientWidth(),
                     Window.getClientHeight());
-            getConnection().getServerRpcQueue().flush();
+            lazyFlusher.schedule(100);
         });
         getWidget().addScrollHandler(new ScrollHandler() {
             private int lastSentScrollTop = Integer.MAX_VALUE;
