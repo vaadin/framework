@@ -58,6 +58,16 @@ public class GridEditRow extends AbstractTestUI {
         getLayout().addComponent(grid);
     }
 
+    @Override
+    protected Integer getTicketNumber() {
+        return 10558;
+    }
+
+    @Override
+    protected String getTestDescription() {
+        return "Calling editRow shouldn't cause any other rows to be emptied.";
+    }
+
     public class TestBean {
         private String name = "name" + counter;
         private String value = "value" + counter;
