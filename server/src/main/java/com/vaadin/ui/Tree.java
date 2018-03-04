@@ -673,7 +673,7 @@ public class Tree<T> extends Composite
     }
 
     /**
-     * Sets the desciprtion generator that is used for generating HTML tooltip
+     * Sets the description generator that is used for generating HTML tooltip
      * descriptions for items.
      *
      * @param descriptionGenerator the item description generator to set, or <code>null</code> to
