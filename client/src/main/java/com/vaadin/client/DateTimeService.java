@@ -60,6 +60,16 @@ public class DateTimeService {
         setLocale(locale);
     }
 
+    /**
+     * Utility method to format positive int as zero-padded two-digits number
+     *
+     * @param i the value
+     * @return "00".."99"
+     */
+    public static String asTwoDigits(int i) {
+        return (i < 10 ? "0" : "") + i;
+    }
+
     public void setLocale(String locale) throws LocaleNotLoadedException {
         if (!LocaleService.getAvailableLocales().contains(locale)) {
             throw new LocaleNotLoadedException(locale);

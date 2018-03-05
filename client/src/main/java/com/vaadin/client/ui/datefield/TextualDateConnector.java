@@ -123,8 +123,8 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
         super.onStateChanged(stateChangeEvent);
 
         getWidget().setTextFieldEnabled(getState().textFieldEnabled);
-        getWidget().setRangeStart(nullSafeDateClone(getState().rangeStart));
-        getWidget().setRangeEnd(nullSafeDateClone(getState().rangeEnd));
+        getWidget().setRangeStart(getState().rangeStart);
+        getWidget().setRangeEnd(getState().rangeEnd);
 
         getWidget().calendar.setDateStyles(getState().dateStyles);
         getWidget().calendar
