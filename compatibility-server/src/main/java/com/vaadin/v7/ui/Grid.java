@@ -6751,7 +6751,7 @@ public class Grid extends AbstractComponent
      *            the content mode for cell tooltips, not <code>null</code>
      * @see #setRowDescriptionGenerator(RowDescriptionGenerator)
      *
-     * @since
+     * @since 8.3.2
      */
     public void setCellDescriptionGenerator(CellDescriptionGenerator generator,
                                             ContentMode contentMode) {
@@ -6782,7 +6782,7 @@ public class Grid extends AbstractComponent
      * @return the content mode used for cell descriptions, not
      *         <code>null</code>
      * @see #setCellDescriptionGenerator(CellDescriptionGenerator, ContentMode)
-     * @since
+     * @since 8.3.2
      */
     public ContentMode getCellDescriptionContentMode() {
         return getState(false).cellTooltipContentMode;
@@ -6823,7 +6823,7 @@ public class Grid extends AbstractComponent
      *
      * @see #setCellDescriptionGenerator(CellDescriptionGenerator)
      *
-     * @since
+     * @since 8.3.2
      */
     public void setRowDescriptionGenerator(RowDescriptionGenerator generator,
                                            ContentMode contentMode) {
@@ -6842,7 +6842,7 @@ public class Grid extends AbstractComponent
      *
      * @return the content mode used for row descriptions, not <code>null</code>
      * @see #setRowDescriptionGenerator(RowDescriptionGenerator, ContentMode)
-     * @since
+     * @since 8.3.2
      */
     public ContentMode getRowDescriptionContentMode() {
         return getState(false).rowTooltipContentMode;

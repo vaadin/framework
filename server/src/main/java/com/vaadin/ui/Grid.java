@@ -1220,7 +1220,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @return {@code true} if the column can be sorted by the user;
          *         {@code false} if not
          *
-         * @since
+         * @since 8.3.2
          */
         public boolean isSortableByUser() {
             return getState(false).sortable;
