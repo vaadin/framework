@@ -1696,7 +1696,7 @@ public abstract class VaadinService implements Serializable {
      *            The actual response
      * @throws IOException
      *             If an error occurred while writing the response
-     * @since
+     * @since 8.3.2
      */
     public void writeUncachedStringResponse(VaadinResponse response,
             String contentType, String responseString) throws IOException {
