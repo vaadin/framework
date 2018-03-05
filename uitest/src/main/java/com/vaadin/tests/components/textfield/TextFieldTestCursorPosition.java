@@ -10,13 +10,14 @@ import com.vaadin.ui.TextField;
 public class TextFieldTestCursorPosition extends AbstractTestUI {
 
     static final String DEFAULT_TEXT = "So we have some text to select";
-    static final String BUTTON_SETPOSITION= "buttonPos";
+    static final String BUTTON_SETPOSITION = "buttonPos";
     static final String BUTTON_SETRANGE = "rS";
     static final String RANGE_LENGTH_TF = "rLTF";
     static final String CURSOR_POS_TF = "cpTF";
-    static final int valueLength=DEFAULT_TEXT.length();
-    final  TextField textField = new TextField("Set cursor position after the last character");
-    final TextField textField1=new TextField("Set Selection range");
+    static final int valueLength = DEFAULT_TEXT.length();
+    final TextField textField = new TextField(
+            "Set cursor position after the last character");
+    final TextField textField1 = new TextField("Set Selection range");
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -26,7 +27,8 @@ public class TextFieldTestCursorPosition extends AbstractTestUI {
 
         Button posButton = new Button("Set Position to the last character");
         posButton.setId(BUTTON_SETPOSITION);
-        posButton.addClickListener(c -> textField.setCursorPosition(valueLength));
+        posButton.addClickListener(
+                c -> textField.setCursorPosition(valueLength));
         addComponent(textField);
         addComponent(posButton);
 
@@ -36,7 +38,8 @@ public class TextFieldTestCursorPosition extends AbstractTestUI {
 
         Button selButton = new Button("Set selection range");
         selButton.setId(BUTTON_SETRANGE);
-        selButton.addClickListener(c -> textField1.setSelection(valueLength/2,valueLength));
+        selButton.addClickListener(
+                c -> textField1.setSelection(valueLength / 2, valueLength));
         addComponent(textField1);
         addComponent(selButton);
     }
