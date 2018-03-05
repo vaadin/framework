@@ -17,9 +17,11 @@ package com.vaadin.ui;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
@@ -154,5 +156,10 @@ public abstract class AbstractLocalDateField
             dateTimeFormatter = dateTimeFormatter.withLocale(locale);
         }
         return value.format(dateTimeFormatter);
+    }
+
+    @Override
+    protected LocalDate toType(TemporalAccessor temporalAccessor) {
+        return temporalAccessor == null? null : LocalDate.from(temporalAccessor);
     }
 }

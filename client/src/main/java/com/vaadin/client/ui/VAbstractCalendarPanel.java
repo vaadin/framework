@@ -60,6 +60,8 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.util.SharedUtil;
 
+import static com.vaadin.client.DateTimeService.asTwoDigits;
+
 /**
  * Abstract calendar panel to show and select a date using a resolution. The
  * class is parameterized by the date resolution enumeration type.
@@ -719,21 +721,23 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             return true;
         }
 
-        Date valueDuplicate = (Date) date.clone();
-        Date rangeStartDuplicate = (Date) rangeStart.clone();
+        String dateStrResolution = dateStrResolution(date, minResolution);
+        return rangeStart.substring(0,dateStrResolution.length())
+                .compareTo(dateStrResolution) <=0;
+    }
 
-        if (isYear(minResolution)) {
-            return valueDuplicate.getYear() >= rangeStartDuplicate.getYear();
+    private String dateStrResolution(Date date, R minResolution) {
+        String dateStrResolution = (1900 + date.getYear()) + "";
+        while (dateStrResolution.length() < 4) {
+            dateStrResolution = "0" + dateStrResolution;
         }
-        if (isMonth(minResolution)) {
-            valueDuplicate = clearDateBelowMonth(valueDuplicate);
-            rangeStartDuplicate = clearDateBelowMonth(rangeStartDuplicate);
-        } else {
-            valueDuplicate = clearDateBelowDay(valueDuplicate);
-            rangeStartDuplicate = clearDateBelowDay(rangeStartDuplicate);
+        if (!isYear(minResolution)) {
+            dateStrResolution += "-" + asTwoDigits(1 + date.getMonth());
+            if (!isMonth(minResolution)) {
+                dateStrResolution += "-" + asTwoDigits(date.getDate());
+            }
         }
-
-        return !rangeStartDuplicate.after(valueDuplicate);
+        return dateStrResolution;
     }
 
     /**
@@ -755,22 +759,9 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             return true;
         }
 
-        Date valueDuplicate = (Date) date.clone();
-        Date rangeEndDuplicate = (Date) rangeEnd.clone();
-
-        if (isYear(minResolution)) {
-            return valueDuplicate.getYear() <= rangeEndDuplicate.getYear();
-        }
-        if (isMonth(minResolution)) {
-            valueDuplicate = clearDateBelowMonth(valueDuplicate);
-            rangeEndDuplicate = clearDateBelowMonth(rangeEndDuplicate);
-        } else {
-            valueDuplicate = clearDateBelowDay(valueDuplicate);
-            rangeEndDuplicate = clearDateBelowDay(rangeEndDuplicate);
-        }
-
-        return !rangeEndDuplicate.before(valueDuplicate);
-
+        String dateStrResolution = dateStrResolution(date, minResolution);
+        return rangeEnd.substring(0,dateStrResolution.length())
+                .compareTo(dateStrResolution) >= 0;
     }
 
     private static Date clearDateBelowMonth(Date date) {
@@ -1691,12 +1682,30 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * @param date
      */
     private Date adjustDateToFitInsideRange(Date date) {
-        if (rangeStart != null && rangeStart.after(date)) {
-            date = (Date) rangeStart.clone();
-        } else if (rangeEnd != null && rangeEnd.before(date)) {
-            date = (Date) rangeEnd.clone();
+        if(!isAcceptedByRangeStart(date,resolution)) {
+            date = parseRangeString(rangeStart);
+        } else
+        if(!isAcceptedByRangeEnd(date,resolution)) {
+            date = parseRangeString(rangeEnd);
         }
         return date;
+    }
+
+    private Date parseRangeString(String dateStr) {
+        if(dateStr == null || "".equals(dateStr)) return null;
+        int year = Integer.parseInt(dateStr.substring(0,4)) - 1900;
+        int month = parsePart(dateStr, 5, 2,1) - 1;
+        int day = parsePart(dateStr, 8, 2,1);
+        int hrs = parsePart(dateStr, 11, 2,0);
+        int min = parsePart(dateStr, 14, 2,0);
+        int sec = parsePart(dateStr, 17, 2,0);
+
+        return new Date(year,month,day,hrs,min,sec);
+    }
+
+    private int parsePart(String dateStr, int beginIndex, int length, int defValue) {
+        if(dateStr.length() < beginIndex + length) return defValue;
+        return Integer.parseInt(dateStr.substring(beginIndex, beginIndex + length));
     }
 
     /**
@@ -1914,9 +1923,9 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     private static final String SUBPART_DAY = "day";
     private static final String SUBPART_MONTH_YEAR_HEADER = "header";
 
-    private Date rangeStart;
+    private String rangeStart;
 
-    private Date rangeEnd;
+    private String rangeEnd;
 
     @Override
     public String getSubPartName(
@@ -2070,7 +2079,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * @param newRangeStart
      *            - the allowed range's start date
      */
-    public void setRangeStart(Date newRangeStart) {
+    public void setRangeStart(String newRangeStart) {
         if (!SharedUtil.equals(rangeStart, newRangeStart)) {
             rangeStart = newRangeStart;
             if (initialRenderDone) {
@@ -2088,7 +2097,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * @param newRangeEnd
      *            - the allowed range's end date
      */
-    public void setRangeEnd(Date newRangeEnd) {
+    public void setRangeEnd(String newRangeEnd) {
         if (!SharedUtil.equals(rangeEnd, newRangeEnd)) {
             rangeEnd = newRangeEnd;
             if (initialRenderDone) {

@@ -49,17 +49,17 @@ public class AbstractDateFieldState extends AbstractFieldState {
 
     /**
      * Start range that has been cleared, depending on the resolution of the
-     * date field.
+     * date field. The format is "YYYY-MM-DD[ HH:MM:SS]"
      */
     @NoLayout
-    public Date rangeStart;
+    public String rangeStart;
 
     /**
      * End range that has been cleared, depending on the resolution of the date
-     * field.
+     * field. The format is "YYYY-MM-DD[ HH:MM:SS]"
      */
     @NoLayout
-    public Date rangeEnd;
+    public String rangeEnd;
 
     /**
      * The JSON used to construct a TimeZone on the client side, can be

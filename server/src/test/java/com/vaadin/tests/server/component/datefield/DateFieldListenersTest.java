@@ -1,6 +1,7 @@
 package com.vaadin.tests.server.component.datefield;
 
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.Map;
 
@@ -54,6 +55,11 @@ public class DateFieldListenersTest extends AbstractListenerMethodsTestBase {
         @Override
         protected String formatDate(LocalDateTime value) {
             return null;
+        }
+
+        @Override
+        protected LocalDateTime toType(TemporalAccessor temporalAccessor) {
+            return LocalDateTime.from(temporalAccessor);
         }
     }
 
