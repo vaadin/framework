@@ -443,7 +443,7 @@ To start uploading a file, set a `StreamVariable` to it. The stream variable pro
 Label dropArea = new Label("Drop files here");
 FileDropTarget<Label> dropTarget = new FileDropTarget<>(dropArea, event -> {
 
-    List<Html5File> files = event.getFiles();
+    Collection<Html5File> files = event.getFiles();
     files.forEach(file -> {
         // Max 1 MB files are uploaded
         if (file.getFileSize() <= 1024 * 1024) {
@@ -452,8 +452,14 @@ FileDropTarget<Label> dropTarget = new FileDropTarget<>(dropArea, event -> {
                 // Output stream to write the file to
                 @Override
                 public OutputStream getOutputStream() {
-                    return new FileOutputStream("/path/to/files/"
-                        + file.getFileName());
+                    try{
+                        return new FileOutputStream("/path/to/files/"
+                          + file.getFileName());
+                        }catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                    return null;
+                       
                 }
 
                 // Returns whether onProgress() is called during upload
@@ -489,6 +495,12 @@ FileDropTarget<Label> dropTarget = new FileDropTarget<>(dropArea, event -> {
                     Notification.show("Stream failed, fileName="
                         + event.getFileName());
                 }
+                
+                @Override
+                public boolean isInterrupted() {
+                      return false;
+                }
+
             });
         }
     }
