@@ -1875,7 +1875,7 @@ public class WidgetUtil {
      * @param element
      *         the element to test for visibility
      * @return {@code true} if the element is displayed, {@code false} otherwise
-     * @since
+     * @since 8.3.2
      */
     public static native boolean isDisplayed(Element element)
     /*-{
