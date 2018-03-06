@@ -21,7 +21,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * Event fired when a spacer element is hidden or shown in Escalator.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.3.2
  */
 public class SpacerVisibilityChangedEvent extends GwtEvent<SpacerVisibilityChangedHandler> {
 
