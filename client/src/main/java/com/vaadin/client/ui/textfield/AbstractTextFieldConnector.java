@@ -40,7 +40,8 @@ public abstract class AbstractTextFieldConnector extends AbstractFieldConnector
         @Override
         public void selectRange(int start, int length) {
             int textLength = getAbstractTextField().getValue().length();
-            start = restrictTo(start, 0, textLength - 1);
+            //Enable setting cursor position after the last character
+            start = restrictTo(start, 0, length == 0 ? textLength : (textLength - 1));
             length = restrictTo(length, 0, textLength - start);
             getAbstractTextField().setSelectionRange(start, length);
         }
