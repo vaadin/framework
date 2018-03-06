@@ -48,7 +48,6 @@ public class DateFieldTimeZones extends AbstractTestUI {
         d5.setZoneId(ZoneId.of("-10"));
         HorizontalLayout layout = new HorizontalLayout();
         layout.addComponents(d1, d2,d3,d4,d5);
-//        layout.addComponents(d2);
 
         addComponent(layout);
     }
