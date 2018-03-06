@@ -458,7 +458,7 @@ FileDropTarget<Label> dropTarget = new FileDropTarget<>(dropArea, event -> {
                         }catch (FileNotFoundException e) {
                                 e.printStackTrace();
                             }
-                    return null;       
+                    return null;
                 }
 
                 // Returns whether onProgress() is called during upload
@@ -494,7 +494,7 @@ FileDropTarget<Label> dropTarget = new FileDropTarget<>(dropArea, event -> {
                     Notification.show("Stream failed, fileName="
                         + event.getFileName());
                 }
-                
+
                 @Override
                 public boolean isInterrupted() {
                     return false;
