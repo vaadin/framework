@@ -1036,53 +1036,6 @@ public abstract class AbstractClientConnector
         this.errorHandler = errorHandler;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        /*
-         * This equals method must return true when we're comparing an object to
-         * its proxy. This happens a lot with CDI (and possibly Spring) when
-         * we're injecting Components. See #14639
-         */
-        if (obj instanceof AbstractClientConnector) {
-            AbstractClientConnector connector = (AbstractClientConnector) obj;
-            return connector.isThis(this);
-        }
-        return false;
-    }
-
-    /**
-     * For internal use only, may be changed or removed in future versions.
-     * <p>
-     * This method must be protected, because otherwise it will not be redefined
-     * by the proxy to actually be called on the underlying instance.
-     * <p>
-     * See #14639
-     *
-     * @deprecated only defined for framework hacks, do not use.
-     */
-    @Deprecated
-    protected boolean isThis(Object that) {
-        return this == that;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
     /**
      * Sets the expected value of a state property so that changes can be
      * properly sent to the client. This needs to be done in cases where a state
