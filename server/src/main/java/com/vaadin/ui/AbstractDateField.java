@@ -354,19 +354,25 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     }
 
     protected T convertFromDateString(String temporalStr) {
-        if (temporalStr == null) return null;
+        if (temporalStr == null) {
+            return null;
+        }
         return toType(RANGE_FORMATTER.parse(temporalStr));
     }
 
     protected abstract T toType(TemporalAccessor temporalAccessor);
 
     protected String convertToDateString(T temporal) {
-        if (temporal == null) return null;
+        if (temporal == null) {
+            return null;
+        }
         return RANGE_FORMATTER.format(temporal);
     }
 
     protected boolean afterDate(T t1, T t2) {
-        if (t1 == null || t2 == null) return false;
+        if (t1 == null || t2 == null) {
+            return false;
+        }
         return t1.compareTo(t2) > 0;
     }
 

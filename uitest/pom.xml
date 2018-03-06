@@ -365,7 +365,6 @@
                         <configuration>
                             <executable>java</executable>
                             <arguments>
-                                <!--<argument>-Duser.timezone=Asia/Anadyr</argument>-->
                                 <argument>-ea</argument>
                                 <argument>-classpath</argument>
                                 <classpath/>

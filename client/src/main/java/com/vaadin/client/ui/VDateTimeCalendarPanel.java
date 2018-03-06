@@ -79,8 +79,6 @@ public class VDateTimeCalendarPanel
         /**
          * Constructs the ListBoxes and updates their value
          *
-         * @param redraw
-         *            Should new instances of the listboxes be created
          */
         private void buildTime() {
             clear();
