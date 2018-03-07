@@ -126,6 +126,10 @@ public class ComboBoxConnector extends AbstractListingConnector
     @OnStateChange({ "selectedItemKey", "selectedItemCaption",
             "selectedItemIcon" })
     private void onSelectionChange() {
+        if (getWidget().selectedOptionKey != getState().selectedItemKey) {
+            getWidget().selectedOptionKey = null;
+            getWidget().currentSuggestion = null;
+        }
         getDataReceivedHandler().updateSelectionFromServer(
                 getState().selectedItemKey, getState().selectedItemCaption,
                 getState().selectedItemIcon);
