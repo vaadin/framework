@@ -77,7 +77,7 @@ public class AbstractTextElementSetValue extends AbstractTestUI {
     }
 
     private RichTextArea createRichTextArea() {
-        RichTextArea rta=new RichTextArea();
+        RichTextArea rta = new RichTextArea();
         rta.setValue(INITIAL_VALUE);
         return rta;
     }

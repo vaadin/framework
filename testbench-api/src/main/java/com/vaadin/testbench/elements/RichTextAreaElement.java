@@ -42,8 +42,10 @@ public class RichTextAreaElement extends AbstractFieldElement {
      * @since
      */
     public String getValue() {
-        JavascriptExecutor executor= (JavascriptExecutor)getDriver();
-        return executor.executeScript("return arguments[0].contentDocument.body.innerHTML",getEditorIframe()).toString();
+        JavascriptExecutor executor = (JavascriptExecutor) getDriver();
+        return executor.executeScript(
+                "return arguments[0].contentDocument.body.innerHTML",
+                getEditorIframe()).toString();
     }
 
     /**
@@ -51,26 +53,26 @@ public class RichTextAreaElement extends AbstractFieldElement {
      *
      * @param chars
      *            new value of the field
-     *@since
+     * @since
      */
     public void setValue(CharSequence chars) throws ReadOnlyException {
         if (isReadOnly()) {
             throw new ReadOnlyException();
         }
         focus();
-        JavascriptExecutor executor= (JavascriptExecutor)getDriver();
-        executor.executeScript("" +
-                "var bodyE=arguments[0].contentDocument.body;\n" +
-                "bodyE.innerHTML=arguments[1]; \n" +
-                "var ev = document.createEvent('HTMLEvents');\n" +
-                "ev.initEvent('change', true, false); \n" +
-                "bodyE.dispatchEvent(ev);",getEditorIframe(), chars);
+        JavascriptExecutor executor = (JavascriptExecutor) getDriver();
+        executor.executeScript("var bodyE=arguments[0].contentDocument.body;\n"
+                + "bodyE.innerHTML=arguments[1]; \n"
+                + "var ev = document.createEvent('HTMLEvents');\n"
+                + "ev.initEvent('change', true, false); \n"
+                + "bodyE.dispatchEvent(ev);", getEditorIframe(), chars);
     }
 
     @Override
-    public void focus(){
+    public void focus() {
         waitForVaadin();
-        JavascriptExecutor executor= (JavascriptExecutor)getDriver();
-        executor.executeScript("arguments[0].contentDocument.body.focus();",getEditorIframe());
+        JavascriptExecutor executor = (JavascriptExecutor) getDriver();
+        executor.executeScript("arguments[0].contentDocument.body.focus();",
+                getEditorIframe());
     }
 }

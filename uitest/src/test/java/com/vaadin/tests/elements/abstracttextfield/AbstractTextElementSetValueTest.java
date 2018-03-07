@@ -66,11 +66,11 @@ public class AbstractTextElementSetValueTest extends MultiBrowserTest {
     }
 
     @Test
-    public void richTextAreaSetValue(){
-        RichTextAreaElement elem=$ (RichTextAreaElement.class).get(0);
+    public void richTextAreaSetValue() {
+        RichTextAreaElement elem = $(RichTextAreaElement.class).get(0);
         elem.setValue(TYPED_STRING);
-        String actual=elem.getValue();
-        assertEquals(TYPED_STRING,actual);
+        String actual = elem.getValue();
+        assertEquals(TYPED_STRING, actual);
     }
 
     // helper methods

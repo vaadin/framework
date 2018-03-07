@@ -120,11 +120,11 @@ public class ComponentElementGetValueTest extends MultiBrowserTest {
     }
 
     @Test
-    public void checkRichTextArea(){
-        RichTextAreaElement elem= $(RichTextAreaElement.class).first();
-        String expected=ComponentElementGetValue.TESTGET_STRING_VALUE_RICHTEXTAREA;
-        String actual=elem.getValue();
-        assertEquals(expected,actual);
+    public void checkRichTextArea() {
+        RichTextAreaElement elem = $(RichTextAreaElement.class).first();
+        String expected = ComponentElementGetValue.TESTGET_STRING_VALUE_RICHTEXTAREA;
+        String actual = elem.getValue();
+        assertEquals(expected, actual);
     }
 
     private void checkValue(AbstractTextFieldElement elem) {

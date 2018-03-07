@@ -35,10 +35,8 @@ public class ComponentElementGetValue extends AbstractTestUI {
 
     public static final String TEST_STRING_VALUE = "item 2";
     public static final int TEST_SLIDER_VALUE = 42;
-    public static final float TEST_FLOAT_VALUE = 0.42f;
     public static final LocalDate TEST_DATE_VALUE = LocalDate.now();
     public static final String TESTGET_STRING_VALUE_RICHTEXTAREA = "value 4";
-    DateField df;
     final Label valueChangeLabel = new Label("Initial value");
 
     // These constants are used to check that change value event was
@@ -140,7 +138,7 @@ public class ComponentElementGetValue extends AbstractTestUI {
     }
 
     private RichTextArea createRichTextArea() {
-        RichTextArea rta=new RichTextArea();
+        RichTextArea rta = new RichTextArea();
         rta.setValue(TESTGET_STRING_VALUE_RICHTEXTAREA);
         return rta;
     }
