@@ -21,7 +21,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
-import com.vaadin.testbench.elements.*;
+import com.vaadin.testbench.elements.AbstractTextFieldElement;
+import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.CheckBoxGroupElement;
+import com.vaadin.testbench.elements.ComboBoxElement;
+import com.vaadin.testbench.elements.DateFieldElement;
+import com.vaadin.testbench.elements.ListSelectElement;
+import com.vaadin.testbench.elements.NativeSelectElement;
+import com.vaadin.testbench.elements.PasswordFieldElement;
+import com.vaadin.testbench.elements.RadioButtonGroupElement;
+import com.vaadin.testbench.elements.TextAreaElement;
+import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.testbench.elements.TwinColSelectElement;
+import com.vaadin.testbench.elements.RichTextAreaElement;
 import org.junit.Before;
 import org.junit.Test;
 

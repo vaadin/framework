@@ -21,7 +21,24 @@ import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.*;
+import com.vaadin.ui.AbstractTextField;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.CheckBoxGroup;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.MultiSelect;
+import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.RadioButtonGroup;
+import com.vaadin.ui.Slider;
+import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.TwinColSelect;
+import com.vaadin.ui.RichTextArea;
+
 
 /**
  * UI test for getValue() method of components: TextField, TextArea,

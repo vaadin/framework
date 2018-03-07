@@ -17,8 +17,13 @@ package com.vaadin.tests.elements.abstracttextfield;
 
 import static org.junit.Assert.assertEquals;
 
-import com.vaadin.testbench.elements.*;
-import com.vaadin.tests.elements.ComponentElementGetValue;
+import com.vaadin.testbench.elements.AbstractTextFieldElement;
+import com.vaadin.testbench.elements.DateFieldElement;
+import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.testbench.elements.PasswordFieldElement;
+import com.vaadin.testbench.elements.TextAreaElement;
+import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.testbench.elements.RichTextAreaElement;
 import org.junit.Before;
 import org.junit.Test;
 
