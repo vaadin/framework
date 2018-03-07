@@ -103,7 +103,7 @@ public class ComboBoxState extends AbstractSingleSelectState {
     /**
      * Filter string that is currently in use in the suggestion listing.
      *
-     * @since
+     * @since 8.3.2
      */
     public String currentFilterText;
 
