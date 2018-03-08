@@ -130,6 +130,12 @@ public class ComboBoxConnector extends AbstractListingConnector
             getWidget().selectedOptionKey = null;
             getWidget().currentSuggestion = null;
         }
+        if (isNewItemStillPending()
+                && pendingNewItemValue == getState().selectedItemCaption) {
+            // no automated selection handling required
+            getDataReceivedHandler().clearPending();
+            clearNewItemHandling();
+        }
         getDataReceivedHandler().updateSelectionFromServer(
                 getState().selectedItemKey, getState().selectedItemCaption,
                 getState().selectedItemIcon);

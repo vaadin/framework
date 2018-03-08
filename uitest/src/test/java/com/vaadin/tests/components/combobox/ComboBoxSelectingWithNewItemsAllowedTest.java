@@ -131,14 +131,14 @@ public class ComboBoxSelectingWithNewItemsAllowedTest extends MultiBrowserTest {
     }
 
     @Test
-    public void noSelectionAfterMouseOut() {
+    public void selectionOnMouseOut() {
         typeInputAndHitEnter("a20");
         comboBoxElement.sendKeys(Keys.ARROW_DOWN, Keys.ARROW_DOWN);
 
         findElement(By.className("v-app")).click();
 
         assertInitialItemCount();
-        assertThatSelectedValueIs("a20");
+        assertThatSelectedValueIs("", "null");
     }
 
     @Test
