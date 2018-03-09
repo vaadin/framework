@@ -23,17 +23,17 @@ public class ComboBoxTestBenchPerformanceTest extends MultiBrowserTest {
         long before = System.currentTimeMillis();
         setComboBoxValue("abc123"); // new
         long after = System.currentTimeMillis();
-        assertThat((double) after - before, closeTo(0d, 1500d));
+        assertThat((double) after - before, closeTo(0d, 6000d));
 
         before = System.currentTimeMillis();
         setComboBoxValue("11"); // existing (2nd page)
         after = System.currentTimeMillis();
-        assertThat((double) after - before, closeTo(0d, 1500d));
+        assertThat((double) after - before, closeTo(0d, 6000d));
 
         before = System.currentTimeMillis();
         setComboBoxValue("abc123"); // previously added (3rd page)
         after = System.currentTimeMillis();
-        assertThat((double) after - before, closeTo(0d, 1500d));
+        assertThat((double) after - before, closeTo(0d, 6000d));
     }
 
     public void setComboBoxValue(final String value) {
