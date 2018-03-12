@@ -676,11 +676,17 @@ public class Tree<T> extends Composite
      * Sets the description generator that is used for generating HTML tooltip
      * descriptions for items.
      *
-     * @param descriptionGenerator the item description generator to set, or <code>null</code> to
-     *                             remove a previously set generator
-     * @param contentMode          how client should interpret textual values
+     * @param descriptionGenerator
+     *            the item description generator to set, or <code>null</code> to
+     *            remove a previously set generator
+     * @param contentMode
+     *            how client should interpret textual values
+     *
+     * @since
      */
-    public void setItemDescriptionGenerator(DescriptionGenerator<T> descriptionGenerator, ContentMode contentMode) {
+    public void setItemDescriptionGenerator(
+            DescriptionGenerator<T> descriptionGenerator,
+            ContentMode contentMode) {
         treeGrid.setDescriptionGenerator(descriptionGenerator, contentMode);
     }
 
