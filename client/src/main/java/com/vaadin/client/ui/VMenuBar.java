@@ -967,6 +967,7 @@ FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
 
             if (styleName != null) {
                 addStyleDependentName(styleName);
+                addStyleName(styleName);
             }
 
             if (enabled) {
