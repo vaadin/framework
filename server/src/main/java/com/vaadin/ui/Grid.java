@@ -2510,7 +2510,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         if (editor instanceof Extension) {
             removeExtension((Extension) editor);
         }
-        editor = createEditor();
+        editor = createEditor(propertySet);
         if (editor instanceof Extension) {
             addExtension((Extension) editor);
         }
@@ -4233,9 +4233,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Editor. If the Editor is a {@link AbstractGridExtension}, it will be
      * automatically added to {@link DataCommunicator}.
      *
+     * @param propertySet
      * @return editor
+     * @since
      */
-    protected Editor<T> createEditor() {
+    protected Editor<T> createEditor(PropertySet<T> propertySet) {
         return new EditorImpl<>(propertySet);
     }
 
