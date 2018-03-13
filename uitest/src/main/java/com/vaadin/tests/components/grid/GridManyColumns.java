@@ -22,6 +22,7 @@ public class GridManyColumns extends AbstractTestUI {
                     .setWidth(200);
         }
         grid.setItems(IntStream.range(0, 10).boxed().map(i -> ""));
+        grid.appendFooterRow();
         addComponent(grid);
     }
 }
