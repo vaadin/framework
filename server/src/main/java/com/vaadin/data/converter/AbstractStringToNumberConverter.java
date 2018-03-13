@@ -21,9 +21,9 @@ import java.text.ParsePosition;
 import java.util.Locale;
 
 import com.vaadin.data.Converter;
+import com.vaadin.data.ErrorMessageProvider;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
-import com.vaadin.server.SerializableFunction;
 
 /**
  * A converter that converts from the number type T to {@link String} and back.
@@ -40,7 +40,7 @@ import com.vaadin.server.SerializableFunction;
 public abstract class AbstractStringToNumberConverter<T extends Number>
         implements Converter<String, T> {
 
-    private final SerializableFunction<ValueContext, String> errorMessageProvider;
+    private final ErrorMessageProvider errorMessageProvider;
     private T emptyValue;
 
     /**
@@ -54,7 +54,7 @@ public abstract class AbstractStringToNumberConverter<T extends Number>
      *            the error message provider to use if conversion fails
      */
     protected AbstractStringToNumberConverter(T emptyValue,
-            SerializableFunction<ValueContext, String> errorMessageProvider) {
+            ErrorMessageProvider errorMessageProvider) {
         this.emptyValue = emptyValue;
         this.errorMessageProvider = errorMessageProvider;
     }

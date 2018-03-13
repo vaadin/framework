@@ -20,10 +20,9 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import com.vaadin.data.ErrorMessageProvider;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
-import com.vaadin.server.SerializableFunction;
-import com.vaadin.server.SerializablePredicate;
 
 /**
  * A converter that converts from {@link String} to {@link BigDecimal} and back.
@@ -79,7 +78,7 @@ public class StringToBigDecimalConverter
      *            the error message provider to use if conversion fails
      */
     public StringToBigDecimalConverter(BigDecimal emptyValue,
-            SerializableFunction<ValueContext, String> errorMessageProvider) {
+            ErrorMessageProvider errorMessageProvider) {
         super(emptyValue, errorMessageProvider);
     }
 

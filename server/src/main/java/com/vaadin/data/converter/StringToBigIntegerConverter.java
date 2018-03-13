@@ -21,9 +21,9 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import com.vaadin.data.ErrorMessageProvider;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
-import com.vaadin.server.SerializableFunction;
 
 /**
  * A converter that converts from {@link String} to {@link BigInteger} and back.
@@ -79,7 +79,7 @@ public class StringToBigIntegerConverter
      *            the error message provider to use if conversion fails
      */
     public StringToBigIntegerConverter(BigInteger emptyValue,
-            SerializableFunction<ValueContext, String> errorMessageProvider) {
+            ErrorMessageProvider errorMessageProvider) {
         super(emptyValue, errorMessageProvider);
     }
 

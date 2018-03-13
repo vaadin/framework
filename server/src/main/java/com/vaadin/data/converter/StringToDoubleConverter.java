@@ -19,9 +19,9 @@ package com.vaadin.data.converter;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import com.vaadin.data.ErrorMessageProvider;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
-import com.vaadin.server.SerializableFunction;
 
 /**
  * A converter that converts from {@link String} to {@link Double} and back.
@@ -76,7 +76,7 @@ public class StringToDoubleConverter
      *            the error message provider to use if conversion fails
      */
     public StringToDoubleConverter(Double emptyValue,
-            SerializableFunction<ValueContext, String> errorMessageProvider) {
+            ErrorMessageProvider errorMessageProvider) {
         super(emptyValue, errorMessageProvider);
     }
 

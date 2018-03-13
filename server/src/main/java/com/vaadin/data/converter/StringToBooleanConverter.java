@@ -16,13 +16,12 @@
 
 package com.vaadin.data.converter;
 
-import java.math.BigDecimal;
 import java.util.Locale;
 
 import com.vaadin.data.Converter;
+import com.vaadin.data.ErrorMessageProvider;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
-import com.vaadin.server.SerializableFunction;
 
 /**
  * A converter that converts from {@link String} to {@link Boolean} and back.
@@ -46,7 +45,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
 
     private final String falseString;
 
-    private SerializableFunction<ValueContext, String> errorMessageProvider;
+    private ErrorMessageProvider errorMessageProvider;
 
     /**
      * Creates converter with default string representations - "true" and
@@ -85,7 +84,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      *            the error message provider to use if conversion fails
      */
     public StringToBooleanConverter(String trueString, String falseString,
-            SerializableFunction<ValueContext, String> errorMessageProvider) {
+            ErrorMessageProvider errorMessageProvider) {
         this.errorMessageProvider = errorMessageProvider;
         this.trueString = trueString;
         this.falseString = falseString;
