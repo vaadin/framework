@@ -23,6 +23,7 @@ import java.util.Locale;
 import com.vaadin.data.Converter;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
+import com.vaadin.server.SerializableFunction;
 
 /**
  * A converter that converts from the number type T to {@link String} and back.
@@ -39,8 +40,24 @@ import com.vaadin.data.ValueContext;
 public abstract class AbstractStringToNumberConverter<T extends Number>
         implements Converter<String, T> {
 
-    private final String errorMessage;
+    private final SerializableFunction<ValueContext, String> errorMessageProvider;
     private T emptyValue;
+
+    /**
+     * Creates a new converter instance with the given empty string value and
+     * error message provider.
+     *
+     * @param emptyValue
+     *            the presentation value to return when converting an empty
+     *            string, may be <code>null</code>
+     * @param errorMessageProvider
+     *            the error message provider to use if conversion fails
+     */
+    protected AbstractStringToNumberConverter(T emptyValue,
+            SerializableFunction<ValueContext, String> errorMessageProvider) {
+        this.emptyValue = emptyValue;
+        this.errorMessageProvider = errorMessageProvider;
+    }
 
     /**
      * Creates a new converter instance with the given empty string value and
@@ -54,8 +71,7 @@ public abstract class AbstractStringToNumberConverter<T extends Number>
      */
     protected AbstractStringToNumberConverter(T emptyValue,
             String errorMessage) {
-        this.emptyValue = emptyValue;
-        this.errorMessage = errorMessage;
+        this(emptyValue, ctx -> errorMessage);
     }
 
     /**
@@ -81,11 +97,12 @@ public abstract class AbstractStringToNumberConverter<T extends Number>
      *
      * @param value
      *            The value to convert
-     * @param locale
-     *            The locale to use for conversion
+     * @param context
+     *            The value context for conversion
      * @return The converted value
      */
-    protected Result<Number> convertToNumber(String value, Locale locale) {
+    protected Result<Number> convertToNumber(String value,
+            ValueContext context) {
         if (value == null) {
             return Result.ok(null);
         }
@@ -96,9 +113,10 @@ public abstract class AbstractStringToNumberConverter<T extends Number>
         // Parse and detect errors. If the full string was not used, it is
         // an error.
         ParsePosition parsePosition = new ParsePosition(0);
-        Number parsedValue = getFormat(locale).parse(value, parsePosition);
+        Number parsedValue = getFormat(context.getLocale().orElse(null))
+                .parse(value, parsePosition);
         if (parsePosition.getIndex() != value.length()) {
-            return Result.error(getErrorMessage());
+            return Result.error(getErrorMessage(context));
         }
 
         if (parsedValue == null) {
@@ -114,8 +132,8 @@ public abstract class AbstractStringToNumberConverter<T extends Number>
      *
      * @return the error message
      */
-    protected String getErrorMessage() {
-        return errorMessage;
+    protected String getErrorMessage(ValueContext context) {
+        return errorMessageProvider.apply(context);
     }
 
     @Override

@@ -16,16 +16,19 @@
 
 package com.vaadin.data.converter;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 
 import com.vaadin.data.Converter;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
+import com.vaadin.server.SerializableFunction;
 
 /**
  * A converter that converts from {@link String} to {@link Boolean} and back.
  * The String representation is given by {@link Boolean#toString()} or provided
- * in constructor {@link StringToBooleanConverter#StringToBooleanConverter(String, String, String)}.
+ * in constructor
+ * {@link StringToBooleanConverter#StringToBooleanConverter(String, String, String)}.
  * <p>
  * Leading and trailing white spaces are ignored when converting from a String.
  * </p>
@@ -43,7 +46,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
 
     private final String falseString;
 
-    private String errorMessage;
+    private SerializableFunction<ValueContext, String> errorMessageProvider;
 
     /**
      * Creates converter with default string representations - "true" and
@@ -68,7 +71,22 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      */
     public StringToBooleanConverter(String errorMessage, String trueString,
             String falseString) {
-        this.errorMessage = errorMessage;
+        this(trueString, falseString, ctx -> errorMessage);
+    }
+
+    /**
+     * Creates converter with custom string representation.
+     *
+     * @param falseString
+     *            string representation for <code>false</code>
+     * @param trueString
+     *            string representation for <code>true</code>
+     * @param errorMessageProvider
+     *            the error message provider to use if conversion fails
+     */
+    public StringToBooleanConverter(String trueString, String falseString,
+            SerializableFunction<ValueContext, String> errorMessageProvider) {
+        this.errorMessageProvider = errorMessageProvider;
         this.trueString = trueString;
         this.falseString = falseString;
     }
@@ -90,7 +108,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
         } else if (value.isEmpty()) {
             return Result.ok(null);
         } else {
-            return Result.error(errorMessage);
+            return Result.error(errorMessageProvider.apply(context));
         }
     }
 

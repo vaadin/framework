@@ -22,6 +22,8 @@ import java.util.Locale;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
+import com.vaadin.server.SerializableFunction;
+import com.vaadin.server.SerializablePredicate;
 
 /**
  * A converter that converts from {@link String} to {@link BigDecimal} and back.
@@ -66,6 +68,21 @@ public class StringToBigDecimalConverter
         super(emptyValue, errorMessage);
     }
 
+    /**
+     * Creates a new converter instance with the given empty string value and
+     * error message provider.
+     *
+     * @param emptyValue
+     *            the presentation value to return when converting an empty
+     *            string, may be <code>null</code>
+     * @param errorMessageProvider
+     *            the error message provider to use if conversion fails
+     */
+    public StringToBigDecimalConverter(BigDecimal emptyValue,
+            SerializableFunction<ValueContext, String> errorMessageProvider) {
+        super(emptyValue, errorMessageProvider);
+    }
+
     @Override
     protected NumberFormat getFormat(Locale locale) {
         NumberFormat numberFormat = super.getFormat(locale);
@@ -79,7 +96,7 @@ public class StringToBigDecimalConverter
     @Override
     public Result<BigDecimal> convertToModel(String value,
             ValueContext context) {
-        return convertToNumber(value, context.getLocale().orElse(null))
+        return convertToNumber(value, context)
                 .map(number -> (BigDecimal) number);
     }
 

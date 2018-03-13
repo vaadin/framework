@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
+import com.vaadin.server.SerializableFunction;
 
 /**
  * A converter that converts from {@link String} to {@link Float} and back. Uses
@@ -62,10 +63,24 @@ public class StringToFloatConverter
         super(emptyValue, errorMessage);
     }
 
+    /**
+     * Creates a new converter instance with the given empty string value and
+     * error message provider.
+     *
+     * @param emptyValue
+     *            the presentation value to return when converting an empty
+     *            string, may be <code>null</code>
+     * @param errorMessageProvider
+     *            the error message provider to use if conversion fails
+     */
+    public StringToFloatConverter(Float emptyValue,
+            SerializableFunction<ValueContext, String> errorMessageProvider) {
+        super(emptyValue, errorMessageProvider);
+    }
+
     @Override
     public Result<Float> convertToModel(String value, ValueContext context) {
-        Result<Number> n = convertToNumber(value,
-                context.getLocale().orElse(null));
+        Result<Number> n = convertToNumber(value, context);
 
         return n.map(number -> {
             if (number == null) {

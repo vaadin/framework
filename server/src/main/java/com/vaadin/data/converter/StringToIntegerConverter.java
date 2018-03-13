@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
+import com.vaadin.server.SerializableFunction;
 
 /**
  * A converter that converts from {@link String} to {@link Integer} and back.
@@ -62,6 +63,21 @@ public class StringToIntegerConverter
     }
 
     /**
+     * Creates a new converter instance with the given empty string value and
+     * error message provider.
+     *
+     * @param emptyValue
+     *            the presentation value to return when converting an empty
+     *            string, may be <code>null</code>
+     * @param errorMessageProvider
+     *            the error message provider to use if conversion fails
+     */
+    public StringToIntegerConverter(Integer emptyValue,
+            SerializableFunction<ValueContext, String> errorMessageProvider) {
+        super(emptyValue, errorMessageProvider);
+    }
+
+    /**
      * Returns the format used by
      * {@link #convertToPresentation(Object, ValueContext)} and
      * {@link #convertToModel(String, ValueContext)}.
@@ -80,8 +96,7 @@ public class StringToIntegerConverter
 
     @Override
     public Result<Integer> convertToModel(String value, ValueContext context) {
-        Result<Number> n = convertToNumber(value,
-                context.getLocale().orElse(null));
+        Result<Number> n = convertToNumber(value, context);
         return n.flatMap(number -> {
             if (number == null) {
                 return Result.ok(null);
@@ -94,7 +109,7 @@ public class StringToIntegerConverter
                 // long and thus does not need to consider wrap-around.
                 return Result.ok(intValue);
             }
-            return Result.error(getErrorMessage());
+            return Result.error(getErrorMessage(context));
         });
     }
 
