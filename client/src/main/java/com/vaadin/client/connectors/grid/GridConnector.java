@@ -211,10 +211,9 @@ public class GridConnector extends AbstractListingConnector
 
         Grid<JsonObject> grid = getWidget();
 
-        // Remove default headers when initializing Grid widget
-        while (grid.getHeaderRowCount() > 0) {
-            grid.removeHeaderRow(0);
-        }
+        // Trigger early redraw of both grid static sections.
+        grid.setHeaderVisible(!grid.isHeaderVisible());
+        grid.setFooterVisible(!grid.isFooterVisible());
 
         registerRpc(GridClientRpc.class, new GridClientRpc() {
 
