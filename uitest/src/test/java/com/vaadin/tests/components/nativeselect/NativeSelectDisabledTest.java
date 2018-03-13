@@ -13,14 +13,14 @@ public class NativeSelectDisabledTest extends MultiBrowserTest {
     public void testDisabled() {
         openTestURL();
 
-        NativeSelectElement el=$(NativeSelectElement.class).first();
+        NativeSelectElement el = $(NativeSelectElement.class).first();
         assertEquals(false, el.isEnabled());
-        ButtonElement but= $ (ButtonElement.class).first();
+        ButtonElement but = $(ButtonElement.class).first();
         but.click();
-        assertEquals(true,el.isEnabled());
-        assertEquals(null,el.getSelectElement().getAttribute("disabled"));
+        assertEquals(true, el.isEnabled());
+        assertEquals(null, el.getSelectElement().getAttribute("disabled"));
         but.click();
         System.out.println(el.getSelectElement().getText());
-        assertEquals("true",el.getSelectElement().getAttribute("disabled"));
+        assertEquals("true", el.getSelectElement().getAttribute("disabled"));
     }
 }
