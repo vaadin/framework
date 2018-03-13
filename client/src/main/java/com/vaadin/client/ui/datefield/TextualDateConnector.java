@@ -167,13 +167,6 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
         getWidget().setTextFieldTabIndex();
     }
 
-    private Date nullSafeDateClone(Date date) {
-        if (date != null) {
-            return (Date) date.clone();
-        }
-        return null;
-    }
-
     @Override
     protected void setWidgetStyleName(String styleName, boolean add) {
         super.setWidgetStyleName(styleName, add);

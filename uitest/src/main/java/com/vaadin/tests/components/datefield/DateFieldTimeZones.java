@@ -18,8 +18,6 @@ public class DateFieldTimeZones extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        System.out.println("new Date() = " + new Date());
-
 
         InlineDateField d1 = new InlineDateField();
         InlineDateField d2 = new InlineDateField();

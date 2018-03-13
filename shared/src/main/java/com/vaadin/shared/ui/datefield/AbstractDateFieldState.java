@@ -49,14 +49,18 @@ public class AbstractDateFieldState extends AbstractFieldState {
 
     /**
      * Start range that has been cleared, depending on the resolution of the
-     * date field. The format is "YYYY-MM-DD[ HH:MM:SS]"
+     * date field. The format is "2018-05-27" or "2018-05-27 14:38:39"
+     *
+     * @see com.vaadin.ui.AbstractDateField#RANGE_FORMATTER
      */
     @NoLayout
     public String rangeStart;
 
     /**
-     * End range that has been cleared, depending on the resolution of the date
-     * field. The format is "YYYY-MM-DD[ HH:MM:SS]"
+     * End range that has been cleared, depending on the resolution of the
+     * date field. The format is "2018-05-27" or "2018-05-27 14:38:39"
+     *
+     * @see com.vaadin.ui.AbstractDateField#RANGE_FORMATTER
      */
     @NoLayout
     public String rangeEnd;
