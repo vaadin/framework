@@ -51,7 +51,7 @@
         <!-- Cannot use 9.3 or 9.4 because they sometimes reset the connection
             too early in case of errors -->
         <!-- See e.g. https://issues.apache.org/jira/browse/SOLR-8453 -->
-        <jetty.version>9.4.8.v20171121</jetty.version>
+        <jetty.version>9.2.9.v20150224</jetty.version>
         <phantomjs.version>2.1.1</phantomjs.version>
 
         <!-- Sonar properties -->
