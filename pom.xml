@@ -346,12 +346,6 @@
         </dependency>
     </dependencies>
 
-    <repositories>
-        <repository>
-            <id>vaadin-staging</id>
-            <url>https://oss.sonatype.org/content/repositories/comvaadin-2305</url>
-        </repository>
-    </repositories>
     <build>
         <pluginManagement>
             <plugins>
