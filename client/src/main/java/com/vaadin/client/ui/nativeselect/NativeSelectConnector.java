@@ -150,4 +150,16 @@ public class NativeSelectConnector
         }
         updateSelectedItem();
     }
+
+    @Override
+    public void setWidgetEnabled(boolean widgetEnabled) {
+        // add or remove v-disabled style name from the widget
+        super.setWidgetEnabled(widgetEnabled);
+        if (widgetEnabled) {
+            getWidget().getListBox().getElement().removeAttribute("disabled");
+        } else {
+            getWidget().getListBox().getElement()
+                    .setAttribute("disabled", "disabled");
+        }
+    }
 }
