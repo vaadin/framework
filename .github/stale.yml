@@ -1,4 +1,4 @@
-daysUntilStale: 335
+daysUntilStale: 10335
 daysUntilClose: 30
 exemptLabels:
  - BFP
