@@ -1,3 +1,5 @@
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/vaadin/framework-8?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 # Vaadin Framework
 
 *[Vaadin Framework](https://vaadin.com/framework) allows you to build modern web apps efficiently in plain Java, without touching low level web technologies.*
