@@ -32,5 +32,7 @@ public class VaadinRefreshServletTest extends SingleBrowserTest {
                 .equals(findElement(By.tagName("body")).getText()));
         assertEquals(getBaseURL() + "/statictestfiles/login.html",
                 getDriver().getCurrentUrl());
+        // Otherwise the memory release workaround will bug as this test is not named according to conventions
+        driver = null;
     }
 }
