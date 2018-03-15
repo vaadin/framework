@@ -52,6 +52,8 @@ public abstract class AbstractStringToNumberConverter<T extends Number>
      *            string, may be <code>null</code>
      * @param errorMessageProvider
      *            the error message provider to use if conversion fails
+     *
+     * @since
      */
     protected AbstractStringToNumberConverter(T emptyValue,
             ErrorMessageProvider errorMessageProvider) {

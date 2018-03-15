@@ -59,6 +59,20 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
     }
 
     /**
+     * Creates a new converter instance with the given error message provider.
+     * Empty strings are converted to <code>null</code>.
+     *
+     * @param errorMessageProvider
+     *            the error message provider to use if conversion fails
+     *
+     * @since
+     */
+    public StringToBooleanConverter(ErrorMessageProvider errorMessageProvider) {
+        this(Boolean.TRUE.toString(), Boolean.FALSE.toString(),
+                errorMessageProvider);
+    }
+
+    /**
      * Creates converter with custom string representation.
      *
      * @param errorMessage
@@ -82,6 +96,8 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      *            string representation for <code>true</code>
      * @param errorMessageProvider
      *            the error message provider to use if conversion fails
+     *
+     * @since
      */
     public StringToBooleanConverter(String trueString, String falseString,
             ErrorMessageProvider errorMessageProvider) {

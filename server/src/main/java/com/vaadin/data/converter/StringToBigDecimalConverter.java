@@ -68,6 +68,20 @@ public class StringToBigDecimalConverter
     }
 
     /**
+     * Creates a new converter instance with the given error message provider.
+     * Empty strings are converted to <code>null</code>.
+     *
+     * @param errorMessageProvider
+     *            the error message provider to use if conversion fails
+     *
+     * @since
+     */
+    public StringToBigDecimalConverter(
+            ErrorMessageProvider errorMessageProvider) {
+        this(null, errorMessageProvider);
+    }
+
+    /**
      * Creates a new converter instance with the given empty string value and
      * error message provider.
      *
@@ -76,6 +90,8 @@ public class StringToBigDecimalConverter
      *            string, may be <code>null</code>
      * @param errorMessageProvider
      *            the error message provider to use if conversion fails
+     *
+     * @since
      */
     public StringToBigDecimalConverter(BigDecimal emptyValue,
             ErrorMessageProvider errorMessageProvider) {

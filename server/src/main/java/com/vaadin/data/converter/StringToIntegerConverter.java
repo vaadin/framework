@@ -63,6 +63,19 @@ public class StringToIntegerConverter
     }
 
     /**
+     * Creates a new converter instance with the given error message provider.
+     * Empty strings are converted to <code>null</code>.
+     *
+     * @param errorMessageProvider
+     *            the error message provider to use if conversion fails
+     *
+     * @since
+     */
+    public StringToIntegerConverter(ErrorMessageProvider errorMessageProvider) {
+        this(null, errorMessageProvider);
+    }
+
+    /**
      * Creates a new converter instance with the given empty string value and
      * error message provider.
      *
@@ -71,6 +84,8 @@ public class StringToIntegerConverter
      *            string, may be <code>null</code>
      * @param errorMessageProvider
      *            the error message provider to use if conversion fails
+     *
+     * @since
      */
     public StringToIntegerConverter(Integer emptyValue,
             ErrorMessageProvider errorMessageProvider) {
