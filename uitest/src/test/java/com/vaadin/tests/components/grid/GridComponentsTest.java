@@ -13,15 +13,19 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+@RunLocally(Browser.CHROME)
 public class GridComponentsTest extends MultiBrowserTest {
 
     @Test
@@ -153,6 +157,31 @@ public class GridComponentsTest extends MultiBrowserTest {
         assertTrue("Row should be selected", grid.getRow(0).isSelected());
     }
 
+    @Test
+    public void testRowNotSelectedFromHeaderOrFooter() {
+        openTestURL();
+
+        GridElement grid = $(GridElement.class).first();
+        grid.getCell(4, 0).$(LabelElement.class).first().click(10, 10,
+                new Keys[0]);
+        assertTrue("Row 4 should be selected", grid.getRow(4).isSelected());
+
+        TextFieldElement headerTextField = grid.getHeaderCell(1, 0)
+                .$(TextFieldElement.class).first();
+        headerTextField.sendKeys(Keys.SPACE);
+
+        assertFalse("Row 1 should not be selected", grid.getRow(1).isSelected());
+        assertTrue("Row 4 should still be selected", grid.getRow(4).isSelected());
+        
+        TextFieldElement footerTextField = grid.getFooterCell(0, 0)
+                .$(TextFieldElement.class).first();
+        footerTextField.sendKeys(Keys.SPACE);
+
+        assertFalse("Row 0 should not be selected", grid.getRow(0).isSelected());
+        assertTrue("Row 4 should still be selected", grid.getRow(4).isSelected());
+
+    }
+
     private void assertRowExists(int i, String string) {
         GridRowElement row = $(GridElement.class).first().getRow(i);
         assertEquals("Label text did not match", string,
@@ -162,9 +191,10 @@ public class GridComponentsTest extends MultiBrowserTest {
                 .click();
         // IE 11 is slow, need to wait for the notification.
         waitUntil(driver -> isElementPresent(NotificationElement.class), 10);
-        assertTrue("Notification should contain given text",
+        assertTrue("Notification should contain given text: " + string,
                 $(NotificationElement.class).first().getText()
                         .contains(string));
+        $(NotificationElement.class).first().close();
     }
 
     private void assertNoButton(int i) {
