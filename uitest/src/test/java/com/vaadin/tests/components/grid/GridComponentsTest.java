@@ -25,7 +25,6 @@ import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-@RunLocally(Browser.CHROME)
 public class GridComponentsTest extends MultiBrowserTest {
 
     @Test
