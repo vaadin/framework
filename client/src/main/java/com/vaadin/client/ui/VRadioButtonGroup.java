@@ -139,8 +139,12 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
 
     private void updateItem(RadioButton button, JsonObject item,
             boolean requireInitialization) {
-        // Set base style name first to avoid overriding style names
-        button.setStyleName("v-radiobutton");
+        if (requireInitialization) {
+            getWidget().add(button);
+            button.setStyleName("v-radiobutton");
+            button.addStyleName(CLASSNAME_OPTION);
+            button.addClickHandler(this);
+        }
 
         String itemHtml = item
                 .getString(ListingJsonConstants.JSONKEY_ITEM_VALUE);
@@ -162,12 +166,6 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
                 item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
 
         String key = item.getString(DataCommunicatorConstants.KEY);
-
-        if (requireInitialization) {
-            getWidget().add(button);
-            button.addStyleName(CLASSNAME_OPTION);
-            button.addClickHandler(this);
-        }
 
         optionsToItems.put(button, item);
         keyToOptions.put(key, button);
