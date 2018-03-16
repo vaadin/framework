@@ -7,7 +7,7 @@ staleLabel: Stale
 only: issues
 # Comment to post when closing a stale Issue or Pull Request.
 closeComment: >
-  The issue was automatically closed due to inactivity. If you found some new details to it or started working on it, feel free to re-open it.
+  The issue was automatically closed due to inactivity. If you found some new details to it or started working on it, comment on the issue so that maintainers can re-open it.
 
 markComment: |
   Hello there!
