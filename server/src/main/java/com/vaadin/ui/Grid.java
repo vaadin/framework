@@ -3058,8 +3058,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param rows
      *            The height in terms of number of rows displayed in Grid's
      *            body. If Grid doesn't contain enough rows, white space is
-     *            displayed instead. If <code>null</code> is given, then Grid's
-     *            height is undefined
+     *            displayed instead.
      * @throws IllegalArgumentException
      *             if {@code rows} is zero or less
      * @throws IllegalArgumentException
