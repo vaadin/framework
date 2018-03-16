@@ -29,6 +29,7 @@ import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.TextField;
+import org.apache.commons.lang.StringUtils;
 
 public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
@@ -492,6 +493,97 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         ErrorMessage errorMessage = textField.getErrorMessage();
         assertNotNull(errorMessage);
         assertEquals("foobar", errorMessage.getFormattedHtmlMessage());
+        // validation is done for all changed bindings once.
+        assertEquals(1, invokes.get());
+
+        textField.setValue("value");
+        assertNull(textField.getErrorMessage());
+        assertTrue(textField.isRequiredIndicatorVisible());
+    }
+
+    @Test
+    public void setRequired_withCustomValidator_fieldGetsRequiredIndicatorAndValidator() {
+        TextField textField = new TextField();
+        textField.setLocale(Locale.CANADA);
+        assertFalse(textField.isRequiredIndicatorVisible());
+
+        BindingBuilder<Person, String> binding = binder.forField(textField);
+        assertFalse(textField.isRequiredIndicatorVisible());
+        AtomicInteger invokes = new AtomicInteger();
+
+        Validator<String> customRequiredValidator = (value, context) -> {
+            invokes.incrementAndGet();
+            if (StringUtils.isBlank(value)) {
+                return ValidationResult.error("Input is required.");
+            }
+            return ValidationResult.ok();
+        };
+        binding.asRequired(customRequiredValidator);
+        assertTrue(textField.isRequiredIndicatorVisible());
+
+        binding.bind(Person::getFirstName, Person::setFirstName);
+        binder.setBean(item);
+        assertNull(textField.getErrorMessage());
+        assertEquals(0, invokes.get());
+
+        textField.setValue("        ");
+        ErrorMessage errorMessage = textField.getErrorMessage();
+        assertNotNull(errorMessage);
+        assertEquals("Input&#32;is&#32;required&#46;", errorMessage.getFormattedHtmlMessage());
+        // validation is done for all changed bindings once.
+        assertEquals(1, invokes.get());
+
+        textField.setValue("value");
+        assertNull(textField.getErrorMessage());
+        assertTrue(textField.isRequiredIndicatorVisible());
+    }
+
+    @Test
+    public void setRequired_withCustomValidator_modelConverterBeforeValidator() {
+        TextField textField = new TextField();
+        textField.setLocale(Locale.CANADA);
+        assertFalse(textField.isRequiredIndicatorVisible());
+
+        Converter<String, String> stringBasicPreProcessingConverter = new Converter<String, String>() {
+            @Override
+            public Result<String> convertToModel(String value, ValueContext context) {
+                if (StringUtils.isBlank(value)) {
+                    return Result.ok(null);
+                }
+                return Result.ok(StringUtils.trim(value));
+            }
+
+            @Override
+            public String convertToPresentation(String value, ValueContext context) {
+                if (value == null) {
+                    return "";
+                }
+                return value;
+            }
+        };
+
+        AtomicInteger invokes = new AtomicInteger();
+        Validator<String> customRequiredValidator = (value, context) -> {
+            invokes.incrementAndGet();
+            if (value == null) {
+                return ValidationResult.error("Input required.");
+            }
+            return ValidationResult.ok();
+        };
+
+        binder.forField(textField)
+                .withConverter(stringBasicPreProcessingConverter)
+                .asRequired(customRequiredValidator)
+                .bind(Person::getFirstName, Person::setFirstName);
+
+        binder.setBean(item);
+        assertNull(textField.getErrorMessage());
+        assertEquals(0, invokes.get());
+
+        textField.setValue("        ");
+        ErrorMessage errorMessage = textField.getErrorMessage();
+        assertNotNull(errorMessage);
+        assertEquals("Input&#32;required&#46;", errorMessage.getFormattedHtmlMessage());
         // validation is done for all changed bindings once.
         assertEquals(1, invokes.get());
 
