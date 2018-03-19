@@ -41,6 +41,16 @@ public class RadioButtonGroupElement extends AbstractSingleSelectElement {
         return optionTexts;
     }
 
+    /**
+     * Gets the list of option elements for this check box group.
+     *
+     * @return list of option elements
+     * @since
+     */
+    public List<WebElement> getOptionElements() {
+        return findElements(bySelectOption);
+    }
+
     public void selectByText(String text) throws ReadOnlyException {
         if (isReadOnly()) {
             throw new ReadOnlyException();
