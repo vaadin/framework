@@ -1095,13 +1095,15 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .bind(Person::getAge, Person::setAge);
 
         binder.setBean(item);
-        
+
         ageField.setValue("not a number");
-        
-        assertEquals(otherError, ageField.getErrorMessage().getFormattedHtmlMessage());
+
+        assertEquals(otherError,
+                ageField.getErrorMessage().getFormattedHtmlMessage());
         ageField.setLocale(new Locale("fi"));
         // Re-validate to get the error message with correct locale
         binder.validate();
-        assertEquals(fiError, ageField.getErrorMessage().getFormattedHtmlMessage());
+        assertEquals(fiError,
+                ageField.getErrorMessage().getFormattedHtmlMessage());
     }
 }
