@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.ui.ContentMode;
 
 /**
  * Shared state for Grid headers and footers.
@@ -75,6 +76,12 @@ public class SectionState implements Serializable {
 
         /** The id of the column that this cell belongs to. */
         public String columnId;
+
+        /** The tooltip for the cell */
+        public String description;
+
+        /** The content mode for the tooltip for the cell */
+        public ContentMode descriptionContentMode = ContentMode.TEXT;
     }
 
     /** The rows in this section. */
