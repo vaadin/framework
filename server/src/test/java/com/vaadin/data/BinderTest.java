@@ -1102,4 +1102,27 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         assertTrue("Binding should be readonly", binding.isReadOnly());
         assertTrue("Name field should be readonly", nameField.isReadOnly());
     }
+
+    @Test
+    public void conversionWithLocaleBasedErrorMessage() {
+        String fiError = "VIRHE";
+        String otherError = "ERROR";
+
+        binder.forField(ageField).withConverter(new StringToIntegerConverter(
+                context -> context.getLocale().map(Locale::getLanguage)
+                        .orElse("en").equals("fi") ? fiError : otherError))
+                .bind(Person::getAge, Person::setAge);
+
+        binder.setBean(item);
+
+        ageField.setValue("not a number");
+
+        assertEquals(otherError,
+                ageField.getErrorMessage().getFormattedHtmlMessage());
+        ageField.setLocale(new Locale("fi"));
+        // Re-validate to get the error message with correct locale
+        binder.validate();
+        assertEquals(fiError,
+                ageField.getErrorMessage().getFormattedHtmlMessage());
+    }
 }
