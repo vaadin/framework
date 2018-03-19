@@ -96,7 +96,7 @@ public class CriticalNotifications extends AbstractReindeerTestUI {
         VaadinResponse response = VaadinService.getCurrentResponse();
 
         try {
-            service.writeStringResponse(response,
+            service.writeUncachedStringResponse(response,
                     JsonConstants.JSON_CONTENT_TYPE,
                     VaadinService.createCriticalNotificationJSON(caption,
                             message, details, url));

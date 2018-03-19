@@ -29,12 +29,14 @@ typically a layout, or the entire UI. You specify the component by the static
 
 ----
 // Have some component with an appropriate style name
+VerticalLayout l = new VerticalLayout();
+
 Label c = new Label("Here be text");
-c.addStyleName("myresponsive");
-content.addComponent(c);
+l.addStyleName("myresponsive");
+l.addComponent(c);
         
 // Enable Responsive CSS selectors for the component
-Responsive.makeResponsive(c);
+Responsive.makeResponsive(l);
 ----
 
 You can now use [literal]#++width-range++# and [literal]#++height-range++#
@@ -263,9 +265,7 @@ demonstrates the flexible wrapping technique described in
 demo")))
 ((("TouchKit", "Parking
 demo")))
-The Parking demo for TouchKit, mentioned in
-<<dummy/../../../mobile/mobile-overview.asciidoc#mobile.overview,"Mobile
-Applications with TouchKit">>, uses a responsive theme to adapt to mobile
+link:https://demo.vaadin.com/parking/[The Parking demo for TouchKit] uses a responsive theme to adapt to mobile
 devices with different screen sizes and when the screen orientation changes.
 
 endif::web[]

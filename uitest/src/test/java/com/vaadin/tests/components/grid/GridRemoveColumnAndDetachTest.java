@@ -72,4 +72,13 @@ public class GridRemoveColumnAndDetachTest extends SingleBrowserTest {
         $(ButtonElement.class).id("remove3").click();
         assertVisibleFrozenColumns(2);
     }
+
+    @Test
+    public void allColumnsFrozenRemoveLast() {
+        openTestURL("debug");
+        $(ButtonElement.class).id("remove3").click();
+        $(ButtonElement.class).id("remove2").click();
+        assertVisibleFrozenColumns(1);
+        assertNoErrorNotifications();
+    }
 }

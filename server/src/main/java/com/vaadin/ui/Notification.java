@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEvent;
+import com.vaadin.event.HasUserOriginated;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
@@ -53,7 +54,7 @@ import com.vaadin.shared.ui.notification.NotificationState;
  * message whenever you want to make the message a little more noticeable.</li>
  * <li>TYPE_ERROR_MESSAGE requires to user to click it before disappearing, and
  * can be used for critical messages.</li>
- * <li>TYPE_TRAY_NOTIFICATION is shown for a while in the lower left corner of
+ * <li>TYPE_TRAY_NOTIFICATION is shown for a while in the lower right corner of
  * the window, and can be used for "convenience notifications" that do not have
  * to be noticed immediately, and should not interfere with the current task -
  * for instance to show "You have a new message in your inbox" while the user is
@@ -125,8 +126,9 @@ public class Notification extends AbstractExtension {
      *
      * @since 8.2
      */
-    private NotificationServerRpc rpc = () -> fireEvent(
-            new CloseEvent(Notification.this));
+    private NotificationServerRpc rpc = () -> {
+        close(true);
+    };
 
     /**
      * Creates a "humanized" notification message.
@@ -391,6 +393,37 @@ public class Notification extends AbstractExtension {
         extend(page.getUI());
     }
 
+    /**
+     * Closes (hides) the notification.
+     * <p>
+     * If the notification is not shown, does nothing.
+     *
+     * @since
+     */
+    public void close() {
+        close(false);
+    }
+
+    /**
+     * Closes (hides) the notification.
+     * <p>
+     * If the notification is not shown, does nothing.
+     *
+     * @param userOriginated
+     *            <code>true</code> if the notification was closed because the
+     *            user clicked on it, <code>false</code> if the notification was
+     *            closed from the server
+     * @since
+     */
+    protected void close(boolean userOriginated) {
+        if (!isAttached()) {
+            return;
+        }
+
+        remove();
+        fireEvent(new CloseEvent(this, userOriginated));
+    }
+
     @Override
     protected NotificationState getState() {
         return (NotificationState) super.getState();
@@ -498,13 +531,21 @@ public class Notification extends AbstractExtension {
      *
      * @since 8.2
      */
-    public static class CloseEvent extends ConnectorEvent {
+    public static class CloseEvent extends ConnectorEvent
+            implements HasUserOriginated {
+
+        private boolean userOriginated;
 
         /**
          * @param source
          */
         public CloseEvent(Notification source) {
+            this(source, true);
+        }
+
+        public CloseEvent(Notification source, boolean userOriginated) {
             super(source);
+            this.userOriginated = userOriginated;
         }
 
         /**
@@ -514,6 +555,11 @@ public class Notification extends AbstractExtension {
          */
         public Notification getNotification() {
             return (Notification) getSource();
+        }
+
+        @Override
+        public boolean isUserOriginated() {
+            return userOriginated;
         }
     }
 

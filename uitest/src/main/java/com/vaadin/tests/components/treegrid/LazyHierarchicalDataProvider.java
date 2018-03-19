@@ -49,7 +49,8 @@ public class LazyHierarchicalDataProvider extends
                 .flatMap(parent -> Optional.of(parent.getId()));
 
         List<HierarchicalTestBean> list = new ArrayList<>();
-        for (int i = 0; i < query.getLimit(); i++) {
+        int limit = Math.min(query.getLimit(), nodesPerLevel);
+        for (int i = 0; i < limit; i++) {
             list.add(new HierarchicalTestBean(parentKey.orElse(null), depth,
                     i + query.getOffset()));
         }

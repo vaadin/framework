@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -50,6 +51,7 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
 
     public static final String CLASSNAME = "v-select-optiongroup";
     public static final String CLASSNAME_OPTION = "v-select-option";
+    public static final String CLASSNAME_OPTION_SELECTED = "v-select-option-selected";
 
     private final Map<VCheckBox, JsonObject> optionsToItems;
 
@@ -135,6 +137,7 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
         widget.setValue(
                 item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
         setOptionEnabled(widget, item);
+        widget.setStyleName(CLASSNAME_OPTION_SELECTED, widget.getValue());
 
         if (requireInitialization) {
             widget.addStyleName(CLASSNAME_OPTION);
@@ -233,4 +236,14 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
                 .remove(selectionChanged);
     }
 
+    /**
+     * Set focus to the first check box.
+     */
+    @Override
+    public void focus() {
+        // If focus is set on creation, need to wait until options are populated
+        Scheduler.get().scheduleDeferred(() -> {
+            getWidget().focusFirstEnabledChild();
+        });
+    }
 }

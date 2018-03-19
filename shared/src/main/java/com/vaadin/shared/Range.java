@@ -31,6 +31,9 @@ import java.io.Serializable;
  * @author Vaadin Ltd
  */
 public final class Range implements Serializable {
+
+    private static final Range EMPTY = Range.withLength(0, 0);
+
     private final int start;
     private final int end;
 
@@ -88,6 +91,10 @@ public final class Range implements Serializable {
             throw new IllegalArgumentException("length must not be negative");
         }
         return new Range(start, start + length);
+    }
+
+    public static Range emptyRange() {
+        return EMPTY;
     }
 
     /**

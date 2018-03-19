@@ -1867,6 +1867,26 @@ public class WidgetUtil {
     }-*/;
 
     /**
+     * Returns whether the given element is displayed.
+     * <p>
+     * This method returns false if either the given element or any of its
+     * ancestors has the style {@code display: none} applied.
+     *
+     * @param element
+     *         the element to test for visibility
+     * @return {@code true} if the element is displayed, {@code false} otherwise
+     * @since 8.3.2
+     */
+    public static native boolean isDisplayed(Element element)
+    /*-{
+        // This measurement is borrowed from JQuery and measures the visible
+        // size of the element. The measurement should return false when either
+        // the element or any of its ancestors has "display: none" style.
+        return !!(element.offsetWidth || element.offsetHeight
+            || element.getClientRects().length);
+    }-*/;
+
+    /**
      * Utility methods for displaying error message on components.
      *
      * @since 8.2

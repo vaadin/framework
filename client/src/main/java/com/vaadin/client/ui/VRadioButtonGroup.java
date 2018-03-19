@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -54,6 +55,7 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
 
     public static final String CLASSNAME = "v-select-optiongroup";
     public static final String CLASSNAME_OPTION = "v-select-option";
+    public static final String CLASSNAME_OPTION_SELECTED = "v-select-option-selected";
 
     private final Map<RadioButton, JsonObject> optionsToItems;
     private final Map<String, RadioButton> keyToOptions;
@@ -150,8 +152,6 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         }
 
         button.setHTML(itemHtml);
-        button.setValue(
-                item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
         boolean optionEnabled = !item
                 .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
         boolean enabled = optionEnabled && !isReadonly() && isEnabled();
@@ -159,6 +159,8 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         // #9258 apply the v-disabled class when disabled for UX
         button.setStyleName(StyleConstants.DISABLED,
                 !isEnabled() || !optionEnabled);
+        updateItemSelection(button,
+                item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
 
         String key = item.getString(DataCommunicatorConstants.KEY);
 
@@ -259,13 +261,50 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
     }
 
     public void selectItemKey(String selectedItemKey) {
+        // At most one item could be selected so reset all radio buttons
+        // before applying current selection
+        keyToOptions.values()
+                .forEach(button -> updateItemSelection(button, false));
         if (selectedItemKey != null) {
             RadioButton radioButton = keyToOptions.get(selectedItemKey);
             if (radioButton != null) { // Items might not be loaded yet
-                radioButton.setValue(true);
+                updateItemSelection(radioButton, true);
             }
-        } else {
-            keyToOptions.values().forEach(button -> button.setValue(false));
         }
+    }
+
+    /**
+     * Set focus to the selected radio button (or first radio button if there is
+     * no selection).
+     */
+    @Override
+    public void focus() {
+        // If focus is set on creation, need to wait until options are populated
+        Scheduler.get().scheduleDeferred(() -> {
+            // if there's a selected radio button, focus it
+            for (String key : keyToOptions.keySet()) {
+                RadioButton radioButton = keyToOptions.get(key);
+                if (radioButton != null && radioButton.getValue()) {
+                    radioButton.setFocus(true);
+                    return;
+                }
+            }
+            // otherwise focus the first enabled child
+            getWidget().focusFirstEnabledChild();
+        });
+    }
+
+    /**
+     * Updates the selected state of a radio button.
+     *
+     * @param radioButton
+     *            the radio button to update
+     * @param value
+     *            {@code true} if selected; {@code false} if not
+     */
+    protected void updateItemSelection(RadioButton radioButton, boolean value) {
+        radioButton.setValue(value);
+        radioButton.setStyleName(CLASSNAME_OPTION_SELECTED, value);
+
     }
 }

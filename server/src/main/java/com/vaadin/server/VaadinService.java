@@ -1635,7 +1635,7 @@ public abstract class VaadinService implements Serializable {
                 SystemMessages ci = getSystemMessages(ServletPortletHelper
                         .findLocale(null, vaadinSession, request), request);
                 try {
-                    writeStringResponse(response,
+                    writeUncachedStringResponse(response,
                             JsonConstants.JSON_CONTENT_TYPE,
                             createCriticalNotificationJSON(
                                     ci.getInternalErrorCaption(),
@@ -1667,21 +1667,44 @@ public abstract class VaadinService implements Serializable {
      *            The response reference
      * @param contentType
      *            The content type of the response
-     * @param reponseString
+     * @param responseString
      *            The actual response
      * @throws IOException
      *             If an error occurred while writing the response
      */
     public void writeStringResponse(VaadinResponse response, String contentType,
-            String reponseString) throws IOException {
+            String responseString) throws IOException {
 
         response.setContentType(contentType);
 
         final OutputStream out = response.getOutputStream();
         try (PrintWriter outWriter = new PrintWriter(
                 new BufferedWriter(new OutputStreamWriter(out, UTF_8)))) {
-            outWriter.print(reponseString);
+            outWriter.print(responseString);
         }
+    }
+
+    /**
+     * Writes the given string as a response with headers to prevent caching and
+     * using the given content type.
+     *
+     * @param response
+     *            The response reference
+     * @param contentType
+     *            The content type of the response
+     * @param responseString
+     *            The actual response
+     * @throws IOException
+     *             If an error occurred while writing the response
+     * @since 8.3.2
+     */
+    public void writeUncachedStringResponse(VaadinResponse response,
+            String contentType, String responseString) throws IOException {
+        // Response might contain sensitive information, so prevent all forms of
+        // caching
+        response.setNoCacheHeaders();
+
+        writeStringResponse(response, contentType, responseString);
     }
 
     /**
@@ -1802,7 +1825,7 @@ public abstract class VaadinService implements Serializable {
     public void criticalNotification(VaadinRequest request,
             VaadinResponse response, String caption, String message,
             String details, String url) throws IOException {
-        writeStringResponse(response, JsonConstants.JSON_CONTENT_TYPE,
+        writeUncachedStringResponse(response, JsonConstants.JSON_CONTENT_TYPE,
                 createCriticalNotificationJSON(caption, message, details, url));
     }
 

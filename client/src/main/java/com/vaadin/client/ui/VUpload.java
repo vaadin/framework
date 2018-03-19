@@ -222,6 +222,7 @@ public class VUpload extends SimplePanel {
              * file. A new target frame is created later."
              */
             cleanTargetFrame();
+            rebuildPanel();
             submitted = false;
         }
     }
