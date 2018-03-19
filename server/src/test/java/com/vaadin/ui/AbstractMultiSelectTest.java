@@ -405,26 +405,4 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
             }
         }
     }
-
-    public static class ItemWithId {
-        private int id;
-
-        public ItemWithId() {
-
-        }
-
-        public ItemWithId(int id) {
-            this.id = id;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-    }
-
 }
