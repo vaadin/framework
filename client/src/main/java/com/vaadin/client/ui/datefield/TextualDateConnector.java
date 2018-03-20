@@ -123,8 +123,8 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
         super.onStateChanged(stateChangeEvent);
 
         getWidget().setTextFieldEnabled(getState().textFieldEnabled);
-        getWidget().setRangeStart(nullSafeDateClone(getState().rangeStart));
-        getWidget().setRangeEnd(nullSafeDateClone(getState().rangeEnd));
+        getWidget().setRangeStart(getState().rangeStart);
+        getWidget().setRangeEnd(getState().rangeEnd);
 
         getWidget().calendar.setDateStyles(getState().dateStyles);
         getWidget().calendar
@@ -165,13 +165,6 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
                 getState().descriptionForAssistiveDevices);
 
         getWidget().setTextFieldTabIndex();
-    }
-
-    private Date nullSafeDateClone(Date date) {
-        if (date != null) {
-            return (Date) date.clone();
-        }
-        return null;
     }
 
     @Override
