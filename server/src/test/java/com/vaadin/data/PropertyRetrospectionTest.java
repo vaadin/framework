@@ -7,8 +7,9 @@ import com.vaadin.ui.TextField;
 
 import static org.junit.Assert.assertEquals;
 
-public class PropertyRetrospection {
+public class PropertyRetrospectionTest {
 
+    @SuppressWarnings("unused")
     public static class InnerBean {
         private String innerString;
 
@@ -21,6 +22,7 @@ public class PropertyRetrospection {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class BeanOne {
         private String someString;
         private InnerBean innerBean;
@@ -42,6 +44,7 @@ public class PropertyRetrospection {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class BeanTwo {
         private String someString;
         private InnerBean innerBean;

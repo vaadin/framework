@@ -55,10 +55,10 @@ public class BeanPropertySet<T> implements PropertySet<T> {
      * @see #readResolve()
      * @see BeanPropertyDefinition#writeReplace()
      */
-    private static class SerializedPropertySet implements Serializable {
-        private final InstanceKey instanceKey;
+    private static class SerializedPropertySet<T> implements Serializable {
+        private final InstanceKey<T> instanceKey;
 
-        private SerializedPropertySet(InstanceKey instanceKey) {
+        private SerializedPropertySet(InstanceKey<T> instanceKey) {
             this.instanceKey = instanceKey;
         }
 
@@ -298,7 +298,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
 
     }
 
-    private static final ConcurrentMap<InstanceKey, BeanPropertySet<?>> INSTANCES = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<InstanceKey<?>, BeanPropertySet<?>> INSTANCES = new ConcurrentHashMap<>();
 
     private final InstanceKey<T> instanceKey;
 

@@ -38,7 +38,9 @@ import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.server.ClassesSerializableTest;
 
 import static com.vaadin.data.PropertyFilterDefinition.getDefaultFilter;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertNotSame;
 
 public class BeanPropertySetTest {
     @Test
