@@ -169,15 +169,19 @@ public class GridComponentsTest extends MultiBrowserTest {
                 .$(TextFieldElement.class).first();
         headerTextField.sendKeys(Keys.SPACE);
 
-        assertFalse("Row 1 should not be selected", grid.getRow(1).isSelected());
-        assertTrue("Row 4 should still be selected", grid.getRow(4).isSelected());
-        
+        assertFalse("Row 1 should not be selected",
+                grid.getRow(1).isSelected());
+        assertTrue("Row 4 should still be selected",
+                grid.getRow(4).isSelected());
+
         TextFieldElement footerTextField = grid.getFooterCell(0, 0)
                 .$(TextFieldElement.class).first();
         footerTextField.sendKeys(Keys.SPACE);
 
-        assertFalse("Row 0 should not be selected", grid.getRow(0).isSelected());
-        assertTrue("Row 4 should still be selected", grid.getRow(4).isSelected());
+        assertFalse("Row 0 should not be selected",
+                grid.getRow(0).isSelected());
+        assertTrue("Row 4 should still be selected",
+                grid.getRow(4).isSelected());
 
     }
 
