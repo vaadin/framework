@@ -20,6 +20,8 @@ import java.util.Date;
 
 import com.vaadin.client.DateTimeService;
 
+import static com.vaadin.client.DateTimeService.asTwoDigits;
+
 public class CalendarEntry {
     private final String styleName;
     private Date start;
@@ -135,10 +137,6 @@ public class CalendarEntry {
             s += title;
         }
         return s;
-    }
-
-    private static String asTwoDigits(int i) {
-        return (i < 10 ? "0" : "") + i;
     }
 
 }
