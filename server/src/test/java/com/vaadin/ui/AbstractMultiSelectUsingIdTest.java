@@ -32,10 +32,6 @@ public class AbstractMultiSelectUsingIdTest {
 
     public TwinColSelect<ItemWithId> selectToTest;
 
-    private List<Set<String>> values;
-
-    private List<Set<String>> oldValues;
-
     public static class ItemWithId {
         private int id;
 
