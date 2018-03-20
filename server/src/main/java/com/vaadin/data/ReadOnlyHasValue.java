@@ -28,11 +28,9 @@ import java.util.Objects;
  * <p>
  * Example:
  * <pre>
- * {@code
  * Label label = new Label();
- * ReadOnlyHasValue<String> hasValue = new ReadOnlyHasValue<>(label::setCaption);
+ * ReadOnlyHasValue&lt;String&gt; hasValue = new ReadOnlyHasValue&lt;&gt;(label::setCaption);
  * binder.forField(hasValue).bind(SomeBean::getName);
- * }
  * </pre>
  *
  * @param <V> the value type
@@ -40,26 +38,39 @@ import java.util.Objects;
  */
 public class ReadOnlyHasValue<V> implements HasValue<V>, Serializable {
     private V value;
-    private final SerializableConsumer<V> setter;
+    private final SerializableConsumer<V> valueProcessor;
+    private final V emptyValue;
     private LinkedHashSet<ValueChangeListener<V>> listenerList;
 
     /**
      * Creates new {@code ReadOnlyHasValue}
      *
-     * @param setter the value setter, e.g. {@link Label#setValue}
+     * @param valueProcessor the value valueProcessor, e.g. {@link Label#setValue}
+     * @param emptyValue the value to be used as empty, {@code null} by default
      */
-    public ReadOnlyHasValue(SerializableConsumer<V> setter) {
-        this.setter = setter;
+    public ReadOnlyHasValue(SerializableConsumer<V> valueProcessor, V emptyValue) {
+        this.valueProcessor = valueProcessor;
+        this.emptyValue = emptyValue;
+    }
+
+    /**
+     * Creates new {@code ReadOnlyHasValue} with {@code null} as an empty value.
+     *
+     * @param valueProcessor the value valueProcessor, e.g. {@link Label#setValue}
+     */
+    public ReadOnlyHasValue(SerializableConsumer<V> valueProcessor) {
+        this(valueProcessor,null);
     }
 
     @Override
     public void setValue(V value) {
         V oldValue = this.value;
         this.value = value;
-        setter.accept(value);
+        valueProcessor.accept(value);
         if (listenerList != null && ! Objects.equals(oldValue, value)) {
             for (ValueChangeListener<V> valueChangeListener : listenerList) {
-                valueChangeListener.valueChange(new ValueChangeEvent<V>(null, this, oldValue, false));
+                valueChangeListener.valueChange(
+                        new ValueChangeEvent<>(null, this, oldValue, false));
             }
         }
     }
@@ -78,9 +89,7 @@ public class ReadOnlyHasValue<V> implements HasValue<V>, Serializable {
         }
         listenerList.add(listener);
 
-        return () -> {
-            listenerList.remove(listener);
-        };
+        return () -> listenerList.remove(listener);
     }
 
     @Override
@@ -101,5 +110,10 @@ public class ReadOnlyHasValue<V> implements HasValue<V>, Serializable {
     @Override
     public boolean isReadOnly() {
         return true;
+    }
+
+    @Override
+    public V getEmptyValue() {
+        return emptyValue;
     }
 }

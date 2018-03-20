@@ -99,7 +99,7 @@ For example, `Panel` caption can display a person full name:
 [source, java]
 ----
 Panel infoPanel = new Panel();
-ReadOnlyHasValue<Person> panelTitle = new ReadOnlyHasValue<String>(
+ReadOnlyHasValue<Person> panelTitle = new ReadOnlyHasValue<>(
         person -> infoPanel.setCaption(person.getLastName() + ", " + person.getFirstName()));
 binder.forField(panelTitle).bind(person -> person, null);
 ----
