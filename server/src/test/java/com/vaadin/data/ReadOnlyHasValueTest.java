@@ -10,8 +10,9 @@ import java.util.Objects;
 import static org.junit.Assert.*;
 
 public class ReadOnlyHasValueTest {
-    public static final String SAY_SOMETHING = "Say something";
+    private static final String SAY_SOMETHING = "Say something";
     private static final String SAY_SOMETHING_ELSE = "Say something else";
+    private static final String NO_VALUE = "-no-value-";
     private Label label;
     private ReadOnlyHasValue<String> hasValue;
 
@@ -76,6 +77,25 @@ public class ReadOnlyHasValueTest {
         assertEquals("", label.getValue());
         assertEquals(null, intHasValue.getValue());
 
+    }
+
+    @Test
+    public void testEmptyValue() {
+        Binder<Bean> beanBinder = new Binder<>(Bean.class);
+        Label label = new Label();
+        ReadOnlyHasValue<String> strHasValue =
+                new ReadOnlyHasValue<>(label::setValue, NO_VALUE);
+
+        beanBinder.forField(strHasValue)
+                .withConverter(Long::parseLong,(Long i)->"" + i)
+                .bind("v");
+
+        beanBinder.readBean(new Bean(42));
+        assertEquals("42", label.getValue());
+
+        beanBinder.readBean(null);
+        assertEquals(NO_VALUE, label.getValue());
+        assertTrue(strHasValue.isEmpty());
     }
 
     public static class Bean {
