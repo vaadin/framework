@@ -79,7 +79,7 @@ import com.vaadin.util.TimeZoneUtil;
 public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & Serializable & Comparable<? super T>, R extends Enum<R>>
         extends AbstractField<T> implements FocusNotifier, BlurNotifier {
 
-    public static final DateTimeFormatter RANGE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd[ HH:mm:ss]", Locale.ENGLISH);
+    private static final DateTimeFormatter RANGE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd[ HH:mm:ss]", Locale.ENGLISH);
     private AbstractDateFieldServerRpc rpc = new AbstractDateFieldServerRpc() {
 
         @Override
@@ -360,6 +360,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @return parsed value
      * @see AbstractDateFieldState#rangeStart
      * @see AbstractDateFieldState#rangeEnd
+     * @since
      */
     protected T convertFromDateString(String temporalStr) {
         if (temporalStr == null) {
@@ -369,9 +370,10 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     }
 
     /**
-     *
-     * @param temporalAccessor
-     * @return
+     * Converts a temporal value into field-specific data type.
+     * @param temporalAccessor - source value
+     * @return conversion result.
+     * @since
      */
     protected abstract T toType(TemporalAccessor temporalAccessor);
 
@@ -382,6 +384,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @return textual representation
      * @see AbstractDateFieldState#rangeStart
      * @see AbstractDateFieldState#rangeEnd
+     * @since
      */
     protected String convertToDateString(T temporal) {
         if (temporal == null) {
@@ -390,11 +393,17 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         return RANGE_FORMATTER.format(temporal);
     }
 
-    protected boolean afterDate(T t1, T t2) {
-        if (t1 == null || t2 == null) {
+    /**
+     * Checks if {@code value} is after {@code base} or not
+     * @param value temporal value
+     * @param base  temporal value to compare to
+     * @return {@code true} if {@code value} is after {@code base}, {@code false} otherwise
+     */
+    protected boolean afterDate(T value, T base) {
+        if (value == null || base == null) {
             return false;
         }
-        return t1.compareTo(t2) > 0;
+        return value.compareTo(base) > 0;
     }
 
     /**
