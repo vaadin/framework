@@ -21,7 +21,7 @@ import com.google.gwt.event.shared.EventHandler;
  * Event handler for a spacer visibility changed event.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.3.2
  */
 public interface SpacerVisibilityChangedHandler extends EventHandler {
 

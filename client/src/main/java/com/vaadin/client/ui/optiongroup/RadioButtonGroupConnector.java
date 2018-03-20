@@ -85,7 +85,6 @@ public class RadioButtonGroupConnector
     }
 
     @OnStateChange("readOnly")
-    @SuppressWarnings("deprecation")
     void updateWidgetReadOnly() {
         getWidget().setEnabled(isEnabled() && !isReadOnly());
     }

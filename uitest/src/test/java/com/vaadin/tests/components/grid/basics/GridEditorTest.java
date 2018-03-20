@@ -19,8 +19,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -61,6 +59,16 @@ public abstract class GridEditorTest extends GridBasicsTest {
 
         selectMenuPath("Component", "Editor", "Cancel edit");
         assertEditorClosed();
+    }
+
+    public void testEditorReopenAfterHide() {
+        editRow(5);
+        assertEditorOpen();
+        selectMenuPath("Component", "Editor", "Hide grid");
+        selectMenuPath("Component", "Editor", "Show grid");
+        assertEditorClosed();
+        editRow(5);
+        assertEditorOpen();
     }
 
     @Test

@@ -1220,7 +1220,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @return {@code true} if the column can be sorted by the user;
          *         {@code false} if not
          *
-         * @since
+         * @since 8.3.2
          */
         public boolean isSortableByUser() {
             return getState(false).sortable;
@@ -3058,8 +3058,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param rows
      *            The height in terms of number of rows displayed in Grid's
      *            body. If Grid doesn't contain enough rows, white space is
-     *            displayed instead. If <code>null</code> is given, then Grid's
-     *            height is undefined
+     *            displayed instead.
      * @throws IllegalArgumentException
      *             if {@code rows} is zero or less
      * @throws IllegalArgumentException
@@ -4753,4 +4752,19 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
     }
 
+    @Override
+    public void setVisible(boolean visible) {
+        if (getEditor().isOpen() && !visible) {
+            getEditor().cancel();
+        }
+        super.setVisible(visible);
+    }
+
+    @Override
+    public void detach() {
+        if (getEditor().isOpen()) {
+            getEditor().cancel();
+        }
+        super.detach();
+    }
 }

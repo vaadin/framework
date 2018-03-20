@@ -792,6 +792,8 @@ public class GridBasics extends AbstractTestUIWithLog {
 
         editorMenu.addItem("Save", i -> grid.getEditor().save());
         editorMenu.addItem("Cancel edit", i -> grid.getEditor().cancel());
+        editorMenu.addItem("Hide grid", i -> grid.setVisible(false));
+        editorMenu.addItem("Show grid", i -> grid.setVisible(true));
 
         Stream.of(0, 5, 100).forEach(i -> editorMenu.addItem("Edit row " + i,
                 menuItem -> grid.getEditor().editRow(i)));
