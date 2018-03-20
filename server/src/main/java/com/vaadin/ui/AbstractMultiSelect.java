@@ -324,11 +324,10 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
         // if there are duplicates, some item is both added & removed, just
         // discard that and leave things as was before
         DataProvider<T, ?> dataProvider = internalGetDataProvider();
-
         addedItems.removeIf(item -> {
             Object addedId = dataProvider.getId(item);
             return removedItems.stream().map(dataProvider::getId)
-                    .anyMatch(addedId::equals);
+                    .anyMatch(addedId::equals)? removedItems.remove(item):false;
         });
 
         if (isAllSelected(addedItems) && isNoneSelected(removedItems)) {
