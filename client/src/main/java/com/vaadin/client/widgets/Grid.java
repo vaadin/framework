@@ -26,13 +26,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -2327,8 +2328,15 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             EventTarget target = getNativeEvent().getEventTarget();
             Grid<?> grid = getGrid();
             if (Element.is(target) && grid != null) {
+                final RowContainer container = Stream
+                        .of(grid.escalator.getHeader(),
+                                grid.escalator.getBody(),
+                                grid.escalator.getFooter())
+                        .filter(c -> c.getCell(target.cast()) != null)
+                        .findFirst()
+                        .orElse(grid.cellFocusHandler.containerWithFocus);
+
                 Section section = Section.FOOTER;
-                final RowContainer container = grid.cellFocusHandler.containerWithFocus;
                 if (container == grid.escalator.getHeader()) {
                     section = Section.HEADER;
                 } else if (container == getGrid().escalator.getBody()) {
@@ -8564,7 +8572,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Adds a spacer visibility changed handler to the underlying escalator.
      *
      * @param handler
-     *         the handler to be called when a spacer's visibility changes
+     *            the handler to be called when a spacer's visibility changes
      * @return the registration object with which the handler can be removed
      * @since 8.3.2
      */
