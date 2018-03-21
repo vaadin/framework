@@ -10,18 +10,19 @@ import static org.junit.Assert.assertEquals;
 
 public class TwinColSelectAndIdBasedDataProviderTest extends MultiBrowserTest {
 
-    private TwinColSelectElement twinCS;
-
     @Before
     public void setUp() {
         openTestURL();
-        twinCS = $(TwinColSelectElement.class).first();
     }
 
     @Test
     public void TestSelection() {
-        assertEquals(twinCS.getValues().size(), 1);
+        assertEquals(getTwinColElement().getValues().size(), 1);
         $(ButtonElement.class).first().click();
-        assertEquals(twinCS.getValues().size(), 0);
+        assertEquals(getTwinColElement().getValues().size(), 0);
+    }
+
+    private TwinColSelectElement getTwinColElement() {
+        return $(TwinColSelectElement.class).first();
     }
 }
