@@ -7299,6 +7299,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *            the desired scroll destination
      * @param callback
      *            the callback command to execute when row is available
+     * @since
      */
     public void scrollToRow(int rowIndex, ScrollDestination destination,
             Runnable callback) {
@@ -7321,6 +7322,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *            the row to look for
      * @param whenRendered
      *            the callback command to execute when row is available
+     * @since
      */
     public void scrollToRow(int rowIndex, Runnable whenRendered) {
         scrollToRow(rowIndex, ScrollDestination.ANY, whenRendered);
