@@ -59,7 +59,6 @@ public class RichTextAreaElement extends AbstractFieldElement {
         if (isReadOnly()) {
             throw new ReadOnlyException();
         }
-        focus();
         JavascriptExecutor executor = (JavascriptExecutor) getDriver();
         executor.executeScript("var bodyE=arguments[0].contentDocument.body;\n"
                 + "bodyE.innerHTML=arguments[1]; \n"
