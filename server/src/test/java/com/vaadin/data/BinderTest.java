@@ -812,6 +812,25 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     }
 
     @Test
+    public void remove_binding_fromFieldValueChangeListener() {
+        // Add listener before bind to make sure it will be executed first.
+        nameField.addValueChangeListener(e -> {
+            if (e.getValue() == "REMOVE") {
+                binder.removeBinding(nameField);
+            }
+        });
+
+        binder.bind(nameField, Person::getFirstName, Person::setFirstName);
+
+        binder.setBean(item);
+
+        nameField.setValue("REMOVE");
+
+        // Removed binding should not update bean.
+        assertNotEquals("REMOVE", item.getFirstName());
+    }
+
+    @Test
     public void beanvalidation_two_fields_not_equal() {
         TextField lastNameField = new TextField();
         setBeanValidationFirstNameNotEqualsLastName(nameField, lastNameField);
@@ -1082,5 +1101,28 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binding.setReadOnly(true);
         assertTrue("Binding should be readonly", binding.isReadOnly());
         assertTrue("Name field should be readonly", nameField.isReadOnly());
+    }
+
+    @Test
+    public void conversionWithLocaleBasedErrorMessage() {
+        String fiError = "VIRHE";
+        String otherError = "ERROR";
+
+        binder.forField(ageField).withConverter(new StringToIntegerConverter(
+                context -> context.getLocale().map(Locale::getLanguage)
+                        .orElse("en").equals("fi") ? fiError : otherError))
+                .bind(Person::getAge, Person::setAge);
+
+        binder.setBean(item);
+
+        ageField.setValue("not a number");
+
+        assertEquals(otherError,
+                ageField.getErrorMessage().getFormattedHtmlMessage());
+        ageField.setLocale(new Locale("fi"));
+        // Re-validate to get the error message with correct locale
+        binder.validate();
+        assertEquals(fiError,
+                ageField.getErrorMessage().getFormattedHtmlMessage());
     }
 }

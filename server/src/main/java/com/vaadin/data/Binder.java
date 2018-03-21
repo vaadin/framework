@@ -1139,9 +1139,11 @@ public class Binder<BEAN> implements Serializable {
          */
         private void handleFieldValueChange(
                 ValueChangeEvent<FIELDVALUE> event) {
-            // Inform binder of changes; if setBean: writeIfValid
-            getBinder().handleFieldValueChange(this, event);
-            getBinder().fireValueChangeEvent(event);
+            if (binder != null) {
+                // Inform binder of changes; if setBean: writeIfValid
+                getBinder().handleFieldValueChange(this, event);
+                getBinder().fireValueChangeEvent(event);
+            }
         }
 
         /**
