@@ -1502,11 +1502,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             return value != null && value.equals(pendingUserInput);
         }
 
-        public void clearPending() {
-            pendingUserInput = null;
-            waitingForFilteringResponse = false;
-        }
-
         /*
          * This method navigates to the proper item in the combobox page. This
          * should be executed after setSuggestions() method which is called from

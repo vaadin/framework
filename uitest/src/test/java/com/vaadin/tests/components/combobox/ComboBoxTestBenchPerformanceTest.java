@@ -7,33 +7,34 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 import com.vaadin.testbench.elements.ComboBoxElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class ComboBoxTestBenchPerformanceTest extends MultiBrowserTest {
+public class ComboBoxTestBenchPerformanceTest extends SingleBrowserTest {
 
-    @Override
-    public void setup() throws Exception {
-        super.setup();
-
-        openTestURL();
-    }
+    /**
+     * TestBench timeout is 20s, require 15s to make sure cluster load won't
+     * affect the result badly.
+     */
+    private static final double TIME_LIMIT = 15000d;
 
     @Test
     public void testSelectionPerformance() throws Exception {
+        openTestURL();
+
         long before = System.currentTimeMillis();
         setComboBoxValue("abc123"); // new
         long after = System.currentTimeMillis();
-        assertThat((double) after - before, closeTo(0d, 6000d));
+        assertThat((double) after - before, closeTo(0d, TIME_LIMIT));
 
         before = System.currentTimeMillis();
         setComboBoxValue("11"); // existing (2nd page)
         after = System.currentTimeMillis();
-        assertThat((double) after - before, closeTo(0d, 6000d));
+        assertThat((double) after - before, closeTo(0d, TIME_LIMIT));
 
         before = System.currentTimeMillis();
         setComboBoxValue("abc123"); // previously added (3rd page)
         after = System.currentTimeMillis();
-        assertThat((double) after - before, closeTo(0d, 6000d));
+        assertThat((double) after - before, closeTo(0d, TIME_LIMIT));
     }
 
     public void setComboBoxValue(final String value) {
@@ -48,5 +49,4 @@ public class ComboBoxTestBenchPerformanceTest extends MultiBrowserTest {
             combobox.sendKeys(Keys.ENTER);
         }
     }
-
 }

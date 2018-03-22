@@ -133,7 +133,6 @@ public class ComboBoxConnector extends AbstractListingConnector
         if (isNewItemStillPending()
                 && pendingNewItemValue == getState().selectedItemCaption) {
             // no automated selection handling required
-            getDataReceivedHandler().clearPending();
             clearNewItemHandling();
         }
         getDataReceivedHandler().updateSelectionFromServer(
