@@ -18,6 +18,8 @@
 
 		<!-- Browser Factory for TestBench testing, use empty string for default -->
 		<browser.factory>com.vaadin.tests.tb3.XvfbHubBrowserFactory</browser.factory>
+		<!-- Parallel test count -->
+		<parallel.tests>12</parallel.tests>
 	</properties>
 
 	<url>https://vaadin.com/</url>
@@ -301,11 +303,11 @@
 						<!-- Static path for screenshots pointing to submodule -->
 						<com.vaadin.testbench.Parameters.screenshotReferenceDirectory>${project.basedir}/reference-screenshots</com.vaadin.testbench.Parameters.screenshotReferenceDirectory>
 						<com.vaadin.testbench.Parameters.screenshotErrorDirectory>${project.build.directory}/error-screenshots</com.vaadin.testbench.Parameters.screenshotErrorDirectory>
-						<com.vaadin.testbench.Parameters.testsInParallel>8</com.vaadin.testbench.Parameters.testsInParallel>
 
 						<!-- Optional properties for the test build -->
 						<vaadin.testbench.developer.license>${vaadin.testbench.developer.license}</vaadin.testbench.developer.license>
 						<com.vaadin.testbench.max.retries>${com.vaadin.testbench.max.retries}</com.vaadin.testbench.max.retries>
+						<com.vaadin.testbench.Parameters.testsInParallel>${parallel.tests}</com.vaadin.testbench.Parameters.testsInParallel>
 						<browser.factory>${browser.factory}</browser.factory>
 						<browsers.include>${browsers.include}</browsers.include>
 						<browsers.exclude>${browsers.exclude}</browsers.exclude>
