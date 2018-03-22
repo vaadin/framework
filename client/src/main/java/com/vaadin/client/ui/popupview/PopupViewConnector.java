@@ -135,7 +135,7 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
 
         } else {
             // The popup shouldn't be visible, try to hide it.
-            popup.hide();
+            popup.hide(false,false,false);
         }
     }
 

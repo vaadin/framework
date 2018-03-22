@@ -413,4 +413,18 @@ public class PopupView extends AbstractComponent implements HasComponents {
          */
         public void popupVisibilityChange(PopupVisibilityEvent event);
     }
+
+    @Override
+    public void detach() {
+        setPopupVisible(false);
+        super.detach();
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        if (!visible) {
+            setPopupVisible(false);
+        }
+        super.setVisible(visible);
+    }
 }
