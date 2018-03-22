@@ -11,24 +11,19 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class PopUpViewInTabsheetTest extends MultiBrowserTest {
 
-    private static final String FIRST_TAB = "//*[@id = 'tab0']";
-    private static final String SECOND_TAB = "//*[@id = 'tab1']";
-
-    WebElement view;
-
     @Before
     public void testPopupView() {
         openTestURL();
-        view = findElement(By.className("v-popupview"));
     }
 
     @Test
     public void testPopUpNotVisisble() {
+        WebElement view = findElement(By.className("v-popupview"));
         view.click();
         assertTrue(
                 findElement(By.className("v-popupview-popup")).isDisplayed());
-        findElement(By.xpath(SECOND_TAB)).click();
-        findElement(By.xpath(FIRST_TAB)).click();
+        findElement(By.id("tab1")).click();
+        findElement(By.id("tab0")).click();
         assertTrue(findElements(By.className("v-popupview-popup")).isEmpty());
     }
 }

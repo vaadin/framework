@@ -6,12 +6,6 @@ import com.vaadin.ui.*;
 
 public class PopUpViewInTabsheet extends AbstractTestUI {
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.tests.components.AbstractTestUI#setup(com.vaadin.server.
-     * VaadinRequest)
-     */
     @Override
     protected void setup(VaadinRequest request) {
         CssLayout layout = new CssLayout();
