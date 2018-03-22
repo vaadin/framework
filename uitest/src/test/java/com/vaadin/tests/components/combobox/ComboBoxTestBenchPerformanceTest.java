@@ -48,5 +48,8 @@ public class ComboBoxTestBenchPerformanceTest extends SingleBrowserTest {
             combobox.sendKeys(value);
             combobox.sendKeys(Keys.ENTER);
         }
+
+        // Make sure Vaadin is ready before leaving the method
+        testBench().waitForVaadin();
     }
 }
