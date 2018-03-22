@@ -541,13 +541,6 @@
                     <!-- Provide a dummy JS config file to avoid errors -->
                     <configJsFile>classpath:/eclipse/VaadinJavaConventions.xml</configJsFile>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>${project.groupId}</groupId>
-                        <artifactId>vaadin-buildhelpers</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -614,7 +607,6 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>buildhelpers</module>
                 <module>shared</module>
                 <module>push</module>
                 <module>server</module>
@@ -662,7 +654,6 @@
                 <vaadin.plugin.version>${project.version}</vaadin.plugin.version>
             </properties>
             <modules>
-                <module>buildhelpers</module>
                 <module>shared</module>
                 <module>push</module>
                 <module>server</module>
@@ -729,7 +720,6 @@
                 <vaadin.plugin.version>${project.version}</vaadin.plugin.version>
             </properties>
             <modules>
-                <module>buildhelpers</module>
                 <module>shared</module>
                 <module>push</module>
                 <module>server</module>
@@ -796,7 +786,6 @@
                 <vaadin.plugin.version>${project.version}</vaadin.plugin.version>
             </properties>
             <modules>
-                <module>buildhelpers</module>
                 <module>shared</module>
                 <module>push</module>
                 <module>server</module>
