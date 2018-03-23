@@ -64,12 +64,7 @@
         <vaadin.testbench.version>5.1.1</vaadin.testbench.version>
     </properties>
 
-    <!-- TODO: remove this after maven plugin has been released -->
     <pluginRepositories>
-        <pluginRepository>
-            <id>vaadin-prereleases</id>
-            <url>http://maven.vaadin.com/vaadin-prereleases</url>
-        </pluginRepository>
         <pluginRepository>
             <id>vaadin-snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
@@ -81,6 +76,19 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+
+    <repositories>
+        <repository>
+            <id>vaadin-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <organization>
         <name>Vaadin Ltd</name>
