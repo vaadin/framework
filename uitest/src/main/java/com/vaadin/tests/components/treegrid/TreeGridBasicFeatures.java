@@ -180,6 +180,11 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         createClickAction("Expand 2 | 1", "Server-side expand",
                 (treeGrid, value, data) -> treeGrid.expand(value),
                 new HierarchicalTestBean("/0/0/1/1", 2, 1));
+
+        createClickAction("Expand 0 | 0 recursively", "Server-side expand",
+                (treeGrid, value, data) -> treeGrid
+                        .expandRecursively(Arrays.asList(value), 1),
+                new HierarchicalTestBean(null, 0, 0));
     }
 
     @SuppressWarnings("unchecked")
@@ -194,6 +199,11 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         createClickAction("Collapse 2 | 1", "Server-side collapse",
                 (treeGrid, value, data) -> treeGrid.collapse(value),
                 new HierarchicalTestBean("/0/0/1/1", 2, 1));
+
+        createClickAction("Collapse 0 | 0 recursively", "Server-side collapse",
+                (treeGrid, value, data) -> treeGrid
+                        .collapseRecursively(Arrays.asList(value), 2),
+                new HierarchicalTestBean(null, 0, 0));
     }
 
     @SuppressWarnings("unchecked")

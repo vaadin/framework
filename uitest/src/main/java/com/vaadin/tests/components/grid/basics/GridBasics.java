@@ -169,6 +169,7 @@ public class GridBasics extends AbstractTestUIWithLog {
     private PersistingDetailsGenerator persistingDetails;
     private List<Column<DataObject, ?>> initialColumnOrder;
     private Registration selectionListenerRegistration;
+    private Registration columnResizeListenerRegistration;
 
     public GridBasics() {
         generators.put("NULL", null);
@@ -367,6 +368,20 @@ public class GridBasics extends AbstractTestUIWithLog {
                 item -> grid.setColumnResizeMode(item.isChecked()
                         ? ColumnResizeMode.SIMPLE : ColumnResizeMode.ANIMATED))
                 .setCheckable(true);
+
+        columnsMenu.addItem("Add resize listener", item -> {
+            if (item.isChecked()) {
+                columnResizeListenerRegistration = grid.addColumnResizeListener(
+                        event -> log(
+                                "Column resized: caption=" + event.getColumn()
+                                        .getCaption() + ", width=" + event
+                                        .getColumn().getWidth()));
+            } else {
+                if (columnResizeListenerRegistration != null) {
+                    columnResizeListenerRegistration.remove();
+                }
+            }
+        }).setCheckable(true);
     }
 
     private void createSizeMenu(MenuItem sizeMenu) {
@@ -777,6 +792,8 @@ public class GridBasics extends AbstractTestUIWithLog {
 
         editorMenu.addItem("Save", i -> grid.getEditor().save());
         editorMenu.addItem("Cancel edit", i -> grid.getEditor().cancel());
+        editorMenu.addItem("Hide grid", i -> grid.setVisible(false));
+        editorMenu.addItem("Show grid", i -> grid.setVisible(true));
 
         Stream.of(0, 5, 100).forEach(i -> editorMenu.addItem("Edit row " + i,
                 menuItem -> grid.getEditor().editRow(i)));

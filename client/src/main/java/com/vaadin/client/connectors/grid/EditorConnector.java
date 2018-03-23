@@ -66,12 +66,7 @@ public class EditorConnector extends AbstractExtensionConnector {
                 public void bind(final int rowIndex) {
                     // call this deferred to avoid issues with editing on init
                     Scheduler.get().scheduleDeferred(() -> {
-                        currentEditedRow = rowIndex;
-                        // might need to wait for available data,
-                        // if data is available, ensureAvailability will immediately trigger the handler anyway,
-                        // so no need for alternative "immediately available" logic
-                        waitingForAvailableData = true;
-                        getParent().getDataSource().ensureAvailability(rowIndex, 1);
+                        getParent().getWidget().editRow(rowIndex);
                     });
                 }
 
@@ -218,13 +213,6 @@ public class EditorConnector extends AbstractExtensionConnector {
     protected void extend(ServerConnector target) {
         Grid<JsonObject> grid = getParent().getWidget();
         grid.getEditor().setHandler(new CustomEditorHandler());
-        grid.addDataAvailableHandler((event) -> {
-            Range range = event.getAvailableRows();
-            if (waitingForAvailableData && currentEditedRow != null && range.contains(currentEditedRow)) {
-                getParent().getWidget().editRow(currentEditedRow);
-                waitingForAvailableData = false;
-            }
-        });
     }
 
     @Override

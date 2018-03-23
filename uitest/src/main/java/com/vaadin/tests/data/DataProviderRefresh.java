@@ -3,16 +3,17 @@ package com.vaadin.tests.data;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import com.vaadin.data.provider.AbstractDataProvider;
 import com.vaadin.data.provider.Query;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 
-public class DataProviderRefresh extends AbstractTestUI {
+public class DataProviderRefresh extends AbstractTestUIWithLog {
 
     public static class Bean implements Serializable {
 
@@ -96,9 +97,10 @@ public class DataProviderRefresh extends AbstractTestUI {
         }
     }
 
+    private Grid<Bean> grid = new Grid<>();
+
     @Override
     protected void setup(VaadinRequest request) {
-        Grid<Bean> grid = new Grid<>();
         List<Bean> arrayList = new ArrayList<>();
         Bean foo = new Bean("Foo", 10);
         arrayList.add(foo);
@@ -108,9 +110,19 @@ public class DataProviderRefresh extends AbstractTestUI {
         grid.setDataProvider(dataProvider);
         grid.addColumn(Object::toString).setCaption("toString");
         addComponent(grid);
-        addComponent(new Button("Replace item",
-                event -> dataProvider.refreshItem(new Bean("Bar", 10))));
+        addComponent(new Button("Replace item", event -> {
+            dataProvider.refreshItem(new Bean("Bar", 10));
+            logSelectedItem(grid.asSingleSelect().getValue());
+        }));
         addComponent(new Button("Select old", event -> grid.select(foo)));
+        grid.asSingleSelect().addValueChangeListener(e -> {
+            logSelectedItem(e.getValue());
+        });
     }
 
+    private void logSelectedItem(Bean bean) {
+        Optional.ofNullable(bean)
+                .map(b -> "Currently selected: " + b.toString())
+                .ifPresent(this::log);
+    }
 }

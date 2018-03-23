@@ -31,23 +31,39 @@ import com.vaadin.shared.annotations.NoLayout;
  */
 public class AbstractDateFieldState extends AbstractFieldState {
 
+    /**
+     * Navigation elements that have assistive label.
+     *
+     * @since
+     */
+    public enum AccessibleElement {
+        PREVIOUS_YEAR,
+        NEXT_YEAR,
+        PREVIOUS_MONTH,
+        NEXT_MONTH
+    }
+
     {
         primaryStyleName = "v-datefield";
     }
 
     /**
      * Start range that has been cleared, depending on the resolution of the
-     * date field.
+     * date field. The format is "2018-05-27" or "2018-05-27 14:38:39"
+     *
+     * @see com.vaadin.ui.AbstractDateField#RANGE_FORMATTER
      */
     @NoLayout
-    public Date rangeStart;
+    public String rangeStart;
 
     /**
-     * End range that has been cleared, depending on the resolution of the date
-     * field.
+     * End range that has been cleared, depending on the resolution of the
+     * date field. The format is "2018-05-27" or "2018-05-27 14:38:39"
+     *
+     * @see com.vaadin.ui.AbstractDateField#RANGE_FORMATTER
      */
     @NoLayout
-    public Date rangeEnd;
+    public String rangeEnd;
 
     /**
      * The JSON used to construct a TimeZone on the client side, can be
@@ -113,5 +129,20 @@ public class AbstractDateFieldState extends AbstractFieldState {
      * @since 8.3
      */
     public Map<String, String> dateStyles = new HashMap<String, String>();
+
+    /**
+     * Map of elements and their corresponding assistive labels.
+     *
+     * @since
+     */
+    public Map<AccessibleElement, String> assistiveLabels = new HashMap<>();
+
+    // Set default accessive labels
+    {
+        assistiveLabels.put(AccessibleElement.PREVIOUS_YEAR, "Previous year");
+        assistiveLabels.put(AccessibleElement.NEXT_YEAR, "Next year");
+        assistiveLabels.put(AccessibleElement.PREVIOUS_MONTH, "Previous month");
+        assistiveLabels.put(AccessibleElement.NEXT_MONTH, "Next month");
+    }
 
 }

@@ -612,24 +612,28 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     public void setReadonlyShouldIgnoreBindingsWithNullSetter() {
         binder.bind(nameField, Person::getFirstName, null);
         binder.forField(ageField)
-            .withConverter(new StringToIntegerConverter(""))
-            .bind(Person::getAge, Person::setAge);
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
 
         binder.setReadOnly(true);
-        assertTrue("Name field should be ignored but should be readonly", nameField.isReadOnly());
+        assertTrue("Name field should be ignored but should be readonly",
+                nameField.isReadOnly());
         assertTrue("Age field should be readonly", ageField.isReadOnly());
 
         binder.setReadOnly(false);
-        assertTrue("Name field should be ignored and should remain readonly", nameField.isReadOnly());
+        assertTrue("Name field should be ignored and should remain readonly",
+                nameField.isReadOnly());
         assertFalse("Age field should not be readonly", ageField.isReadOnly());
 
         nameField.setReadOnly(false);
         binder.setReadOnly(false);
-        assertFalse("Name field should be ignored and remain not readonly", nameField.isReadOnly());
+        assertFalse("Name field should be ignored and remain not readonly",
+                nameField.isReadOnly());
         assertFalse("Age field should not be readonly", ageField.isReadOnly());
 
         binder.setReadOnly(true);
-        assertFalse("Name field should be ignored and remain not readonly", nameField.isReadOnly());
+        assertFalse("Name field should be ignored and remain not readonly",
+                nameField.isReadOnly());
         assertTrue("Age field should be readonly", ageField.isReadOnly());
     }
 
@@ -805,6 +809,25 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.setBean(item);
         assertNotEquals("Binding was not removed",
                 String.valueOf(item.getAge()), ageField.getValue());
+    }
+
+    @Test
+    public void remove_binding_fromFieldValueChangeListener() {
+        // Add listener before bind to make sure it will be executed first.
+        nameField.addValueChangeListener(e -> {
+            if (e.getValue() == "REMOVE") {
+                binder.removeBinding(nameField);
+            }
+        });
+
+        binder.bind(nameField, Person::getFirstName, Person::setFirstName);
+
+        binder.setBean(item);
+
+        nameField.setValue("REMOVE");
+
+        // Removed binding should not update bean.
+        assertNotEquals("REMOVE", item.getFirstName());
     }
 
     @Test
@@ -1045,14 +1068,61 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.removeBinding(binding);
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void bindWithNullSetterSetReadWrite() {
+        Binding<Person, String> binding = binder.bind(nameField,
+                Person::getFirstName, null);
+        binding.setReadOnly(false);
+    }
+
     @Test
     public void bindWithNullSetterShouldMarkFieldAsReadonly() {
-        binder.bind(nameField, Person::getFirstName, null);
+        Binding<Person, String> nameBinding = binder.bind(nameField,
+                Person::getFirstName, null);
         binder.forField(ageField)
-            .withConverter(new StringToIntegerConverter(""))
-            .bind(Person::getAge, Person::setAge);
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
 
         assertTrue("Name field should be readonly", nameField.isReadOnly());
-        assertFalse("Name field should be readonly", ageField.isReadOnly());
+        assertFalse("Age field should not be readonly", ageField.isReadOnly());
+        assertTrue("Binding should be marked readonly",
+                nameBinding.isReadOnly());
+    }
+
+    @Test
+    public void setReadOnly_binding() {
+        Binding<Person, String> binding = binder.bind(nameField,
+                Person::getFirstName, Person::setFirstName);
+
+        assertFalse("Binding should not be readonly", binding.isReadOnly());
+        assertFalse("Name field should not be readonly",
+                nameField.isReadOnly());
+
+        binding.setReadOnly(true);
+        assertTrue("Binding should be readonly", binding.isReadOnly());
+        assertTrue("Name field should be readonly", nameField.isReadOnly());
+    }
+
+    @Test
+    public void conversionWithLocaleBasedErrorMessage() {
+        String fiError = "VIRHE";
+        String otherError = "ERROR";
+
+        binder.forField(ageField).withConverter(new StringToIntegerConverter(
+                context -> context.getLocale().map(Locale::getLanguage)
+                        .orElse("en").equals("fi") ? fiError : otherError))
+                .bind(Person::getAge, Person::setAge);
+
+        binder.setBean(item);
+
+        ageField.setValue("not a number");
+
+        assertEquals(otherError,
+                ageField.getErrorMessage().getFormattedHtmlMessage());
+        ageField.setLocale(new Locale("fi"));
+        // Re-validate to get the error message with correct locale
+        binder.validate();
+        assertEquals(fiError,
+                ageField.getErrorMessage().getFormattedHtmlMessage());
     }
 }

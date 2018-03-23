@@ -87,7 +87,7 @@ Optionally, if you are using Vaadin Designer or declarative files otherwise, the
 
 ==== The Migration Tool
 
-To ease the migration process, the vaadin maven plugin has a target `vaadin:upgrade8` which updates all
+To ease the migration process, the Vaadin maven plugin has a target `vaadin:upgrade8` which updates all
 imports in java files and prefixes in design files to point to the versions in the compatibility packages.
 This migration tool is available separately at link:https://github.com/vaadin/framework8-migration-tool[].
 
@@ -98,7 +98,7 @@ For example the compatibility `TextField` is available through the import `impor
 
 ==== Widgetset Changes
 
-When using compatibility packages in your project you need to changes references from the default vaadin client side widgetset `com.vaadin.DefaultWidgetSet` to the one containing the compatibility packages `com.vaadin.v7.Vaadin7WidgetSet`, which is available in the vaadin-compatibility-client-compiled maven dependency.
+When using compatibility packages in your project you need to changes references from the default Vaadin client side widgetset `com.vaadin.DefaultWidgetSet` to the one containing the compatibility packages `com.vaadin.v7.Vaadin7WidgetSet`, which is available in the vaadin-compatibility-client-compiled maven dependency.
 Typically, widgetset recompilation will handle this automatically for you, except for the following two cases which should be handled manually:
 
 * Your project defines a custom widgetset, in which case you need to make sure `Vaadin7WidgetSet` is inherited

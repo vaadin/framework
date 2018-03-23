@@ -64,6 +64,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.DeferredWorker;
+import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.SubPartAware;
@@ -87,6 +88,7 @@ import com.vaadin.client.widget.escalator.ScrollbarBundle.VerticalScrollbarBundl
 import com.vaadin.client.widget.escalator.Spacer;
 import com.vaadin.client.widget.escalator.SpacerUpdater;
 import com.vaadin.client.widget.escalator.events.RowHeightChangedEvent;
+import com.vaadin.client.widget.escalator.events.SpacerVisibilityChangedEvent;
 import com.vaadin.client.widget.grid.events.ScrollEvent;
 import com.vaadin.client.widget.grid.events.ScrollHandler;
 import com.vaadin.client.widgets.Escalator.JsniUtil.TouchHandlerBundle;
@@ -566,7 +568,6 @@ public class Escalator extends Widget
                     yMov.moveTouch(event);
                     xMov.validate(yMov);
                     yMov.validate(xMov);
-                    event.getNativeEvent().preventDefault();
                     moveScrollFromEvent(escalator, xMov.delta, yMov.delta,
                             event.getNativeEvent());
                 }
@@ -618,21 +619,36 @@ public class Escalator extends Widget
                 final double deltaX, final double deltaY,
                 final NativeEvent event) {
 
+            boolean scrollPosXChanged = false;
+            boolean scrollPosYChanged = false;
+
             if (!Double.isNaN(deltaX)) {
+                double oldScrollPosX = escalator.horizontalScrollbar
+                        .getScrollPos();
                 escalator.horizontalScrollbar.setScrollPosByDelta(deltaX);
+                if (oldScrollPosX != escalator.horizontalScrollbar
+                        .getScrollPos()) {
+                    scrollPosXChanged = true;
+                }
             }
 
             if (!Double.isNaN(deltaY)) {
+                double oldScrollPosY = escalator.verticalScrollbar
+                        .getScrollPos();
                 escalator.verticalScrollbar.setScrollPosByDelta(deltaY);
+                if (oldScrollPosY != escalator.verticalScrollbar
+                        .getScrollPos()) {
+                    scrollPosYChanged = true;
+                }
             }
 
             /*
-             * TODO: only prevent if not scrolled to end/bottom. Or no? UX team
-             * needs to decide.
+             * Only prevent if internal scrolling happened. If there's no more
+             * room to scroll internally, allow the event to pass further.
              */
-            final boolean warrantedYScroll = deltaY != 0
+            final boolean warrantedYScroll = deltaY != 0 && scrollPosYChanged
                     && escalator.verticalScrollbar.showsScrollHandle();
-            final boolean warrantedXScroll = deltaX != 0
+            final boolean warrantedXScroll = deltaX != 0 && scrollPosXChanged
                     && escalator.horizontalScrollbar.showsScrollHandle();
             if (warrantedYScroll || warrantedXScroll) {
                 event.preventDefault();
@@ -4962,11 +4978,15 @@ public class Escalator extends Widget
             public void show() {
                 getRootElement().getStyle().clearDisplay();
                 getDecoElement().getStyle().clearDisplay();
+                Escalator.this.fireEvent(
+                        new SpacerVisibilityChangedEvent(getRow(), true));
             }
 
             public void hide() {
                 getRootElement().getStyle().setDisplay(Display.NONE);
                 getDecoElement().getStyle().setDisplay(Display.NONE);
+                Escalator.this.fireEvent(
+                        new SpacerVisibilityChangedEvent(getRow(), false));
             }
 
             /**

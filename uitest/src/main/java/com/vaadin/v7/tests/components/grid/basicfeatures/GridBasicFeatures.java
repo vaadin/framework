@@ -30,6 +30,7 @@ import java.util.Random;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -138,7 +139,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
         @Override
         public String getDescription(RowReference row) {
-            return "Row tooltip for row " + row.getItemId();
+            return "<b>Row</b> tooltip\n for row " + row.getItemId();
         }
     };
 
@@ -147,7 +148,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         @Override
         public String getDescription(CellReference cell) {
             if ("Column 0".equals(cell.getPropertyId())) {
-                return "Cell tooltip for row " + cell.getItemId()
+                return "<b>Cell</b> tooltip\n for row " + cell.getItemId()
                         + ", column 0";
             } else {
                 return null;
@@ -668,22 +669,40 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 });
 
-        createBooleanAction("Row description generator", "State", false,
-                new Command<Grid, Boolean>() {
+        LinkedHashMap<String, ContentMode> contentModes = new LinkedHashMap<String, ContentMode>();
+        contentModes.put("None", null);
+        // Abusing an unused value for this special case
+        contentModes.put("Plain text", ContentMode.TEXT);
+        contentModes.put("Preformatted(Default)", ContentMode.PREFORMATTED);
+        contentModes.put("HTML", ContentMode.HTML);
 
+        createSelectAction("Row description generator", "State", contentModes,
+                "None", new Command<Grid, ContentMode>() {
                     @Override
-                    public void execute(Grid c, Boolean value, Object data) {
-                        c.setRowDescriptionGenerator(
-                                value ? rowDescriptionGenerator : null);
+                    public void execute(Grid grid, ContentMode mode, Object data) {
+                        if (mode == null) {
+                            grid.setRowDescriptionGenerator(null);
+                        } else if (mode == ContentMode.PREFORMATTED) {
+                            grid.setRowDescriptionGenerator(rowDescriptionGenerator);
+                        } else {
+                            grid.setRowDescriptionGenerator(
+                                    rowDescriptionGenerator, mode);
+                        }
                     }
                 });
 
-        createBooleanAction("Cell description generator", "State", false,
-                new Command<Grid, Boolean>() {
+        createSelectAction("Cell description generator", "State",
+                contentModes, "None", new Command<Grid, ContentMode>() {
                     @Override
-                    public void execute(Grid c, Boolean value, Object data) {
-                        c.setCellDescriptionGenerator(
-                                value ? cellDescriptionGenerator : null);
+                    public void execute(Grid grid, ContentMode mode, Object data) {
+                        if (mode == null) {
+                            grid.setCellDescriptionGenerator(null);
+                        } else if (mode == ContentMode.PREFORMATTED) {
+                            grid.setCellDescriptionGenerator(cellDescriptionGenerator);
+                        } else {
+                            grid.setCellDescriptionGenerator(
+                                    cellDescriptionGenerator, mode);
+                        }
                     }
                 });
 

@@ -510,6 +510,19 @@ public class BrowserInfo {
     }
 
     /**
+     * Gets the complete browser version in form of a string. The version is
+     * given by the browser through the user agent string and usually consists
+     * of dot-separated numbers. Note that the string may contain characters
+     * other than dots and digits.
+     *
+     * @return the complete browser version or {@code null} if unknown
+     * @since
+     */
+    public String getBrowserVersion() {
+        return browserDetails.getBrowserVersion();
+    }
+
+    /**
      * Checks if the browser version is newer or equal to the given major+minor
      * version.
      *

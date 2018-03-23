@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -584,6 +585,10 @@ public class TabSheet extends AbstractComponentContainer
      */
     private void setSelected(Component component) {
         Tab tab = tabs.get(selected);
+        if (tab != null && !Objects.equals(tab.getComponent(), component) && tab.getComponent() != null && tab.getComponent().isAttached()) {
+            tab.getComponent().detach();
+            tab.getComponent().attach(); // ugly hack
+        }
 
         selected = component;
         // Repaint of the selected component is needed as only the selected

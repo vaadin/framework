@@ -19,6 +19,7 @@ package com.vaadin.data.converter;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import com.vaadin.data.ErrorMessageProvider;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
 
@@ -62,6 +63,36 @@ public class StringToIntegerConverter
     }
 
     /**
+     * Creates a new converter instance with the given error message provider.
+     * Empty strings are converted to <code>null</code>.
+     *
+     * @param errorMessageProvider
+     *            the error message provider to use if conversion fails
+     *
+     * @since
+     */
+    public StringToIntegerConverter(ErrorMessageProvider errorMessageProvider) {
+        this(null, errorMessageProvider);
+    }
+
+    /**
+     * Creates a new converter instance with the given empty string value and
+     * error message provider.
+     *
+     * @param emptyValue
+     *            the presentation value to return when converting an empty
+     *            string, may be <code>null</code>
+     * @param errorMessageProvider
+     *            the error message provider to use if conversion fails
+     *
+     * @since
+     */
+    public StringToIntegerConverter(Integer emptyValue,
+            ErrorMessageProvider errorMessageProvider) {
+        super(emptyValue, errorMessageProvider);
+    }
+
+    /**
      * Returns the format used by
      * {@link #convertToPresentation(Object, ValueContext)} and
      * {@link #convertToModel(String, ValueContext)}.
@@ -80,8 +111,7 @@ public class StringToIntegerConverter
 
     @Override
     public Result<Integer> convertToModel(String value, ValueContext context) {
-        Result<Number> n = convertToNumber(value,
-                context.getLocale().orElse(null));
+        Result<Number> n = convertToNumber(value, context);
         return n.flatMap(number -> {
             if (number == null) {
                 return Result.ok(null);
@@ -94,7 +124,7 @@ public class StringToIntegerConverter
                 // long and thus does not need to consider wrap-around.
                 return Result.ok(intValue);
             }
-            return Result.error(getErrorMessage());
+            return Result.error(getErrorMessage(context));
         });
     }
 

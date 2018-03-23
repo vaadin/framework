@@ -38,14 +38,8 @@ public class VDateFieldCalendar
         super(GWT.create(VDateCalendarPanel.class), YEAR);
     }
 
-    /**
-     * TODO refactor: almost same method as in VPopupCalendar.updateValue
-     * <p>
-     * For internal use only. May be removed or replaced in the future.
-     */
     @Override
-    @SuppressWarnings("deprecation")
-    public void updateValueFromPanel() {
+    public void updateBufferedValues() {
         // If field is invisible at the beginning, client can still be null when
         // this function is called.
         if (getClient() == null) {
@@ -67,6 +61,18 @@ public class VDateFieldCalendar
                     bufferedResolutions.put(DAY, date2.getDate());
                 }
             }
+        }
+    }
+
+    /**
+     * TODO refactor: almost same method as in VPopupCalendar.updateValue
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
+     */
+    @Override
+    public void updateValueFromPanel() {
+        updateBufferedValues();
+        if (bufferedResolutions != null) {
             sendBufferedValues();
         }
     }

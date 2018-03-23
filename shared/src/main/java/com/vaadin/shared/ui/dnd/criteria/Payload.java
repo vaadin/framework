@@ -76,6 +76,16 @@ public class Payload implements Serializable {
     }
 
     /**
+     * Sets the key of this payload.
+     *
+     * @param key
+     *         key that identifies the payload
+     */
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    /**
      * Gets the value of this payload.
      *
      * @return value of this payload
@@ -85,12 +95,32 @@ public class Payload implements Serializable {
     }
 
     /**
+     * Sets the value of this payload.
+     *
+     * @param value
+     *         value of the payload
+     */
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    /**
      * Gets the value type of this payload.
      *
      * @return the type of the value of this payload
      */
     public ValueType getValueType() {
         return valueType;
+    }
+
+    /**
+     * Sets the value type of this payload.
+     *
+     * @param valueType
+     *         type of the payload value
+     */
+    public void setValueType(ValueType valueType) {
+        this.valueType = valueType;
     }
 
     /**

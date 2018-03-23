@@ -198,7 +198,7 @@ access to [classname]#MultiSelectionEvent#, which allows to easily access differ
 [source, java]
 ----
 // Grid in multi-selection mode
-Grid<Person> grid = Grid<>()
+Grid<Person> grid = new Grid<>()
 grid.setItems(people);
 MultiSelectionModel<Person> selectionModel
       = (MultiSelectionModel<Person>) grid.setSelectionMode(SelectionMode.MULTI);
