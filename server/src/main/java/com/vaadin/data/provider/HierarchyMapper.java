@@ -401,10 +401,9 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
         if (referenceItem != null) {
             // Fetch items before the reference
-            items.addAll(fetchItemsBefore(referenceItem,
+            fetchItemsBefore(referenceItem,
                     referenceItemIndex - range.getStart()).stream()
-                            .limit(range.length())
-                            .collect(Collectors.toList()));
+                            .limit(range.length()).forEach(items::add);
 
             // Add the reference item to the list
             if (range.contains(referenceItemIndex)) {
@@ -412,12 +411,12 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
             }
 
             // Fetch items after the reference
-            items.addAll(fetchItemsAfter(referenceItem,
+            fetchItemsAfter(referenceItem,
                     range.getEnd() - referenceItemIndex - 1)
                             .stream()
                             .skip(Math.max(0,
                                     range.getStart() - referenceItemIndex - 1))
-                            .collect(Collectors.toList()));
+                            .forEach(items::add);
         } else {
             // When there is no reference, fetch items starting from the root
             items.addAll(fetchItemsAfter(null, range.getEnd()).stream()
