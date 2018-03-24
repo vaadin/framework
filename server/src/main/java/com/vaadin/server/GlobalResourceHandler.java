@@ -16,7 +16,10 @@
 
 package com.vaadin.server;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -25,8 +28,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.LegacyComponent;
@@ -96,7 +97,7 @@ public class GlobalResourceHandler implements RequestHandler {
             oldInstances = CurrentInstance.setCurrent(ui);
             ConnectorResource resource;
             if (LEGACY_TYPE.equals(type)) {
-                resource = legacyResources.get(key);
+                resource = legacyResources.get(urlEncodedKey(key));
             } else {
                 return error(request, response, "Unknown global resource type "
                         + type + " in requested path " + pathInfo);
@@ -123,6 +124,15 @@ public class GlobalResourceHandler implements RequestHandler {
         return true;
     }
 
+
+    private String urlEncodedKey(String key) {
+        try {
+            return new URI(null, null, key, null).getRawPath();
+        } catch (URISyntaxException e) {
+            return key;
+        }
+    }
+
     /**
      * Registers a resource to be served with a global URL.
      * <p>
@@ -147,7 +157,7 @@ public class GlobalResourceHandler implements RequestHandler {
                         + Integer.toString(nextLegacyId++);
                 String filename = connectorResource.getFilename();
                 if (filename != null && !filename.isEmpty()) {
-                    uri += '/' + filename;
+                    uri += '/' + ResourceReference.encodeFileName(filename);
                 }
                 legacyResourceKeys.put(connectorResource, uri);
                 legacyResources.put(uri, connectorResource);
