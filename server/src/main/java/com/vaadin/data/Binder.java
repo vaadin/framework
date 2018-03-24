@@ -982,8 +982,8 @@ public class Binder<BEAN> implements Serializable {
 
         private boolean readOnly;
 
-        // Not final since we temporarily remove listener while changing values
-        private Registration onValueChange;
+        private final Registration onValueChange;
+        private boolean valueInit = false;
 
         /**
          * Contains all converters and validators chained together in the
@@ -1056,7 +1056,6 @@ public class Binder<BEAN> implements Serializable {
         public void unbind() {
             if (onValueChange != null) {
                 onValueChange.remove();
-                onValueChange = null;
             }
             binder.removeBindingInternal(this);
             binder = null;
@@ -1116,12 +1115,11 @@ public class Binder<BEAN> implements Serializable {
         private void initFieldValue(BEAN bean) {
             assert bean != null;
             assert onValueChange != null;
-            onValueChange.remove();
+            valueInit = true;
             try {
                 getField().setValue(convertDataToFieldType(bean));
             } finally {
-                onValueChange = getField()
-                        .addValueChangeListener(this::handleFieldValueChange);
+                valueInit = false;
             }
         }
 
@@ -1139,6 +1137,11 @@ public class Binder<BEAN> implements Serializable {
          */
         private void handleFieldValueChange(
                 ValueChangeEvent<FIELDVALUE> event) {
+            // Don't handle change events when setting initial value
+            if (valueInit) {
+                return;
+            }
+
             if (binder != null) {
                 // Inform binder of changes; if setBean: writeIfValid
                 getBinder().handleFieldValueChange(this, event);
@@ -1180,8 +1183,7 @@ public class Binder<BEAN> implements Serializable {
 
         @Override
         public void read(BEAN bean) {
-            field.setValue(converterValidatorChain.convertToPresentation(
-                    getter.apply(bean), createValueContext()));
+            getField().setValue(convertDataToFieldType(bean));
         }
 
         @Override

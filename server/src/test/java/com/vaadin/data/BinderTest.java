@@ -11,6 +11,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -1124,5 +1125,29 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.validate();
         assertEquals(fiError,
                 ageField.getErrorMessage().getFormattedHtmlMessage());
+    }
+
+    @Test
+    public void valueChangeListenerOrder() {
+        AtomicBoolean beanSet = new AtomicBoolean();
+        nameField.addValueChangeListener(e -> {
+            if (!beanSet.get()) {
+                assertEquals("Value in bean updated earlier than expected",
+                        e.getOldValue(), item.getFirstName());
+            }
+        });
+        binder.bind(nameField, Person::getFirstName, Person::setFirstName);
+        nameField.addValueChangeListener(e -> {
+            if (!beanSet.get()) {
+                assertEquals("Value in bean not updated when expected",
+                        e.getValue(), item.getFirstName());
+            }
+        });
+
+        beanSet.set(true);
+        binder.setBean(item);
+        beanSet.set(false);
+
+        nameField.setValue("Foo");
     }
 }
