@@ -741,6 +741,7 @@ public class Binder<BEAN> implements Serializable {
          * @param customRequiredValidator
          *            validator responsible for the required check
          * @return this binding, for chaining
+         * @since
          */
         public BindingBuilder<BEAN, TARGET> asRequired(
                 Validator<TARGET> customRequiredValidator);
