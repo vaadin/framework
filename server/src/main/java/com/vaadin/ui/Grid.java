@@ -399,7 +399,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         public MouseEventDetails getMouseEventDetails() {
             return mouseEventDetails;
         }
-        
+
         /**
          * Returns the clicked rowIndex.
          *
