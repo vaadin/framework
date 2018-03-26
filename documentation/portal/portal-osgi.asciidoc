@@ -84,13 +84,13 @@ The latest client binary can be downloaded from the link: link:https://releases.
 Here is an example script for doing that:
 [source, shell]
 ----
-java -jar blade.jar sh start https://repo1.maven.org/maven2/org/jsoup/jsoup/1.8.3/jsoup-1.8.3.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/org/jsoup/jsoup/1.11.0/jsoup-1.11.0.jar
 java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/external/gentyref/1.2.0.vaadin1/gentyref-1.2.0.vaadin1.jar
-java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-shared/8.1.0/vaadin-shared-8.1.0.jar
-java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-server/8.1.0/vaadin-server-8.1.0.jar
-java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-osgi-integration/8.1.0/vaadin-osgi-integration-8.1.0.jar
-java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-client-compiled/8.1.0/vaadin-client-compiled-8.1.0.jar
-java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-themes/8.1.0/vaadin-themes-8.1.0.jar
-java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-liferay-integration/8.1.0/vaadin-liferay-integration-8.1.0.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-shared/8.3.2/vaadin-shared-8.3.2.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-server/8.3.2/vaadin-server-8.3.2.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-osgi-integration/8.3.2/vaadin-osgi-integration-8.3.2.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-client-compiled/8.3.2/vaadin-client-compiled-8.3.2.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-themes/8.3.2/vaadin-themes-8.3.2.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-liferay-integration/8.3.2/vaadin-liferay-integration-8.3.2.jar
 java -jar blade.jar sh start file:<path_to_liferay_portlet.jar>
 ----
