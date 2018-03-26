@@ -22,6 +22,6 @@ public class GridEventListenersTest extends GridBasicsTest {
 		GridElement grid = getGridElement();
 		grid.getCell(row, 2).click();
 		String logRow = getLogRow(0);
-		Assert.assertTrue("Log row did not contain index " + row, logRow.endsWith("Index " + row));
+		Assert.assertTrue("Log row '" + logRow + "' did not contain index " + row, logRow.endsWith("Index " + row));
 	}
 }
