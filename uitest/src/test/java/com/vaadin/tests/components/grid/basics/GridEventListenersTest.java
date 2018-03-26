@@ -10,6 +10,7 @@ public class GridEventListenersTest extends GridBasicsTest {
 	@Test
 	public void testItemClickListener() {
 		selectMenuPath("Component", "State", "Item click listener");
+		selectMenuPath("Compenent", "State", "Selection model", "none");
 		checkItemClickOnRow(0);
 		checkItemClickOnRow(2);
 		GridElement grid = getGridElement();
