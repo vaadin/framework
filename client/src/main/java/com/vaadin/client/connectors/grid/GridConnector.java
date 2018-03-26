@@ -108,9 +108,10 @@ public class GridConnector extends AbstractListingConnector
                 NativeEvent mouseEvent) {
             String rowKey = getRowKey((JsonObject) cell.getRow());
             String columnId = columnToIdMap.get(cell.getColumn());
+            int rowIndex = cell.getRowIndex();
             getRpcProxy(GridServerRpc.class).itemClick(rowKey, columnId,
                     MouseEventDetailsBuilder
-                            .buildMouseEventDetails(mouseEvent));
+                            .buildMouseEventDetails(mouseEvent),rowIndex);
         }
     }
 

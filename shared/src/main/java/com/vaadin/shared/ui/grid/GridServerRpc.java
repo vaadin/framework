@@ -44,7 +44,7 @@ public interface GridServerRpc extends ServerRpc {
      *            mouse event details
      */
     void itemClick(String rowKey, String columnInternalId,
-            MouseEventDetails details);
+            MouseEventDetails details, int rowIndex);
 
     /**
      * Informs the server that a context click has happened inside of Grid.
