@@ -233,14 +233,14 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
         editor.clear();
         // Click to ensure IE focus...
         editor.click(5, 5);
-        editor.sendKeys("Foo", Keys.ENTER);
+        editor.sendKeys("Foo Bar", Keys.ENTER);
 
         assertEquals("Editor did not move.", "(6, 0)",
                 getGridElement().getEditor().getField(0).getAttribute("value"));
         assertEquals("Editor field value did not update from server.", "6",
                 getGridElement().getEditor().getField(3).getAttribute("value"));
 
-        assertEquals("Edited value was not saved.", "Foo",
+        assertEquals("Edited value was not saved.", "Foo Bar",
                 getGridElement().getCell(5, 0).getText());
     }
 }

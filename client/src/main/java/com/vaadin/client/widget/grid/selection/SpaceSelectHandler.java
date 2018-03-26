@@ -40,7 +40,8 @@ public class SpaceSelectHandler<T> {
 
         @Override
         public void onKeyDown(GridKeyDownEvent event) {
-            if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE || spaceDown) {
+            if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE || spaceDown
+                    || grid.isEditorActive()) {
                 return;
             }
 
