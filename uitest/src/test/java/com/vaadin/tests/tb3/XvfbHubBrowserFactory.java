@@ -16,9 +16,7 @@ public class XvfbHubBrowserFactory extends DefaultBrowserFactory {
             return create(browser, "", Platform.ANY);
         case FIREFOX:
         default:
-            DesiredCapabilities dc = create(Browser.FIREFOX, "", Platform.ANY);
-            dc.setCapability("marionette", "false");
-            return dc;
+            return create(Browser.FIREFOX, "", Platform.ANY);
         }
     }
 }
