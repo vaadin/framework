@@ -2518,6 +2518,17 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
+     * Returns the property set used by this grid.
+     *
+     * @return propertySet
+     *             the property set to return
+     * @since
+     */
+    protected PropertySet<T> getPropertySet() {
+        return propertySet;
+    }
+
+    /**
      * Creates a grid using a custom {@link PropertySet} implementation for
      * creating a default set of columns and for resolving property names with
      * {@link #addColumn(String)} and
