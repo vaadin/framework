@@ -65,7 +65,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      * @param errorMessageProvider
      *            the error message provider to use if conversion fails
      *
-     * @since
+     * @since 8.4
      */
     public StringToBooleanConverter(ErrorMessageProvider errorMessageProvider) {
         this(Boolean.TRUE.toString(), Boolean.FALSE.toString(),
@@ -97,7 +97,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      * @param errorMessageProvider
      *            the error message provider to use if conversion fails
      *
-     * @since
+     * @since 8.4
      */
     public StringToBooleanConverter(String trueString, String falseString,
             ErrorMessageProvider errorMessageProvider) {

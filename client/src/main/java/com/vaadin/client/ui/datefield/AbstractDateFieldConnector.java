@@ -151,7 +151,7 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
      *
      * @param calendar
      *         the calendar panel for which to set the assistive labels
-     * @since
+     * @since 8.4
      */
     protected void setAndUpdateAssistiveLabels(
             VAbstractCalendarPanel calendar) {

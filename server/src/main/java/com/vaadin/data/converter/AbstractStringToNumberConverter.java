@@ -53,7 +53,7 @@ public abstract class AbstractStringToNumberConverter<T extends Number>
      * @param errorMessageProvider
      *            the error message provider to use if conversion fails
      *
-     * @since
+     * @since 8.4
      */
     protected AbstractStringToNumberConverter(T emptyValue,
             ErrorMessageProvider errorMessageProvider) {

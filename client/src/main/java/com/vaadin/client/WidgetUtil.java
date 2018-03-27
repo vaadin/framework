@@ -56,7 +56,7 @@ public class WidgetUtil {
      * 
      * @param <T>
      *            the object type to store
-     * @since
+     * @since 8.4
      */
     public static class Reference<T> {
 

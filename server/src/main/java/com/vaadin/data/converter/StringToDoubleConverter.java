@@ -72,7 +72,7 @@ public class StringToDoubleConverter
      * @param errorMessageProvider
      *            the error message provider to use if conversion fails
      *
-     * @since
+     * @since 8.4
      */
     public StringToDoubleConverter(ErrorMessageProvider errorMessageProvider) {
         this(null, errorMessageProvider);
@@ -88,7 +88,7 @@ public class StringToDoubleConverter
      * @param errorMessageProvider
      *            the error message provider to use if conversion fails
      *
-     * @since
+     * @since 8.4
      */
     public StringToDoubleConverter(Double emptyValue,
             ErrorMessageProvider errorMessageProvider) {

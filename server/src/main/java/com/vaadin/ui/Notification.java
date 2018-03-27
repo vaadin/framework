@@ -398,7 +398,7 @@ public class Notification extends AbstractExtension {
      * <p>
      * If the notification is not shown, does nothing.
      *
-     * @since
+     * @since 8.4
      */
     public void close() {
         close(false);
@@ -413,7 +413,7 @@ public class Notification extends AbstractExtension {
      *            <code>true</code> if the notification was closed because the
      *            user clicked on it, <code>false</code> if the notification was
      *            closed from the server
-     * @since
+     * @since 8.4
      */
     protected void close(boolean userOriginated) {
         if (!isAttached()) {

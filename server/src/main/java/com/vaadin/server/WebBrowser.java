@@ -253,7 +253,7 @@ public class WebBrowser implements Serializable {
      * than dots and digits.
      *
      * @return the complete browser version or {@code null} if unknown
-     * @since
+     * @since 8.4
      */
     public String getBrowserVersion() {
         return browserDetails != null ? browserDetails.getBrowserVersion()

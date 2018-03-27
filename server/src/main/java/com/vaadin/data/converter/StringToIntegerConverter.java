@@ -69,7 +69,7 @@ public class StringToIntegerConverter
      * @param errorMessageProvider
      *            the error message provider to use if conversion fails
      *
-     * @since
+     * @since 8.4
      */
     public StringToIntegerConverter(ErrorMessageProvider errorMessageProvider) {
         this(null, errorMessageProvider);
@@ -85,7 +85,7 @@ public class StringToIntegerConverter
      * @param errorMessageProvider
      *            the error message provider to use if conversion fails
      *
-     * @since
+     * @since 8.4
      */
     public StringToIntegerConverter(Integer emptyValue,
             ErrorMessageProvider errorMessageProvider) {

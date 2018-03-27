@@ -404,6 +404,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * Returns the clicked rowIndex.
          *
          * @return the clicked rowIndex
+         * @since 8.4
          */
         public int getRowIndex() {
             return rowIndex;
@@ -639,7 +640,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 MouseEventDetails details, int rowIndex) {
             Column<T, ?> column = getColumnByInternalId(columnInternalId);
             T item = getDataCommunicator().getKeyMapper().get(rowKey);
-            fireEvent(new ItemClick<>(Grid.this, column, item, details, rowIndex));
+            fireEvent(new ItemClick<>(Grid.this, column, item, details,
+                    rowIndex));
         }
 
         @Override
@@ -2531,9 +2533,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Returns the property set used by this grid.
      *
-     * @return propertySet
-     *             the property set to return
-     * @since
+     * @return propertySet the property set to return
+     * @since 8.4
      */
     protected PropertySet<T> getPropertySet() {
         return propertySet;

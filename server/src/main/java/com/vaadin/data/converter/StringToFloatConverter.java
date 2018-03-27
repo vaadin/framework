@@ -70,7 +70,7 @@ public class StringToFloatConverter
      * @param errorMessageProvider
      *            the error message provider to use if conversion fails
      *
-     * @since
+     * @since 8.4
      */
     public StringToFloatConverter(ErrorMessageProvider errorMessageProvider) {
         this(null, errorMessageProvider);
@@ -86,7 +86,7 @@ public class StringToFloatConverter
      * @param errorMessageProvider
      *            the error message provider to use if conversion fails
      *
-     * @since
+     * @since 8.4
      */
     public StringToFloatConverter(Float emptyValue,
             ErrorMessageProvider errorMessageProvider) {

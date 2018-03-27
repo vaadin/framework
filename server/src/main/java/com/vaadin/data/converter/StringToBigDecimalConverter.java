@@ -74,7 +74,7 @@ public class StringToBigDecimalConverter
      * @param errorMessageProvider
      *            the error message provider to use if conversion fails
      *
-     * @since
+     * @since 8.4
      */
     public StringToBigDecimalConverter(
             ErrorMessageProvider errorMessageProvider) {
@@ -91,7 +91,7 @@ public class StringToBigDecimalConverter
      * @param errorMessageProvider
      *            the error message provider to use if conversion fails
      *
-     * @since
+     * @since 8.4
      */
     public StringToBigDecimalConverter(BigDecimal emptyValue,
             ErrorMessageProvider errorMessageProvider) {
