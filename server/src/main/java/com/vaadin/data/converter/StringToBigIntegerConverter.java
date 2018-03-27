@@ -75,7 +75,7 @@ public class StringToBigIntegerConverter
      * @param errorMessageProvider
      *            the error message provider to use if conversion fails
      *
-     * @since
+     * @since 8.4
      */
     public StringToBigIntegerConverter(
             ErrorMessageProvider errorMessageProvider) {
@@ -92,7 +92,7 @@ public class StringToBigIntegerConverter
      * @param errorMessageProvider
      *            the error message provider to use if conversion fails
      *
-     * @since
+     * @since 8.4
      */
     public StringToBigIntegerConverter(BigInteger emptyValue,
             ErrorMessageProvider errorMessageProvider) {

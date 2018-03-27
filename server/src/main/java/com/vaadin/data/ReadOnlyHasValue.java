@@ -24,17 +24,21 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 
 /**
- * Generic {@link HasValue} to use any type of component with Vaadin data binding.
+ * Generic {@link HasValue} to use any type of component with Vaadin data
+ * binding.
  * <p>
  * Example:
+ *
  * <pre>
  * Label label = new Label();
- * ReadOnlyHasValue&lt;String&gt; hasValue = new ReadOnlyHasValue&lt;&gt;(label::setCaption);
+ * ReadOnlyHasValue&lt;String&gt; hasValue = new ReadOnlyHasValue&lt;&gt;(
+ *         label::setCaption);
  * binder.forField(hasValue).bind(SomeBean::getName);
  * </pre>
  *
- * @param <V> the value type
- * @since
+ * @param <V>
+ *            the value type
+ * @since 8.4
  */
 public class ReadOnlyHasValue<V> implements HasValue<V>, Serializable {
     private V value;
@@ -43,12 +47,15 @@ public class ReadOnlyHasValue<V> implements HasValue<V>, Serializable {
     private LinkedHashSet<ValueChangeListener<V>> listenerList;
 
     /**
-     * Creates new {@code ReadOnlyHasValue}
+     * Creates new {@code ReadOnlyHasValue}.
      *
-     * @param valueProcessor the value valueProcessor, e.g. {@link Label#setValue}
-     * @param emptyValue the value to be used as empty, {@code null} by default
+     * @param valueProcessor
+     *            the value valueProcessor, e.g. {@link Label#setValue}
+     * @param emptyValue
+     *            the value to be used as empty, {@code null} by default
      */
-    public ReadOnlyHasValue(SerializableConsumer<V> valueProcessor, V emptyValue) {
+    public ReadOnlyHasValue(SerializableConsumer<V> valueProcessor,
+            V emptyValue) {
         this.valueProcessor = valueProcessor;
         this.emptyValue = emptyValue;
     }
@@ -56,10 +63,11 @@ public class ReadOnlyHasValue<V> implements HasValue<V>, Serializable {
     /**
      * Creates new {@code ReadOnlyHasValue} with {@code null} as an empty value.
      *
-     * @param valueProcessor the value valueProcessor, e.g. {@link Label#setValue}
+     * @param valueProcessor
+     *            the value valueProcessor, e.g. {@link Label#setValue}
      */
     public ReadOnlyHasValue(SerializableConsumer<V> valueProcessor) {
-        this(valueProcessor,null);
+        this(valueProcessor, null);
     }
 
     @Override
@@ -67,7 +75,7 @@ public class ReadOnlyHasValue<V> implements HasValue<V>, Serializable {
         V oldValue = this.value;
         this.value = value;
         valueProcessor.accept(value);
-        if (listenerList != null && ! Objects.equals(oldValue, value)) {
+        if (listenerList != null && !Objects.equals(oldValue, value)) {
             for (ValueChangeListener<V> valueChangeListener : listenerList) {
                 valueChangeListener.valueChange(
                         new ValueChangeEvent<>(null, this, oldValue, false));
@@ -99,12 +107,14 @@ public class ReadOnlyHasValue<V> implements HasValue<V>, Serializable {
 
     @Override
     public void setRequiredIndicatorVisible(boolean requiredIndicatorVisible) {
-        if (requiredIndicatorVisible) throw new IllegalArgumentException("Not Writable");
+        if (requiredIndicatorVisible)
+            throw new IllegalArgumentException("Not Writable");
     }
 
     @Override
     public void setReadOnly(boolean readOnly) {
-        if (!readOnly) throw new IllegalArgumentException("Not Writable");
+        if (!readOnly)
+            throw new IllegalArgumentException("Not Writable");
     }
 
     @Override

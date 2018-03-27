@@ -308,7 +308,7 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
      * @param value
      *            {@code true} if enabled; {@code false} if not
      *
-     * @since
+     * @since 8.4
      */
     protected void updateItemEnabled(RadioButton radioButton, boolean value) {
         boolean enabled = value && !isReadonly() && isEnabled();

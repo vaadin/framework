@@ -61,11 +61,12 @@ public class DateTimeService {
     }
 
     /**
-     * Utility method to format positive int as zero-padded two-digits number
+     * Utility method to format positive int as zero-padded two-digits number.
      *
-     * @param i the value
+     * @param i
+     *            the value
      * @return "00".."99"
-     * @since
+     * @since 8.4
      */
     public static String asTwoDigits(int i) {
         return (i < 10 ? "0" : "") + i;

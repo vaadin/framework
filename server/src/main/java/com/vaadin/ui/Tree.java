@@ -454,7 +454,7 @@ public class Tree<T> extends Composite
      *            the items to expand recursively
      * @param depth
      *            the maximum depth of recursion
-     * @since
+     * @since 8.4
      */
     public void expandRecursively(Collection<T> items, int depth) {
         treeGrid.expandRecursively(items, depth);
@@ -497,7 +497,7 @@ public class Tree<T> extends Composite
      *            the items to expand recursively
      * @param depth
      *            the maximum depth of recursion
-     * @since
+     * @since 8.4
      */
     public void collapseRecursively(Collection<T> items, int depth) {
         treeGrid.collapseRecursively(items, depth);
@@ -682,7 +682,7 @@ public class Tree<T> extends Composite
      * @param contentMode
      *            how client should interpret textual values
      *
-     * @since
+     * @since 8.4
      */
     public void setItemDescriptionGenerator(
             DescriptionGenerator<T> descriptionGenerator,

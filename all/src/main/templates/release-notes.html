@@ -83,6 +83,12 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
+            <li><tt>ComboBox</tt> has a better new item handling implementation with <tt>NewItemProvider</tt>.</li>
+            <lli><tt>Binding</tt> APIs have been improved to allow more advanced use.</lli>
+            <li>New <tt>ReadOnlyHasValue</tt> wrapper class for easy implementation of new <tt>HasValue</tt>s for <tt>Binder</tt>.</li>
+            <li>Built-in <tt>StringTo</tt> converters now have option to use <tt>ErrorMessageProvider</tt>.</li>
+            <li><tt>Grid</tt> headers and footers now support tooltips.</li>
+            <li>Added <tt>Tree</tt> and <tt>TreeGrid</tt> recursive expand and collapse methods.</li>
         </ul>
 
         </p>
@@ -97,8 +103,9 @@
 
         <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h2>
 
-        <li><tt>BindingBuilder</tt> will now automatically mark bound field <i>read-only</i> when bound to a read-only property or a <tt>null</tt> setter.</li>
         <li>Date range limits in <tt>AbstractDateFieldState</tt> are now <tt>String</tt>s instead of <tt>Date</tt>s, some client-side method signatures were changed</li>
+        <li><tt>BrowserResizeListener</tt> is only called once resizing ends.</li>
+        <li><tt>ItemClickEvent</tt> for <tt>Grid</tt> now takes and additional row index parameter.</li>
 
         <h2>For incompatible or behavior-altering changes in 8.3, please see <a href="https://vaadin.com/download/release/8.3/8.3.0/release-notes.html#incompatible">8.3 release notes</a></h2>
         
