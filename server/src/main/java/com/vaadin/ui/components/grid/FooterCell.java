@@ -143,7 +143,7 @@ public interface FooterCell extends Serializable {
 
     /**
      * Gets the content mode for the tooltip.
-     * 
+     *
      * @see ContentMode
      * @return the content mode for the tooltip
      * @since 8.4

@@ -372,7 +372,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
     /**
      * Converts a temporal value into field-specific data type.
-     * 
+     *
      * @param temporalAccessor
      *            - source value
      * @return conversion result.
@@ -381,7 +381,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     protected abstract T toType(TemporalAccessor temporalAccessor);
 
     /**
-     * Converts date range limit itno string representaion
+     * Converts date range limit into string representation.
      *
      * @param temporal
      *            the value
@@ -398,8 +398,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     }
 
     /**
-     * Checks if {@code value} is after {@code base} or not
-     * 
+     * Checks if {@code value} is after {@code base} or not.
+     *
      * @param value
      *            temporal value
      * @param base

@@ -28,7 +28,7 @@ import java.util.Objects;
  * binding.
  * <p>
  * Example:
- * 
+ *
  * <pre>
  * Label label = new Label();
  * ReadOnlyHasValue&lt;String&gt; hasValue = new ReadOnlyHasValue&lt;&gt;(
