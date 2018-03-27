@@ -406,7 +406,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @return the clicked rowIndex
          */
         public int getRowIndex() {
-        	return rowIndex;
+            return rowIndex;
         }
     }
 

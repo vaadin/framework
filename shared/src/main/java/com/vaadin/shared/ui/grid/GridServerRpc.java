@@ -42,6 +42,8 @@ public interface GridServerRpc extends ServerRpc {
      *            column internal id identifying the clicked property
      * @param details
      *            mouse event details
+     * @param rowIndex
+     *            the row index of the clicked item
      */
     void itemClick(String rowKey, String columnInternalId,
             MouseEventDetails details, int rowIndex);
