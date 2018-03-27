@@ -728,6 +728,23 @@ public class Binder<BEAN> implements Serializable {
          */
         public BindingBuilder<BEAN, TARGET> asRequired(
                 ErrorMessageProvider errorMessageProvider);
+
+        /**
+         * Sets the field to be required and delegates the required check to a custom validator.
+         * This means two things:
+         * <ol>
+         * <li>the required indicator will be displayed for this field</li>
+         * <li>the field value is validated by customRequiredValidator</li>
+         * </ol>
+         *
+         * @see HasValue#setRequiredIndicatorVisible(boolean)
+         * @param customRequiredValidator
+         *            validator responsible for the required check
+         * @return this binding, for chaining
+         * @since
+         */
+        public BindingBuilder<BEAN, TARGET> asRequired(
+                Validator<TARGET> customRequiredValidator);
     }
 
     /**
@@ -885,11 +902,18 @@ public class Binder<BEAN> implements Serializable {
         @Override
         public BindingBuilder<BEAN, TARGET> asRequired(
                 ErrorMessageProvider errorMessageProvider) {
+            return asRequired(
+                    Validator.from(
+                            value -> !Objects.equals(value, field.getEmptyValue()),
+                            errorMessageProvider));
+        }
+
+        @Override
+        public BindingBuilder<BEAN, TARGET> asRequired(
+                Validator<TARGET> customRequiredValidator) {
             checkUnbound();
             field.setRequiredIndicatorVisible(true);
-            return withValidator(
-                    value -> !Objects.equals(value, field.getEmptyValue()),
-                    errorMessageProvider);
+            return withValidator(customRequiredValidator);
         }
 
         /**
@@ -982,8 +1006,8 @@ public class Binder<BEAN> implements Serializable {
 
         private boolean readOnly;
 
-        // Not final since we temporarily remove listener while changing values
-        private Registration onValueChange;
+        private final Registration onValueChange;
+        private boolean valueInit = false;
 
         /**
          * Contains all converters and validators chained together in the
@@ -1056,7 +1080,6 @@ public class Binder<BEAN> implements Serializable {
         public void unbind() {
             if (onValueChange != null) {
                 onValueChange.remove();
-                onValueChange = null;
             }
             binder.removeBindingInternal(this);
             binder = null;
@@ -1116,12 +1139,11 @@ public class Binder<BEAN> implements Serializable {
         private void initFieldValue(BEAN bean) {
             assert bean != null;
             assert onValueChange != null;
-            onValueChange.remove();
+            valueInit = true;
             try {
                 getField().setValue(convertDataToFieldType(bean));
             } finally {
-                onValueChange = getField()
-                        .addValueChangeListener(this::handleFieldValueChange);
+                valueInit = false;
             }
         }
 
@@ -1139,9 +1161,16 @@ public class Binder<BEAN> implements Serializable {
          */
         private void handleFieldValueChange(
                 ValueChangeEvent<FIELDVALUE> event) {
-            // Inform binder of changes; if setBean: writeIfValid
-            getBinder().handleFieldValueChange(this, event);
-            getBinder().fireValueChangeEvent(event);
+            // Don't handle change events when setting initial value
+            if (valueInit) {
+                return;
+            }
+
+            if (binder != null) {
+                // Inform binder of changes; if setBean: writeIfValid
+                getBinder().handleFieldValueChange(this, event);
+                getBinder().fireValueChangeEvent(event);
+            }
         }
 
         /**
@@ -1178,8 +1207,7 @@ public class Binder<BEAN> implements Serializable {
 
         @Override
         public void read(BEAN bean) {
-            field.setValue(converterValidatorChain.convertToPresentation(
-                    getter.apply(bean), createValueContext()));
+            getField().setValue(convertDataToFieldType(bean));
         }
 
         @Override

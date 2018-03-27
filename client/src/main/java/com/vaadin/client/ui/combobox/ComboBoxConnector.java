@@ -126,6 +126,15 @@ public class ComboBoxConnector extends AbstractListingConnector
     @OnStateChange({ "selectedItemKey", "selectedItemCaption",
             "selectedItemIcon" })
     private void onSelectionChange() {
+        if (getWidget().selectedOptionKey != getState().selectedItemKey) {
+            getWidget().selectedOptionKey = null;
+            getWidget().currentSuggestion = null;
+        }
+        if (isNewItemStillPending()
+                && pendingNewItemValue == getState().selectedItemCaption) {
+            // no automated selection handling required
+            clearNewItemHandling();
+        }
         getDataReceivedHandler().updateSelectionFromServer(
                 getState().selectedItemKey, getState().selectedItemCaption,
                 getState().selectedItemIcon);
@@ -196,7 +205,7 @@ public class ComboBoxConnector extends AbstractListingConnector
      *            the current filter string
      */
     protected void setFilter(String filter) {
-        if (!Objects.equals(filter, getWidget().lastFilter)) {
+        if (!Objects.equals(filter, getState().currentFilterText)) {
             getDataReceivedHandler().clearPendingNavigation();
 
             rpc.setFilter(filter);
@@ -243,10 +252,9 @@ public class ComboBoxConnector extends AbstractListingConnector
             page = 0;
         }
         VComboBox widget = getWidget();
-        int adjustment = widget.nullSelectionAllowed && filter.isEmpty()
-                ? 1 : 0;
-        int startIndex = Math.max(0,
-                page * widget.pageLength - adjustment);
+        int adjustment = widget.nullSelectionAllowed && filter.isEmpty() ? 1
+                : 0;
+        int startIndex = Math.max(0, page * widget.pageLength - adjustment);
         int pageLength = widget.pageLength > 0 ? widget.pageLength
                 : getDataSource().size();
         getDataSource().ensureAvailability(startIndex, pageLength);

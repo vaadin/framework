@@ -599,7 +599,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * @param rangeStart
      *            - the allowed range's start date
      */
-    public void setRangeStart(Date rangeStart) {
+    public void setRangeStart(String rangeStart) {
         calendar.setRangeStart(rangeStart);
     }
 
@@ -610,7 +610,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * @param rangeEnd
      *            - the allowed range's end date
      */
-    public void setRangeEnd(Date rangeEnd) {
+    public void setRangeEnd(String rangeEnd) {
         calendar.setRangeEnd(rangeEnd);
     }
 

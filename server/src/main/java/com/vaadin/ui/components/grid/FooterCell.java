@@ -17,6 +17,7 @@ package com.vaadin.ui.components.grid;
 
 import java.io.Serializable;
 
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.ui.Component;
 
@@ -102,4 +103,60 @@ public interface FooterCell extends Serializable {
      *            the style name to set or null to not use any style name
      */
     public void setStyleName(String styleName);
+
+    /**
+     * Gets the tooltip for the cell.
+     * <p>
+     * The tooltip is shown in the mode returned by
+     * {@link #getDescriptionContentMode()}.
+     *
+     * @since
+     */
+    public String getDescription();
+
+    /**
+     * Sets the tooltip for the cell.
+     * <p>
+     * By default, tooltips are shown as plain text. For HTML tooltips, see
+     * {@link #setDescription(String, ContentMode)} or
+     * {@link #setDescriptionContentMode(ContentMode)}.
+     *
+     * @param description
+     *            the tooltip to show when hovering the cell
+     * @since
+     */
+    public void setDescription(String description);
+
+    /**
+     * Sets the tooltip for the cell to be shown with the given content mode.
+     *
+     * @see ContentMode
+     * @param description
+     *            the tooltip to show when hovering the cell
+     * @param descriptionContentMode
+     *            the content mode to use for the tooltip (HTML or plain text)
+     * @since
+     */
+    public void setDescription(String description,
+            ContentMode descriptionContentMode);
+
+    /**
+     * Gets the content mode for the tooltip.
+
+     * @see ContentMode
+     * @return the content mode for the tooltip
+     * @since
+     */
+    public ContentMode getDescriptionContentMode();
+
+    /**
+     * Sets the content mode for the tooltip.
+     *
+     * @see ContentMode
+     * @param descriptionContentMode
+     *            the content mode for the tooltip
+     * @since
+     */
+    public void setDescriptionContentMode(ContentMode descriptionContentMode);
+
 }

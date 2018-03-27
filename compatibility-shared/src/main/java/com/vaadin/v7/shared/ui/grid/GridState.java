@@ -214,14 +214,14 @@ public class GridState extends TabIndexState {
     /**
      * The content mode used for cell tooltips.
      *
-     * @since
+     * @since 8.3.2
      */
     public ContentMode cellTooltipContentMode = ContentMode.PREFORMATTED;
 
     /**
      * The content mode used for row tooltips.
      *
-     * @since
+     * @since 8.3.2
      */
     public ContentMode rowTooltipContentMode = ContentMode.PREFORMATTED;
 

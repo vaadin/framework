@@ -35,5 +35,4 @@ public class NativeSelectInitTest extends MultiBrowserTest {
         String selected = $(NativeSelectElement.class).first().getValue();
         assertEquals("Bar", selected);
     }
-
 }

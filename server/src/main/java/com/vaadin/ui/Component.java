@@ -1012,22 +1012,22 @@ public interface Component extends ClientConnector, Sizeable {
          * Sets the focus to this component.
          *
          * <pre>
-         * Form loginBox = new Form();
+         * FormLayout loginBox = new FormLayout();
          * loginBox.setCaption(&quot;Login&quot;);
          * layout.addComponent(loginBox);
          *
          * // Create the first field which will be focused
          * TextField username = new TextField(&quot;User name&quot;);
-         * loginBox.addField(&quot;username&quot;, username);
+         * loginBox.addComponent(username);
          *
          * // Set focus to the user name
          * username.focus();
          *
          * TextField password = new TextField(&quot;Password&quot;);
-         * loginBox.addField(&quot;password&quot;, password);
+         * loginBox.addComponent(password);
          *
          * Button login = new Button(&quot;Login&quot;);
-         * loginBox.getFooter().addComponent(login);
+         * loginBox.addComponent(login);
          * </pre>
          *
          * <p>

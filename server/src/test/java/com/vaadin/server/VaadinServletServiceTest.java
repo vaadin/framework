@@ -52,7 +52,7 @@ public class VaadinServletServiceTest {
         assertEquals("./../..", location);
 
         // http://dummy.host/contextpath/servlet/extra/stuff/
-        // should return ./../.. (relative url resolving to /contextpath)
+        // should return ./../../.. (relative url resolving to /contextpath)
         location = testLocation("http://dummy.host", "/contextpath", "/servlet",
                 "/extra/stuff/");
         assertEquals("./../../..", location);

@@ -49,17 +49,21 @@ public class AbstractDateFieldState extends AbstractFieldState {
 
     /**
      * Start range that has been cleared, depending on the resolution of the
-     * date field.
+     * date field. The format is "2018-05-27" or "2018-05-27 14:38:39"
+     *
+     * @see com.vaadin.ui.AbstractDateField#RANGE_FORMATTER
      */
     @NoLayout
-    public Date rangeStart;
+    public String rangeStart;
 
     /**
-     * End range that has been cleared, depending on the resolution of the date
-     * field.
+     * End range that has been cleared, depending on the resolution of the
+     * date field. The format is "2018-05-27" or "2018-05-27 14:38:39"
+     *
+     * @see com.vaadin.ui.AbstractDateField#RANGE_FORMATTER
      */
     @NoLayout
-    public Date rangeEnd;
+    public String rangeEnd;
 
     /**
      * The JSON used to construct a TimeZone on the client side, can be
