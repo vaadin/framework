@@ -446,27 +446,31 @@ public class JsonCodec implements Serializable {
     }
 
     /**
-     * Add a custom JSONSerializer for a specific Class.
+     * Add a custom JSONSerializer for a specific Class. Friendly warning: it's
+     * easy to break things with this API, use at your own risk.
      *
+     * @throws IllegalArgumentException
+     *             if either parameter is null or clazz is in the package
+     *             java.lang
      * @param clazz
      *            Class that should use a custom serializer
      * @param jsonSerializer
      *            Custom JSONSerializer
      */
-    public static void putCustomSerializer(Class<?> clazz,
+    public static void addCustomSerializer(Class<?> clazz,
             JSONSerializer<?> jsonSerializer) {
+        if (clazz == null) {
+            throw new IllegalArgumentException(
+                    "Cannot add serializer for null");
+        }
+        if (clazz.getPackage().getName().startsWith("java.lang")) {
+            throw new IllegalArgumentException(
+                    "Cannot add a custom serializer for a class in the package java.lang");
+        }
+        if (jsonSerializer == null) {
+            throw new IllegalArgumentException("Cannot add a null serializer");
+        }
         CUSTOM_SERIALIZERS.put(clazz, jsonSerializer);
-    }
-
-    /**
-     * Remove from CUSTOM_SERIALIZERS a serializer for a specific class.
-     *
-     * @param clazz
-     *            The Class key you want to remove from the CUSTOM_SERIALIZERS
-     *            map
-     */
-    public static void removeCustomSerializer(Class<?> clazz) {
-        CUSTOM_SERIALIZERS.remove(clazz);
     }
 
     private static UidlValue decodeUidlValue(JsonArray encodedJsonValue,
