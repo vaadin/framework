@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -94,5 +95,47 @@ public class FocusUtil {
                 .getElement() != null) : "Can't getTabIndex for a widget without an element";
 
         return focusable.getElement().getTabIndex();
+    }
+
+    /**
+     * Get all the child elements of a parent that are focusable.
+     * 
+     * @param parent
+     *            The parent element whose children to search.
+     * @return Array of child Elements that are focusable.
+     * @since 7.7.12
+     */
+    public static native Element[] getFocusableChildren(Element parent)
+    /*-{
+        var focusableChildren = parent.querySelectorAll('[type][tabindex]:not([tabindex="-1"]), [role=button][tabindex]:not([tabindex="-1"])');
+        return focusableChildren;
+    }-*/;
+
+    /**
+     * Focus on the first focusable child Element of a parent Element.
+     * 
+     * @param parent
+     *            The parent element to scan for a focusable child.
+     * @since 7.7.12
+     */
+    public static void focusOnFirstFocusableElement(Element parent) {
+        Element[] focusableChildren = getFocusableChildren(parent);
+        if (focusableChildren.length > 0) {
+            focusableChildren[0].focus();
+        }
+    }
+
+    /**
+     * Focus on the last focusable child Element of a parent Element.
+     * 
+     * @param parent
+     *            The parent element to scan for a focusable child.
+     * @since 7.7.12
+     */
+    public static void focusOnLastFocusableElement(Element parent) {
+        Element[] focusableChildren = getFocusableChildren(parent);
+        if (focusableChildren.length > 0) {
+            focusableChildren[focusableChildren.length - 1].focus();
+        }
     }
 }

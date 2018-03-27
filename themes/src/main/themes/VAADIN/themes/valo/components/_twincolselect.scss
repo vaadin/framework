@@ -85,6 +85,40 @@
     }
   }
 
+  .#{$primary-stylename}-error-info {
+    .#{$primary-stylename}-options,
+    .#{$primary-stylename}-selections {
+      @include valo-textfield-error-level-info-style;
+    }
+  }
+
+  .#{$primary-stylename}-error-warning {
+    .#{$primary-stylename}-options,
+    .#{$primary-stylename}-selections {
+      @include valo-textfield-error-level-warning-style;
+    }
+  }
+
+  .#{$primary-stylename}-error-error {
+    .#{$primary-stylename}-options,
+    .#{$primary-stylename}-selections {
+      @include valo-textfield-error-level-error-style;
+    }
+  }
+
+  .#{$primary-stylename}-error-critical {
+    .#{$primary-stylename}-options,
+    .#{$primary-stylename}-selections {
+      @include valo-textfield-error-level-critical-style;
+    }
+  }
+
+  .#{$primary-stylename}-error-system {
+    .#{$primary-stylename}-options,
+    .#{$primary-stylename}-selections {
+      @include valo-textfield-error-level-system-style;
+    }
+  }
 }
 
 

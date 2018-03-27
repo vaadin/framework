@@ -428,7 +428,7 @@ public class CalendarConnector extends AbstractComponentConnector
     public TooltipInfo getTooltipInfo(
             com.google.gwt.dom.client.Element element) {
         TooltipInfo tooltipInfo = null;
-        Widget w = WidgetUtil.findWidget(element, null);
+        Widget w = WidgetUtil.findWidget(element);
         if (w instanceof HasTooltipKey) {
             tooltipInfo = GWT.create(TooltipInfo.class);
             String title = tooltips.get(((HasTooltipKey) w).getTooltipKey());

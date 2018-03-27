@@ -56,6 +56,8 @@ import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.client.widget.escalator.events.RowHeightChangedEvent;
 import com.vaadin.client.widget.escalator.events.RowHeightChangedHandler;
+import com.vaadin.client.widget.escalator.events.SpacerVisibilityChangedEvent;
+import com.vaadin.client.widget.escalator.events.SpacerVisibilityChangedHandler;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
@@ -97,6 +99,7 @@ import com.vaadin.shared.ui.grid.GridStaticSectionState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState.CellState;
 import com.vaadin.shared.ui.grid.GridStaticSectionState.RowState;
 import com.vaadin.shared.ui.grid.ScrollDestination;
+import com.vaadin.shared.ui.label.ContentMode;
 
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;
@@ -496,6 +499,8 @@ public class GridConnector extends AbstractHasComponentsConnector
     private class CustomDetailsGenerator
             implements HeightAwareDetailsGenerator {
 
+
+
         private final Map<String, ComponentConnector> idToDetailsMap = new HashMap<String, ComponentConnector>();
         private final Map<String, Integer> idToRowIndex = new HashMap<String, Integer>();
         private final Map<Element, ScheduledCommand> elementToResizeCommand = new HashMap<Element, Scheduler.ScheduledCommand>();
@@ -544,9 +549,13 @@ public class GridConnector extends AbstractHasComponentsConnector
                     if (spacerCellBorderHeights != null
                             && !getLayoutManager().isLayoutRunning()
                             && hasDetailsOpen(rowIndex)) {
-                        double height = getLayoutManager().getOuterHeightDouble(
-                                element) + spacerCellBorderHeights;
-                        getWidget().setDetailsHeight(rowIndex, height);
+                        // Measure and set details height if element is visible
+                        if (WidgetUtil.isDisplayed(element)) {
+                            double height =
+                                    getLayoutManager().getOuterHeightDouble(
+                                            element) + spacerCellBorderHeights;
+                            getWidget().setDetailsHeight(rowIndex, height);
+                        }
                     }
                 }
             };
@@ -873,6 +882,24 @@ public class GridConnector extends AbstractHasComponentsConnector
                 getLayoutManager().layoutNow();
             }
         });
+
+        // When details element is shown, remeasure it in the layout phase.
+        // This is necessary because details might've been laid out incorrectly
+        // while they were out of view.
+        getWidget().addSpacerVisibilityChangedHandler(
+                new SpacerVisibilityChangedHandler() {
+                    @Override
+                    public void onSpacerVisibilityChanged(
+                            SpacerVisibilityChangedEvent event) {
+                        if (event.isVisible()) {
+                            ComponentConnector connector = customDetailsGenerator.idToDetailsMap
+                                    .get(customDetailsGenerator
+                                            .getId(event.getRowIndex()));
+                            getLayoutManager()
+                                    .setNeedsMeasureRecursively(connector);
+                        }
+                    }
+                });
 
         layout();
     }
@@ -1299,16 +1326,25 @@ public class GridConnector extends AbstractHasComponentsConnector
                     .getObject(GridState.JSONKEY_CELLDESCRIPTION);
 
             if (cellDescriptions != null && cellDescriptions.hasKey(c.id)) {
-                return new TooltipInfo(cellDescriptions.getString(c.id));
+                return createCellTooltipInfo(cellDescriptions.getString(c.id),
+                        getState().cellTooltipContentMode);
             } else if (row.hasKey(GridState.JSONKEY_ROWDESCRIPTION)) {
-                return new TooltipInfo(
-                        row.getString(GridState.JSONKEY_ROWDESCRIPTION));
+                return createCellTooltipInfo(
+                        row.getString(GridState.JSONKEY_ROWDESCRIPTION),
+                        getState().rowTooltipContentMode);
             } else {
                 return null;
             }
         }
 
         return super.getTooltipInfo(element);
+    }
+
+    private static TooltipInfo createCellTooltipInfo(String text,
+            ContentMode contentMode) {
+        TooltipInfo info = new TooltipInfo(text);
+        info.setContentMode(contentMode);
+        return info;
     }
 
     @Override

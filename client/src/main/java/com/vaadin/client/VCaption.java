@@ -25,6 +25,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.Icon;
@@ -34,6 +35,7 @@ import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.ComponentStateUtil;
+import com.vaadin.shared.ui.ErrorLevel;
 
 public class VCaption extends HTML {
 
@@ -264,7 +266,7 @@ public class VCaption extends HTML {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
                 DOM.setElementProperty(errorIndicatorElement, "className",
-                        "v-errorindicator");
+                        StyleConstants.STYLE_NAME_ERROR_INDICATOR);
 
                 DOM.insertChild(getElement(), errorIndicatorElement,
                         getInsertPosition(InsertPosition.ERROR));
@@ -273,6 +275,11 @@ public class VCaption extends HTML {
                 Roles.getTextboxRole().setAriaHiddenState(errorIndicatorElement,
                         true);
             }
+
+            ErrorUtil.setErrorLevelStyle(errorIndicatorElement,
+                    StyleConstants.STYLE_NAME_ERROR_INDICATOR,
+                    owner.getState().errorLevel);
+
         } else if (errorIndicatorElement != null) {
             // Remove existing
             getElement().removeChild(errorIndicatorElement);
@@ -323,6 +330,36 @@ public class VCaption extends HTML {
     public boolean updateCaptionWithoutOwner(String caption, boolean disabled,
             boolean hasDescription, boolean hasError, String iconURL,
             String iconAltText) {
+        return updateCaptionWithoutOwner(caption, disabled, hasDescription,
+                hasError, null, iconURL, iconAltText);
+    }
+
+    @Deprecated
+    /**
+     * Updates the caption without an owner component, for example a tabsheet's
+     * tab's.
+     *
+     * @param caption
+     *            the caption text to set
+     * @param disabled
+     *            style the caption as disabled if this is true
+     * @param hasDescription
+     *            add description style if this is true
+     * @param hasError
+     *            if true, add error indicator element
+     * @param errorLevel
+     *            if hasError is true, use this value to define the severity
+     * @param iconURL
+     *            url of the icon of the caption
+     * @param iconAltText
+     *            alt text of the caption
+     * @return true if the caption was placed after the component when it wasn't
+     *         before or vice versa
+     * @since 7.7.11
+     */
+    public boolean updateCaptionWithoutOwner(String caption, boolean disabled,
+            boolean hasDescription, boolean hasError, ErrorLevel errorLevel,
+            String iconURL, String iconAltText) {
         boolean wasPlacedAfterComponent = placedAfterComponent;
 
         // Caption is placed after component unless there is some part which
@@ -406,11 +443,15 @@ public class VCaption extends HTML {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
                 DOM.setElementProperty(errorIndicatorElement, "className",
-                        "v-errorindicator");
+                        StyleConstants.STYLE_NAME_ERROR_INDICATOR);
 
                 DOM.insertChild(getElement(), errorIndicatorElement,
                         getInsertPosition(InsertPosition.ERROR));
             }
+
+            ErrorUtil.setErrorLevelStyle(errorIndicatorElement,
+                    StyleConstants.STYLE_NAME_ERROR_INDICATOR, errorLevel);
+
         } else if (errorIndicatorElement != null) {
             // Remove existing
             getElement().removeChild(errorIndicatorElement);

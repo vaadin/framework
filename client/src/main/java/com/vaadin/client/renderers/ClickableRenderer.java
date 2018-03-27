@@ -180,7 +180,7 @@ public abstract class ClickableRenderer<T, W extends Widget>
          * @return the parent grid or null if none found.
          */
         private static Grid<?> findClosestParentGrid(Element e) {
-            Widget w = WidgetUtil.findWidget(e, null);
+            Widget w = WidgetUtil.findWidget(e);
 
             while (w != null && !(w instanceof Grid)) {
                 w = w.getParent();

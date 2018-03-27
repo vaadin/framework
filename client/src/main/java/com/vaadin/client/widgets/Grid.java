@@ -109,6 +109,8 @@ import com.vaadin.client.widget.escalator.Spacer;
 import com.vaadin.client.widget.escalator.SpacerUpdater;
 import com.vaadin.client.widget.escalator.events.RowHeightChangedEvent;
 import com.vaadin.client.widget.escalator.events.RowHeightChangedHandler;
+import com.vaadin.client.widget.escalator.events.SpacerVisibilityChangedEvent;
+import com.vaadin.client.widget.escalator.events.SpacerVisibilityChangedHandler;
 import com.vaadin.client.widget.grid.AutoScroller;
 import com.vaadin.client.widget.grid.AutoScroller.AutoScrollerCallback;
 import com.vaadin.client.widget.grid.AutoScroller.ScrollAxis;
@@ -2344,7 +2346,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (!Element.is(target)) {
                 return null;
             }
-            return WidgetUtil.findWidget(Element.as(target), Grid.class);
+            return WidgetUtil.findWidget(Element.as(target), Grid.class, false);
         }
 
         /**
@@ -2411,7 +2413,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (!Element.is(target)) {
                 return null;
             }
-            return WidgetUtil.findWidget(Element.as(target), Grid.class);
+            return WidgetUtil.findWidget(Element.as(target), Grid.class, false);
         }
 
         /**
@@ -5671,7 +5673,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 if (renderer instanceof WidgetRenderer) {
                     try {
                         Widget w = WidgetUtil.findWidget(
-                                cell.getElement().getFirstChildElement(), null);
+                                cell.getElement().getFirstChildElement());
                         if (w != null) {
 
                             // Logical detach
@@ -5888,9 +5890,17 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         @Override
                         public void onComplete() {
                             dragEnded();
-
                             col.setWidth(width);
-                            fireEvent(new ColumnResizeEvent<T>(col));
+
+                            // Need to wait for column width recalculation
+                            // scheduled by setWidth() before firing the event
+                            Scheduler.get().scheduleDeferred(
+                                    new ScheduledCommand() {
+                                        @Override
+                                        public void execute() {
+                                            fireEvent(new ColumnResizeEvent<T>(col));
+                                        }
+                                    });
                         }
                     };
 
@@ -7482,7 +7492,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     private boolean isElementInChildWidget(Element e) {
-        Widget w = WidgetUtil.findWidget(e, null);
+        Widget w = WidgetUtil.findWidget(e);
 
         if (w == this) {
             return false;
@@ -8456,6 +8466,19 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
+     * Adds a spacer visibility changed handler to the underlying escalator.
+     *
+     * @param handler
+     *         the handler to be called when a spacer's visibility changes
+     * @return the registration object with which the handler can be removed
+     * @since 7.7.13
+     */
+    public HandlerRegistration addSpacerVisibilityChangedHandler(
+            SpacerVisibilityChangedHandler handler) {
+        return escalator.addHandler(handler, SpacerVisibilityChangedEvent.TYPE);
+    }
+
+    /**
      * Adds a low-level DOM event handler to this Grid. The handler is inserted
      * into the given position in the list of handlers. The handlers are invoked
      * in order. If the
@@ -9120,7 +9143,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Update details row height.
      *
-     * @since
+     * @since 7.7.11
      * @param rowIndex
      *            the index of the row for which to update details height
      * @param height

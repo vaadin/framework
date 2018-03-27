@@ -18,7 +18,9 @@ package com.vaadin.client;
 import com.google.gwt.aria.client.LiveValue;
 import com.google.gwt.aria.client.RelevantValue;
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.PreElement;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -48,8 +50,9 @@ import com.vaadin.client.ui.VOverlay;
 public class VTooltip extends VOverlay {
     private static final String CLASSNAME = "v-tooltip";
     private static final int MARGIN = 4;
-    public static final int TOOLTIP_EVENTS = Event.ONKEYDOWN | Event.ONMOUSEOVER
-            | Event.ONMOUSEOUT | Event.ONMOUSEMOVE | Event.ONCLICK;
+    public static final int TOOLTIP_EVENTS = Event.ONKEYDOWN
+            | Event.ONMOUSEOVER | Event.ONMOUSEOUT | Event.ONMOUSEMOVE
+            | Event.ONCLICK;
     VErrorMessage em = new VErrorMessage();
     Element description = DOM.createDiv();
 
@@ -137,11 +140,34 @@ public class VTooltip extends VOverlay {
                 && !info.getErrorMessage().isEmpty()) {
             em.setVisible(true);
             em.updateMessage(info.getErrorMessage());
+            em.updateErrorLevel(info.getErrorLevel());
         } else {
             em.setVisible(false);
         }
         if (info.getTitle() != null && !info.getTitle().isEmpty()) {
-            description.setInnerHTML(info.getTitle());
+            switch (info.getContentMode()) {
+            case RAW:
+            case XML:
+            case HTML:
+                description.setInnerHTML(info.getTitle());
+                break;
+            case TEXT:
+                // Cannot use setInnerText because IE8 preserves linebreaks
+                description.removeAllChildren();
+                description.appendChild(Document.get().createTextNode(
+                        info.getTitle()));
+                break;
+            case PREFORMATTED:
+                PreElement preElement = Document.get().createPreElement();
+                preElement.addClassName(CLASSNAME + "-pre");
+                preElement.setInnerText(info.getTitle());
+                description.removeAllChildren();
+                // add preformatted text to dom
+                description.appendChild(preElement);
+                break;
+            default:
+                break;
+            }
             /*
              * Issue #11871: to correctly update the offsetWidth of description
              * element we need to clear style width of its parent DIV from old
@@ -440,6 +466,7 @@ public class VTooltip extends VOverlay {
     @Override
     public void hide() {
         em.updateMessage("");
+        em.updateErrorLevel(null);
         description.setInnerHTML("");
 
         updatePosition(null, true);

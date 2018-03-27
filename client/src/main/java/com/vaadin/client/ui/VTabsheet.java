@@ -339,7 +339,8 @@ public class VTabsheet extends VTabsheetBase
             if (tabState.description != null
                     || tabState.componentError != null) {
                 setTooltipInfo(new TooltipInfo(tabState.description,
-                        tabState.componentError, this));
+                        tabState.componentError, this,
+                        tabState.componentErrorLevel));
             } else {
                 setTooltipInfo(null);
             }
@@ -351,6 +352,7 @@ public class VTabsheet extends VTabsheetBase
             boolean ret = updateCaptionWithoutOwner(captionString,
                     !tabState.enabled, hasAttribute(tabState.description),
                     hasAttribute(tabState.componentError),
+                    tabState.componentErrorLevel,
                     tab.getTabsheet().connector.getResourceUrl(
                             ComponentConstants.ICON_RESOURCE + tabState.key),
                     tabState.iconAltText);

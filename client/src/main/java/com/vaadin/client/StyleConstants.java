@@ -44,4 +44,11 @@ public class StyleConstants {
     public static final String REQUIRED_EXT = "-required";
 
     public static final String ERROR_EXT = "-error";
+
+    /**
+     * Style name and style name prefix for the error indicator element.
+     * 
+     * @since 7.7.11
+     */
+    public static final String STYLE_NAME_ERROR_INDICATOR = "v-errorindicator";
 }

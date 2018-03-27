@@ -46,6 +46,7 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.metadata.NoDataException;
@@ -637,6 +638,10 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         setWidgetStyleNameWithPrefix(primaryStyleName, StyleConstants.ERROR_EXT,
                 null != state.errorMessage);
 
+        // add or remove error level style name
+        ErrorUtil.setErrorLevelStyle(getWidget().getElement(),
+                primaryStyleName + StyleConstants.ERROR_EXT, state.errorLevel);
+
         // add additional user defined style names as class names, prefixed with
         // component default class name. remove nonexistent style names.
 
@@ -764,7 +769,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     @Override
     public TooltipInfo getTooltipInfo(Element element) {
-        return new TooltipInfo(getState().description, getState().errorMessage);
+        return new TooltipInfo(getState().description, getState().errorMessage,
+                null, getState().errorLevel);
     }
 
     @Override

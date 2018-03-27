@@ -80,35 +80,56 @@ public interface ErrorMessage extends Serializable {
             return text;
         }
 
+        /**
+         * Converts this to an error level that can be used on the client side.
+         *
+         * @return error level for the client side
+         * @since 7.7.11
+         */
+        public com.vaadin.shared.ui.ErrorLevel convertToShared() {
+            switch (this) {
+            case INFORMATION:
+                return com.vaadin.shared.ui.ErrorLevel.INFO;
+            case WARNING:
+                return com.vaadin.shared.ui.ErrorLevel.WARNING;
+            case CRITICAL:
+                return com.vaadin.shared.ui.ErrorLevel.CRITICAL;
+            case SYSTEMERROR:
+                return com.vaadin.shared.ui.ErrorLevel.SYSTEM;
+            case ERROR:
+            default:
+                return com.vaadin.shared.ui.ErrorLevel.ERROR;
+            }
+        }
     }
 
     /**
-     * @deprecated As of 7.0, use {@link ErrorLevel#SYSTEMERROR} instead    
+     * @deprecated As of 7.0, use {@link ErrorLevel#SYSTEMERROR} instead
      */
     @Deprecated
     public static final ErrorLevel SYSTEMERROR = ErrorLevel.SYSTEMERROR;
 
     /**
-     * @deprecated As of 7.0, use {@link ErrorLevel#CRITICAL} instead    
+     * @deprecated As of 7.0, use {@link ErrorLevel#CRITICAL} instead
      */
     @Deprecated
     public static final ErrorLevel CRITICAL = ErrorLevel.CRITICAL;
 
     /**
-     * @deprecated As of 7.0, use {@link ErrorLevel#ERROR} instead    
+     * @deprecated As of 7.0, use {@link ErrorLevel#ERROR} instead
      */
 
     @Deprecated
     public static final ErrorLevel ERROR = ErrorLevel.ERROR;
 
     /**
-     * @deprecated As of 7.0, use {@link ErrorLevel#WARNING} instead    
+     * @deprecated As of 7.0, use {@link ErrorLevel#WARNING} instead
      */
     @Deprecated
     public static final ErrorLevel WARNING = ErrorLevel.WARNING;
 
     /**
-     * @deprecated As of 7.0, use {@link ErrorLevel#INFORMATION} instead    
+     * @deprecated As of 7.0, use {@link ErrorLevel#INFORMATION} instead
      */
     @Deprecated
     public static final ErrorLevel INFORMATION = ErrorLevel.INFORMATION;
