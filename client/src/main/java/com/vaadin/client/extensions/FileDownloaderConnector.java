@@ -21,33 +21,27 @@ import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.server.FileDownloader;
 import com.vaadin.shared.extension.filedownloader.FileDownloaderState;
 import com.vaadin.shared.ui.Connect;
 
 @Connect(FileDownloader.class)
-public class FileDownloaderConnector extends AbstractExtensionConnector
-        implements ClickHandler {
+public class FileDownloaderConnector
+        extends AbstractEventTriggerExtensionConnector {
 
     private IFrameElement iframe;
 
+    /**
+     * Called when the download should start.
+     *
+     * @since
+     */
     @Override
-    protected void extend(ServerConnector target) {
-        final Widget downloadWidget = ((ComponentConnector) target).getWidget();
-
-        downloadWidget.addDomHandler(this, ClickEvent.getType());
-    }
-
-    @Override
-    public void onClick(ClickEvent event) {
+    protected void trigger() {
         final String url = getResourceUrl("dl");
         if (url != null && !url.isEmpty()) {
             BrowserInfo browser = BrowserInfo.get();

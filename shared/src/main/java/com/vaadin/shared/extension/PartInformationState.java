@@ -13,23 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.shared.extension;
 
-package com.vaadin.shared.ui;
+import com.vaadin.shared.communication.SharedState;
 
-import java.util.HashMap;
-import java.util.Map;
+/**
+ * Shared state for {@code AbstractEventTriggerExtensionConnector} extension.
+ *
+ *  @since
+ */
+public class PartInformationState extends SharedState {
 
-import com.vaadin.shared.extension.PartInformationState;
-
-public class BrowserWindowOpenerState extends PartInformationState {
-    public static final String locationResource = "url";
-
-    public String target = "_blank";
-
-    public String features;
-
-    public String uriFragment;
-
-    public Map<String, String> parameters = new HashMap<>();
+    /**
+     * Information passed to the widget on the client side, to allow it to
+     * attach to the correct DOM element.
+     */
+    public String partInformation;
 
 }

@@ -18,13 +18,8 @@ package com.vaadin.client.extensions;
 
 import java.util.Map.Entry;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ServerConnector;
 import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.shared.ui.BrowserWindowOpenerState;
 import com.vaadin.shared.ui.Connect;
@@ -37,15 +32,8 @@ import com.vaadin.shared.util.SharedUtil;
  * @since 7.0.0
  */
 @Connect(BrowserWindowOpener.class)
-public class BrowserWindowOpenerConnector extends AbstractExtensionConnector
-        implements ClickHandler {
-
-    @Override
-    protected void extend(ServerConnector target) {
-        final Widget targetWidget = ((ComponentConnector) target).getWidget();
-
-        targetWidget.addDomHandler(this, ClickEvent.getType());
-    }
+public class BrowserWindowOpenerConnector
+        extends AbstractEventTriggerExtensionConnector {
 
     @Override
     public BrowserWindowOpenerState getState() {
@@ -53,7 +41,7 @@ public class BrowserWindowOpenerConnector extends AbstractExtensionConnector
     }
 
     @Override
-    public void onClick(ClickEvent event) {
+    protected void trigger() {
         String url = getResourceUrl(BrowserWindowOpenerState.locationResource);
         url = addParametersAndFragment(url);
         if (url != null) {

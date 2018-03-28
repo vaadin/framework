@@ -122,8 +122,27 @@ public class BrowserWindowOpener extends AbstractExtension {
         setResource(BrowserWindowOpenerState.locationResource, resource);
     }
 
+    /**
+     * Add this extension to the target component.
+     *
+     * @param target
+     *            the component to attach this extension to
+     */
     public void extend(AbstractComponent target) {
         super.extend(target);
+    }
+
+    /**
+     * Add this extension to the {@code EventTrigger}.
+     *
+     * @param eventTrigger
+     *            the trigger to attach this extension to
+     *
+     * @since
+     */
+    public void extend(EventTrigger eventTrigger) {
+        super.extend(eventTrigger.getConnector());
+        getState().partInformation = eventTrigger.getPartInformation();
     }
 
     /**
