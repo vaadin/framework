@@ -107,7 +107,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                 }
 
                 hasChanges |= !Objects.equals(dateString, newDateString)
-                        || !Objects.equals(oldDate, newDate);
+                        || !Objects.equals(oldDate, newDate)
+                        || currentParseErrorMessage != null;
 
                 if (hasChanges) {
                     dateString = newDateString;
