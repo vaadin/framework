@@ -502,7 +502,8 @@ public class ConnectorTracker implements Serializable {
     }
 
     /**
-     * Mark the connector as dirty. This should not be done while the response
+     * Mark the connector as dirty and notifies any marked as dirty listeners.
+     * This should not be done while the response
      * is being written.
      *
      * @see #getDirtyConnectors()
@@ -518,10 +519,14 @@ public class ConnectorTracker implements Serializable {
         }
 
         if (getLogger().isLoggable(Level.FINE)) {
-            if (!dirtyConnectors.contains(connector)) {
+            if (!isDirty(connector)) {
                 getLogger().log(Level.FINE, "{0} is now dirty",
                         getConnectorAndParentInfo(connector));
             }
+        }
+
+        if(!isDirty(connector)) {
+            uI.notifyMarkedAsDirtyListeners(connector);
         }
 
         dirtyConnectors.add(connector);
