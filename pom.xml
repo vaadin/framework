@@ -454,6 +454,25 @@
                     <version>${vaadin.plugin.version}</version>
                 </plugin>
                 <plugin>
+                    <groupId>com.marvinformatics.formatter</groupId>
+                    <artifactId>formatter-maven-plugin</artifactId>
+                    <version>2.1.2</version>
+                    <configuration>
+                        <configFile>../eclipse/VaadinJavaConventions.xml</configFile>
+                        <!-- Provide a dummy JS config file to avoid errors -->
+                        <configJsFile>../eclipse/VaadinJavaConventions.xml</configJsFile>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>format-source</id>
+                            <goals>
+                                <goal>format</goal>
+                            </goals>
+                            <phase>process-sources</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>2.17</version>
@@ -540,16 +559,6 @@
         </pluginManagement>
 
         <plugins>
-            <plugin>
-                <groupId>com.marvinformatics.formatter</groupId>
-                <artifactId>formatter-maven-plugin</artifactId>
-                <version>1.8.1</version>
-                <configuration>
-                    <configFile>classpath:/eclipse/VaadinJavaConventions.xml</configFile>
-                    <!-- Provide a dummy JS config file to avoid errors -->
-                    <configJsFile>classpath:/eclipse/VaadinJavaConventions.xml</configJsFile>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-maven-plugin</artifactId>
