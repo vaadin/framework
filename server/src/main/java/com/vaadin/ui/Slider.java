@@ -298,7 +298,7 @@ public class Slider extends AbstractField<Double> {
      */
     @Override
     public void setValue(Double value) {
-        Objects.requireNonNull(value, "color cannot be null");
+        Objects.requireNonNull(value, "Value cannot be null");
         super.setValue(value);
     }
 
