@@ -427,10 +427,11 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
             }
         }
         expandedItemIds.remove(id);
-        invalidatedChildren.stream().map(getDataProvider()::getId).forEach(x -> {
-            removeChildren(x);
-            parentIdMap.remove(x);
-        });
+        invalidatedChildren.stream().map(getDataProvider()::getId)
+                .forEach(x -> {
+                    removeChildren(x);
+                    parentIdMap.remove(x);
+                });
     }
 
     /**
@@ -540,7 +541,8 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      */
     protected void registerChildren(T parent, List<T> childList) {
         childMap.put(parent, new HashSet<>(childList));
-        childList.forEach(x -> parentIdMap.put(getDataProvider().getId(x), parent));
+        childList.forEach(
+                x -> parentIdMap.put(getDataProvider().getId(x), parent));
     }
 
     /**

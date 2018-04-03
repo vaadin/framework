@@ -123,7 +123,8 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      * @param <F> Query type
      * @return new {@link HierarchyMapper}
      */
-    protected <F> HierarchyMapper<T, F> createHierarchyMapper(HierarchicalDataProvider<T, F> dataProvider) {
+    protected <F> HierarchyMapper<T, F> createHierarchyMapper(
+            HierarchicalDataProvider<T, F> dataProvider) {
         return new HierarchyMapper<>(dataProvider);
     }
 
@@ -180,7 +181,8 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      *            changes, {@code false} otherwise.
      */
     public void collapse(T item, boolean syncAndRefresh) {
-        Integer index = syncAndRefresh ? mapper.getIndexOf(item).orElse(null) : null;
+        Integer index = syncAndRefresh ? mapper.getIndexOf(item).orElse(null)
+                : null;
         doCollapse(item, index, syncAndRefresh);
     }
 
@@ -267,7 +269,8 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      *         false} otherwise.
      */
     public void expand(T item, boolean syncAndRefresh) {
-        Integer index = syncAndRefresh ? mapper.getIndexOf(item).orElse(null) : null;
+        Integer index = syncAndRefresh ? mapper.getIndexOf(item).orElse(null)
+                : null;
         doExpand(item, index, syncAndRefresh);
     }
 
@@ -304,11 +307,10 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         Range addedRows = mapper.expand(item, index);
         if (syncAndRefresh) {
             if (!reset && !addedRows.isEmpty()) {
-                getClientRpc()
-                        .insertRows(addedRows.getStart(), addedRows.length());
-                Stream<T> children = mapper
-                        .fetchItems(item,
-                                Range.withLength(0, addedRows.length()));
+                getClientRpc().insertRows(addedRows.getStart(),
+                        addedRows.length());
+                Stream<T> children = mapper.fetchItems(item,
+                        Range.withLength(0, addedRows.length()));
                 pushData(addedRows.getStart(),
                         children.collect(Collectors.toList()));
             }

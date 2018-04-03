@@ -32,8 +32,8 @@ import com.vaadin.ui.dnd.FileDropHandler;
  * @see FileDropHandler
  * @since 8.1
  */
-public class FileDropEvent<T extends AbstractComponent> extends
-        Component.Event {
+public class FileDropEvent<T extends AbstractComponent>
+        extends Component.Event {
 
     private final Collection<Html5File> files;
 

@@ -183,6 +183,7 @@ public abstract class AbstractLocalDateTimeField
 
     @Override
     protected LocalDateTime toType(TemporalAccessor temporalAccessor) {
-        return temporalAccessor == null? null : LocalDateTime.from(temporalAccessor);
+        return temporalAccessor == null ? null
+                : LocalDateTime.from(temporalAccessor);
     }
 }

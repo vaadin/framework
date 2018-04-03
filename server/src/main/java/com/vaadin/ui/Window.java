@@ -79,8 +79,7 @@ import com.vaadin.util.ReflectTools;
  * @since 3.0
  */
 @SuppressWarnings({ "serial", "deprecation" })
-public class Window extends Panel
-        implements FocusNotifier, BlurNotifier {
+public class Window extends Panel implements FocusNotifier, BlurNotifier {
 
     private WindowServerRpc rpc = new WindowServerRpc() {
 

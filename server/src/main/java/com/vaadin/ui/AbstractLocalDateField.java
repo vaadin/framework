@@ -160,6 +160,7 @@ public abstract class AbstractLocalDateField
 
     @Override
     protected LocalDate toType(TemporalAccessor temporalAccessor) {
-        return temporalAccessor == null? null : LocalDate.from(temporalAccessor);
+        return temporalAccessor == null ? null
+                : LocalDate.from(temporalAccessor);
     }
 }

@@ -30,8 +30,8 @@ import com.vaadin.ui.dnd.event.FileDropEvent;
  * @see com.vaadin.ui.dnd.FileDropTarget
  * @since 8.1
  */
-public interface FileDropHandler<T extends AbstractComponent> extends
-        Serializable {
+public interface FileDropHandler<T extends AbstractComponent>
+        extends Serializable {
 
     /**
      * Handles the drop event. The method is called when files are dropped onto

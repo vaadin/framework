@@ -30,8 +30,7 @@ import com.vaadin.server.PaintTarget;
  *
  * @since 6.3
  */
-public abstract class ClientSideCriterion
-        implements AcceptCriterion {
+public abstract class ClientSideCriterion implements AcceptCriterion {
 
     /*
      * All criteria that extend this must be completely validatable on client

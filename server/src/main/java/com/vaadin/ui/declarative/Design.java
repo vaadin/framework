@@ -264,8 +264,7 @@ public class Design implements Serializable {
             String packageName = getPackageName(componentClass);
             String prefix = context.getPackagePrefix(packageName);
             if (prefix == null) {
-                prefix = packageName.replace('.', '_')
-                        .toLowerCase(Locale.ROOT);
+                prefix = packageName.replace('.', '_').toLowerCase(Locale.ROOT);
                 context.addPackagePrefix(prefix, packageName);
             }
             prefix += "-";

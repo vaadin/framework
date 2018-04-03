@@ -430,9 +430,8 @@ public abstract class AbstractListing<T> extends AbstractComponent
             ((DeclarativeCaptionGenerator) captionGenerator).setCaption(item,
                     caption);
         } else {
-            throw new IllegalStateException(String.format(
-                    "Don't know how "
-                            + "to set caption using current caption generator '%s'",
+            throw new IllegalStateException(String.format("Don't know how "
+                    + "to set caption using current caption generator '%s'",
                     captionGenerator.getClass().getName()));
         }
 
@@ -443,9 +442,8 @@ public abstract class AbstractListing<T> extends AbstractComponent
                         DesignAttributeHandler.readAttribute("icon",
                                 child.attributes(), Resource.class));
             } else {
-                throw new IllegalStateException(String.format(
-                        "Don't know how "
-                                + "to set icon using current caption generator '%s'",
+                throw new IllegalStateException(String.format("Don't know how "
+                        + "to set icon using current caption generator '%s'",
                         iconGenerator.getClass().getName()));
             }
         }

@@ -88,15 +88,17 @@ public class HierarchicalCommunicatorTest {
         communicator.expand(FOLDER);
         communicator.refresh(LEAF);
         //Replace dataprovider
-        communicator.setDataProvider(new TreeDataProvider<>(new TreeData<>()), null);
+        communicator.setDataProvider(new TreeDataProvider<>(new TreeData<>()),
+                null);
         dataProvider.refreshAll();
         communicator.beforeClientResponse(false);
         assertFalse("Stalled object in KeyMapper",
                 communicator.getKeyMapper().has(ROOT));
-        assertEquals(-1,communicator.getParentIndex(FOLDER).longValue());
+        assertEquals(-1, communicator.getParentIndex(FOLDER).longValue());
     }
 
-    private static class TestHierarchicalDataCommunicator<T> extends HierarchicalDataCommunicator<T> {
+    private static class TestHierarchicalDataCommunicator<T>
+            extends HierarchicalDataCommunicator<T> {
         @Override
         public void extend(AbstractClientConnector target) {
             super.extend(target);

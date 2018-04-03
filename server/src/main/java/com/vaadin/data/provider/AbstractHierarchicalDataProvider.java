@@ -27,8 +27,7 @@ package com.vaadin.data.provider;
  * @param <F>
  *            filter type
  */
-public abstract class AbstractHierarchicalDataProvider<T, F>
-        extends AbstractDataProvider<T, F>
-        implements HierarchicalDataProvider<T, F> {
+public abstract class AbstractHierarchicalDataProvider<T, F> extends
+        AbstractDataProvider<T, F> implements HierarchicalDataProvider<T, F> {
 
 }

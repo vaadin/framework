@@ -121,8 +121,7 @@ import com.vaadin.util.ReflectTools;
  * @since 7.0
  */
 public abstract class UI extends AbstractSingleComponentContainer
-        implements Action.Notifier, PollNotifier,
-        LegacyComponent, Focusable {
+        implements Action.Notifier, PollNotifier, LegacyComponent, Focusable {
 
     /**
      * The application to which this UI belongs

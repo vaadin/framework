@@ -83,12 +83,11 @@ public class ReadOnlyHasValueTest {
     public void testEmptyValue() {
         Binder<Bean> beanBinder = new Binder<>(Bean.class);
         Label label = new Label();
-        ReadOnlyHasValue<String> strHasValue =
-                new ReadOnlyHasValue<>(label::setValue, NO_VALUE);
+        ReadOnlyHasValue<String> strHasValue = new ReadOnlyHasValue<>(
+                label::setValue, NO_VALUE);
 
         beanBinder.forField(strHasValue)
-                .withConverter(Long::parseLong,(Long i)->"" + i)
-                .bind("v");
+                .withConverter(Long::parseLong, (Long i) -> "" + i).bind("v");
 
         beanBinder.readBean(new Bean(42));
         assertEquals("42", label.getValue());

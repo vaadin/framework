@@ -74,10 +74,10 @@ public class ComboBoxDeclarativeTest
             IllegalAccessException, InvocationTargetException {
         List<String> items = Arrays.asList("foo", "bar", "foobar");
 
-        String design = String.format(
-                "<%s>\n" + "<option item='foo' style='foo-style'>foo</option>\n"
-                        + "<option item='bar' style='bar-style'>bar</option>"
-                        + "<option item='foobar' style='foobar-style'>foobar</option></%s>",
+        String design = String.format("<%s>\n"
+                + "<option item='foo' style='foo-style'>foo</option>\n"
+                + "<option item='bar' style='bar-style'>bar</option>"
+                + "<option item='foobar' style='foobar-style'>foobar</option></%s>",
                 getComponentTag(), getComponentTag());
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.setItems(items);

@@ -585,7 +585,9 @@ public class TabSheet extends AbstractComponentContainer
      */
     private void setSelected(Component component) {
         Tab tab = tabs.get(selected);
-        if (tab != null && !Objects.equals(tab.getComponent(), component) && tab.getComponent() != null && tab.getComponent().isAttached()) {
+        if (tab != null && !Objects.equals(tab.getComponent(), component)
+                && tab.getComponent() != null
+                && tab.getComponent().isAttached()) {
             tab.getComponent().detach();
             tab.getComponent().attach(); // ugly hack
         }

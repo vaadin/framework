@@ -73,9 +73,8 @@ public class DropTargetExtension<T extends AbstractComponent>
      * {@link #onDrop(List, Map, DropEffect, MouseEventDetails)} instead.
      */
     protected void registerDropTargetRpc() {
-        registerRpc(
-                (DropTargetRpc) (types, data, dropEffect, mouseEventDetails) ->
-                    onDrop(types, data,
+        registerRpc((DropTargetRpc) (types, data, dropEffect,
+                mouseEventDetails) -> onDrop(types, data,
                         DropEffect.valueOf(dropEffect.toUpperCase(Locale.ROOT)),
                         mouseEventDetails));
     }
