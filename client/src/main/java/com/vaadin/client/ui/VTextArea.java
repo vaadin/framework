@@ -34,8 +34,7 @@ import com.vaadin.client.ui.dd.DragImageModifier;
  * @author Vaadin Ltd.
  *
  */
-public class VTextArea extends VTextField
-        implements DragImageModifier {
+public class VTextArea extends VTextField implements DragImageModifier {
 
     public static final String CLASSNAME = "v-textarea";
 

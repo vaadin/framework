@@ -23,7 +23,8 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author Vaadin Ltd
  * @since 8.3.2
  */
-public class SpacerVisibilityChangedEvent extends GwtEvent<SpacerVisibilityChangedHandler> {
+public class SpacerVisibilityChangedEvent
+        extends GwtEvent<SpacerVisibilityChangedHandler> {
 
     /**
      * Handler type.

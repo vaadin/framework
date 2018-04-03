@@ -92,16 +92,14 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
     public void setConnection(ApplicationConnection connection) {
         this.connection = connection;
 
-        connection.addHandler(ApplicationStoppedEvent.TYPE,
-                event -> {
-                    if (isReconnecting()) {
-                        giveUp();
-                    }
-                    if (scheduledReconnect != null
-                            && scheduledReconnect.isRunning()) {
-                        scheduledReconnect.cancel();
-                    }
-                });
+        connection.addHandler(ApplicationStoppedEvent.TYPE, event -> {
+            if (isReconnecting()) {
+                giveUp();
+            }
+            if (scheduledReconnect != null && scheduledReconnect.isRunning()) {
+                scheduledReconnect.cancel();
+            }
+        });
 
         // Allow dialog to cache needed resources to make them available when we
         // are offline

@@ -70,8 +70,8 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
             if (popup.captionWrapper != null) {
                 popup.captionWrapper.updateCaption();
             } else {
-                popup.captionWrapper = new VCaptionWrapper(
-                        childConnector, getConnection());
+                popup.captionWrapper = new VCaptionWrapper(childConnector,
+                        getConnection());
                 popup.setWidget(popup.captionWrapper);
                 popup.captionWrapper.updateCaption();
             }

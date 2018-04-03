@@ -39,7 +39,7 @@ import elemental.json.JsonValue;
 public class ColumnConnector extends AbstractExtensionConnector {
 
     public abstract static class CustomColumn
-    extends Column<Object, JsonObject> {
+            extends Column<Object, JsonObject> {
 
         private final String connectorId;
         private ContentMode tooltipContentMode;

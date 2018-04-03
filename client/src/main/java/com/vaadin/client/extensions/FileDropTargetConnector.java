@@ -178,14 +178,14 @@ public class FileDropTargetConnector extends DropTargetExtensionConnector {
                 }
             }
         }
-
+    
         // Zero sized files without a type are also likely to be folders
         if (file.size == 0 && !file.type) {
             return false;
         }
-
+    
         // TODO Make it detect folders on all browsers
-
+    
         return true;
     }-*/;
 

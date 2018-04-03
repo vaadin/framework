@@ -155,12 +155,12 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
      */
     protected void setAndUpdateAssistiveLabels(
             VAbstractCalendarPanel calendar) {
-        calendar.setAssistiveLabelPreviousMonth(
-                getState().assistiveLabels.get(AccessibleElement.PREVIOUS_MONTH));
+        calendar.setAssistiveLabelPreviousMonth(getState().assistiveLabels
+                .get(AccessibleElement.PREVIOUS_MONTH));
         calendar.setAssistiveLabelNextMonth(
                 getState().assistiveLabels.get(AccessibleElement.NEXT_MONTH));
-        calendar.setAssistiveLabelPreviousYear(
-                getState().assistiveLabels.get(AccessibleElement.PREVIOUS_YEAR));
+        calendar.setAssistiveLabelPreviousYear(getState().assistiveLabels
+                .get(AccessibleElement.PREVIOUS_YEAR));
         calendar.setAssistiveLabelNextYear(
                 getState().assistiveLabels.get(AccessibleElement.NEXT_YEAR));
 

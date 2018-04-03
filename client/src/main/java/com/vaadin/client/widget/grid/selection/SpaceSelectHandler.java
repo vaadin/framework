@@ -56,15 +56,13 @@ public class SpaceSelectHandler<T> {
                 scrollHandler = null;
             }
 
-            scrollHandler = grid
-                    .addDataAvailableHandler(dataAvailableEvent -> {
-                        if (dataAvailableEvent.getAvailableRows()
-                                .contains(rowIndex)) {
-                            setSelected(grid, rowIndex);
-                            scrollHandler.removeHandler();
-                            scrollHandler = null;
-                        }
-                    });
+            scrollHandler = grid.addDataAvailableHandler(dataAvailableEvent -> {
+                if (dataAvailableEvent.getAvailableRows().contains(rowIndex)) {
+                    setSelected(grid, rowIndex);
+                    scrollHandler.removeHandler();
+                    scrollHandler = null;
+                }
+            });
             grid.scrollToRow(rowIndex, ScrollDestination.ANY);
         }
 

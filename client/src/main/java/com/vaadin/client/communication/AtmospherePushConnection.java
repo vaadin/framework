@@ -149,16 +149,15 @@ public class AtmospherePushConnection implements PushConnection {
             final PushConfigurationState pushConfiguration) {
         this.connection = connection;
 
-        connection.addHandler(ApplicationStoppedEvent.TYPE,
-                event -> {
-                    if (state == State.DISCONNECT_PENDING
-                            || state == State.DISCONNECTED) {
-                        return;
-                    }
+        connection.addHandler(ApplicationStoppedEvent.TYPE, event -> {
+            if (state == State.DISCONNECT_PENDING
+                    || state == State.DISCONNECTED) {
+                return;
+            }
 
-                    disconnect(() -> {
-                    });
-                });
+            disconnect(() -> {
+            });
+        });
         config = createConfig();
         String debugParameter = Location.getParameter("debug");
         if ("push".equals(debugParameter)) {
@@ -506,7 +505,7 @@ public class AtmospherePushConnection implements PushConnection {
             JavaScriptObject config)
     /*-{
         var self = this;
-
+    
         config.url = uri;
         config.onOpen = $entry(function(response) {
             self.@com.vaadin.client.communication.AtmospherePushConnection::onOpen(*)(response);
@@ -532,7 +531,7 @@ public class AtmospherePushConnection implements PushConnection {
         config.onClientTimeout = $entry(function(request) {
             self.@com.vaadin.client.communication.AtmospherePushConnection::onClientTimeout(*)(request);
         });
-
+    
         return $wnd.vaadinPush.atmosphere.subscribe(config);
     }-*/;
 

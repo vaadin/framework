@@ -139,8 +139,7 @@ public abstract class AbstractSplitPanelConnector extends
         panel.maximumPosition = splitterState.maxPosition
                 + splitterState.maxPositionUnit;
 
-        panel.position = splitterState.position
-                + splitterState.positionUnit;
+        panel.position = splitterState.position + splitterState.positionUnit;
 
         panel.setPositionReversed(splitterState.positionReversed);
 
