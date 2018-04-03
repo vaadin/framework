@@ -948,6 +948,9 @@ public class ConnectorTracker implements Serializable {
      * @return unmodifiable list of registered listeners for navigation handler
      */
     public <E> List<E> getRegisteredListeners(Class<E> listenerType) {
+        if (listeners == null) {
+            return Collections.emptyList();
+        }
         List<E> registeredListeners = (List<E>) listeners
                 .computeIfAbsent(listenerType, key -> new ArrayList<>());
         return Collections.unmodifiableList(registeredListeners);
