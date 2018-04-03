@@ -24,10 +24,12 @@ import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.event.MarkedAsDirtyConnectorEvent;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.tests.util.MockUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComponentTest;
+import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -41,8 +43,8 @@ public class MarkAsDirtyListenerTest {
     public void fire_event_when_ui_marked_dirty() {
         UI ui = new MockUI();
 
-        AtomicReference<UI.MarkedAsDirtyConnectorEvent> events = new AtomicReference<>();
-        ui.addMarkedAsDirtyListener(event -> Assert
+        AtomicReference<MarkedAsDirtyConnectorEvent> events = new AtomicReference<>();
+        ui.getConnectorTracker().addMarkedAsDirtyListener(event -> Assert
                 .assertTrue("No reference should have been registered",
                         events.compareAndSet(null, event)));
         // UI is marked dirty on creation and when adding a listener
@@ -60,9 +62,9 @@ public class MarkAsDirtyListenerTest {
 
     @Test
     public void fire_event_for_setContent() {
-        List<UI.MarkedAsDirtyConnectorEvent> events = new ArrayList<>();
+        List<MarkedAsDirtyConnectorEvent> events = new ArrayList<>();
         UI ui = new MockUI() {{
-            addMarkedAsDirtyListener(event -> events.add(event));
+            getConnectorTracker().addMarkedAsDirtyListener(event -> events.add(event));
         }};
         ComponentTest.syncToClient(ui);
 
@@ -84,8 +86,8 @@ public class MarkAsDirtyListenerTest {
         ui.setContent(button);
         ComponentTest.syncToClient(button);
 
-        AtomicReference<UI.MarkedAsDirtyConnectorEvent> events = new AtomicReference<>();
-        ui.addMarkedAsDirtyListener(event -> Assert
+        AtomicReference<MarkedAsDirtyConnectorEvent> events = new AtomicReference<>();
+        ui.getConnectorTracker().addMarkedAsDirtyListener(event -> Assert
                 .assertTrue("No reference should have been registered",
                         events.compareAndSet(null, event)));
 
@@ -101,9 +103,9 @@ public class MarkAsDirtyListenerTest {
 
     @Test
     public void fire_events_for_each_component() {
-        List<UI.MarkedAsDirtyConnectorEvent> events = new ArrayList<>();
+        List<MarkedAsDirtyConnectorEvent> events = new ArrayList<>();
         UI ui = new MockUI() {{
-            addMarkedAsDirtyListener(event -> events.add(event));
+            getConnectorTracker().addMarkedAsDirtyListener(event -> events.add(event));
         }};
 
         HorizontalLayout layout = new HorizontalLayout();
@@ -119,7 +121,7 @@ public class MarkAsDirtyListenerTest {
                 events.size());
 
         Set<ClientConnector> connectors = events.stream()
-                .map(UI.MarkedAsDirtyConnectorEvent::getConnector)
+                .map(MarkedAsDirtyConnectorEvent::getConnector)
                 .collect(Collectors.toSet());
 
         Assert.assertTrue(

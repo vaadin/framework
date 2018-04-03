@@ -21,16 +21,20 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.vaadin.event.MarkedAsDirtyConnectorEvent;
+import com.vaadin.event.MarkedAsDirtyListener;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.DragAndDropService;
@@ -40,6 +44,7 @@ import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.communication.ConnectorHierarchyWriter;
+import com.vaadin.shared.Registration;
 
 import elemental.json.Json;
 import elemental.json.JsonException;
@@ -70,6 +75,8 @@ public class ConnectorTracker implements Serializable {
     private final Map<String, ClientConnector> connectorIdToConnector = new HashMap<>();
     private final Set<ClientConnector> dirtyConnectors = new HashSet<>();
     private final Set<ClientConnector> uninitializedConnectors = new HashSet<>();
+
+    private HashMap<Class<?>, List<?>> listeners;
 
     /**
      * Connectors that have been unregistered and should be cleaned up the next
@@ -526,7 +533,7 @@ public class ConnectorTracker implements Serializable {
         }
 
         if(!isDirty(connector)) {
-            uI.notifyMarkedAsDirtyListeners(connector);
+            notifyMarkedAsDirtyListeners(connector);
         }
 
         dirtyConnectors.add(connector);
@@ -903,5 +910,67 @@ public class ConnectorTracker implements Serializable {
      */
     public int getCurrentSyncId() {
         return currentSyncId;
+    }
+
+    /**
+     * Add a marked as dirty listener that will be called when a client
+     * connector is marked as dirty.
+     *
+     * @param listener
+     *         listener to add
+     * @return registration for removing listener registration
+     */
+    public Registration addMarkedAsDirtyListener(
+            MarkedAsDirtyListener listener) {
+        return addListener(MarkedAsDirtyListener.class, listener);
+    }
+
+    /**
+     * Notify all registered MarkedAsDirtyListeners the given client connector
+     * has been marked as dirty.
+     *
+     * @param connector
+     *         client connector marked as dirty
+     */
+    public void notifyMarkedAsDirtyListeners(ClientConnector connector) {
+        getRegisteredListeners(MarkedAsDirtyListener.class).forEach(
+                listener -> listener.connectorMarkedAsDirty(
+                        new MarkedAsDirtyConnectorEvent(connector, uI)));
+    }
+
+    /**
+     * Get all registered listeners for given navigation handler type.
+     *
+     * @param listenerType
+     *         handler to get listeners for
+     * @param <E>
+     *         the handler type
+     * @return unmodifiable list of registered listeners for navigation handler
+     */
+    public <E> List<E> getRegisteredListeners(Class<E> listenerType) {
+        List<E> registeredListeners = (List<E>) listeners
+                .computeIfAbsent(listenerType, key -> new ArrayList<>());
+        return Collections.unmodifiableList(registeredListeners);
+    }
+
+    /**
+     * Add a new listener of given class type
+     *
+     * @param listenerClass
+     *         Listener class
+     * @param listener
+     *         listener to add
+     * @param <E>
+     *         the listener type
+     * @return handler to remove the event listener
+     */
+    private <E> Registration addListener(Class<E> listenerClass, E listener) {
+        if (listeners == null) {
+            listeners = new HashMap<>();
+        }
+        List<E> list = (List<E>) listeners
+                .computeIfAbsent(listenerClass, key -> new ArrayList<>());
+        list.add(listener);
+        return () -> list.remove(listener);
     }
 }

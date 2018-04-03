@@ -39,7 +39,6 @@ import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
-import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
@@ -2033,76 +2032,5 @@ public abstract class UI extends AbstractSingleComponentContainer
          * @param event
          */
         public void windowOrderUpdated(WindowOrderUpdateEvent event);
-    }
-
-    /**
-     * Event which is fired for all registered MarkDirtyListeners when a
-     * connector is marked as dirty.
-     */
-    public static class MarkedAsDirtyConnectorEvent extends ConnectorEvent {
-
-        private static final String MARK_DIRTY = "connectorMarkedAsDirty";
-
-        private final UI ui;
-
-        public MarkedAsDirtyConnectorEvent(ClientConnector source, UI ui) {
-            super(source);
-            this.ui = ui;
-        }
-
-        /**
-         * Get the UI for which the connector event was fired
-         *
-         * @return target ui for event
-         */
-        public UI getUi() {
-            return ui;
-        }
-    }
-
-    /**
-     * An interface used for listening to marked as dirty events.
-     */
-    @FunctionalInterface
-    public interface MarkedAsDirtyListener extends ConnectorEventListener {
-
-        Method markedAsDirtyMethod = ReflectTools
-                .findMethod(MarkedAsDirtyListener.class,
-                        "connectorMarkedAsDirty",
-                        MarkedAsDirtyConnectorEvent.class);
-
-        /**
-         * Method called when a client connector has been marked as dirty.
-         *
-         * @param event
-         *            marked as dirty connector event object
-         */
-        void connectorMarkedAsDirty(MarkedAsDirtyConnectorEvent event);
-    }
-
-    /**
-     * Add a marked as dirty listener that will be called when a client
-     * connector is marked as dirty.
-     *
-     * @param listener
-     *            listener to add
-     * @return registration for removing listener registration
-     */
-    public Registration addMarkedAsDirtyListener(
-            MarkedAsDirtyListener listener) {
-        return addListener(MarkedAsDirtyConnectorEvent.MARK_DIRTY,
-                MarkedAsDirtyConnectorEvent.class, listener,
-                MarkedAsDirtyListener.markedAsDirtyMethod);
-    }
-
-    /**
-     * Notify all registered MarkedAsDirtyListeners the given client connector
-     * has been marked as dirty.
-     *
-     * @param connector
-     *            client connector marked as dirty
-     */
-    public void notifyMarkedAsDirtyListeners(ClientConnector connector) {
-        fireEvent(new MarkedAsDirtyConnectorEvent(connector, this));
     }
 }
