@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -1012,22 +1012,22 @@ public interface Component extends ClientConnector, Sizeable {
          * Sets the focus to this component.
          *
          * <pre>
-         * Form loginBox = new Form();
+         * FormLayout loginBox = new FormLayout();
          * loginBox.setCaption(&quot;Login&quot;);
          * layout.addComponent(loginBox);
          *
          * // Create the first field which will be focused
          * TextField username = new TextField(&quot;User name&quot;);
-         * loginBox.addField(&quot;username&quot;, username);
+         * loginBox.addComponent(username);
          *
          * // Set focus to the user name
          * username.focus();
          *
          * TextField password = new TextField(&quot;Password&quot;);
-         * loginBox.addField(&quot;password&quot;, password);
+         * loginBox.addComponent(password);
          *
          * Button login = new Button(&quot;Login&quot;);
-         * loginBox.getFooter().addComponent(login);
+         * loginBox.addComponent(login);
          * </pre>
          *
          * <p>

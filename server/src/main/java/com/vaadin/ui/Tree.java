@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -454,7 +454,7 @@ public class Tree<T> extends Composite
      *            the items to expand recursively
      * @param depth
      *            the maximum depth of recursion
-     * @since
+     * @since 8.4
      */
     public void expandRecursively(Collection<T> items, int depth) {
         treeGrid.expandRecursively(items, depth);
@@ -497,7 +497,7 @@ public class Tree<T> extends Composite
      *            the items to expand recursively
      * @param depth
      *            the maximum depth of recursion
-     * @since
+     * @since 8.4
      */
     public void collapseRecursively(Collection<T> items, int depth) {
         treeGrid.collapseRecursively(items, depth);
@@ -670,6 +670,24 @@ public class Tree<T> extends Composite
     public void setItemDescriptionGenerator(
             DescriptionGenerator<T> descriptionGenerator) {
         treeGrid.setDescriptionGenerator(descriptionGenerator);
+    }
+
+    /**
+     * Sets the description generator that is used for generating HTML tooltip
+     * descriptions for items.
+     *
+     * @param descriptionGenerator
+     *            the item description generator to set, or <code>null</code> to
+     *            remove a previously set generator
+     * @param contentMode
+     *            how client should interpret textual values
+     *
+     * @since 8.4
+     */
+    public void setItemDescriptionGenerator(
+            DescriptionGenerator<T> descriptionGenerator,
+            ContentMode contentMode) {
+        treeGrid.setDescriptionGenerator(descriptionGenerator, contentMode);
     }
 
     /**

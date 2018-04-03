@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -568,7 +568,6 @@ public class Escalator extends Widget
                     yMov.moveTouch(event);
                     xMov.validate(yMov);
                     yMov.validate(xMov);
-                    event.getNativeEvent().preventDefault();
                     moveScrollFromEvent(escalator, xMov.delta, yMov.delta,
                             event.getNativeEvent());
                 }
@@ -620,21 +619,36 @@ public class Escalator extends Widget
                 final double deltaX, final double deltaY,
                 final NativeEvent event) {
 
+            boolean scrollPosXChanged = false;
+            boolean scrollPosYChanged = false;
+
             if (!Double.isNaN(deltaX)) {
+                double oldScrollPosX = escalator.horizontalScrollbar
+                        .getScrollPos();
                 escalator.horizontalScrollbar.setScrollPosByDelta(deltaX);
+                if (oldScrollPosX != escalator.horizontalScrollbar
+                        .getScrollPos()) {
+                    scrollPosXChanged = true;
+                }
             }
 
             if (!Double.isNaN(deltaY)) {
+                double oldScrollPosY = escalator.verticalScrollbar
+                        .getScrollPos();
                 escalator.verticalScrollbar.setScrollPosByDelta(deltaY);
+                if (oldScrollPosY != escalator.verticalScrollbar
+                        .getScrollPos()) {
+                    scrollPosYChanged = true;
+                }
             }
 
             /*
-             * TODO: only prevent if not scrolled to end/bottom. Or no? UX team
-             * needs to decide.
+             * Only prevent if internal scrolling happened. If there's no more
+             * room to scroll internally, allow the event to pass further.
              */
-            final boolean warrantedYScroll = deltaY != 0
+            final boolean warrantedYScroll = deltaY != 0 && scrollPosYChanged
                     && escalator.verticalScrollbar.showsScrollHandle();
-            final boolean warrantedXScroll = deltaX != 0
+            final boolean warrantedXScroll = deltaX != 0 && scrollPosXChanged
                     && escalator.horizontalScrollbar.showsScrollHandle();
             if (warrantedYScroll || warrantedXScroll) {
                 event.preventDefault();

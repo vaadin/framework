@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -188,7 +188,7 @@ public class Binder<BEAN> implements Serializable {
          * @param readOnly
          *            {@code true} to set binding read-only; {@code false} to
          *            enable writes
-         * @since
+         * @since 8.4
          * @throws IllegalStateException
          *             if trying to make binding read-write and the setter is
          *             {@code null}
@@ -201,7 +201,7 @@ public class Binder<BEAN> implements Serializable {
          * @see #setReadOnly(boolean)
          * 
          * @return {@code true} if read-only; {@code false} if not
-         * @since
+         * @since 8.4
          */
         public boolean isReadOnly();
 
@@ -209,7 +209,7 @@ public class Binder<BEAN> implements Serializable {
          * Gets the getter associated with this Binding.
          *
          * @return the getter
-         * @since
+         * @since 8.4
          */
         public ValueProvider<BEAN, TARGET> getGetter();
 
@@ -217,7 +217,7 @@ public class Binder<BEAN> implements Serializable {
          * Gets the setter associated with this Binding.
          *
          * @return the setter
-         * @since
+         * @since 8.4
          */
         public Setter<BEAN, TARGET> getSetter();
     }
@@ -728,6 +728,23 @@ public class Binder<BEAN> implements Serializable {
          */
         public BindingBuilder<BEAN, TARGET> asRequired(
                 ErrorMessageProvider errorMessageProvider);
+
+        /**
+         * Sets the field to be required and delegates the required check to a
+         * custom validator. This means two things:
+         * <ol>
+         * <li>the required indicator will be displayed for this field</li>
+         * <li>the field value is validated by {@code requiredValidator}</li>
+         * </ol>
+         *
+         * @see HasValue#setRequiredIndicatorVisible(boolean)
+         * @param requiredValidator
+         *            validator responsible for the required check
+         * @return this binding, for chaining
+         * @since 8.4
+         */
+        public BindingBuilder<BEAN, TARGET> asRequired(
+                Validator<TARGET> requiredValidator);
     }
 
     /**
@@ -885,11 +902,17 @@ public class Binder<BEAN> implements Serializable {
         @Override
         public BindingBuilder<BEAN, TARGET> asRequired(
                 ErrorMessageProvider errorMessageProvider) {
+            return asRequired(Validator.from(
+                    value -> !Objects.equals(value, field.getEmptyValue()),
+                    errorMessageProvider));
+        }
+
+        @Override
+        public BindingBuilder<BEAN, TARGET> asRequired(
+                Validator<TARGET> customRequiredValidator) {
             checkUnbound();
             field.setRequiredIndicatorVisible(true);
-            return withValidator(
-                    value -> !Objects.equals(value, field.getEmptyValue()),
-                    errorMessageProvider);
+            return withValidator(customRequiredValidator);
         }
 
         /**
@@ -982,8 +1005,8 @@ public class Binder<BEAN> implements Serializable {
 
         private boolean readOnly;
 
-        // Not final since we temporarily remove listener while changing values
-        private Registration onValueChange;
+        private final Registration onValueChange;
+        private boolean valueInit = false;
 
         /**
          * Contains all converters and validators chained together in the
@@ -1056,7 +1079,6 @@ public class Binder<BEAN> implements Serializable {
         public void unbind() {
             if (onValueChange != null) {
                 onValueChange.remove();
-                onValueChange = null;
             }
             binder.removeBindingInternal(this);
             binder = null;
@@ -1116,12 +1138,11 @@ public class Binder<BEAN> implements Serializable {
         private void initFieldValue(BEAN bean) {
             assert bean != null;
             assert onValueChange != null;
-            onValueChange.remove();
+            valueInit = true;
             try {
                 getField().setValue(convertDataToFieldType(bean));
             } finally {
-                onValueChange = getField()
-                        .addValueChangeListener(this::handleFieldValueChange);
+                valueInit = false;
             }
         }
 
@@ -1139,9 +1160,16 @@ public class Binder<BEAN> implements Serializable {
          */
         private void handleFieldValueChange(
                 ValueChangeEvent<FIELDVALUE> event) {
-            // Inform binder of changes; if setBean: writeIfValid
-            getBinder().handleFieldValueChange(this, event);
-            getBinder().fireValueChangeEvent(event);
+            // Don't handle change events when setting initial value
+            if (valueInit) {
+                return;
+            }
+
+            if (binder != null) {
+                // Inform binder of changes; if setBean: writeIfValid
+                getBinder().handleFieldValueChange(this, event);
+                getBinder().fireValueChangeEvent(event);
+            }
         }
 
         /**
@@ -1178,8 +1206,7 @@ public class Binder<BEAN> implements Serializable {
 
         @Override
         public void read(BEAN bean) {
-            field.setValue(converterValidatorChain.convertToPresentation(
-                    getter.apply(bean), createValueContext()));
+            getField().setValue(convertDataToFieldType(bean));
         }
 
         @Override

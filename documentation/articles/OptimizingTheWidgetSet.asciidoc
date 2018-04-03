@@ -89,7 +89,8 @@ public class MyConnectorBundleLoaderFactory extends
     eagerComponents.add(Label.class);
   }
 
-  @Override protected LoadStyle getLoadStyle(JClassType connectorType){
+  @Override
+  protected LoadStyle getLoadStyle(JClassType connectorType){
     Connect annotation = connectorType.getAnnotation(Connect.class);
     Class componentClass = annotation.value();
 
