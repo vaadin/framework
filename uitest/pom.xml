@@ -16,8 +16,6 @@
 		<!-- Don't care about coding style for tests -->
 		<sonar.skip>true</sonar.skip>
 
-		<!-- Browser Factory for TestBench testing, use empty string for default -->
-		<browser.factory>com.vaadin.tests.tb3.XvfbHubBrowserFactory</browser.factory>
 		<!-- Parallel test count -->
 		<parallel.tests>12</parallel.tests>
 	</properties>
@@ -313,6 +311,7 @@
 						<browsers.exclude>${browsers.exclude}</browsers.exclude>
 						<categories.include>${categories.include}</categories.include>
 						<categories.exclude>${categories.exclude}</categories.exclude>
+						<useLocalWebDriver>${useLocalWebDriver}</useLocalWebDriver>
 					</systemPropertyVariables>
 					<includes>
 						<include>**/AllTB3Tests.java</include>

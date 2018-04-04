@@ -31,6 +31,14 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class GridPopupViewTest extends MultiBrowserTest {
 
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        List<DesiredCapabilities> l = getBrowserCapabilities(Browser.IE11,
+                Browser.FIREFOX, Browser.CHROME);
+        l.add(PHANTOMJS2());
+        return l;
+    }
+
     @Test
     public void gridSizeCorrect() {
         openTestURL();

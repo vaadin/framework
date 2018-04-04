@@ -75,4 +75,10 @@ public class GridSidebarThemeTest extends GridBasicFeaturesTest {
 
         compareScreen(theme + "-SidebarClosed2");
     }
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // phantom JS looks wrong from the beginning, so not tested
+        return getBrowsersExcludingPhantomJS();
+    }
 }

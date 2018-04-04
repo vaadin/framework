@@ -35,7 +35,7 @@ public abstract class GridBasicsTest extends MultiBrowserTest {
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
         // Most tests are run with only one browser.
-        return getBrowserCapabilities(Browser.CHROME);
+        return getBrowserCapabilities(Browser.PHANTOMJS);
     }
 
     @Override

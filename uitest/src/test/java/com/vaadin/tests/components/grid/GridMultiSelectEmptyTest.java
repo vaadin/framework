@@ -13,6 +13,12 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class GridMultiSelectEmptyTest extends MultiBrowserTest {
 
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // On PhantomJS the result is more correct before recalculation.
+        return getBrowsersExcludingPhantomJS();
+    }
+
     @Test
     public void testCheckBoxColumnCorrectSize() {
         openTestURL();

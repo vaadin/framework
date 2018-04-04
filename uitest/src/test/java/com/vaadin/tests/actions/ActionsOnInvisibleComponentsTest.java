@@ -17,7 +17,7 @@ public class ActionsOnInvisibleComponentsTest extends MultiBrowserTest {
     // This method should be removed once #12785 is fixed
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowserCapabilities(Browser.IE11);
+        return getBrowserCapabilities(Browser.IE11, Browser.PHANTOMJS);
     }
 
     @Test

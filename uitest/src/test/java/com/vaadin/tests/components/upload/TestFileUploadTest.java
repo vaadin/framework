@@ -38,6 +38,13 @@ import com.vaadin.testbench.elements.UploadElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TestFileUploadTest extends MultiBrowserTest {
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // PhantomJS fails to upload files for unknown reasons
+        return getBrowsersExcludingPhantomJS();
+    }
+
     @Test
     public void testUploadAnyFile() throws Exception {
         openTestURL();

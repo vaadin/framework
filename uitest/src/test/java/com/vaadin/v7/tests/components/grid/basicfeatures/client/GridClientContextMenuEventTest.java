@@ -28,6 +28,13 @@ import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicClientFeatures
 
 public class GridClientContextMenuEventTest
         extends GridBasicClientFeaturesTest {
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // PhantomJS doesn't support context click..
+        return getBrowsersExcludingPhantomJS();
+    }
+
     @Test
     public void testContextMenuEventIsHandledCorrectly() {
         setDebug(true);

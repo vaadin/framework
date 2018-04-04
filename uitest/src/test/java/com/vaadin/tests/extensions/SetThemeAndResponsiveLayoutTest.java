@@ -39,6 +39,13 @@ public class SetThemeAndResponsiveLayoutTest extends MultiBrowserTest {
         testBench().resizeViewPortTo(1024, 768);
     }
 
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // Seems like stylesheet onload is not fired on PhantomJS
+        // https://github.com/ariya/phantomjs/issues/12332
+        return getBrowsersExcludingPhantomJS();
+    }
+
     @Test
     public void testWidthAndHeightRanges() throws Exception {
         openTestURL();

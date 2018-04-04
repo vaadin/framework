@@ -32,6 +32,13 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class TabSheetFocusedTabTest extends MultiBrowserTest {
 
     @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // PhantomJS doesn't send Focus / Blur events when clicking or
+        // navigating with keyboard
+        return getBrowsersExcludingPhantomJS();
+    }
+
+    @Override
     protected Class<?> getUIClass() {
         return TabsheetScrolling.class;
     }

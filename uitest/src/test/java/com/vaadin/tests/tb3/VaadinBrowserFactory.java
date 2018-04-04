@@ -55,6 +55,8 @@ public class VaadinBrowserFactory extends DefaultBrowserFactory {
         switch (browser) {
         case IE11:
             return createIE(browser, "11");
+        case PHANTOMJS:
+            return create(browser, "1", Platform.LINUX);
         case CHROME:
             return create(browser, "40", Platform.VISTA);
         case FIREFOX:

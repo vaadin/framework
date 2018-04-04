@@ -28,6 +28,13 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class GridColumnAutoExpandTest extends MultiBrowserTest {
 
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // The functionality doesn't work for PHJS_1. And the test fails. It
+        // works for PHJS_2.
+        return getBrowsersExcludingPhantomJS();
+    }
+
     @Test
     public void testSecondColumnHasExpanded() {
         openTestURL();

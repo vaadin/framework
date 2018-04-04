@@ -19,10 +19,8 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.jcraft.jsch.JSchException;
-import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTestWithProxy;
 
-@TestCategory("needs-ssh")
 public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
 
     @Override

@@ -35,7 +35,7 @@ import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.CustomTestBenchCommandExecutor;
 import com.vaadin.tests.tb3.MultiBrowserThemeTestWithProxy;
 
-@TestCategory("needs-ssh")
+@TestCategory("communication")
 public class ReconnectDialogThemeTest extends MultiBrowserThemeTestWithProxy {
 
     static By reconnectDialogBy = By.className("v-reconnect-dialog");

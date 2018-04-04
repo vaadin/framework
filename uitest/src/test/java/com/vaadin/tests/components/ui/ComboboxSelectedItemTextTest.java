@@ -44,7 +44,8 @@ public class ComboboxSelectedItemTextTest extends MultiBrowserTest {
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
         // Ignoring Chrome 40 because of a regression. See #16636.
-        return getBrowserCapabilities(Browser.IE11, Browser.FIREFOX);
+        return getBrowserCapabilities(Browser.IE11, Browser.FIREFOX,
+                Browser.PHANTOMJS);
     }
 
     @Test
