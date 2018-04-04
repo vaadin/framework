@@ -82,7 +82,7 @@ public class FileDownloader extends AbstractExtension {
      * @param eventTrigger
      *            the trigger to attach this extension to
      *
-     * @since
+     * @since 8.4
      */
     public void extend(EventTrigger eventTrigger) {
         super.extend(eventTrigger.getConnector());

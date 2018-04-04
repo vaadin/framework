@@ -36,7 +36,7 @@ import com.vaadin.ui.MenuBar;
  * connector on the client side must implement
  * {@code com.vaadin.client.extensions.EventTrigger}.
  *
- * @since
+ * @since 8.4
  */
 public interface EventTrigger extends Serializable {
 

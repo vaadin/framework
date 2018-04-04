@@ -29,7 +29,7 @@ import com.vaadin.shared.extension.PartInformationState;
  * limitations. For instance, window may not be open with the round-trip.
  *
  * @author Vaadin Ltd.
- * @since
+ * @since 8.4
  */
 public abstract class AbstractEventTriggerExtensionConnector
         extends AbstractExtensionConnector {
