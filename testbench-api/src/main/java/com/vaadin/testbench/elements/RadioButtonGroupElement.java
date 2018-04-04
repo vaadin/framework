@@ -45,7 +45,7 @@ public class RadioButtonGroupElement extends AbstractSingleSelectElement {
      * Gets the list of option elements for this check box group.
      *
      * @return list of option elements
-     * @since
+     * @since 8.3.3
      */
     public List<WebElement> getOptionElements() {
         return findElements(bySelectOption);
