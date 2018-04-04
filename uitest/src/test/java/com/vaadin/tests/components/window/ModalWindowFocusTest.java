@@ -113,6 +113,28 @@ public class ModalWindowFocusTest extends MultiBrowserTest {
         assertEquals("true", ariaModal);
         String role = windowElement.getAttribute("role");
         assertEquals("dialog", role);
+    }
+
+    /**
+     * Fourth scenario: Open modal window like in third scenario. Click modality
+     * curtain to remove focus from Window -> press tab twice so that focus goes
+     * into Window again and focuses the text field so that the focus event is
+     * fired.
+     */
+    @Test
+    public void testFocusOutsideModal() {
+        waitForElementPresent(By.id("modalWindowButton"));
+        WebElement button = findElement(By.id("modalWindowButton"));
+        button.click();
+        waitForElementPresent(By.id("focusfield"));
+        WebElement curtain = findElement(
+                org.openqa.selenium.By.className("v-window-modalitycurtain"));
+        curtain.click();
+        pressKeyAndWait(Keys.TAB);
+        pressKeyAndWait(Keys.TAB);
+        TextFieldElement tfe = $(TextFieldElement.class).id("focusfield");
+        assertTrue("First TextField should have received focus",
+                "this has been focused".equals(tfe.getValue()));
 
     }
 
