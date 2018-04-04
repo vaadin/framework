@@ -230,7 +230,7 @@ implements LegacyComponent, Focusable {
      *            the text for the menu item
      * @throws IllegalArgumentException
      *
-     * @since
+     * @since 8.4
      */
     public MenuBar.MenuItem addItem(String caption) {
         return addItem(caption, null, null);
@@ -551,7 +551,7 @@ implements LegacyComponent, Focusable {
          * @param caption
          *            the text for the menu item
          *
-         * @since
+         * @since 8.4
          */
         public MenuBar.MenuItem addItem(String caption) {
             return addItem(caption, null, null);
@@ -1032,7 +1032,7 @@ implements LegacyComponent, Focusable {
          * Gets the menu bar this item is part of.
          *
          * @return the menu bar this item is attached to
-         * @since
+         * @since 8.4
          */
         public MenuBar getMenuBar() {
             return MenuBar.this;

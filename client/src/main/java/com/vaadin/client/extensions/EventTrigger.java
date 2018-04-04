@@ -34,7 +34,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
  * {@code com.vaadin.server.EventTrigger} then this interface should be
  * implemented by the {@link Widget} used by the client side connector.
  *
- * @since
+ * @since 8.4
  */
 public interface EventTrigger {
 
