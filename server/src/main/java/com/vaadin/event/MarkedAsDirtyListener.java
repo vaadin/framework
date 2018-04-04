@@ -17,6 +17,8 @@ package com.vaadin.event;
 
 /**
  * An interface used for listening to marked as dirty events.
+ *
+ * @since 8.4
  */
 @FunctionalInterface
 public interface MarkedAsDirtyListener extends ConnectorEventListener {

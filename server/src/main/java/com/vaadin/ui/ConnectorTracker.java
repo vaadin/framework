@@ -917,6 +917,7 @@ public class ConnectorTracker implements Serializable {
      *
      * @param listener
      *         listener to add
+     * @since 8.4
      * @return registration for removing listener registration
      */
     public Registration addMarkedAsDirtyListener(
@@ -931,6 +932,7 @@ public class ConnectorTracker implements Serializable {
      *
      * @param connector
      *         client connector marked as dirty
+     * @since 8.4
      */
     public void notifyMarkedAsDirtyListeners(ClientConnector connector) {
         MarkedAsDirtyConnectorEvent event = new MarkedAsDirtyConnectorEvent(

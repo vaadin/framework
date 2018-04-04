@@ -21,6 +21,8 @@ import com.vaadin.ui.UI;
 /**
  * Event which is fired for all registered MarkDirtyListeners when a
  * connector is marked as dirty.
+ *
+ * @since 8.4
  */
 public class MarkedAsDirtyConnectorEvent extends ConnectorEvent {
 
