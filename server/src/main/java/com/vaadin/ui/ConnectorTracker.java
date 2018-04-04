@@ -21,7 +21,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -76,7 +75,7 @@ public class ConnectorTracker implements Serializable {
     private final Set<ClientConnector> dirtyConnectors = new HashSet<>();
     private final Set<ClientConnector> uninitializedConnectors = new HashSet<>();
 
-    private HashMap<Class<?>, List<?>> listeners;
+    private List<MarkedAsDirtyListener> markedDirtyListeners = new ArrayList<>(0);
 
     /**
      * Connectors that have been unregistered and should be cleaned up the next
@@ -922,7 +921,8 @@ public class ConnectorTracker implements Serializable {
      */
     public Registration addMarkedAsDirtyListener(
             MarkedAsDirtyListener listener) {
-        return addListener(MarkedAsDirtyListener.class, listener);
+        markedDirtyListeners.add(listener);
+        return () -> markedDirtyListeners.remove(listener);
     }
 
     /**
@@ -933,47 +933,11 @@ public class ConnectorTracker implements Serializable {
      *         client connector marked as dirty
      */
     public void notifyMarkedAsDirtyListeners(ClientConnector connector) {
-        getRegisteredListeners(MarkedAsDirtyListener.class).forEach(
-                listener -> listener.connectorMarkedAsDirty(
-                        new MarkedAsDirtyConnectorEvent(connector, uI)));
+        MarkedAsDirtyConnectorEvent event = new MarkedAsDirtyConnectorEvent(
+                connector, uI);
+        new ArrayList<>(markedDirtyListeners).forEach(listener -> {
+            listener.connectorMarkedAsDirty(event);
+        });
     }
 
-    /**
-     * Get all registered listeners for given navigation handler type.
-     *
-     * @param listenerType
-     *         handler to get listeners for
-     * @param <E>
-     *         the handler type
-     * @return unmodifiable list of registered listeners for navigation handler
-     */
-    public <E> List<E> getRegisteredListeners(Class<E> listenerType) {
-        if (listeners == null) {
-            return Collections.emptyList();
-        }
-        List<E> registeredListeners = (List<E>) listeners
-                .computeIfAbsent(listenerType, key -> new ArrayList<>());
-        return Collections.unmodifiableList(registeredListeners);
-    }
-
-    /**
-     * Add a new listener of given class type
-     *
-     * @param listenerClass
-     *         Listener class
-     * @param listener
-     *         listener to add
-     * @param <E>
-     *         the listener type
-     * @return handler to remove the event listener
-     */
-    private <E> Registration addListener(Class<E> listenerClass, E listener) {
-        if (listeners == null) {
-            listeners = new HashMap<>();
-        }
-        List<E> list = (List<E>) listeners
-                .computeIfAbsent(listenerClass, key -> new ArrayList<>());
-        list.add(listener);
-        return () -> list.remove(listener);
-    }
 }
