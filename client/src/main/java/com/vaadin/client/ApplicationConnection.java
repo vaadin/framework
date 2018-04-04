@@ -409,7 +409,7 @@ public class ApplicationConnection implements HasHandlers {
 
         initializeClientHooks();
 
-        uIConnector.init(cnf.getRootPanelId(), this);
+        uIConnector.init(cnf.getRootElement(), cnf.getRootPanelId(),this);
 
         // Connection state handler preloads the reconnect dialog, which uses
         // overlay container. This in turn depends on VUI being attached

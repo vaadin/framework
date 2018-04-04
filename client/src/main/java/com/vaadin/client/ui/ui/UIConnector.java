@@ -44,6 +44,8 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -505,7 +507,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
     }
 
-    public void init(String rootPanelId,
+    public void init(Element rootPanelElement, String rootPanelId,
             ApplicationConnection applicationConnection) {
         VUI ui = getWidget();
         Widget shortcutContextWidget = ui;
@@ -532,7 +534,14 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
         DOM.sinkEvents(ui.getElement(), Event.ONSCROLL);
 
-        RootPanel root = RootPanel.get(rootPanelId);
+        Panel root;
+        if (rootPanelElement != null) {
+            root = new AbsolutePanel(rootPanelElement) {{
+                onAttach();
+            }};
+        } else {
+            root = RootPanel.get(rootPanelId);
+        }
 
         // Remove the v-app-loading or any splash screen added inside the div by
         // the user
