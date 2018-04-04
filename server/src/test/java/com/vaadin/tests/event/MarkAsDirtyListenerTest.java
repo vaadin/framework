@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2018 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.event;
 
 import java.util.ArrayList;
@@ -132,4 +117,39 @@ public class MarkAsDirtyListenerTest {
         Assert.assertTrue("Button should have fired an markedAsDirty event",
                 connectors.contains(button));
     }
+
+    @Test
+    public void event_should_only_fire_once_for_an_connector_per_roundtrip() {
+        UI ui = new MockUI();
+        Button button = new Button("empty");
+        ui.setContent(button);
+        ComponentTest.syncToClient(button);
+
+        AtomicReference<MarkedAsDirtyConnectorEvent> events = new AtomicReference<>();
+        ui.getConnectorTracker().addMarkedAsDirtyListener(event -> Assert
+                .assertTrue("Only one event should have registered",
+                        events.compareAndSet(null, event)));
+
+        button.setIconAlternateText("alternate");
+        button.setCaption("Update");
+        button.setDisableOnClick(true);
+
+        Assert.assertNotNull("Mark as dirty event should have fired",
+                events.get());
+        Assert.assertEquals("Event contains wrong ui", ui,
+                events.get().getUi());
+        Assert.assertEquals("Found wrong connector in event", button,
+                events.get().getConnector());
+
+        events.set(null);
+        ComponentTest.syncToClient(button);
+
+        button.setCaption("new caption");
+
+        Assert.assertNotNull("Mark as dirty event should have fired",
+                events.get());
+        Assert.assertEquals("Found wrong connector in event", button,
+                events.get().getConnector());
+    }
+
 }
