@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.vaadin.tests.tb3;
 
 import java.util.List;

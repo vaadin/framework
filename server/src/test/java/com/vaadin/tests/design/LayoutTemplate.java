@@ -7,7 +7,6 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Template to be populated in the tests
  *
- * @since
  * @author Vaadin Ltd
  */
 public class LayoutTemplate extends VerticalLayout {

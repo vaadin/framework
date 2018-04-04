@@ -31,7 +31,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * side. Each element has changeValue listener added in the UI class. Compare
  * labelChangeValue value with the value used in the listener of the UI class.
  *
- * @since
  * @author Vaadin Ltd
  */
 

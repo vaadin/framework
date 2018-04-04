@@ -8,9 +8,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 
-/**
- *
- */
 @SuppressWarnings("serial")
 public class ButtonUI extends AbstractTestUI {
 

@@ -15,7 +15,6 @@ import com.vaadin.v7.ui.TextField;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
@@ -62,7 +61,6 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
     }
 
     /**
-     * @since
      * @return
      */
     private Component createServerConfigPanel() {

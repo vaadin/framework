@@ -18,7 +18,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Tests LayoutClickListener on different layouts.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class TestLayoutClickListenersTest extends MultiBrowserTest {

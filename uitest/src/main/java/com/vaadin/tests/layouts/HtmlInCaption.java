@@ -21,7 +21,6 @@ import com.vaadin.v7.ui.TextField;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class HtmlInCaption extends AbstractReindeerTestUI {

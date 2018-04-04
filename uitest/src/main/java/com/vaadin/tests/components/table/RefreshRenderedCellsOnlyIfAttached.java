@@ -11,7 +11,6 @@ import com.vaadin.v7.ui.Table;
  * There shouldn't be any attempts to refresh table's cells if the table isn't
  * attached.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class RefreshRenderedCellsOnlyIfAttached extends AbstractReindeerTestUI {
@@ -71,7 +70,6 @@ public class RefreshRenderedCellsOnlyIfAttached extends AbstractReindeerTestUI {
     /**
      * Remove Table's parent component.
      *
-     * @since
      */
     protected void removeTableParent() {
         removeComponent(layout);

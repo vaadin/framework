@@ -5,7 +5,6 @@ import com.vaadin.ui.AbstractLayout;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class BaseLayoutSizing extends BaseLayoutTestUI {

@@ -9,7 +9,6 @@ import com.vaadin.ui.Slider;
 /**
  * Tests declarative support for implementations of {@link Slider}.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class SliderDeclarativeTest extends DeclarativeTestBase<Slider> {

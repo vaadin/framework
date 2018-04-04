@@ -10,7 +10,6 @@ import com.vaadin.ui.Label;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public abstract class GridBaseLayoutTestUI extends BaseLayoutTestUI {

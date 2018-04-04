@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.vaadin.tests.push;
 
 import java.util.ArrayList;
@@ -44,9 +41,6 @@ public class PushConfigurator extends VerticalLayout {
         refreshStatus();
     }
 
-    /**
-     * @since
-     */
     private void refreshStatus() {
         PushConfiguration pc = ui.getPushConfiguration();
         String value = "";
@@ -59,9 +53,6 @@ public class PushConfigurator extends VerticalLayout {
         status.setValue(value);
     }
 
-    /**
-     * @since
-     */
     private void construct() {
         pushMode.addItem(PushMode.DISABLED);
         pushMode.addItem(PushMode.MANUAL);
@@ -87,9 +78,6 @@ public class PushConfigurator extends VerticalLayout {
 
     }
 
-    /**
-     * @since
-     */
     private void listeners() {
         pushMode.addValueChangeListener(event -> {
             ui.getPushConfiguration()

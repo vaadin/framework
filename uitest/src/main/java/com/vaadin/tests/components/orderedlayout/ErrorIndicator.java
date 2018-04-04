@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.vaadin.tests.components.orderedlayout;
 
 import com.vaadin.server.VaadinRequest;

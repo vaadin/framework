@@ -19,7 +19,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Tests Table Footer
  *
- * @since
  * @author Vaadin Ltd
  */
 public class FooterTest extends MultiBrowserTest {

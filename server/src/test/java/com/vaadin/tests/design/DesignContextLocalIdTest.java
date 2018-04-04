@@ -30,7 +30,6 @@ import com.vaadin.ui.declarative.DesignContext;
 /**
  * Tests that setting local id via DesignContext works as intended.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class DesignContextLocalIdTest {

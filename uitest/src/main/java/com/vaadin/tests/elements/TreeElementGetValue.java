@@ -6,7 +6,6 @@ import com.vaadin.v7.ui.Tree;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class TreeElementGetValue extends AbstractTestUI {

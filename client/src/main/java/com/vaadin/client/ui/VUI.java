@@ -42,9 +42,6 @@ import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.ApplicationConstants;
 
-/**
- *
- */
 public class VUI extends SimplePanel implements ResizeHandler,
         Window.ClosingHandler, ShortcutActionHandlerOwner, Focusable,
         com.google.gwt.user.client.ui.Focusable, HasResizeHandlers,

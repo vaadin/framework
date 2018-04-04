@@ -9,7 +9,6 @@ import com.vaadin.server.ThemeResource;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class TestIcon {

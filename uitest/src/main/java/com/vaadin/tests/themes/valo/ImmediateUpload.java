@@ -6,7 +6,6 @@ import com.vaadin.ui.Upload;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class ImmediateUpload extends AbstractTestUI {

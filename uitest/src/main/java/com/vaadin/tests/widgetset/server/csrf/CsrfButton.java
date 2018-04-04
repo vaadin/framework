@@ -6,7 +6,6 @@ import com.vaadin.ui.AbstractComponent;
  * Dummy client connector to link with the client functionality if the
  * CsrfToken.
  *
- * @since
  * @author Vaadin Ltd
  */
 @SuppressWarnings("serial")

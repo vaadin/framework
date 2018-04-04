@@ -37,12 +37,6 @@ public class DateFieldWhenChangingValueAndEnablingParentTest
 
     }
 
-    /**
-     * @since
-     * @param id
-     * @param widgetEnabled
-     * @param textInputEnabled
-     */
     private void assertState(AbstractDateFieldElement id, boolean widgetEnabled,
             boolean textInputEnabled) {
         assertDateFieldEnabled(id, widgetEnabled);

@@ -4,7 +4,6 @@ import java.util.Date;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class Potus {

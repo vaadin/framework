@@ -31,7 +31,6 @@ import elemental.json.JsonException;
 /**
  * Test the actual csrf token validation by the server.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class CsrfTokenMissingTest {

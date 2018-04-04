@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
@@ -11,7 +8,6 @@ import com.vaadin.v7.ui.Table;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class HiddenComponentCells extends AbstractReindeerTestUI {

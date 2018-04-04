@@ -9,7 +9,6 @@ import com.vaadin.ui.Window;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class ComboboxScrollableWindow extends AbstractReindeerTestUI {

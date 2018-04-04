@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.vaadin.tests.components.button;
 
 import com.vaadin.server.ThemeResource;
@@ -11,7 +8,6 @@ import com.vaadin.ui.CheckBox;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class ButtonUpdateAltText extends AbstractReindeerTestUI {

@@ -7,7 +7,6 @@ import com.vaadin.v7.ui.ComboBox;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class BaseCaption extends BaseLayoutTestUI {

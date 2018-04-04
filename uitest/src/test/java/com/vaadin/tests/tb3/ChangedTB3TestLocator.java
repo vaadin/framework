@@ -27,7 +27,6 @@ import org.eclipse.jgit.util.io.DisabledOutputStream;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class ChangedTB3TestLocator extends TB3TestLocator {

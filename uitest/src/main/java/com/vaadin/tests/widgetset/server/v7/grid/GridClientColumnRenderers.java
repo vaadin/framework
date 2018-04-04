@@ -45,23 +45,14 @@ public class GridClientColumnRenderers extends UI {
             rpc().detachAttach();
         }
 
-        /**
-         * @since
-         */
         public void triggerClientSorting() {
             rpc().triggerClientSorting();
         }
 
-        /**
-         * @since
-         */
         public void triggerClientSortingTest() {
             rpc().triggerClientSortingTest();
         }
 
-        /**
-         * @since
-         */
         public void shuffle() {
             rpc().shuffle();
         }

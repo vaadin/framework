@@ -10,7 +10,6 @@ import com.vaadin.tests.tb3.SingleBrowserTest;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class UnnecessaryPaddingInResponsiveUITest extends SingleBrowserTest {

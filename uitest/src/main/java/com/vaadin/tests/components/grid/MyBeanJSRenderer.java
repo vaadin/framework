@@ -7,7 +7,6 @@ import com.vaadin.ui.renderers.AbstractJavaScriptRenderer;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 @JavaScript("myBeanJsRenderer.js")

@@ -17,7 +17,6 @@ import com.vaadin.ui.declarative.DesignException;
 /**
  * Tests declarative support for implementations of {@link Window}.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {

@@ -10,7 +10,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 /**
  * Tests Table Footer ClickListener
  *
- * @since
  * @author Vaadin Ltd
  */
 public class TableVisibleColumnsUpdateTest extends MultiBrowserTest {

@@ -74,11 +74,6 @@ public class FieldErrorIndication extends AbstractReindeerTestUI {
 
     }
 
-    /**
-     * @since
-     * @param fieldClass
-     * @return
-     */
     private Component getField(Class<? extends AbstractField> fieldClass) {
         try {
             AbstractField<?> f = fieldClass.newInstance();

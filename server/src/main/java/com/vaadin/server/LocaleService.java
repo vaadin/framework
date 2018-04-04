@@ -14,9 +14,6 @@
  * the License.
  */
 
-/**
- *
- */
 package com.vaadin.server;
 
 import java.io.Serializable;

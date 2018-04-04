@@ -13,7 +13,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  *
  * Ticket #12154
  *
- * @since
  * @author Vaadin Ltd
  */
 public class TabsheetNotEnoughHorizontalSpaceTest extends MultiBrowserTest {

@@ -9,7 +9,6 @@ import com.vaadin.v7.ui.Table;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class BaseLayoutForSpacingMargin extends BaseLayoutTestUI {

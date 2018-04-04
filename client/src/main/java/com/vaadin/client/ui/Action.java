@@ -18,9 +18,6 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.user.client.Command;
 
-/**
- *
- */
 public abstract class Action implements Command {
 
     protected ActionOwner owner;

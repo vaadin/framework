@@ -34,7 +34,6 @@ import com.vaadin.ui.declarative.DesignException;
  * from prefixes to package names (for example
  * <meta name=”package-mapping” content=”my:com.addon.mypackage” />)
  *
- * @since
  * @author Vaadin Ltd
  */
 public class ParseLayoutTest {

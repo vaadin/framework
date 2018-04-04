@@ -24,7 +24,6 @@ import com.vaadin.ui.declarative.DesignContext;
 /**
  * Tests the handling of the locale property in parsing and html generation.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class LocaleTest {

@@ -5,7 +5,6 @@ import com.vaadin.ui.UI;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class PotusCrudUI extends UI {

@@ -16,7 +16,6 @@ import com.vaadin.client.ui.SubPartAware;
  * Pure GWT Test Application base for testing features of a single widget;
  * provides a menu system and convenience method for adding items to it.
  *
- * @since
  * @author Vaadin Ltd
  */
 public abstract class PureGWTTestApplication<T> extends DockLayoutPanel

@@ -12,7 +12,6 @@ import com.vaadin.ui.themes.ValoTheme;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class UnnecessaryPaddingInResponsiveUI extends UI {

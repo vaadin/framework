@@ -4,7 +4,6 @@ import com.vaadin.tests.layouts.layouttester.BaseCaptionTest;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class GridCaptionTest extends BaseCaptionTest {

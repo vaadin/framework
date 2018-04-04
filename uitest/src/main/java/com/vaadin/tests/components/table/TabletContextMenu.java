@@ -14,7 +14,6 @@ import com.vaadin.v7.ui.Table;
  * This UI has no attached unit test due to the poor support of touch events on
  * Selenium.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class TabletContextMenu extends AbstractReindeerTestUI {

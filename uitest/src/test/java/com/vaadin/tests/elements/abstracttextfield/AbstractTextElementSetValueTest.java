@@ -15,7 +15,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 public class AbstractTextElementSetValueTest extends MultiBrowserTest {

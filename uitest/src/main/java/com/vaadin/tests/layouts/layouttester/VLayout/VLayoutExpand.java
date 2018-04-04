@@ -5,7 +5,6 @@ import com.vaadin.ui.VerticalLayout;
 
 /**
  *
- * @since
  * @author Vaadin Ltd
  */
 
