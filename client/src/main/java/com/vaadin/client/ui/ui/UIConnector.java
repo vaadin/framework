@@ -507,7 +507,39 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
     }
 
-    public void init(Element rootPanelElement, String rootPanelId,
+    /**
+     * Initialize UIConnector and attach UI to the rootPanelElement.
+     *
+     * @param rootPanelElement
+     *         element to attach ui into
+     * @param applicationConnection
+     *         application connection
+     * @since 8.4
+     */
+    public void init(Element rootPanelElement,
+            ApplicationConnection applicationConnection) {
+        Panel root = new AbsolutePanel(rootPanelElement) {{
+            onAttach();
+        }};
+
+        initConnector(root, applicationConnection);
+    }
+
+    /**
+     * Initialize UIConnector and attach UI to RootPanel for rootPanelId
+     * element.
+     *
+     * @param rootPanelId
+     *         root panel element id
+     * @param applicationConnection
+     *         application connection
+     */
+    public void init(String rootPanelId,
+            ApplicationConnection applicationConnection) {
+        initConnector(RootPanel.get(rootPanelId), applicationConnection);
+    }
+
+    private void initConnector(Panel root,
             ApplicationConnection applicationConnection) {
         VUI ui = getWidget();
         Widget shortcutContextWidget = ui;
@@ -534,14 +566,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
         DOM.sinkEvents(ui.getElement(), Event.ONSCROLL);
 
-        Panel root;
-        if (rootPanelElement != null) {
-            root = new AbsolutePanel(rootPanelElement) {{
-                onAttach();
-            }};
-        } else {
-            root = RootPanel.get(rootPanelId);
-        }
 
         // Remove the v-app-loading or any splash screen added inside the div by
         // the user

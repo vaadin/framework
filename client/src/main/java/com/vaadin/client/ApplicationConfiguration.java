@@ -147,7 +147,7 @@ public class ApplicationConfiguration implements EntryPoint {
         }-*/;
 
         /**
-         * Reads a confifguration parameter as an {@link Element} object.
+         * Reads a configuration parameter as an {@link Element} object.
          * Please note
          * that the javascript value of the parameter should also be an Element
          * object,
@@ -158,6 +158,7 @@ public class ApplicationConfiguration implements EntryPoint {
          *         name of the configuration parameter
          * @return element for the configuration parameter, or <code>null</code> if no
          *         value is defined
+         * @since 8.4
          */
         private native Element getConfigElement(String name)
         /*-{
@@ -925,6 +926,7 @@ public class ApplicationConfiguration implements EntryPoint {
      * Get the root element instance used for this application.
      *
      * @return registered root element
+     * @since 8.4
      */
     public Element getRootElement() {
         return rootElement;
