@@ -9,11 +9,6 @@ import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- * Tests Table Footer ClickListener
- *
- * @author Vaadin Ltd
- */
 public class HeaderUpdateWhenNoRowsTest extends MultiBrowserTest {
 
     @Test

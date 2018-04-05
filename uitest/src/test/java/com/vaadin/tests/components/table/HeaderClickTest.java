@@ -13,7 +13,7 @@ import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
- * Tests Table Footer ClickListener
+ * Tests Table Header ClickListener
  *
  * @author Vaadin Ltd
  */

@@ -8,11 +8,6 @@ import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- * Tests Table Footer ClickListener
- *
- * @author Vaadin Ltd
- */
 public class HeaderSyncOnScrollTest extends MultiBrowserTest {
 
     @Test
