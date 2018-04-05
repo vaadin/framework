@@ -23,10 +23,6 @@ import com.vaadin.v7.ui.OptionGroup;
 import com.vaadin.v7.ui.TextArea;
 import com.vaadin.v7.ui.TextField;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class Forms extends VerticalLayout implements View {
 
     private boolean readOnly = true;

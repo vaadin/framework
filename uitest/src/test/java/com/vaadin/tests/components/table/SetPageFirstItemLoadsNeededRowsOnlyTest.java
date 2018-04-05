@@ -7,10 +7,6 @@ import org.junit.Test;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class SetPageFirstItemLoadsNeededRowsOnlyTest extends MultiBrowserTest {
 
     /*

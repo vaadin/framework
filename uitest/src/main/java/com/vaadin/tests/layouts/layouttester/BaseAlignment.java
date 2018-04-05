@@ -3,10 +3,6 @@ package com.vaadin.tests.layouts.layouttester;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.AbstractOrderedLayout;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public abstract class BaseAlignment extends BaseLayoutTestUI {
 
     @Override

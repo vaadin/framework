@@ -32,10 +32,6 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class Dragging extends VerticalLayout implements View {
 
     SortableLayout sample;

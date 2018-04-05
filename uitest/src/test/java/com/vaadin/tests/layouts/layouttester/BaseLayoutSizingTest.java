@@ -8,10 +8,6 @@ import org.junit.Test;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public abstract class BaseLayoutSizingTest extends MultiBrowserTest {
     @Test
     public void LayoutSizing() throws IOException, InterruptedException {

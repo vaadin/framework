@@ -6,10 +6,6 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class ValoMenuLayout extends HorizontalLayout {
 
     CssLayout contentArea = new CssLayout();

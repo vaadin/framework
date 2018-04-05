@@ -6,10 +6,6 @@ import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.v7.ui.Table;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class BaseLayoutExpand extends BaseLayoutTestUI {
 
     public BaseLayoutExpand(Class<? extends AbstractLayout> layoutClass) {

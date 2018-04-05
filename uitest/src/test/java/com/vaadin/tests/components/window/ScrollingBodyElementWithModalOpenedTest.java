@@ -7,10 +7,6 @@ import com.vaadin.testbench.By;
 import com.vaadin.testbench.commands.TestBenchElementCommands;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class ScrollingBodyElementWithModalOpenedTest extends MultiBrowserTest {
 
     @Test

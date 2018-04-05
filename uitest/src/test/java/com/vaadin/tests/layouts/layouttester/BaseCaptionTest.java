@@ -6,10 +6,6 @@ import org.junit.Test;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public abstract class BaseCaptionTest extends MultiBrowserTest {
     @Test
     public void LayoutCaption() throws IOException, InterruptedException {

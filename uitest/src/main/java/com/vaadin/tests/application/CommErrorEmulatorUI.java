@@ -13,10 +13,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.TextField;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
 
     private static class Response {

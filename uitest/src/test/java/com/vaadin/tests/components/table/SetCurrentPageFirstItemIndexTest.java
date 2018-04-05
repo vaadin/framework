@@ -13,10 +13,6 @@ import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- *
- * @author Vaadin Ltd
- */
 @Ignore
 // Enable after #15286 is fixed.
 public class SetCurrentPageFirstItemIndexTest extends MultiBrowserTest {

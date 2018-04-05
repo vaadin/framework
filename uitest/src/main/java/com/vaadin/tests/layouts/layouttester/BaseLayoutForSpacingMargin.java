@@ -7,10 +7,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.ui.Table;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class BaseLayoutForSpacingMargin extends BaseLayoutTestUI {
     /**
      * @param layoutClass

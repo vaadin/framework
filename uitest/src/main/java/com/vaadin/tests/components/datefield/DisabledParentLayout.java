@@ -7,10 +7,6 @@ import com.vaadin.ui.AbstractLocalDateField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.VerticalLayout;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class DisabledParentLayout extends AbstractReindeerTestUI {
 
     @Override

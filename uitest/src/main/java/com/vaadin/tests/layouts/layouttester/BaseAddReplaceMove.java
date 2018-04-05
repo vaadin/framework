@@ -10,10 +10,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.TextField;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class BaseAddReplaceMove extends BaseLayoutTestUI {
 
     /**

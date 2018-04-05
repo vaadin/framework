@@ -12,15 +12,7 @@ import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-/**
- *
- * @author Vaadin Ltd
- */
-public class ButtonsAndLinks extends VerticalLayout implements View {
-    /**
-    *
-    */
-    public ButtonsAndLinks() {
+public class ButtonsAndLinks extends VerticalLayout implements View {    public ButtonsAndLinks() {
         setSpacing(false);
 
         Label h1 = new Label("Buttons");

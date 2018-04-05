@@ -10,10 +10,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.util.BeanContainer;
 import com.vaadin.v7.ui.Table;
 
-/**
- *
- * @author Vaadin Ltd
- */
 
 @SuppressWarnings("serial")
 public class SetPageFirstItemLoadsNeededRowsOnly

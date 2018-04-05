@@ -5,10 +5,6 @@ import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class InvalidLayoutTemplate extends VerticalLayout {
     private NativeButton firstButton;
     private NativeButton secondButton;

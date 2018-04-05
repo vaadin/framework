@@ -8,10 +8,6 @@ import com.vaadin.testbench.elements.UIElement;
 import com.vaadin.tests.components.button.ButtonClick;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class VaadinFinderLocatorUISearchTest extends MultiBrowserTest {
 
     @Override

@@ -6,10 +6,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.ui.Table;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class HiddenComponentCells extends AbstractReindeerTestUI {
 
     @Override

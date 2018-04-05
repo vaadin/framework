@@ -25,10 +25,6 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class ChangedTB3TestLocator extends TB3TestLocator {
 
     @Override

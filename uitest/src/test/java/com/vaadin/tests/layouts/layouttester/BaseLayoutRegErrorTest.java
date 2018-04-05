@@ -6,10 +6,6 @@ import org.junit.Test;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public abstract class BaseLayoutRegErrorTest extends MultiBrowserTest {
 
     @Test

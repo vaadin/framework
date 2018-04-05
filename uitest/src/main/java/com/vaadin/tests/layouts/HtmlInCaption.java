@@ -19,10 +19,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.v7.ui.TextField;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class HtmlInCaption extends AbstractReindeerTestUI {
 
     @Override

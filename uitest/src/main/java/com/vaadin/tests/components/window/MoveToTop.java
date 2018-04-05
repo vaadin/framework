@@ -4,10 +4,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Window;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class MoveToTop extends AbstractReindeerTestUI {
 
     @Override

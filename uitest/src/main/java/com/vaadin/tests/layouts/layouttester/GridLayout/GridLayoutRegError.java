@@ -10,10 +10,6 @@ import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.TextField;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class GridLayoutRegError extends GridBaseLayoutTestUI {
 
     @Override

@@ -3,10 +3,6 @@ package com.vaadin.server;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class MockVaadinSession extends VaadinSession {
     /*
      * Used to make sure there's at least one reference to the mock session

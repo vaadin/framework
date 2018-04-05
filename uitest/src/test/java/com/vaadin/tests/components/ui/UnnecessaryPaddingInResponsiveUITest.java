@@ -8,10 +8,6 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class UnnecessaryPaddingInResponsiveUITest extends SingleBrowserTest {
 
     @Test

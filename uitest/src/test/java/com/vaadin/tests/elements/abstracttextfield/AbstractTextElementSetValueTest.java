@@ -13,10 +13,6 @@ import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class AbstractTextElementSetValueTest extends MultiBrowserTest {
     private static final String TYPED_STRING = "this is typed string";
 

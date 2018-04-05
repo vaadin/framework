@@ -6,10 +6,6 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupView;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class PopupViewCaption extends AbstractReindeerTestUI {
 
     @Override

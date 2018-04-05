@@ -12,10 +12,6 @@ import com.vaadin.server.DownloadStream;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.StreamResource.StreamSource;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class StreamResourceTest {
 
     @Test

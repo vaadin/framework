@@ -6,10 +6,6 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.v7.ui.Table;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class SelectAllConstantViewport extends AbstractTestUIWithLog {
 
     /*

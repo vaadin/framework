@@ -6,10 +6,6 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class ButtonUpdateAltText extends AbstractReindeerTestUI {
 
     private final ThemeResource ICON = new ThemeResource(
