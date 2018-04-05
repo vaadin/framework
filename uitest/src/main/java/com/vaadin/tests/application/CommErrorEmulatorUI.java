@@ -56,9 +56,6 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         addComponent(new Button("Say hello", event -> log("Hello")));
     }
 
-    /**
-     * @return
-     */
     private Component createServerConfigPanel() {
         Panel p = new Panel("Server config (NOTE: affects all users)");
         VerticalLayout vl = new VerticalLayout();
