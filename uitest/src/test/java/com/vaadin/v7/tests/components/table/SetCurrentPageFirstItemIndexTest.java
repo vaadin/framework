@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.table;
+package com.vaadin.v7.tests.components.table;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
