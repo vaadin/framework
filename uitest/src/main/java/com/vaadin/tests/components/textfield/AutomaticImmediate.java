@@ -14,24 +14,7 @@ import com.vaadin.v7.ui.TextField;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public class AutomaticImmediate extends AbstractTestUIWithLog {
-
-    /**
-     *
-     */
-    static final String BUTTON = "button";
-    /**
-     *
-     */
-    static final String EXPLICIT_FALSE = "explicit-false";
-    /**
-     *
-     */
-    static final String FIELD = "field";
-    /**
-     *
-     */
-    static final String LISTENER_TOGGLE = "listener-toggle";
+public class AutomaticImmediate extends AbstractTestUIWithLog {    static final String BUTTON = "button";    static final String EXPLICIT_FALSE = "explicit-false";    static final String FIELD = "field";    static final String LISTENER_TOGGLE = "listener-toggle";
 
     /*
      * (non-Javadoc)

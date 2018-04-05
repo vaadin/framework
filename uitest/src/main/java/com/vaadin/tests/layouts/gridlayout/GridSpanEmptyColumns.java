@@ -5,11 +5,6 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class GridSpanEmptyColumns extends AbstractReindeerTestUI {
 
     @Override

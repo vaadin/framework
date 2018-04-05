@@ -11,10 +11,6 @@ import com.vaadin.server.StreamVariable.StreamingErrorEvent;
 import com.vaadin.shared.ui.upload.UploadState;
 import com.vaadin.ui.Upload;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class UploadTest {
 
     @Test

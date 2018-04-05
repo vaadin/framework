@@ -7,9 +7,6 @@ import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 
-/**
- *
- */
 @SuppressWarnings("serial")
 public class MenuBarUI extends AbstractTestUI {
 

@@ -10,11 +10,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class Labels extends VerticalLayout implements View {
     public Labels() {
         setSpacing(false);

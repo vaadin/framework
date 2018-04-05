@@ -14,9 +14,6 @@
  * the License.
  */
 
-/**
- *
- */
 package com.vaadin.data.converter;
 
 import java.util.Date;

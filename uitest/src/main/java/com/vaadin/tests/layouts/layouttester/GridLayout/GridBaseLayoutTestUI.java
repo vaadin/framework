@@ -8,11 +8,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public abstract class GridBaseLayoutTestUI extends BaseLayoutTestUI {
     protected GridLayout layout = new GridLayout();
 

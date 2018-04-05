@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.vaadin.tests.components.window;
 
 import com.vaadin.server.VaadinRequest;

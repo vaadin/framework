@@ -14,10 +14,6 @@ import org.junit.Test;
 import com.vaadin.shared.Registration;
 import com.vaadin.util.CurrentInstance;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class VaadinServiceTest {
 
     private class TestSessionDestroyListener implements SessionDestroyListener {

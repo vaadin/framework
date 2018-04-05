@@ -9,7 +9,6 @@ import com.vaadin.v7.ui.Table;
 /**
  * Test UI Class for testing memory leak in table (#14159).
  *
- * @since
  * @author Vaadin Ltd
  */
 public class MemoryLeakTable extends AbstractReindeerTestUI {

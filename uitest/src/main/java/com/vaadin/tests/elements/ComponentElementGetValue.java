@@ -28,7 +28,6 @@ import com.vaadin.ui.TwinColSelect;
  * PasswordField, ComboBox, ListSelect, NativeSelect, OptionGroup, CheckBox,
  * DateField, TwinColSelect
  *
- * @since
  * @author Vaadin Ltd
  */
 public class ComponentElementGetValue extends AbstractTestUI {

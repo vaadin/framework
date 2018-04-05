@@ -20,15 +20,9 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * To test memory consuption. Run test in debug mode. Take memory snapshot in
  * Profiler in browser before and after the loop. Compare memory consuption.
  *
- * @since
  * @author Vaadin Ltd
  */
-public class MemoryLeakTableTest extends MultiBrowserTest {
-
-    /**
-     *
-     */
-    private static final int ITERATIONS = 200;
+public class MemoryLeakTableTest extends MultiBrowserTest {    private static final int ITERATIONS = 200;
 
     // To run locally in chrome download ChromeDriver for TB3
     // Set path to the chrome driver. In

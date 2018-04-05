@@ -2,11 +2,6 @@ package com.vaadin.tests.declarative;
 
 import java.util.Date;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class Potus {
     private String firstName;
     private String lastName;

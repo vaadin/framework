@@ -75,7 +75,6 @@ import com.vaadin.v7.shared.ui.grid.ScrollDestination;
 /**
  * Grid basic client features test application.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class GridBasicClientFeaturesWidget
@@ -196,10 +195,6 @@ public class GridBasicClientFeaturesWidget
         Object value;
     }
 
-    /**
-     * @since
-     * @return
-     */
     private List<List<Data>> createData(int rowCount) {
         List<List<Data>> dataList = new ArrayList<>();
         Random rand = new Random();

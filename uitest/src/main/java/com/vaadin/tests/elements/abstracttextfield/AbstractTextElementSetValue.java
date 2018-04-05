@@ -12,11 +12,6 @@ import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class AbstractTextElementSetValue extends AbstractTestUI {
 
     AbstractTextField[] comps = { new TextField(), new PasswordField(),

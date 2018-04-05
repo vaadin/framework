@@ -13,11 +13,6 @@ import com.vaadin.v7.ui.PasswordField;
 import com.vaadin.v7.ui.TextArea;
 import com.vaadin.v7.ui.TextField;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class CompatibilityAbstractTextElementSetValue extends AbstractTestUI {
 
     AbstractTextField[] comps = { new TextField(), new PasswordField(),

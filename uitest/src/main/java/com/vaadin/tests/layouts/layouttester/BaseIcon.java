@@ -9,11 +9,6 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.TextField;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class BaseIcon extends BaseLayoutTestUI {
     /**
      * @param layoutClass

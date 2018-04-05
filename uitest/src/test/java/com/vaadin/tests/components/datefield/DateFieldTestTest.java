@@ -85,20 +85,12 @@ public class DateFieldTestTest extends MultiBrowserTest {
         getDriver().findElement(By.tagName("body")).click();
     }
 
-    /**
-     * @since
-     * @param string
-     */
     private void menuSub(String string) {
         getDriver().findElement(By.xpath("//span[text() = '" + string + "']"))
                 .click();
         new Actions(getDriver()).moveByOffset(100, 0).build().perform();
     }
 
-    /**
-     * @since
-     * @param string
-     */
     private void menu(String string) {
         getDriver().findElement(By.xpath("//span[text() = '" + string + "']"))
                 .click();

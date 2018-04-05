@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.vaadin.tests.components.slider;
 
 import com.vaadin.server.VaadinRequest;

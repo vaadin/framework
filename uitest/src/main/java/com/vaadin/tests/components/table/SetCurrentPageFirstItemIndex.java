@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
@@ -11,11 +8,6 @@ import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.ColumnGenerator;
 import com.vaadin.v7.ui.Table.ColumnHeaderMode;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class SetCurrentPageFirstItemIndex extends AbstractReindeerTestUI {
 
     private int index = 5;

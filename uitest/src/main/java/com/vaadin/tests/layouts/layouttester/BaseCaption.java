@@ -5,11 +5,6 @@ import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.v7.ui.ComboBox;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class BaseCaption extends BaseLayoutTestUI {
 
     /**

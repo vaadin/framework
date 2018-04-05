@@ -7,11 +7,6 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class ComboboxScrollableWindow extends AbstractReindeerTestUI {
 
     static final String WINDOW_ID = "window";

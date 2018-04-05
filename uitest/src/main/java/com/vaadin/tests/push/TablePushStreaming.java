@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.vaadin.tests.push;
 
 import com.vaadin.annotations.Push;
@@ -12,11 +9,6 @@ import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Table;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 @Push(transport = Transport.STREAMING)
 public class TablePushStreaming extends AbstractReindeerTestUI {
 
@@ -52,11 +44,6 @@ public class TablePushStreaming extends AbstractReindeerTestUI {
         setContent(t);
     }
 
-    /**
-     * @param iter
-     * @since
-     * @return
-     */
     private Container generateContainer(int rows, int cols, int iter) {
         IndexedContainer ic = new IndexedContainer();
         for (int col = 1; col <= cols; col++) {

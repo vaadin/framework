@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.vaadin.tests.push;
 
 import java.util.concurrent.ExecutorService;

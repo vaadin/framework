@@ -10,11 +10,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class UnnecessaryPaddingInResponsiveUI extends UI {
 
     @Override

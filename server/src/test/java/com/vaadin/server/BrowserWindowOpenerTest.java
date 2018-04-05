@@ -11,10 +11,6 @@ import org.junit.Test;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.BrowserWindowOpenerState;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class BrowserWindowOpenerTest {
 
     @Test

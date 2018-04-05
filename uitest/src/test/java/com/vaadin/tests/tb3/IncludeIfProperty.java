@@ -14,7 +14,6 @@ import java.lang.annotation.Target;
  * <p>
  * Used by {@link TB3TestLocator}
  *
- * @since
  * @author Vaadin Ltd
  */
 @Retention(RetentionPolicy.RUNTIME)

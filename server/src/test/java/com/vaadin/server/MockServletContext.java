@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.vaadin.server;
 
 import java.io.InputStream;

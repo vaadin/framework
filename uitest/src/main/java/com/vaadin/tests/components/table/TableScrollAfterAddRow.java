@@ -9,10 +9,6 @@ import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Table;
 
-/**
- *
- * @author Vaadin Ltd
- */
 @SuppressWarnings("serial")
 public class TableScrollAfterAddRow extends AbstractReindeerTestUI {
 

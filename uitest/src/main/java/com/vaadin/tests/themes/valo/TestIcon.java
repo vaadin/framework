@@ -7,11 +7,6 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class TestIcon {
 
     int iconCount = 0;

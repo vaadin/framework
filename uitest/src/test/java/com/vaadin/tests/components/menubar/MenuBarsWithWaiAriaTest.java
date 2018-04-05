@@ -15,7 +15,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * This class tests that MenuBar and its contents have all the required WAI-ARIA
  * attributes.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class MenuBarsWithWaiAriaTest extends MultiBrowserTest {

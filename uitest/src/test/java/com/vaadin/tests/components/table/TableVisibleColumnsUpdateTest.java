@@ -7,12 +7,6 @@ import org.junit.Test;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- * Tests Table Footer ClickListener
- *
- * @since
- * @author Vaadin Ltd
- */
 public class TableVisibleColumnsUpdateTest extends MultiBrowserTest {
 
     @Test

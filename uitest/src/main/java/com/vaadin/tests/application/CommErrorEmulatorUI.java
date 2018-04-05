@@ -13,11 +13,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.TextField;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
 
     private static class Response {
@@ -61,10 +56,6 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         addComponent(new Button("Say hello", event -> log("Hello")));
     }
 
-    /**
-     * @since
-     * @return
-     */
     private Component createServerConfigPanel() {
         Panel p = new Panel("Server config (NOTE: affects all users)");
         VerticalLayout vl = new VerticalLayout();

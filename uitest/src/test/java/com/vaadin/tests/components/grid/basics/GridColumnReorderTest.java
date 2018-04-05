@@ -12,10 +12,6 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeaturesTest.CellSide;
 
-/**
- *
- * @author Vaadin Ltd
- */
 @TestCategory("grid")
 public class GridColumnReorderTest extends GridBasicsTest {
 

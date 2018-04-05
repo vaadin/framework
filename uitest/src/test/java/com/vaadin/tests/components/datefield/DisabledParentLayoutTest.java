@@ -10,10 +10,6 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class DisabledParentLayoutTest extends MultiBrowserTest {
 
     @Test

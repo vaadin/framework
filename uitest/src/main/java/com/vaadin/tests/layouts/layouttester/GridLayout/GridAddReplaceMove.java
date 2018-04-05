@@ -9,11 +9,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.TextField;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 
 public class GridAddReplaceMove extends GridBaseLayoutTestUI {
 

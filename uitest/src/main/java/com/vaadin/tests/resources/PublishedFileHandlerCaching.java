@@ -18,7 +18,6 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
  * FireBug), keeping an eye on the GET requests for cachingtest.js and it's
  * cache headers.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class PublishedFileHandlerCaching extends AbstractReindeerTestUI {

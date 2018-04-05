@@ -31,11 +31,7 @@ import com.vaadin.testbench.parallel.BrowserUtil;
  */
 @RunOnHub("tb3-hub.intra.itmill.com")
 @BrowserFactory(VaadinBrowserFactory.class)
-public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
-    /**
-     *
-     */
-    public static final String SCREENSHOT_DIRECTORY = "com.vaadin.testbench.screenshot.directory";
+public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {    public static final String SCREENSHOT_DIRECTORY = "com.vaadin.testbench.screenshot.directory";
     private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
     private static final String RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.runLocally";
     private static final String ALLOW_RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.allowRunLocally";

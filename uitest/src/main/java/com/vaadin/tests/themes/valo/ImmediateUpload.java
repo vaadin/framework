@@ -4,11 +4,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Upload;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class ImmediateUpload extends AbstractTestUI {
 
     /*

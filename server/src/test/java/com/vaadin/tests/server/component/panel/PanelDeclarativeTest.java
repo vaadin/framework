@@ -10,7 +10,6 @@ import com.vaadin.ui.declarative.DesignException;
 /**
  * Tests declarative support for Panel.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class PanelDeclarativeTest extends DeclarativeTestBase<Panel> {

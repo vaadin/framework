@@ -4,11 +4,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.v7.ui.Tree;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class TreeElementGetValue extends AbstractTestUI {
 
     public static final String TEST_VALUE = "testValue";

@@ -3,11 +3,6 @@ package com.vaadin.tests.layouts.layouttester;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.AbstractLayout;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class BaseLayoutSizing extends BaseLayoutTestUI {
     /**
      * @param layoutClass

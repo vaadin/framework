@@ -7,11 +7,6 @@ import com.vaadin.ui.CustomField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class CustomFieldSize extends AbstractReindeerTestUI {
 
     @Override
