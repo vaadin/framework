@@ -28,6 +28,9 @@ public class CaptionLeakTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
+        // Make sure debug window is visible
+        showDebugWindow();
+
         openDebugLogTab();
 
         // this should be present

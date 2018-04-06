@@ -35,6 +35,8 @@ public class HierarchyAfterAnalyzeLayoutsTest extends MultiBrowserTest {
     public void checkNoLayoutProblemsFound() throws IOException {
         setDebug(true);
         openTestURL();
+        // Make sure debug window is visible
+        showDebugWindow();
 
         // select tab
         pressDebugWindowButton(findByXpath(
