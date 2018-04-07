@@ -30,8 +30,6 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.TimeZone;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -42,6 +40,12 @@ import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateTimeFieldZoneIdTest extends MultiBrowserTest {
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // PhantomJS doesn't support getting timezone
+        return getBrowsersExcludingPhantomJS();
+    }
 
     private static LocalDateTime THIRTY_OF_JULY = INITIAL_DATE_TIME
             .plus(6, MONTHS).withDayOfMonth(30);
