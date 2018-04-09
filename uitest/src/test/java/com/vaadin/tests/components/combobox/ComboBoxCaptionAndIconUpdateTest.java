@@ -6,13 +6,10 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.ComboBoxElement;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
-@RunLocally(Browser.PHANTOMJS)
 public class ComboBoxCaptionAndIconUpdateTest extends SingleBrowserTest {
 
     @Test
@@ -52,7 +49,7 @@ public class ComboBoxCaptionAndIconUpdateTest extends SingleBrowserTest {
         openTestURL();
         changeIconGenerator();
         changeCaptionGenerator();
-        
+
         clickButton("editMsg");
         assertDisplayValues("m.gif", "Edited message");
     }
