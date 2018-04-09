@@ -382,7 +382,7 @@ public class GridSelectionTest extends GridBasicsTest {
         assertFalse(getGridElement().getRow(10).isSelected());
 
         // Select all by press SPACE on the header cell (should not select)
-        getGridElement().getHeaderCell(0, 0).sendKeys(Keys.SPACE);
+        new Actions(getDriver()).sendKeys(Keys.SPACE);
         assertFalse(getSelectAllCheckbox().isSelected());
         assertFalse(getGridElement().getRow(0).isSelected());
         assertFalse(getGridElement().getRow(10).isSelected());

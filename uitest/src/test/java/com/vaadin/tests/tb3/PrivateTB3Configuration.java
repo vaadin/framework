@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -16,6 +17,7 @@ import java.util.Properties;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.Parameters;
 import com.vaadin.testbench.annotations.BrowserFactory;
 import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.annotations.RunOnHub;
@@ -62,6 +64,31 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {    pub
                 if (properties.containsKey(PHANTOMJS_PATH)) {
                     System.setProperty(PHANTOMJS_PATH,
                             properties.getProperty(PHANTOMJS_PATH));
+                }
+
+                String dir = System.getProperty(SCREENSHOT_DIRECTORY,
+                        properties.getProperty(SCREENSHOT_DIRECTORY));
+                if (dir != null && !dir.isEmpty()) {
+                    String reference = Paths.get(dir, "reference").toString();
+                    String errors = Paths.get(dir, "errors").toString();
+                    Parameters.setScreenshotReferenceDirectory(reference);
+                    Parameters.setScreenshotErrorDirectory(errors);
+                } else {
+                    // Attempt to pass specific values to Parameters based on
+                    // real property name
+                    final String base = Parameters.class.getName() + ".";
+                    if (properties.containsKey(
+                            base + "screenshotReferenceDirectory")) {
+                        Parameters.setScreenshotReferenceDirectory(
+                                properties.getProperty(
+                                        base + "screenshotReferenceDirectory"));
+                    }
+                    if (properties
+                            .containsKey(base + "screenshotErrorDirectory")) {
+                        Parameters.setScreenshotErrorDirectory(
+                                properties.getProperty(
+                                        base + "screenshotErrorDirectory"));
+                    }
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -129,16 +156,6 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {    pub
         }
 
         return property;
-    }
-
-    @Override
-    protected String getScreenshotDirectory() {
-        String screenshotDirectory = getProperty(SCREENSHOT_DIRECTORY);
-        if (screenshotDirectory == null) {
-            throw new RuntimeException("No screenshot directory defined. Use -D"
-                    + SCREENSHOT_DIRECTORY + "=<path>");
-        }
-        return screenshotDirectory;
     }
 
     @Override

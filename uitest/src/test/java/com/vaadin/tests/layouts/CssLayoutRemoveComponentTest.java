@@ -6,9 +6,9 @@ import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class CssLayoutRemoveComponentTest extends SingleBrowserTestPhantomJS2 {
+public class CssLayoutRemoveComponentTest extends SingleBrowserTest {
     @Test
     public void testRemoveOnlyNecessaryComponentsFromDom() {
         openTestURL();

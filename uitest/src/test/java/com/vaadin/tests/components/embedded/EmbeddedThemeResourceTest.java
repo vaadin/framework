@@ -32,14 +32,6 @@ import com.vaadin.ui.Image;
  */
 public class EmbeddedThemeResourceTest extends SingleBrowserTest {
 
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        // Seems like stylesheet onload is not fired on PhantomJS
-        // https://github.com/ariya/phantomjs/issues/12332
-        return Collections
-                .singletonList(Browser.FIREFOX.getDesiredCapabilities());
-    }
-
     @Before
     @Override
     public void setup() throws Exception {

@@ -47,7 +47,7 @@ public class MenuBarIconsTest extends SingleBrowserTest {
         openTestURL();
         MenuBarElement menu = $(MenuBarElement.class).id("image");
         WebElement moreItem = menu
-                .findElements(By.className("v-menubar-menuitem")).get(3);
+                .findElements(By.className("v-menubar-menuitem")).get(4);
 
         String image = "/tests-valo/img/email-reply.png";
         assertImage(image, menu.findElement(By.vaadin("#Main")));
