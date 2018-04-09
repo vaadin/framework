@@ -10,6 +10,7 @@ import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ComboBoxItemIconTest extends MultiBrowserTest {
+
     @Test
     public void testIconsInComboBox() throws Exception {
         openTestURL();
@@ -17,20 +18,28 @@ public class ComboBoxItemIconTest extends MultiBrowserTest {
         ComboBoxElement firstCombo = $(ComboBoxElement.class).first();
 
         firstCombo.openPopup();
-        compareScreen("first-combobox-open");
+        compareScreen(firstCombo.getSuggestionPopup(), "first-combobox-open");
 
         // null item not on the list, so use index 1
         firstCombo.selectByText(firstCombo.getPopupSuggestions().get(1));
 
-        compareScreen("fi-hu-selected");
+        compareScreen(firstCombo, "fi-hu-selected");
 
         ComboBoxElement secondCombo = $(ComboBoxElement.class).get(1);
 
         secondCombo.openPopup();
-        compareScreen("second-combobox-open");
+        compareScreen(secondCombo.getSuggestionPopup(), "second-combobox-open");
 
         secondCombo.selectByText(secondCombo.getPopupSuggestions().get(2));
-        compareScreen("fi-au-selected");
+        compareScreen(secondCombo, "fi-au-selected");
+
+        ComboBoxElement thirdCombo = $(ComboBoxElement.class).get(2);
+
+        thirdCombo.openPopup();
+        compareScreen(thirdCombo.getSuggestionPopup(), "third-combobox-open");
+
+        thirdCombo.selectByText(thirdCombo.getPopupSuggestions().get(3));
+        compareScreen(thirdCombo, "classresource");
     }
 
     @Test
