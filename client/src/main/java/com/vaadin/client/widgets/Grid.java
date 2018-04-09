@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -445,7 +445,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              * The tooltip is shown in the mode returned by
              * {@link #getDescriptionContentMode()}.
              *
-             * @since
+             * @return the tooltip text for this cell
+             * @since 8.4
              */
             public String getDescription() {
                 return description;
@@ -460,7 +461,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              *
              * @param description
              *            the tooltip to show when hovering the cell
-             * @since
+             * @since 8.4
              */
             public void setDescription(String description) {
                 this.description = description;
@@ -476,7 +477,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              * @param descriptionContentMode
              *            the content mode to use for the tooltip (HTML or plain
              *            text)
-             * @since
+             * @since 8.4
              */
             public void setDescription(String description,
                     ContentMode descriptionContentMode) {
@@ -491,7 +492,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              *
              * @see ContentMode
              * @return the content mode for the tooltip
-             * @since
+             * @since 8.4
              */
             public ContentMode getDescriptionContentMode() {
                 return descriptionContentMode;
@@ -503,7 +504,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              * @see ContentMode
              * @param descriptionContentMode
              *            the content mode for the tooltip
-             * @since
+             * @since 8.4
              */
             public void setDescriptionContentMode(
                     ContentMode descriptionContentMode) {
@@ -7383,7 +7384,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *            the desired scroll destination
      * @param callback
      *            the callback command to execute when row is available
-     * @since
+     * @since 8.4
      */
     public void scrollToRow(int rowIndex, ScrollDestination destination,
             Runnable callback) {
@@ -7406,7 +7407,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *            the row to look for
      * @param whenRendered
      *            the callback command to execute when row is available
-     * @since
+     * @since 8.4
      */
     public void scrollToRow(int rowIndex, Runnable whenRendered) {
         scrollToRow(rowIndex, ScrollDestination.ANY, whenRendered);

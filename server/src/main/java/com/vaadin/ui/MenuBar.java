@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,6 +28,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
+import com.vaadin.server.AbstractClientConnector;
+import com.vaadin.server.EventTrigger;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
@@ -215,6 +217,23 @@ implements LegacyComponent, Focusable {
     public MenuBar() {
         menuItems = new ArrayList<>();
         setMoreMenuItem(null);
+    }
+
+    /**
+     * Adds a new menu item to the menu bar
+     * <p>
+     * Clicking on this menu item has no effect. Use
+     * {@link #addItem(String, Command)} or {@link MenuItem#setCommand(Command)}
+     * to assign an action to the menu item.
+     *
+     * @param caption
+     *            the text for the menu item
+     * @throws IllegalArgumentException
+     *
+     * @since 8.4
+     */
+    public MenuBar.MenuItem addItem(String caption) {
+        return addItem(caption, null, null);
     }
 
     /**
@@ -453,7 +472,7 @@ implements LegacyComponent, Focusable {
      * multiple MenuItems to a MenuItem and create a sub-menu.
      *
      */
-    public class MenuItem implements Serializable {
+    public class MenuItem implements Serializable, EventTrigger {
 
         /** Private members * */
         private final int itsId;
@@ -520,6 +539,22 @@ implements LegacyComponent, Focusable {
             MenuItem item = addItemBefore("", null, null, itemToAddBefore);
             item.setSeparator(true);
             return item;
+        }
+
+        /**
+         * Add a new menu item inside this menu item, creating a sub-menu.
+         * <p>
+         * Clicking on the new item has no effect. Use
+         * {@link #addItem(String, Command)} or {@link #setCommand(Command)} to
+         * assign an action to the menu item.
+         *
+         * @param caption
+         *            the text for the menu item
+         *
+         * @since 8.4
+         */
+        public MenuBar.MenuItem addItem(String caption) {
+            return addItem(caption, null, null);
         }
 
         /**
@@ -991,6 +1026,26 @@ implements LegacyComponent, Focusable {
         public void setChecked(boolean checked) {
             this.checked = checked;
             markAsDirty();
+        }
+
+        /**
+         * Gets the menu bar this item is part of.
+         *
+         * @return the menu bar this item is attached to
+         * @since 8.4
+         */
+        public MenuBar getMenuBar() {
+            return MenuBar.this;
+        }
+
+        @Override
+        public AbstractClientConnector getConnector() {
+            return getMenuBar();
+        }
+
+        @Override
+        public String getPartInformation() {
+            return String.valueOf(getId());
         }
     }
 

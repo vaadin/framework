@@ -435,7 +435,7 @@ public class GridBasics extends AbstractTestUIWithLog {
                                 !grid.isDetailsVisible(event.getItem()));
                         log("Item click on row "
                                 + event.getItem().getRowNumber() + ", Column '"
-                                + event.getColumn().getCaption() + "'");
+                                + event.getColumn().getCaption() + "' Index " + event.getRowIndex());
                     });
                     log("Registered an item click listener.");
                 }
