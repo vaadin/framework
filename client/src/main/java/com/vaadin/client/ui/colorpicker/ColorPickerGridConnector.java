@@ -26,6 +26,7 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGridServerRpc;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGridState;
+import com.vaadin.shared.ui.colorpicker.ColorPickerServerRpc;
 import com.vaadin.ui.components.colorpicker.ColorPickerGrid;
 
 /**
@@ -42,6 +43,7 @@ public class ColorPickerGridConnector extends AbstractComponentConnector
 
     private ColorPickerGridServerRpc rpc = RpcProxy
             .create(ColorPickerGridServerRpc.class, this);
+
 
     @Override
     protected Widget createWidget() {

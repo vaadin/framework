@@ -47,6 +47,10 @@ public class VColorPicker extends VButton {
         this.color = color;
     }
 
+    public String getColor() {
+        return color;
+    }
+
     /**
      * Mark the popup opened/closed.
      *
@@ -82,4 +86,7 @@ public class VColorPicker extends VButton {
         }
     }
 
+    @Override public void onClick() {
+        super.onClick();
+    }
 }

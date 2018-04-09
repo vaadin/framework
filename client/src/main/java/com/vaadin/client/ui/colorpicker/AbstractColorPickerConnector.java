@@ -21,6 +21,9 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.colorpicker.AbstractColorPickerState;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * An abstract class that defines default implementation for a color picker
  * connector.
@@ -46,6 +49,8 @@ public abstract class AbstractColorPickerConnector
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         // NOTE: this method is called after @DelegateToWidget
         super.onStateChanged(stateChangeEvent);
+        Logger.getLogger(AbstractColorPickerConnector.class.getName()).log(
+                Level.SEVERE,"onStateChanged" + (stateChangeEvent.hasPropertyChanged("color")));
         if (stateChangeEvent.hasPropertyChanged("color")) {
             refreshColor();
 
