@@ -77,7 +77,6 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
         POPUP_SIMPLE("simple");
 
         private final String style;
-
         PopupStyle(String styleName) {
             style = styleName;
         }
@@ -88,7 +87,29 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
         }
     }
 
-    private ColorPickerServerRpc rpc = this::showPopup;
+    private Color selectedColor = Color.WHITE;
+    private ColorPickerServerRpc rpc = new ColorPickerServerRpc() {
+        @Override public void openPopup(boolean openPopup) {
+            showPopup(openPopup);
+        }
+
+        @Override
+        public void changeColor(String color) {
+            Notification.show("Cange color + " + color);
+            try{
+            Color valueC= new Color(Integer.parseInt(color.substring(1,color.length()), 16));
+                selectedColor=valueC;
+            setValue(valueC);
+            if(window!=null){
+                Notification.show("Window not null");
+                window.setValue(valueC);}
+                doSetValue(valueC);
+                setValue(valueC);}
+            catch(Error e){
+                Notification.show("ERROR" + e.getMessage());
+            }
+        }
+    };
 
     protected static final String STYLENAME_DEFAULT = "v-colorpicker";
     protected static final String STYLENAME_BUTTON = "v-button";
@@ -144,7 +165,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
         setValue(initialColor);
         this.popupCaption = popupCaption;
         setDefaultStyles();
-        setCaption("");
+        setCaption(popupCaption);
     }
 
     /**
@@ -447,12 +468,13 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
                 window.addCloseListener(
                         event -> getState().popupVisible = false);
                 window.addValueChangeListener(
-                        event -> setValue(event.getValue()));
-
+                        event -> {setValue(event.getValue());
+                        rpc.changeColor(event.getValue().getCSS());});
                 window.getHistory().setValue(color);
                 window.setPositionX(positionX);
                 window.setPositionY(positionY);
                 window.setVisible(true);
+                window.setValue(color);
 
                 parent.addWindow(window);
                 window.focus();
@@ -465,13 +487,15 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
                 window.setHistoryVisible(historyVisible);
                 window.setPreviewVisible(textfieldVisible);
 
-                window.setValue(color);
-                window.getHistory().setValue(color);
+                window.setValue(selectedColor);
+                Notification.show("SelectedColor2:selectedColor" + selectedColor);
+                window.getHistory().setValue(selectedColor);
                 window.setVisible(true);
 
                 parent.addWindow(window);
                 window.focus();
             }
+            window.setValue(selectedColor);
 
         } else if (window != null) {
             window.setVisible(false);

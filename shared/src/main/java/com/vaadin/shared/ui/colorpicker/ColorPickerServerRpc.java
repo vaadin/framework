@@ -33,4 +33,6 @@ public interface ColorPickerServerRpc extends ServerRpc {
      */
     public void openPopup(boolean openPopup);
 
+    public void changeColor(String color);
+
 }
