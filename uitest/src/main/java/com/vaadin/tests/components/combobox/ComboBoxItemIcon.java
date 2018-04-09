@@ -72,7 +72,8 @@ public class ComboBoxItemIcon extends TestBase {
             cb.setItems(IntStream.range(0, 3).boxed());
             cb.setItemIconGenerator(iconGenerator);
 
-            cb.setValue(1);
+            // FIXME: ConnectorResource when CB is not attached selected
+            // cb.setValue(1);
             addComponent(cb);
         }
     }
