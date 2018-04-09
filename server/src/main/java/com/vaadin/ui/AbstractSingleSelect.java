@@ -37,6 +37,7 @@ import com.vaadin.shared.ui.AbstractSingleSelectState;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignException;
 
+import elemental.json.Json;
 import elemental.json.JsonObject;
 
 /**
@@ -210,12 +211,12 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
      * @return {@code true} if the item is selected, {@code false} otherwise
      */
     public boolean isSelected(T item) {
-        if (item == null || selectedItem == null) {
-            return false;
-        }
-
         if (Objects.equals(selectedItem, item)) {
             return true;
+        }
+
+        if (item == null || selectedItem == null) {
+            return false;
         }
 
         return Objects.equals(getDataProvider().getId(selectedItem),
@@ -314,7 +315,8 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
             public void refreshData(T item) {
                 if (isSelected(item)) {
                     selectedItem = item;
-                    updateSelectedItemState(item);
+                    // Invalidate old data
+                    updateSelectedItemState(null);
                 }
             }
         });
@@ -347,8 +349,11 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
             getDataCommunicator().refresh(value);
         }
 
-        // Always clear state to allow "reverting" selection
-        updateSelectedItemState(null);
+        // Deselection can be handled immediately
+        updateSelectedItemState(value);
+
+        // Update diffstate to make sure null can be selected later.
+        updateDiffstate("selectedItemKey", Json.createObject());
 
         fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this,
                 oldValue, userOriginated));
@@ -362,9 +367,8 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
      *            the value that is selected; may be {@code null}
      */
     protected void updateSelectedItemState(T value) {
-        assert value == null || getDataCommunicator().getKeyMapper().has(
-                value) : "Data has not been generated for the selected item.";
-
+        // FIXME: If selecting a value that does not exist, this will leave and
+        // extra object in the key mapper that will not be dropped any time.
         getState().selectedItemKey = value != null
                 ? getDataCommunicator().getKeyMapper().key(value)
                 : null;
