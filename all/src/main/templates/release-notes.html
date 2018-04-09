@@ -83,12 +83,16 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li><tt>ComboBox</tt> has a better new item handling implementation with <tt>NewItemProvider</tt>.</li>
+            <li><tt>ComboBox</tt> has a better handling of new items with <tt>NewItemProvider</tt>.</li>
             <li><tt>Binding</tt> APIs have been improved to allow more advanced use.</li>
-            <li>New <tt>ReadOnlyHasValue</tt> wrapper class for easy implementation of new <tt>HasValue</tt>s for <tt>Binder</tt>.</li>
-            <li>Built-in <tt>StringTo</tt> converters now have option to use <tt>ErrorMessageProvider</tt>.</li>
+            <li>New <tt>ReadOnlyHasValue</tt> wrapper helps to bind any visible element to a data item via <tt>Binder</tt>.</li>
+            <li>Built-in <tt>StringTo</tt> converters now have an option to use <tt>ErrorMessageProvider</tt>.</li>
             <li><tt>Grid</tt> headers and footers now support tooltips.</li>
             <li>Added <tt>Tree</tt> and <tt>TreeGrid</tt> recursive expand and collapse methods.</li>
+            <li><tt>BrowserResizeListener</tt> is called lazily during the resize (previously on each and every event browser fired, causing potentially hundreds of server visits per window resize).</li>
+            <li><tt>ItemClickEvent</tt> for <tt>Grid</tt> now takes an additional row index parameter.</li>
+            <li>Support starting downloads and opening URLs from a menu item.</li>
+
         </ul>
 
         </p>
