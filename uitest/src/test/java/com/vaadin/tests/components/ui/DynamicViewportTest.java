@@ -3,6 +3,7 @@ package com.vaadin.tests.components.ui;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -19,7 +20,12 @@ public class DynamicViewportTest extends SingleBrowserTest {
         WebElement viewportElement = findElement(
                 By.cssSelector("meta[name=viewport]"));
 
-        assertTrue(viewportElement.getAttribute("content").contains("Chrome"));
+        String viewportContent = viewportElement.getAttribute("content")
+                .toLowerCase(Locale.ROOT);
+        String browserName = getDesiredCapabilities().getBrowserName()
+                .toLowerCase(Locale.ROOT);
+
+        assertTrue(viewportContent.contains(browserName));
     }
 
     @Test
