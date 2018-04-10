@@ -17,8 +17,6 @@ package com.vaadin.client.ui.colorpicker;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.ui.VColorPicker;
@@ -27,9 +25,6 @@ import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.colorpicker.ColorPickerServerRpc;
 import com.vaadin.shared.ui.colorpicker.ColorPickerState;
 import com.vaadin.ui.ColorPicker;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A class that defines default implementation for a color picker connector.

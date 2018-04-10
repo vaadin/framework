@@ -86,7 +86,4 @@ public class VColorPicker extends VButton {
         }
     }
 
-    @Override public void onClick() {
-        super.onClick();
-    }
 }
