@@ -51,48 +51,43 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         if (propertiesFile.exists()) {
             try {
                 properties.load(new FileInputStream(propertiesFile));
-                if (properties.containsKey(RUN_LOCALLY_PROPERTY)) {
-                    System.setProperty("useLocalWebDriver", "true");
-                    DesiredCapabilities localBrowser = getRunLocallyCapabilities();
-                    System.setProperty("browsers.include",
-                            localBrowser.getBrowserName()
-                                    + localBrowser.getVersion());
-                }
-                if (properties.containsKey(FIREFOX_PATH)) {
-                    System.setProperty(FIREFOX_PATH,
-                            properties.getProperty(FIREFOX_PATH));
-                }
-                if (properties.containsKey(PHANTOMJS_PATH)) {
-                    System.setProperty(PHANTOMJS_PATH,
-                            properties.getProperty(PHANTOMJS_PATH));
-                }
-
-                String dir = System.getProperty(SCREENSHOT_DIRECTORY,
-                        properties.getProperty(SCREENSHOT_DIRECTORY));
-                if (dir != null && !dir.isEmpty()) {
-                    String reference = Paths.get(dir, "reference").toString();
-                    String errors = Paths.get(dir, "errors").toString();
-                    Parameters.setScreenshotReferenceDirectory(reference);
-                    Parameters.setScreenshotErrorDirectory(errors);
-                } else {
-                    // Attempt to pass specific values to Parameters based on
-                    // real property name
-                    final String base = Parameters.class.getName() + ".";
-                    if (properties.containsKey(
-                            base + "screenshotReferenceDirectory")) {
-                        Parameters.setScreenshotReferenceDirectory(
-                                properties.getProperty(
-                                        base + "screenshotReferenceDirectory"));
-                    }
-                    if (properties
-                            .containsKey(base + "screenshotErrorDirectory")) {
-                        Parameters.setScreenshotErrorDirectory(
-                                properties.getProperty(
-                                        base + "screenshotErrorDirectory"));
-                    }
-                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+        }
+        if (properties.containsKey(RUN_LOCALLY_PROPERTY)) {
+            System.setProperty("useLocalWebDriver", "true");
+            DesiredCapabilities localBrowser = getRunLocallyCapabilities();
+            System.setProperty("browsers.include",
+                    localBrowser.getBrowserName() + localBrowser.getVersion());
+        }
+        if (properties.containsKey(FIREFOX_PATH)) {
+            System.setProperty(FIREFOX_PATH,
+                    properties.getProperty(FIREFOX_PATH));
+        }
+        if (properties.containsKey(PHANTOMJS_PATH)) {
+            System.setProperty(PHANTOMJS_PATH,
+                    properties.getProperty(PHANTOMJS_PATH));
+        }
+
+        String dir = System.getProperty(SCREENSHOT_DIRECTORY,
+                properties.getProperty(SCREENSHOT_DIRECTORY));
+        if (dir != null && !dir.isEmpty()) {
+            String reference = Paths.get(dir, "reference").toString();
+            String errors = Paths.get(dir, "errors").toString();
+            Parameters.setScreenshotReferenceDirectory(reference);
+            Parameters.setScreenshotErrorDirectory(errors);
+        } else {
+            // Attempt to pass specific values to Parameters based on
+            // real property name
+            final String base = Parameters.class.getName() + ".";
+            if (properties.containsKey(base + "screenshotReferenceDirectory")) {
+                Parameters.setScreenshotReferenceDirectory(properties
+                        .getProperty(base + "screenshotReferenceDirectory"));
+            }
+            if (properties.containsKey(base + "screenshotErrorDirectory")) {
+                Parameters.setScreenshotErrorDirectory(properties
+                        .getProperty(base + "screenshotErrorDirectory"));
             }
         }
     }
