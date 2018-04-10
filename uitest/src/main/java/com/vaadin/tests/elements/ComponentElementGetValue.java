@@ -22,11 +22,13 @@ import com.vaadin.ui.Slider;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
+import com.vaadin.ui.RichTextArea;
+
 
 /**
  * UI test for getValue() method of components: TextField, TextArea,
  * PasswordField, ComboBox, ListSelect, NativeSelect, OptionGroup, CheckBox,
- * DateField, TwinColSelect
+ * DateField, TwinColSelect, RichTextArea
  *
  * @author Vaadin Ltd
  */
@@ -34,9 +36,8 @@ public class ComponentElementGetValue extends AbstractTestUI {
 
     public static final String TEST_STRING_VALUE = "item 2";
     public static final int TEST_SLIDER_VALUE = 42;
-    public static final float TEST_FLOAT_VALUE = 0.42f;
     public static final LocalDate TEST_DATE_VALUE = LocalDate.now();
-    DateField df;
+    public static final String TESTGET_STRING_VALUE_RICHTEXTAREA = "value 4";
     final Label valueChangeLabel = new Label("Initial value");
 
     // These constants are used to check that change value event was
@@ -105,7 +106,7 @@ public class ComponentElementGetValue extends AbstractTestUI {
                     event -> valueChangeLabel.setValue(value));
             addComponent(field);
         }
-
+        addComponent(createRichTextArea());
         addComponent(createCheckBox());
         addComponent(createSlider());
         addComponent(createDateField());
@@ -135,6 +136,12 @@ public class ComponentElementGetValue extends AbstractTestUI {
         cb.addValueChangeListener(
                 event -> valueChangeLabel.setValue(CHECKBOX_VALUE_CHANGE));
         return cb;
+    }
+
+    private RichTextArea createRichTextArea() {
+        RichTextArea rta = new RichTextArea();
+        rta.setValue(TESTGET_STRING_VALUE_RICHTEXTAREA);
+        return rta;
     }
 
     @Override

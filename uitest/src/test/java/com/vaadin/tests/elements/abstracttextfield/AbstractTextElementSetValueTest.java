@@ -2,15 +2,16 @@ package com.vaadin.tests.elements.abstracttextfield;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import com.vaadin.testbench.elements.AbstractTextFieldElement;
 import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.PasswordFieldElement;
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.testbench.elements.RichTextAreaElement;
+import org.junit.Before;
+import org.junit.Test;
+
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class AbstractTextElementSetValueTest extends MultiBrowserTest {
@@ -47,6 +48,14 @@ public class AbstractTextElementSetValueTest extends MultiBrowserTest {
         elem.setValue(TYPED_STRING);
         // invalid values should stay unchanged
         assertEquals(TYPED_STRING, elem.getValue());
+    }
+
+    @Test
+    public void richTextAreaSetValue() {
+        RichTextAreaElement elem = $(RichTextAreaElement.class).get(0);
+        elem.setValue(TYPED_STRING);
+        String actual = elem.getValue();
+        assertEquals(TYPED_STRING, actual);
     }
 
     // helper methods
