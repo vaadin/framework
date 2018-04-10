@@ -77,6 +77,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
         POPUP_SIMPLE("simple");
 
         private final String style;
+
         PopupStyle(String styleName) {
             style = styleName;
         }
@@ -89,23 +90,20 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
 
     private Color selectedColor = Color.WHITE;
     private ColorPickerServerRpc rpc = new ColorPickerServerRpc() {
-        @Override public void openPopup(boolean openPopup) {
+        @Override
+        public void openPopup(boolean openPopup) {
             showPopup(openPopup);
         }
 
         @Override
         public void changeColor(String color) {
-            Notification.show("Cange color + " + color);
-            try{
-            Color valueC= new Color(Integer.parseInt(color.substring(1,color.length()), 16));
-                selectedColor=valueC;
-            setValue(valueC);
-            if(window!=null){
-                Notification.show("Window not null");
-                window.setValue(valueC);}
-                doSetValue(valueC);
-                setValue(valueC);}
-            catch(Error e){
+            try {
+                Color valueC = new Color(Integer
+                        .parseInt(color.substring(1, color.length()), 16));
+                selectedColor = valueC;
+                doSetValue(selectedColor);
+                setValue(selectedColor);
+            } catch (Error e) {
                 Notification.show("ERROR" + e.getMessage());
             }
         }
@@ -467,9 +465,11 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
 
                 window.addCloseListener(
                         event -> getState().popupVisible = false);
-                window.addValueChangeListener(
-                        event -> {setValue(event.getValue());
-                        rpc.changeColor(event.getValue().getCSS());});
+                window.addValueChangeListener(event -> {
+                    Notification.show("Window chnage value listener");
+                    setValue(event.getValue());
+                    rpc.changeColor(event.getValue().getCSS());
+                });
                 window.getHistory().setValue(color);
                 window.setPositionX(positionX);
                 window.setPositionY(positionY);
@@ -488,7 +488,6 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
                 window.setPreviewVisible(textfieldVisible);
 
                 window.setValue(selectedColor);
-                Notification.show("SelectedColor2:selectedColor" + selectedColor);
                 window.getHistory().setValue(selectedColor);
                 window.setVisible(true);
 

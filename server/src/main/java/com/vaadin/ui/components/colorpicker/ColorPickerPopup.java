@@ -28,8 +28,16 @@ import com.vaadin.data.HasValue;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.colorpicker.Color;
-import com.vaadin.shared.ui.colorpicker.ColorPickerServerRpc;
-import com.vaadin.ui.*;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.Window;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Slider;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.AbstractColorPicker.Coordinates2Color;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Slider.ValueOutOfBoundsException;
@@ -152,12 +160,11 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
      */
     public ColorPickerPopup(Color initialColor) {
         this();
-        selectedColor = initialColor;
         initContents();
+        setValue(initialColor);
     }
 
     private void initContents() {
-        Notification.show("INIT CONTENT");
         // Create the preview on the rgb tab
         rgbPreview = new ColorPickerPreview(selectedColor);
         rgbPreview.setWidth("240px");
@@ -241,6 +248,7 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
         buttons.setComponentAlignment(ok, Alignment.MIDDLE_CENTER);
         buttons.setComponentAlignment(cancel, Alignment.MIDDLE_CENTER);
         layout.addComponent(buttons);
+        setRgbSliderValues(selectedColor);
     }
 
     /**
@@ -444,7 +452,6 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
 
     private void okButtonClick(ClickEvent event) {
         fireEvent(new ValueChangeEvent<>(this, previouslySelectedColor, true));
-        Notification.show("Selected Color?:" + selectedColor + getValue());
         rgbPreview.setValue(getValue());
         hsvPreview.setValue(getValue());
         selPreview.setValue(getValue());
