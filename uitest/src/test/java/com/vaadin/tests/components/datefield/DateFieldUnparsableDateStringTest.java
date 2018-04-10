@@ -13,6 +13,7 @@ public class DateFieldUnparsableDateStringTest extends MultiBrowserTest {
     @Test
     public void testInvalidText() {
         openTestURL();
+        waitForElementVisible(By.className("v-datefield"));
 
         getInput().sendKeys("0304", Keys.TAB);
         assertEquals("03.04.2018", getInput().getAttribute("value"));
