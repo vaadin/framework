@@ -33,7 +33,8 @@ import com.vaadin.testbench.parallel.BrowserUtil;
  */
 @RunOnHub("tb3-hub.intra.itmill.com")
 @BrowserFactory(VaadinBrowserFactory.class)
-public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {    public static final String SCREENSHOT_DIRECTORY = "com.vaadin.testbench.screenshot.directory";
+public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
+    public static final String SCREENSHOT_DIRECTORY = "com.vaadin.testbench.screenshot.directory";
     private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
     private static final String RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.runLocally";
     private static final String ALLOW_RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.allowRunLocally";
@@ -138,10 +139,21 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {    pub
 
     protected static DesiredCapabilities getRunLocallyCapabilities() {
         VaadinBrowserFactory factory = new VaadinBrowserFactory();
+
         try {
-            return factory.create(
-                    Browser.valueOf(properties.getProperty(RUN_LOCALLY_PROPERTY)
-                            .toUpperCase(Locale.ROOT)));
+            if (properties.containsKey(RUN_LOCALLY_PROPERTY)) {
+                // RunLocally defined in propeties file
+                return factory.create(Browser
+                        .valueOf(properties.getProperty(RUN_LOCALLY_PROPERTY)
+                                .toUpperCase(Locale.ROOT)));
+            } else if (System.getProperties().containsKey("browsers.include")) {
+                // Use first included browser as the run locally browser.
+                String property = System.getProperty("browsers.include");
+                String firstBrowser = property.split(",")[0];
+
+                return factory.create(Browser.valueOf(firstBrowser
+                        .replaceAll("[0-9]+$", "").toUpperCase(Locale.ROOT)));
+            }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             System.err.println("Falling back to FireFox");
@@ -199,7 +211,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {    pub
             return true;
         }
 
-        return false;
+        return "true".equals(System.getProperty("useLocalWebDriver", "false"));
     }
 
     /**
