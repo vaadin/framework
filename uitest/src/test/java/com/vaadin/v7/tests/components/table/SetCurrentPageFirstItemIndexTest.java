@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.table;
+package com.vaadin.v7.tests.components.table;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -13,8 +13,6 @@ import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-@Ignore
-// Enable after #15286 is fixed.
 public class SetCurrentPageFirstItemIndexTest extends MultiBrowserTest {
 
     @Test

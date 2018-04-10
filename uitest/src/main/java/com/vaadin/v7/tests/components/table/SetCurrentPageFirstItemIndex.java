@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.table;
+package com.vaadin.v7.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
