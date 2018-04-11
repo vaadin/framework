@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -188,7 +188,7 @@ public class Binder<BEAN> implements Serializable {
          * @param readOnly
          *            {@code true} to set binding read-only; {@code false} to
          *            enable writes
-         * @since
+         * @since 8.4
          * @throws IllegalStateException
          *             if trying to make binding read-write and the setter is
          *             {@code null}
@@ -201,7 +201,7 @@ public class Binder<BEAN> implements Serializable {
          * @see #setReadOnly(boolean)
          * 
          * @return {@code true} if read-only; {@code false} if not
-         * @since
+         * @since 8.4
          */
         public boolean isReadOnly();
 
@@ -209,7 +209,7 @@ public class Binder<BEAN> implements Serializable {
          * Gets the getter associated with this Binding.
          *
          * @return the getter
-         * @since
+         * @since 8.4
          */
         public ValueProvider<BEAN, TARGET> getGetter();
 
@@ -217,7 +217,7 @@ public class Binder<BEAN> implements Serializable {
          * Gets the setter associated with this Binding.
          *
          * @return the setter
-         * @since
+         * @since 8.4
          */
         public Setter<BEAN, TARGET> getSetter();
     }
@@ -730,21 +730,21 @@ public class Binder<BEAN> implements Serializable {
                 ErrorMessageProvider errorMessageProvider);
 
         /**
-         * Sets the field to be required and delegates the required check to a custom validator.
-         * This means two things:
+         * Sets the field to be required and delegates the required check to a
+         * custom validator. This means two things:
          * <ol>
          * <li>the required indicator will be displayed for this field</li>
-         * <li>the field value is validated by customRequiredValidator</li>
+         * <li>the field value is validated by {@code requiredValidator}</li>
          * </ol>
          *
          * @see HasValue#setRequiredIndicatorVisible(boolean)
-         * @param customRequiredValidator
+         * @param requiredValidator
          *            validator responsible for the required check
          * @return this binding, for chaining
-         * @since
+         * @since 8.4
          */
         public BindingBuilder<BEAN, TARGET> asRequired(
-                Validator<TARGET> customRequiredValidator);
+                Validator<TARGET> requiredValidator);
     }
 
     /**
@@ -902,10 +902,9 @@ public class Binder<BEAN> implements Serializable {
         @Override
         public BindingBuilder<BEAN, TARGET> asRequired(
                 ErrorMessageProvider errorMessageProvider) {
-            return asRequired(
-                    Validator.from(
-                            value -> !Objects.equals(value, field.getEmptyValue()),
-                            errorMessageProvider));
+            return asRequired(Validator.from(
+                    value -> !Objects.equals(value, field.getEmptyValue()),
+                    errorMessageProvider));
         }
 
         @Override

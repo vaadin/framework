@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,6 +35,7 @@ import com.vaadin.data.HasValue;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataCommunicator;
+import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataKeyMapper;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
@@ -44,6 +45,7 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.server.ConnectorResource;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
@@ -288,21 +290,56 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         registerRpc(rpc);
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
 
-        addDataGenerator((T data, JsonObject jsonObject) -> {
-            String caption = getItemCaptionGenerator().apply(data);
-            if (caption == null) {
-                caption = "";
+        addDataGenerator(new DataGenerator<T>() {
+
+            /**
+             * Map for storing names for icons.
+             */
+            private Map<Object, String> resourceKeyMap = new HashMap<>();
+            private int counter = 0;
+
+            @Override
+            public void generateData(T item, JsonObject jsonObject) {
+                String caption = getItemCaptionGenerator().apply(item);
+                if (caption == null) {
+                    caption = "";
+                }
+                jsonObject.put(DataCommunicatorConstants.NAME, caption);
+                String style = itemStyleGenerator.apply(item);
+                if (style != null) {
+                    jsonObject.put(ComboBoxConstants.STYLE, style);
+                }
+                Resource icon = getItemIcon(item);
+                if (icon != null) {
+                    String iconKey = resourceKeyMap
+                            .get(getDataProvider().getId(item));
+                    String iconUrl = ResourceReference
+                            .create(icon, ComboBox.this, iconKey).getURL();
+                    jsonObject.put(ComboBoxConstants.ICON, iconUrl);
+                }
             }
-            jsonObject.put(DataCommunicatorConstants.NAME, caption);
-            String style = itemStyleGenerator.apply(data);
-            if (style != null) {
-                jsonObject.put(ComboBoxConstants.STYLE, style);
+
+            @Override
+            public void destroyData(T item) {
+                Object itemId = getDataProvider().getId(item);
+                if (resourceKeyMap.containsKey(itemId)) {
+                    setResource(resourceKeyMap.get(itemId), null);
+                    resourceKeyMap.remove(itemId);
+                }
             }
-            Resource icon = getItemIconGenerator().apply(data);
-            if (icon != null) {
-                String iconUrl = ResourceReference
-                        .create(icon, ComboBox.this, null).getURL();
-                jsonObject.put(ComboBoxConstants.ICON, iconUrl);
+
+            private Resource getItemIcon(T item) {
+                Resource icon = getItemIconGenerator().apply(item);
+                if (icon == null || !(icon instanceof ConnectorResource)) {
+                    return icon;
+                }
+
+                Object itemId = getDataProvider().getId(item);
+                if (!resourceKeyMap.containsKey(itemId)) {
+                    resourceKeyMap.put(itemId, "icon" + (counter++));
+                }
+                setResource(resourceKeyMap.get(itemId), icon);
+                return icon;
             }
         });
     }
@@ -804,8 +841,11 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         if (value != null) {
             Resource icon = getItemIconGenerator().apply(value);
             if (icon != null) {
+                if (icon instanceof ConnectorResource) {
+                    setResource("selected", icon);
+                }
                 selectedItemIcon = ResourceReference
-                        .create(icon, ComboBox.this, null).getURL();
+                        .create(icon, ComboBox.this, "selected").getURL();
             }
         }
         getState().selectedItemIcon = selectedItemIcon;

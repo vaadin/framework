@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -398,7 +398,7 @@ public class Notification extends AbstractExtension {
      * <p>
      * If the notification is not shown, does nothing.
      *
-     * @since
+     * @since 8.4
      */
     public void close() {
         close(false);
@@ -413,7 +413,7 @@ public class Notification extends AbstractExtension {
      *            <code>true</code> if the notification was closed because the
      *            user clicked on it, <code>false</code> if the notification was
      *            closed from the server
-     * @since
+     * @since 8.4
      */
     protected void close(boolean userOriginated) {
         if (!isAttached()) {

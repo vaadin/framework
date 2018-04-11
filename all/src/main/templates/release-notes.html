@@ -83,6 +83,16 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
+            <li><tt>ComboBox</tt> has a better handling of new items with <tt>NewItemProvider</tt>.</li>
+            <li><tt>Binding</tt> APIs have been improved to allow more advanced use.</li>
+            <li>New <tt>ReadOnlyHasValue</tt> wrapper helps to bind any visible element to a data item via <tt>Binder</tt>.</li>
+            <li>Built-in <tt>StringTo</tt> converters now have an option to use <tt>ErrorMessageProvider</tt>.</li>
+            <li><tt>Grid</tt> headers and footers now support tooltips.</li>
+            <li>Added <tt>Tree</tt> and <tt>TreeGrid</tt> recursive expand and collapse methods.</li>
+            <li><tt>BrowserResizeListener</tt> is called lazily during the resize (previously on each and every event browser fired, causing potentially hundreds of server visits per window resize).</li>
+            <li><tt>ItemClickEvent</tt> for <tt>Grid</tt> now takes an additional row index parameter.</li>
+            <li>Support starting downloads and opening URLs from a menu item.</li>
+
         </ul>
 
         </p>
@@ -97,8 +107,10 @@
 
         <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h2>
 
-        <li><tt>BindingBuilder</tt> will now automatically mark bound field <i>read-only</i> when bound to a read-only property or a <tt>null</tt> setter.</li>
+        <li><tt>BrowserWindowOpenerConnector</tt> and <tt>FileDownloaderConnector</tt> now are subclasses of <tt>AbstractEventTriggerExtensionConnector</tt>
         <li>Date range limits in <tt>AbstractDateFieldState</tt> are now <tt>String</tt>s instead of <tt>Date</tt>s, some client-side method signatures were changed</li>
+        <li><tt>BrowserResizeListener</tt> is only called once resizing ends.</li>
+        <li><tt>ItemClickEvent</tt> for <tt>Grid</tt> now takes an additional row index parameter.</li>
 
         <h2>For incompatible or behavior-altering changes in 8.3, please see <a href="https://vaadin.com/download/release/8.3/8.3.0/release-notes.html#incompatible">8.3 release notes</a></h2>
         

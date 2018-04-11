@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.vaadin.tests;
 
 import com.vaadin.ui.Button;

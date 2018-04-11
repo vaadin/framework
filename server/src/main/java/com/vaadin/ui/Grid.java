@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -347,6 +347,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         private final T item;
         private final Column<T, ?> column;
         private final MouseEventDetails mouseEventDetails;
+        private final int rowIndex;
 
         /**
          * Creates a new {@code ItemClick} event containing the given item and
@@ -354,11 +355,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          */
         public ItemClick(Grid<T> source, Column<T, ?> column, T item,
-                MouseEventDetails mouseEventDetails) {
+                MouseEventDetails mouseEventDetails, int rowIndex) {
             super(source);
             this.column = column;
             this.item = item;
             this.mouseEventDetails = mouseEventDetails;
+            this.rowIndex = rowIndex;
         }
 
         /**
@@ -396,6 +398,16 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          */
         public MouseEventDetails getMouseEventDetails() {
             return mouseEventDetails;
+        }
+
+        /**
+         * Returns the clicked rowIndex.
+         *
+         * @return the clicked rowIndex
+         * @since 8.4
+         */
+        public int getRowIndex() {
+            return rowIndex;
         }
     }
 
@@ -625,10 +637,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         @Override
         public void itemClick(String rowKey, String columnInternalId,
-                MouseEventDetails details) {
+                MouseEventDetails details, int rowIndex) {
             Column<T, ?> column = getColumnByInternalId(columnInternalId);
             T item = getDataCommunicator().getKeyMapper().get(rowKey);
-            fireEvent(new ItemClick<>(Grid.this, column, item, details));
+            fireEvent(new ItemClick<>(Grid.this, column, item, details,
+                    rowIndex));
         }
 
         @Override
@@ -2520,9 +2533,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Returns the property set used by this grid.
      *
-     * @return propertySet
-     *             the property set to return
-     * @since
+     * @return propertySet the property set to return
+     * @since 8.4
      */
     protected PropertySet<T> getPropertySet() {
         return propertySet;

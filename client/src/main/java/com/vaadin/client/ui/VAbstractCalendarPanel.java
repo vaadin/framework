@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -2113,7 +2113,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      *
      * @param label
      *         the label to set
-     * @since
+     * @since 8.4
      */
     public void setAssistiveLabelPreviousYear(String label) {
         prevYearAssistiveLabel = label;
@@ -2124,7 +2124,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      *
      * @param label
      *         the label to set
-     * @since
+     * @since 8.4
      */
     public void setAssistiveLabelNextYear(String label) {
         nextYearAssistiveLabel = label;
@@ -2135,7 +2135,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      *
      * @param label
      *         the label to set
-     * @since
+     * @since 8.4
      */
     public void setAssistiveLabelPreviousMonth(String label) {
         prevMonthAssistiveLabel = label;
@@ -2146,7 +2146,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      *
      * @param label
      *         the label to set
-     * @since
+     * @since 8.4
      */
     public void setAssistiveLabelNextMonth(String label) {
         nextMonthAssistiveLabel = label;
@@ -2155,7 +2155,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     /**
      * Updates assistive labels of the navigation elements.
      *
-     * @since
+     * @since 8.4
      */
     public void updateAssistiveLabels() {
         if (prevMonth != null) {

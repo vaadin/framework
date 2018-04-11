@@ -504,7 +504,7 @@ Set the renderer in the [classname]#Grid.Column# object:
 +
 [source, java]
 ----
-Column<Person, String> htmlColumn grid.addColumn(person ->
+Column<Person, String> htmlColumn = grid.addColumn(person ->
       "<a href='" + person.getDetailsUrl() + "' target='_top'>info</a>",
       new HtmlRenderer());
 ----
@@ -957,9 +957,9 @@ You can style entire rows or individual cells with a
 [[components.grid.stylegeneration.row]]
 === Generating Row Styles
 
-You set a [interfacename]#StyleGenerator# to a grid with
-[methodname]#setStyleGenerator()#. The [methodname]#getStyle()# method gets a
-date item, and should return a style name or [parameter]#null# if
+The easiest way to style rows is to make a lambda and set it with
+[methodname]#setStyleGenerator()# to a grid.
+The lambda gets a data item, and should return a style name or [parameter]#null# if
 no style is generated.
 
 For example, to add a style names to rows having certain values in one

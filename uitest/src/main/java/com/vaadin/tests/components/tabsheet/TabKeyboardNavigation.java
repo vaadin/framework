@@ -20,7 +20,6 @@ import com.vaadin.v7.ui.TextField;
  *
  * The solution was broken in ticket (#14304)
  *
- * @since
  * @author Vaadin Ltd
  */
 public class TabKeyboardNavigation extends AbstractReindeerTestUI {

@@ -96,6 +96,14 @@ found at <<jmeter-vaadin-servlet-extension>>. This implementation works for Gatl
 as well. Note that, it is suggested to do this only for load testing, and NOT
 for the production.
 
+An alternative way to handle these ids is to use a similar mechanism as in case of
+XSRF prevention keys. For instance, you can try to extract id of a button by finding
+it from some of the previous responses based on its caption or css id. And, then use
+hand crafter regular expression to extract it from the response. As you might have 
+guessed this is tedious if there are a lot of components interacted. But, benefit of 
+this approach is that you do not have to do code changes to your application just 
+for the testing purpose.
+
 [[ignoring-obsolete-static-file-requests]]
 Ignoring "obsolete" static file requests
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -104,7 +112,7 @@ One of the most simplest and cheapest method to improve your apps
 scalability is to serve static files form a separate server or from a
 CDN provider. Thus it might make sense to leave loading those files away
 from your test script. If you do the script manually, just don't add
-requests for static files (js/css/images/...). If you recorded you test
+requests for static files (js/css/images/...). If you recorded your test
 case, just remove these form the script. Check out the example project
 that only uses the required files.
 
@@ -112,7 +120,7 @@ that only uses the required files.
 Testing with WebSockets
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-If your want to load test your application with the most advanced
+If you want to load test your application with the most advanced
 communication channel, WebSockets, you can do that with Gatling as well.
 Using the recorder in this case doesn't work, but handcrafting the test
 case isn't that hard once you get started. The example app has a branch
