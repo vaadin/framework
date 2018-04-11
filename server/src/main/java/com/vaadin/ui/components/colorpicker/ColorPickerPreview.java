@@ -19,7 +19,6 @@ import java.util.Objects;
 
 import com.vaadin.data.HasValue;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -54,7 +53,6 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
         field.setSizeFull();
         field.setStyleName("v-colorpicker-preview-textfield");
         field.setData(this);
-        field.setValueChangeMode(ValueChangeMode.LAZY);
         valueChangeListenerRegistration = field
                 .addValueChangeListener(this::valueChange);
         addComponent(field);

@@ -116,6 +116,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
         public void openPopup(boolean openPopup) {
             showPopup(openPopup);
         }
+
         @Override
         public void changeColor(String col) {
             Color valueC = new Color(
@@ -183,6 +184,10 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
     public void setValue(Color color) {
         Objects.requireNonNull(color, "color cannot be null");
         super.setValue(color);
+        if (window != null) {
+            window.setValue(color);
+        }
+        doSetValue(color);
     }
 
     /**
