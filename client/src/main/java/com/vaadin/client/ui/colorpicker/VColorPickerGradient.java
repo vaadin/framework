@@ -27,9 +27,6 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.ui.SubPartAware;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * Client side implementation for ColorPickerGradient.
  *
@@ -176,9 +173,6 @@ public class VColorPickerGradient extends FocusPanel implements
         }
         if (y >= 0) {
             lowercross.getElement().getStyle().setTop(y, Unit.PX);
-        }
-        if (y >= 0) {
-            lowercross.getElement().getStyle().setHeight(height - y, Unit.PX);
         }
         if (y >= 0) {
             lowercross.getElement().getStyle().setHeight(height - y, Unit.PX);

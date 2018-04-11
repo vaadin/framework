@@ -62,7 +62,7 @@ public class ColorPickerGrid extends AbstractField<Color> {
             fireEvent(new ValueChangeEvent<>(ColorPickerGrid.this, oldValue,
                     true));
             setValue(getValue());
-doSetValue(getValue());
+            doSetValue(getValue());
         }
 
         @Override
