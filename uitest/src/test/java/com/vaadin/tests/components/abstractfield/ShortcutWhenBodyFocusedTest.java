@@ -18,11 +18,11 @@ public class ShortcutWhenBodyFocusedTest extends SingleBrowserTest {
         b.click();
         assertEquals("1. Hello clicked", getLogRow(0));
 
-        b.sendKeys("A");
+        b.sendKeys("a");
         assertEquals("2. Hello clicked", getLogRow(0));
 
         WebElement body = findElement(By.xpath("//body"));
-        body.sendKeys("A");
+        body.sendKeys("a");
         assertEquals("3. Hello clicked", getLogRow(0));
     }
 }

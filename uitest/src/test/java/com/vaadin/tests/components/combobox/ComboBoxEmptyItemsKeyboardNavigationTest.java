@@ -11,10 +11,10 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ComboBoxElement;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class ComboBoxEmptyItemsKeyboardNavigationTest
-        extends SingleBrowserTestPhantomJS2 {
+        extends SingleBrowserTest {
 
     @Test
     public void navigatingUpOnAnEmptyMenuDoesntThrowErrors() {

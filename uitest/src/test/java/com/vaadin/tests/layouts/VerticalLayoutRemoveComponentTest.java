@@ -6,10 +6,10 @@ import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.VerticalLayoutElement;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class VerticalLayoutRemoveComponentTest
-        extends SingleBrowserTestPhantomJS2 {
+        extends SingleBrowserTest {
     @Test
     public void testRemoveOnlyNecessaryComponentsFromDom() {
         openTestURL();
