@@ -741,7 +741,7 @@ public class VMenuBar extends FocusableFlowPanel
         if (visibleChildMenu != null) {
             popup.hide();
             setSelected(null);
-            menuVisible = !autoClosed;
+            menuVisible = false;
         }
 
         if (getParentMenu() != null) {
