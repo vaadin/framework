@@ -52,12 +52,13 @@ public class DateFieldIsValidTest extends MultiBrowserTest {
         assertLogText("4. buttonClick: value: null, is valid: false");
 
         dateTextbox.clear();
-        //dateTextbox.sendKeys(Keys.TAB);
-        //TODO add assertion here that date field control is valid
-        dateTextbox.sendKeys("02/02/02", Keys.TAB);
-        assertLogText("5. valueChange: value: 02/02/02, is valid: true");
         button.click();
-        assertLogText("6. buttonClick: value: 02/02/02, is valid: true");
+        assertLogText("5. buttonClick: value: null, is valid: true");
+
+        dateTextbox.sendKeys("02/02/02", Keys.TAB);
+        assertLogText("6. valueChange: value: 02/02/02, is valid: true");
+        button.click();
+        assertLogText("7. buttonClick: value: 02/02/02, is valid: true");
     }
 
     private void assertLogText(String expected) throws Exception {
