@@ -112,6 +112,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
     protected boolean swatchesVisible = true;
     protected boolean historyVisible = true;
     protected boolean textfieldVisible = true;
+    private boolean modal;
 
     /**
      * Instantiates a new color picker.
@@ -453,7 +454,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
                 window.setPositionX(positionX);
                 window.setPositionY(positionY);
                 window.setVisible(true);
-
+                window.setModal(modal);
                 parent.addWindow(window);
                 window.focus();
 
@@ -468,7 +469,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
                 window.setValue(color);
                 window.getHistory().setValue(color);
                 window.setVisible(true);
-
+                window.setModal(modal);
                 parent.addWindow(window);
                 window.focus();
             }
@@ -537,5 +538,13 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
     @Override
     public Color getEmptyValue() {
         return Color.WHITE;
+    }
+
+    public void setModal(boolean modal) {
+        this.modal = modal;
+    }
+
+    public boolean isModal() {
+        return this.modal;
     }
 }
