@@ -3,12 +3,14 @@ package com.vaadin.tests.components.menubar;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Assume;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.MenuBarElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class MenuBarIconsTest extends SingleBrowserTest {
@@ -44,6 +46,10 @@ public class MenuBarIconsTest extends SingleBrowserTest {
 
     @Test
     public void imageIconsRendered() {
+        Assume.assumeFalse(
+                "PhantomJS uses different font which shifts index of the 'More' item",
+                BrowserUtil.isPhantomJS(getDesiredCapabilities()));
+
         openTestURL();
         MenuBarElement menu = $(MenuBarElement.class).id("image");
         WebElement moreItem = menu

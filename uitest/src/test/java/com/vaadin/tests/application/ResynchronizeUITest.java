@@ -5,18 +5,23 @@ import static org.junit.Assert.fail;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.Assume;
 import org.junit.Test;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.parallel.Browser;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class ResynchronizeUITest extends SingleBrowserTest {
 
     @Test
     public void ensureResynchronizeRecreatesDOM() {
+        Assume.assumeFalse("PhantomJS does not send onload events for styles",
+                BrowserUtil.isPhantomJS(getDesiredCapabilities()));
+
         openTestURL();
         ButtonElement button = $(ButtonElement.class).first();
         button.click();

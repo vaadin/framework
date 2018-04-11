@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -19,6 +20,7 @@ import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.EmbeddedElement;
 import com.vaadin.testbench.elements.ImageElement;
 import com.vaadin.testbench.parallel.Browser;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Image;
@@ -35,6 +37,9 @@ public class EmbeddedThemeResourceTest extends SingleBrowserTest {
     @Before
     @Override
     public void setup() throws Exception {
+        Assume.assumeFalse("PhantomJS does not send onload events for styles",
+                BrowserUtil.isPhantomJS(getDesiredCapabilities()));
+
         super.setup();
         openTestURL();
         waitForElementPresent(By.className("v-embedded"));

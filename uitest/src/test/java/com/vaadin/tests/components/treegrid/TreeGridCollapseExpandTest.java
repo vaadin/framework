@@ -2,9 +2,11 @@ package com.vaadin.tests.components.treegrid;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Assume;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.TreeGridElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class TreeGridCollapseExpandTest extends SingleBrowserTest {
@@ -18,6 +20,9 @@ public class TreeGridCollapseExpandTest extends SingleBrowserTest {
 
     @Test
     public void no_race_condition_with_multiple_collapse_or_expand() {
+        Assume.assumeFalse("PhantomJS has issues with this test",
+                BrowserUtil.isPhantomJS(getDesiredCapabilities()));
+
         openTestURL();
         grid = $(TreeGridElement.class).first();
         testBench().disableWaitForVaadin();
