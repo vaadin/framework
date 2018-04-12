@@ -10,7 +10,7 @@ Opening a UI in a popup window
 
 To open a new popup window in the browser showing another part of your
 application, you can use the new `BrowserWindowOpener` extension. Any
-component that you extend with `BrowserWindowOpener` will make clicking
+component or `MenuItem` that you extend with `BrowserWindowOpener` will make clicking
 the component open a new browser window with some options for the
 content. Opening a popup this way helps you bypass most popup blockers.
 
