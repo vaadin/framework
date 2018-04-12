@@ -122,8 +122,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
             Color valueC = new Color(
                     Integer.parseInt(col.substring(1, col.length()), 16));
             color = valueC;
-            doSetValue(color);
-            setValue(color);
+            setValue(color,true);
         }
     };
 
@@ -187,7 +186,6 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
         if (window != null) {
             window.setValue(color);
         }
-        doSetValue(color);
     }
 
     /**
