@@ -23,12 +23,10 @@ public class DateFieldUnparsableDateStringTest extends MultiBrowserTest {
                 .findElement(By.className("v-textfield"));
         dateTextbox.sendKeys("0304", Keys.ENTER);
         findElement(By.tagName("body")).click();
-        Thread.sleep(1000);
         assertEquals("03.04.2018", dateTextbox.getAttribute("value"));
 
         dateTextbox.clear();
         dateTextbox.sendKeys("0304", Keys.ENTER);
-        Thread.sleep(1000);
         findElement(By.tagName("body")).click();
         assertEquals("03.04.2018", dateTextbox.getAttribute("value"));
     }
