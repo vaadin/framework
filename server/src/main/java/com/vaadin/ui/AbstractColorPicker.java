@@ -540,10 +540,18 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
         return Color.WHITE;
     }
 
+    /**
+     *
+     * @since
+     */
     public void setModal(boolean modal) {
         this.modal = modal;
     }
 
+    /**
+     *
+     * @since
+     */
     public boolean isModal() {
         return this.modal;
     }
