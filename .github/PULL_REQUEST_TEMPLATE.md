@@ -1,7 +1,10 @@
 Thanks for submitting a pull request!  
-Please confirm that your pull request provides enough information so that we can review your pull request.  
+Please confirm that your pull request follows our guidelines found in CONTRIBUTING and that you provide enough information so that we can review your pull request.  
 
-- Does your pull request follow our  [contributing guidelines](https://github.com/vaadin/framework/blob/master/CONTRIBUTING.md)?  
-- Does your pull request have the required tests?  
-- Does your pull request describe what is fixed by the change?  
-- Does your pull request contain a link to the fixed issue? 
+<Description of pull request, e.g. "Fix Grid Column not sortable with backend data and sort property">
+
+Fixes #<replace with an issue number>
+
+**Check when you have completed**  
+[ ] Valid tests for the pull requests  
+[ ] Contributing guidlines followed and implemented
