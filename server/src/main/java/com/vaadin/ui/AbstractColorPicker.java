@@ -158,7 +158,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
         setValue(initialColor);
         this.popupCaption = popupCaption;
         setDefaultStyles();
-        setCaption(popupCaption);
+        setCaption("");
     }
 
     /**

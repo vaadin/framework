@@ -57,7 +57,6 @@ public class ColorPickerAreaConnector extends AbstractColorPickerConnector {
 
     @Override
     protected void setCaption(String caption) {
-        getState().caption=caption;
         VCaption.setCaptionText(getWidget(), getState());
     }
 

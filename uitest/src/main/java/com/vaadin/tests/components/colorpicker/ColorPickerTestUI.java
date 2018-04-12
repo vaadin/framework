@@ -17,7 +17,6 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.colorpicker.Color;
-import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractColorPicker;
 import com.vaadin.ui.Alignment;
