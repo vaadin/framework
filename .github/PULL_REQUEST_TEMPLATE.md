@@ -7,4 +7,4 @@ Fixes #<replace with an issue number>
 
 **Check when you have completed**  
 [ ] Valid tests for the pull requests  
-[ ] Contributing guidlines followed and implemented
+[ ] Contributing guidelines implemented
