@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 public class ColorPickerValueTestTest extends MultiBrowserTest {
 
     @Test
-    public void testRGBValue() throws Exception {
+    public void testValue() throws Exception {
         openTestURL();
 
         // Open ColorPicker
@@ -21,7 +21,7 @@ public class ColorPickerValueTestTest extends MultiBrowserTest {
         // Click Button to change color
         ButtonElement button = $(ButtonElement.class).first();
         button.click();
-        Thread.sleep(1000);
+        Thread.sleep(300);
         assertEquals("#ffff00", getColorpickerValue());
     }
 
