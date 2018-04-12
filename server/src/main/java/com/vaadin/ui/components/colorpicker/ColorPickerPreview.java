@@ -16,9 +16,20 @@
 package com.vaadin.ui.components.colorpicker;
 
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.vaadin.data.HasValue;
+import com.vaadin.data.ValidationResult;
+import com.vaadin.data.Validator;
+import com.vaadin.data.ValueContext;
+import com.vaadin.server.AbstractErrorMessage.ContentMode;
+import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.UserError;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -31,6 +42,9 @@ import com.vaadin.ui.TextField;
  * @since 7.0.0
  */
 public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
+    private static final Logger getLogger() {
+        return Logger.getLogger(ColorPickerPreview.class.getName());
+    }
 
     private static final String STYLE_DARK_COLOR = "v-textfield-dark";
     private static final String STYLE_LIGHT_COLOR = "v-textfield-light";
@@ -39,7 +53,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
     private Color color;
 
     /** The field. */
-    private final TextField field;
+    private final ColorTextField field;
 
     /** The old value. */
     private String oldValue;
@@ -49,7 +63,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
 
     private ColorPickerPreview() {
         setStyleName("v-colorpicker-preview");
-        field = new TextField();
+        field = new ColorTextField();
         field.setSizeFull();
         field.setStyleName("v-colorpicker-preview-textfield");
         field.setData(this);
@@ -122,66 +136,56 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
     private void valueChange(ValueChangeEvent<String> event) {
         String value = event.getValue();
         Color oldColor = color;
-        try {
-            if (value != null) {
+
+        if (value != null && field.getComponentError() == null) {
+            value = value.trim();
+            try {
                 /*
                  * Description of supported formats see
                  * http://www.w3schools.com/cssref/css_colors_legal.asp
                  */
-                if (value.length() == 7 && value.startsWith("#")) {
-                    // CSS color format (e.g. #000000)
-                    int red = Integer.parseInt(value.substring(1, 3), 16);
-                    int green = Integer.parseInt(value.substring(3, 5), 16);
-                    int blue = Integer.parseInt(value.substring(5, 7), 16);
-                    color = new Color(red, green, blue);
-
-                } else if (value.startsWith("rgb")) {
-                    // RGB color format rgb/rgba(255,255,255,0.1)
-                    String[] colors = value.substring(value.indexOf('(') + 1,
-                            value.length() - 1).split(",");
-
-                    int red = Integer.parseInt(colors[0]);
-                    int green = Integer.parseInt(colors[1]);
-                    int blue = Integer.parseInt(colors[2]);
-                    if (colors.length > 3) {
-                        int alpha = (int) (Double.parseDouble(colors[3])
-                                * 255d);
-                        color = new Color(red, green, blue, alpha);
-                    } else {
-                        color = new Color(red, green, blue);
-                    }
-
-                } else if (value.startsWith("hsl")) {
-                    // HSL color format hsl/hsla(100,50%,50%,1.0)
-                    String[] colors = value.substring(value.indexOf('(') + 1,
-                            value.length() - 1).split(",");
-
-                    int hue = Integer.parseInt(colors[0]);
-                    int saturation = Integer
-                            .parseInt(colors[1].replace("%", ""));
-                    int lightness = Integer
-                            .parseInt(colors[2].replace("%", ""));
-                    int rgb = Color.HSLtoRGB(hue, saturation, lightness);
-
-                    if (colors.length > 3) {
-                        int alpha = (int) (Double.parseDouble(colors[3])
-                                * 255d);
-                        color = new Color(rgb);
-                        color.setAlpha(alpha);
-                    } else {
-                        color = new Color(rgb);
-                    }
+                if (HEX_PATTERN.matcher(value).matches()) {
+                    Matcher m = HEX_PATTERN.matcher(value);
+                    m.matches();
+                    color = getHexPatternColor(m);
+                } else if (RGB_PATTERN.matcher(value).matches()) {
+                    Matcher m = RGB_PATTERN.matcher(value);
+                    m.matches();
+                    color = getRGBPatternColor(m);
+                } else if (RGBA_PATTERN.matcher(value).matches()) {
+                    Matcher m = RGBA_PATTERN.matcher(value);
+                    m.matches();
+                    color = getRGBPatternColor(m);
+                    int alpha = (int) (Double.parseDouble(m.group("alpha"))
+                            * 255d);
+                    color.setAlpha(alpha);
+                } else if (HSL_PATTERN.matcher(value).matches()) {
+                    Matcher m = HSL_PATTERN.matcher(value);
+                    m.matches();
+                    color = getHSLPatternColor(m);
+                    oldValue = value;
+                } else if (HSLA_PATTERN.matcher(value).matches()) {
+                    Matcher m = HSLA_PATTERN.matcher(value);
+                    m.matches();
+                    color = getHSLPatternColor(m);
+                    int alpha = (int) (Double.parseDouble(m.group("alpha"))
+                            * 255d);
+                    color.setAlpha(alpha);
                 }
-
                 oldValue = value;
                 fireEvent(new ValueChangeEvent<>(this, oldColor,
                         event.isUserOriginated()));
+            } catch (NumberFormatException e) {
+                // {@link ColorTextField} Validator ensures the validitity of
+                // the input, this should never happen
+                getLogger().log(Level.SEVERE,
+                        "Parsing color from input '" + value + "' failed.");
+                field.setComponentError(new UserError(
+                        "Parsing color from input '" + value + "' failed.",
+                        ContentMode.TEXT, ErrorLevel.ERROR));
             }
-
-        } catch (NumberFormatException nfe) {
-            // Revert value
-            field.setValue(oldValue);
         }
+
     }
 
     @Override
@@ -222,6 +226,161 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
             for (Component c : (HasComponents) component) {
                 updateColorComponents(c);
             }
+        }
+    }
+
+    private Color getHexPatternColor(Matcher m) {
+        int red = Integer.parseInt(m.group("red"), 16);
+        int green = Integer.parseInt(m.group("green"), 16);
+        int blue = Integer.parseInt(m.group("blue"), 16);
+        return new Color(red, green, blue);
+    }
+
+    private Color getRGBPatternColor(Matcher m) {
+        int red = Integer.parseInt(m.group("red"));
+        int green = Integer.parseInt(m.group("green"));
+        int blue = Integer.parseInt(m.group("blue"));
+        return new Color(red, green, blue);
+    }
+
+    private Color getHSLPatternColor(Matcher m) {
+        int hue = Integer.parseInt(m.group("hue"));
+        int saturation = Integer.parseInt(m.group("saturation"));
+        int light = Integer.parseInt(m.group("light"));
+        int rgb = Color.HSLtoRGB(hue, saturation, light);
+        return new Color(rgb);
+    }
+
+    /**
+     * Case insensitive {@link Pattern} with regular expression matching the
+     * default hexadecimal color presentation pattern:<br>
+     * '#' followed by six <code>[\da-fA-F]</code> characters.
+     * <p>
+     * Pattern contains named groups <code>red</code>, <code>green</code>, and
+     * <code>blue</code>, which represent the individual values.
+     */
+    protected static final Pattern HEX_PATTERN = Pattern.compile(
+            "(?i)^#\\s*(?<red>[\\da-f]{2})(?<green>[\\da-f]{2})(?<blue>[\\da-f]{2}"
+                    + ")\\s*$");
+    /**
+     * Case insensitive {@link Pattern} with regular expression matching common
+     * RGB color presentation patterns:<br>
+     * 'rgb' followed by three [0-255] number values. Values can be separated
+     * with either comma or whitespace.
+     * <p>
+     * Pattern contains named groups <code>red</code>, <code>green</code>, and
+     * <code>blue</code>, which represent the individual values.
+     */
+    protected static final Pattern RGB_PATTERN = Pattern.compile(
+            "(?i)^rgb\\(\\s*(?<red>[01]?\\d{0,2}|2[0-4]\\d|25[0-5])(?:\\s*[,+|\\"
+                    + "s+]\\s*)(?<green>[01]?\\d\\d?|2[0-4]\\d|25[0-5])(?:\\s*[,"
+                    + "+|\\s+]\\s*)(?<blue>[01]?\\d\\d?|2[0-4]\\d|25[0-5])\\s*\\"
+                    + ")$");
+    /**
+     * Case insensitive {@link Pattern} with regular expression matching common
+     * RGBA presentation patterns:<br>
+     * 'rgba' followed by three [0-255] values and one [0.0-1.0] value. Values
+     * can be separated with either comma or whitespace. The only accepted
+     * decimal marker is point ('.').
+     * <p>
+     * Pattern contains named groups <code>red</code>, <code>green</code>,
+     * <code>blue</code>, and <code>alpha</code>, which represent the individual
+     * values.
+     */
+    protected static final Pattern RGBA_PATTERN = Pattern.compile(
+            "(?i)^rgba\\(\\s*(?<red>[01]?\\d{0,2}|2[0-4]\\d|25[0-5])(?:\\s*[,+|"
+                    + "\\s+]\\s*)(?<green>[01]?\\d\\d?|2[0-4]\\d|25[0-5])(?:\\s"
+                    + "*[,+|\\s+]\\s*)(?<blue>[01]?\\d\\d?|2[0-4]\\d|25[0-5])(?"
+                    + ":\\s*[,+|\\s+]\\s*)(?<alpha>0(?:\\.\\d{1,2})?|0?(?:\\.\\"
+                    + "d{1,2})|1(?:\\.0{1,2})?)\\s*\\)$");
+
+    /**
+     * Case insensitive {@link Pattern} with regular expression matching common
+     * HSL presentation patterns:<br>
+     * 'hsl' followed by one [0-360] value and two [0-100] percentage value.
+     * Values can be separated with either comma or whitespace. The percent sign
+     * ('%') is optional.
+     * <p>
+     * Pattern contains named groups <code>hue</code>,<code>saturation</code>,
+     * and <code>light</code>, which represent the individual values.
+     */
+    protected static final Pattern HSL_PATTERN = Pattern.compile(
+            "(?i)hsl\\(\\s*(?<hue>[12]?\\d{0,2}|3[0-5]\\d|360)(?:\\s*[,+|\\s+]"
+                    + "\\s*)(?<saturation>\\d{1,2}|100)(?:%?\\s*[,+|\\s+]\\s*)"
+                    + "(?<light>\\d{1,2}|100)\\s*\\)$");
+
+    /**
+     * Case insensitive {@link Pattern} with regular expression matching common
+     * HSLA presentation patterns:<br>
+     * 'hsla' followed by one [0-360] value, two [0-100] percentage values, and
+     * one [0.0-1.0] value. Values can be separated with either comma or
+     * whitespace. The percent sign ('%') is optional. The only accepted decimal
+     * marker is point ('.').
+     * <p>
+     * Pattern contains named groups <code>hue</code>,<code>saturation</code>,
+     * <code>light</code>, and <code>alpha</code>, which represent the
+     * individual values.
+     */
+    protected static final Pattern HSLA_PATTERN = Pattern.compile(
+            "(?i)hsla\\(\\s*(?<hue>[12]?\\d{0,2}|3[0-5]\\d|360)(?:\\s*[,+|\\s+"
+                    + "]\\s*)(?<saturation>\\d{1,2}|100)(?:%?\\s*[,+|\\s+]\\s*"
+                    + ")(?<light>\\d{1,2}|100)(?:\\s*%?[,+|\\s+]\\s*)(?<alpha>"
+                    + "0(?:\\.\\d{1,2})?|0?(?:\\.\\d{1,2})|1(?:\\.0{1,2})?)"
+                    + "\\s*\\)$");
+
+    /**
+     * {@link TextField} extension for picker preview.
+     * <p>
+     * Provides input validation against common patterns of hexadecimal, RGB,
+     * RGBA, HSL, and HSLA color presentation, and error message handling.
+     *
+     * @see ColorPickerPreview#HEX_PATTERN
+     * @see ColorPickerPreview#RGB_PATTERN
+     * @see ColorPickerPreview#RGBA_PATTERN
+     * @see ColorPickerPreview#HSL_PATTERN
+     * @see ColorPickerPreview#HSLA_PATTERN
+     *
+     */
+    protected class ColorTextField extends TextField
+            implements HasValue<String> {
+
+        private String currentErrorMessage;
+
+        @Override
+        protected void doSetValue(String value) {
+            super.doSetValue(value);
+            ValidationResult result = getDefaultValidator().apply(value,
+                    new ValueContext(this, this));
+
+            currentErrorMessage = result.isError() ? result.getErrorMessage()
+                    : null;
+            ErrorMessage errorMessage;
+            if (currentErrorMessage == null) {
+                errorMessage = null;
+            } else {
+                errorMessage = new UserError(currentErrorMessage,
+                        ContentMode.TEXT, ErrorLevel.WARNING);
+            }
+            setComponentError(errorMessage);
+        }
+
+        @Override
+        public Validator<String> getDefaultValidator() {
+            return new Validator<String>() {
+
+                @Override
+                public ValidationResult apply(String value,
+                        ValueContext context) {
+                    boolean matches = HEX_PATTERN.matcher(value).matches()
+                            || RGB_PATTERN.matcher(value).matches()
+                            || RGBA_PATTERN.matcher(value).matches()
+                            || HSL_PATTERN.matcher(value).matches()
+                            || HSLA_PATTERN.matcher(value).matches();
+                    return matches ? ValidationResult.ok()
+                            : ValidationResult.error(value
+                                    + " does not match any of the accepted formats");
+                }
+            };
         }
     }
 }
