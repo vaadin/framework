@@ -47,6 +47,12 @@ public class VColorPicker extends VButton {
         this.color = color;
     }
 
+    /**
+     * Gets the color.
+     *
+     * @since
+     * @return the color
+     */
     public String getColor() {
         return color;
     }

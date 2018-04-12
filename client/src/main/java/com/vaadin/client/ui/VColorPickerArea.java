@@ -164,6 +164,12 @@ public class VColorPickerArea extends Widget
         this.color = color;
     }
 
+    /**
+     * Gets the color.
+     *
+     * @since
+     * @return the color
+     */
     public String getColor() {
         return color;
     }
