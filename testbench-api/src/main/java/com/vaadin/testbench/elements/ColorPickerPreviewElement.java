@@ -15,9 +15,58 @@
  */
 package com.vaadin.testbench.elements;
 
+import java.util.List;
+
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+
+import com.vaadin.testbench.By;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.ColorPickerPreview")
 public class ColorPickerPreviewElement extends CssLayoutElement {
 
+    /**
+     * Get whether TextField in ColorPickerPreview has validation errors.
+     *
+     * @return true if field has errors, false otherwise
+     */
+    public boolean getColorFieldContainsErrors() {
+        List<WebElement> caption = findElements(
+                By.className("v-caption-v-colorpicker-preview-textfield"));
+        boolean noCaption = caption.isEmpty();
+        return noCaption ? noCaption
+                : caption.get(0).findElements(By.className("v-errorindicator"))
+                        .isEmpty();
+    }
+
+    /**
+     * Get the value of the input element TextField in ColorPickerPreview.
+     *
+     * @return the value of the attribute 'value' of the input element
+     */
+    public String getColorFieldValue() {
+        return getColorTextField().getAttribute("value");
+    }
+
+    /**
+     * Set value of TextField in ColorPickerPreview. Any existing value in the
+     * field is replaced.
+     *
+     * @param value
+     *            text to insert
+     */
+    public void setColorTextFieldValue(String value) {
+        // Select all text
+        getColorTextField().sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        getColorTextField().sendKeys(value);
+    }
+
+    /**
+     * @return <code>WebElement</code> representing TextField in
+     *         ColorPickerPreviewComponent
+     */
+    public WebElement getColorTextField() {
+        return findElement(By.className("v-colorpicker-preview-textfield"));
+    }
 }
