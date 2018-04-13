@@ -77,6 +77,7 @@ public class VColorPickerArea extends Widget
     @Override
     public void onClick(ClickEvent event) {
         setOpen(!isOpen);
+        refreshColor();
     }
 
     @Override
@@ -161,6 +162,16 @@ public class VColorPickerArea extends Widget
      */
     public void setColor(String color) {
         this.color = color;
+    }
+
+    /**
+     * Gets the color.
+     *
+     * @since
+     * @return the color
+     */
+    public String getColor() {
+        return color;
     }
 
     /**

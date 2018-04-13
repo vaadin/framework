@@ -176,8 +176,9 @@ public class VColorPickerGradient extends FocusPanel implements
         }
         if (y >= 0) {
             lowercross.getElement().getStyle().setHeight(height - y, Unit.PX);
+        } else {
+            lowercross.getElement().getStyle().setHeight(Math.abs(y), Unit.PX);
         }
-
         if (x >= 0) {
             highercross.getElement().getStyle().setWidth(width - x, Unit.PX);
         }
@@ -186,6 +187,8 @@ public class VColorPickerGradient extends FocusPanel implements
         }
         if (y >= 0) {
             highercross.getElement().getStyle().setHeight(y, Unit.PX);
+        } else {
+            highercross.getElement().getStyle().setHeight(height + y, Unit.PX);
         }
     }
 
