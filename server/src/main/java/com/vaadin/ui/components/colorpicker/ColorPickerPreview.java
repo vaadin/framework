@@ -22,8 +22,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.vaadin.data.HasValue;
-import com.vaadin.data.ValidationResult;
-import com.vaadin.data.Validator;
 import com.vaadin.data.ValueContext;
 import com.vaadin.server.AbstractErrorMessage.ContentMode;
 import com.vaadin.server.ErrorMessage;
@@ -53,7 +51,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
     private Color color;
 
     /** The field. */
-    private final ColorTextField field;
+    private final TextField field;
 
     /** The old value. */
     private String oldValue;
@@ -63,7 +61,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
 
     private ColorPickerPreview() {
         setStyleName("v-colorpicker-preview");
-        field = new ColorTextField();
+        field = new TextField();
         field.setSizeFull();
         field.setStyleName("v-colorpicker-preview-textfield");
         field.setData(this);
@@ -136,9 +134,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
     private void valueChange(ValueChangeEvent<String> event) {
         String value = event.getValue();
         Color oldColor = color;
-
-        if (value != null && field.getComponentError() == null) {
-            value = value.trim();
+        if (value != null && isInputValid(value)) {
             try {
                 /*
                  * Description of supported formats see
@@ -329,10 +325,9 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
                     + "\\s*\\)$");
 
     /**
-     * {@link TextField} extension for picker preview.
-     * <p>
      * Provides input validation against common patterns of hexadecimal, RGB,
-     * RGBA, HSL, and HSLA color presentation, and error message handling.
+     * RGBA, HSL, and HSLA color presentation, and error message handling for
+     * component's TextField.
      *
      * @see ColorPickerPreview#HEX_PATTERN
      * @see ColorPickerPreview#RGB_PATTERN
@@ -340,47 +335,28 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
      * @see ColorPickerPreview#HSL_PATTERN
      * @see ColorPickerPreview#HSLA_PATTERN
      *
+     * @param unTrimmedInput
+     *            value from TextField
+     * @return true if input matched any accepted format, else otherwise
      */
-    protected class ColorTextField extends TextField
-            implements HasValue<String> {
-
-        private String currentErrorMessage;
-
-        @Override
-        protected void doSetValue(String value) {
-            super.doSetValue(value);
-            ValidationResult result = getDefaultValidator().apply(value,
-                    new ValueContext(this, this));
-
-            currentErrorMessage = result.isError() ? result.getErrorMessage()
-                    : null;
-            ErrorMessage errorMessage;
-            if (currentErrorMessage == null) {
-                errorMessage = null;
-            } else {
-                errorMessage = new UserError(currentErrorMessage,
-                        ContentMode.TEXT, ErrorLevel.WARNING);
-            }
-            setComponentError(errorMessage);
+    private boolean isInputValid(String unTrimmedInput) {
+        final String input = unTrimmedInput.trim();
+        boolean matches = field.getDefaultValidator().andThen(r -> {
+            return HEX_PATTERN.matcher(input).matches()
+                    || RGB_PATTERN.matcher(input).matches()
+                    || RGBA_PATTERN.matcher(input).matches()
+                    || HSL_PATTERN.matcher(input).matches()
+                    || HSLA_PATTERN.matcher(input).matches();
+        }).apply(input, new ValueContext(field));
+        ErrorMessage errorMessage;
+        if (matches) {
+            errorMessage = null;
+        } else {
+            errorMessage = new UserError(
+                    input + "  does not match any accepted formats",
+                    ContentMode.TEXT, ErrorLevel.WARNING);
         }
-
-        @Override
-        public Validator<String> getDefaultValidator() {
-            return new Validator<String>() {
-
-                @Override
-                public ValidationResult apply(String value,
-                        ValueContext context) {
-                    boolean matches = HEX_PATTERN.matcher(value).matches()
-                            || RGB_PATTERN.matcher(value).matches()
-                            || RGBA_PATTERN.matcher(value).matches()
-                            || HSL_PATTERN.matcher(value).matches()
-                            || HSLA_PATTERN.matcher(value).matches();
-                    return matches ? ValidationResult.ok()
-                            : ValidationResult.error(value
-                                    + " does not match any of the accepted formats");
-                }
-            };
-        }
+        field.setComponentError(errorMessage);
+        return matches;
     }
 }
