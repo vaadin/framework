@@ -63,7 +63,6 @@ public class ColorPickerAreaConnector extends AbstractColorPickerConnector {
     @Override
     protected void refreshColor() {
         getWidget().refreshColor();
-        getState().color=getWidget().getColor();
     }
 
     @Override
