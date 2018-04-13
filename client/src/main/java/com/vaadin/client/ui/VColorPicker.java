@@ -48,6 +48,16 @@ public class VColorPicker extends VButton {
     }
 
     /**
+     * Gets the color.
+     *
+     * @since
+     * @return the color
+     */
+    public String getColor() {
+        return color;
+    }
+
+    /**
      * Mark the popup opened/closed.
      *
      * @param open
