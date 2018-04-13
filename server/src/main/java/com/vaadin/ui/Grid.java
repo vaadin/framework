@@ -1347,9 +1347,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          */
         public Column<T, V> setSortProperty(String... properties) {
             Objects.requireNonNull(properties, "Sort properties can't be null");
-            sortOrderProvider = dir -> Arrays.stream(properties)
-                    .map(s -> new QuerySortOrder(s, dir));
-            return this;
+            return setSortOrderProvider(dir -> Arrays.stream(properties)
+                    .map(s -> new QuerySortOrder(s, dir)));
         }
 
         /**
@@ -1369,6 +1368,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             Objects.requireNonNull(provider,
                     "Sort order provider can't be null");
             sortOrderProvider = provider;
+
+            // Update state
+            updateSortable();
+
             return this;
         }
 
@@ -2226,7 +2229,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 setSortable(false);
             }
             if (design.hasAttr("editable")) {
-                /*
+                /**
                  * This is a fake editor just to have something (otherwise
                  * "setEditable" throws an exception.
                  *
@@ -3146,7 +3149,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *            the mode in to which Grid should be set
      */
     public void setHeightMode(HeightMode heightMode) {
-        /*
+        /**
          * This method is a workaround for the fact that Vaadin re-applies
          * widget dimensions (height/width) on each state change event. The
          * original design was to have setHeight and setHeightByRow be equals,
