@@ -66,6 +66,7 @@ public class ColorPickerConnector extends AbstractColorPickerConnector {
     @Override
     protected void refreshColor() {
         getWidget().refreshColor();
+        rpc.changeColor(getWidget().getColor());
     }
 
     @Override
