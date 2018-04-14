@@ -728,6 +728,7 @@ public class VMenuBar extends FocusableFlowPanel
      * @since 7.3.7
      */
     public void hideChildren(boolean animateIn, boolean animateOut) {
+        menuVisible = false;
         if (visibleChildMenu != null) {
             visibleChildMenu.hideChildren(animateIn, animateOut);
             popup.hide(false, animateIn, animateOut);
