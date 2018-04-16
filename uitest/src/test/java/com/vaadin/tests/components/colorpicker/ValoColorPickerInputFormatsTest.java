@@ -68,14 +68,14 @@ public class ValoColorPickerInputFormatsTest extends MultiBrowserTest {
 
     @Test
     public void testHSLValue() {
-        setColorpickerValue("hsl(120,100%,50%)");
+        setColorpickerValue("hsl(120,100%, 50%)");
 
         assertEquals("#00ff00", previewElement.getColorFieldValue());
     }
 
     @Test
     public void testHSLAValue() {
-        setColorpickerValue("hsla(120,100%,50%, 0.3)");
+        setColorpickerValue("hsla(120, 0, 50%, 0.3)");
 
         assertEquals("#00ff00", previewElement.getColorFieldValue());
     }

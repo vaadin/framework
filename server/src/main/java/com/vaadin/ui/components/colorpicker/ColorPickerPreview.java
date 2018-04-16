@@ -302,8 +302,8 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
      */
     protected static final Pattern HSL_PATTERN = Pattern.compile(
             "(?i)hsl\\(\\s*(?<hue>[12]?\\d{0,2}|3[0-5]\\d|360)(?:\\s*[,+|\\s+]"
-                    + "\\s*)(?<saturation>\\d{1,2}|100)(?:%?\\s*[,+|\\s+]\\s*)"
-                    + "(?<light>\\d{1,2}|100)\\s*\\)$");
+                    + "\\s*)(?<saturation>\\d{1,2}|100)(?:\\s*%?\\s*[,+|\\s+]\\"
+                    + "s*)(?<light>\\d{1,2}|100)(?:\\s*%?\\s*)\\)$");
 
     /**
      * Case insensitive {@link Pattern} with regular expression matching common
@@ -319,7 +319,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
      */
     protected static final Pattern HSLA_PATTERN = Pattern.compile(
             "(?i)hsla\\(\\s*(?<hue>[12]?\\d{0,2}|3[0-5]\\d|360)(?:\\s*[,+|\\s+"
-                    + "]\\s*)(?<saturation>\\d{1,2}|100)(?:%?\\s*[,+|\\s+]\\s*"
+                    + "]\\s*)(?<saturation>\\d{1,2}|100)(?:\\s*%?\\s*[,+|\\s+]\\s*"
                     + ")(?<light>\\d{1,2}|100)(?:\\s*%?[,+|\\s+]\\s*)(?<alpha>"
                     + "0(?:\\.\\d{1,2})?|0?(?:\\.\\d{1,2})|1(?:\\.0{1,2})?)"
                     + "\\s*\\)$");
