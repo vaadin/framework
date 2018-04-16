@@ -561,16 +561,23 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
     }
 
     /**
-     *
+     * Sets ColorPicker modality. When a modal ColorPicker is open, components
+     * outside that ColorPicker cannot be accessed.
+     * 
      * @since
+     * @param modal
+     *            true if modality is to be turned on
      */
     public void setModal(boolean modal) {
         this.modal = modal;
     }
 
     /**
+     * Checks the modality of the dialog.
      *
+     * @see #setModal(boolean)
      * @since
+     * @return true if the dialog is modal, false otherwise
      */
     public boolean isModal() {
         return this.modal;
