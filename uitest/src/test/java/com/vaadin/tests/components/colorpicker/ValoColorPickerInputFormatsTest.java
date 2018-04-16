@@ -146,7 +146,10 @@ public class ValoColorPickerInputFormatsTest extends MultiBrowserTest {
         // Select all text
         field.sendKeys(Keys.chord(Keys.CONTROL, "a"));
 
-        // Replace with rgb value
+        // Replace with new value
         field.sendKeys(value);
+
+        // Submit
+        field.sendKeys(Keys.RETURN);
     }
 }
