@@ -38,6 +38,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import elemental.json.Json;
 import org.jsoup.nodes.Element;
 
 import com.googlecode.gentyref.GenericTypeReflector;
@@ -119,7 +120,17 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                         if (resolutions.isEmpty()) {
                             Result<T> parsedDate = handleUnparsableDateString(
                                     dateString);
-                            parsedDate.ifOk(v -> setValue(v, true));
+                            // If handleUnparsableDateString returns the same
+                            // date as current, force update state to display
+                            // correct representation
+                            parsedDate.ifOk(v -> {
+                                if (!setValue(v, true)
+                                        && !isDifferentValue(v)) {
+                                    updateDiffstate("resolutions",
+                                            Json.createObject());
+                                    doSetValue(v);
+                                }
+                            });
                             if (parsedDate.isError()) {
                                 dateString = null;
                                 currentParseErrorMessage = parsedDate
