@@ -96,7 +96,7 @@ public class ModalWindowFocusTest extends MultiBrowserTest {
                 "this has been focused".equals(tfe.getValue()));
     }
 
-    private void pressKeyAndWait(Keys key) {
+    protected void pressKeyAndWait(Keys key) {
         new Actions(driver).sendKeys(key).build().perform();
         sleep(100);
     }
@@ -113,7 +113,6 @@ public class ModalWindowFocusTest extends MultiBrowserTest {
         assertEquals("true", ariaModal);
         String role = windowElement.getAttribute("role");
         assertEquals("dialog", role);
-
     }
 
 }
