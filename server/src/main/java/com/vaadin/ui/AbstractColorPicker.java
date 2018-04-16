@@ -88,8 +88,6 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
         }
     }
 
-    private ColorPickerServerRpc rpc = this::showPopup;
-
     protected static final String STYLENAME_DEFAULT = "v-colorpicker";
     protected static final String STYLENAME_BUTTON = "v-button";
     protected static final String STYLENAME_AREA = "v-colorpicker-area";
@@ -113,6 +111,21 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
     protected boolean historyVisible = true;
     protected boolean textfieldVisible = true;
     private boolean modal;
+
+    private ColorPickerServerRpc rpc = new ColorPickerServerRpc() {
+        @Override
+        public void openPopup(boolean openPopup) {
+            showPopup(openPopup);
+        }
+
+        @Override
+        public void changeColor(String col) {
+            Color valueC = new Color(
+                    Integer.parseInt(col.substring(1, col.length()), 16));
+            color = valueC;
+            setValue(color, true);
+        }
+    };
 
     /**
      * Instantiates a new color picker.
@@ -171,6 +184,9 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
     public void setValue(Color color) {
         Objects.requireNonNull(color, "color cannot be null");
         super.setValue(color);
+        if (window != null) {
+            window.setValue(color);
+        }
     }
 
     /**
@@ -447,14 +463,17 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
 
                 window.addCloseListener(
                         event -> getState().popupVisible = false);
-                window.addValueChangeListener(
-                        event -> setValue(event.getValue()));
-
+                window.addValueChangeListener(event -> {
+                    setValue(event.getValue());
+                    rpc.changeColor(event.getValue().getCSS());
+                });
                 window.getHistory().setValue(color);
                 window.setPositionX(positionX);
                 window.setPositionY(positionY);
                 window.setVisible(true);
+                window.setValue(color);
                 window.setModal(modal);
+
                 parent.addWindow(window);
                 window.focus();
 
@@ -473,6 +492,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
                 parent.addWindow(window);
                 window.focus();
             }
+            window.setValue(color);
 
         } else if (window != null) {
             window.setVisible(false);

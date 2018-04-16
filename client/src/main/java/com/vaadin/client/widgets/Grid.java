@@ -4597,7 +4597,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         private void transferCellFocusOnDrop() {
             final Cell focusedCell = cellFocusHandler.getFocusedCell();
-            if (focusedCell != null) {
+            if (focusedCell != null && focusedCell.getElement() != null) {
                 final int focusedColumnIndexDOM = focusedCell.getColumn();
                 final int focusedRowIndex = focusedCell.getRow();
                 final int draggedColumnIndex = eventCell.getColumnIndex();
