@@ -16,6 +16,7 @@ public class ModalWindowFocus extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest req) {
 
         Button button = new Button("Open windows");
+        button.setTabIndex(2);
         button.setId("firstButton");
         addComponent(button);
         button.addClickListener(event -> {
@@ -42,6 +43,7 @@ public class ModalWindowFocus extends AbstractReindeerTestUI {
         });
         Button button2 = new Button(
                 "Open unclosable and unresizable modal window");
+        button2.setTabIndex(1);
         addComponent(button2);
         button2.setId("modalWindowButton");
         button2.addClickListener(event -> {
