@@ -4,13 +4,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ColorPickerElement;
 import com.vaadin.testbench.elements.ColorPickerPreviewElement;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -18,6 +22,13 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * http://www.w3schools.com/cssref/css_colors_legal.asp
  */
 public class ValoColorPickerInputFormatsTest extends MultiBrowserTest {
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // Ignoring Phantom JS
+        return getBrowserCapabilities(Browser.IE11, Browser.FIREFOX,
+                Browser.CHROME);
+    }
 
     private ColorPickerPreviewElement previewElement;
 
