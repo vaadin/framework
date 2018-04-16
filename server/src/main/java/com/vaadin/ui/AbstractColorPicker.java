@@ -110,6 +110,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
     protected boolean swatchesVisible = true;
     protected boolean historyVisible = true;
     protected boolean textfieldVisible = true;
+    private boolean modal;
 
     private ColorPickerServerRpc rpc = new ColorPickerServerRpc() {
         @Override
@@ -122,7 +123,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
             Color valueC = new Color(
                     Integer.parseInt(col.substring(1, col.length()), 16));
             color = valueC;
-            setValue(color,true);
+            setValue(color, true);
         }
     };
 
@@ -471,6 +472,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
                 window.setPositionY(positionY);
                 window.setVisible(true);
                 window.setValue(color);
+                window.setModal(modal);
 
                 parent.addWindow(window);
                 window.focus();
@@ -486,7 +488,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
                 window.setValue(color);
                 window.getHistory().setValue(color);
                 window.setVisible(true);
-
+                window.setModal(modal);
                 parent.addWindow(window);
                 window.focus();
             }
@@ -556,5 +558,33 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
     @Override
     public Color getEmptyValue() {
         return Color.WHITE;
+    }
+
+    /**
+     * Sets ColorPicker modality. When a modal ColorPicker is open, components
+     * outside that ColorPicker cannot be accessed.
+     * <p>
+     * Note: It must be set to {@code true} if ColorPicker is a child of modal
+     * {@link Window}
+     * </p>
+     * 
+     * @see Window#setModal
+     * @since
+     * @param modal
+     *            true if modality is to be turned on
+     */
+    public void setModal(boolean modal) {
+        this.modal = modal;
+    }
+
+    /**
+     * Checks the modality of the dialog.
+     *
+     * @see #setModal(boolean)
+     * @since
+     * @return true if the dialog is modal, false otherwise
+     */
+    public boolean isModal() {
+        return this.modal;
     }
 }
