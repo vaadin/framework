@@ -22,7 +22,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.vaadin.data.HasValue;
-import com.vaadin.data.ValueContext;
 import com.vaadin.server.AbstractErrorMessage.ContentMode;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
@@ -135,8 +134,10 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
     private void valueChange(ValueChangeEvent<String> event) {
         String value = event.getValue();
         Color oldColor = color;
-        if (value != null && isInputValid(value)) {
+        if (value != null) {
             try {
+                value = value.trim();
+                ErrorMessage errorMessage = null;
                 /*
                  * Description of supported formats see
                  * http://www.w3schools.com/cssref/css_colors_legal.asp
@@ -168,14 +169,20 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
                     int alpha = (int) (Double.parseDouble(m.group("alpha"))
                             * 255d);
                     color.setAlpha(alpha);
+                } else {
+                    errorMessage = new UserError(
+                            value + "  does not match any accepted formats",
+                            ContentMode.TEXT, ErrorLevel.WARNING);
                 }
+
+                field.setComponentError(errorMessage);
                 oldValue = value;
                 fireEvent(new ValueChangeEvent<>(this, oldColor,
                         event.isUserOriginated()));
             } catch (NumberFormatException e) {
-                // {@link ColorTextField} Validator ensures the validitity of
+                // Pattern matching ensures the validity of
                 // the input, this should never happen
-                getLogger().log(Level.SEVERE,
+                getLogger().log(Level.WARNING,
                         "Parsing color from input '" + value + "' failed.");
                 field.setComponentError(new UserError(
                         "Parsing color from input '" + value + "' failed.",
@@ -249,7 +256,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
     }
 
     /**
-     * Case insensitive {@link Pattern} with regular expression matching the
+     * Case-insensitive {@link Pattern} with regular expression matching the
      * default hexadecimal color presentation pattern:<br>
      * '#' followed by six <code>[\da-fA-F]</code> characters.
      * <p>
@@ -260,7 +267,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
             "(?i)^#\\s*(?<red>[\\da-f]{2})(?<green>[\\da-f]{2})(?<blue>[\\da-f]{2}"
                     + ")\\s*$");
     /**
-     * Case insensitive {@link Pattern} with regular expression matching common
+     * Case-insensitive {@link Pattern} with regular expression matching common
      * RGB color presentation patterns:<br>
      * 'rgb' followed by three [0-255] number values. Values can be separated
      * with either comma or whitespace.
@@ -269,12 +276,12 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
      * <code>blue</code>, which represent the individual values.
      */
     protected static final Pattern RGB_PATTERN = Pattern.compile(
-            "(?i)^rgb\\(\\s*(?<red>[01]?\\d{0,2}|2[0-4]\\d|25[0-5])(?:\\s*[,+|\\"
+            "(?i)^rgb\\(\\s*(?<red>[01]?\\d{1,2}|2[0-4]\\d|25[0-5])(?:\\s*[,+|\\"
                     + "s+]\\s*)(?<green>[01]?\\d\\d?|2[0-4]\\d|25[0-5])(?:\\s*[,"
                     + "+|\\s+]\\s*)(?<blue>[01]?\\d\\d?|2[0-4]\\d|25[0-5])\\s*\\"
                     + ")$");
     /**
-     * Case insensitive {@link Pattern} with regular expression matching common
+     * Case-insensitive {@link Pattern} with regular expression matching common
      * RGBA presentation patterns:<br>
      * 'rgba' followed by three [0-255] values and one [0.0-1.0] value. Values
      * can be separated with either comma or whitespace. The only accepted
@@ -285,14 +292,14 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
      * values.
      */
     protected static final Pattern RGBA_PATTERN = Pattern.compile(
-            "(?i)^rgba\\(\\s*(?<red>[01]?\\d{0,2}|2[0-4]\\d|25[0-5])(?:\\s*[,+|"
+            "(?i)^rgba\\(\\s*(?<red>[01]?\\d{1,2}|2[0-4]\\d|25[0-5])(?:\\s*[,+|"
                     + "\\s+]\\s*)(?<green>[01]?\\d\\d?|2[0-4]\\d|25[0-5])(?:\\s"
                     + "*[,+|\\s+]\\s*)(?<blue>[01]?\\d\\d?|2[0-4]\\d|25[0-5])(?"
                     + ":\\s*[,+|\\s+]\\s*)(?<alpha>0(?:\\.\\d{1,2})?|0?(?:\\.\\"
                     + "d{1,2})|1(?:\\.0{1,2})?)\\s*\\)$");
 
     /**
-     * Case insensitive {@link Pattern} with regular expression matching common
+     * Case-insensitive {@link Pattern} with regular expression matching common
      * HSL presentation patterns:<br>
      * 'hsl' followed by one [0-360] value and two [0-100] percentage value.
      * Values can be separated with either comma or whitespace. The percent sign
@@ -302,12 +309,12 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
      * and <code>light</code>, which represent the individual values.
      */
     protected static final Pattern HSL_PATTERN = Pattern.compile(
-            "(?i)hsl\\(\\s*(?<hue>[12]?\\d{0,2}|3[0-5]\\d|360)(?:\\s*[,+|\\s+]"
+            "(?i)hsl\\(\\s*(?<hue>[12]?\\d{1,2}|3[0-5]\\d|360)(?:\\s*[,+|\\s+]"
                     + "\\s*)(?<saturation>\\d{1,2}|100)(?:\\s*%?\\s*[,+|\\s+]\\"
                     + "s*)(?<light>\\d{1,2}|100)(?:\\s*%?\\s*)\\)$");
 
     /**
-     * Case insensitive {@link Pattern} with regular expression matching common
+     * Case-insensitive {@link Pattern} with regular expression matching common
      * HSLA presentation patterns:<br>
      * 'hsla' followed by one [0-360] value, two [0-100] percentage values, and
      * one [0.0-1.0] value. Values can be separated with either comma or
@@ -319,45 +326,9 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
      * individual values.
      */
     protected static final Pattern HSLA_PATTERN = Pattern.compile(
-            "(?i)hsla\\(\\s*(?<hue>[12]?\\d{0,2}|3[0-5]\\d|360)(?:\\s*[,+|\\s+"
+            "(?i)hsla\\(\\s*(?<hue>[12]?\\d{1,2}|3[0-5]\\d|360)(?:\\s*[,+|\\s+"
                     + "]\\s*)(?<saturation>\\d{1,2}|100)(?:\\s*%?\\s*[,+|\\s+]\\s*"
                     + ")(?<light>\\d{1,2}|100)(?:\\s*%?[,+|\\s+]\\s*)(?<alpha>"
                     + "0(?:\\.\\d{1,2})?|0?(?:\\.\\d{1,2})|1(?:\\.0{1,2})?)"
                     + "\\s*\\)$");
-
-    /**
-     * Provides input validation against common patterns of hexadecimal, RGB,
-     * RGBA, HSL, and HSLA color presentation, and error message handling for
-     * component's TextField.
-     *
-     * @see ColorPickerPreview#HEX_PATTERN
-     * @see ColorPickerPreview#RGB_PATTERN
-     * @see ColorPickerPreview#RGBA_PATTERN
-     * @see ColorPickerPreview#HSL_PATTERN
-     * @see ColorPickerPreview#HSLA_PATTERN
-     *
-     * @param unTrimmedInput
-     *            value from TextField
-     * @return true if input matched any accepted format, else otherwise
-     */
-    private boolean isInputValid(String unTrimmedInput) {
-        final String input = unTrimmedInput.trim();
-        boolean matches = field.getDefaultValidator().andThen(r -> {
-            return HEX_PATTERN.matcher(input).matches()
-                    || RGB_PATTERN.matcher(input).matches()
-                    || RGBA_PATTERN.matcher(input).matches()
-                    || HSL_PATTERN.matcher(input).matches()
-                    || HSLA_PATTERN.matcher(input).matches();
-        }).apply(input, new ValueContext(field));
-        ErrorMessage errorMessage;
-        if (matches) {
-            errorMessage = null;
-        } else {
-            errorMessage = new UserError(
-                    input + "  does not match any accepted formats",
-                    ContentMode.TEXT, ErrorLevel.WARNING);
-        }
-        field.setComponentError(errorMessage);
-        return matches;
-    }
 }
