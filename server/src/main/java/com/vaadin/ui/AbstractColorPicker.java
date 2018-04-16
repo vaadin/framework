@@ -563,6 +563,10 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
     /**
      * Sets ColorPicker modality. When a modal ColorPicker is open, components
      * outside that ColorPicker cannot be accessed.
+     * <p>
+     * Note: If ColorPicker is the child of modal component, it must be set to
+     * modal too.
+     * </p>
      * 
      * @since
      * @param modal
