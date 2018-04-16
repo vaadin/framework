@@ -98,6 +98,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
 
         String colorCSS = color.getCSS();
         field.setValue(colorCSS);
+        field.setComponentError(null);
 
         oldValue = colorCSS;
 
