@@ -120,6 +120,9 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                         if (resolutions.isEmpty()) {
                             Result<T> parsedDate = handleUnparsableDateString(
                                     dateString);
+                            // If handleUnparsableDateString returns the same
+                            // date as current, force update state to display
+                            // correct representation
                             parsedDate.ifOk(v -> {
                                 if (!setValue(v, true)
                                         && !isDifferentValue(v)) {
