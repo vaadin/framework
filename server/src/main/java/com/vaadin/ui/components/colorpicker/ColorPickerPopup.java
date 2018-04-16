@@ -770,4 +770,9 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
             }
         }
     }
+
+    @Override
+    public void setModal(boolean modal) {
+        getState().modal = modal;
+    }
 }
