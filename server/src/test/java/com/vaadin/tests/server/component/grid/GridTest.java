@@ -777,7 +777,7 @@ public class GridTest {
 
         Assert.assertTrue("Column should be marked sortable",
                 column.isSortable());
-        Assert.assertFalse(
+        Assert.assertTrue(
                 "User should be able to sort the column with the sort order",
                 column.isSortableByUser());
     }
