@@ -23,7 +23,7 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
-@ServerClass("com.vaadin.ui.ColorPickerPreview")
+@ServerClass("com.vaadin.ui.components.colorpicker.ColorPickerPreview")
 public class ColorPickerPreviewElement extends CssLayoutElement {
 
     /**
