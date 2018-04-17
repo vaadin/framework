@@ -27,9 +27,9 @@ public class DateFieldTimeZones extends AbstractTestUI {
 
         d1.setValue(LocalDate.of(2018, 1, 1));
         d2.setValue(LocalDate.of(2019, 12, 1));
-        d3.setValue(LocalDateTime.of(2019, 12, 1,0,0,0));
-        d4.setValue(LocalDateTime.of(2019, 12, 1,0,0,0));
-        d4.setValue(LocalDateTime.of(2019, 12, 1,0,0,0));
+        d3.setValue(LocalDateTime.of(2019, 12, 1, 0, 0, 0));
+        d4.setValue(LocalDateTime.of(2019, 12, 1, 0, 0, 0));
+        d4.setValue(LocalDateTime.of(2019, 12, 1, 0, 0, 0));
 
         d1.setResolution(DateResolution.DAY);
         d2.setResolution(DateResolution.DAY);
@@ -37,15 +37,15 @@ public class DateFieldTimeZones extends AbstractTestUI {
         d2.setRangeStart(LocalDate.of(2018, 1, 1));
         d2.setRangeEnd(LocalDate.of(2019, 12, 1));
 
-        d3.setRangeStart(LocalDateTime.of(2018, 1, 1,0,0,0));
-        d3.setRangeEnd(LocalDateTime.of(2019, 12, 1,0,0,0));
+        d3.setRangeStart(LocalDateTime.of(2018, 1, 1, 0, 0, 0));
+        d3.setRangeEnd(LocalDateTime.of(2019, 12, 1, 0, 0, 0));
 
-        d5.setRangeStart(LocalDateTime.of(2018, 1, 1,0,0,0));
-        d5.setRangeEnd(LocalDateTime.of(2019, 12, 1,0,0,0));
+        d5.setRangeStart(LocalDateTime.of(2018, 1, 1, 0, 0, 0));
+        d5.setRangeEnd(LocalDateTime.of(2019, 12, 1, 0, 0, 0));
 
         d5.setZoneId(ZoneId.of("-10"));
         HorizontalLayout layout = new HorizontalLayout();
-        layout.addComponents(d1, d2,d3,d4,d5);
+        layout.addComponents(d1, d2, d3, d4, d5);
 
         addComponent(layout);
     }

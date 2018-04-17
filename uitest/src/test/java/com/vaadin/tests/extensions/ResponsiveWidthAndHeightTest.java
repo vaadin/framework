@@ -26,7 +26,7 @@ public class ResponsiveWidthAndHeightTest extends MultiBrowserTest {
 
         // IE sometimes has trouble waiting long enough.
         waitUntil(ExpectedConditions.presenceOfElementLocated(
-                        By.cssSelector(".v-csslayout-width-and-height")), 30);
+                By.cssSelector(".v-csslayout-width-and-height")), 30);
 
         // Verify both width-range and height-range.
         assertEquals("600px-",

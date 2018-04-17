@@ -20,9 +20,9 @@ import org.openqa.selenium.support.ui.Select;
 
 import com.vaadin.testbench.elements.AbstractComponentElement.ReadOnlyException;
 import com.vaadin.testbench.elements.ListSelectElement;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
+public class ListSelectTest extends SingleBrowserTest {
     @Before
     public void setUp() throws Exception {
         openTestURL();
@@ -236,8 +236,7 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
         Select select = new Select(
                 getListSelect().findElement(By.tagName("select")));
         return select.getAllSelectedOptions().stream()
-                .map(element -> element.getText())
-                .collect(Collectors.toList());
+                .map(element -> element.getText()).collect(Collectors.toList());
     }
 
     private void assertSelected(String... expectedSelection) {

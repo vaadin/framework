@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -61,6 +62,10 @@ public class ResponsiveStylesTest extends MultiBrowserTest {
     @Test
     public void testValoMenuResponsiveHover() throws Exception {
         openTestURL(COLLAPSED_MENU_TEST_PARAM);
+
+        // Make sure mouse is not hovering the menu
+        new Actions(getDriver()).moveToElement($(LabelElement.class).first())
+                .moveByOffset(0, 300).perform();
 
         compareScreen("collapsedMenu");
 

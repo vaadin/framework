@@ -3,23 +3,48 @@ package com.vaadin.tests.serialization;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.stream.Collectors;
 
+import org.junit.Test;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
+import com.vaadin.testbench.annotations.RunLocally;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class SerializerTestTest extends MultiBrowserTest {
 
+    private static final SimpleDateFormat FORMAT = new SimpleDateFormat(
+            "EEE MMM dd HH:mm:ss 'GMT'Z yyyy", new Locale("en", "fi"));
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // PhantomJS doesn't support getting timezone
+        return getBrowsersExcludingPhantomJS();
+    }
+
     @Test
     public void testSerialization() {
+        // Set up formatting with browsers timezone
+        FORMAT.setTimeZone(getBrowserTimeZone());
+
         openTestURL();
         int logRow = 0;
 
         assertEquals("sendJson: {\"b\":false,\"s\":\"JSON\"}, null, \"value\"",
                 getLogRow(logRow++));
         assertEquals(
-                "sendDateArray: January 31, 2013 10:00:00 PM UTC January 31, 2012 10:00:00 PM UTC",
+                "sendDateArray: January 31, 2013 12:00:00 AM UTC January 31, 2012 12:00:00 AM UTC",
                 getLogRow(logRow++));
-        assertEquals("sendDate: May 31, 2013 8:12:13 AM UTC",
+        assertEquals("sendDate: May 1, 2013 11:12:13 AM UTC",
                 getLogRow(logRow++));
         assertEquals("sendDate: January 1, 1970 12:00:00 AM UTC",
                 getLogRow(logRow++));
@@ -67,13 +92,19 @@ public class SerializerTestTest extends MultiBrowserTest {
                 "sendBoolean: false, false, [false, false, true, false, true, true]",
                 getLogRow(logRow++));
         assertEquals("sendBeanSubclass: 43", getLogRow(logRow++));
+
+        // Dates from state
+        Date date1 = new Date(1);
+        Date date2 = new Date(Date.UTC(2013 - 1900, 4, 1, 11, 12, 13));
+        Date[] dateArray = new Date[] { new Date(1), new Date(2) };
+
         assertEquals(
-                "state.dateArray: Thu Jan 01 02:00:00 GMT+200 1970 Thu Jan 01 02:00:00 GMT+200 1970",
+                "state.dateArray: " + Arrays.stream(dateArray)
+                        .map(this::formatDate).collect(Collectors.joining(" ")),
                 getLogRow(logRow++));
-        assertEquals("state.date2: Fri May 31 11:12:13 GMT+300 2013",
-                getLogRow(logRow++));
-        assertEquals("state.date1: Thu Jan 01 02:00:00 GMT+200 1970",
-                getLogRow(logRow++));
+        assertEquals("state.date2: " + formatDate(date2), getLogRow(logRow++));
+        assertEquals("state.date1: " + formatDate(date1), getLogRow(logRow++));
+
         assertEquals("state.jsonBoolean: false", getLogRow(logRow++));
         assertEquals("state.jsonString: a string", getLogRow(logRow++));
         assertEquals("state.jsonNull: NULL", getLogRow(logRow++));
@@ -107,6 +138,19 @@ public class SerializerTestTest extends MultiBrowserTest {
         assertEquals(
                 "state.booleanArray: [true, true, false, true, false, false]",
                 getLogRow(logRow++));
+    }
 
+    private TimeZone getBrowserTimeZone() {
+        // Ask TimeZone from browser
+        String browserTimeZone = ((JavascriptExecutor) getDriver())
+                .executeScript(
+                        "return Intl.DateTimeFormat().resolvedOptions().timeZone;")
+                .toString();
+        return TimeZone.getTimeZone(browserTimeZone);
+    }
+
+    private String formatDate(Date date) {
+        // JavaScript formatting drops leading 0 from offset
+        return FORMAT.format(date).replaceAll("(GMT[+-])0", "$1");
     }
 }

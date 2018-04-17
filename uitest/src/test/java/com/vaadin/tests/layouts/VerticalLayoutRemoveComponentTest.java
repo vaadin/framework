@@ -2,16 +2,20 @@ package com.vaadin.tests.layouts;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Assume;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.VerticalLayoutElement;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
+import com.vaadin.testbench.parallel.BrowserUtil;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class VerticalLayoutRemoveComponentTest
-        extends SingleBrowserTestPhantomJS2 {
+public class VerticalLayoutRemoveComponentTest extends SingleBrowserTest {
     @Test
     public void testRemoveOnlyNecessaryComponentsFromDom() {
+        Assume.assumeFalse("PhantomJS has issues with this test",
+                BrowserUtil.isPhantomJS(getDesiredCapabilities()));
+
         openTestURL();
 
         String script = "document.mutationEventCount = 0;"

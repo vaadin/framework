@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.Assume;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -13,20 +14,16 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.parallel.Browser;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class ThemeChangeFaviconTest extends SingleBrowserTest {
 
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        // Seems like stylesheet onload is not fired on PhantomJS
-        // https://github.com/ariya/phantomjs/issues/12332
-        return Collections
-                .singletonList(Browser.FIREFOX.getDesiredCapabilities());
-    }
-
     @Test
     public void changeFavicon() throws InterruptedException {
+        Assume.assumeFalse("PhantomJS does not send onload events for styles",
+                BrowserUtil.isPhantomJS(getDesiredCapabilities()));
+
         setDebug(true);
         openTestURL();
         assertFavicon("reindeer");
