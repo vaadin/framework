@@ -5837,12 +5837,11 @@ public class Escalator extends Widget
                     || tableWrapper.getScrollTop() != 0;
             boolean keyEvent = event.getType().startsWith("key");
 
-            if (browserScroll || keyEvent) {
-
+            if (browserScroll) {
                 // Browser is scrolling our div automatically, reset
                 tableWrapper.setScrollLeft(0);
                 tableWrapper.setScrollTop(0);
-
+            } else if (keyEvent) {
                 Element focused = WidgetUtil.getFocusedElement();
                 Stream.of(header, body, footer).forEach(container -> {
                     Cell cell = container.getCell(focused);
