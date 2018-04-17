@@ -221,8 +221,8 @@ public class FileTypeResolver implements Serializable {
     static {
 
         // Initialize extension to MIME map
-        final StringTokenizer lines = new StringTokenizer(INITIAL_EXT_TO_MIME_MAP,
-                ",");
+        final StringTokenizer lines = new StringTokenizer(
+                INITIAL_EXT_TO_MIME_MAP, ",");
         while (lines.hasMoreTokens()) {
             final String line = lines.nextToken();
             final StringTokenizer exts = new StringTokenizer(line);

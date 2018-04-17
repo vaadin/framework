@@ -42,9 +42,9 @@ import com.vaadin.server.ClientConnector;
  * </ul>
  * Note that you should (almost) always use URLs starting with
  * {@literal frontend://} so that the framework can resolve the files to either
- * {@literal VAADIN/frontend/es5} or {@literal VAADIN/frontend/es6} depending on if the browser
- * supports ES6 classes (most browers) or not (IE11 and Safari <= 9). Polymer
- * elements rely on importing dependencies using relative paths
+ * {@literal VAADIN/frontend/es5} or {@literal VAADIN/frontend/es6} depending on
+ * if the browser supports ES6 classes (most browers) or not (IE11 and Safari <=
+ * 9). Polymer elements rely on importing dependencies using relative paths
  * {@literal ../../other-element/other-element.html}, which will not work if
  * they are installed in different locations.
  * <p>

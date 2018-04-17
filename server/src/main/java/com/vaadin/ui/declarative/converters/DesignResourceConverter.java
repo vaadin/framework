@@ -116,7 +116,9 @@ public class DesignResourceConverter implements Converter<String, Resource> {
                     return CODE_POINTS.get(codepoint);
                 }
 
-                if (FontAwesome.FONT_FAMILY.equals(familyAndCode[0])) { // Left for compatibility
+                if (FontAwesome.FONT_FAMILY.equals(familyAndCode[0])) { // Left
+                                                                        // for
+                                                                        // compatibility
                     return FontAwesome.fromCodepoint(codepoint);
                 }
                 // all vaadin icons should have a codepoint

@@ -72,7 +72,7 @@ public interface PropertyDefinition<T, V> extends Serializable {
 
     /**
      * Gets the top level name of this property.
-     * 
+     *
      * @return the top level property name, not <code>null</code>
      * @since 8.3
      */

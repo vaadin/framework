@@ -45,16 +45,14 @@ public class HasItemsTest {
 
             DataProvider dataProvider = hasItems.getDataProvider();
 
-            Assert.assertTrue(
-                    hasItemsType.getSimpleName()
-                            + " setItems method with varargs parameters of does not create a list data provider",
+            Assert.assertTrue(hasItemsType.getSimpleName()
+                    + " setItems method with varargs parameters of does not create a list data provider",
                     dataProvider instanceof ListDataProvider);
 
             ListDataProvider listDataProvider = (ListDataProvider) dataProvider;
 
-            Assert.assertTrue(
-                    hasItemsType.getSimpleName()
-                            + " does not have setItems method with varargs parameters of does not create an ArrayList backed list data provider",
+            Assert.assertTrue(hasItemsType.getSimpleName()
+                    + " does not have setItems method with varargs parameters of does not create an ArrayList backed list data provider",
                     listDataProvider.getItems() instanceof ArrayList);
 
             List list = (List) listDataProvider.getItems();

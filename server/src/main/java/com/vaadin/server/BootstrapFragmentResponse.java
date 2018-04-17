@@ -36,7 +36,8 @@ public class BootstrapFragmentResponse extends BootstrapResponse {
     /**
      * Crate a new bootstrap fragment response.
      *
-     * @see BootstrapResponse#BootstrapResponse(BootstrapHandler, VaadinRequest, VaadinSession, Class, UIProvider)
+     * @see BootstrapResponse#BootstrapResponse(BootstrapHandler, VaadinRequest,
+     *      VaadinSession, Class, UIProvider)
      *
      * @param handler
      *            the bootstrap handler that is firing the event

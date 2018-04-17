@@ -24,8 +24,8 @@ import com.vaadin.event.SerializableEventListener;
  * {@link BindingBuilder#withValidationStatusHandler(BindingValidationStatusHandler)}
  * Register} an instance of this class to be able to override the default
  * handling, which is to show
- * {@link com.vaadin.ui.AbstractComponent#setComponentError(com.vaadin.server.ErrorMessage) an
- * error message} for failed field validations.
+ * {@link com.vaadin.ui.AbstractComponent#setComponentError(com.vaadin.server.ErrorMessage)
+ * an error message} for failed field validations.
  *
  * @author Vaadin Ltd
  *

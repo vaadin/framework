@@ -116,14 +116,17 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     }
 
     /**
-     * Create new {@code HierarchyMapper} for the given data provider.
-     * May be overridden in subclasses.
+     * Create new {@code HierarchyMapper} for the given data provider. May be
+     * overridden in subclasses.
      *
-     * @param dataProvider the data provider
-     * @param <F> Query type
+     * @param dataProvider
+     *            the data provider
+     * @param <F>
+     *            Query type
      * @return new {@link HierarchyMapper}
      */
-    protected <F> HierarchyMapper<T, F> createHierarchyMapper(HierarchicalDataProvider<T, F> dataProvider) {
+    protected <F> HierarchyMapper<T, F> createHierarchyMapper(
+            HierarchicalDataProvider<T, F> dataProvider) {
         return new HierarchyMapper<>(dataProvider);
     }
 
@@ -171,7 +174,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      * method will have no effect if the row is already collapsed.
      * {@code syncAndRefresh} indicates whether the changes should be
      * synchronised to the client and the data provider be notified.
-     * 
+     *
      * @param item
      *            the item to collapse
      * @param syncAndRefresh
@@ -180,7 +183,8 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      *            changes, {@code false} otherwise.
      */
     public void collapse(T item, boolean syncAndRefresh) {
-        Integer index = syncAndRefresh ? mapper.getIndexOf(item).orElse(null) : null;
+        Integer index = syncAndRefresh ? mapper.getIndexOf(item).orElse(null)
+                : null;
         doCollapse(item, index, syncAndRefresh);
     }
 
@@ -202,7 +206,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      * will have no effect if the row is already collapsed. The index is
      * provided by the client-side or calculated from a full data request.
      *
-     * 
+     *
      * @param item
      *            the item to collapse
      * @param index
@@ -220,7 +224,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      * provided by the client-side or calculated from a full data request.
      * {@code syncAndRefresh} indicates whether the changes should be
      * synchronised to the client and the data provider be notified.
-     * 
+     *
      * @param item
      *            the item to collapse
      * @param index
@@ -267,7 +271,8 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      *         false} otherwise.
      */
     public void expand(T item, boolean syncAndRefresh) {
-        Integer index = syncAndRefresh ? mapper.getIndexOf(item).orElse(null) : null;
+        Integer index = syncAndRefresh ? mapper.getIndexOf(item).orElse(null)
+                : null;
         doExpand(item, index, syncAndRefresh);
     }
 
@@ -304,11 +309,10 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         Range addedRows = mapper.expand(item, index);
         if (syncAndRefresh) {
             if (!reset && !addedRows.isEmpty()) {
-                getClientRpc()
-                        .insertRows(addedRows.getStart(), addedRows.length());
-                Stream<T> children = mapper
-                        .fetchItems(item,
-                                Range.withLength(0, addedRows.length()));
+                getClientRpc().insertRows(addedRows.getStart(),
+                        addedRows.length());
+                Stream<T> children = mapper.fetchItems(item,
+                        Range.withLength(0, addedRows.length()));
                 pushData(addedRows.getStart(),
                         children.collect(Collectors.toList()));
             }

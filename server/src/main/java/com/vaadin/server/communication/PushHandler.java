@@ -468,7 +468,8 @@ public class PushHandler {
                         "sendNotificationAndDisconnect called for resource no longer in scope");
                 return;
             }
-            resource.getResponse().setContentType(JsonConstants.JSON_CONTENT_TYPE);
+            resource.getResponse()
+                    .setContentType(JsonConstants.JSON_CONTENT_TYPE);
             resource.getResponse().getWriter().write(notificationJson);
             resource.resume();
         } catch (Exception e) {

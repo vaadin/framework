@@ -329,7 +329,8 @@ public class JsonCodec implements Serializable {
             Class<?> classForType = getClassForType(targetType);
             return decodeEnum(classForType.asSubclass(Enum.class),
                     (JsonString) value);
-        } else if (CUSTOM_SERIALIZERS.containsKey(getClassForType(targetType))) {
+        } else if (CUSTOM_SERIALIZERS
+                .containsKey(getClassForType(targetType))) {
             return CUSTOM_SERIALIZERS.get(getClassForType(targetType))
                     .deserialize(targetType, value, connectorTracker);
         } else {
@@ -695,7 +696,8 @@ public class JsonCodec implements Serializable {
 
     public static Collection<BeanProperty> getProperties(Class<?> type)
             throws IntrospectionException {
-        Collection<BeanProperty> cachedProperties = TYPE_PROPERTY_CACHE.get(type);
+        Collection<BeanProperty> cachedProperties = TYPE_PROPERTY_CACHE
+                .get(type);
         if (cachedProperties != null) {
             return cachedProperties;
         }

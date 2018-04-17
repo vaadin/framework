@@ -21,8 +21,7 @@ public class CompileTransitionPropertyTest {
         if (file.contains("%20")) {
             fail("path contains spaces, please move the project");
         }
-        ScssStylesheet ss = ScssStylesheet
-                .get(file);
+        ScssStylesheet ss = ScssStylesheet.get(file);
         ss.compile();
         // extract the style rules for .my-label
         String compiled = ss.printState();

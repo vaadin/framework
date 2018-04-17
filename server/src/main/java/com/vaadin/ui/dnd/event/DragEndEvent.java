@@ -25,7 +25,7 @@ import com.vaadin.ui.dnd.DropTargetExtension;
  * HTML5 drag end event.
  *
  * @param <T>
- *         Type of the component that was dragged.
+ *            Type of the component that was dragged.
  * @author Vaadin Ltd
  * @see DragSourceExtension#addDragEndListener(DragEndListener)
  * @since 8.1
@@ -37,9 +37,9 @@ public class DragEndEvent<T extends AbstractComponent> extends Component.Event {
      * Creates a drag end event.
      *
      * @param source
-     *         Component that was dragged.
+     *            Component that was dragged.
      * @param dropEffect
-     *         Drop effect from {@code DataTransfer.dropEffect} object.
+     *            Drop effect from {@code DataTransfer.dropEffect} object.
      */
     public DragEndEvent(T source, DropEffect dropEffect) {
         super(source);
@@ -60,7 +60,7 @@ public class DragEndEvent<T extends AbstractComponent> extends Component.Event {
      * should be removed from the source.
      *
      * @return The {@code DataTransfer.dropEffect} parameter of the client side
-     * dragend event.
+     *         dragend event.
      * @see DragSourceExtension#setEffectAllowed(com.vaadin.shared.ui.dnd.EffectAllowed)
      *      DragSourceExtension#setEffectAllowed(EffectAllowed)
      * @see DropTargetExtension#setDropEffect(DropEffect)
@@ -75,7 +75,7 @@ public class DragEndEvent<T extends AbstractComponent> extends Component.Event {
      * {@code dropEffect == NONE}.
      *
      * @return {@code true} if the drop event was cancelled, {@code false}
-     * otherwise.
+     *         otherwise.
      */
     public boolean isCanceled() {
         return getDropEffect() == DropEffect.NONE;

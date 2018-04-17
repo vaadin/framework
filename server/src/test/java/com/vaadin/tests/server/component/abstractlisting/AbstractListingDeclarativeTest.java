@@ -72,11 +72,11 @@ public abstract class AbstractListingDeclarativeTest<T extends AbstractListing>
 
         List<String> items = Arrays.asList("foo", "bar", "foobar", "barfoo");
 
-        String design = String.format(
-                "<%s>\n" + "<option item='foo' icon='%s'>foo</option>\n"
-                        + "<option item='bar' icon='%s'>bar</option>"
-                        + "<option item='foobar' icon='theme://%s'>foobar</option>"
-                        + "<option item='barfoo'>barfoo</option>" + "</%s>",
+        String design = String.format("<%s>\n"
+                + "<option item='foo' icon='%s'>foo</option>\n"
+                + "<option item='bar' icon='%s'>bar</option>"
+                + "<option item='foobar' icon='theme://%s'>foobar</option>"
+                + "<option item='barfoo'>barfoo</option>" + "</%s>",
                 getComponentTag(), EXTERNAL_URL, FILE_PATH, THEME_PATH,
                 getComponentTag());
 

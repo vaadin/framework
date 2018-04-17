@@ -40,12 +40,15 @@ public class HugeFileUploadTest {
     public void setup() throws IOException {
         MockitoAnnotations.initMocks(this);
         // 0= UIid, 1 = cid, 2= name, 3 = sec key
-        when(request.getPathInfo()).thenReturn("/" + UPLOAD_URL_PREFIX + UI_ID + "/" + CONN_ID + "/var/" + SEC_KEY);
-        when(request.getContentType()).thenReturn("application/multipart-attached;boundary=bbbbb");
+        when(request.getPathInfo()).thenReturn("/" + UPLOAD_URL_PREFIX + UI_ID
+                + "/" + CONN_ID + "/var/" + SEC_KEY);
+        when(request.getContentType())
+                .thenReturn("application/multipart-attached;boundary=bbbbb");
         when(session.hasLock()).thenReturn(true);
         when(session.getUIById(UI_ID)).thenReturn(ui);
         when(ui.getConnectorTracker()).thenReturn(connectorTracker);
-        when(connectorTracker.getStreamVariable(CONN_ID,"var")).thenReturn(streamVariable);
+        when(connectorTracker.getStreamVariable(CONN_ID, "var"))
+                .thenReturn(streamVariable);
         when(connectorTracker.getSeckey(streamVariable)).thenReturn(SEC_KEY);
         when(request.getInputStream()).thenReturn(new InputStream() {
             @Override

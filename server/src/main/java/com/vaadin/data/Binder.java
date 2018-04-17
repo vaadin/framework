@@ -197,9 +197,9 @@ public class Binder<BEAN> implements Serializable {
 
         /**
          * Gets the current read-only status for this Binding.
-         * 
+         *
          * @see #setReadOnly(boolean)
-         * 
+         *
          * @return {@code true} if read-only; {@code false} if not
          * @since 8.4
          */
