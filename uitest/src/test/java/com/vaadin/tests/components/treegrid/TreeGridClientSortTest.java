@@ -20,7 +20,8 @@ public class TreeGridClientSortTest extends SingleBrowserTest {
         TreeGridElement grid = $(TreeGridElement.class).first();
         selectMenuPath("Component", "Features", "Set data provider",
                 "TreeDataProvider");
-        grid.getHeaderCell(0, 0).doubleClick();
+        grid.getHeaderCell(0, 0).click();
+        grid.getHeaderCell(0, 0).click();
         grid.expandWithClick(0);
         grid.expandWithClick(1);
         grid.collapseWithClick(0);

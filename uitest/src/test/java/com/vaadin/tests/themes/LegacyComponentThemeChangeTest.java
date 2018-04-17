@@ -122,6 +122,9 @@ public class LegacyComponentThemeChangeTest extends MultiBrowserTest {
         WebElement subMenuThemeImage = subMenu
                 .findElement(By.xpath(".//span[text()='selectedtheme']/img"));
         assertAttributePrefix(subMenuThemeImage, "src", theme);
+
+        // Close menu item.
+        subMenuItem.click();
     }
 
     private void assertAttributePrefix(WebElement element, String attribute,

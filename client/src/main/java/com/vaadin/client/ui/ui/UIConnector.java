@@ -217,7 +217,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             getRpcProxy(UIServerRpc.class).resize(event.getWidth(),
                     event.getHeight(), Window.getClientWidth(),
                     Window.getClientHeight());
-            if(!firstSizeReported) {
+            if (!firstSizeReported) {
                 firstSizeReported = true;
                 getConnection().getServerRpcQueue().flush();
             } else {

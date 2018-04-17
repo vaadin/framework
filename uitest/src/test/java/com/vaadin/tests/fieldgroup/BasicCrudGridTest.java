@@ -5,15 +5,17 @@ import static org.junit.Assert.assertNotEquals;
 
 import java.util.List;
 
+import org.junit.Assume;
 import org.junit.Test;
 
 import com.vaadin.testbench.AbstractHasTestBenchCommandExecutor;
 import com.vaadin.testbench.elements.AbstractComponentElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
+import com.vaadin.testbench.parallel.BrowserUtil;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class BasicCrudGridTest extends SingleBrowserTestPhantomJS2 {
+public class BasicCrudGridTest extends SingleBrowserTest {
 
     @Test
     public void fieldsInitiallyEmpty() {
@@ -32,6 +34,9 @@ public class BasicCrudGridTest extends SingleBrowserTestPhantomJS2 {
 
     @Test
     public void fieldsClearedOnDeselect() {
+        Assume.assumeFalse("PhantomJS has issues with this test",
+                BrowserUtil.isPhantomJS(getDesiredCapabilities()));
+
         openTestURL();
 
         // Select row
