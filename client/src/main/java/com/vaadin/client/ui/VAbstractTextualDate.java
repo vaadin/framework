@@ -55,9 +55,8 @@ import com.vaadin.shared.EventId;
  */
 public abstract class VAbstractTextualDate<R extends Enum<R>>
         extends VDateField<R>
-        implements ChangeHandler, Focusable,
-        SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
-        HandlesAriaRequired, KeyDownHandler {
+        implements ChangeHandler, Focusable, SubPartAware, HandlesAriaCaption,
+        HandlesAriaInvalid, HandlesAriaRequired, KeyDownHandler {
 
     private static final String PARSE_ERROR_CLASSNAME = "-parseerror";
     private static final String ISO_DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
@@ -86,10 +85,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         super(resoluton);
         text = new TextBox();
         text.addChangeHandler(this);
-        text.addFocusHandler(
-                event -> fireBlurFocusEvent(event, true));
-        text.addBlurHandler(
-                event -> fireBlurFocusEvent(event, false));
+        text.addFocusHandler(event -> fireBlurFocusEvent(event, true));
+        text.addBlurHandler(event -> fireBlurFocusEvent(event, false));
         if (BrowserInfo.get().isIE()) {
             addDomHandler(this, KeyDownEvent.getType());
         }
@@ -278,7 +275,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      *
      * @since 8.2
      * @deprecated Use {@link #updateBufferedResolutions()} and
-     * {@link #sendBufferedValues()} instead.
+     *             {@link #sendBufferedValues()} instead.
      */
     @Deprecated
     protected final void updateAndSendBufferedValues() {
@@ -409,8 +406,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         }
     }
 
-    private void fireBlurFocusEvent(DomEvent<?> event,
-            boolean focus) {
+    private void fireBlurFocusEvent(DomEvent<?> event, boolean focus) {
         String styleName = VTextField.CLASSNAME + "-"
                 + VTextField.CLASSNAME_FOCUS;
         if (focus) {

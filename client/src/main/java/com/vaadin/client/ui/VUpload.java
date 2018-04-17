@@ -318,7 +318,8 @@ public class VUpload extends SimplePanel {
     /** For internal use only. May be removed or replaced in the future. */
     public void submit() {
         if (submitted || !enabled) {
-            getLogger().info("Submit cancelled (disabled or already submitted)");
+            getLogger()
+                    .info("Submit cancelled (disabled or already submitted)");
             return;
         }
         if (fu.getFilename().isEmpty()) {

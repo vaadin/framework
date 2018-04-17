@@ -122,7 +122,8 @@ public class MultiSelectionRenderer<T>
 
         @Override
         public void onKeyUp(KeyUpEvent event) {
-            if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE || !checkBox.isEnabled()) {
+            if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE
+                    || !checkBox.isEnabled()) {
                 return;
             }
             int logicalRow = getLogicalRowIndex(grid, checkBox.getElement());
@@ -460,8 +461,9 @@ public class MultiSelectionRenderer<T>
                 bottomBound = Math.max(finalBottomBound, pageY);
             } else {
                 /*
-                 * Subsequent runs make sure that the scroll area grows (but doesn't
-                 * shrink) with the finger, but no further than the final bound.
+                 * Subsequent runs make sure that the scroll area grows (but
+                 * doesn't shrink) with the finger, but no further than the
+                 * final bound.
                  */
                 int oldTopBound = topBound;
                 if (topBound < finalTopBound) {
@@ -645,7 +647,7 @@ public class MultiSelectionRenderer<T>
         checkBox.setEnabled(grid.isEnabled() && !grid.isEditorActive());
     }
 
-    private int getDOMRowIndex(RendererCellReference cell){
+    private int getDOMRowIndex(RendererCellReference cell) {
         // getRowIndex starts with zero, that's why we add an additional 1.
         // getDOMRowIndex should include getHeaderRows as well, this number
         // should be equals to aria-rowindex.

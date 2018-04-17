@@ -149,16 +149,15 @@ public class AtmospherePushConnection implements PushConnection {
             final PushConfigurationState pushConfiguration) {
         this.connection = connection;
 
-        connection.addHandler(ApplicationStoppedEvent.TYPE,
-                event -> {
-                    if (state == State.DISCONNECT_PENDING
-                            || state == State.DISCONNECTED) {
-                        return;
-                    }
+        connection.addHandler(ApplicationStoppedEvent.TYPE, event -> {
+            if (state == State.DISCONNECT_PENDING
+                    || state == State.DISCONNECTED) {
+                return;
+            }
 
-                    disconnect(() -> {
-                    });
-                });
+            disconnect(() -> {
+            });
+        });
         config = createConfig();
         String debugParameter = Location.getParameter("debug");
         if ("push".equals(debugParameter)) {

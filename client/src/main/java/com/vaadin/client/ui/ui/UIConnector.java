@@ -217,7 +217,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             getRpcProxy(UIServerRpc.class).resize(event.getWidth(),
                     event.getHeight(), Window.getClientWidth(),
                     Window.getClientHeight());
-            if(!firstSizeReported) {
+            if (!firstSizeReported) {
                 firstSizeReported = true;
                 getConnection().getServerRpcQueue().flush();
             } else {
@@ -511,16 +511,18 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * Initialize UIConnector and attach UI to the rootPanelElement.
      *
      * @param rootPanelElement
-     *         element to attach ui into
+     *            element to attach ui into
      * @param applicationConnection
-     *         application connection
+     *            application connection
      * @since 8.4
      */
     public void init(Element rootPanelElement,
             ApplicationConnection applicationConnection) {
-        Panel root = new AbsolutePanel(rootPanelElement) {{
-            onAttach();
-        }};
+        Panel root = new AbsolutePanel(rootPanelElement) {
+            {
+                onAttach();
+            }
+        };
 
         initConnector(root, applicationConnection);
     }
@@ -530,9 +532,9 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * element.
      *
      * @param rootPanelId
-     *         root panel element id
+     *            root panel element id
      * @param applicationConnection
-     *         application connection
+     *            application connection
      */
     public void init(String rootPanelId,
             ApplicationConnection applicationConnection) {
@@ -565,7 +567,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }, KeyDownEvent.getType());
 
         DOM.sinkEvents(ui.getElement(), Event.ONSCROLL);
-
 
         // Remove the v-app-loading or any splash screen added inside the div by
         // the user

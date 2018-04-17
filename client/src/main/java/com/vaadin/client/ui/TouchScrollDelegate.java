@@ -101,8 +101,8 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
     private static TouchScrollDelegate activeScrollDelegate;
 
-    private static final boolean ANDROID_WITH_BROKEN_SCROLL_TOP = BrowserInfo.get()
-            .isAndroidWithBrokenScrollTop();
+    private static final boolean ANDROID_WITH_BROKEN_SCROLL_TOP = BrowserInfo
+            .get().isAndroidWithBrokenScrollTop();
 
     /**
      * A helper class for making a widget scrollable. Uses native scrolling if
@@ -562,8 +562,8 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         finalScrollTop = finalY;
 
         if (Math.abs(pixelsToMove) < 3 || duration < 20) {
-            getLogger().info("Small 'momentum' " + pixelsToMove + " |  " + duration
-                    + " Skipping animation,");
+            getLogger().info("Small 'momentum' " + pixelsToMove + " |  "
+                    + duration + " Skipping animation,");
             moveTransformationToScrolloffset();
             return;
         }
@@ -701,7 +701,8 @@ public class TouchScrollDelegate implements NativePreviewHandler {
             }
             break;
         default:
-            getLogger().info("Non touch event:" + event.getNativeEvent().getType());
+            getLogger().info(
+                    "Non touch event:" + event.getNativeEvent().getType());
             event.cancel();
             break;
         }

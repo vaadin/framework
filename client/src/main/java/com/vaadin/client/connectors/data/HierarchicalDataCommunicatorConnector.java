@@ -46,11 +46,11 @@ public class HierarchicalDataCommunicatorConnector
          */
         JsonObject hierarchyData = newRowData.getObject(
                 HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION);
-        if (!hierarchyData.hasKey(HierarchicalDataCommunicatorConstants.ROW_DEPTH)) {
+        if (!hierarchyData
+                .hasKey(HierarchicalDataCommunicatorConstants.ROW_DEPTH)) {
             hierarchyData.put(HierarchicalDataCommunicatorConstants.ROW_DEPTH,
-                    oldRowData
-                            .getObject(
-                                    HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION)
+                    oldRowData.getObject(
+                            HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION)
                             .getNumber(
                                     HierarchicalDataCommunicatorConstants.ROW_DEPTH));
         }

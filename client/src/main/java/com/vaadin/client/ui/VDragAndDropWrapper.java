@@ -387,8 +387,8 @@ public class VDragAndDropWrapper extends VCustomComponent
                 if (event.isFile(i)) {
                     final int fileId = filecounter++;
                     final VHtml5File file = event.getFile(i);
-                    getLogger().info("Preparing to upload file " + file.getName()
-                            + " with id " + fileId + ", size="
+                    getLogger().info("Preparing to upload file "
+                            + file.getName() + " with id " + fileId + ", size="
                             + file.getSize());
                     transferable.setData("fi" + fileIndex, "" + fileId);
                     transferable.setData("fn" + fileIndex, file.getName());

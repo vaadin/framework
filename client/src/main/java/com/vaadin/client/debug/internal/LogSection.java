@@ -223,7 +223,8 @@ public class LogSection implements Section {
     /**
      * Sets the log row limit.
      *
-     * @param limit The limit
+     * @param limit
+     *            The limit
      */
     public void setLimit(int limit) {
         this.limit = limit;

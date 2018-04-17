@@ -421,12 +421,11 @@ public class TreeGridConnector extends GridConnector {
     }
 
     private static boolean isCollapsed(JsonObject rowData) {
-        assert rowData
-                .hasKey(HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION) : "missing hierarchy data for row "
+        assert rowData.hasKey(
+                HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION) : "missing hierarchy data for row "
                         + rowData.asString();
-        return rowData
-                .getObject(
-                        HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION)
+        return rowData.getObject(
+                HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION)
                 .getBoolean(
                         HierarchicalDataCommunicatorConstants.ROW_COLLAPSED);
     }

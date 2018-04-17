@@ -241,8 +241,7 @@ public class FlyweightRow implements Row {
         assert offset >= 0 && offset + numberOfCells <= cells
                 .size() : "Invalid range of cells";
         return () -> CellIterator
-                .attached(
-                        cells.subList(offset, offset + numberOfCells));
+                .attached(cells.subList(offset, offset + numberOfCells));
     }
 
     /**
@@ -266,8 +265,7 @@ public class FlyweightRow implements Row {
         assert offset >= 0 && offset + numberOfCells <= cells
                 .size() : "Invalid range of cells";
         return () -> CellIterator
-                .unattached(
-                        cells.subList(offset, offset + numberOfCells));
+                .unattached(cells.subList(offset, offset + numberOfCells));
     }
 
     /**
