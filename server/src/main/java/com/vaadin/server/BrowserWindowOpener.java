@@ -229,14 +229,14 @@ public class BrowserWindowOpener extends AbstractExtension {
 
     // Avoid breaking url to multiple lines
     // @formatter:off
-    /**
-     * Sets the features for opening the window. See e.g.
-     * {@link https://developer.mozilla.org/en-US/docs/DOM/window.open#Position_and_size_features}
-     * for a description of the commonly supported features.
-     *
-     * @param features a string with window features, or <code>null</code> to use the default features.
-     */
-    // @formatter:on
+	/**
+	 * Sets the features for opening the window. See e.g.
+	 * {@link https://developer.mozilla.org/en-US/docs/DOM/window.open#Position_and_size_features}
+	 * for a description of the commonly supported features.
+	 *
+	 * @param features a string with window features, or <code>null</code> to use the default features.
+	 */
+	// @formatter:on
     public void setFeatures(String features) {
         getState().features = features;
     }

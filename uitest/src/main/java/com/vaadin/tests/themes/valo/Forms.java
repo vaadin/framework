@@ -57,7 +57,8 @@ public class Forms extends VerticalLayout implements View {
         name.setWidth("50%");
         form.addComponent(name);
 
-        AbstractDateField<LocalDate, DateResolution> birthday = new TestDateField("Birthday");
+        AbstractDateField<LocalDate, DateResolution> birthday = new TestDateField(
+                "Birthday");
         birthday.setValue(LocalDate.of(1980, 1, 31));
         form.addComponent(birthday);
 

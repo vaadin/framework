@@ -43,7 +43,8 @@ public class LocalDateTimeToDateConverter
     /**
      * Creates a new converter using the given time zone.
      *
-     * @param zoneId the time zone to use, not <code>null</code>
+     * @param zoneId
+     *            the time zone to use, not <code>null</code>
      */
     public LocalDateTimeToDateConverter(ZoneId zoneId) {
         this.zoneId = Objects.requireNonNull(zoneId,

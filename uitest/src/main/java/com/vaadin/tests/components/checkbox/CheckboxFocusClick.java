@@ -10,7 +10,8 @@ public class CheckboxFocusClick extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         final CheckBox cb = new CheckBox("Click me", true);
-        cb.addFocusListener((FieldEvents.FocusListener) event -> log("checkbox focused"));
+        cb.addFocusListener(
+                (FieldEvents.FocusListener) event -> log("checkbox focused"));
         addComponent(cb);
     }
 

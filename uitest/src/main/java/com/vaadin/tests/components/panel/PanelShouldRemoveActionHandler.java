@@ -33,8 +33,7 @@ public class PanelShouldRemoveActionHandler extends TestBase {
         layout.setMargin(true);
         panel = new Panel("A panel", layout);
         layout.addComponent(new TextField());
-        Button add = new Button("Add an action handler",
-                event -> add());
+        Button add = new Button("Add an action handler", event -> add());
         Button addAnother = new Button("Add another action handler",
                 event -> addAnother());
         Button remove = new Button("Remove an action handler",

@@ -147,7 +147,8 @@ public class MenuBar extends AbstractComponent
             }
 
             ContentMode contentMode = item.getDescriptionContentMode();
-            // If the contentMode is equal to ContentMode.PREFORMATTED, we don't add any attribute.
+            // If the contentMode is equal to ContentMode.PREFORMATTED, we don't
+            // add any attribute.
             if (contentMode != null
                     && contentMode != ContentMode.PREFORMATTED) {
                 target.addAttribute(

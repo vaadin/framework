@@ -17,10 +17,9 @@ public class ConfirmBrowserTabClose extends AbstractTestUIWithLog {
         // There should be no error
         Button b = new Button("Say hello", event -> log("Hello"));
         addComponent(b);
-        JavaScript
-                .eval("window.addEventListener('beforeunload', function (e) {"
-                        + "var confirmationMessage = 'Please stay!';"
-                        + "e.returnValue = confirmationMessage;"
-                        + "return confirmationMessage;" + "});");
+        JavaScript.eval("window.addEventListener('beforeunload', function (e) {"
+                + "var confirmationMessage = 'Please stay!';"
+                + "e.returnValue = confirmationMessage;"
+                + "return confirmationMessage;" + "});");
     }
 }

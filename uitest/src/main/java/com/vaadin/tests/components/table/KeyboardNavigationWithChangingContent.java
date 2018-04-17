@@ -29,8 +29,8 @@ public class KeyboardNavigationWithChangingContent extends TestBase {
         t.setMultiSelect(true);
 
         getLayout().addComponent(t);
-        getLayout().addComponent(new Button("Change elements and selection",
-                event -> {
+        getLayout().addComponent(
+                new Button("Change elements and selection", event -> {
                     bic.removeAllItems();
                     ValueHolder<String> v4 = null;
                     for (int i = 4; i < 30; i++) {

@@ -53,6 +53,7 @@ public class TreeGridAriaRowcountTest extends SingleBrowserTest {
     }
 
     private boolean containsRows(int rowcount) {
-        return grid.getHTML().contains("aria-rowcount=\"" + String.valueOf(rowcount) + "\"");
+        return grid.getHTML()
+                .contains("aria-rowcount=\"" + String.valueOf(rowcount) + "\"");
     }
 }

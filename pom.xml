@@ -454,9 +454,9 @@
                     <version>${vaadin.plugin.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>com.marvinformatics.formatter</groupId>
+                    <groupId>net.revelc.code.formatter</groupId>
                     <artifactId>formatter-maven-plugin</artifactId>
-                    <version>2.1.2</version>
+                    <version>2.7.2</version>
                     <configuration>
                         <configFile>${project.basedir}/../eclipse/VaadinJavaConventions.xml</configFile>
                         <!-- Provide a dummy JS config file to avoid errors -->

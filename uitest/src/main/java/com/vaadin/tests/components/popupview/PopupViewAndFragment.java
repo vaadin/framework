@@ -13,12 +13,11 @@ public class PopupViewAndFragment extends AbstractReindeerTestUI {
         final PopupView pw = new PopupView("Open", new Label("Oh, hi"));
         addComponent(pw);
 
-        final Button button = new Button("Open and change fragment",
-                event -> {
-                    pw.setPopupVisible(true);
-                    getPage().setUriFragment(
-                            String.valueOf(System.currentTimeMillis()));
-                });
+        final Button button = new Button("Open and change fragment", event -> {
+            pw.setPopupVisible(true);
+            getPage()
+                    .setUriFragment(String.valueOf(System.currentTimeMillis()));
+        });
         addComponent(button);
     }
 

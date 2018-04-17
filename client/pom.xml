@@ -47,7 +47,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.marvinformatics.formatter</groupId>
+                <groupId>net.revelc.code.formatter</groupId>
                 <artifactId>formatter-maven-plugin</artifactId>
             </plugin>
 

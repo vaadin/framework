@@ -27,10 +27,9 @@ public class NoLayout extends AbstractReindeerTestUI {
         });
         addComponent(uiPolling);
 
-        addComponent(
-                new Button("Change regular state",
-                        event -> event.getButton().setCaption(
-                                String.valueOf(System.currentTimeMillis()))));
+        addComponent(new Button("Change regular state",
+                event -> event.getButton().setCaption(
+                        String.valueOf(System.currentTimeMillis()))));
         addComponent(new Button("Change @NoLayout state",
                 event -> event.getButton().setDescription(
                         String.valueOf(System.currentTimeMillis()))));
@@ -40,11 +39,10 @@ public class NoLayout extends AbstractReindeerTestUI {
         addComponent(new Button("Do @NoLayout RPC",
                 event -> layoutDetector.doNoLayoutRpc()));
 
-        addComponent(new Button("Update LegacyComponent",
-                event -> {
-                    // Assumes UI is a LegacyComponent
-                    markAsDirty();
-                }));
+        addComponent(new Button("Update LegacyComponent", event -> {
+            // Assumes UI is a LegacyComponent
+            markAsDirty();
+        }));
     }
 
     @Override

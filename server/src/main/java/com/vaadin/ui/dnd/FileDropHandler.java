@@ -24,7 +24,7 @@ import com.vaadin.ui.dnd.event.FileDropEvent;
  * Handles the drop event on a file drop target.
  *
  * @param <T>
- *         Type of the file drop target component.
+ *            Type of the file drop target component.
  * @author Vaadin Ltd
  * @see FileDropEvent
  * @see com.vaadin.ui.dnd.FileDropTarget
@@ -38,8 +38,8 @@ public interface FileDropHandler<T extends AbstractComponent>
      * the file drop target this handler is registered to.
      *
      * @param event
-     *         The file drop event containing the list of files that were
-     *         dropped onto the component.
+     *            The file drop event containing the list of files that were
+     *            dropped onto the component.
      */
     public void drop(FileDropEvent<T> event);
 }

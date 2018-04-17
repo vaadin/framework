@@ -103,10 +103,9 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         reconnectDialogMessage.setWidth("50em");
         reconnectDialogMessage
                 .setValue(getReconnectDialogConfiguration().getDialogText());
-        reconnectDialogMessage
-                .addValueChangeListener(event ->
-                        getReconnectDialogConfiguration().setDialogText(
-                reconnectDialogMessage.getValue()));
+        reconnectDialogMessage.addValueChangeListener(
+                event -> getReconnectDialogConfiguration()
+                        .setDialogText(reconnectDialogMessage.getValue()));
 
         final TextField reconnectDialogGaveUpMessage = new TextField(
                 "Reconnect gave up message");
@@ -114,42 +113,37 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
 
         reconnectDialogGaveUpMessage.setValue(
                 getReconnectDialogConfiguration().getDialogTextGaveUp());
-        reconnectDialogGaveUpMessage
-                .addValueChangeListener(event ->
-                        getReconnectDialogConfiguration().setDialogTextGaveUp(
-                reconnectDialogGaveUpMessage.getValue()));
+        reconnectDialogGaveUpMessage.addValueChangeListener(
+                event -> getReconnectDialogConfiguration().setDialogTextGaveUp(
+                        reconnectDialogGaveUpMessage.getValue()));
         final TextField reconnectDialogReconnectAttempts = new TextField(
                 "Reconnect attempts");
         reconnectDialogReconnectAttempts.setConverter(Integer.class);
         reconnectDialogReconnectAttempts.setConvertedValue(
                 getReconnectDialogConfiguration().getReconnectAttempts());
-        reconnectDialogReconnectAttempts
-                .addValueChangeListener(event ->
-                        getReconnectDialogConfiguration().setReconnectAttempts(
-                                (Integer) reconnectDialogReconnectAttempts
-                        .getConvertedValue()));
+        reconnectDialogReconnectAttempts.addValueChangeListener(
+                event -> getReconnectDialogConfiguration().setReconnectAttempts(
+                        (Integer) reconnectDialogReconnectAttempts
+                                .getConvertedValue()));
         final TextField reconnectDialogReconnectInterval = new TextField(
                 "Reconnect interval (ms)");
         reconnectDialogReconnectInterval.setConverter(Integer.class);
         reconnectDialogReconnectInterval.setConvertedValue(
                 getReconnectDialogConfiguration().getReconnectInterval());
-        reconnectDialogReconnectInterval
-                .addValueChangeListener(event ->
-                        getReconnectDialogConfiguration().setReconnectInterval(
-                                (Integer) reconnectDialogReconnectInterval
-                        .getConvertedValue()));
+        reconnectDialogReconnectInterval.addValueChangeListener(
+                event -> getReconnectDialogConfiguration().setReconnectInterval(
+                        (Integer) reconnectDialogReconnectInterval
+                                .getConvertedValue()));
 
         final TextField reconnectDialogGracePeriod = new TextField(
                 "Reconnect dialog grace period (ms)");
         reconnectDialogGracePeriod.setConverter(Integer.class);
         reconnectDialogGracePeriod.setConvertedValue(
                 getReconnectDialogConfiguration().getDialogGracePeriod());
-        reconnectDialogGracePeriod
-                .addValueChangeListener(
-                        event -> getReconnectDialogConfiguration()
-                        .setDialogGracePeriod(
-                                (Integer) reconnectDialogGracePeriod
-                                        .getConvertedValue()));
+        reconnectDialogGracePeriod.addValueChangeListener(
+                event -> getReconnectDialogConfiguration().setDialogGracePeriod(
+                        (Integer) reconnectDialogGracePeriod
+                                .getConvertedValue()));
 
         final CheckBox reconnectDialogModal = new CheckBox(
                 "Reconnect dialog modality");

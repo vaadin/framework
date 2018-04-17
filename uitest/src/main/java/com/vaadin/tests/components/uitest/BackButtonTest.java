@@ -26,17 +26,16 @@ public class BackButtonTest extends AbstractReindeerTestUI {
         addComponent(p1);
 
         p2 = new Page2();
-        getPage().addUriFragmentChangedListener(
-                event -> {
-                    String f = event.getUriFragment();
-                    if ("page2".equals(f)) {
-                        showPage2();
-                    }
+        getPage().addUriFragmentChangedListener(event -> {
+            String f = event.getUriFragment();
+            if ("page2".equals(f)) {
+                showPage2();
+            }
 
-                    if ("page1".equals(f)) {
-                        showPage1();
-                    }
-                });
+            if ("page1".equals(f)) {
+                showPage1();
+            }
+        });
     }
 
     class Page1 extends VerticalLayout {

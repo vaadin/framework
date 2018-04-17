@@ -30,15 +30,14 @@ public class PropertyFilterDefinition implements Serializable {
     private List<String> ignorePackageNamesStartingWith;
 
     /**
-     * Create a property filter with max nesting depth and package names
-     * to ignore.
+     * Create a property filter with max nesting depth and package names to
+     * ignore.
      *
      * @param maxNestingDepth
-     *            The maximum amount of nesting levels for
-     *            sub-properties.
+     *            The maximum amount of nesting levels for sub-properties.
      * @param ignorePackageNamesStartingWith
-     *            Ignore package names that start with this string, for
-     *            example "java.lang".
+     *            Ignore package names that start with this string, for example
+     *            "java.lang".
      */
     public PropertyFilterDefinition(int maxNestingDepth,
             List<String> ignorePackageNamesStartingWith) {

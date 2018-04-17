@@ -31,7 +31,7 @@ public class UploadInTabsheetTest extends MultiBrowserTest {
 
     @Test
     public void testThatChangingTabAfterUploadDoesntCauseErrors()
-        throws Exception {
+            throws Exception {
         setDebug(true);
         openTestURL();
 

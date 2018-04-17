@@ -11,8 +11,7 @@ import com.vaadin.ui.TreeGrid;
 
 @Theme("valo")
 @Widgetset("com.vaadin.DefaultWidgetSet")
-public class TreeGridHugeTree
-        extends AbstractTestUI {
+public class TreeGridHugeTree extends AbstractTestUI {
 
     private TreeGrid<String> treeGrid;
     private TreeDataProvider<String> inMemoryDataProvider;

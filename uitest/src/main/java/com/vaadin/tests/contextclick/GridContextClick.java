@@ -73,9 +73,8 @@ public class GridContextClick extends
     @Override
     protected HorizontalLayout createContextClickControls() {
         HorizontalLayout controls = super.createContextClickControls();
-        controls.addComponent(
-                new Button("Remove all content", event -> testComponent
-                        .setItems(Collections.emptyList())));
+        controls.addComponent(new Button("Remove all content",
+                event -> testComponent.setItems(Collections.emptyList())));
         return controls;
     }
 }

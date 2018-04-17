@@ -27,7 +27,7 @@ import com.vaadin.ui.dnd.FileDropHandler;
  * target.
  *
  * @param <T>
- *         Type of the file drop target component.
+ *            Type of the file drop target component.
  * @author Vaadin Ltd
  * @see FileDropHandler
  * @since 8.1
@@ -41,9 +41,9 @@ public class FileDropEvent<T extends AbstractComponent>
      * Creates a file drop event.
      *
      * @param target
-     *         The file drop target component.
+     *            The file drop target component.
      * @param files
-     *         Collection of files.
+     *            Collection of files.
      */
     public FileDropEvent(T target, Collection<Html5File> files) {
         super(target);
@@ -55,7 +55,7 @@ public class FileDropEvent<T extends AbstractComponent>
      * Gets the collection of files dropped onto the file drop target component.
      *
      * @return Collection of files that were dropped onto the file drop target
-     * component.
+     *         component.
      */
     public Collection<Html5File> getFiles() {
         return files;

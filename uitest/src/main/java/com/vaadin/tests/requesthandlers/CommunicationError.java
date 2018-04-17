@@ -51,20 +51,19 @@ public class CommunicationError extends UIProvider {
 
         @Override
         protected void setup(VaadinRequest request) {
-            Button button = new Button("Send bad request",
-                    event -> {
-                        try {
-                            // An unparseable response will cause
-                            // communication error
-                            PrintWriter writer = VaadinService
-                                    .getCurrentResponse().getWriter();
-                            writer.write("for(;;)[{FOOBAR}]");
-                            writer.flush();
-                            writer.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    });
+            Button button = new Button("Send bad request", event -> {
+                try {
+                    // An unparseable response will cause
+                    // communication error
+                    PrintWriter writer = VaadinService.getCurrentResponse()
+                            .getWriter();
+                    writer.write("for(;;)[{FOOBAR}]");
+                    writer.flush();
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
             addComponent(button);
         }
 

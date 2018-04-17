@@ -233,7 +233,7 @@ public class DevelopmentServerLauncher {
                 scanner.setScanInterval(interval);
 
                 scanner.setRecursive(true);
-                scanner.addListener((BulkListener) e-> {
+                scanner.addListener((BulkListener) e -> {
                     webappcontext.stop();
                     server.stop();
                     webappcontext.start();

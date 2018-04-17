@@ -2113,7 +2113,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * Set assistive label for the previous year element.
      *
      * @param label
-     *         the label to set
+     *            the label to set
      * @since 8.4
      */
     public void setAssistiveLabelPreviousYear(String label) {
@@ -2124,7 +2124,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * Set assistive label for the next year element.
      *
      * @param label
-     *         the label to set
+     *            the label to set
      * @since 8.4
      */
     public void setAssistiveLabelNextYear(String label) {
@@ -2135,7 +2135,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * Set assistive label for the previous month element.
      *
      * @param label
-     *         the label to set
+     *            the label to set
      * @since 8.4
      */
     public void setAssistiveLabelPreviousMonth(String label) {
@@ -2146,7 +2146,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * Set assistive label for the next month element.
      *
      * @param label
-     *         the label to set
+     *            the label to set
      * @since 8.4
      */
     public void setAssistiveLabelNextMonth(String label) {

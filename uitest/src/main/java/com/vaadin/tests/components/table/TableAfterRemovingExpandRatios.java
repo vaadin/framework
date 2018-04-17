@@ -47,21 +47,19 @@ public class TableAfterRemovingExpandRatios extends AbstractReindeerTestUI {
     }
 
     private NativeButton createSetExpandRatiosButton(final Table table) {
-        NativeButton button = new NativeButton("Set expand",
-                event -> {
-                    table.setColumnExpandRatio("column1", 1.0f);
-                    table.setColumnExpandRatio("column2", 3.0f);
-                });
+        NativeButton button = new NativeButton("Set expand", event -> {
+            table.setColumnExpandRatio("column1", 1.0f);
+            table.setColumnExpandRatio("column2", 3.0f);
+        });
         button.setId("expand-button");
         return button;
     }
 
     private NativeButton createUnsetExpandRatiosButton(final Table table) {
-        NativeButton button = new NativeButton("Unset expand",
-                event -> {
-                    table.setColumnExpandRatio("column1", -1);
-                    table.setColumnExpandRatio("column2", -1);
-                });
+        NativeButton button = new NativeButton("Unset expand", event -> {
+            table.setColumnExpandRatio("column1", -1);
+            table.setColumnExpandRatio("column2", -1);
+        });
         button.setId("unexpand-button");
         return button;
     }

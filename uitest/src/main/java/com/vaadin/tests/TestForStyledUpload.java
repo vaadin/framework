@@ -72,11 +72,9 @@ public class TestForStyledUpload extends LegacyApplication
                     "Transferred " + readBytes + " of " + contentLenght);
         });
 
-        final Button b = new Button("Update status",
-                event -> readState());
+        final Button b = new Button("Update status", event -> readState());
 
-        final Button c = new Button("Update status with gc",
-                evenet -> gc());
+        final Button c = new Button("Update status with gc", evenet -> gc());
 
         main.addComponent(up);
         l = new Label("Idle");

@@ -17,9 +17,8 @@ public class MenuBarTooltipTest extends MultiBrowserTest {
 
     @Test
     public void toolTipShouldBeOnTopOfMenuItem() {
-        String[] themes = { ValoTheme.THEME_NAME,
-                Reindeer.THEME_NAME, Runo.THEME_NAME,
-                ChameleonTheme.THEME_NAME };
+        String[] themes = { ValoTheme.THEME_NAME, Reindeer.THEME_NAME,
+                Runo.THEME_NAME, ChameleonTheme.THEME_NAME };
 
         for (String theme : themes) {
             assertZIndices(theme);

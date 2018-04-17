@@ -417,14 +417,13 @@ public class CommonParts extends VerticalLayout implements View {
                     tabs.addTab(new Label("&nbsp;", ContentMode.HTML),
                             "One more");
                     tabs.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
-                    tabs.addSelectedTabChangeListener(
-                            event -> {
-                                try {
-                                    Thread.sleep(600);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            });
+                    tabs.addSelectedTabChangeListener(event -> {
+                        try {
+                            Thread.sleep(600);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    });
                     content = tabs;
                 } else if (!autoHeight) {
                     Panel p = new Panel();
@@ -584,13 +583,12 @@ public class CommonParts extends VerticalLayout implements View {
                 options.addStyleName(ValoTheme.MENUBAR_SMALL);
                 addComponent(options);
 
-                final Button show = new Button("Open Window",
-                        event -> {
-                            getUI().addWindow(win);
-                            win.center();
-                            win.focus();
-                            event.getButton().setEnabled(false);
-                        });
+                final Button show = new Button("Open Window", event -> {
+                    getUI().addWindow(win);
+                    win.center();
+                    win.focus();
+                    event.getButton().setEnabled(false);
+                });
                 show.addStyleName(ValoTheme.BUTTON_PRIMARY);
                 addComponent(show);
 

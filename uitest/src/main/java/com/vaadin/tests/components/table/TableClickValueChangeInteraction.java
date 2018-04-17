@@ -61,9 +61,8 @@ public class TableClickValueChangeInteraction extends TestBase {
             });
         }
         if (listenValueChanges) {
-            table.addValueChangeListener(event ->
-                    valueChangeLabel.setValue(
-                    "Value " + event.getProperty().getValue()));
+            table.addValueChangeListener(event -> valueChangeLabel
+                    .setValue("Value " + event.getProperty().getValue()));
         }
 
         Layout result = new VerticalLayout();

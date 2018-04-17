@@ -46,18 +46,19 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
      * Creates a server side drop event.
      *
      * @param target
-     *         Component that received the drop.
+     *            Component that received the drop.
      * @param data
-     *         Map containing all types and corresponding data from the {@code
+     *            Map containing all types and corresponding data from the
+     *            {@code
      *         DataTransfer} object.
      * @param dropEffect
-     *         the desired drop effect
+     *            the desired drop effect
      * @param dragSourceExtension
-     *         Drag source extension of the component that initiated the drop
-     *         event.
+     *            Drag source extension of the component that initiated the drop
+     *            event.
      * @param mouseEventDetails
-     *         Mouse event details object containing information about the drop
-     *         event
+     *            Mouse event details object containing information about the
+     *            drop event
      */
     public DropEvent(T target, Map<String, String> data, DropEffect dropEffect,
             DragSourceExtension<? extends AbstractComponent> dragSourceExtension,
@@ -76,7 +77,7 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
      * Get data from the {@code DataTransfer} object.
      *
      * @param type
-     *         Data format, e.g. {@code text/plain} or {@code text/uri-list}.
+     *            Data format, e.g. {@code text/plain} or {@code text/uri-list}.
      * @return Optional data for the given format if exists in the {@code
      * DataTransfer}, otherwise {@code Optional.empty()}.
      */
@@ -175,7 +176,7 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
      * Gets the mouse event details for the drop event.
      *
      * @return Mouse event details object containing information about the drop
-     * event.
+     *         event.
      */
     public MouseEventDetails getMouseEventDetails() {
         return mouseEventDetails;

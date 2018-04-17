@@ -26,9 +26,8 @@ public class DateFieldShortcut extends AbstractTestUI {
                 new ShortcutListener("Enter", KeyCode.ENTER, null) {
                     @Override
                     public void handleAction(Object sender, Object target) {
-                        Notification.show(dateField.getValue()
-                                .format(DateTimeFormatter
-                                        .ofPattern(dateFormat)));
+                        Notification.show(dateField.getValue().format(
+                                DateTimeFormatter.ofPattern(dateFormat)));
                     }
                 });
 

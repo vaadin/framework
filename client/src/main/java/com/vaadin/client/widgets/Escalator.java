@@ -1147,8 +1147,8 @@ public class Escalator extends Widget
      * The following WAI-ARIA attributes are added through this class:
      *
      * <ul>
-     *     <li>aria-rowcount (since 8.2)</li>
-     *     <li>roles provided by {@link AriaGridRole} (since 8.2)</li>
+     * <li>aria-rowcount (since 8.2)</li>
+     * <li>roles provided by {@link AriaGridRole} (since 8.2)</li>
      * </ul>
      *
      * @since 8.2
@@ -1210,8 +1210,10 @@ public class Escalator extends Widget
         /**
          * Sets the {@code role} attribute to the given element.
          *
-         * @param element     element that should get the role attribute
-         * @param role        role to be added
+         * @param element
+         *            element that should get the role attribute
+         * @param role
+         *            role to be added
          *
          * @since 8.2
          */
@@ -1297,8 +1299,8 @@ public class Escalator extends Widget
         /**
          * Gets the role attribute of an element to represent a cell in a row.
          * <p>
-         * Usually {@link AriaGridRole#GRIDCELL} except for a cell in
-         * the header.
+         * Usually {@link AriaGridRole#GRIDCELL} except for a cell in the
+         * header.
          *
          * @return the role attribute for the element to represent cells
          *
@@ -1311,8 +1313,7 @@ public class Escalator extends Widget
         /**
          * Gets the role attribute of an element to represent a row in a grid.
          * <p>
-         * Usually {@link AriaGridRole#ROW} except for a row in
-         * the header.
+         * Usually {@link AriaGridRole#ROW} except for a row in the header.
          *
          * @return the role attribute for the element to represent rows
          *

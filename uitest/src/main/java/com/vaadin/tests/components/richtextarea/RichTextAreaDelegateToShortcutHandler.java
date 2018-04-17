@@ -7,7 +7,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.VerticalLayout;
 
-public class RichTextAreaDelegateToShortcutHandler extends AbstractTestUIWithLog {
+public class RichTextAreaDelegateToShortcutHandler
+        extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -17,7 +18,8 @@ public class RichTextAreaDelegateToShortcutHandler extends AbstractTestUIWithLog
 
         Button button = new Button("Click Me");
         button.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-        button.addClickListener(e -> log("ShortcutHandler invoked " + name.getValue()));
+        button.addClickListener(
+                e -> log("ShortcutHandler invoked " + name.getValue()));
 
         layout.addComponents(name, button);
         addComponent(layout);

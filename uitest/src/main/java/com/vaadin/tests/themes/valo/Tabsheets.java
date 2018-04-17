@@ -121,7 +121,8 @@ public class Tabsheets extends VerticalLayout implements View {
 
         for (int i = 1; i <= (scrolling ? 10 : 3); i++) {
             String tabcaption = caption
-                    ? sg.nextString(true) + " " + sg.nextString(false) : null;
+                    ? sg.nextString(true) + " " + sg.nextString(false)
+                    : null;
 
             VerticalLayout content = new VerticalLayout();
             content.addComponent(new Label("Content for tab " + i));

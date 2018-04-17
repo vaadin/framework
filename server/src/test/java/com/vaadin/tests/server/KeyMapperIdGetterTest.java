@@ -3,9 +3,11 @@ package com.vaadin.tests.server;
 import com.vaadin.server.KeyMapper;
 
 /**
- * The test checks the same functionality as {@link KeyMapperTest} does, but uses custom {@code identifierGetter}
- * instead of default trivial one. {@code BrokenBean} intentionally has broken {@code hashCode} and {@code equals}, and the test should pass
- * despite of that, because {@code BrokenBean.getId()} is used for bean identification.
+ * The test checks the same functionality as {@link KeyMapperTest} does, but
+ * uses custom {@code identifierGetter} instead of default trivial one.
+ * {@code BrokenBean} intentionally has broken {@code hashCode} and
+ * {@code equals}, and the test should pass despite of that, because
+ * {@code BrokenBean.getId()} is used for bean identification.
  */
 public class KeyMapperIdGetterTest extends KeyMapperTest {
 

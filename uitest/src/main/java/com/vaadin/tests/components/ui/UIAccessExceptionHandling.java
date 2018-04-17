@@ -22,8 +22,8 @@ public class UIAccessExceptionHandling extends AbstractTestUIWithLog
     protected void setup(VaadinRequest request) {
         getSession().setErrorHandler(this);
 
-        addComponent(new Button("Throw RuntimeException on UI.access",
-                event -> {
+        addComponent(
+                new Button("Throw RuntimeException on UI.access", event -> {
                     log.clear();
 
                     // Ensure beforeClientResponse is invoked
@@ -48,29 +48,27 @@ public class UIAccessExceptionHandling extends AbstractTestUIWithLog
                     });
                 }));
 
-        addComponent(
-                new Button("Throw RuntimeException after removing instances",
-                        event -> {
-                            log.clear();
+        addComponent(new Button(
+                "Throw RuntimeException after removing instances", event -> {
+                    log.clear();
 
-                            // Ensure beforeClientResponse is invoked
-                            markAsDirty();
+                    // Ensure beforeClientResponse is invoked
+                    markAsDirty();
 
-                            assert UI
-                                    .getCurrent() == UIAccessExceptionHandling.this;
+                    assert UI.getCurrent() == UIAccessExceptionHandling.this;
 
-                            Map<Class<?>, CurrentInstance> instances = CurrentInstance
-                                    .getInstances();
-                            CurrentInstance.clearAll();
+                    Map<Class<?>, CurrentInstance> instances = CurrentInstance
+                            .getInstances();
+                    CurrentInstance.clearAll();
 
-                            assert UI.getCurrent() == null;
+                    assert UI.getCurrent() == null;
 
-                            future = access(() -> {
-                                throw new RuntimeException();
-                            });
+                    future = access(() -> {
+                        throw new RuntimeException();
+                    });
 
-                            CurrentInstance.restoreInstances(instances);
-                        }));
+                    CurrentInstance.restoreInstances(instances);
+                }));
 
         addComponent(new Button("Clear", event -> log.clear()));
     }

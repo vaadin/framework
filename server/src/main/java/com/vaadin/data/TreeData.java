@@ -357,11 +357,11 @@ public class TreeData<T> implements Serializable {
      * Get the parent item for the given item.
      *
      * @param item
-     *         the item for which to retrieve the parent item for
+     *            the item for which to retrieve the parent item for
      * @return parent item for the given item or {@code null} if the item is a
      *         root item.
      * @throws IllegalArgumentException
-     *         if the item does not exist in this structure
+     *             if the item does not exist in this structure
      * @since 8.1.1
      */
     public T getParent(T item) {
@@ -375,14 +375,14 @@ public class TreeData<T> implements Serializable {
     /**
      * Moves an item to become a child of the given parent item. The new parent
      * item must exist in the hierarchy. Setting the parent to {@code null}
-     * makes the item a root item. After making changes to the tree data, {@link
-     * TreeDataProvider#refreshAll()} should be called.
+     * makes the item a root item. After making changes to the tree data,
+     * {@link TreeDataProvider#refreshAll()} should be called.
      *
      * @param item
-     *         the item to be set as the child of {@code parent}
+     *            the item to be set as the child of {@code parent}
      * @param parent
-     *         the item to be set as parent or {@code null} to set the item as
-     *         root
+     *            the item to be set as parent or {@code null} to set the item
+     *            as root
      * @since 8.1
      */
     public void setParent(T item, T parent) {
@@ -422,9 +422,9 @@ public class TreeData<T> implements Serializable {
      * {@link TreeDataProvider#refreshAll()} should be called.
      *
      * @param item
-     *         the item to be moved
+     *            the item to be moved
      * @param sibling
-     *         the item after which the moved item will be located, or {@code
+     *            the item after which the moved item will be located, or {@code
      *         null} to move item to first position
      * @since 8.1
      */

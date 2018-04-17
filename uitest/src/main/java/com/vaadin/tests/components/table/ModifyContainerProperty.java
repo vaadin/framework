@@ -26,20 +26,19 @@ public class ModifyContainerProperty extends TestBase {
         table.setContainerDataSource(ic);
         addComponent(new Button("Remove container property",
                 event -> ic.removeContainerProperty("one")));
-        addComponent(new Button("Add container property",
-                event -> {
-                    boolean added = ic.addContainerProperty("three",
-                            String.class, "three");
-                    if (added) {
-                        Object[] current = table.getVisibleColumns();
-                        Object[] vis = new Object[current.length + 1];
-                        for (int i = 0; i < current.length; i++) {
-                            vis[i] = current[i];
-                        }
-                        vis[current.length] = "three";
-                        table.setVisibleColumns(vis);
-                    }
-                }));
+        addComponent(new Button("Add container property", event -> {
+            boolean added = ic.addContainerProperty("three", String.class,
+                    "three");
+            if (added) {
+                Object[] current = table.getVisibleColumns();
+                Object[] vis = new Object[current.length + 1];
+                for (int i = 0; i < current.length; i++) {
+                    vis[i] = current[i];
+                }
+                vis[current.length] = "three";
+                table.setVisibleColumns(vis);
+            }
+        }));
     }
 
     @Override

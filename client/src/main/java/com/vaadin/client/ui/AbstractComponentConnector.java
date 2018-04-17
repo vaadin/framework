@@ -185,9 +185,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             }
 
             /*
-             * we need to build mouseEventDetails eagerly - the event won't
-             * be guaranteed to be around when the timer executes. At least
-             * this was the case with iOS devices.
+             * we need to build mouseEventDetails eagerly - the event won't be
+             * guaranteed to be around when the timer executes. At least this
+             * was the case with iOS devices.
              */
 
             final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder

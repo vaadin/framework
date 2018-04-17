@@ -109,17 +109,17 @@ public class GridDescriptionGeneratorTest extends GridBasicFeaturesTest {
     }
 
     private void assertPreTooltipShown() {
-        assertTrue("Tooltip should contain <b> as text", getTooltipText()
-                .contains("<b>"));
-        assertTrue("Tooltip should contain a newline", getTooltipText()
-                .contains("\n"));
+        assertTrue("Tooltip should contain <b> as text",
+                getTooltipText().contains("<b>"));
+        assertTrue("Tooltip should contain a newline",
+                getTooltipText().contains("\n"));
     }
 
     private void assertPlainTooltipShown() {
-        assertTrue("Tooltip should contain <b> as text", getTooltipText()
-                .contains("<b>"));
-        assertFalse("Tooltip should not contain a newline", getTooltipText()
-                .contains("\n"));
+        assertTrue("Tooltip should contain <b> as text",
+                getTooltipText().contains("<b>"));
+        assertFalse("Tooltip should not contain a newline",
+                getTooltipText().contains("\n"));
     }
 
     private void assertHtmlTooltipShown() {
@@ -132,7 +132,8 @@ public class GridDescriptionGeneratorTest extends GridBasicFeaturesTest {
     }
 
     private void selectCellGenerator(String name) {
-        selectMenuPath("Component", "State", "Cell description generator", name);
+        selectMenuPath("Component", "State", "Cell description generator",
+                name);
     }
 
     private void selectRowGenerator(String name) {

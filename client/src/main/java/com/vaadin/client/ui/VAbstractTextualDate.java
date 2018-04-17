@@ -275,7 +275,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      *
      * @since 8.2
      * @deprecated Use {@link #updateBufferedResolutions()} and
-     * {@link #sendBufferedValues()} instead.
+     *             {@link #sendBufferedValues()} instead.
      */
     @Deprecated
     protected final void updateAndSendBufferedValues() {

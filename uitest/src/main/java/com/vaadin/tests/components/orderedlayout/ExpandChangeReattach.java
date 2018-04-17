@@ -16,14 +16,13 @@ public class ExpandChangeReattach extends AbstractReindeerTestUI {
 
         Table table = new Table("Table", TestUtils.getISO3166Container());
         verticalLayout.addComponent(table);
-        verticalLayout.addComponent(
-                new Button("Toggle expand logic", event -> {
-                    if (verticalLayout.getHeight() == -1) {
-                        verticalLayout.setHeight("900px");
-                    } else {
-                        verticalLayout.setHeight(null);
-                    }
-                }));
+        verticalLayout.addComponent(new Button("Toggle expand logic", event -> {
+            if (verticalLayout.getHeight() == -1) {
+                verticalLayout.setHeight("900px");
+            } else {
+                verticalLayout.setHeight(null);
+            }
+        }));
 
         addComponent(verticalLayout);
     }

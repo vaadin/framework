@@ -25,9 +25,9 @@ import com.vaadin.event.SerializableEventListener;
  * handling.
  * <p>
  * The default handler will show
- * {@link com.vaadin.ui.AbstractComponent#setComponentError(com.vaadin.server.ErrorMessage) an
- * error message} for failed field validations. For bean level validation errors
- * it will display the first error message in
+ * {@link com.vaadin.ui.AbstractComponent#setComponentError(com.vaadin.server.ErrorMessage)
+ * an error message} for failed field validations. For bean level validation
+ * errors it will display the first error message in
  * {@link Binder#setStatusLabel(com.vaadin.ui.Label) status label}, if one has
  * been set.
  *

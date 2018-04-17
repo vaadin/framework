@@ -35,22 +35,23 @@ import com.vaadin.data.HasValue;
  * <p>
  * In following usage example, the text field would be bound to property "foo"
  * in the Entity class.
+ * 
  * <pre>
-    class Editor extends FormLayout {
-        &#64;PropertyId("foo")
-        TextField myField = new TextField();
-    }
-
-    class Entity {
-        String foo;
-    }
-
-    {
-        Editor editor = new Editor();
-        Binder&lt;Entity&gt; binder = new Binder(Entity.class);
-        binder.bindInstanceFields(editor);
-    }
-   </pre>
+ * class Editor extends FormLayout {
+ *     &#64;PropertyId("foo")
+ *     TextField myField = new TextField();
+ * }
+ * 
+ * class Entity {
+ *     String foo;
+ * }
+ * 
+ * {
+ *     Editor editor = new Editor();
+ *     Binder&lt;Entity&gt; binder = new Binder(Entity.class);
+ *     binder.bindInstanceFields(editor);
+ * }
+ * </pre>
  *
  * @since 8.0
  * @author Vaadin Ltd

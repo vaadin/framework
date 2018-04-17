@@ -31,9 +31,8 @@ public class AbstractSingleSelection extends AbstractTestUI {
 
         addComponent(componentSelect);
         addComponent(component); // This will be replaced in createComponent
-        addComponent(
-                new Button("Deselect",
-                        event -> component.setSelectedItem(null)));
+        addComponent(new Button("Deselect",
+                event -> component.setSelectedItem(null)));
         addComponent(new Button("Select Bar",
                 event -> component.setSelectedItem("Bar")));
         addComponent(new Button("Refresh",

@@ -66,16 +66,15 @@ public class IndexedContainerFilteringTest extends TestBase {
 
         // addItemAt(idx), addItemAfter(selection), addItem()
 
-        final Button addItemButton = new Button("addItem()",
-                event -> {
-                    Item item = container.addItem("addItem() " + nextToAdd);
-                    if (item != null) {
-                        item.getItemProperty("column1")
-                                .setValue("addItem() " + nextToAdd);
-                    }
-                    nextToAdd++;
-                    nextLabel.setCaption("Next id: " + nextToAdd);
-                });
+        final Button addItemButton = new Button("addItem()", event -> {
+            Item item = container.addItem("addItem() " + nextToAdd);
+            if (item != null) {
+                item.getItemProperty("column1")
+                        .setValue("addItem() " + nextToAdd);
+            }
+            nextToAdd++;
+            nextLabel.setCaption("Next id: " + nextToAdd);
+        });
         vl.addComponent(addItemButton);
 
         final Button addItemAfterButton = new Button("addItemAfter()",
@@ -101,21 +100,20 @@ public class IndexedContainerFilteringTest extends TestBase {
         position = new TextField("Position:", "0");
         vl.addComponent(position);
 
-        final Button addItemAtButton = new Button("addItemAt()",
-                event -> {
-                    int index = Integer.parseInt(position.getValue());
-                    String id = "addItemAt() " + nextToAdd;
-                    Item item = container.addItemAt(index, id);
-                    if (item != null) {
-                        item.getItemProperty("column1").setValue(id);
-                        table.setValue(id);
-                    } else {
-                        getMainWindow().showNotification("Adding item at index "
-                                + position.getValue() + " failed");
-                    }
-                    nextToAdd++;
-                    nextLabel.setCaption("Next id: " + nextToAdd);
-                });
+        final Button addItemAtButton = new Button("addItemAt()", event -> {
+            int index = Integer.parseInt(position.getValue());
+            String id = "addItemAt() " + nextToAdd;
+            Item item = container.addItemAt(index, id);
+            if (item != null) {
+                item.getItemProperty("column1").setValue(id);
+                table.setValue(id);
+            } else {
+                getMainWindow().showNotification("Adding item at index "
+                        + position.getValue() + " failed");
+            }
+            nextToAdd++;
+            nextLabel.setCaption("Next id: " + nextToAdd);
+        });
         vl.addComponent(addItemAtButton);
 
         getLayout().addComponent(table);

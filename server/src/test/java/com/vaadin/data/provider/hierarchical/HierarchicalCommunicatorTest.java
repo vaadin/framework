@@ -69,7 +69,7 @@ public class HierarchicalCommunicatorTest {
         communicator.pushData(1, Arrays.asList(ROOT, FOLDER, LEAF));
         communicator.expand(ROOT);
         communicator.expand(FOLDER);
-        //Put the item into client queue
+        // Put the item into client queue
         communicator.refresh(item);
         treeData.removeItem(item);
         if (refreshAll) {
@@ -83,11 +83,11 @@ public class HierarchicalCommunicatorTest {
     @Test
     public void testReplaceAll() {
         communicator.pushData(1, Arrays.asList(ROOT, FOLDER, LEAF));
-        //Some modifications
+        // Some modifications
         communicator.expand(ROOT);
         communicator.expand(FOLDER);
         communicator.refresh(LEAF);
-        //Replace dataprovider
+        // Replace dataprovider
         communicator.setDataProvider(new TreeDataProvider<>(new TreeData<>()),
                 null);
         dataProvider.refreshAll();

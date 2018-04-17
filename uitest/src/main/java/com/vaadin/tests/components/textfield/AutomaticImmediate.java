@@ -75,9 +75,8 @@ public class AutomaticImmediate extends AbstractTestUIWithLog {
                 event -> textField.setImmediate(false));
         b.setId(EXPLICIT_FALSE);
 
-        Button b2 = new Button("Hit server, causes server roundtrip",
-                event -> {
-                });
+        Button b2 = new Button("Hit server, causes server roundtrip", event -> {
+        });
         b2.setId(BUTTON);
 
         addComponent(textField);

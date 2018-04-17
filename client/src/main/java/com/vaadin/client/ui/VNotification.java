@@ -480,8 +480,8 @@ public class VNotification extends VOverlay {
      * @param description
      *            The Notification description, can be {@code null}.
      * @param htmlContentAllowed
-     *            Whether {@code caption} and {@code description}
-     *            are interpreted as HTML or not.
+     *            Whether {@code caption} and {@code description} are
+     *            interpreted as HTML or not.
      * @param iconUri
      *            The icon URI, can be {@code null}.
      * @param styleName

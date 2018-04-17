@@ -40,11 +40,10 @@ public class TreeV8ContextClick extends
     @Override
     protected HorizontalLayout createContextClickControls() {
         HorizontalLayout controls = super.createContextClickControls();
-        controls.addComponent(
-                new Button("Remove all content", event -> {
-                    testComponent.setItems(Collections.emptyList());
-                    testComponent.setHeight("200px");
-                }));
+        controls.addComponent(new Button("Remove all content", event -> {
+            testComponent.setItems(Collections.emptyList());
+            testComponent.setHeight("200px");
+        }));
         return controls;
     }
 

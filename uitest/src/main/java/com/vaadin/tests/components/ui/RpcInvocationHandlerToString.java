@@ -12,12 +12,10 @@ public class RpcInvocationHandlerToString extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
         addButton("Exec toString() for an invocation proxy",
                 event -> log("An invoation proxy: " + dummyProxy));
-        addButton("Exec hashCode() for an invocation proxy",
-                event -> log("Invocation proxy.hashCode(): "
-                        + dummyProxy.hashCode()));
-        addButton("Exec equals(false) for an invocation proxy",
-                event -> log("Invocation proxy.equals(false): "
-                        + dummyProxy.equals(false)));
+        addButton("Exec hashCode() for an invocation proxy", event -> log(
+                "Invocation proxy.hashCode(): " + dummyProxy.hashCode()));
+        addButton("Exec equals(false) for an invocation proxy", event -> log(
+                "Invocation proxy.equals(false): " + dummyProxy.equals(false)));
     }
 
     @Override

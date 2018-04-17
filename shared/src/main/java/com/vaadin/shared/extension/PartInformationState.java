@@ -20,7 +20,7 @@ import com.vaadin.shared.communication.SharedState;
 /**
  * Shared state for {@code AbstractEventTriggerExtensionConnector} extension.
  *
- *  @since
+ * @since
  */
 public class PartInformationState extends SharedState {
 

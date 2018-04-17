@@ -79,7 +79,7 @@ public class Payload implements Serializable {
      * Sets the key of this payload.
      *
      * @param key
-     *         key that identifies the payload
+     *            key that identifies the payload
      */
     public void setKey(String key) {
         this.key = key;
@@ -98,7 +98,7 @@ public class Payload implements Serializable {
      * Sets the value of this payload.
      *
      * @param value
-     *         value of the payload
+     *            value of the payload
      */
     public void setValue(String value) {
         this.value = value;
@@ -117,7 +117,7 @@ public class Payload implements Serializable {
      * Sets the value type of this payload.
      *
      * @param valueType
-     *         type of the payload value
+     *            type of the payload value
      */
     public void setValueType(ValueType valueType) {
         this.valueType = valueType;

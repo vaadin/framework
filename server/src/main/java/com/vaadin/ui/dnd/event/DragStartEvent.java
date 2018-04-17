@@ -24,7 +24,7 @@ import com.vaadin.ui.dnd.DragSourceExtension;
  * HTML5 drag start event.
  *
  * @param <T>
- *         Type of the component that is dragged.
+ *            Type of the component that is dragged.
  * @author Vaadin Ltd
  * @see DragSourceExtension#addDragStartListener(DragStartListener)
  * @since 8.1
@@ -37,9 +37,10 @@ public class DragStartEvent<T extends AbstractComponent>
      * Creates a drag start event.
      *
      * @param source
-     *         Component that is dragged.
+     *            Component that is dragged.
      * @param effectAllowed
-     *         Allowed effects from {@code DataTransfer.effectAllowed} object.
+     *            Allowed effects from {@code DataTransfer.effectAllowed}
+     *            object.
      */
     public DragStartEvent(T source, EffectAllowed effectAllowed) {
         super(source);

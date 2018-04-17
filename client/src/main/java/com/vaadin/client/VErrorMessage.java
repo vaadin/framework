@@ -64,7 +64,7 @@ public class VErrorMessage extends FlowPanel {
      * all previous style names.
      *
      * @param errorLevel
-     *         error level
+     *            error level
      * @since 8.2
      */
     public void updateErrorLevel(ErrorLevel errorLevel) {
