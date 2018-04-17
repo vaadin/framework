@@ -842,6 +842,10 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
             Resource icon = getItemIconGenerator().apply(value);
             if (icon != null) {
                 if (icon instanceof ConnectorResource) {
+                    if (!isAttached()) {
+                        // Deferred resource generation.
+                        return;
+                    }
                     setResource("selected", icon);
                 }
                 selectedItemIcon = ResourceReference
@@ -849,6 +853,13 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
             }
         }
         getState().selectedItemIcon = selectedItemIcon;
+    }
+
+    @Override
+    public void attach() {
+        super.attach();
+
+        updateSelectedItemIcon();
     }
 
     @Override
