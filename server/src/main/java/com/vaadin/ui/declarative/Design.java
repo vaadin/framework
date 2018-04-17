@@ -495,8 +495,8 @@ public class Design implements Serializable {
             designContext.addComponentCreationListener(creationListener);
 
             // create subtree
-            if (componentRoot instanceof CustomComponent
-                    || componentRoot instanceof Composite) {
+
+            if (ComponentRootSetter.canSetRoot(componentRoot)) {
                 Component rootComponent = designContext.readDesign(element);
                 ComponentRootSetter.setRoot(componentRoot, rootComponent);
             } else {
