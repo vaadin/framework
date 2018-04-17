@@ -245,9 +245,8 @@ public class VPopupView extends HTML
             // directly attached to the RootPanel.
             addDomHandler(event -> {
                 if (shortcutActionHandler != null) {
-                    shortcutActionHandler
-                            .handleKeyboardEvent(
-                                    Event.as(event.getNativeEvent()));
+                    shortcutActionHandler.handleKeyboardEvent(
+                            Event.as(event.getNativeEvent()));
                 }
             }, KeyDownEvent.getType());
         }

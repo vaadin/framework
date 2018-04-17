@@ -9,7 +9,6 @@ import com.vaadin.server.KeyMapper;
  */
 public class KeyMapperIdGetterTest extends KeyMapperTest {
 
-
     private static class BrokenBean {
         private final Object id = new Object();
 

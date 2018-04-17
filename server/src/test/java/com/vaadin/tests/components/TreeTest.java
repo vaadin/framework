@@ -88,9 +88,9 @@ public class TreeTest {
         tree.setDescription(TEST_DESCRIPTION);
         tree.setIcon(new ThemeResource(TEST_RESOURCE_ID));
 
-        assertEquals(TEST_CAPTION,tree.getCaption());
-        assertEquals(TEST_DESCRIPTION,tree.getDescription());
-        assertEquals(TEST_RESOURCE_ID,tree.getIcon().toString());
+        assertEquals(TEST_CAPTION, tree.getCaption());
+        assertEquals(TEST_DESCRIPTION, tree.getDescription());
+        assertEquals(TEST_RESOURCE_ID, tree.getIcon().toString());
 
         assertFalse(tree.isCaptionAsHtml());
         tree.setCaptionAsHtml(true);

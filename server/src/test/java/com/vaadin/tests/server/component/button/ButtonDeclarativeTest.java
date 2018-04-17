@@ -70,8 +70,7 @@ public class ButtonDeclarativeTest extends DeclarativeTestBase<Button> {
         designPlainText = designPlainText.replace("vaadin-button",
                 "vaadin-native-button");
         Button nativeButton = read(designPlainText);
-        assertEquals(expectedCaptionPlainText,
-                nativeButton.getCaption());
+        assertEquals(expectedCaptionPlainText, nativeButton.getCaption());
 
         String designHtml = "<vaadin-button>&gt; One</vaadin-button>";
         String expectedCaptionHtml = "&gt; One";

@@ -326,8 +326,8 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
         DataProvider<T, ?> dataProvider = internalGetDataProvider();
         addedItems.removeIf(item -> {
             Object addedId = dataProvider.getId(item);
-            return removedItems.stream().map(dataProvider::getId)
-                    .anyMatch(addedId::equals)? removedItems.remove(item):false;
+            return removedItems.stream().map(dataProvider::getId).anyMatch(
+                    addedId::equals) ? removedItems.remove(item) : false;
         });
 
         if (isAllSelected(addedItems) && isNoneSelected(removedItems)) {

@@ -31,8 +31,7 @@ public final class JavaScriptComponentConnector extends
     private final JavaScriptConnectorHelper helper = new JavaScriptConnectorHelper(
             this) {
         @Override
-        protected void showInitProblem(
-                List<String> attemptedNames) {
+        protected void showInitProblem(List<String> attemptedNames) {
             getWidget().showNoInitFound(attemptedNames);
         }
     };

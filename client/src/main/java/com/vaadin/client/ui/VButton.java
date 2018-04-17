@@ -435,28 +435,28 @@ public class VButton extends FocusWidget
     private static native int getHorizontalBorderAndPaddingWidth(Element elem)
     /*-{
         // THIS METHOD IS ONLY USED FOR INTERNET EXPLORER, IT DOESN'T WORK WITH OTHERS
-
+    
         var convertToPixel = function(elem, value) {
             // From the awesome hack by Dean Edwards
             // http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
-
+    
             // Remember the original values
             var left = elem.style.left, rsLeft = elem.runtimeStyle.left;
-
+    
             // Put in the new values to get a computed value out
             elem.runtimeStyle.left = elem.currentStyle.left;
             elem.style.left = value || 0;
             var ret = elem.style.pixelLeft;
-
+    
             // Revert the changed values
             elem.style.left = left;
             elem.runtimeStyle.left = rsLeft;
-
+    
             return ret;
         }
-
+    
          var ret = 0;
-
+    
         var sides = ["Right","Left"];
         for (var i=0; i<2; i++) {
             var side = sides[i];
@@ -470,7 +470,7 @@ public class VButton extends FocusWidget
                     ret += parseInt(value.substr(0, value.length-2));
                 }
             }
-
+    
             // Padding -------------------------------------------------------
             value = elem.currentStyle["padding"+side];
             if ( !/^\d+(px)?$/i.test( value ) && /^\d/.test( value ) ) {
@@ -479,7 +479,7 @@ public class VButton extends FocusWidget
                 ret += parseInt(value.substr(0, value.length-2));
             }
         }
-
+    
         return ret;
     }-*/;
 

@@ -158,8 +158,8 @@ public class NativeSelectConnector
         if (widgetEnabled) {
             getWidget().getListBox().getElement().removeAttribute("disabled");
         } else {
-            getWidget().getListBox().getElement()
-                    .setAttribute("disabled", "disabled");
+            getWidget().getListBox().getElement().setAttribute("disabled",
+                    "disabled");
         }
     }
 }

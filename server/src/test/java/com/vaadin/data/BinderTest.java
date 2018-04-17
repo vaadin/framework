@@ -530,7 +530,8 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         textField.setValue("        ");
         ErrorMessage errorMessage = textField.getErrorMessage();
         assertNotNull(errorMessage);
-        assertEquals("Input&#32;is&#32;required&#46;", errorMessage.getFormattedHtmlMessage());
+        assertEquals("Input&#32;is&#32;required&#46;",
+                errorMessage.getFormattedHtmlMessage());
         // validation is done for all changed bindings once.
         assertEquals(1, invokes.get());
 
@@ -547,7 +548,8 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         Converter<String, String> stringBasicPreProcessingConverter = new Converter<String, String>() {
             @Override
-            public Result<String> convertToModel(String value, ValueContext context) {
+            public Result<String> convertToModel(String value,
+                    ValueContext context) {
                 if (StringUtils.isBlank(value)) {
                     return Result.ok(null);
                 }
@@ -555,7 +557,8 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
             }
 
             @Override
-            public String convertToPresentation(String value, ValueContext context) {
+            public String convertToPresentation(String value,
+                    ValueContext context) {
                 if (value == null) {
                     return "";
                 }
@@ -584,7 +587,8 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         textField.setValue("        ");
         ErrorMessage errorMessage = textField.getErrorMessage();
         assertNotNull(errorMessage);
-        assertEquals("Input&#32;required&#46;", errorMessage.getFormattedHtmlMessage());
+        assertEquals("Input&#32;required&#46;",
+                errorMessage.getFormattedHtmlMessage());
         // validation is done for all changed bindings once.
         assertEquals(1, invokes.get());
 

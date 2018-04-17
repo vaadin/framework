@@ -28,8 +28,8 @@ import com.vaadin.client.Util;
 import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.shared.ui.BorderStyle;
 
-public class VLink extends HTML implements ClickHandler, HasEnabled,
-        HasErrorIndicatorElement {
+public class VLink extends HTML
+        implements ClickHandler, HasEnabled, HasErrorIndicatorElement {
 
     public static final String CLASSNAME = "v-link";
 

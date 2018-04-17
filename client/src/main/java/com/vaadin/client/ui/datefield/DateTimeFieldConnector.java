@@ -57,26 +57,25 @@ public class DateTimeFieldConnector extends
         VPopupTimeCalendar widget = getWidget();
         if (widget.getCurrentResolution()
                 .compareTo(DateTimeResolution.DAY) < 0) {
-            widget.calendar
-                    .setTimeChangeListener((hour, min, sec, msec) -> {
-                        Date d = widget.getDate();
-                        if (d == null) {
-                            // date currently null, use the value from
-                            // calendarPanel
-                            // (~ client time at the init of the widget)
-                            d = (Date) widget.calendar.getDate().clone();
-                        }
-                        d.setHours(hour);
-                        d.setMinutes(min);
-                        d.setSeconds(sec);
-                        DateTimeService.setMilliseconds(d, msec);
+            widget.calendar.setTimeChangeListener((hour, min, sec, msec) -> {
+                Date d = widget.getDate();
+                if (d == null) {
+                    // date currently null, use the value from
+                    // calendarPanel
+                    // (~ client time at the init of the widget)
+                    d = (Date) widget.calendar.getDate().clone();
+                }
+                d.setHours(hour);
+                d.setMinutes(min);
+                d.setSeconds(sec);
+                DateTimeService.setMilliseconds(d, msec);
 
-                        // Always update time changes to the server
-                        widget.updateValue(d);
+                // Always update time changes to the server
+                widget.updateValue(d);
 
-                        // Update text field
-                        widget.buildDate();
-                    });
+                // Update text field
+                widget.buildDate();
+            });
         }
     }
 }

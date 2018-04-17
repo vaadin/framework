@@ -101,15 +101,15 @@ public class VHtml5DragEvent extends NativeEvent {
                 }
             }
         }
-
+    
         // Zero sized files without a type are also likely to be folders
         var file = this.dataTransfer.files[fileIndex];
         if (file.size == 0 && !file.type) {
             return false;
         }
-
+    
         // TODO Make it detect folders on all browsers
-
+    
         return true;
     }-*/;
 

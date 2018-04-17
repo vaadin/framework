@@ -451,9 +451,8 @@ public class TreeData<T> implements Serializable {
 
             if (!Objects.equals(parent,
                     itemToWrapperMap.get(sibling).getParent())) {
-                throw new IllegalArgumentException(
-                        "Items '" + item + "' and '" + sibling
-                                + "' don't have the same parent");
+                throw new IllegalArgumentException("Items '" + item + "' and '"
+                        + sibling + "' don't have the same parent");
             }
 
             List<T> children = itemToWrapperMap.get(parent).getChildren();

@@ -31,8 +31,8 @@ import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.button.ButtonServerRpc;
 
-public class VNativeButton extends Button implements ClickHandler,
-        HasErrorIndicatorElement {
+public class VNativeButton extends Button
+        implements ClickHandler, HasErrorIndicatorElement {
 
     public static final String CLASSNAME = "v-nativebutton";
 
@@ -171,8 +171,8 @@ public class VNativeButton extends Button implements ClickHandler,
         if (visible) {
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = ErrorUtil.createErrorIndicatorElement();
-                getElement()
-                        .insertBefore(errorIndicatorElement, captionElement);
+                getElement().insertBefore(errorIndicatorElement,
+                        captionElement);
             }
         } else if (errorIndicatorElement != null) {
             getElement().removeChild(errorIndicatorElement);

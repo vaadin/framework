@@ -294,13 +294,12 @@ public class VNotification extends VOverlay {
             // in some browsers)
             if (getStyleName()
                     .contains(VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
-                AnimationUtil.addAnimationEndListener(getElement(),
-                        event -> {
-                            if (AnimationUtil.getAnimationName(event).contains(
-                                    VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
-                                VNotification.this.hide();
-                            }
-                        });
+                AnimationUtil.addAnimationEndListener(getElement(), event -> {
+                    if (AnimationUtil.getAnimationName(event).contains(
+                            VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                        VNotification.this.hide();
+                    }
+                });
             } else {
                 VNotification.super.hide();
                 fireEvent(new HideEvent(this));
@@ -496,7 +495,8 @@ public class VNotification extends VOverlay {
      */
     public static VNotification showNotification(ApplicationConnection client,
             String caption, String description, boolean htmlContentAllowed,
-            String iconUri, String styleName, Position position, int delayMsec) {
+            String iconUri, String styleName, Position position,
+            int delayMsec) {
         String html = "";
         if (iconUri != null) {
             html += client.getIcon(iconUri).getElement().getString();

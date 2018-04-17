@@ -7,7 +7,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.declarative.Design;
 
 @DesignRoot("DesignWithEmptyAnnotation.html")
-public class CustomComponentDesignRootForVerticalLayout extends CustomComponent {
+public class CustomComponentDesignRootForVerticalLayout
+        extends CustomComponent {
 
     public Button ok;
     public Button cancel;

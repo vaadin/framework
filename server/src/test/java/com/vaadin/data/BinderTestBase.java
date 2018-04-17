@@ -17,7 +17,8 @@ import com.vaadin.ui.TextField;
  *
  * @since 8.0
  */
-public abstract class BinderTestBase<BINDER extends Binder<ITEM>, ITEM> implements Serializable {
+public abstract class BinderTestBase<BINDER extends Binder<ITEM>, ITEM>
+        implements Serializable {
 
     protected static final String NEGATIVE_ERROR_MESSAGE = "Value must be non-negative";
 
@@ -35,13 +36,13 @@ public abstract class BinderTestBase<BINDER extends Binder<ITEM>, ITEM> implemen
     protected Validator<String> notEmpty = Validator.from(val -> !val.isEmpty(),
             EMPTY_ERROR_MESSAGE);
     protected Converter<String, Integer> stringToInteger = Converter.from(
-            Integer::valueOf, String::valueOf,
-            e -> NOT_NUMBER_ERROR_MESSAGE);
+            Integer::valueOf, String::valueOf, e -> NOT_NUMBER_ERROR_MESSAGE);
     protected Validator<Integer> notNegative = Validator.from(x -> x >= 0,
             NEGATIVE_ERROR_MESSAGE);
 
     public static void testSerialization(Object toSerialize) {
-        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new ByteArrayOutputStream())) {
+        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(
+                new ByteArrayOutputStream())) {
             objectOutputStream.writeObject(toSerialize);
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -168,7 +168,8 @@ public abstract class VLayoutSlot {
 
         int captionHeight;
         VCaption caption = getCaption();
-        Style captionStyle = caption == null ? null : caption.getElement().getStyle();
+        Style captionStyle = caption == null ? null
+                : caption.getElement().getStyle();
         if (caption == null || caption.shouldBePlacedAfterComponent()) {
             style.clearPaddingTop();
             captionHeight = 0;

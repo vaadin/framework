@@ -29,8 +29,8 @@ import com.vaadin.ui.dnd.DragSourceExtension;
  * @see DragSourceExtension#addDragStartListener(DragStartListener)
  * @since 8.1
  */
-public class DragStartEvent<T extends AbstractComponent> extends
-        Component.Event {
+public class DragStartEvent<T extends AbstractComponent>
+        extends Component.Event {
     private final EffectAllowed effectAllowed;
 
     /**

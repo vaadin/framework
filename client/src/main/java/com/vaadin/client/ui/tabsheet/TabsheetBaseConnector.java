@@ -59,8 +59,8 @@ public abstract class TabsheetBaseConnector
 
         // Widgets in the TabSheet before update
         List<Widget> oldWidgets = new ArrayList<>();
-        for (Iterator<Widget> iterator = widget
-                .getWidgetIterator(); iterator.hasNext();) {
+        for (Iterator<Widget> iterator = widget.getWidgetIterator(); iterator
+                .hasNext();) {
             oldWidgets.add(iterator.next());
         }
 

@@ -37,6 +37,11 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>com.marvinformatics.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+            </plugin>
+
             <!-- Generated Version.java -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

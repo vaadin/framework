@@ -52,8 +52,7 @@ public class DesignEnumConverter<T extends Enum>
             return Result.ok(null);
         }
         try {
-            T result = (T) Enum.valueOf(type,
-                    value.toUpperCase(Locale.ROOT));
+            T result = (T) Enum.valueOf(type, value.toUpperCase(Locale.ROOT));
             return Result.ok(result);
         } catch (Exception e) {
             return Result.error(e.getMessage());

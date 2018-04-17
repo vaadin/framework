@@ -30,7 +30,8 @@ import com.vaadin.util.ReflectTools;
  * @param <T>
  *            collapsed item type
  */
-public class CollapseEvent<T> extends Component.Event implements HasUserOriginated {
+public class CollapseEvent<T> extends Component.Event
+        implements HasUserOriginated {
 
     private final T collapsedItem;
 

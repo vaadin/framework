@@ -41,8 +41,7 @@ import com.vaadin.ui.Component;
  *
  *
  */
-public class ActionManager
-        implements Action.Handler, Action.Notifier {
+public class ActionManager implements Action.Handler, Action.Notifier {
 
     private static final long serialVersionUID = 1641868163608066491L;
 

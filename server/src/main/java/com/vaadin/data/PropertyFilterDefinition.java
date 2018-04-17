@@ -25,8 +25,7 @@ import java.util.List;
  * @author Vaadin Ltd
  * @since 8.2
  */
-public class PropertyFilterDefinition
-        implements Serializable {
+public class PropertyFilterDefinition implements Serializable {
     private int maxNestingDepth;
     private List<String> ignorePackageNamesStartingWith;
 
@@ -71,7 +70,8 @@ public class PropertyFilterDefinition
      * @return default property filter
      */
     public static PropertyFilterDefinition getDefaultFilter() {
-        return new PropertyFilterDefinition(BeanPropertySet.NestedBeanPropertyDefinition.MAX_PROPERTY_NESTING_DEPTH,
+        return new PropertyFilterDefinition(
+                BeanPropertySet.NestedBeanPropertyDefinition.MAX_PROPERTY_NESTING_DEPTH,
                 Arrays.asList("java"));
     }
 }

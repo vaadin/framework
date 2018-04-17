@@ -58,10 +58,9 @@ public class RpcManager {
                 method.invoke(clientRpc, invocation.getParameters());
             }
         } catch (NoDataException e) {
-            throw new IllegalStateException(
-                    "There is no information about " + method.getSignature()
-                            + ". Did you remember to compile the right widgetset?",
-                    e);
+            throw new IllegalStateException("There is no information about "
+                    + method.getSignature()
+                    + ". Did you remember to compile the right widgetset?", e);
         }
     }
 
@@ -92,10 +91,9 @@ public class RpcManager {
             Type[] parameterTypes = method.getParameterTypes();
             return parameterTypes;
         } catch (NoDataException e) {
-            throw new IllegalStateException(
-                    "There is no information about " + method.getSignature()
-                            + ". Did you remember to compile the right widgetset?",
-                    e);
+            throw new IllegalStateException("There is no information about "
+                    + method.getSignature()
+                    + ". Did you remember to compile the right widgetset?", e);
         }
     }
 

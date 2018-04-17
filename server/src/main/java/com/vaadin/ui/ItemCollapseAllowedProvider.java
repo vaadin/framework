@@ -31,7 +31,8 @@ import com.vaadin.server.SerializablePredicate;
  *            item data type
  */
 @FunctionalInterface
-public interface ItemCollapseAllowedProvider<T> extends SerializablePredicate<T> {
+public interface ItemCollapseAllowedProvider<T>
+        extends SerializablePredicate<T> {
 
     /**
      * Returns whether collapsing is allowed for the given item.

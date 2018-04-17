@@ -236,7 +236,7 @@ public class TreeGridConnector extends GridConnector {
             GridEventHandler<?> eventHandler)
     /*-{
         var browserEventHandlers = grid.@com.vaadin.client.widgets.Grid::browserEventHandlers;
-
+    
         // FocusEventHandler is initially 5th in the list of browser event handlers
         browserEventHandlers.@java.util.List::set(*)(5, eventHandler);
     }-*/;
@@ -421,12 +421,11 @@ public class TreeGridConnector extends GridConnector {
     }
 
     private static boolean isCollapsed(JsonObject rowData) {
-        assert rowData
-                .hasKey(HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION) : "missing hierarchy data for row "
+        assert rowData.hasKey(
+                HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION) : "missing hierarchy data for row "
                         + rowData.asString();
-        return rowData
-                .getObject(
-                        HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION)
+        return rowData.getObject(
+                HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION)
                 .getBoolean(
                         HierarchicalDataCommunicatorConstants.ROW_COLLAPSED);
     }

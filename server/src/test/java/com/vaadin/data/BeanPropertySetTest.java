@@ -36,10 +36,12 @@ public class BeanPropertySetTest {
         PropertySet<Person> deserializedPropertySet = ClassesSerializableTest
                 .serializeAndDeserialize(originalPropertySet);
 
-        comparePropertySet(originalPropertySet, deserializedPropertySet, "Deserialized instance should be the same as the original");
+        comparePropertySet(originalPropertySet, deserializedPropertySet,
+                "Deserialized instance should be the same as the original");
     }
 
-    private void comparePropertySet(PropertySet<?> propertySetA, PropertySet<?> propertySetB, String message) {
+    private void comparePropertySet(PropertySet<?> propertySetA,
+            PropertySet<?> propertySetB, String message) {
 
         PropertyDefinition<?, ?>[] propertiesA = propertySetA.getProperties()
                 .sorted(Comparator.comparing(PropertyDefinition::getName))
@@ -50,8 +52,7 @@ public class BeanPropertySetTest {
 
         assertEquals(message, propertiesA.length, propertiesB.length);
         for (int i = 0; i < propertiesB.length; i++) {
-            assertSame(message,
-                    propertiesA[i], propertiesB[i]);
+            assertSame(message, propertiesA[i], propertiesB[i]);
         }
     }
 
@@ -79,7 +80,9 @@ public class BeanPropertySetTest {
         PropertySet<Person> deserializedPropertySet = (PropertySet<Person>) in
                 .readObject();
 
-        comparePropertySet(BeanPropertySet.get(Person.class), deserializedPropertySet, "Deserialized instance should be the same as in the cache");
+        comparePropertySet(BeanPropertySet.get(Person.class),
+                deserializedPropertySet,
+                "Deserialized instance should be the same as in the cache");
         assertNotSame(
                 "Deserialized instance should not be the same as the original",
                 originalPropertySet, deserializedPropertySet);
@@ -112,9 +115,10 @@ public class BeanPropertySetTest {
             throws Exception {
 
         PropertyDefinition<com.vaadin.tests.data.bean.Person, ?> definition = BeanPropertySet
-                .get(com.vaadin.tests.data.bean.Person.class,true, getDefaultFilter())
-                .getProperty("address.postalCode").orElseThrow(AssertionFailedError::new);
-
+                .get(com.vaadin.tests.data.bean.Person.class, true,
+                        getDefaultFilter())
+                .getProperty("address.postalCode")
+                .orElseThrow(AssertionFailedError::new);
 
         PropertyDefinition<com.vaadin.tests.data.bean.Person, ?> deserializedDefinition = ClassesSerializableTest
                 .serializeAndDeserialize(definition);

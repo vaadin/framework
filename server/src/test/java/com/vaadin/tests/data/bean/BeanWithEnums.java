@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BeanWithEnums implements Serializable{
+public class BeanWithEnums implements Serializable {
     private Set<TestEnum> enums = new HashSet<>();
 
     public Set<TestEnum> getEnums() {

@@ -66,7 +66,7 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
         var m = this;
         var target = $wnd;
         var parts = name.split('.');
-
+    
         for (var i = 0; i < parts.length - 1; i++) {
             var part = parts[i];
             if (target[part] === undefined) {
@@ -74,7 +74,7 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
             }
             target = target[part];
         }
-
+    
         target[parts[parts.length - 1]] = $entry(function() {
             //Must make a copy because arguments is an array-like object (not instanceof Array), causing suboptimal JSON encoding
             var args = Array.prototype.slice.call(arguments, 0);
@@ -89,7 +89,7 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
     /*-{
         var target = $wnd;
         var parts = name.split('.');
-
+    
         for (var i = 0; i < parts.length - 1; i++) {
             var part = parts[i];
             if (target[part] === undefined) {
@@ -99,7 +99,7 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
             }
             target = target[part];
         }
-
+    
         $wnd.console.log('removing',parts[parts.length - 1],'from',target);
         delete target[parts[parts.length - 1]];
     }-*/;

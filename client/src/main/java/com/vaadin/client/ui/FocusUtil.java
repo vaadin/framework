@@ -126,7 +126,8 @@ public class FocusUtil {
         for (int i = 0; i < focusableChildren.length; i++) {
             Element element = focusableChildren[i];
             String classes = element.getAttribute("class");
-            if (classes == null || !classes.toLowerCase().contains("disabled")) {
+            if (classes == null
+                    || !classes.toLowerCase().contains("disabled")) {
                 element.focus();
                 return;
             }

@@ -194,8 +194,7 @@ public interface VaadinResponse extends Serializable {
     public default void setNoCacheHeaders() {
         // no-store to disallow storing even if cache would be revalidated
         // must-revalidate to not use stored value even if someone asks for it
-        setHeader("Cache-Control",
-                "no-cache, no-store, must-revalidate");
+        setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 
         // Also set legacy values in case of old proxies in between
         setHeader("Pragma", "no-cache");

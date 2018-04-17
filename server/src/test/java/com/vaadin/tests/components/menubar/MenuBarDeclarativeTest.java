@@ -63,13 +63,15 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
                 + "<menu descriptioncontentmode=\"TEXT\" description=\"Just plain text\">plain text</menu>"
                 + "</vaadin-menu-bar>";
         MenuBar menuBar = new MenuBar();
-        menuBar.addItem("One", null).setDescription("This description is implicitly preformatted");
-        menuBar.addItem("preformatted", null)
-                .setDescription("This description\nis explicitly\n\npreformatted", ContentMode.PREFORMATTED);
-        menuBar.addItem("HTML", null)
-                .setDescription("<b>I</b> contain <br/> <e>html</e>", ContentMode.HTML);
-        menuBar.addItem("plain text", null)
-                .setDescription("Just plain text", ContentMode.TEXT);
+        menuBar.addItem("One", null)
+                .setDescription("This description is implicitly preformatted");
+        menuBar.addItem("preformatted", null).setDescription(
+                "This description\nis explicitly\n\npreformatted",
+                ContentMode.PREFORMATTED);
+        menuBar.addItem("HTML", null).setDescription(
+                "<b>I</b> contain <br/> <e>html</e>", ContentMode.HTML);
+        menuBar.addItem("plain text", null).setDescription("Just plain text",
+                ContentMode.TEXT);
 
         testWrite(design, menuBar);
         testRead(design, menuBar);
@@ -177,7 +179,8 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
                 actual.getDescription());
         assertEquals(baseError + "Style Name", expected.getStyleName(),
                 actual.getStyleName());
-        assertEquals(baseError + "Content Mode", expected.getDescriptionContentMode(),
+        assertEquals(baseError + "Content Mode",
+                expected.getDescriptionContentMode(),
                 actual.getDescriptionContentMode());
 
         if (expected.getIcon() != null) {
