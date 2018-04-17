@@ -31,7 +31,7 @@ public interface FileDropTargetClientRpc extends ClientRpc {
      * Sends the of upload URLs mapped to the generated file ID.
      *
      * @param urls
-     *         File IDs and URLs for uploading files to the server.
+     *            File IDs and URLs for uploading files to the server.
      */
     void sendUploadUrl(Map<String, String> urls);
 }

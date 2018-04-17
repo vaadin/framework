@@ -115,9 +115,12 @@ public class MethodInvocation implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((connectorId == null) ? 0 : connectorId.hashCode());
-        result = prime * result + ((interfaceName == null) ? 0 : interfaceName.hashCode());
-        result = prime * result + ((methodName == null) ? 0 : methodName.hashCode());
+        result = prime * result
+                + ((connectorId == null) ? 0 : connectorId.hashCode());
+        result = prime * result
+                + ((interfaceName == null) ? 0 : interfaceName.hashCode());
+        result = prime * result
+                + ((methodName == null) ? 0 : methodName.hashCode());
         result = prime * result + Arrays.hashCode(parameters);
         return result;
     }

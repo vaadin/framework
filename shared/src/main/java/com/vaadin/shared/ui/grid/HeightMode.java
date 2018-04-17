@@ -16,10 +16,10 @@
 package com.vaadin.shared.ui.grid;
 
 /**
- * The modes for height calculation that are supported by Grid (
- * client ({@code com.vaadin.client.widgets.Grid}),
- * server ({@code com.vaadin.ui.Grid server}), and
- * Escalator ({@code com.vaadin.client.widgets.Escalator Escalator}).
+ * The modes for height calculation that are supported by Grid ( client
+ * ({@code com.vaadin.client.widgets.Grid}), server
+ * ({@code com.vaadin.ui.Grid server}), and Escalator
+ * ({@code com.vaadin.client.widgets.Escalator Escalator}).
  *
  * @since 7.4
  * @author Vaadin Ltd

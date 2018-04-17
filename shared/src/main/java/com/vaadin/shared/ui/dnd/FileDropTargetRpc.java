@@ -31,7 +31,7 @@ public interface FileDropTargetRpc extends ServerRpc {
      * Called when files are dropped onto the file drop target.
      *
      * @param fileParams
-     *         Generated file IDs and file parameters of dropped files.
+     *            Generated file IDs and file parameters of dropped files.
      */
     public void drop(Map<String, FileParameters> fileParams);
 

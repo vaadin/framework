@@ -298,8 +298,7 @@ public final class Range implements Serializable {
      *
      * @param other
      *            the other range to compare against
-     * @return <code>true</code> if this range ends after the
-     *         <code>other</code>
+     * @return <code>true</code> if this range ends after the <code>other</code>
      */
     public boolean endsAfter(final Range other) {
         return getEnd() > other.getEnd();
