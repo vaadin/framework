@@ -18,8 +18,6 @@ package com.vaadin.ui.components.colorpicker;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.vaadin.data.HasValue;
 import com.vaadin.server.AbstractErrorMessage.ContentMode;
@@ -132,63 +130,32 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
     }
 
     private void valueChange(ValueChangeEvent<String> event) {
+        ErrorMessage errorMessage = null;
         String value = event.getValue();
         Color oldColor = color;
-        if (value != null) {
-            try {
-                value = value.trim();
-                ErrorMessage errorMessage = null;
-                /*
-                 * Description of supported formats see
-                 * http://www.w3schools.com/cssref/css_colors_legal.asp
-                 */
-                if (HEX_PATTERN.matcher(value).matches()) {
-                    Matcher m = HEX_PATTERN.matcher(value);
-                    m.matches();
-                    color = getHexPatternColor(m);
-                } else if (RGB_PATTERN.matcher(value).matches()) {
-                    Matcher m = RGB_PATTERN.matcher(value);
-                    m.matches();
-                    color = getRGBPatternColor(m);
-                } else if (RGBA_PATTERN.matcher(value).matches()) {
-                    Matcher m = RGBA_PATTERN.matcher(value);
-                    m.matches();
-                    color = getRGBPatternColor(m);
-                    int alpha = (int) (Double.parseDouble(m.group("alpha"))
-                            * 255d);
-                    color.setAlpha(alpha);
-                } else if (HSL_PATTERN.matcher(value).matches()) {
-                    Matcher m = HSL_PATTERN.matcher(value);
-                    m.matches();
-                    color = getHSLPatternColor(m);
-                    oldValue = value;
-                } else if (HSLA_PATTERN.matcher(value).matches()) {
-                    Matcher m = HSLA_PATTERN.matcher(value);
-                    m.matches();
-                    color = getHSLPatternColor(m);
-                    int alpha = (int) (Double.parseDouble(m.group("alpha"))
-                            * 255d);
-                    color.setAlpha(alpha);
-                } else {
-                    errorMessage = new UserError(
-                            value + "  does not match any accepted formats",
-                            ContentMode.TEXT, ErrorLevel.WARNING);
-                }
-
-                field.setComponentError(errorMessage);
-                oldValue = value;
-                fireEvent(new ValueChangeEvent<>(this, oldColor,
-                        event.isUserOriginated()));
-            } catch (NumberFormatException e) {
-                // Pattern matching ensures the validity of
-                // the input, this should never happen
-                getLogger().log(Level.WARNING,
-                        "Parsing color from input '" + value + "' failed.");
-                field.setComponentError(new UserError(
-                        "Parsing color from input '" + value + "' failed.",
-                        ContentMode.TEXT, ErrorLevel.ERROR));
+        try {
+            if (value == null) {
+                throw new NumberFormatException("Input cannot be empty");
             }
+            value = value.trim();
+
+            /*
+             * Description of supported formats see
+             * http://www.w3schools.com/cssref/css_colors_legal.asp
+             */
+            color = ColorUtils.stringToColor(value);
+
+            oldValue = value;
+            fireEvent(new ValueChangeEvent<>(this, oldColor,
+                    event.isUserOriginated()));
+        } catch (NumberFormatException e) {
+            // Pattern matching ensures the validity of
+            // the input, this should never happen
+            getLogger().log(Level.INFO, e.getMessage());
+            errorMessage = new UserError(e.getMessage(), ContentMode.TEXT,
+                    ErrorLevel.WARNING);
         }
+        field.setComponentError(errorMessage);
 
     }
 
@@ -233,102 +200,4 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
         }
     }
 
-    private Color getHexPatternColor(Matcher m) {
-        int red = Integer.parseInt(m.group("red"), 16);
-        int green = Integer.parseInt(m.group("green"), 16);
-        int blue = Integer.parseInt(m.group("blue"), 16);
-        return new Color(red, green, blue);
-    }
-
-    private Color getRGBPatternColor(Matcher m) {
-        int red = Integer.parseInt(m.group("red"));
-        int green = Integer.parseInt(m.group("green"));
-        int blue = Integer.parseInt(m.group("blue"));
-        return new Color(red, green, blue);
-    }
-
-    private Color getHSLPatternColor(Matcher m) {
-        int hue = Integer.parseInt(m.group("hue"));
-        int saturation = Integer.parseInt(m.group("saturation"));
-        int light = Integer.parseInt(m.group("light"));
-        int rgb = Color.HSLtoRGB(hue, saturation, light);
-        return new Color(rgb);
-    }
-
-    /**
-     * Case-insensitive {@link Pattern} with regular expression matching the
-     * default hexadecimal color presentation pattern:<br>
-     * '#' followed by six <code>[\da-fA-F]</code> characters.
-     * <p>
-     * Pattern contains named groups <code>red</code>, <code>green</code>, and
-     * <code>blue</code>, which represent the individual values.
-     */
-    protected static final Pattern HEX_PATTERN = Pattern.compile(
-            "(?i)^#\\s*(?<red>[\\da-f]{2})(?<green>[\\da-f]{2})(?<blue>[\\da-f]{2}"
-                    + ")\\s*$");
-    /**
-     * Case-insensitive {@link Pattern} with regular expression matching common
-     * RGB color presentation patterns:<br>
-     * 'rgb' followed by three [0-255] number values. Values can be separated
-     * with either comma or whitespace.
-     * <p>
-     * Pattern contains named groups <code>red</code>, <code>green</code>, and
-     * <code>blue</code>, which represent the individual values.
-     */
-    protected static final Pattern RGB_PATTERN = Pattern.compile(
-            "(?i)^rgb\\(\\s*(?<red>[01]?\\d{1,2}|2[0-4]\\d|25[0-5])(?:\\s*[,+|\\"
-                    + "s+]\\s*)(?<green>[01]?\\d\\d?|2[0-4]\\d|25[0-5])(?:\\s*[,"
-                    + "+|\\s+]\\s*)(?<blue>[01]?\\d\\d?|2[0-4]\\d|25[0-5])\\s*\\"
-                    + ")$");
-    /**
-     * Case-insensitive {@link Pattern} with regular expression matching common
-     * RGBA presentation patterns:<br>
-     * 'rgba' followed by three [0-255] values and one [0.0-1.0] value. Values
-     * can be separated with either comma or whitespace. The only accepted
-     * decimal marker is point ('.').
-     * <p>
-     * Pattern contains named groups <code>red</code>, <code>green</code>,
-     * <code>blue</code>, and <code>alpha</code>, which represent the individual
-     * values.
-     */
-    protected static final Pattern RGBA_PATTERN = Pattern.compile(
-            "(?i)^rgba\\(\\s*(?<red>[01]?\\d{1,2}|2[0-4]\\d|25[0-5])(?:\\s*[,+|"
-                    + "\\s+]\\s*)(?<green>[01]?\\d\\d?|2[0-4]\\d|25[0-5])(?:\\s"
-                    + "*[,+|\\s+]\\s*)(?<blue>[01]?\\d\\d?|2[0-4]\\d|25[0-5])(?"
-                    + ":\\s*[,+|\\s+]\\s*)(?<alpha>0(?:\\.\\d{1,2})?|0?(?:\\.\\"
-                    + "d{1,2})|1(?:\\.0{1,2})?)\\s*\\)$");
-
-    /**
-     * Case-insensitive {@link Pattern} with regular expression matching common
-     * HSL presentation patterns:<br>
-     * 'hsl' followed by one [0-360] value and two [0-100] percentage value.
-     * Values can be separated with either comma or whitespace. The percent sign
-     * ('%') is optional.
-     * <p>
-     * Pattern contains named groups <code>hue</code>,<code>saturation</code>,
-     * and <code>light</code>, which represent the individual values.
-     */
-    protected static final Pattern HSL_PATTERN = Pattern.compile(
-            "(?i)hsl\\(\\s*(?<hue>[12]?\\d{1,2}|3[0-5]\\d|360)(?:\\s*[,+|\\s+]"
-                    + "\\s*)(?<saturation>\\d{1,2}|100)(?:\\s*%?\\s*[,+|\\s+]\\"
-                    + "s*)(?<light>\\d{1,2}|100)(?:\\s*%?\\s*)\\)$");
-
-    /**
-     * Case-insensitive {@link Pattern} with regular expression matching common
-     * HSLA presentation patterns:<br>
-     * 'hsla' followed by one [0-360] value, two [0-100] percentage values, and
-     * one [0.0-1.0] value. Values can be separated with either comma or
-     * whitespace. The percent sign ('%') is optional. The only accepted decimal
-     * marker is point ('.').
-     * <p>
-     * Pattern contains named groups <code>hue</code>,<code>saturation</code>,
-     * <code>light</code>, and <code>alpha</code>, which represent the
-     * individual values.
-     */
-    protected static final Pattern HSLA_PATTERN = Pattern.compile(
-            "(?i)hsla\\(\\s*(?<hue>[12]?\\d{1,2}|3[0-5]\\d|360)(?:\\s*[,+|\\s+"
-                    + "]\\s*)(?<saturation>\\d{1,2}|100)(?:\\s*%?\\s*[,+|\\s+]\\s*"
-                    + ")(?<light>\\d{1,2}|100)(?:\\s*%?[,+|\\s+]\\s*)(?<alpha>"
-                    + "0(?:\\.\\d{1,2})?|0?(?:\\.\\d{1,2})|1(?:\\.0{1,2})?)"
-                    + "\\s*\\)$");
 }
