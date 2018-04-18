@@ -29,15 +29,24 @@ import com.vaadin.shared.ui.colorpicker.Color;
  *
  * @since
  */
-public class ColorUtils {
-    private ColorUtils() {
+public class ColorUtil {
+    private ColorUtil() {
     }
 
     /**
+     * Parses {@link Color} from any of the following {@link String} inputs:
+     * <br>
+     * - RGB hex (e.g. "#FFAA00"), {@link #HEX_PATTERN}<br>
+     * - RGB "function" (e.g. "rgb(128,0,255)"), {@link #RGB_PATTERN}<br>
+     * - RGBA "function" (e.g. "rgba(50,50,50,0.2)"), {@link #RGBA_PATTERN}<br>
+     * - HSL "function" (e.g. "hsl(50,50,50)"), {@link #HSL_PATTERN}<br>
+     * - HSLA "function" (e.g. "hsl(50,50,50,0.2)"), {@link #HSLA_PATTERN}
+     * <p>
+     * Parsing is case-insensitive.
      *
      * @param input
      *            String input
-     * @return Color parsed from input
+     * @return {@link Color} parsed from input
      * @throws NumberFormatException
      *             Input does not match any recognized pattern
      */

@@ -143,7 +143,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
              * Description of supported formats see
              * http://www.w3schools.com/cssref/css_colors_legal.asp
              */
-            color = ColorUtils.stringToColor(value);
+            color = ColorUtil.stringToColor(value);
 
             oldValue = value;
             fireEvent(new ValueChangeEvent<>(this, oldColor,

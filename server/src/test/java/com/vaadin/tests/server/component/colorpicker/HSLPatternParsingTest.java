@@ -14,7 +14,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.vaadin.shared.ui.colorpicker.Color;
-import com.vaadin.ui.components.colorpicker.ColorUtils;
+import com.vaadin.ui.components.colorpicker.ColorUtil;
 
 @RunWith(value = Parameterized.class)
 public class HSLPatternParsingTest {
@@ -61,11 +61,11 @@ public class HSLPatternParsingTest {
 
     @Test
     public void testHSLData() {
-        Matcher m = ColorUtils.HSL_PATTERN.matcher(input);
+        Matcher m = ColorUtil.HSL_PATTERN.matcher(input);
         boolean matches = m.matches();
         if (expectedMatches) {
             Color c = new Color(expectedRGB);
-            Color c1 = ColorUtils.getHSLPatternColor(m);
+            Color c1 = ColorUtil.getHSLPatternColor(m);
             assertTrue(c.equals(c1));
         } else {
             assertTrue(!matches);

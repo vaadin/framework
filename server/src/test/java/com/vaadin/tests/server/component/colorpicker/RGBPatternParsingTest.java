@@ -14,7 +14,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.vaadin.shared.ui.colorpicker.Color;
-import com.vaadin.ui.components.colorpicker.ColorUtils;
+import com.vaadin.ui.components.colorpicker.ColorUtil;
 
 @RunWith(value = Parameterized.class)
 public class RGBPatternParsingTest {
@@ -58,11 +58,11 @@ public class RGBPatternParsingTest {
 
     @Test
     public void testRGBData() {
-        Matcher m = ColorUtils.RGB_PATTERN.matcher(input);
+        Matcher m = ColorUtil.RGB_PATTERN.matcher(input);
         boolean matches = m.matches();
         if (expectedMatches) {
             Color c = new Color(expectedRGB);
-            Color c1 = ColorUtils.getRGBPatternColor(m);
+            Color c1 = ColorUtil.getRGBPatternColor(m);
             assertTrue(c.equals(c1));
         } else {
             assertTrue(!matches);
