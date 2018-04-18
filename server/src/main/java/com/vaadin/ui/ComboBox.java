@@ -814,7 +814,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     @Override
     protected void updateSelectedItemState(T value) {
         super.updateSelectedItemState(value);
-        
+
         updateSelectedItemCaption(value);
         updateSelectedItemIcon(value);
     }
@@ -850,7 +850,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     public void attach() {
         super.attach();
 
-        updateSelectedItemIcon();
+        // Update icon for ConnectorResource
+        updateSelectedItemIcon(getValue());
     }
 
     @Override

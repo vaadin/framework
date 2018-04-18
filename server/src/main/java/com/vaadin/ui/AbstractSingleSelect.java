@@ -325,12 +325,14 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     /**
      * This method updates the internal selection state of the server-side of
      * {@code AbstractSingleSelect}.
-     * 
+     *
      * @param value
      *            the value that should be selected
      * @param userOriginated
      *            {@code true} if selection was done by user, {@code false} if
      *            not
+     *
+     * @since
      */
     protected void setSelectedItem(T value, boolean userOriginated) {
         if (isSelected(value)) {
@@ -362,9 +364,11 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     /**
      * This method updates the shared selection state of the
      * {@code AbstractSingleSelect}.
-     * 
+     *
      * @param value
      *            the value that is selected; may be {@code null}
+     *
+     * @since
      */
     protected void updateSelectedItemState(T value) {
         // FIXME: If selecting a value that does not exist, this will leave and
