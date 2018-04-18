@@ -37,9 +37,8 @@ import com.vaadin.ui.TextField;
  * @since 7.0.0
  */
 public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
-    private static final Logger getLogger() {
-        return Logger.getLogger(ColorPickerPreview.class.getName());
-    }
+    private static final Logger LOGGER = Logger
+            .getLogger(ColorPickerPreview.class.getName());
 
     private static final String STYLE_DARK_COLOR = "v-textfield-dark";
     private static final String STYLE_LIGHT_COLOR = "v-textfield-light";
@@ -151,7 +150,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
         } catch (NumberFormatException e) {
             // Pattern matching ensures the validity of
             // the input, this should never happen
-            getLogger().log(Level.INFO, e.getMessage());
+            LOGGER.log(Level.INFO, e.getMessage());
             errorMessage = new UserError(e.getMessage(), ContentMode.TEXT,
                     ErrorLevel.WARNING);
         }
