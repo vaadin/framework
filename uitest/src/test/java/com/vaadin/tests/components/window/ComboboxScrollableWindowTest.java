@@ -3,8 +3,11 @@ package com.vaadin.tests.components.window;
 import static com.vaadin.tests.components.window.ComboboxScrollableWindow.COMBOBOX_ID;
 import static com.vaadin.tests.components.window.ComboboxScrollableWindow.WINDOW_ID;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.commands.TestBenchElementCommands;
@@ -18,6 +21,12 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * @author Vaadin Ltd
  */
 public class ComboboxScrollableWindowTest extends MultiBrowserTest {
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // Fix to #10652 broke this for PhantomJS
+        return getBrowsersExcludingPhantomJS();
+    }
 
     @Test
     public void testWindowScrollbars() throws Exception {

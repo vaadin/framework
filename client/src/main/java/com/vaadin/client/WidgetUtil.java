@@ -488,7 +488,7 @@ public class WidgetUtil {
             final int scrollleft = elem.getScrollLeft();
             elem.getStyle().setProperty("overflow", "hidden");
 
-            Scheduler.get().scheduleDeferred(() -> {
+            Scheduler.get().scheduleFinally(() -> {
                 // Dough, Safari scroll auto means actually just a moped
                 elem.getStyle().setProperty("overflow", originalOverflow);
                 if (!originalOverflowX.isEmpty()) {
