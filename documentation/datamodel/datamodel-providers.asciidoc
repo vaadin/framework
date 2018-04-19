@@ -61,7 +61,7 @@ We can also define a custom [classname]#Comparator# if we want to customize the 
 grid.addColumn("Name", Person::getName)
   // Override default natural sorting
   .setComparator(
-     Comparator.comparing(Person::getName)::compare));
+     Comparator.comparing(Person::getName)::compare);
 ----
 
 [NOTE]
