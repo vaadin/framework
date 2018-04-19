@@ -916,8 +916,10 @@ public class WidgetUtil {
             EventListener eventListener = null;
             while (eventListener == null && element != null) {
                 eventListener = Event.getEventListener(element);
-                if (eventListener == null) {
+                if (eventListener == null
+                        || !(eventListener instanceof Widget)) {
                     element = element.getParentElement();
+                    eventListener = null;
                 }
             }
             if (eventListener instanceof Widget) {

@@ -30,6 +30,7 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.animation.client.AnimationScheduler;
@@ -53,9 +54,11 @@ import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Touch;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -5822,6 +5825,38 @@ public class Escalator extends Widget
         setupScrollbars(root);
 
         tableWrapper = DivElement.as(DOM.createDiv());
+
+        Event.sinkEvents(tableWrapper, Event.ONSCROLL | Event.KEYEVENTS);
+
+        Event.setEventListener(tableWrapper, event -> {
+            if (event.getKeyCode() != KeyCodes.KEY_TAB) {
+                return;
+            }
+
+            boolean browserScroll = tableWrapper.getScrollLeft() != 0
+                    || tableWrapper.getScrollTop() != 0;
+            boolean keyEvent = event.getType().startsWith("key");
+
+            if (browserScroll || keyEvent) {
+
+                // Browser is scrolling our div automatically, reset
+                tableWrapper.setScrollLeft(0);
+                tableWrapper.setScrollTop(0);
+
+                Element focused = WidgetUtil.getFocusedElement();
+                Stream.of(header, body, footer).forEach(container -> {
+                    Cell cell = container.getCell(focused);
+                    if (cell == null) {
+                        return;
+                    }
+
+                    scrollToColumn(cell.getColumn(), ScrollDestination.ANY, 0);
+                    if (container == body) {
+                        scrollToRow(cell.getRow(), ScrollDestination.ANY, 0);
+                    }
+                });
+            }
+        });
 
         root.appendChild(tableWrapper);
 
