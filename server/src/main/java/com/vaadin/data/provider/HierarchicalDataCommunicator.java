@@ -425,6 +425,15 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         super.setFilter(filter);
     }
 
+    @Override
+    protected void sendDataToClient(boolean initial) {
+        // Remove mapper's cached data on hard reset
+        if (reset) {
+            mapper.destroyAllData();
+        }
+        super.sendDataToClient(initial);
+    }
+
     /**
      * Returns the {@code HierarchyMapper} used by this data communicator.
      *
