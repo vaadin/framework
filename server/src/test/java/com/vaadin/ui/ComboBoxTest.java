@@ -1,5 +1,10 @@
 package com.vaadin.ui;
 
+import static org.junit.Assert.assertArrayEquals;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 
 import com.vaadin.server.ServerRpcManager;
@@ -8,6 +13,8 @@ import com.vaadin.tests.util.MockUI;
 
 public class ComboBoxTest {
 
+    private List<String> eventValues = new ArrayList<>();
+
     @Test
     public void testResetValue() {
         ComboBox<String> comboBox = new ComboBox<>();
@@ -15,10 +22,15 @@ public class ComboBoxTest {
 
         // Reset value whenever it changes (in a real case, this listener would
         // do something with the selected value before discarding it)
-        comboBox.addValueChangeListener(event -> comboBox.setValue(null));
+        comboBox.addValueChangeListener(event -> {
+            eventValues.add(event.getValue());
+            comboBox.setValue(null);
+        });
 
         // "Attach" the component and initialize diffstate
         new MockUI().setContent(comboBox);
+        // Generate initial data
+        comboBox.getDataCommunicator().beforeClientResponse(true);
         ComponentTest.syncToClient(comboBox);
 
         // Emulate selection of "one"
@@ -26,6 +38,9 @@ public class ComboBoxTest {
                 .key("one");
         ServerRpcManager.getRpcProxy(comboBox, SelectionServerRpc.class)
                 .select(oneKey);
+
+        assertArrayEquals("Unexpected values from selection events",
+                new Object[] { "one", null }, eventValues.toArray());
 
         ComponentTest.assertEncodedStateProperties(comboBox,
                 "Selection change done by the listener should be sent to the client",

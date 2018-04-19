@@ -680,9 +680,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     public void setItemCaptionGenerator(
             ItemCaptionGenerator<T> itemCaptionGenerator) {
         super.setItemCaptionGenerator(itemCaptionGenerator);
-        if (getSelectedItem().isPresent()) {
-            updateSelectedItemCaption();
-        }
     }
 
     /**
@@ -724,10 +721,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     @Override
     public void setItemIconGenerator(IconGenerator<T> itemIconGenerator) {
         super.setItemIconGenerator(itemIconGenerator);
-
-        if (getSelectedItem().isPresent()) {
-            updateSelectedItemIcon();
-        }
     }
 
     @Override
@@ -819,25 +812,23 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     @Override
-    protected void doSetSelectedKey(String key) {
-        super.doSetSelectedKey(key);
+    protected void updateSelectedItemState(T value) {
+        super.updateSelectedItemState(value);
 
-        updateSelectedItemCaption();
-        updateSelectedItemIcon();
+        updateSelectedItemCaption(value);
+        updateSelectedItemIcon(value);
     }
 
-    private void updateSelectedItemCaption() {
+    private void updateSelectedItemCaption(T value) {
         String selectedCaption = null;
-        T value = keyToItem(getSelectedKey());
         if (value != null) {
             selectedCaption = getItemCaptionGenerator().apply(value);
         }
         getState().selectedItemCaption = selectedCaption;
     }
 
-    private void updateSelectedItemIcon() {
+    private void updateSelectedItemIcon(T value) {
         String selectedItemIcon = null;
-        T value = keyToItem(getSelectedKey());
         if (value != null) {
             Resource icon = getItemIconGenerator().apply(value);
             if (icon != null) {
@@ -859,7 +850,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     public void attach() {
         super.attach();
 
-        updateSelectedItemIcon();
+        // Update icon for ConnectorResource
+        updateSelectedItemIcon(getValue());
     }
 
     @Override
