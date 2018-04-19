@@ -23,7 +23,8 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author Vaadin Ltd
  * @since 8.3.2
  */
-public class SpacerVisibilityChangedEvent extends GwtEvent<SpacerVisibilityChangedHandler> {
+public class SpacerVisibilityChangedEvent
+        extends GwtEvent<SpacerVisibilityChangedHandler> {
 
     /**
      * Handler type.
@@ -41,10 +42,10 @@ public class SpacerVisibilityChangedEvent extends GwtEvent<SpacerVisibilityChang
      * Creates a spacer visibility changed event.
      *
      * @param rowIndex
-     *         index of row to which the spacer belongs
+     *            index of row to which the spacer belongs
      * @param visible
-     *         {@code true} if the spacer element is shown, {@code false} if the
-     *         spacer element is hidden
+     *            {@code true} if the spacer element is shown, {@code false} if
+     *            the spacer element is hidden
      */
     public SpacerVisibilityChangedEvent(int rowIndex, boolean visible) {
         this.rowIndex = rowIndex;
@@ -64,7 +65,7 @@ public class SpacerVisibilityChangedEvent extends GwtEvent<SpacerVisibilityChang
      * Gets whether the spacer element is displayed.
      *
      * @return {@code true} if the spacer element is shown, {@code false} if the
-     * spacer element is hidden
+     *         spacer element is hidden
      */
     public boolean isSpacerVisible() {
         return visible;

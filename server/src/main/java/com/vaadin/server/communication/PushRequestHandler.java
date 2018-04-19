@@ -55,8 +55,7 @@ import com.vaadin.shared.communication.PushConstants;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class PushRequestHandler
-        implements SessionExpiredHandler {
+public class PushRequestHandler implements SessionExpiredHandler {
 
     private AtmosphereFramework atmosphere;
     private PushHandler pushHandler;

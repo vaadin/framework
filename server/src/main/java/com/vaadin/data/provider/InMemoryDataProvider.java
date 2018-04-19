@@ -383,8 +383,7 @@ public interface InMemoryDataProvider<T> extends
             ValueProvider<T, String> valueProvider, Locale locale) {
         Objects.requireNonNull(locale, "Locale cannot be null");
         return InMemoryDataProviderHelpers.filteringByCaseInsensitiveString(
-                this, valueProvider,
-                String::contains, () -> locale);
+                this, valueProvider, String::contains, () -> locale);
     }
 
     /**
@@ -425,8 +424,8 @@ public interface InMemoryDataProvider<T> extends
      */
     public default DataProvider<T, String> filteringByPrefix(
             ValueProvider<T, String> valueProvider, Locale locale) {
-        return InMemoryDataProviderHelpers.filteringByCaseInsensitiveString(this, valueProvider,
-                String::startsWith, () -> locale);
+        return InMemoryDataProviderHelpers.filteringByCaseInsensitiveString(
+                this, valueProvider, String::startsWith, () -> locale);
     }
 
     /**
@@ -445,7 +444,8 @@ public interface InMemoryDataProvider<T> extends
      */
     public default DataProvider<T, String> filteringByPrefix(
             ValueProvider<T, String> valueProvider) {
-        return InMemoryDataProviderHelpers.filteringByCaseInsensitiveString(this, valueProvider,
-                String::startsWith, InMemoryDataProviderHelpers.CURRENT_LOCALE_SUPPLIER);
+        return InMemoryDataProviderHelpers.filteringByCaseInsensitiveString(
+                this, valueProvider, String::startsWith,
+                InMemoryDataProviderHelpers.CURRENT_LOCALE_SUPPLIER);
     }
 }

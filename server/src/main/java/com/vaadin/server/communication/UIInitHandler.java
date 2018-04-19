@@ -222,7 +222,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         session.addUI(ui);
         if (initException != null) {
             ui.getSession().getCommunicationManager()
-            .handleConnectorRelatedException(ui, initException);
+                    .handleConnectorRelatedException(ui, initException);
         }
         // Warn if the window can't be preserved
         if (embedId == null
@@ -310,7 +310,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         String seckey = session.getCsrfToken();
 
         return "\"" + ApplicationConstants.UIDL_SECURITY_TOKEN_ID + "\":\""
-        + seckey + "\",";
+                + seckey + "\",";
     }
 
     /**

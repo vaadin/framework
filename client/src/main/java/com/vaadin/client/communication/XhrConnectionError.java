@@ -21,8 +21,8 @@ import com.google.gwt.http.client.Response;
 import elemental.json.JsonObject;
 
 /**
- * XhrConnectionError provides detail about an error which occurred during
- * an XHR request to the server.
+ * XhrConnectionError provides detail about an error which occurred during an
+ * XHR request to the server.
  *
  * @since 7.6
  * @author Vaadin Ltd

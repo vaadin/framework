@@ -287,9 +287,8 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
                 ((DeclarativeItemEnabledProvider) provider).addDisabled(item);
             }
         } else {
-            throw new IllegalStateException(String.format(
-                    "Don't know how "
-                            + "to disable item using current item enabled provider '%s'",
+            throw new IllegalStateException(String.format("Don't know how "
+                    + "to disable item using current item enabled provider '%s'",
                     provider.getClass().getName()));
         }
         return item;

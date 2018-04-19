@@ -34,7 +34,7 @@ public class ColumnState extends AbstractGridExtensionState {
     /**
      * Sets whether Grid should handle events from Widgets from this column or
      * not.
-     * 
+     *
      * @since 8.3
      */
     public boolean handleWidgetEvents = false;

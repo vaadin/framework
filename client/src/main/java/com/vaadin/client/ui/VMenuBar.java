@@ -60,9 +60,9 @@ import com.vaadin.client.extensions.EventTrigger;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
 
-public class VMenuBar extends FocusableFlowPanel
-        implements CloseHandler<PopupPanel>, KeyPressHandler, KeyDownHandler,
-        FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler, EventTrigger {
+public class VMenuBar extends FocusableFlowPanel implements
+        CloseHandler<PopupPanel>, KeyPressHandler, KeyDownHandler, FocusHandler,
+        SubPartAware, MouseOutHandler, MouseOverHandler, EventTrigger {
 
     // The hierarchy of VMenuBar is a bit weird as VMenuBar is the Paintable,
     // used for the root menu but also used for the sub menus.
@@ -803,7 +803,7 @@ public class VMenuBar extends FocusableFlowPanel
      *
      */
     public static class CustomMenuItem extends Widget
-    implements HasHTML, SubPartAware {
+            implements HasHTML, SubPartAware {
 
         protected String html = null;
         protected Command command = null;
@@ -1924,7 +1924,8 @@ public class VMenuBar extends FocusableFlowPanel
                     "The 'partInformation' parameter must contain the menu item id");
         }
 
-        getTriggers().computeIfAbsent(partInformation, s-> new ArrayList<>()).add(command);
+        getTriggers().computeIfAbsent(partInformation, s -> new ArrayList<>())
+                .add(command);
         return () -> {
             List<Command> commands = getTriggers().get(partInformation);
             if (commands != null) {

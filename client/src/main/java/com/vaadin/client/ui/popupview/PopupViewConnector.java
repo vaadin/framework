@@ -70,8 +70,8 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
             if (popup.captionWrapper != null) {
                 popup.captionWrapper.updateCaption();
             } else {
-                popup.captionWrapper = new VCaptionWrapper(
-                        childConnector, getConnection());
+                popup.captionWrapper = new VCaptionWrapper(childConnector,
+                        getConnection());
                 popup.setWidget(popup.captionWrapper);
                 popup.captionWrapper.updateCaption();
             }
@@ -135,7 +135,7 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
 
         } else {
             // The popup shouldn't be visible, try to hide it.
-            popup.hide(false,false,false);
+            popup.hide(false, false, false);
         }
     }
 

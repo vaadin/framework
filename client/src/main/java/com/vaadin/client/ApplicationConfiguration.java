@@ -147,17 +147,15 @@ public class ApplicationConfiguration implements EntryPoint {
         }-*/;
 
         /**
-         * Reads a configuration parameter as an {@link Element} object.
-         * Please note
-         * that the javascript value of the parameter should also be an Element
-         * object,
-         * or else an undefined exception may be thrown when calling this method
-         * or methods on the returned object.
+         * Reads a configuration parameter as an {@link Element} object. Please
+         * note that the javascript value of the parameter should also be an
+         * Element object, or else an undefined exception may be thrown when
+         * calling this method or methods on the returned object.
          *
          * @param name
-         *         name of the configuration parameter
-         * @return element for the configuration parameter, or <code>null</code> if no
-         *         value is defined
+         *            name of the configuration parameter
+         * @return element for the configuration parameter, or <code>null</code>
+         *         if no value is defined
          * @since 8.4
          */
         private native Element getConfigElement(String name)

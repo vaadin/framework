@@ -39,7 +39,8 @@ public class NotificationState extends SharedState {
     public String description;
 
     /**
-     * Whether texts are interpreted as HTML ({@code true}) or not ({@code false}).
+     * Whether texts are interpreted as HTML ({@code true}) or not
+     * ({@code false}).
      */
     public boolean htmlContentAllowed;
 
@@ -49,8 +50,8 @@ public class NotificationState extends SharedState {
     public String styleName;
 
     /**
-     * The {@link Position} of the {@link com.vaadin.ui.Notification},
-     *            can not be {@code null}.
+     * The {@link Position} of the {@link com.vaadin.ui.Notification}, can not
+     * be {@code null}.
      */
     public Position position = Position.MIDDLE_CENTER;
 

@@ -22,8 +22,8 @@ public class SimpleMultiPartInputStreamTest {
     protected void checkBoundaryDetection(byte[] input, String boundary,
             byte[] expected) throws Exception {
         ByteArrayInputStream bais = new ByteArrayInputStream(input);
-        try (SimpleMultiPartInputStream smpis = new SimpleMultiPartInputStream(bais,
-                boundary)) {
+        try (SimpleMultiPartInputStream smpis = new SimpleMultiPartInputStream(
+                bais, boundary)) {
             ByteArrayOutputStream resultStream = new ByteArrayOutputStream();
             int outbyte;
             try {
@@ -33,7 +33,7 @@ public class SimpleMultiPartInputStreamTest {
             } catch (IOException e) {
                 throw new IOException(
                         e.getMessage() + "; expected " + new String(expected)
-                        + " but got " + resultStream.toString());
+                                + " but got " + resultStream.toString());
             }
             if (!Arrays.equals(expected, resultStream.toByteArray())) {
                 throw new Exception("Mismatch: expected " + new String(expected)

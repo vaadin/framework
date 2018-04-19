@@ -359,17 +359,15 @@ public class VTwinColSelect extends Composite implements MultiSelectWidget,
     private void moveSelectedItemsLeftToRight() {
         Set<String> movedItems = moveSelectedItems(optionsListBox,
                 selectionsListBox);
-        selectionChangeListeners
-                .forEach(listener -> listener.accept(movedItems,
-                        Collections.emptySet()));
+        selectionChangeListeners.forEach(listener -> listener.accept(movedItems,
+                Collections.emptySet()));
     }
 
     private void moveSelectedItemsRightToLeft() {
         Set<String> movedItems = moveSelectedItems(selectionsListBox,
                 optionsListBox);
-        selectionChangeListeners
-                .forEach(listener -> listener.accept(Collections.emptySet(),
-                        movedItems));
+        selectionChangeListeners.forEach(listener -> listener
+                .accept(Collections.emptySet(), movedItems));
     }
 
     private static Set<String> moveSelectedItems(ListBox source,

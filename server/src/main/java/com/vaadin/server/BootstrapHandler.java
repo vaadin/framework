@@ -325,8 +325,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         protected String encodeQueryStringParameterValue(String queryString) {
             String encodedString = null;
             try {
-                encodedString = URLEncoder.encode(queryString,
-                        UTF_8.name());
+                encodedString = URLEncoder.encode(queryString, UTF_8.name());
             } catch (UnsupportedEncodingException e) {
                 // should never happen
                 throw new RuntimeException("Could not find UTF-8", e);
@@ -661,8 +660,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         mainDiv.attr("id", context.getAppId());
         mainDiv.addClass("v-app");
         mainDiv.addClass(context.getThemeName());
-        mainDiv.addClass(context.getUIClass().getSimpleName()
-                .toLowerCase(Locale.ROOT));
+        mainDiv.addClass(
+                context.getUIClass().getSimpleName().toLowerCase(Locale.ROOT));
         if (style != null && !style.isEmpty()) {
             mainDiv.attr("style", style);
         }

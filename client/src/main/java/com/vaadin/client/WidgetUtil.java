@@ -53,7 +53,7 @@ public class WidgetUtil {
 
     /**
      * Simple object to store another object.
-     * 
+     *
      * @param <T>
      *            the object type to store
      * @since 8.4
@@ -64,7 +64,7 @@ public class WidgetUtil {
 
         /**
          * Gets the current object.
-         * 
+         *
          * @return the stored object
          */
         public T get() {
@@ -73,7 +73,7 @@ public class WidgetUtil {
 
         /**
          * Sets the current object.
-         * 
+         *
          * @param reference
          *            the object to store
          */
@@ -809,7 +809,7 @@ public class WidgetUtil {
             com.google.gwt.dom.client.Element el, String p)
     /*-{
         try {
-    
+
         if (el.currentStyle) {
             // IE
             return el.currentStyle[p];
@@ -824,7 +824,7 @@ public class WidgetUtil {
         } catch (e) {
             return "";
         }
-    
+
      }-*/;
 
     /**
@@ -838,7 +838,7 @@ public class WidgetUtil {
         try {
             el.focus();
         } catch (e) {
-    
+
         }
     }-*/;
 
@@ -1191,7 +1191,7 @@ public class WidgetUtil {
        if ($wnd.document.activeElement) {
            return $wnd.document.activeElement;
        }
-    
+
        return null;
      }-*/;
 
@@ -1262,11 +1262,11 @@ public class WidgetUtil {
     /*-{
         var top = elem.offsetTop;
         var height = elem.offsetHeight;
-    
+
         if (elem.parentNode != elem.offsetParent) {
           top -= elem.parentNode.offsetTop;
         }
-    
+
         var cur = elem.parentNode;
         while (cur && (cur.nodeType == 1)) {
           if (top < cur.scrollTop) {
@@ -1275,12 +1275,12 @@ public class WidgetUtil {
           if (top + height > cur.scrollTop + cur.clientHeight) {
             cur.scrollTop = (top + height) - cur.clientHeight;
           }
-    
+
           var offsetTop = cur.offsetTop;
           if (cur.parentNode != cur.offsetParent) {
             offsetTop -= cur.parentNode.offsetTop;
           }
-    
+
           top += offsetTop - cur.scrollTop;
           cur = cur.parentNode;
         }
@@ -1729,7 +1729,7 @@ public class WidgetUtil {
             }
             var heightWithoutBorder = cloneElement.offsetHeight;
             parentElement.removeChild(cloneElement);
-    
+
             return heightWithBorder - heightWithoutBorder;
         }
     }-*/;

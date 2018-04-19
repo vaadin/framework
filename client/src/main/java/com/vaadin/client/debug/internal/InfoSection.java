@@ -54,7 +54,9 @@ public class InfoSection implements Section {
         public void run() {
             refresh();
         }
-    };    public InfoSection() {
+    };
+
+    public InfoSection() {
         createContent();
     }
 

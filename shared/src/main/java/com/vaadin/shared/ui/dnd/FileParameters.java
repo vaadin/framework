@@ -39,11 +39,11 @@ public class FileParameters implements Serializable {
      * Creates a file parameters object.
      *
      * @param name
-     *         Name of the file.
+     *            Name of the file.
      * @param size
-     *         Size of the file.
+     *            Size of the file.
      * @param mime
-     *         Mime type of the file.
+     *            Mime type of the file.
      */
     public FileParameters(String name, long size, String mime) {
         this.name = name;
@@ -64,7 +64,7 @@ public class FileParameters implements Serializable {
      * Sets the file name.
      *
      * @param name
-     *         Name of the file.
+     *            Name of the file.
      */
     public void setName(String name) {
         this.name = name;
@@ -83,7 +83,7 @@ public class FileParameters implements Serializable {
      * Sets the file size.
      *
      * @param size
-     *         Size of the file.
+     *            Size of the file.
      */
     public void setSize(long size) {
         this.size = size;
@@ -102,7 +102,7 @@ public class FileParameters implements Serializable {
      * Sets the mime type.
      *
      * @param mime
-     *         Mime type of the file.
+     *            Mime type of the file.
      */
     public void setMime(String mime) {
         this.mime = mime;

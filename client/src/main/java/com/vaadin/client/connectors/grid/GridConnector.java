@@ -110,8 +110,8 @@ public class GridConnector extends AbstractListingConnector
             String columnId = columnToIdMap.get(cell.getColumn());
             int rowIndex = cell.getRowIndex();
             getRpcProxy(GridServerRpc.class).itemClick(rowKey, columnId,
-                    MouseEventDetailsBuilder
-                            .buildMouseEventDetails(mouseEvent), rowIndex);
+                    MouseEventDetailsBuilder.buildMouseEventDetails(mouseEvent),
+                    rowIndex);
         }
     }
 

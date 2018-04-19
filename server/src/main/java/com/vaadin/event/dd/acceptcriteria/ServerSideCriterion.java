@@ -36,8 +36,7 @@ import com.vaadin.server.PaintTarget;
  *
  * @since 6.3
  */
-public abstract class ServerSideCriterion
-        implements AcceptCriterion {
+public abstract class ServerSideCriterion implements AcceptCriterion {
 
     private static final long serialVersionUID = 2128510128911628902L;
 

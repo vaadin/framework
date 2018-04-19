@@ -98,7 +98,7 @@ public class FocusUtil {
 
     /**
      * Finds all the focusable children of given parent element.
-     * 
+     *
      * @param parent
      *            the parent element
      * @return array of focusable children
@@ -112,7 +112,7 @@ public class FocusUtil {
 
     /**
      * Moves the focus to the first focusable child of given parent element.
-     * 
+     *
      * @param parent
      *            the parent element
      * @since 8.1.7
@@ -126,7 +126,8 @@ public class FocusUtil {
         for (int i = 0; i < focusableChildren.length; i++) {
             Element element = focusableChildren[i];
             String classes = element.getAttribute("class");
-            if (classes == null || !classes.toLowerCase().contains("disabled")) {
+            if (classes == null
+                    || !classes.toLowerCase().contains("disabled")) {
                 element.focus();
                 return;
             }
@@ -135,7 +136,7 @@ public class FocusUtil {
 
     /**
      * Moves the focus to the last focusable child of given parent element.
-     * 
+     *
      * @param parent
      *            the parent element
      * @since 8.1.7

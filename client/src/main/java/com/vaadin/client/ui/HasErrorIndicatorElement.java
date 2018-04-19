@@ -35,8 +35,8 @@ public interface HasErrorIndicatorElement {
      * Sets the visibility of the error indicator element.
      *
      * @param visible
-     *         {@code true} to show the error indicator element, {@code false}
-     *         to hide it
+     *            {@code true} to show the error indicator element,
+     *            {@code false} to hide it
      */
     void setErrorIndicatorElementVisible(boolean visible);
 }

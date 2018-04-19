@@ -28,7 +28,8 @@ import com.vaadin.ui.Grid.Column;
 public class GridSortOrder<T> extends SortOrder<Column<T, ?>> {
 
     /**
-     * Construct sorting information for usage in a {@link com.vaadin.ui.Grid Grid}.
+     * Construct sorting information for usage in a {@link com.vaadin.ui.Grid
+     * Grid}.
      *
      * @param column
      *            the column to be sorted

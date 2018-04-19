@@ -92,8 +92,8 @@ public class DateField extends AbstractLocalDateField {
     }
 
     /**
-     * Constructs a new {@code DateField} with the given caption, initial
-     * text contents and a value change listener.
+     * Constructs a new {@code DateField} with the given caption, initial text
+     * contents and a value change listener.
      * <p>
      * The listener is called when the value of this {@code DateField} is
      * changed either by the user or programmatically.

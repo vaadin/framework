@@ -83,10 +83,8 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
                         }
                     } else {
                         if (widget.fileIdToReceiver.containsKey(fileId)
-                                && receiverUrl != null
-                                && !receiverUrl
-                                        .equals(widget.fileIdToReceiver
-                                                .get(fileId))) {
+                                && receiverUrl != null && !receiverUrl.equals(
+                                        widget.fileIdToReceiver.get(fileId))) {
                             getLogger().severe(
                                     "Overwriting file receiver mapping for fileId "
                                             + fileId + " . Old receiver URL: "

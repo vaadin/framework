@@ -567,7 +567,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
      * Note: It must be set to {@code true} if ColorPicker is a child of modal
      * {@link Window}
      * </p>
-     * 
+     *
      * @see Window#setModal
      * @since
      * @param modal

@@ -45,7 +45,8 @@ import elemental.json.Json;
  * @since 8.0
  */
 public abstract class AbstractTextField extends AbstractField<String>
-        implements HasValueChangeMode, FieldEvents.FocusNotifier, FieldEvents.BlurNotifier {
+        implements HasValueChangeMode, FieldEvents.FocusNotifier,
+        FieldEvents.BlurNotifier {
 
     private final class AbstractTextFieldServerRpcImpl
             implements AbstractTextFieldServerRpc {

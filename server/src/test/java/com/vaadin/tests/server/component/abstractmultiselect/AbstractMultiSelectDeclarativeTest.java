@@ -39,10 +39,10 @@ public abstract class AbstractMultiSelectDeclarativeTest<T extends AbstractMulti
         String type = "com.vaadin.SomeType";
         String attribute = "data-type";
 
-        String design = String.format(
-                "<%s %s='%s'>\n" + "<option item='foo' selected>foo1</option>\n"
-                        + "<option item='bar'>bar1</option>"
-                        + "<option item='foobar' selected>foobar1</option></%s>",
+        String design = String.format("<%s %s='%s'>\n"
+                + "<option item='foo' selected>foo1</option>\n"
+                + "<option item='bar'>bar1</option>"
+                + "<option item='foobar' selected>foobar1</option></%s>",
                 getComponentTag(), attribute, type, getComponentTag());
         T component = getComponentClass().newInstance();
         component.setItems(items);
@@ -69,10 +69,10 @@ public abstract class AbstractMultiSelectDeclarativeTest<T extends AbstractMulti
         String type = "com.vaadin.SomeType";
         String attribute = "data-type";
 
-        String design = String.format(
-                "<%s %s='%s'>\n" + "<option item='foo' selected>foo1</option>\n"
-                        + "<option item='bar'>bar1</option>"
-                        + "<option item='foobar' selected>foobar1</option></%s>",
+        String design = String.format("<%s %s='%s'>\n"
+                + "<option item='foo' selected>foo1</option>\n"
+                + "<option item='bar'>bar1</option>"
+                + "<option item='foobar' selected>foobar1</option></%s>",
                 getComponentTag(), attribute, type, getComponentTag());
         T component = getComponentClass().newInstance();
         component.setItems(items);

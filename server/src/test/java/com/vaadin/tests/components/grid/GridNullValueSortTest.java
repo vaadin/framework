@@ -26,9 +26,11 @@ public class GridNullValueSortTest {
         VaadinSession.setCurrent(null);
         this.grid = new Grid<TestClass>();
         this.stringColumn = this.grid.addColumn(bean -> bean.stringField);
-        this.nonComparableColumn = this.grid.addColumn(bean -> bean.nonComparableField);
+        this.nonComparableColumn = this.grid
+                .addColumn(bean -> bean.nonComparableField);
 
-        this.grid.setItems(new TestClass(null, new Object()), new TestClass("something", null));
+        this.grid.setItems(new TestClass(null, new Object()),
+                new TestClass("something", null));
         new MockUI().setContent(grid);
     }
 

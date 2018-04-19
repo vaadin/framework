@@ -29,8 +29,9 @@ public class MarkAsDirtyListenerTest {
         UI ui = new MockUI();
 
         AtomicReference<MarkedAsDirtyConnectorEvent> events = new AtomicReference<>();
-        ui.getConnectorTracker().addMarkedAsDirtyListener(event -> Assert
-                .assertTrue("No reference should have been registered",
+        ui.getConnectorTracker()
+                .addMarkedAsDirtyListener(event -> Assert.assertTrue(
+                        "No reference should have been registered",
                         events.compareAndSet(null, event)));
         // UI is marked dirty on creation and when adding a listener
         ComponentTest.syncToClient(ui);
@@ -48,9 +49,12 @@ public class MarkAsDirtyListenerTest {
     @Test
     public void fire_event_for_setContent() {
         List<MarkedAsDirtyConnectorEvent> events = new ArrayList<>();
-        UI ui = new MockUI() {{
-            getConnectorTracker().addMarkedAsDirtyListener(event -> events.add(event));
-        }};
+        UI ui = new MockUI() {
+            {
+                getConnectorTracker()
+                        .addMarkedAsDirtyListener(event -> events.add(event));
+            }
+        };
         ComponentTest.syncToClient(ui);
 
         Button button = new Button("Button");
@@ -72,8 +76,9 @@ public class MarkAsDirtyListenerTest {
         ComponentTest.syncToClient(button);
 
         AtomicReference<MarkedAsDirtyConnectorEvent> events = new AtomicReference<>();
-        ui.getConnectorTracker().addMarkedAsDirtyListener(event -> Assert
-                .assertTrue("No reference should have been registered",
+        ui.getConnectorTracker()
+                .addMarkedAsDirtyListener(event -> Assert.assertTrue(
+                        "No reference should have been registered",
                         events.compareAndSet(null, event)));
 
         button.setIconAlternateText("alternate");
@@ -89,9 +94,12 @@ public class MarkAsDirtyListenerTest {
     @Test
     public void fire_events_for_each_component() {
         List<MarkedAsDirtyConnectorEvent> events = new ArrayList<>();
-        UI ui = new MockUI() {{
-            getConnectorTracker().addMarkedAsDirtyListener(event -> events.add(event));
-        }};
+        UI ui = new MockUI() {
+            {
+                getConnectorTracker()
+                        .addMarkedAsDirtyListener(event -> events.add(event));
+            }
+        };
 
         HorizontalLayout layout = new HorizontalLayout();
         // UI initially marked as dirty so should not show as event.
@@ -126,8 +134,9 @@ public class MarkAsDirtyListenerTest {
         ComponentTest.syncToClient(button);
 
         AtomicReference<MarkedAsDirtyConnectorEvent> events = new AtomicReference<>();
-        ui.getConnectorTracker().addMarkedAsDirtyListener(event -> Assert
-                .assertTrue("Only one event should have registered",
+        ui.getConnectorTracker()
+                .addMarkedAsDirtyListener(event -> Assert.assertTrue(
+                        "Only one event should have registered",
                         events.compareAndSet(null, event)));
 
         button.setIconAlternateText("alternate");

@@ -5624,7 +5624,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * Returns whether Grid should handle events from Widgets in this
          * Column.
-         * 
+         *
          * @return {@code true} to handle events from widgets; {@code false} to
          *         not
          * @since 8.3
@@ -7377,7 +7377,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Helper method for making sure desired row is visible and it is properly
      * rendered.
-     * 
+     *
      * @param rowIndex
      *            the row to look for
      * @param destination
@@ -7402,7 +7402,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Helper method for making sure desired row is visible and it is properly
      * rendered.
-     * 
+     *
      * @param rowIndex
      *            the row to look for
      * @param whenRendered
@@ -7452,7 +7452,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Helper method for scrolling and making sure row is visible.
-     * 
+     *
      * @param rowIndex
      *            the row index to make visible
      * @param destination

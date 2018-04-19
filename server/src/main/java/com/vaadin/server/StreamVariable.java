@@ -53,8 +53,8 @@ public interface StreamVariable extends Serializable {
      * {@link #onProgress(long, long)} is called in a synchronized block when
      * the content is being received. This is potentially bit slow, so we are
      * calling that method only if requested. The value is requested after the
-     * {@link #streamingStarted(StreamingStartEvent)} event, but not after reading
-     * each buffer.
+     * {@link #streamingStarted(StreamingStartEvent)} event, but not after
+     * reading each buffer.
      *
      * @return true if this {@link StreamVariable} wants to by notified during
      *         the upload of the progress of streaming.
@@ -116,8 +116,8 @@ public interface StreamVariable extends Serializable {
     }
 
     /**
-     * Event passed to {@link #streamingStarted(StreamingStartEvent)} method before
-     * the streaming of the content to {@link StreamVariable} starts.
+     * Event passed to {@link #streamingStarted(StreamingStartEvent)} method
+     * before the streaming of the content to {@link StreamVariable} starts.
      */
     public interface StreamingStartEvent extends StreamingEvent {
         /**

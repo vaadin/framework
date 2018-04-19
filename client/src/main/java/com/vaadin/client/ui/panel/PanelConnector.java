@@ -93,16 +93,14 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
 
             // Restore default stylenames
             panel.contentNode.setClassName(VPanel.CLASSNAME + "-content");
-            panel.bottomDecoration
-                    .setClassName(VPanel.CLASSNAME + "-deco");
+            panel.bottomDecoration.setClassName(VPanel.CLASSNAME + "-deco");
             panel.captionNode.setClassName(VPanel.CLASSNAME + "-caption");
             boolean hasCaption = hasCaption();
             if (hasCaption) {
                 panel.setCaption(getState().caption);
             } else {
                 panel.setCaption("");
-                panel.captionNode
-                        .setClassName(VPanel.CLASSNAME + "-nocaption");
+                panel.captionNode.setClassName(VPanel.CLASSNAME + "-nocaption");
             }
 
             // Add proper stylenames for all elements. This way we can prevent

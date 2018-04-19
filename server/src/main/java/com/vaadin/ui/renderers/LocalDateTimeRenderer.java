@@ -86,7 +86,8 @@ public class LocalDateTimeRenderer
      * @throws IllegalArgumentException
      *             if formatter is null
      */
-    public LocalDateTimeRenderer(DateTimeFormatter formatter, String nullRepresentation) {
+    public LocalDateTimeRenderer(DateTimeFormatter formatter,
+            String nullRepresentation) {
         super(LocalDateTime.class, nullRepresentation);
 
         if (formatter == null) {
