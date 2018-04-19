@@ -58,7 +58,7 @@ We can also define a custom [classname]#Comparator# if we want to customize the 
 
 [source, java]
 ----
-grid.addColumn("Name", Person::getName).setCaption("Name")
+grid.addColumn(Person::getName).setCaption("Name")
   // Override default natural sorting
   .setComparator(
      Comparator.comparing(Person::getName)::compare);
