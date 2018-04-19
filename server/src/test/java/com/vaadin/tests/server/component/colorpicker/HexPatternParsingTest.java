@@ -2,9 +2,9 @@ package com.vaadin.tests.server.component.colorpicker;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Random;
+import java.util.Collections;
 import java.util.regex.Matcher;
 
 import org.junit.Test;
@@ -23,39 +23,41 @@ public class HexPatternParsingTest {
     public String input;
 
     @Parameter(value = 1)
-    public int expectedRGB;
-
+    public int expectedRed;
     @Parameter(value = 2)
+    public int expectedGreen;
+    @Parameter(value = 3)
+    public int expectedBlue;
+
+    @Parameter(value = 4)
     public boolean expectedMatches;
 
-    @Parameters(name = "{index}: textValidHEX({0}) = ({1},{2})")
+    @Parameters(name = "{index}: textValidHEX({0}) = ({1},{2},{3},{4})")
     public static Collection<Object[]> hexdata() {
-        Object[][] values = new Object[201][3];
-        Random rnd = new Random();
-        int i = 0;
-        for (; i < values.length - INVALID_HEX_VALUES.length; i++) {
-            StringBuilder sb = new StringBuilder("#");
+        Object[][] validValues = { { "#000000", 0, 0, 0, true },
+                { "#ffffff", 255, 255, 255, true },
+                { "#FF00ff", 255, 0, 255, true }, { "#aa90e3",170,144,227, true },
+                { "#016953", 1, 105, 83, true },
+                { "#bC64D0", 188, 100, 208, true },
+                { "#F100FF", 241, 0, 255, true },
+                { "#F0E9a5", 240, 233, 165, true },
+                { "#990077", 153, 0, 119, true } };
+        Object[][] invalidValues = { { "#0000000", 0, 0, 0, false },
+                { "#ffgfff", 0, 0, 0, false }, { "#FF10f", 0, 0, 0, false },
+                { "#aa9", 0, 0, 0, false }, { "#03", 0, 0, 0, false },
+                { "#aab3c4c", 0, 0, 0, false }, { "#6010", 0, 0, 0, false },
+                { "#CCCC", 0, 0, 0, false }, { "#9", 0, 0, 0, false },
+                { "#10 10 10", 0, 0, 0, false }, { "101010", 0, 0, 0, false },
+                { "#10101q", 0, 0, 0, false },
+                { "\\s%\\d[0-9]", 0, 0, 0, false },
+                { "#\\d.*", 0, 0, 0, false }, { "rgb\\(\\.*", 0, 0, 0, false },
+                { "#\\d\\d\\d", 0, 0, 0, false }, { "#\\d.*", 0, 0, 0, false },
+                { "", 0, 0, 0, false }, { "hsl(25,25,25)", 0, 0, 0, false } };
+        ArrayList<Object[]> values = new ArrayList<>();
+        Collections.addAll(values, validValues);
+        Collections.addAll(values, invalidValues);
 
-            int red = rnd.nextInt(256);
-            int green = rnd.nextInt(256);
-            int blue = rnd.nextInt(256);
-
-            sb.append(Integer.toHexString(red).length() < 2
-                    ? "0" + Integer.toHexString(red)
-                    : Integer.toHexString(red));
-            sb.append(Integer.toHexString(green).length() < 2
-                    ? "0" + Integer.toHexString(green)
-                    : Integer.toHexString(green));
-            sb.append(Integer.toHexString(blue).length() < 2
-                    ? "0" + Integer.toHexString(blue)
-                    : Integer.toHexString(blue));
-            values[i] = new Object[] { sb.toString(),
-                    new Color(red, green, blue).getRGB(), true };
-        }
-        for (int j = 0; j < INVALID_HEX_VALUES.length; j++) {
-            values[i++] = INVALID_HEX_VALUES[j];
-        }
-        return Arrays.asList(values);
+        return values;
     }
 
     @Test
@@ -63,7 +65,7 @@ public class HexPatternParsingTest {
         Matcher m = ColorUtil.HEX_PATTERN.matcher(input);
         boolean matches = m.matches();
         if (expectedMatches) {
-            Color c = new Color(expectedRGB);
+            Color c = new Color(expectedRed, expectedGreen, expectedBlue);
             Color c1 = ColorUtil.getHexPatternColor(m);
             assertTrue(c.equals(c1));
         } else {
@@ -71,14 +73,4 @@ public class HexPatternParsingTest {
         }
     }
 
-    private static final Object[][] INVALID_HEX_VALUES = {
-            { "#0000000", 0, false }, { "#ffgfff", 0, false },
-            { "#FF10f", 0, false }, { "#aa9", 0, false }, { "#03", 0, false },
-            { "#aab3c4c", 0, false }, { "#6010", 0, false },
-            { "#CCCC", 0, false }, { "#9", 0, false },
-            { "#10 10 10", 0, false }, { "101010", 0, false },
-            { "#10101q", 0, false }, { "\\s%\\d[0-9]", 0, false },
-            { "#\\d.*", 0, false }, { "rgb\\(\\.*", 0, false },
-            { "#\\d\\d\\d", 0, false }, { "#\\d.*", 0, false },
-            { "", 0, false }, { "hsl(25,25,25)", 0, false } };
 }

@@ -72,8 +72,7 @@ public class ColorUtil {
             return getHSLAPatternColor(m);
         }
 
-        throw new NumberFormatException(
-                "Parsing color from input '" + input + "' failed.");
+        throw new NumberFormatException("Parsing color from input failed.");
     }
 
     /**

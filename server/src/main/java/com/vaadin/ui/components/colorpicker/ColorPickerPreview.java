@@ -151,11 +151,10 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
             // Pattern matching ensures the validity of
             // the input, this should never happen
             LOGGER.log(Level.INFO, e.getMessage());
-            errorMessage = new UserError(e.getMessage(), ContentMode.TEXT,
-                    ErrorLevel.WARNING);
+            errorMessage = new UserError(getUserErrorText(value),
+                    ContentMode.TEXT, ErrorLevel.WARNING);
         }
         field.setComponentError(errorMessage);
-
     }
 
     @Override
@@ -197,6 +196,17 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
                 updateColorComponents(c);
             }
         }
+    }
+
+    /**
+     * Get the client error message text for color input parsing error.
+     *
+     * @param value
+     *            input which caused the error
+     * @return error message text
+     */
+    protected String getUserErrorText(String value) {
+        return value.concat(" is not in any recognized format");
     }
 
 }
