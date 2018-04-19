@@ -131,12 +131,9 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
     private void valueChange(ValueChangeEvent<String> event) {
         ErrorMessage errorMessage = null;
         String value = event.getValue();
+        value = Objects.toString(value, "").trim();
         Color oldColor = color;
         try {
-            if (value == null) {
-                throw new NumberFormatException("Input cannot be empty");
-            }
-            value = value.trim();
 
             /*
              * Description of supported formats see
@@ -206,7 +203,9 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
      * @return error message text
      */
     protected String getUserErrorText(String value) {
-        return value.concat(" is not in any recognized format");
+        return value.isEmpty() ? "Input cannot be empty"
+                : "Input '".concat(value)
+                        .concat("' is not in any recognized format");
     }
 
 }
