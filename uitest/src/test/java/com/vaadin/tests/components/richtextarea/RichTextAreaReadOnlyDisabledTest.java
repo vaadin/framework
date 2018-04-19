@@ -29,5 +29,9 @@ public class RichTextAreaReadOnlyDisabledTest extends MultiBrowserTest {
         enablePrB.click();
 
         assertElementPresent(By.className("gwt-RichTextArea"));
+        readPrB.click();//Set to read-only
+        assertElementNotPresent(By.className("gwt-RichTextArea"));
+        enablePrB.click();//Set disabled
+        assertElementNotPresent(By.className("gwt-RichTextArea"));
     }
 }
