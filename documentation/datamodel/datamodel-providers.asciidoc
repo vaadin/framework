@@ -58,10 +58,10 @@ We can also define a custom [classname]#Comparator# if we want to customize the 
 
 [source, java]
 ----
-grid.addColumn("Name", Person::getName)
+grid.addColumn(Person::getName).setCaption("Name")
   // Override default natural sorting
-  .setComparator(Comparator.comparing(
-    person -> person.getName().toLowerCase()));
+  .setComparator(
+     Comparator.comparing(Person::getName)::compare);
 ----
 
 [NOTE]
