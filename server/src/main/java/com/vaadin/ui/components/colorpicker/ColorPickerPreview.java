@@ -201,6 +201,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
      * @param value
      *            input which caused the error
      * @return error message text
+     * @since 8.4
      */
     protected String getUserErrorText(String value) {
         return value.isEmpty() ? "Input cannot be empty"

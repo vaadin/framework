@@ -59,7 +59,7 @@ public class ComponentRootSetter implements Serializable {
      * @param customComponent
      *            the custom component or composite
      * @return
-     * @since
+     * @since 8.4
      *
      */
     public static boolean canSetRoot(Component customComponent) {
