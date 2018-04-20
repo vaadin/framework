@@ -3,7 +3,7 @@ Bundle-Name: Vaadin OSGi Integration
 Bundle-Version: ${osgi.bundle.version}
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-License: http://www.apache.org/licenses/LICENSE-2.0
-Import-Package: com.vaadin.*;version='[${osgi.bundle.version},${osgi.bundle.version}]',\
+Import-Package: !com.vaadin.osgi.servlet*,com.vaadin.*;version='[${osgi.bundle.version},${osgi.bundle.version}]',\
     * 
 
-Export-Package: com.vaadin.osgi.servlet
+Export-Package: com.vaadin.osgi.servlet, com.vaadin.osgi.servlet.ds
