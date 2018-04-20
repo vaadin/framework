@@ -50,7 +50,7 @@ public class VColorPicker extends VButton {
     /**
      * Gets the color.
      *
-     * @since
+     * @since 8.4
      * @return the color
      */
     public String getColor() {

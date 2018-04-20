@@ -167,7 +167,7 @@ public class VColorPickerArea extends Widget
     /**
      * Gets the color.
      *
-     * @since
+     * @since 8.4
      * @return the color
      */
     public String getColor() {
