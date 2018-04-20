@@ -163,8 +163,8 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
     public void setEnabled(boolean enabled) {
         if (this.enabled != enabled) {
             // rta.setEnabled(enabled);
-            swapEditableArea();
             this.enabled = enabled;
+            swapEditableArea();
         }
     }
 
@@ -179,6 +179,9 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
     private void swapEditableArea() {
         String value = getValue();
         if (html.isAttached()) {
+            if (isReadOnly() || !isEnabled()) {
+                return;
+            }
             fp.remove(html);
             if (BrowserInfo.get().isWebkit()) {
                 fp.remove(formatter);
@@ -218,8 +221,8 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
 
     public void setReadOnly(boolean b) {
         if (isReadOnly() != b) {
-            swapEditableArea();
             readOnly = b;
+            swapEditableArea();
         }
         // reset visibility in case enabled state changed and the formatter was
         // recreated
