@@ -36,7 +36,7 @@ public interface ColorPickerServerRpc extends ServerRpc {
     /**
      * ColorPicker's selected color is changed
      *
-     * @since
+     * @since 8.4
      * @param color
      */
     public void changeColor(String color);
