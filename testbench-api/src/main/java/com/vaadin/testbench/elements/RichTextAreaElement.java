@@ -39,7 +39,7 @@ public class RichTextAreaElement extends AbstractFieldElement {
      * Return value of the field element.
      *
      * @return value of the field element
-     * @since
+     * @since 8.4
      */
     public String getValue() {
         JavascriptExecutor executor = (JavascriptExecutor) getDriver();
@@ -53,7 +53,7 @@ public class RichTextAreaElement extends AbstractFieldElement {
      *
      * @param chars
      *            new value of the field
-     * @since
+     * @since 8.4
      */
     public void setValue(CharSequence chars) throws ReadOnlyException {
         if (isReadOnly()) {

@@ -31,7 +31,7 @@ public class ColorPickerPreviewElement extends CssLayoutElement {
      *
      * @return true if field has errors, false otherwise
      *
-     * @since
+     * @since 8.4
      */
     public boolean getColorFieldContainsErrors() {
         List<WebElement> caption = findElements(
@@ -47,7 +47,7 @@ public class ColorPickerPreviewElement extends CssLayoutElement {
      *
      * @return the value of the attribute 'value' of the input element
      *
-     * @since
+     * @since 8.4
      */
     public String getColorFieldValue() {
         return getColorTextField().getAttribute("value");
@@ -60,7 +60,7 @@ public class ColorPickerPreviewElement extends CssLayoutElement {
      * @param value
      *            text to insert
      *
-     * @since
+     * @since 8.4
      */
     public void setColorTextFieldValue(String value) {
         // Select all text
@@ -72,7 +72,7 @@ public class ColorPickerPreviewElement extends CssLayoutElement {
      * @return <code>WebElement</code> representing TextField in
      *         ColorPickerPreviewComponent
      * 
-     * @since
+     * @since 8.4
      */
     public WebElement getColorTextField() {
         return findElement(By.className("v-colorpicker-preview-textfield"));

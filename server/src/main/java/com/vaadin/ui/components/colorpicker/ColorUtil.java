@@ -27,7 +27,7 @@ import com.vaadin.shared.ui.colorpicker.Color;
  * Description of supported formats see
  * http://www.w3schools.com/cssref/css_colors_legal.asp
  *
- * @since
+ * @since 8.4
  */
 public class ColorUtil {
     private ColorUtil() {
