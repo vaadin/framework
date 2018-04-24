@@ -709,7 +709,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             hideDraggingCurtain();
             hideResizingCurtain();
         }
-        super.hide();
+        super.hide(false, true, false);
 
         int curIndex = getWindowOrder();
         // Remove window from windowOrder to avoid references being left
