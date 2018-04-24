@@ -101,7 +101,7 @@ public class JavaScript extends AbstractExtension {
     }
 
     /**
-     * Removes a JavaScripFunction from the browser's global JavaScript
+     * Removes a JavaScriptFunction from the browser's global JavaScript
      * namespace.
      *
      * If the name contains dots and intermediate objects were created by
