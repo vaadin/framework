@@ -120,7 +120,7 @@ Enter the following values:
 [guilabel]#Artifact ID#::
  Give `vaadin-archetype-application`
 [guilabel]#Version#::
- You can find the latest Vaadin version number from http://vaadin.com/download/[vaadin.com/download].
+ You can find the latest Vaadin version number from https://vaadin.com/framework/releases[vaadin.com/framework/releases].
 [guilabel]#Repository URL#::
  This can be left blank.
 
