@@ -36,7 +36,8 @@ public class HexPatternParsingTest {
     public static Collection<Object[]> hexdata() {
         Object[][] validValues = { { "#000000", 0, 0, 0, true },
                 { "#ffffff", 255, 255, 255, true },
-                { "#FF00ff", 255, 0, 255, true }, { "#aa90e3",170,144,227, true },
+                { "#FF00ff", 255, 0, 255, true },
+                { "#aa90e3", 170, 144, 227, true },
                 { "#016953", 1, 105, 83, true },
                 { "#bC64D0", 188, 100, 208, true },
                 { "#F100FF", 241, 0, 255, true },

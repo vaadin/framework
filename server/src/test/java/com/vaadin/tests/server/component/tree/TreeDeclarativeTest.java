@@ -149,22 +149,19 @@ public class TreeDeclarativeTest
     public void testUpdateExisting() {
         Tree tree = new Tree();
 
-        String treeDesign =
-                "<vaadin-tree selection-mode=\"MULTI\">" +
-                        "<node item=\"A\">A</node>" +
-                        "<node item=\"B\">B</node>" +
-                        "<node item=\"AA\" parent=\"A\">AA</node>" +
-                        "</vaadin-tree>";
+        String treeDesign = "<vaadin-tree selection-mode=\"MULTI\">"
+                + "<node item=\"A\">A</node>" + "<node item=\"B\">B</node>"
+                + "<node item=\"AA\" parent=\"A\">AA</node>" + "</vaadin-tree>";
 
         Design.read(new ByteArrayInputStream(treeDesign.getBytes()), tree);
-        Object[] items = tree.getDataProvider().
-                fetchChildren(new HierarchicalQuery(null, null)).toArray();
-        assertArrayEquals(new Object[]{"A", "B"}, items);
-        Object[] itemsA = tree.getDataProvider().
-                fetchChildren(new HierarchicalQuery(null, "A")).toArray();
-        assertArrayEquals(new Object[]{"AA"}, itemsA);
-        long countB = tree.getDataProvider().
-                fetchChildren(new HierarchicalQuery(null, "B")).count();
+        Object[] items = tree.getDataProvider()
+                .fetchChildren(new HierarchicalQuery(null, null)).toArray();
+        assertArrayEquals(new Object[] { "A", "B" }, items);
+        Object[] itemsA = tree.getDataProvider()
+                .fetchChildren(new HierarchicalQuery(null, "A")).toArray();
+        assertArrayEquals(new Object[] { "AA" }, itemsA);
+        long countB = tree.getDataProvider()
+                .fetchChildren(new HierarchicalQuery(null, "B")).count();
         assertEquals(0L, countB);
         assertTrue(tree.getSelectionModel() instanceof SelectionModel.Multi);
     }
