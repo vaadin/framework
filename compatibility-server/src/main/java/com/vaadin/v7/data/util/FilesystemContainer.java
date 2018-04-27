@@ -28,8 +28,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.vaadin.server.Resource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.util.FileTypeResolver;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
@@ -49,6 +52,10 @@ import com.vaadin.v7.data.Property;
 @SuppressWarnings("serial")
 public class FilesystemContainer implements Container.Hierarchical {
 
+    /**
+     * MIME type to Icon mapping.
+     */
+    private static final Map<String, Resource> MIME_TO_ICON_MAP = new ConcurrentHashMap<>();
     /**
      * String identifier of a file's "name" property.
      */
@@ -170,6 +177,71 @@ public class FilesystemContainer implements Container.Hierarchical {
         this(root);
         this.setFilter(filter);
         setRecursive(recursive);
+    }
+
+    static {
+        // Initialize Icons
+        ThemeResource folder = new ThemeResource("../runo/icons/16/folder.png");
+        FilesystemContainer.addIcon("inode/drive", folder);
+        FilesystemContainer.addIcon("inode/directory", folder);
+
+    }
+
+    /**
+     * Gets the descriptive icon representing file, based on the filename. First
+     * the mime-type for the given filename is resolved, and then the
+     * corresponding icon is fetched from the internal icon storage. If it is
+     * not found the default icon is returned.
+     *
+     * @param fileName the name of the file whose icon is requested.
+     * @return the icon corresponding to the given file
+     */
+    public static Resource getIcon(String fileName) {
+        return getIconByMimeType(FileTypeResolver.getMIMEType(fileName));
+    }
+
+    private static Resource getIconByMimeType(String mimeType) {
+        final Resource icon = MIME_TO_ICON_MAP.get(mimeType);
+        if (icon != null) {
+            return icon;
+        }
+
+        // If nothing is known about the file-type, general file
+        // icon is used
+        return FileTypeResolver.DEFAULT_ICON;
+    }
+
+    /**
+     * Gets the descriptive icon representing a file. First the mime-type for
+     * the given file name is resolved, and then the corresponding icon is
+     * fetched from the internal icon storage. If it is not found the default
+     * icon is returned.
+     *
+     * @param file the file whose icon is requested.
+     * @return the icon corresponding to the given file
+     */
+    public static Resource getIcon(File file) {
+        return getIconByMimeType(FileTypeResolver.getMIMEType(file));
+    }
+
+    /**
+     * Adds a icon for the given mime-type. If the mime-type also has a
+     * corresponding icon, it is replaced with the new icon.
+     *
+     * @param mimeType the mime-type whose icon is to be changed.
+     * @param icon     the new icon to be associated with <code>MIMEType</code>.
+     */
+    public static void addIcon(String mimeType, Resource icon) {
+        MIME_TO_ICON_MAP.put(mimeType, icon);
+    }
+
+    /**
+     * Gets the internal mime-type to icon mapping.
+     *
+     * @return unmodifiable map containing the current mime-type to icon mapping
+     */
+    public static Map<String, Resource> getMIMETypeToIconMapping() {
+        return Collections.unmodifiableMap(MIME_TO_ICON_MAP);
     }
 
     /**
@@ -714,7 +786,7 @@ public class FilesystemContainer implements Container.Hierarchical {
          * @return the icon of this file.
          */
         public Resource getIcon() {
-            return FileTypeResolver.getIcon(file);
+            return FilesystemContainer.getIcon(file);
         }
 
         /**
