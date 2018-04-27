@@ -180,6 +180,8 @@ public abstract class AbstractListing<T> extends AbstractComponent
     /**
      * Gets the item caption generator that is used to produce the strings shown
      * in the combo box for each item.
+     * <p>
+     * Implementations that support item captions make this method public.
      *
      * @return the item caption generator used, not null
      */
@@ -191,6 +193,8 @@ public abstract class AbstractListing<T> extends AbstractComponent
      * Sets the item caption generator that is used to produce the strings shown
      * in the combo box for each item. By default,
      * {@link String#valueOf(Object)} is used.
+     * <p>
+     * Implementations that support item captions make this method public.
      *
      * @param itemCaptionGenerator
      *            the item caption provider to use, not null

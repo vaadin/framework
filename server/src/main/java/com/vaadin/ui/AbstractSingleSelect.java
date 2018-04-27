@@ -275,6 +275,77 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         return item;
     }
 
+
+    /**
+     * Returns whether the user is allowed to select nothing.
+     *
+     * @return true if empty selection is allowed, false otherwise
+     * @since 8.0
+     */
+    public boolean isEmptySelectionAllowed() {
+        return getState(false).emptySelectionAllowed;
+    }
+
+    /**
+     * Sets whether the user is allowed to select nothing. When
+     * true, a special empty item is shown to the user.
+     *
+     * @param emptySelectionAllowed
+     *            true to allow not selecting anything, false to require
+     *            selection
+     * @since 8.0
+     */
+    public void setEmptySelectionAllowed(boolean emptySelectionAllowed) {
+        getState().emptySelectionAllowed = emptySelectionAllowed;
+    }
+
+    @Override
+    public void setItemCaptionGenerator(
+            ItemCaptionGenerator<T> itemCaptionGenerator) {
+        super.setItemCaptionGenerator(itemCaptionGenerator);
+    }
+
+    @Override
+    public ItemCaptionGenerator<T> getItemCaptionGenerator() {
+        return super.getItemCaptionGenerator();
+    }
+
+    /**
+     * Returns the empty selection caption.
+     * <p>
+     * Empty string is the default empty selection caption.
+     *
+     * @see #setEmptySelectionAllowed(boolean)
+     * @see #isEmptySelectionAllowed()
+     * @see #setEmptySelectionCaption(String)
+     * @see #isSelected(Object)
+     *
+     * @return the empty selection caption, not {@code null}
+     * @since 8.0
+     */
+    public String getEmptySelectionCaption() {
+        return getState(false).emptySelectionCaption;
+    }
+
+    /**
+     * Sets the empty selection caption.
+     * <p>
+     * Empty string is the default empty selection caption.
+     * <p>
+     * If empty selection is allowed via the
+     * {@link #setEmptySelectionAllowed(boolean)} method (it is by default) then
+     * the empty item will be shown with the given caption.
+     *
+     * @param caption
+     *            the caption to set, not {@code null}
+     * @see #isSelected(Object)
+     * @since 8.0
+     */
+    public void setEmptySelectionCaption(String caption) {
+        Objects.nonNull(caption);
+        getState().emptySelectionCaption = caption;
+    }
+
     @Override
     protected Collection<String> getCustomAttributes() {
         Collection<String> attributes = super.getCustomAttributes();

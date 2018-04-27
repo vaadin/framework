@@ -70,13 +70,6 @@ public class ComboBoxState extends AbstractSingleSelectState {
     public boolean allowNewItems = false;
 
     /**
-     * True to allow selecting nothing (a special empty selection item is shown
-     * at the beginning of the list), false not to allow empty selection by the
-     * user.
-     */
-    public boolean emptySelectionAllowed = true;
-
-    /**
      * True to automatically scroll the ComboBox to show the selected item,
      * false not to search for it in the results.
      */
@@ -87,11 +80,6 @@ public class ComboBoxState extends AbstractSingleSelectState {
      * selected.
      */
     public String selectedItemCaption;
-
-    /**
-     * Caption for item which represents empty selection.
-     */
-    public String emptySelectionCaption = "";
 
     /**
      * Selected item icon uri.
