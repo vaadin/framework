@@ -26,6 +26,7 @@ public class FocusOutsideWindowTest extends MultiBrowserTest {
         focusBut.click();
         openW.click();
         $(WindowElement.class).first().close();
+        Thread.sleep(150);
         assertEquals(openW, getFocusedElement());
     }
 }
