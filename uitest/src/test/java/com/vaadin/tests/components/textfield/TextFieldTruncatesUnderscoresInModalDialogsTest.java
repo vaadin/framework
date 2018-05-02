@@ -11,6 +11,6 @@ public class TextFieldTruncatesUnderscoresInModalDialogsTest
     public void testWindowRepositioning() throws Exception {
         openTestURL();
 
-        compareScreen("TextFieldTruncatesUnderscoresInModalDialogs");
+        compareScreen("init");
     }
 }
