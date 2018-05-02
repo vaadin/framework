@@ -25,7 +25,7 @@ public class TabsheetNotEnoughHorizontalSpaceTest extends MultiBrowserTest {
         driver.findElement(By.className("v-tabsheet-scrollerPrev-disabled"));
         driver.findElement(By.className("v-tabsheet-scrollerNext"));
 
-        compareScreen(getScreenshotBaseName());
+        compareScreen("init");
     }
 
 }
