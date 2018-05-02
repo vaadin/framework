@@ -462,7 +462,8 @@ public class GridElement extends AbstractComponentElement {
         Optional<WebElement> toggleButton = getDriver()
                 .findElement(By.className("v-grid-sidebar-content"))
                 .findElements(By.className("column-hiding-toggle")).stream()
-                .filter(element -> element.getText().equals(toggleCaption)).findAny();
+                .filter(element -> element.getText().equals(toggleCaption))
+                .findAny();
         if (toggleButton.isPresent()) {
             toggleButton.ifPresent(element -> element.click());
         } else {
