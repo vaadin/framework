@@ -55,8 +55,6 @@ public class ClassesSerializableTest {
             // exact class level filtering
             "com\\.vaadin\\.event\\.FieldEvents", //
             "com\\.vaadin\\.util\\.FileTypeResolver",
-            "com\\.vaadin\\.util\\.FileTypeResolver",
-
             "com\\.vaadin\\.event\\.LayoutEvents", //
             "com\\.vaadin\\.event\\.MouseEvents", //
             "com\\.vaadin\\.event\\.UIEvents", //
