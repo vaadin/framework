@@ -34,6 +34,7 @@ import com.vaadin.testbench.parallel.BrowserUtil;
 @RunOnHub("tb3-hub.intra.itmill.com")
 @BrowserFactory(VaadinBrowserFactory.class)
 public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
+    private static final String BROWSER_FACTORY = "browser.factory";
     public static final String SCREENSHOT_DIRECTORY = "com.vaadin.testbench.screenshot.directory";
     private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
     private static final String RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.runLocally";
@@ -46,6 +47,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
             "eclipse-run-selected-test.properties");
     private static final String FIREFOX_PATH = "firefox.path";
     private static final String PHANTOMJS_PATH = "phantomjs.binary.path";
+    private static final String BROWSERS_EXCLUDE = "browsers.exclude";
 
     static {
         if (propertiesFile.exists()) {
@@ -68,6 +70,12 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         if (properties.containsKey(PHANTOMJS_PATH)) {
             System.setProperty(PHANTOMJS_PATH,
                     properties.getProperty(PHANTOMJS_PATH));
+        }
+        if (properties.containsKey(BROWSER_FACTORY)) {
+            System.setProperty(BROWSER_FACTORY, properties.getProperty(BROWSER_FACTORY));
+        }
+        if (properties.containsKey(BROWSERS_EXCLUDE)) {
+            System.setProperty(BROWSERS_EXCLUDE, properties.getProperty(BROWSERS_EXCLUDE));
         }
 
         String dir = System.getProperty(SCREENSHOT_DIRECTORY,
