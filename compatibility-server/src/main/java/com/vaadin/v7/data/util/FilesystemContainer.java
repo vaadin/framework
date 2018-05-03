@@ -30,7 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.vaadin.server.Resource;
-import com.vaadin.util.FileTypeResolver;
+import com.vaadin.v7.util.FileTypeResolver;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;

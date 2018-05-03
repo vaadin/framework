@@ -21,7 +21,7 @@ public class ScrollingBodyElementWithModalOpenedTest extends MultiBrowserTest {
 
         Thread.sleep(1000);
 
-        compareScreen(getScreenshotBaseName());
+        compareScreen("init");
     }
 
 }

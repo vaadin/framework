@@ -52,7 +52,8 @@ public class ComponentRootSetter implements Serializable {
     }
 
     /**
-     * Checks if the given custom component or composite may accept a root component.
+     * Checks if the given custom component or composite may accept a root
+     * component.
      * <p>
      * For internal use only.
      *
@@ -63,11 +64,11 @@ public class ComponentRootSetter implements Serializable {
      *
      */
     public static boolean canSetRoot(Component customComponent) {
-        if(customComponent instanceof  CustomComponent) {
+        if (customComponent instanceof CustomComponent) {
             return true;
         }
-        if(customComponent instanceof  Composite) {
-            return ((Composite)customComponent).getCompositionRoot() == null;
+        if (customComponent instanceof Composite) {
+            return ((Composite) customComponent).getCompositionRoot() == null;
         }
         return false;
     }
