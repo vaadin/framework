@@ -36,6 +36,10 @@ public class ServletIntegrationWebsocketIT
 
     @Test
     public void testWebsockedUsed() {
+        // Reopen the page with debug window
+        openTestURL(
+                Stream.concat(getParameters(), Stream.of("debug")).distinct());
+
         // Make sure the correct debug window tab is open.
         findElements(By.className("v-debugwindow-tab")).get(1).click();
 
@@ -50,10 +54,5 @@ public class ServletIntegrationWebsocketIT
                 row.findElement(By.className("caption")).getText());
         assertEquals("Client to server: websocket, server to client: websocket",
                 row.findElement(By.className("value")).getText());
-    }
-
-    protected Stream<String> getParameters() {
-        return Stream.concat(super.getParameters(), Stream.of("debug"))
-                .distinct();
     }
 }

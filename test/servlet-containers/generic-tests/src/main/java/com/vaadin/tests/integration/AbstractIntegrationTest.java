@@ -44,12 +44,12 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
 
         testBench().resizeViewPortTo(SCREENSHOT_WIDTH, SCREENSHOT_HEIGHT);
 
-        openTestURL();
+        openTestURL(getParameters());
     }
 
-    private void openTestURL() {
+    protected void openTestURL(Stream<String> parameters) {
         String url = getDeploymentURL() + getContextPath() + getTestPath() + "?"
-                + getParameters().collect(Collectors.joining("&"));
+                + parameters.collect(Collectors.joining("&"));
 
         driver.get(url);
 
