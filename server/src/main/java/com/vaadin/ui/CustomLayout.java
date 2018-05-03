@@ -105,7 +105,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
 
     /**
      * Constructor for custom layout with given template name. Template file is
-     * fetched from "&lt;theme&gt;/layout/&lt;templateName&gt;".
+     * fetched from "&lt;theme&gt;/layouts/&lt;templateName&gt;".
      */
     public CustomLayout(String template) {
         this();
