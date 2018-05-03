@@ -3,8 +3,8 @@ package com.vaadin.v7.data.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
+import com.googlecode.openbeans.Introspector;
+import com.googlecode.openbeans.PropertyDescriptor;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;

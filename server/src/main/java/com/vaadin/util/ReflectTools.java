@@ -15,8 +15,8 @@
  */
 package com.vaadin.util;
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
+import com.googlecode.openbeans.IntrospectionException;
+import com.googlecode.openbeans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

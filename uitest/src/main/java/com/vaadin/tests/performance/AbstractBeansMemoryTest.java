@@ -1,5 +1,6 @@
 package com.vaadin.tests.performance;
 
+import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -24,7 +25,7 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
-import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
+//import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
 
 /**
  * @author Vaadin Ltd
@@ -140,8 +141,9 @@ public abstract class AbstractBeansMemoryTest<T extends AbstractComponent>
 
         HasComponents container = component.getParent();
         setParent(component, null);
-        memoryLabel.setValue(
-                String.valueOf(ObjectSizeCalculator.getObjectSize(component)));
+//        todo enable back
+// memoryLabel.setValue(
+//                String.valueOf(Instrumentation.getObjectSize(component)));
 
         setParent(component, container);
     }

@@ -15,7 +15,7 @@
  */
 package com.vaadin.v7.data.fieldgroup;
 
-import java.beans.IntrospectionException;
+import com.googlecode.openbeans.IntrospectionException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;

@@ -15,7 +15,7 @@
  */
 package com.vaadin.data;
 
-import java.beans.PropertyDescriptor;
+import com.googlecode.openbeans.PropertyDescriptor;
 
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.util.ReflectTools;

@@ -47,6 +47,11 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.googlecode</groupId>
+            <artifactId>openbeans</artifactId>
+        </dependency>
+
         <!-- Bean Validation API -->
         <dependency>
             <groupId>javax.validation</groupId>
