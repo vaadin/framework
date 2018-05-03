@@ -405,17 +405,6 @@ public class VUI extends SimplePanel implements ResizeHandler,
     }
 
     /**
-     * Returns the element, which was focused.
-     *
-     * @see #storeFocus()
-     *
-     * @return storedFocus element
-     */
-    public Element getStoredFocus() {
-        return storedFocus;
-    }
-
-    /**
      * Restores the previously stored focus Element.
      *
      * Current use case is to restore the focus when a Window is closed. Does

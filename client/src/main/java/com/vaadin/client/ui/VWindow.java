@@ -253,9 +253,12 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
          *
          * When the focus was changed outside the window while the window was
          * open, the originally stored element is not restored.
+         *
+         * IE returns null and other browsers HTMLBodyElement, if no element is
+         * focused after window is closed.
          */
-        if (WidgetUtil.getFocusedElement() == null || WidgetUtil
-                .getFocusedElement().getTagName().equalsIgnoreCase("body")) {
+        if (WidgetUtil.getFocusedElement() == null || "body".equalsIgnoreCase(
+                WidgetUtil.getFocusedElement().getTagName())) {
             getApplicationConnection().getUIConnector().getWidget()
                     .focusStoredElement();
         }
