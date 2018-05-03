@@ -44,7 +44,7 @@ The parameters are as follows:
 archetypes.
 
 [parameter]#archetypeArtifactId#:: The archetype ID.
-See the list of available archetypes in <<dummy/../../../framework/getting-started-archetypes#getting-started.archetypes,"Overview of Maven Archetypes">>.
+See the list of available archetypes in <<dummy/../../../framework/getting-started/getting-started-archetypes.html#getting-started.archetypes,"Overview of Maven Archetypes">>.
 
 [parameter]#archetypeVersion#::
 Version of the archetype to use.
