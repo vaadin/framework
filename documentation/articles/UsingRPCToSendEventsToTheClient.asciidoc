@@ -33,7 +33,7 @@ We'll create *MyComponentClientRpc* in the client package:
 ....
 package com.example.mycomponent.client;
 
-import com.vaadin.client.communication.ClientRpc;
+import com.vaadin.shared.communication.ClientRpc;
 
 public interface MyComponentClientRpc extends ClientRpc {
   public void alert(String message);
@@ -121,7 +121,7 @@ public class MyComponent extends AbstractComponent {
             "Ok, that's enough!");
       }
 
-      setText("You have clicked " + clickCount + " times");
+     // setText("You have clicked " + clickCount + " times");
     }
   };
 
