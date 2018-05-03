@@ -3,6 +3,7 @@ daysUntilClose: 900
 exemptLabels:
  - BFP
  - Pinned
+ - enhancement
 staleLabel: Stale
 only: issues
 # Comment to post when closing a stale Issue or Pull Request.
