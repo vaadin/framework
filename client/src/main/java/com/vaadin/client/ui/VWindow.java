@@ -253,11 +253,16 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
          * Restores the previously stored focused element.
          *
          * When the focus was changed outside the window while the window was
-         * open, the originally stored element is restored.
+         * open, the originally stored element is not restored.
+         *
+         * IE returns null and other browsers HTMLBodyElement, if no element is
+         * focused after window is closed.
          */
-        getApplicationConnection().getUIConnector().getWidget()
-                .focusStoredElement();
-
+        if (WidgetUtil.getFocusedElement() == null || "body".equalsIgnoreCase(
+                WidgetUtil.getFocusedElement().getTagName())) {
+            getApplicationConnection().getUIConnector().getWidget()
+                    .focusStoredElement();
+        }
         removeTabBlockHandlers();
         // If you click while the window is being closed,
         // a new dragging curtain might be added and will
@@ -725,8 +730,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             hideDraggingCurtain();
             hideResizingCurtain();
         }
-        super.hide(false, true, false);
-
+        super.hide();
         int curIndex = getWindowOrder();
         // Remove window from windowOrder to avoid references being left
         // hanging.

@@ -1,11 +1,14 @@
 package com.vaadin.tests;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class FocusOutsideWindow extends AbstractTestUI {
     private boolean focusTextF = true;
 
@@ -23,8 +26,8 @@ public class FocusOutsideWindow extends AbstractTestUI {
         button.addClickListener(new Button.ClickListener() {
             public void buttonClick(Button.ClickEvent event) {
                 Window window = new Window("WINDOW");
+                window.setContent(new Label("Inside window"));
                 window.setHeight("100px");
-                // window.setModal(true);
                 window.addCloseListener(new Window.CloseListener() {
                     @Override
                     public void windowClose(Window.CloseEvent e) {
