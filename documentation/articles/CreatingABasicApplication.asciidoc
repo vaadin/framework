@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-a-basic-application]]
-Creating a basic application
-----------------------------
+= Creating a basic application
 
 To create a Vaadin application you need two files. A class that extends
 UI which is your main view and entry point to the application as well as

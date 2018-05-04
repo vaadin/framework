@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[formatting-data-in-grid]]
-Formatting data in grid
------------------------
+= Formatting data in grid
 
 Without any special configuration, Grid tries to find a `Converter` for
 converting the property value into a String that can be shown in the

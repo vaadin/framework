@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[adding-jpa-to-the-address-book-demo]]
-Adding JPA to the address book demo
------------------------------------
+= Adding JPA to the address book demo
 
 Petter Holmström
 
