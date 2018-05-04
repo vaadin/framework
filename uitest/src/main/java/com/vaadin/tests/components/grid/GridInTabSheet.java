@@ -5,25 +5,46 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.renderers.NumberRenderer;
 
-public class GridInTabSheet extends AbstractReindeerTestUI {
+@Widgetset("com.vaadin.DefaultWidgetSet")
+public class GridInTabSheet extends AbstractTestUIWithLog {
+
+    public class DataCommunicator<T>
+            extends com.vaadin.data.provider.DataCommunicator<T> {
+        @Override
+        protected void onRequestRows(int firstRowIndex, int numberOfRows,
+                int firstCachedRowIndex, int cacheSize) {
+            log("RequestRows: [" + firstRowIndex + "," + numberOfRows + ","
+                    + firstCachedRowIndex + "," + cacheSize + "]");
+            super.onRequestRows(firstRowIndex, numberOfRows,
+                    firstCachedRowIndex, cacheSize);
+        }
+    }
+
+    public class Grid<T> extends com.vaadin.ui.Grid<T> {
+
+        public Grid() {
+            super(new DataCommunicator<>());
+        }
+    }
 
     private AtomicInteger index = new AtomicInteger(0);
 
     @Override
     protected void setup(VaadinRequest request) {
         TabSheet sheet = new TabSheet();
+
         final Grid<Integer> grid = new Grid<>();
         grid.setSelectionMode(SelectionMode.MULTI);
         grid.addColumn(ValueProvider.identity(), new NumberRenderer())

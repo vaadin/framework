@@ -2,6 +2,8 @@ package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -65,6 +67,21 @@ public class GridInTabSheetTest extends MultiBrowserTest {
 
         tabsheet.openTab("Grid");
 
+        assertNoNotification();
+    }
+
+    @Test
+    public void testNoDataRequestFromClientWhenSwitchingTab() {
+        setDebug(true);
+        openTestURL();
+
+        TabSheetElement tabsheet = $(TabSheetElement.class).first();
+        tabsheet.openTab("Label");
+        tabsheet.openTab("Grid");
+
+        getLogs().forEach(logText -> assertTrue(
+                "There should be no logged requests, was: " + logText,
+                logText.trim().isEmpty()));
         assertNoNotification();
     }
 
