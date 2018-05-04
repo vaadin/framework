@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[using-font-icons-in-vaadin-7.2]]
-Using font icons in Vaadin 7.2
-------------------------------
+= Using font icons in Vaadin 7.2
 
 A “font icon” is an icon that is a glyph (essentially a character) from
 a font. A font that is made for this purpose (containing only icons) is

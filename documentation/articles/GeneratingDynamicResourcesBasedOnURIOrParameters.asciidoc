@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[generating-dynamic-resources-based-on-uri-or-parameters]]
-Generating dynamic resources based on URI or parameters
--------------------------------------------------------
+= Generating dynamic resources based on URI or parameters
 
 You can dynamically generate responses based on e.g. query parameters by
 creating your own `RequestHandler` and registering it with the session.

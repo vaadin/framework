@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[sending-events-from-the-client-to-the-server-using-RPC]]
-Sending events from the client to the server using RPC
-------------------------------------------------------
+= Sending events from the client to the server using RPC
 An RPC mechanism can be used to communicate from the client to the
 server. In effect, the client can call methods that are executed by the
 server component. The server component can then take appropriate action

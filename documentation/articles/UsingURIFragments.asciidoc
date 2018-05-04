@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[using-uri-fragments]]
-Using URI fragments
--------------------
+= Using URI fragments
 
 [[reading-fragment-when-initializing-ui]]
 Reading Fragment when Initializing UI

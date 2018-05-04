@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[configuring-push-for-your-environment]]
-Configuring push for your environment
--------------------------------------
+= Configuring push for your environment
 
 Server push and especially websockets are emerging technologies and not
 all servers and browsers handle them correctly (or even close to

@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[scalable-web-applications]]
-Scalable web applications
--------------------------
+= Scalable web applications
 
 [[introduction]]
 Introduction

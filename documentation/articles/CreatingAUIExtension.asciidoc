@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-a-ui-extension]]
-Creating a UI extension
------------------------
+= Creating a UI extension
 
 An *Extension* is an entity that is not a full-fledged UI component, but
 is instead used to enhance or extend the functionality of an existing

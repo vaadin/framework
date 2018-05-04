@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[visually-distinguish-primary-actions]]
-Visually distinguish primary actions
-------------------------------------
+= Visually distinguish primary actions
 
 Most forms and dialogs have at least two actions that can be performed,
 such as _Submit/Cancel_, _Save/Revert_ or _Yes/No_. Quite often, there

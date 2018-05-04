@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[setting-and-reading-cookies]]
-Setting And Reading Cookies
----------------------------
+= Setting And Reading Cookies
 
 You can easily read and write
 http://en.wikipedia.org/wiki/HTTP_cookie[cookies] from both the server

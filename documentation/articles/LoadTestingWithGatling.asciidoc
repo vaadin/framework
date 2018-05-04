@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[loading-testing-with-gatling]]
-Load testing with Gatling
--------------------------
+= Load testing with Gatling
 
 http://gatling.io[Gatling] is a powerful tool for load testing. Compared
 to WebDriver/Selenium/TestBench, it doesn't render the actual content,

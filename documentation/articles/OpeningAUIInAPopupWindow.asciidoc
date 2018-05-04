@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[opening-a-ui-in-a-popup-window]]
-Opening a UI in a popup window
-------------------------------
+= Opening a UI in a popup window
 
 To open a new popup window in the browser showing another part of your
 application, you can use the new `BrowserWindowOpener` extension. Any

@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-an-application-that-preserves-state-on-refresh]]
-Creating an application that preserves state on refresh
--------------------------------------------------------
+= Creating an application that preserves state on refresh
 
 By default, Vaadin 7 does not preserve UI state when the browser page is
 refreshed. This means that the instance number in this example is
