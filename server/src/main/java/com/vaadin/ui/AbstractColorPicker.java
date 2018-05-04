@@ -569,7 +569,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
      * </p>
      * 
      * @see Window#setModal
-     * @since
+     * @since 8.4.1
      * @param modal
      *            true if modality is to be turned on
      */
@@ -581,7 +581,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
      * Checks the modality of the dialog.
      *
      * @see #setModal(boolean)
-     * @since
+     * @since 8.4.1
      * @return true if the dialog is modal, false otherwise
      */
     public boolean isModal() {
