@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -34,6 +35,7 @@ import com.vaadin.testbench.parallel.BrowserUtil;
 @RunOnHub("tb3-hub.intra.itmill.com")
 @BrowserFactory(VaadinBrowserFactory.class)
 public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
+    private static final String BROWSER_FACTORY = "browser.factory";
     public static final String SCREENSHOT_DIRECTORY = "com.vaadin.testbench.screenshot.directory";
     private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
     private static final String RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.runLocally";
@@ -46,6 +48,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
             "eclipse-run-selected-test.properties");
     private static final String FIREFOX_PATH = "firefox.path";
     private static final String PHANTOMJS_PATH = "phantomjs.binary.path";
+    private static final String BROWSERS_EXCLUDE = "browsers.exclude";
 
     static {
         if (propertiesFile.exists()) {
@@ -61,14 +64,12 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
             System.setProperty("browsers.include",
                     localBrowser.getBrowserName() + localBrowser.getVersion());
         }
-        if (properties.containsKey(FIREFOX_PATH)) {
-            System.setProperty(FIREFOX_PATH,
-                    properties.getProperty(FIREFOX_PATH));
-        }
-        if (properties.containsKey(PHANTOMJS_PATH)) {
-            System.setProperty(PHANTOMJS_PATH,
-                    properties.getProperty(PHANTOMJS_PATH));
-        }
+
+        // Read properties from the file.
+        Stream.of(FIREFOX_PATH, PHANTOMJS_PATH, BROWSER_FACTORY,
+                BROWSERS_EXCLUDE).filter(properties::containsKey)
+                .forEach(property -> System.setProperty(property,
+                        properties.getProperty(property)));
 
         String dir = System.getProperty(SCREENSHOT_DIRECTORY,
                 properties.getProperty(SCREENSHOT_DIRECTORY));
