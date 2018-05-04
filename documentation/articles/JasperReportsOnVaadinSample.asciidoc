@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[jasper-reports-on-vaadin-sample]]
-Jasper reports on Vaadin sample
-------------------------------
+= Jasper reports on Vaadin sample
 
 [[introduction]]
 Introduction

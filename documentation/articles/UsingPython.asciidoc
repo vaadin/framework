@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[developing-vaadin-apps-with-python]]
-Developing Vaadin apps with Python
-----------------------------------
+= Developing Vaadin apps with Python
 
 [[to-accomplish-exactly-what]]
 To accomplish exactly what?

@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[simplified-rpc-using-javascript]]
-Simplified RPC using JavaScript
--------------------------------
+= Simplified RPC using JavaScript
 
 This tutorial continues where
 link:IntegratingAJavaScriptComponent.asciidoc[Integrating a JavaScript

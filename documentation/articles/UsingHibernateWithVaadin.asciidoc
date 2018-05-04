@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[using-hibernate-with-vaadin]]
-Using Hibernate with Vaadin
----------------------------
+= Using Hibernate with Vaadin
 
 Using Hibernate in Toolkit application, Basic
 http://en.wikipedia.org/wiki/Create,_read,_update_and_delete[CRUD]

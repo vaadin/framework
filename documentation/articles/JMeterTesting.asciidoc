@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[how-to-test-vaadin-web-application-performance-with-jmeter]]
-How to test Vaadin web application performance with JMeter
-----------------------------------------------------------
+= How to test Vaadin web application performance with JMeter
 
 This article describes how to make load testing of your Vaadin web
 application with http://jakarta.apache.org/jmeter/[JMeter].
