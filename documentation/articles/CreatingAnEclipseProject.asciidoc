@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-an-eclipse-project]]
-Creating an Eclipse project
----------------------------
+= Creating an Eclipse project
 
 At the moment you have two options:
 

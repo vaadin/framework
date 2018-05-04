@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[handling-logout]]
-Handling logout
----------------
+= Handling logout
 What should happen the user wants to log out from a Vaadin application
 depends on how the user is stored when the user logged in.
 

@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[using-server-initiated-events]]
-Using server-initiated events
------------------------------
+= Using server-initiated events
 
 The traditional way of communicating with the server is always client
 initiated. Whenever the user interacts with the application so a server

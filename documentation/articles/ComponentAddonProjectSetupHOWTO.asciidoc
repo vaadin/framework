@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[component-add-on-project-setup-howto]]
-Component add-on project setup how-to
-------------------------------------
+= Component add-on project setup how-to
 
 This how-to walks you through a complete setup for a project for
 developing, building and publishing your own Vaadin UI component

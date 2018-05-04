@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[adding-a-splash-sreen]]
-Adding a splash screen
-----------------------
+= Adding a splash screen
 
 When a Vaadin application is loading a loading indicator is
 automatically shown so the user knows something is happening. But what

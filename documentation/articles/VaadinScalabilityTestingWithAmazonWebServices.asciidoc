@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[vaadin-scalability-testing-with-amazon-web-services]]
-Vaadin scalability testing with Amazon Web Services
----------------------------------------------------
+= Vaadin scalability testing with Amazon Web Services
 
 This article explains how you can test the scalability of your
 application in the Amazon Web Services (AWS) cloud. The AWS services

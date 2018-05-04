@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[letting-the-user-download-a-file]]
-Letting The User Download A File
---------------------------------
+= Letting The User Download A File
 
 Providing a file for download to the user might be trickier that what it
 seems - the file should be downloaded instead of just opened by the

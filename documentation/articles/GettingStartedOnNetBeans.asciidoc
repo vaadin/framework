@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[getting-started-on-netbeans]]
-Getting started on NetBeans
----------------------------
+= Getting started on NetBeans
 
 *This page is for old NetBeans version. Take a look at
 http://wiki.netbeans.org/VaadinPlugin1.0.0[New plugin in NetBeans wiki]*

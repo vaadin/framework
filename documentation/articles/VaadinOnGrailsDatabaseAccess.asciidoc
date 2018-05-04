@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[vaadin-on-grails-database-access]]
-Vaadin on grails - Database access
-----------------------------------
+= Vaadin on grails - Database access
 
 _Versions used in this tutorial: Grails 2.3.x, Vaadin 7.1.x. News and
 updates about Vaadin on Grails are available on

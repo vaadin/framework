@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[exposing-server-side-api-to-javascript]]
-Exposing server-side API to JavaScript
---------------------------------------
+= Exposing server-side API to JavaScript
 
 The new JavaScript integration functionality will allow you to easily
 publish methods that can be called with JavaScript on the client side.

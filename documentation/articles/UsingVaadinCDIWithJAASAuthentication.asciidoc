@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[using-vaadin-cdi-with-jaas-authentication]]
-Using Vaadin CDI with JAAS authentication
------------------------------------------
+= Using Vaadin CDI with JAAS authentication
 
 Servlet 3.0 is awesome, so is CDI. They work well and are a joy to set
 up. Even adding the Vaadin Navigator to the mix isn't an issue, since

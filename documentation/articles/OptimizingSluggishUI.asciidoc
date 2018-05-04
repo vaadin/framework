@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[optimizing-sluggish-ui]]
-Optimizing sluggish UI
-----------------------
+= Optimizing sluggish UI
 
 Is your Vaadin application becoming sluggish? Yes, this can happen - it
 is no secret. This can happen for every application, with every

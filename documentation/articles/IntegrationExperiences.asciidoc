@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[integrating-vaadin-applications-with-other-technologies]]
-Integrating Vaadin Applications with other technologies
--------------------------------------------------------
+= Integrating Vaadin Applications with other technologies
 
 [[preface]]
 Preface

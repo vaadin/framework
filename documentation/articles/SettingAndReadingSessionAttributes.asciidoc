@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[setting-and-reading-session-attributes]]
-Setting and reading session attributes
---------------------------------------
+= Setting and reading session attributes
 
 Vaadin has a few different ways of storing data that should be
 accessible later. Which one you should use depends on the scope of the

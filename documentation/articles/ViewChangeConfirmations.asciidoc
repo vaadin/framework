@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[view-change-confirmations]]
-View change confirmations
--------------------------
+= View change confirmations
 
 The `Navigator` API provides ways to prevent the user from navigating away
 from a view in some cases, usually when the view has some unsaved

@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[configure-input-fields-to-guide-data-entry]]
-Configure input fields to guide data entry
-------------------------------------------
+= Configure input fields to guide data entry
 
 [[field-size]]
 Field size

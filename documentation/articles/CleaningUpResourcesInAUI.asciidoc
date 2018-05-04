@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[cleaning-up-resources-in-a-ui]]
-Cleaning up resources in a UI
------------------------------
+= Cleaning up resources in a UI
 
 Vaadin UIs that are open on the client side send a regular heartbeat
 to the server to indicate they are still alive, even though there is no

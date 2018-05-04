@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[use-tooltips-to-clarify-functions]]
-Use tooltips to clarify functions
----------------------------------
+= Use tooltips to clarify functions
 
 Even when clearly labelled, the action performed by a button might not
 be clear enough to the user. This is especially common when space or

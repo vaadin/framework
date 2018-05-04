@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-a-bookmarkable-application-with-back-button-support]]
-Creating a bookmarkable application with back button support
-------------------------------------------------------------
+= Creating a bookmarkable application with back button support
 
 Vaadin 7 comes with a new set of APIs to aid creation of navigation
 within your application. The main concepts are *Navigator* and *View*,
