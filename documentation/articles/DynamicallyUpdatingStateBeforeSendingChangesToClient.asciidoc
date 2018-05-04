@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[dynamically-updating-state-before-sending-changes-to-client]]
-Dynamically updating state before sending changes to client
------------------------------------------------------------
+= Dynamically updating state before sending changes to client
 
 There are some cases where a server-side implementation must delay some
 work until right before data is about to be sent to the client. Some

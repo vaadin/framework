@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[widget-styling-using-only-css]]
-Widget styling using only CSS
------------------------------
+= Widget styling using only CSS
 
 The preferred way of styling your widget is to only use static CSS
 included in the theme's styles.css file. For information on how to

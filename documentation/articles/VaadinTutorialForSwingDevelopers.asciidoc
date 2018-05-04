@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[a-hitchhikers-guide-to-convert-aswing-appto-modern-web-app]]
-A hitchhiker's guide to convert a Swing app to modern web app
--------------------------------------------------------------
+= A hitchhiker's guide to convert a Swing app to modern web app
 
 [[intro]]
 Intro

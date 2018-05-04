@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[packaging-scss-or-css-in-an-add-on]]
-Packaging SCSS or CSS in an add-on
-----------------------------------
+= Packaging SCSS or CSS in an add-on
 
 The add-on architecture of Vaadin enables you to easily create reusable
 components and share them with the world. The add-on can be of various

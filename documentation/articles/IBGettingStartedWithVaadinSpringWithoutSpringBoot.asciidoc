@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[i-b-getting-started-with-vaadin-spring-without-spring-boot]]
-I b - Getting started with Vaadin Spring without Spring Boot
-------------------------------------------------------------
+= I b - Getting started with Vaadin Spring without Spring Boot
 
 Note: this tutorial applies to *Vaadin Spring 1.0.0 and later*
 

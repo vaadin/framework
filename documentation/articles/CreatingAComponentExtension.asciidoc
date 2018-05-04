@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-a-component-extension]]
-Creating a component extension
-------------------------------
+= Creating a component extension
 
 In this tutorial we create a simple extension that can be attached to a
 `PasswordField`, displaying a floating notification if the user's Caps

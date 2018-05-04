@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[using-parameters-with-views]]
-Using parameters with Views
----------------------------
+= Using parameters with Views
 
 When the Navigator API is in use, one can pass "parameters" to Views in
 the URI fragment.

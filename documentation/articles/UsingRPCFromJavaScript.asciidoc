@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[using-rpc-from-javascript]]
-Using RPC from JavaScript
--------------------------
+= Using RPC from JavaScript
 
 This tutorial continues where
 link:IntegratingAJavaScriptComponent.asciidoc[Integrating a JavaScript

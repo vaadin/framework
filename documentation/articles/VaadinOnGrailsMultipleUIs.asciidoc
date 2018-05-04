@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[vaadin-on-grails-multiple-uis]]
-Vaadin on grails - multiple UIs
--------------------------------
+= Vaadin on grails - multiple UIs
 
 _Versions used in this tutorial: Grails 2.3.x, Vaadin 7.1.x. News and
 updates about Vaadin on Grails are available on

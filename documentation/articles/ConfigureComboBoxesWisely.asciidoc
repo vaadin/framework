@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[configure-comboboxes-wisely]]
-Configure ComboBoxes wisely
----------------------------
+= Configure ComboBoxes wisely
 The Vaadin *ComboBox* is a versatile input field with lots of settings
 that change its behavior. The default settings are a good start, but are
 not necessarily suitable for all situations. Configure your ComboBoxes

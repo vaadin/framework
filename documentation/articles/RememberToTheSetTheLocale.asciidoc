@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[remember-to-the-set-the-locale]]
-Remember to the set the locale
-------------------------------
+= Remember to the set the locale
 The Locale of an application or an individual component dictates the
 language and format used for displaying and parsing numbers and dates.
 This includes things like names of months, 12 or 24 hour time formats,
