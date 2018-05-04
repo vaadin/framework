@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-a-master-details-view-for-editing-persons]]
-Creating a master details view for editing persons
---------------------------------------------------
+= Creating a master details view for editing persons
 
 [[set-up]]
 Set-up

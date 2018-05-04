@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[changing-the-default-converters-for-an-application]]
-Changing the default converters for an application
---------------------------------------------------
+= Changing the default converters for an application
 
 Each Vaadin session instance has a `ConverterFactory` that provides
 converters to Fields and Table. The defaults might not be ideal for your

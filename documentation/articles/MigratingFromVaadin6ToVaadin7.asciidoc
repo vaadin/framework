@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[migrating-from-vaadin-6-to-vaadin-7]]
-Migrating from Vaadin 6 to Vaadin 7
------------------------------------
+= Migrating from Vaadin 6 to Vaadin 7
 
 For migration to Vaadin 7.1,  see
 link:MigratingFromVaadin7.0ToVaadin7.1.asciidoc[Migrating

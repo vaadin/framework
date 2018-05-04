@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-a-customfield-for-editing-the-address-of-a-person]]
-Creating a CustomField for editing the address of a person
-----------------------------------------------------------
+= Creating a CustomField for editing the address of a person
 
 A normal use case is that you want to create a form out a bean that the
 user can edit. Often these beans contain references to other beans as

@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-an-application-with-different-features-for-different-clients]]
-Creating an application with different features for different clients
----------------------------------------------------------------------
+= Creating an application with different features for different clients
 
 Providing different features for different clients can be done by
 creating a specialized UIProvider for the application.

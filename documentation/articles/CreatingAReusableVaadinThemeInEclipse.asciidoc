@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-a-reusable-vaadin-theme-in-eclipse]]
-Creating a reusable Vaadin theme in Eclipse
--------------------------------------------
+= Creating a reusable Vaadin theme in Eclipse
 
 This tutorial teaches you how to create a standalone Vaadin theme that
 can be reused in other Vaadin projects as an add-on.

@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[auto-generating-a-form-based-on-a-bean-vaadin-6-style-form]]
-Auto-generating a form based on a bean - Vaadin 6 style Form
-------------------------------------------------------------
+= Auto-generating a form based on a bean - Vaadin 6 style Form
 
 In Vaadin 6 it is easy to get a completely auto generated form based on
 a bean instance by creating a `BeanItem` and passing that to a Form. Using
