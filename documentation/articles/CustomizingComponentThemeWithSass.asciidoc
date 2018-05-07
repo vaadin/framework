@@ -123,9 +123,6 @@ Now we have a good starting-point. Note that this might not be such a
 big deal for small things, like buttons, but imagine something like
 Table witout _any_ styles. Yikes.
 
-*_NOTE_* _in beta10, the $primaryStyleName functionality is still only
-available for Base and Reindeer. This will change in the near future._
-
 Here are the full sources (using distinct colors for each button for
 clarity):
 
