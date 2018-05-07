@@ -112,8 +112,15 @@ The package structure usually looks something like this:
 ** MyComponentConnector.java
 ** MyComponentWidget.java
 
-Finally, compile the widgetset, and *make sure web.xml contains the
-widgetset parameter:*
+Finally, compile the widgetset, and *make sure the widget set is defined with the @WidgetSet annotation in the UI class*:
+
+[source,java]
+....
+@WidgetSet("com.example.mycomponent.MyComponentWidgetset")
+class MyUI extends UI {
+....
+
+If you are using web.xml, it should contain the widgetset parameter:
 
 [source,xml]
 ....
