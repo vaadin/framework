@@ -49,6 +49,13 @@ same folder as _RedButton.java_ and has this content:
 
 This new mechanism makes it very easy to include style sheet or
 JavaScript files with add-ons and automatically load them in the browser
-when the add-on is used. Do note that third-party JavaScript code can be dangerous 
+when the add-on is used.
+
+[WARNING]
+.Security Warning
+====
+Do note that third-party JavaScript code can be dangerous 
 (https://www.owasp.org/index.php/3rd_Party_Javascript_Management_Cheat_Sheet), 
 and you should take into account the security risks of using such. 
+
+====

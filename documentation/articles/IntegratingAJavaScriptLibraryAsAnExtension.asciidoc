@@ -85,3 +85,12 @@ libraries that do not provide a component that is added to a layout. By
 using a client-side JavaScript connector for integrating the JavaScript
 library, you can eliminate GWT from the equation to give you slightly
 less code to maintain.
+
+[WARNING]
+.Security Warning
+====
+Do note that third-party JavaScript code can be dangerous 
+(https://www.owasp.org/index.php/3rd_Party_Javascript_Management_Cheat_Sheet), 
+and you should take into account the security risks of using such. 
+
+====
