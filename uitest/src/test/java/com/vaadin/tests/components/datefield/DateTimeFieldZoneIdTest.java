@@ -22,14 +22,15 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.DateTimeFieldElement;
 import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateTimeFieldZoneIdTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        // PhantomJS doesn't support getting timezone
-        return getBrowsersExcludingPhantomJS();
+        // IE11 and PhantomJS don't support getting timezone
+        return getBrowserCapabilities(Browser.CHROME, Browser.FIREFOX);
     }
 
     private static LocalDateTime THIRTY_OF_JULY = INITIAL_DATE_TIME
