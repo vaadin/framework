@@ -22,7 +22,8 @@ public class GlobalResourceHandlerTest {
         assertEncodedFilenameIsHandled("simple.txt", "simple.txt");
         assertEncodedFilenameIsHandled("with spaces.txt", "with+spaces.txt");
         assertEncodedFilenameIsHandled("with # hash.txt", "with+%23+hash.txt");
-        assertEncodedFilenameIsHandled("with # hash.txt", "with+%23+hash.txt");
+        assertEncodedFilenameIsHandled("with ; semicolon.txt", "with+%3B+semicolon.txt");
+        assertEncodedFilenameIsHandled("with , comma.txt", "with+%2C+comma.txt");
     }
 
     private void assertEncodedFilenameIsHandled(String filename, String expectedFilename) throws IOException {

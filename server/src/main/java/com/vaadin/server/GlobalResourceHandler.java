@@ -18,8 +18,6 @@ package com.vaadin.server;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -126,11 +124,8 @@ public class GlobalResourceHandler implements RequestHandler {
 
 
     private String urlEncodedKey(String key) {
-        try {
-            return new URI(null, null, key, null).getRawPath();
-        } catch (URISyntaxException e) {
-            return key;
-        }
+        // getPathInfo return path decoded but without decoding plus as spaces
+        return ResourceReference.encodeFileName(key.replace("+", " "));
     }
 
     /**
