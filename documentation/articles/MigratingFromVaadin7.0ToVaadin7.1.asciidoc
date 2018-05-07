@@ -13,9 +13,9 @@ This guide describes how to migrate from earlier versions to Vaadin 7.1.
 Migrating from Vaadin 6
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-When migrating from Vaadin 6, first review
-link:MigratingFromVaadin6ToVaadin7.asciidoc[Migrating
-from Vaadin 6 to Vaadin 7], then continue with the rest of this guide.
+When migrating from Vaadin 6, first review 
+<<MigratingFromVaadin6ToVaadin7#migrating-from-vaadin-6-to-vaadin-7,Migrating
+from Vaadin 6 to Vaadin 7>>, then continue with the rest of this guide.
 
 [[migrating-from-vaadin-7.0]]
 Migrating from Vaadin 7.0

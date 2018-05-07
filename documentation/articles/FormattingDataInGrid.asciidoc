@@ -114,8 +114,8 @@ Full example
 ^^^^^^^^^^^^
 
 Putting all these pieces together, we end up with this class that uses
-the same data as in the link:UsingGridWithAContainer.asciidoc[Using
-Grid with a Container] example.
+the same data as in the <<UsingGridWithAContainer#using-with-a-container,Using
+Grid with a Container>> example.
 
 [source,java]
 ....

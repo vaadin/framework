@@ -1,11 +1,11 @@
----
+--
 title: Contents
 order: 1
 layout: page
----
-
+--
+ 
 = Community articles for Vaadin 7
-
+ 
 [discrete]
 == Articles
 - <<LazyQueryContainer#lazy-query-container,"Lazy query container">>
@@ -42,3 +42,26 @@ layout: page
 - <<UsingGridWithInlineData#using-grid-with-inline-data,"Using Grid with inline data">>
 - <<MigratingFromVaadin6ToVaadin7#migrating-from-vaadin-6-to-vaadin-7,"Migrating from Vaadin 6 to Vaadin 7">>
 - <<MigratingFromVaadin7%2E0ToVaadin7%2E1#migrating-from-vaadin-7.0-to-vaadin-7.1,"Migrating from Vaadin 7.0 to Vaadin 7.1">>
+- <<UsingParametersWithViews#using-parameters-with-views,"Using parameters with views">>
+- <<SendingEventsFromTheClientToTheServerUsingRPC#sending-events-from-the-client-to-the-server-using-RPC,"Sending events from the client to the server using RPC">>
+- <<IntegratingAJavaScriptComponent#integrating-a-javascript-component,"Integrating a JavaScript component">>
+- <<IntegratingAJavaScriptLibraryAsAnExtension#integrating-a-javascript-library-as-an-extension,"Integrating a JavaScript library as an extension">>
+- <<UsingAJavaScriptLibraryOrAStyleSheetInAnAddOn#using-a-javascript-library-or-a-style-sheet-in-an-addon,"Using a JavaScript library or a style sheet in an add-on">>
+- <<ExposingServerSideAPIToJavaScript#exposing-server-side-api-to-javascript,"Exposing Server Side API to JavaScript">>
+- <<UsingRPCFromJavaScript#using-rpc-from-javascript,"Using RPC from JavaScript">>
+- <<CustomizingTheStartupPageInAnApplication#customizing-the-startup-page-in-an-application,"Customizing the startup page in an application">>
+- <<OptimizingTheWidgetSet#optimizing-the-widget-set,"Optimizing the widget set">>
+- <<UsingBeanValidationToValidateInput#using-bean-validation-to-validate-input,"Using Bean Validation to validate input">>
+- <<AccessControlForViews#access-control-for-views,"Access control for views">>
+- <<CustomizingComponentThemeWithSass#customizing-component-theme-with-sass,"Customizing component theme with Sass">>
+- <<CreatingASimpleComponent#creating-a-simple-component,"Creating a simple component">>
+- <<CreatingASimpleComponentContainer#creating-a-simple-component-container,"Creating a simple component container">>
+- <<CreatingAUIExtension#creating-a-ui-extension,"Creating a UI extension">>
+- <<CreatingAComponentExtension#creating-a-component-extension,"Creating a component extension">>
+- <<WidgetStylingUsingOnlyCSS#widget-styling-using-only-css,"Widget styling using only CSS">>
+- <<CreatingAThemeUsingSass#creating-a-theme-using-sass,"Creating a theme using Sass">>
+- <<ViewChangeConfirmations#view-change-confirmations,"View change confirmations">>
+- <<CreatingABookmarkableApplicationWithBackButtonSupport#creating-a-bookmarkable-application-with-back-button-support,"Creating a bookmarkable application with back button support">>
+- <<UsingRPCToSendEventsToTheClient#using-rpc-to-send-events-to-the-client,"Using RPC to send events to the client">>
+ 
+ 
