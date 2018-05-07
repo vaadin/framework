@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[showing-extra-data-for-grid-rows]]
-Showing extra data for Grid rows
---------------------------------
+= Showing extra data for Grid rows
 
 Some data might not be suitable to be shown as part of a regular Grid,
 e.g. because it's too large to fit into a Grid cell or because it's

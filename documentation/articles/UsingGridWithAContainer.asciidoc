@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[using-grid-with-a-container]]
-Using Grid with a Container
----------------------------
+= Using Grid with a Container
 
 Grid lazy-loads data from a `Container` instance. There are different
 container implementations that e.g. fetch data from a database or use a

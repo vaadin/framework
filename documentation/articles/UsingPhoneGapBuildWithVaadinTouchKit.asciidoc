@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[using-phonegap-build-with-vaadin-touchkit]]
-Using PhoneGap Build with Vaadin TouchKit
------------------------------------------
+= Using PhoneGap Build with Vaadin TouchKit
 
 [.underline]#*_Note:_* _Vaadin Touchkit has been discontinued. A community-supported version is
 available https://github.com/parttio/touchkit[on GitHub]._#

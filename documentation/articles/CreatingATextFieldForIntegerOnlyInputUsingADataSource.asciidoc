@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-a-textfield-for-integer-only-input-using-a-data-source]]
-Creating a TextField for integer only input using a data source
----------------------------------------------------------------
+= Creating a TextField for integer only input using a data source
 
 A `TextField` is a component that always has a value of type `String`. When
 binding a property of another type to a text field, the value is

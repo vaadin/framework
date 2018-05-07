@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[showing-data-in-grid]]
-Showing data in Grid
---------------------
+= Showing data in Grid
 
 Grid lazy-loads data from a `Container` instance. There are different
 container implementations that e.g. fetch data from a database or use a

@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[using-grid-with-inline-data]]
-Using Grid with inline data
----------------------------
+= Using Grid with inline data
 
 Instead of using a Vaadin Container as explained in
 <<UsingGridWithAContainer#

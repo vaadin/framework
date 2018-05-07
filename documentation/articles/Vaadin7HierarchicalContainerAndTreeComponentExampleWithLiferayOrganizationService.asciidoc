@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[vaadin-7-hierarchical-container-and-treecomponent-example-with-liferay-organizationservice]]
-Vaadin 7 hierarchical container and TreeComponent example with Liferay OrganizationService
-------------------------------------------------------------------------------------------
+= Vaadin 7 hierarchical container and TreeComponent example with Liferay OrganizationService
 
 I recently needed a portlet to display the Organizations/Locations a
 user belongs to in a Hierarchical Tree.  I used Vaadin's tree and
