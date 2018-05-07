@@ -71,7 +71,7 @@ public class V6tm1Application extends Application {
     Label label = new Label("Hello Vaadin!");
     mainWindow.addComponent(label);
     setMainWindow(mainWindow);
-    setTheme(“mytheme”);
+    setTheme("mytheme");
   }
 }
 ....

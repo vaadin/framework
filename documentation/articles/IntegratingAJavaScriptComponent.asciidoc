@@ -104,4 +104,7 @@ By implementing a server-side Java class extending
 initialization function, existing JavaScript component libraries can
 easily be integrated to Vaadin. The server-side code is almost similar
 to the code required for a component based on GWT and the client-side
-code is quite similar to a `ComponentConnector` implemented using GWT.
+code is quite similar to a `ComponentConnector` implemented using GWT. 
+Do note that third-party JavaScript code could be dangerous 
+(https://www.owasp.org/index.php/3rd_Party_Javascript_Management_Cheat_Sheet), 
+and you should take into account the security risks of using such. 

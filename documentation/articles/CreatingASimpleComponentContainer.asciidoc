@@ -76,7 +76,7 @@ public class WidgetContainer extends AbstractComponentContainer {
 }
 ....
 
-Add, remove and replace are quite straight forward. In the class we
+Add, remove and replace are quite straightforward. In the class we
 upkeep a list of children internally, and these three methods modify
 them. Add and remove have ready made methods in the super class for
 notifying all event handlers that the children have changed and because

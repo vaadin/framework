@@ -86,7 +86,7 @@ could just as easily use a Button and tell the Navigator where we want
 to go when the button's ClickListener is invoked. Note that we're using
 _CountView.NAME_, and what we're actually doing is using the "fragment"
 part of the application URI to indicate the view. The resulting URI will
-look something like http://.../application#count .
+look something like http://.../application#!count .
 
 Ok, one last thing: we need to set up a UI with a Navigator, and
 register our views:
