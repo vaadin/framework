@@ -18,8 +18,8 @@ expanded, and then you need to hook up the events for actually expanding
 a row.
 
 This example uses the same data as in the
-link:UsingGridWithAContainer.asciidoc[Using Grid with a Container]
-example.
+<<UsingGridWithAContainer#using-grid-with-a-container,
+Using Grid with a Container>> example.
 
 [[detailsgenerator]]
 DetailsGenerator

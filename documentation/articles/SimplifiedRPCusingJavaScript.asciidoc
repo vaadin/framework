@@ -8,16 +8,17 @@ layout: page
 = Simplified RPC using JavaScript
 
 This tutorial continues where
-link:IntegratingAJavaScriptComponent.asciidoc[Integrating a JavaScript
-component] ended. We will now add RPC functionality to the JavaScript
-Flot component. RPC can be used in the same way as with ordinary GWT
-components as described in link:UsingRPCFromJavaScript.asciidoc[Using
-RPC from JavaScript]. This tutorial describes a simplified way that is
+<<IntegratingAJavaScriptComponent#integrating-a-javascript-component,
+Integrating a JavaScript component>> ended. We will now add RPC 
+functionality to the JavaScript Flot component. RPC can be used in the 
+same way as with ordinary GWT components as described in 
+<<IntegratingAJavaScriptComponent#integrating-a-javascript-component,
+Using RPC from JavaScript>>. This tutorial describes a simplified way that is
 based on the same concepts as in
-link:ExposingServerSideAPIToJavaScript.asciidoc[Exposing server
-side API to JavaScript]. This way of doing RPC is less rigorous and is
-intended for simple cases and for developers appreciating the dynamic
-nature of JavaScript.
+<<ExposingServerSideAPIToJavaScript#exposing-server-side-api-to-javascript,
+Exposing server side API to JavaScript>>. This way of doing RPC is less 
+rigorous and is intended for simple cases and for developers appreciating 
+the dynamic nature of JavaScript.
 
 The simplified way is based on single callback functions instead of
 interfaces containing multiple methods. We will invoke a server-side

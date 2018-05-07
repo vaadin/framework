@@ -8,7 +8,8 @@ layout: page
 = Using Grid with inline data
 
 Instead of using a Vaadin Container as explained in
-link:UsingGridWithAContainer.asciidoc[Using Grid with a Container],
+<<UsingGridWithAContainer#
+using-grid-with-a-container,Using Grid With a Container>>,
 you can also directly add simple inline data to Grid without directly
 using a Container.
 
