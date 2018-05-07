@@ -112,11 +112,11 @@ The package structure usually looks something like this:
 ** MyComponentConnector.java
 ** MyComponentWidget.java
 
-Finally, compile the widgetset, and *make sure the widget set is defined with the @WidgetSet annotation in the UI class*:
+Finally, compile the widgetset, and *make sure the widgetset is defined with the @Widgetset annotation in the UI class*:
 
 [source,java]
 ....
-@WidgetSet("com.example.mycomponent.MyComponentWidgetset")
+@Widgetset("com.example.mycomponent.MyComponentWidgetset")
 class MyUI extends UI {
 ....
 

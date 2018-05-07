@@ -203,7 +203,7 @@ package com.example.widgetcontainer;
 
 import java.util.Random;
 
-import com.vaadin.annotations.WidgetSet;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -213,7 +213,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
-@WidgetSet("com.example.widgetcontainer.Widgetset")
+@Widgetset("com.example.widgetcontainer.Widgetset")
 public class WidgetcontainerUI extends UI {
   @Override
   public void init(VaadinRequest request) {
