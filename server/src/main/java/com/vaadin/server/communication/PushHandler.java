@@ -58,6 +58,8 @@ public class PushHandler {
 
     private int longPollingSuspendTimeout = -1;
 
+    private final ServerRpcHandler rpcHandler = createRpcHandler();
+
     /**
      * Callback interface used internally to process an event with the
      * corresponding UI properly locked.
@@ -143,7 +145,7 @@ public class PushHandler {
         assert vaadinRequest != null;
 
         try {
-            new ServerRpcHandler().handleRpc(ui, reader, vaadinRequest);
+            rpcHandler.handleRpc(ui, reader, vaadinRequest);
             connection.push(false);
         } catch (JsonException e) {
             getLogger().log(Level.SEVERE, "Error writing JSON to response", e);
@@ -162,6 +164,15 @@ public class PushHandler {
 
     public PushHandler(VaadinServletService service) {
         this.service = service;
+    }
+
+    /**
+     * Creates the ServerRpcHandler to use.
+     *
+     * @return the ServerRpcHandler to use
+     */
+    protected ServerRpcHandler createRpcHandler() {
+        return new ServerRpcHandler();
     }
 
     /**
