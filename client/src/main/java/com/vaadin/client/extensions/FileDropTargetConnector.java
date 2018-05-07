@@ -199,7 +199,7 @@ public class FileDropTargetConnector extends DropTargetExtensionConnector {
 
         public final native void postFile(File file)
         /*-{
-            var formData = new FormData();
+            var formData = new $wnd.FormData();
             formData.append("File", file);
             this.send(formData);
         }-*/;
