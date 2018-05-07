@@ -27,7 +27,7 @@ public class SerializerTestTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        // PhantomJS doesn't support getting timezone
+        // IE11 and PhantomJS don't support getting timezone
         return getBrowsersExcludingPhantomJS();
     }
 
