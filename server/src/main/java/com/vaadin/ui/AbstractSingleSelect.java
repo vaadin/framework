@@ -332,7 +332,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
      *            {@code true} if selection was done by user, {@code false} if
      *            not
      *
-     * @since
+     * @since 8.5
      */
     protected void setSelectedItem(T value, boolean userOriginated) {
         if (isSelected(value)) {
@@ -368,7 +368,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
      * @param value
      *            the value that is selected; may be {@code null}
      *
-     * @since
+     * @since 8.5
      */
     protected void updateSelectedItemState(T value) {
         // FIXME: If selecting a value that does not exist, this will leave and
