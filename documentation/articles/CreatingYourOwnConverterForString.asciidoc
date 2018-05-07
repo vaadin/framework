@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-your-own-converter-for-string-mytype-conversion]]
-Creating your own converter for String - MyType conversion
-----------------------------------------------------------
+= Creating your own converter for String - MyType conversion
 
 If you have custom types that you want to represent using the built in
 field components, you can easily create your own converter to take care

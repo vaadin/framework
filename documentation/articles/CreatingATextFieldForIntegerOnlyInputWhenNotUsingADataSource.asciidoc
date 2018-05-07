@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-a-textfield-for-integer-only-input-when-not-using-a-data-source]]
-Creating a TextField for integer only input when not using a data source
-------------------------------------------------------------------------
+= Creating a TextField for integer only input when not using a data source
 
 A `TextField` is a component that always has a value of type `String`. By
 adding a converter to a field, the field will automatically validate

@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[scala-and-vaadin-how-to]]
-Scala and Vaadin how-to
------------------------
+= Scala and Vaadin how-to
 
 [[introduction]]
 Introduction
