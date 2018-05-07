@@ -108,7 +108,7 @@ public class NavigationtestUI extends UI {
     // Add some Views
     navigator.addView(MainView.NAME, new MainView()); // no fragment
 
-    // #count will be a new instance each time we navigate to it, counts:
+    // #!count will be a new instance each time we navigate to it, counts:
     navigator.addView(CountView.NAME, CountView.class);
 
     // The Navigator attached to the UI will automatically navigate to the initial fragment once

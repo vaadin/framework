@@ -14,7 +14,7 @@ the URI fragment.
 The remainder of the fragment that is left after the (longest) view name
 matched is removed, is considered to be "fragment parameters". These are
 passed to the View in question, which can then handle the parameter(s).
-Basically: `#viewname/parameters`.
+Basically: `#!viewname/parameters`.
 
 Continuing from the basic navigation example, let's make a View that
 displays a message passed as a fragment parameter:
@@ -66,7 +66,7 @@ public class NavigationtestUI extends UI {
         // Add some Views
         navigator.addView(MainView.NAME, new MainView()); // no fragment
 
-        // #count will be a new instance each time we navigate to it, counts:
+        // #!count will be a new instance each time we navigate to it, counts:
         navigator.addView(CountView.NAME, CountView.class);
 
         // #message adds a label with whatever it receives as a parameter

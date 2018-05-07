@@ -162,7 +162,7 @@ public class NavigationtestUI extends UI {
         // Add some Views
         navigator.addView(MainView.NAME, new MainView()); // no fragment
 
-        // #count will be a new instance each time we navigate to it, counts:
+        // #!count will be a new instance each time we navigate to it, counts:
         navigator.addView(CountView.NAME, CountView.class);
 
         // #message adds a label with whatever it receives as a parameter
