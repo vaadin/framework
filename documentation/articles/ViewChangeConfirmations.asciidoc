@@ -35,7 +35,7 @@ public class NavigationtestUI extends UI {
     // no fragment for main view
     navigator.addView(MainView.NAME, new MainView(navigator));
 
-    // #settings
+    // #!settings
     navigator.addView(SettingsView.NAME, new SettingsView(navigator));
   }
 }

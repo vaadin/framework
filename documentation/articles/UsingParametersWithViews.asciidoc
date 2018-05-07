@@ -69,7 +69,7 @@ public class NavigationtestUI extends UI {
         // #!count will be a new instance each time we navigate to it, counts:
         navigator.addView(CountView.NAME, CountView.class);
 
-        // #message adds a label with whatever it receives as a parameter
+        // #!message adds a label with whatever it receives as a parameter
         navigator.addView(MessageView.NAME, new MessageView());
     }
 }
