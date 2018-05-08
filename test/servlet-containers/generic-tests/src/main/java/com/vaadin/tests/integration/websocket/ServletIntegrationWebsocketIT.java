@@ -31,7 +31,7 @@ import com.vaadin.tests.integration.AbstractServletIntegrationTest;
 public class ServletIntegrationWebsocketIT
         extends AbstractServletIntegrationTest {
     // Uses the test method declared in the super class
-    
+
     private static final Set<String> nonWebsocketServers = new HashSet<>();
 
     static {
@@ -41,7 +41,8 @@ public class ServletIntegrationWebsocketIT
     @Override
     public void setup() throws Exception {
         Assume.assumeFalse("This server does not support Websockets",
-                nonWebsocketServers.contains(System.getProperty("server-name")));
+                nonWebsocketServers
+                        .contains(System.getProperty("server-name")));
 
         super.setup();
     }
