@@ -17,8 +17,11 @@ package com.vaadin.tests.integration.websocket;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Stream;
 
+import org.junit.Assume;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -28,6 +31,20 @@ import com.vaadin.tests.integration.AbstractServletIntegrationTest;
 public class ServletIntegrationWebsocketIT
         extends AbstractServletIntegrationTest {
     // Uses the test method declared in the super class
+    
+    private static final Set<String> nonWebsocketServers = new HashSet<>();
+
+    static {
+        nonWebsocketServers.add("liberty-microprofile");
+    }
+
+    @Override
+    public void setup() throws Exception {
+        Assume.assumeFalse("This server does not support Websockets",
+                nonWebsocketServers.contains(System.getProperty("server-name")));
+
+        super.setup();
+    }
 
     @Override
     protected String getTestPath() {
