@@ -44,6 +44,7 @@ public class UnsupportedBrowserHandler extends SynchronizedRequestHandler {
             // bypass if cookie set
             String c = request.getHeader("Cookie");
             if (c == null || !c.contains(FORCE_LOAD_COOKIE)) {
+                response.setNoCacheHeaders();
                 writeBrowserTooOldPage(request, response);
                 return true; // request handled
             }
