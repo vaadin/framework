@@ -24,6 +24,11 @@ public class GlobalResourceHandlerTest {
         assertEncodedFilenameIsHandled("with # hash.txt", "with+%23+hash.txt");
         assertEncodedFilenameIsHandled("with ; semicolon.txt", "with+%3B+semicolon.txt");
         assertEncodedFilenameIsHandled("with , comma.txt", "with+%2C+comma.txt");
+
+        // ResourceReference.encodeFileName does not encode slashes and backslashes
+        // See comment inside2 method for more details
+        assertEncodedFilenameIsHandled("with \\ backslash.txt", "with+\\+backslash.txt");
+        assertEncodedFilenameIsHandled("with / slash.txt", "with+/+slash.txt");
     }
 
     private void assertEncodedFilenameIsHandled(String filename, String expectedFilename) throws IOException {
