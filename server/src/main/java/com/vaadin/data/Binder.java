@@ -1384,7 +1384,7 @@ public class Binder<BEAN> implements Serializable {
 
         changedBindings.add(binding);
         if (getBean() != null) {
-            doWriteIfValid(getBean(), getChangedBindingsEnabled());
+            doWriteIfValid(getBean(), changedBindings);
         } else {
             binding.validate();
         }
