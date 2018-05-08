@@ -52,7 +52,7 @@ attempt to do so may result in an exception.
 
 === Handling New Items
 
-Adding new items is handled by a [interfacename]#setNewItemProvider#, which gets the
+Adding new items is handled by a [interfacename]#NewItemProvider#, which gets the
 item caption string as parameter for the [methodname]#accept(String)# method.
 
 
