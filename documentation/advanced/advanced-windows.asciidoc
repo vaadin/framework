@@ -93,7 +93,7 @@ public static class MyPopupUI extends UI {
 === Popping It Up
 
 A popup window is opened using the [classname]#BrowserWindowOpener# extension,
-which you can attach to any component. The constructor of the extension takes
+which you can attach to any component or `MenuItem`. The constructor of the extension takes
 the class object of the UI class to be opened as a parameter.
 
 You can configure the features of the popup window with

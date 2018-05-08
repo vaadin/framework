@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,5 +32,13 @@ public interface ColorPickerServerRpc extends ServerRpc {
      *
      */
     public void openPopup(boolean openPopup);
+
+    /**
+     * ColorPicker's selected color is changed
+     *
+     * @since 8.4
+     * @param color
+     */
+    public void changeColor(String color);
 
 }

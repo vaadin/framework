@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,6 +21,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import com.vaadin.data.ErrorMessageProvider;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
 
@@ -67,6 +68,37 @@ public class StringToBigIntegerConverter
         super(emptyValue, errorMessage);
     }
 
+    /**
+     * Creates a new converter instance with the given error message provider.
+     * Empty strings are converted to <code>null</code>.
+     *
+     * @param errorMessageProvider
+     *            the error message provider to use if conversion fails
+     *
+     * @since 8.4
+     */
+    public StringToBigIntegerConverter(
+            ErrorMessageProvider errorMessageProvider) {
+        this(null, errorMessageProvider);
+    }
+
+    /**
+     * Creates a new converter instance with the given empty string value and
+     * error message provider.
+     *
+     * @param emptyValue
+     *            the presentation value to return when converting an empty
+     *            string, may be <code>null</code>
+     * @param errorMessageProvider
+     *            the error message provider to use if conversion fails
+     *
+     * @since 8.4
+     */
+    public StringToBigIntegerConverter(BigInteger emptyValue,
+            ErrorMessageProvider errorMessageProvider) {
+        super(emptyValue, errorMessageProvider);
+    }
+
     @Override
     protected NumberFormat getFormat(Locale locale) {
         NumberFormat numberFormat = super.getFormat(locale);
@@ -80,17 +112,16 @@ public class StringToBigIntegerConverter
     @Override
     public Result<BigInteger> convertToModel(String value,
             ValueContext context) {
-        return convertToNumber(value, context.getLocale().orElse(null))
-                .map(number -> {
-                    if (number == null) {
-                        return null;
-                    }
-                    // Empty value will be a BigInteger
-                    if (number instanceof BigInteger) {
-                        return (BigInteger) number;
-                    }
-                    return ((BigDecimal) number).toBigInteger();
-                });
+        return convertToNumber(value, context).map(number -> {
+            if (number == null) {
+                return null;
+            }
+            // Empty value will be a BigInteger
+            if (number instanceof BigInteger) {
+                return (BigInteger) number;
+            }
+            return ((BigDecimal) number).toBigInteger();
+        });
     }
 
 }

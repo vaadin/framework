@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[customizing-component-theme-with-sass]]
-Customizing component theme with SASS
--------------------------------------
+= Customizing component theme with SASS
 
 In addition to the general benefits Sass brings to the world of CSS in
 Vaadin 7, the way themes are set up allows us to quite easily accomplish

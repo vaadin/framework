@@ -28,4 +28,14 @@ It has two modules: one for the add-on and another for a demo application.
 `vaadin-archetype-liferay-portlet`::
 A portlet development setup for the open-source Liferay portal.
 
-All archetype versions follow the framework version numbers (like `8.2.1`) and use the groupId `com.vaadin`.
+All archetype versions follow the framework version numbers (like `8.3.3`) and use the groupId `com.vaadin`. For example to generate a new application project in batch mode using version: 
+
+```
+mvn -B archetype:generate \
+		-DarchetypeGroupId=com.vaadin \
+		-DarchetypeArtifactId=vaadin-archetype-application \
+		-DarchetypeVersion=8.3.3 \
+		-DgroupId=org.test \
+		-DartifactId=vaadin-app \
+		-Dversion=1.0-SNAPSHOT 
+```

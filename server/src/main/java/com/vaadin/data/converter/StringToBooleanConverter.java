@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,13 +19,15 @@ package com.vaadin.data.converter;
 import java.util.Locale;
 
 import com.vaadin.data.Converter;
+import com.vaadin.data.ErrorMessageProvider;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
 
 /**
  * A converter that converts from {@link String} to {@link Boolean} and back.
  * The String representation is given by {@link Boolean#toString()} or provided
- * in constructor {@link StringToBooleanConverter#StringToBooleanConverter(String, String, String)}.
+ * in constructor
+ * {@link StringToBooleanConverter#StringToBooleanConverter(String, String, String)}.
  * <p>
  * Leading and trailing white spaces are ignored when converting from a String.
  * </p>
@@ -43,7 +45,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
 
     private final String falseString;
 
-    private String errorMessage;
+    private ErrorMessageProvider errorMessageProvider;
 
     /**
      * Creates converter with default string representations - "true" and
@@ -54,6 +56,20 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      */
     public StringToBooleanConverter(String errorMessage) {
         this(errorMessage, Boolean.TRUE.toString(), Boolean.FALSE.toString());
+    }
+
+    /**
+     * Creates a new converter instance with the given error message provider.
+     * Empty strings are converted to <code>null</code>.
+     *
+     * @param errorMessageProvider
+     *            the error message provider to use if conversion fails
+     *
+     * @since 8.4
+     */
+    public StringToBooleanConverter(ErrorMessageProvider errorMessageProvider) {
+        this(Boolean.TRUE.toString(), Boolean.FALSE.toString(),
+                errorMessageProvider);
     }
 
     /**
@@ -68,7 +84,24 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      */
     public StringToBooleanConverter(String errorMessage, String trueString,
             String falseString) {
-        this.errorMessage = errorMessage;
+        this(trueString, falseString, ctx -> errorMessage);
+    }
+
+    /**
+     * Creates converter with custom string representation.
+     *
+     * @param falseString
+     *            string representation for <code>false</code>
+     * @param trueString
+     *            string representation for <code>true</code>
+     * @param errorMessageProvider
+     *            the error message provider to use if conversion fails
+     *
+     * @since 8.4
+     */
+    public StringToBooleanConverter(String trueString, String falseString,
+            ErrorMessageProvider errorMessageProvider) {
+        this.errorMessageProvider = errorMessageProvider;
         this.trueString = trueString;
         this.falseString = falseString;
     }
@@ -90,7 +123,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
         } else if (value.isEmpty()) {
             return Result.ok(null);
         } else {
-            return Result.error(errorMessage);
+            return Result.error(errorMessageProvider.apply(context));
         }
     }
 

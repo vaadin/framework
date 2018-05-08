@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -116,7 +116,8 @@ public class DesignResourceConverter implements Converter<String, Resource> {
                     return CODE_POINTS.get(codepoint);
                 }
 
-                if (FontAwesome.FONT_FAMILY.equals(familyAndCode[0])) { // Left for compatibility
+                if (FontAwesome.FONT_FAMILY.equals(familyAndCode[0])) {
+                    // Left for compatibility
                     return FontAwesome.fromCodepoint(codepoint);
                 }
                 // all vaadin icons should have a codepoint

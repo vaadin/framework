@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,8 +27,8 @@ import com.vaadin.client.widgets.Escalator;
  * should the displayed data need to be fetched remotely.
  * <p>
  * This has a similar function to {@link com.vaadin.client.widgets.Grid Grid's}
- * {@link com.vaadin.client.renderers.Renderer Renderers}
- * , although they operate on different abstraction levels.
+ * {@link com.vaadin.client.renderers.Renderer Renderers} , although they
+ * operate on different abstraction levels.
  *
  * @since 7.4
  * @author Vaadin Ltd

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,13 +27,13 @@ import com.vaadin.ui.dnd.FileDropHandler;
  * target.
  *
  * @param <T>
- *         Type of the file drop target component.
+ *            Type of the file drop target component.
  * @author Vaadin Ltd
  * @see FileDropHandler
  * @since 8.1
  */
-public class FileDropEvent<T extends AbstractComponent> extends
-        Component.Event {
+public class FileDropEvent<T extends AbstractComponent>
+        extends Component.Event {
 
     private final Collection<Html5File> files;
 
@@ -41,9 +41,9 @@ public class FileDropEvent<T extends AbstractComponent> extends
      * Creates a file drop event.
      *
      * @param target
-     *         The file drop target component.
+     *            The file drop target component.
      * @param files
-     *         Collection of files.
+     *            Collection of files.
      */
     public FileDropEvent(T target, Collection<Html5File> files) {
         super(target);
@@ -55,7 +55,7 @@ public class FileDropEvent<T extends AbstractComponent> extends
      * Gets the collection of files dropped onto the file drop target component.
      *
      * @return Collection of files that were dropped onto the file drop target
-     * component.
+     *         component.
      */
     public Collection<Html5File> getFiles() {
         return files;

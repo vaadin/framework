@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.grid.basics;
 
 import static org.junit.Assert.assertEquals;
@@ -112,7 +97,7 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
         String faultyInt = "not a number";
         getEditor().getField(7).sendKeys(faultyInt);
 
-        getGridElement().getCell(6, 7).click();
+        getGridElement().getCell(7, 7).click();
 
         assertEquals("Editor should not move from row 5", "(5, 0)",
                 getEditor().getField(0).getAttribute("value"));
@@ -233,14 +218,14 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
         editor.clear();
         // Click to ensure IE focus...
         editor.click(5, 5);
-        editor.sendKeys("Foo", Keys.ENTER);
+        editor.sendKeys("Foo Bar", Keys.ENTER);
 
         assertEquals("Editor did not move.", "(6, 0)",
                 getGridElement().getEditor().getField(0).getAttribute("value"));
         assertEquals("Editor field value did not update from server.", "6",
                 getGridElement().getEditor().getField(3).getAttribute("value"));
 
-        assertEquals("Edited value was not saved.", "Foo",
+        assertEquals("Edited value was not saved.", "Foo Bar",
                 getGridElement().getCell(5, 0).getText());
     }
 }

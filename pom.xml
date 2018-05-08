@@ -10,7 +10,7 @@
     <artifactId>vaadin-root</artifactId>
     <name>vaadin-root</name>
     <packaging>pom</packaging>
-    <version>8.4-SNAPSHOT</version>
+    <version>8.5-SNAPSHOT</version>
 
     <prerequisites>
         <maven>3.1.0</maven>
@@ -35,7 +35,7 @@
         <javax.portlet.version>2.0</javax.portlet.version>
         <vaadin.sass.version>0.9.13</vaadin.sass.version>
         <!-- Note that this should be kept in sync with the class Constants -->
-        <atmosphere.runtime.version>2.4.21.vaadin1</atmosphere.runtime.version>
+        <atmosphere.runtime.version>2.4.24.vaadin1</atmosphere.runtime.version>
 
         <!-- OSGi -->
         <osgi.execution.environment>JavaSE-1.8</osgi.execution.environment>
@@ -64,12 +64,7 @@
         <vaadin.testbench.version>5.1.1</vaadin.testbench.version>
     </properties>
 
-    <!-- TODO: remove this after maven plugin has been released -->
     <pluginRepositories>
-        <pluginRepository>
-            <id>vaadin-prereleases</id>
-            <url>http://maven.vaadin.com/vaadin-prereleases</url>
-        </pluginRepository>
         <pluginRepository>
             <id>vaadin-snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
@@ -81,6 +76,19 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+
+    <repositories>
+        <repository>
+            <id>vaadin-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <organization>
         <name>Vaadin Ltd</name>
@@ -345,7 +353,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <pluginManagement>
             <plugins>
@@ -446,6 +453,38 @@
                     <version>${vaadin.plugin.version}</version>
                 </plugin>
                 <plugin>
+                    <groupId>net.revelc.code.formatter</groupId>
+                    <artifactId>formatter-maven-plugin</artifactId>
+                    <version>2.7.2</version>
+                    <configuration>
+                        <configFile>${project.basedir}/../eclipse/VaadinJavaConventions.xml</configFile>
+                        <skipJsFormatting>true</skipJsFormatting>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>format-source</id>
+                            <goals>
+                                <goal>format</goal>
+                            </goals>
+                            <phase>process-sources</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.dantwining.whitespace-maven-plugin</groupId>
+                    <artifactId>whitespace-maven-plugin</artifactId>
+                    <version>1.0.4</version>
+                    <executions>
+                        <execution>
+                            <id>trim-trailing-spaces-source</id>
+                            <goals>
+                                <goal>trim</goal>
+                            </goals>
+                            <phase>process-sources</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>2.17</version>
@@ -533,23 +572,6 @@
 
         <plugins>
             <plugin>
-                <groupId>com.marvinformatics.formatter</groupId>
-                <artifactId>formatter-maven-plugin</artifactId>
-                <version>1.8.1</version>
-                <configuration>
-                    <configFile>classpath:/eclipse/VaadinJavaConventions.xml</configFile>
-                    <!-- Provide a dummy JS config file to avoid errors -->
-                    <configJsFile>classpath:/eclipse/VaadinJavaConventions.xml</configJsFile>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>${project.groupId}</groupId>
-                        <artifactId>vaadin-buildhelpers</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-maven-plugin</artifactId>
                 <executions>
@@ -614,7 +636,6 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>buildhelpers</module>
                 <module>shared</module>
                 <module>push</module>
                 <module>server</module>
@@ -662,7 +683,6 @@
                 <vaadin.plugin.version>${project.version}</vaadin.plugin.version>
             </properties>
             <modules>
-                <module>buildhelpers</module>
                 <module>shared</module>
                 <module>push</module>
                 <module>server</module>
@@ -729,7 +749,6 @@
                 <vaadin.plugin.version>${project.version}</vaadin.plugin.version>
             </properties>
             <modules>
-                <module>buildhelpers</module>
                 <module>shared</module>
                 <module>push</module>
                 <module>server</module>
@@ -796,7 +815,6 @@
                 <vaadin.plugin.version>${project.version}</vaadin.plugin.version>
             </properties>
             <modules>
-                <module>buildhelpers</module>
                 <module>shared</module>
                 <module>push</module>
                 <module>server</module>

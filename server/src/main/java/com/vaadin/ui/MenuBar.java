@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,6 +28,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
+import com.vaadin.server.AbstractClientConnector;
+import com.vaadin.server.EventTrigger;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
@@ -47,7 +49,7 @@ import com.vaadin.ui.declarative.DesignContext;
  */
 @SuppressWarnings("serial")
 public class MenuBar extends AbstractComponent
-implements LegacyComponent, Focusable {
+        implements LegacyComponent, Focusable {
 
     // Items of the top-level menu
     private final List<MenuItem> menuItems;
@@ -145,8 +147,10 @@ implements LegacyComponent, Focusable {
             }
 
             ContentMode contentMode = item.getDescriptionContentMode();
-            // If the contentMode is equal to ContentMode.PREFORMATTED, we don't add any attribute.
-            if (contentMode != null && contentMode != ContentMode.PREFORMATTED) {
+            // If the contentMode is equal to ContentMode.PREFORMATTED, we don't
+            // add any attribute.
+            if (contentMode != null
+                    && contentMode != ContentMode.PREFORMATTED) {
                 target.addAttribute(
                         MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION_CONTENT_MODE,
                         contentMode.name());
@@ -215,6 +219,23 @@ implements LegacyComponent, Focusable {
     public MenuBar() {
         menuItems = new ArrayList<>();
         setMoreMenuItem(null);
+    }
+
+    /**
+     * Adds a new menu item to the menu bar
+     * <p>
+     * Clicking on this menu item has no effect. Use
+     * {@link #addItem(String, Command)} or {@link MenuItem#setCommand(Command)}
+     * to assign an action to the menu item.
+     *
+     * @param caption
+     *            the text for the menu item
+     * @throws IllegalArgumentException
+     *
+     * @since 8.4
+     */
+    public MenuBar.MenuItem addItem(String caption) {
+        return addItem(caption, null, null);
     }
 
     /**
@@ -453,7 +474,7 @@ implements LegacyComponent, Focusable {
      * multiple MenuItems to a MenuItem and create a sub-menu.
      *
      */
-    public class MenuItem implements Serializable {
+    public class MenuItem implements Serializable, EventTrigger {
 
         /** Private members * */
         private final int itsId;
@@ -520,6 +541,22 @@ implements LegacyComponent, Focusable {
             MenuItem item = addItemBefore("", null, null, itemToAddBefore);
             item.setSeparator(true);
             return item;
+        }
+
+        /**
+         * Add a new menu item inside this menu item, creating a sub-menu.
+         * <p>
+         * Clicking on the new item has no effect. Use
+         * {@link #addItem(String, Command)} or {@link #setCommand(Command)} to
+         * assign an action to the menu item.
+         *
+         * @param caption
+         *            the text for the menu item
+         *
+         * @since 8.4
+         */
+        public MenuBar.MenuItem addItem(String caption) {
+            return addItem(caption, null, null);
         }
 
         /**
@@ -596,7 +633,7 @@ implements LegacyComponent, Focusable {
          */
         public MenuBar.MenuItem addItemBefore(String caption, Resource icon,
                 MenuBar.Command command, MenuBar.MenuItem itemToAddBefore)
-                        throws IllegalStateException {
+                throws IllegalStateException {
             if (isCheckable()) {
                 throw new IllegalStateException(
                         "A checkable item cannot have children");
@@ -992,6 +1029,26 @@ implements LegacyComponent, Focusable {
             this.checked = checked;
             markAsDirty();
         }
+
+        /**
+         * Gets the menu bar this item is part of.
+         *
+         * @return the menu bar this item is attached to
+         * @since 8.4
+         */
+        public MenuBar getMenuBar() {
+            return MenuBar.this;
+        }
+
+        @Override
+        public AbstractClientConnector getConnector() {
+            return getMenuBar();
+        }
+
+        @Override
+        public String getPartInformation() {
+            return String.valueOf(getId());
+        }
     }
 
     @Override
@@ -1098,11 +1155,13 @@ implements LegacyComponent, Focusable {
                     attr, boolean.class));
         }
         if (menuElement.hasAttr("description")) {
-            String description = DesignAttributeHandler.readAttribute("description", attr, String.class);
+            String description = DesignAttributeHandler
+                    .readAttribute("description", attr, String.class);
             if (menuElement.hasAttr("descriptioncontentmode")) {
                 String contentModeString = DesignAttributeHandler.readAttribute(
                         "descriptioncontentmode", attr, String.class);
-                menu.setDescription(description, ContentMode.valueOf(contentModeString));
+                menu.setDescription(description,
+                        ContentMode.valueOf(contentModeString));
             } else {
                 menu.setDescription(description);
             }

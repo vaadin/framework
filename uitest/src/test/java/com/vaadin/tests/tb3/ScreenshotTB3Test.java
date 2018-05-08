@@ -1,19 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests.tb3;
 
 import java.io.File;
@@ -29,6 +13,7 @@ import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -98,10 +83,6 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
     @Before
     public void setupScreenComparisonParameters() {
         screenshotFailures = new ArrayList<>();
-
-        Parameters.setScreenshotErrorDirectory(getScreenshotErrorDirectory());
-        Parameters.setScreenshotReferenceDirectory(
-                getScreenshotReferenceDirectory());
     }
 
     /**
@@ -252,8 +233,10 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
     private File getErrorFileFromReference(File referenceFile) {
 
         String absolutePath = referenceFile.getAbsolutePath();
-        String screenshotReferenceDirectory = getScreenshotReferenceDirectory();
-        String screenshotErrorDirectory = getScreenshotErrorDirectory();
+        String screenshotReferenceDirectory = Parameters
+                .getScreenshotReferenceDirectory();
+        String screenshotErrorDirectory = Parameters
+                .getScreenshotErrorDirectory();
         // We throw an exception to safeguard against accidental reference
         // deletion. See (#14446)
         if (!absolutePath.contains(screenshotReferenceDirectory)) {
@@ -328,39 +311,6 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
     }
 
     /**
-     * @return the base directory of 'reference' and 'errors' screenshots
-     */
-    protected abstract String getScreenshotDirectory();
-
-    /**
-     * @return the base directory of 'reference' and 'errors' screenshots with a
-     *         trailing file separator
-     */
-    private String getScreenshotDirectoryWithTrailingSeparator() {
-        String screenshotDirectory = getScreenshotDirectory();
-        if (!screenshotDirectory.endsWith(File.separator)) {
-            screenshotDirectory += File.separator;
-        }
-        return screenshotDirectory;
-    }
-
-    /**
-     * @return the directory where reference images are stored (the 'reference'
-     *         folder inside the screenshot directory)
-     */
-    private String getScreenshotReferenceDirectory() {
-        return getScreenshotDirectoryWithTrailingSeparator() + "reference";
-    }
-
-    /**
-     * @return the directory where comparison error images should be created
-     *         (the 'errors' folder inside the screenshot directory)
-     */
-    private String getScreenshotErrorDirectory() {
-        return getScreenshotDirectoryWithTrailingSeparator() + "errors";
-    }
-
-    /**
      * Checks if any screenshot comparisons failures occurred during the test
      * and combines all comparison errors into one exception
      *
@@ -383,7 +333,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      *         fails
      */
     private String getScreenshotFailureName() {
-        return getScreenshotBaseName() + "_" + getUniqueIdentifier(null)
+        return getScreenshotBaseName() + "_" + getUniqueIdentifier(null, null)
                 + "-failure.png";
     }
 
@@ -408,24 +358,54 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
     }
 
     /**
-     * Returns the name of the reference file based on the given parameters. The
-     * version given in {@literal capabilities} is used unless it is overridden
-     * by the {@literal versionOverride} parameter.
+     * Returns the name of the reference file based on the given parameters.
+     * This method takes in a {@code versionOverride} parameter to find a
+     * specific version in the reference name. If the {@link Platform} defined
+     * in the {@link DesiredCapabilities} is {@code ANY}, this method will
+     * attempt different platforms in the reference file names if needed.
      *
-     * @param testName
-     * @param capabilities
      * @param identifier
+     * @param versionOverride
      * @return the full path of the reference
      */
     private String getScreenshotReferenceName(String identifier,
             Integer versionOverride) {
-        return getScreenshotReferenceDirectory() + File.separator
-                + getScreenshotBaseName() + "_"
-                + getUniqueIdentifier(versionOverride) + "_" + identifier
-                + ".png";
+        String fileName = getScreenshotReferenceName(identifier,
+                versionOverride, null);
+        File refFile = new File(fileName);
+        if (!refFile.exists()
+                && getDesiredCapabilities().getPlatform() == Platform.ANY) {
+            for (Platform p : Platform.values()) {
+                String tmpName = getScreenshotReferenceName(identifier,
+                        versionOverride, p);
+                if (new File(tmpName).exists()) {
+                    return tmpName;
+                }
+            }
+        }
+        return fileName;
     }
 
-    private String getUniqueIdentifier(Integer versionOverride) {
+    /**
+     * Returns the name of the reference file based on the given parameters.This
+     * method takes in {@code versionOverride} and {@code platformOverride}
+     * parameters.
+     *
+     * @param identifier
+     * @param versionOverride
+     * @param platformOverride
+     * @return the full path of the reference
+     */
+    private String getScreenshotReferenceName(String identifier,
+            Integer versionOverride, Platform platformOverride) {
+        return Parameters.getScreenshotReferenceDirectory() + File.separator
+                + getScreenshotBaseName() + "_"
+                + getUniqueIdentifier(versionOverride, platformOverride) + "_"
+                + identifier + ".png";
+    }
+
+    private String getUniqueIdentifier(Integer versionOverride,
+            Platform platformOverride) {
         String testNameAndParameters = testName.getMethodName();
         // runTest-wildfly9-nginx[Windows_Firefox_24][/buffering/demo][valo]
 
@@ -442,11 +422,30 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
 
         if (versionOverride != null) {
             // Windows_Firefox_17_bufferingdemo_valo
-            parameters = parameters.replaceFirst(
-                    "_" + getDesiredCapabilities().getVersion(),
-                    "_" + versionOverride);
+            int indexOfBrowser = parameters.indexOf("_") + 1;
+            parameters = parameters.substring(0, indexOfBrowser)
+                    + parameters.substring(indexOfBrowser).replaceFirst(
+                            "_" + getDesiredCapabilities().getVersion(),
+                            "_" + versionOverride);
         }
+
+        if (platformOverride != null) {
+            // LINUX_Firefox_17_bufferingdemo_valo
+            parameters = getPlatformName(platformOverride)
+                    + parameters.substring(parameters.indexOf("_"));
+        }
+
         return parameters;
+    }
+
+    private String getPlatformName(Platform platform) {
+        switch (platform) {
+        case WINDOWS:
+            // Reference file names have Windows instead of WINDOWS
+            return "Windows";
+        default:
+            return platform.name();
+        }
     }
 
     /**
@@ -458,8 +457,8 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      */
     private String getScreenshotErrorBaseName() {
         return getScreenshotReferenceName("dummy", null)
-                .replace(getScreenshotReferenceDirectory(),
-                        getScreenshotErrorDirectory())
+                .replace(Parameters.getScreenshotReferenceDirectory(),
+                        Parameters.getScreenshotErrorDirectory())
                 .replace("_dummy.png", "");
     }
 
@@ -471,7 +470,8 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
     public void cleanErrorDirectory() {
         // Remove any screenshots for this test from the error directory
         // before running it. Leave unrelated files as-is
-        File errorDirectory = new File(getScreenshotErrorDirectory());
+        File errorDirectory = new File(
+                Parameters.getScreenshotErrorDirectory());
 
         // Create errors directory if it does not exist
         if (!errorDirectory.exists()) {

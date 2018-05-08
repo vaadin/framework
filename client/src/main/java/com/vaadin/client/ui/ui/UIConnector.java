@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -44,6 +44,8 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -142,6 +144,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
     };
 
+    private boolean firstSizeReported;
+
     @Override
     protected void init() {
         super.init();
@@ -200,11 +204,25 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             }-*/;
         });
 
+        // Used to avoid choking server with hundreds of resize events when user
+        // changes the window size
+        Timer lazyFlusher = new Timer() {
+            @Override
+            public void run() {
+                getConnection().getServerRpcQueue().flush();
+            }
+        };
+
         getWidget().addResizeHandler(event -> {
             getRpcProxy(UIServerRpc.class).resize(event.getWidth(),
                     event.getHeight(), Window.getClientWidth(),
                     Window.getClientHeight());
-            getConnection().getServerRpcQueue().flush();
+            if (!firstSizeReported) {
+                firstSizeReported = true;
+                getConnection().getServerRpcQueue().flush();
+            } else {
+                lazyFlusher.schedule(100);
+            }
         });
         getWidget().addScrollHandler(new ScrollHandler() {
             private int lastSentScrollTop = Integer.MAX_VALUE;
@@ -415,8 +433,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         if (firstPaint) {
             // Queue the initial window size to be sent with the following
             // request.
-            Scheduler.get()
-                    .scheduleDeferred(() -> ui.sendClientResized());
+            Scheduler.get().scheduleDeferred(() -> ui.sendClientResized());
         }
     }
 
@@ -490,7 +507,41 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
     }
 
+    /**
+     * Initialize UIConnector and attach UI to the rootPanelElement.
+     *
+     * @param rootPanelElement
+     *            element to attach ui into
+     * @param applicationConnection
+     *            application connection
+     * @since 8.4
+     */
+    public void init(Element rootPanelElement,
+            ApplicationConnection applicationConnection) {
+        Panel root = new AbsolutePanel(rootPanelElement) {
+            {
+                onAttach();
+            }
+        };
+
+        initConnector(root, applicationConnection);
+    }
+
+    /**
+     * Initialize UIConnector and attach UI to RootPanel for rootPanelId
+     * element.
+     *
+     * @param rootPanelId
+     *            root panel element id
+     * @param applicationConnection
+     *            application connection
+     */
     public void init(String rootPanelId,
+            ApplicationConnection applicationConnection) {
+        initConnector(RootPanel.get(rootPanelId), applicationConnection);
+    }
+
+    private void initConnector(Panel root,
             ApplicationConnection applicationConnection) {
         VUI ui = getWidget();
         Widget shortcutContextWidget = ui;
@@ -516,8 +567,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }, KeyDownEvent.getType());
 
         DOM.sinkEvents(ui.getElement(), Event.ONSCROLL);
-
-        RootPanel root = RootPanel.get(rootPanelId);
 
         // Remove the v-app-loading or any splash screen added inside the div by
         // the user

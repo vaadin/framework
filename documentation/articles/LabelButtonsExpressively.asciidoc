@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[label-buttons-expressively]]
-Label buttons expressively
---------------------------
+= Label buttons expressively
 
 People don’t read dialog box messages. They just click _“OK”_ or _“Yes”_
 or whichever button that seems like the right choice to make the dialog

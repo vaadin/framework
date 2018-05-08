@@ -14,7 +14,6 @@ import com.vaadin.ui.TabSheet;
  * This test used to cause nonfunctional TabSheet if the current tab was 1, user
  * selects 5, then the selection listener will revert the selected tab to 1.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class TabSelectionRevertedByServer extends AbstractReindeerTestUI {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -241,8 +241,7 @@ public class FlyweightRow implements Row {
         assert offset >= 0 && offset + numberOfCells <= cells
                 .size() : "Invalid range of cells";
         return () -> CellIterator
-                .attached(
-                        cells.subList(offset, offset + numberOfCells));
+                .attached(cells.subList(offset, offset + numberOfCells));
     }
 
     /**
@@ -266,8 +265,7 @@ public class FlyweightRow implements Row {
         assert offset >= 0 && offset + numberOfCells <= cells
                 .size() : "Invalid range of cells";
         return () -> CellIterator
-                .unattached(
-                        cells.subList(offset, offset + numberOfCells));
+                .unattached(cells.subList(offset, offset + numberOfCells));
     }
 
     /**

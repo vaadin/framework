@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,13 +34,10 @@ public class AbstractDateFieldState extends AbstractFieldState {
     /**
      * Navigation elements that have assistive label.
      *
-     * @since
+     * @since 8.4
      */
     public enum AccessibleElement {
-        PREVIOUS_YEAR,
-        NEXT_YEAR,
-        PREVIOUS_MONTH,
-        NEXT_MONTH
+        PREVIOUS_YEAR, NEXT_YEAR, PREVIOUS_MONTH, NEXT_MONTH
     }
 
     {
@@ -49,17 +46,21 @@ public class AbstractDateFieldState extends AbstractFieldState {
 
     /**
      * Start range that has been cleared, depending on the resolution of the
-     * date field.
+     * date field. The format is "2018-05-27" or "2018-05-27 14:38:39"
+     *
+     * @see com.vaadin.ui.AbstractDateField#RANGE_FORMATTER
      */
     @NoLayout
-    public Date rangeStart;
+    public String rangeStart;
 
     /**
      * End range that has been cleared, depending on the resolution of the date
-     * field.
+     * field. The format is "2018-05-27" or "2018-05-27 14:38:39"
+     *
+     * @see com.vaadin.ui.AbstractDateField#RANGE_FORMATTER
      */
     @NoLayout
-    public Date rangeEnd;
+    public String rangeEnd;
 
     /**
      * The JSON used to construct a TimeZone on the client side, can be
@@ -121,7 +122,7 @@ public class AbstractDateFieldState extends AbstractFieldState {
     /**
      * Map of custom style names that correspond with given dates. Each date
      * must be set to midnight for the handling logic to work correctly.
-     * 
+     *
      * @since 8.3
      */
     public Map<String, String> dateStyles = new HashMap<String, String>();
@@ -129,7 +130,7 @@ public class AbstractDateFieldState extends AbstractFieldState {
     /**
      * Map of elements and their corresponding assistive labels.
      *
-     * @since
+     * @since 8.4
      */
     public Map<AccessibleElement, String> assistiveLabels = new HashMap<>();
 

@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[vaadin-spring-tips]]
-Vaadin Spring tips
-------------------
+= Vaadin Spring tips
 
 [[vaadin-spring-boot-configuration-properties]]
 Vaadin Spring (Boot) configuration properties

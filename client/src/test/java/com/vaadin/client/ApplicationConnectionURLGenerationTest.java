@@ -8,8 +8,7 @@ import com.vaadin.shared.util.SharedUtil;
 
 public class ApplicationConnectionURLGenerationTest {
 
-    private static final String[] URIS = {
-            "http://demo.vaadin.com/", //
+    private static final String[] URIS = { "http://demo.vaadin.com/", //
             "https://demo.vaadin.com/", "http://demo.vaadin.com/foo",
             "http://demo.vaadin.com/foo?f", "http://demo.vaadin.com/foo?f=1",
             "http://demo.vaadin.com:1234/foo?a",

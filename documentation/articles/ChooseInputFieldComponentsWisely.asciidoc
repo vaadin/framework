@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[choosing-input-field-components-wisely]]
-Choosing input field components wisely
---------------------------------------
+= Choosing input field components wisely
 
 The core Vaadin framework has more than ten different input field
 components. Choosing the right one can improve your application’s

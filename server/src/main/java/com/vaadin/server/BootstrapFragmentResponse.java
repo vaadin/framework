@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,7 +36,8 @@ public class BootstrapFragmentResponse extends BootstrapResponse {
     /**
      * Crate a new bootstrap fragment response.
      *
-     * @see BootstrapResponse#BootstrapResponse(BootstrapHandler, VaadinRequest, VaadinSession, Class, UIProvider)
+     * @see BootstrapResponse#BootstrapResponse(BootstrapHandler, VaadinRequest,
+     *      VaadinSession, Class, UIProvider)
      *
      * @param handler
      *            the bootstrap handler that is firing the event

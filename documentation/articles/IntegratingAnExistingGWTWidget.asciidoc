@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[integrating-an-existing-gwt-widget]]
-Integrating an existing GWT widget
-----------------------------------
+= Integrating an existing GWT widget
 
 Integrating an existing, third party GWT widget usually just involves
 creating a regular Vaadin component with a client-side connector that

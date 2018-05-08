@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -139,6 +139,13 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
 
     private void updateItem(RadioButton button, JsonObject item,
             boolean requireInitialization) {
+        if (requireInitialization) {
+            getWidget().add(button);
+            button.setStyleName("v-radiobutton");
+            button.addStyleName(CLASSNAME_OPTION);
+            button.addClickHandler(this);
+        }
+
         String itemHtml = item
                 .getString(ListingJsonConstants.JSONKEY_ITEM_VALUE);
         if (!isHtmlContentAllowed()) {
@@ -154,22 +161,12 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         button.setHTML(itemHtml);
         boolean optionEnabled = !item
                 .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
-        boolean enabled = optionEnabled && !isReadonly() && isEnabled();
-        button.setEnabled(enabled);
-        // #9258 apply the v-disabled class when disabled for UX
-        button.setStyleName(StyleConstants.DISABLED,
-                !isEnabled() || !optionEnabled);
+        updateItemEnabled(button, optionEnabled);
         updateItemSelection(button,
                 item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
 
         String key = item.getString(DataCommunicatorConstants.KEY);
 
-        if (requireInitialization) {
-            getWidget().add(button);
-            button.setStyleName("v-radiobutton");
-            button.addStyleName(CLASSNAME_OPTION);
-            button.addClickHandler(this);
-        }
         optionsToItems.put(button, item);
         keyToOptions.put(key, button);
     }
@@ -205,7 +202,6 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
     }
 
     protected void updateEnabledState() {
-        boolean radioButtonEnabled = isEnabled() && !isReadonly();
         // sets options enabled according to the widget's enabled,
         // readonly and each options own enabled
         for (Map.Entry<RadioButton, JsonObject> entry : optionsToItems
@@ -214,10 +210,7 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
             JsonObject value = entry.getValue();
             boolean optionEnabled = !value
                     .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
-            radioButton.setEnabled(radioButtonEnabled && optionEnabled);
-            // #9258 apply the v-disabled class when disabled for UX
-            radioButton.setStyleName(StyleConstants.DISABLED,
-                    !isEnabled() || !optionEnabled);
+            updateItemEnabled(radioButton, optionEnabled);
         }
     }
 
@@ -305,6 +298,23 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
     protected void updateItemSelection(RadioButton radioButton, boolean value) {
         radioButton.setValue(value);
         radioButton.setStyleName(CLASSNAME_OPTION_SELECTED, value);
+    }
 
+    /**
+     * Updates the enabled state of a radio button.
+     *
+     * @param radioButton
+     *            the radio button to update
+     * @param value
+     *            {@code true} if enabled; {@code false} if not
+     *
+     * @since 8.3.3
+     */
+    protected void updateItemEnabled(RadioButton radioButton, boolean value) {
+        boolean enabled = value && !isReadonly() && isEnabled();
+        radioButton.setEnabled(enabled);
+        // #9258 apply the v-disabled class when disabled for UX
+        boolean hasDisabledStyle = !isEnabled() || !value;
+        radioButton.setStyleName(StyleConstants.DISABLED, hasDisabledStyle);
     }
 }

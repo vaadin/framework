@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[right-align-comparable-numeric-fields]]
-Right-align comparable numeric fields
--------------------------------------
+= Right-align comparable numeric fields
 
 In the table below, the various numerical fields are kind of hard to
 compare and easy misinterpret, because of the alignment of the values:

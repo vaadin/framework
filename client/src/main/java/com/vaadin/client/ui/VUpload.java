@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -318,7 +318,8 @@ public class VUpload extends SimplePanel {
     /** For internal use only. May be removed or replaced in the future. */
     public void submit() {
         if (submitted || !enabled) {
-            getLogger().info("Submit cancelled (disabled or already submitted)");
+            getLogger()
+                    .info("Submit cancelled (disabled or already submitted)");
             return;
         }
         if (fu.getFilename().isEmpty()) {

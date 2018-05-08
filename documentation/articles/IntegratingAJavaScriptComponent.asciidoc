@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[integrating-a-javascript-component]]
-Integrating a JavaScript component
-----------------------------------
+= Integrating a JavaScript component
 
 You can use an existing JavaScript component as a component in Vaadin by
 creating a server-side API for the component as well as writing the

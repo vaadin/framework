@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,7 +20,9 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalAdjuster;
 import java.util.Calendar;
 import java.util.Collections;
@@ -36,6 +38,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import elemental.json.Json;
 import org.jsoup.nodes.Element;
 
 import com.googlecode.gentyref.GenericTypeReflector;
@@ -77,6 +80,8 @@ import com.vaadin.util.TimeZoneUtil;
 public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & Serializable & Comparable<? super T>, R extends Enum<R>>
         extends AbstractField<T> implements FocusNotifier, BlurNotifier {
 
+    private static final DateTimeFormatter RANGE_FORMATTER = DateTimeFormatter
+            .ofPattern("yyyy-MM-dd[ HH:mm:ss]", Locale.ENGLISH);
     private AbstractDateFieldServerRpc rpc = new AbstractDateFieldServerRpc() {
 
         @Override
@@ -115,7 +120,17 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                         if (resolutions.isEmpty()) {
                             Result<T> parsedDate = handleUnparsableDateString(
                                     dateString);
-                            parsedDate.ifOk(v -> setValue(v, true));
+                            // If handleUnparsableDateString returns the same
+                            // date as current, force update state to display
+                            // correct representation
+                            parsedDate.ifOk(v -> {
+                                if (!setValue(v, true)
+                                        && !isDifferentValue(v)) {
+                                    updateDiffstate("resolutions",
+                                            Json.createObject());
+                                    doSetValue(v);
+                                }
+                            });
                             if (parsedDate.isError()) {
                                 dateString = null;
                                 currentParseErrorMessage = parsedDate
@@ -269,14 +284,12 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *            - the allowed range's start date
      */
     public void setRangeStart(T startDate) {
-        Date date = convertToDate(startDate);
-        if (date != null && getState().rangeEnd != null
-                && date.after(getState().rangeEnd)) {
+        if (afterDate(startDate, convertFromDateString(getState().rangeEnd))) {
             throw new IllegalStateException(
                     "startDate cannot be later than endDate");
         }
 
-        getState().rangeStart = date;
+        getState().rangeStart = convertToDateString(startDate);
     }
 
     /**
@@ -333,9 +346,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *            resolution)
      */
     public void setRangeEnd(T endDate) {
-        Date date = convertToDate(endDate);
-        if (date != null && getState().rangeStart != null
-                && getState().rangeStart.after(date)) {
+        String date = convertToDateString(endDate);
+        if (afterDate(convertFromDateString(getState().rangeStart), endDate)) {
             throw new IllegalStateException(
                     "endDate cannot be earlier than startDate");
         }
@@ -349,7 +361,68 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @return the precise rangeStart used, may be {@code null}.
      */
     public T getRangeStart() {
-        return convertFromDate(getState(false).rangeStart);
+        return convertFromDateString(getState(false).rangeStart);
+    }
+
+    /**
+     * Parses string representaion of date range limit into date type
+     *
+     * @param temporalStr
+     *            the string representation
+     * @return parsed value
+     * @see AbstractDateFieldState#rangeStart
+     * @see AbstractDateFieldState#rangeEnd
+     * @since 8.4
+     */
+    protected T convertFromDateString(String temporalStr) {
+        if (temporalStr == null) {
+            return null;
+        }
+        return toType(RANGE_FORMATTER.parse(temporalStr));
+    }
+
+    /**
+     * Converts a temporal value into field-specific data type.
+     *
+     * @param temporalAccessor
+     *            - source value
+     * @return conversion result.
+     * @since 8.4
+     */
+    protected abstract T toType(TemporalAccessor temporalAccessor);
+
+    /**
+     * Converts date range limit into string representation.
+     *
+     * @param temporal
+     *            the value
+     * @return textual representation
+     * @see AbstractDateFieldState#rangeStart
+     * @see AbstractDateFieldState#rangeEnd
+     * @since 8.4
+     */
+    protected String convertToDateString(T temporal) {
+        if (temporal == null) {
+            return null;
+        }
+        return RANGE_FORMATTER.format(temporal);
+    }
+
+    /**
+     * Checks if {@code value} is after {@code base} or not.
+     *
+     * @param value
+     *            temporal value
+     * @param base
+     *            temporal value to compare to
+     * @return {@code true} if {@code value} is after {@code base},
+     *         {@code false} otherwise
+     */
+    protected boolean afterDate(T value, T base) {
+        if (value == null || base == null) {
+            return false;
+        }
+        return value.compareTo(base) > 0;
     }
 
     /**
@@ -358,7 +431,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @return the precise rangeEnd used, may be {@code null}.
      */
     public T getRangeEnd() {
-        return convertFromDate(getState(false).rangeEnd);
+        return convertFromDateString(getState(false).rangeEnd);
     }
 
     /**
@@ -883,10 +956,10 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * reading software.
      *
      * @param element
-     *         the element for which to set the label. Not {@code null}.
+     *            the element for which to set the label. Not {@code null}.
      * @param label
-     *         the assistive label to set
-     * @since
+     *            the assistive label to set
+     * @since 8.4
      */
     public void setAssistiveLabel(AccessibleElement element, String label) {
         Objects.requireNonNull(element, "Element cannot be null");
@@ -897,8 +970,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * Gets the assistive label of a calendar navigation element.
      *
      * @param element
-     *         the element of which to get the assistive label
-     * @since
+     *            the element of which to get the assistive label
+     * @since 8.4
      */
     public void getAssistiveLabel(AccessibleElement element) {
         getState(false).assistiveLabels.get(element);

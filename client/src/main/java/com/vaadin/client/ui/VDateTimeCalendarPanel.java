@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -79,8 +79,6 @@ public class VDateTimeCalendarPanel
         /**
          * Constructs the ListBoxes and updates their value
          *
-         * @param redraw
-         *            Should new instances of the listboxes be created
          */
         private void buildTime() {
             clear();
@@ -89,11 +87,11 @@ public class VDateTimeCalendarPanel
             if (getDateTimeService().isTwelveHourClock()) {
                 hours.addItem("12");
                 for (int i = 1; i < 12; i++) {
-                    hours.addItem(asTwoDigits(i));
+                    hours.addItem(DateTimeService.asTwoDigits(i));
                 }
             } else {
                 for (int i = 0; i < 24; i++) {
-                    hours.addItem(asTwoDigits(i));
+                    hours.addItem(DateTimeService.asTwoDigits(i));
                 }
             }
 
@@ -109,14 +107,14 @@ public class VDateTimeCalendarPanel
             if (getResolution().compareTo(DateTimeResolution.MINUTE) <= 0) {
                 mins = createListBox();
                 for (int i = 0; i < 60; i++) {
-                    mins.addItem(asTwoDigits(i));
+                    mins.addItem(DateTimeService.asTwoDigits(i));
                 }
                 mins.addChangeHandler(this);
             }
             if (getResolution().compareTo(DateTimeResolution.SECOND) <= 0) {
                 sec = createListBox();
                 for (int i = 0; i < 60; i++) {
-                    sec.addItem(asTwoDigits(i));
+                    sec.addItem(DateTimeService.asTwoDigits(i));
                 }
                 sec.addChangeHandler(this);
             }
@@ -130,7 +128,7 @@ public class VDateTimeCalendarPanel
                 if (getDateTimeService().isTwelveHourClock()) {
                     h -= h < 12 ? 0 : 12;
                 }
-                add(new VLabel(asTwoDigits(h)));
+                add(new VLabel(DateTimeService.asTwoDigits(h)));
             } else {
                 add(hours);
             }
@@ -139,7 +137,7 @@ public class VDateTimeCalendarPanel
                 add(new VLabel(delimiter));
                 if (isReadonly()) {
                     final int m = mins.getSelectedIndex();
-                    add(new VLabel(asTwoDigits(m)));
+                    add(new VLabel(DateTimeService.asTwoDigits(m)));
                 } else {
                     add(mins);
                 }
@@ -148,7 +146,7 @@ public class VDateTimeCalendarPanel
                 add(new VLabel(delimiter));
                 if (isReadonly()) {
                     final int s = sec.getSelectedIndex();
-                    add(new VLabel(asTwoDigits(s)));
+                    add(new VLabel(DateTimeService.asTwoDigits(s)));
                 } else {
                     add(sec);
                 }
@@ -306,10 +304,6 @@ public class VDateTimeCalendarPanel
                 event.stopPropagation();
             }
         }
-    }
-
-    private static String asTwoDigits(int i) {
-        return (i < 10 ? "0" : "") + i;
     }
 
     /**

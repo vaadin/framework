@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,13 +26,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -79,6 +80,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.WidgetUtil.Reference;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
@@ -443,7 +445,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              * The tooltip is shown in the mode returned by
              * {@link #getDescriptionContentMode()}.
              *
-             * @since
+             * @return the tooltip text for this cell
+             * @since 8.4
              */
             public String getDescription() {
                 return description;
@@ -458,7 +461,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              *
              * @param description
              *            the tooltip to show when hovering the cell
-             * @since
+             * @since 8.4
              */
             public void setDescription(String description) {
                 this.description = description;
@@ -474,7 +477,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              * @param descriptionContentMode
              *            the content mode to use for the tooltip (HTML or plain
              *            text)
-             * @since
+             * @since 8.4
              */
             public void setDescription(String description,
                     ContentMode descriptionContentMode) {
@@ -489,7 +492,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              *
              * @see ContentMode
              * @return the content mode for the tooltip
-             * @since
+             * @since 8.4
              */
             public ContentMode getDescriptionContentMode() {
                 return descriptionContentMode;
@@ -501,7 +504,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              * @see ContentMode
              * @param descriptionContentMode
              *            the content mode for the tooltip
-             * @since
+             * @since 8.4
              */
             public void setDescriptionContentMode(
                     ContentMode descriptionContentMode) {
@@ -1436,7 +1439,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private String styleName = null;
 
         private HandlerRegistration hScrollHandler;
-        private HandlerRegistration vScrollHandler;
 
         private final Button saveButton;
         private final Button cancelButton;
@@ -1679,20 +1681,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
             state = State.ACTIVATING;
 
-            final Escalator escalator = grid.getEscalator();
-            if (escalator.getVisibleRowRange().contains(rowIndex)) {
-                show(rowIndex, columnIndexDOM);
-            } else {
-                vScrollHandler = grid.addScrollHandler(event -> {
-                    if (escalator.getVisibleRowRange().contains(rowIndex)) {
-                        show(rowIndex, columnIndexDOM);
-                        vScrollHandler.removeHandler();
-                    }
-                });
-                grid.scrollToRow(rowIndex,
-                        isBuffered() ? ScrollDestination.MIDDLE
-                                : ScrollDestination.ANY);
-            }
+            grid.scrollToRow(rowIndex,
+                    isBuffered() ? ScrollDestination.MIDDLE
+                            : ScrollDestination.ANY,
+                    () -> show(rowIndex, columnIndexDOM));
         }
 
         /**
@@ -2403,8 +2395,15 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             EventTarget target = getNativeEvent().getEventTarget();
             Grid<?> grid = getGrid();
             if (Element.is(target) && grid != null) {
+                final RowContainer container = Stream
+                        .of(grid.escalator.getHeader(),
+                                grid.escalator.getBody(),
+                                grid.escalator.getFooter())
+                        .filter(c -> c.getCell(target.cast()) != null)
+                        .findFirst()
+                        .orElse(grid.cellFocusHandler.containerWithFocus);
+
                 Section section = Section.FOOTER;
-                final RowContainer container = grid.cellFocusHandler.containerWithFocus;
                 if (container == grid.escalator.getHeader()) {
                     section = Section.HEADER;
                 } else if (container == getGrid().escalator.getBody()) {
@@ -4598,7 +4597,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         private void transferCellFocusOnDrop() {
             final Cell focusedCell = cellFocusHandler.getFocusedCell();
-            if (focusedCell != null) {
+            if (focusedCell != null && focusedCell.getElement() != null) {
                 final int focusedColumnIndexDOM = focusedCell.getColumn();
                 final int focusedRowIndex = focusedCell.getRow();
                 final int draggedColumnIndex = eventCell.getColumnIndex();
@@ -5625,7 +5624,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * Returns whether Grid should handle events from Widgets in this
          * Column.
-         * 
+         *
          * @return {@code true} to handle events from widgets; {@code false} to
          *         not
          * @since 8.3
@@ -7376,6 +7375,45 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
+     * Helper method for making sure desired row is visible and it is properly
+     * rendered.
+     *
+     * @param rowIndex
+     *            the row to look for
+     * @param destination
+     *            the desired scroll destination
+     * @param callback
+     *            the callback command to execute when row is available
+     * @since 8.4
+     */
+    public void scrollToRow(int rowIndex, ScrollDestination destination,
+            Runnable callback) {
+        waitUntilVisible(rowIndex, destination, () -> {
+            Reference<HandlerRegistration> registration = new Reference<>();
+            registration.set(addDataAvailableHandler(event -> {
+                if (event.getAvailableRows().contains(rowIndex)) {
+                    registration.get().removeHandler();
+                    callback.run();
+                }
+            }));
+        });
+    }
+
+    /**
+     * Helper method for making sure desired row is visible and it is properly
+     * rendered.
+     *
+     * @param rowIndex
+     *            the row to look for
+     * @param whenRendered
+     *            the callback command to execute when row is available
+     * @since 8.4
+     */
+    public void scrollToRow(int rowIndex, Runnable whenRendered) {
+        scrollToRow(rowIndex, ScrollDestination.ANY, whenRendered);
+    }
+
+    /**
      * Scrolls to a certain row using only user-specified parameters.
      * <p>
      * If the details for that row are visible, those will be taken into account
@@ -7410,6 +7448,43 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         escalator.scrollToRowAndSpacer(rowIndex, destination, paddingPx);
+    }
+
+    /**
+     * Helper method for scrolling and making sure row is visible.
+     *
+     * @param rowIndex
+     *            the row index to make visible
+     * @param destination
+     *            the desired scroll destination
+     * @param whenVisible
+     *            the callback method to call when row is visible
+     */
+    private void waitUntilVisible(int rowIndex, ScrollDestination destination,
+            Runnable whenVisible) {
+        final Escalator escalator = getEscalator();
+        if (escalator.getVisibleRowRange().contains(rowIndex)) {
+            TableRowElement rowElement = escalator.getBody()
+                    .getRowElement(rowIndex);
+            long bottomBorder = Math.round(WidgetUtil.getBorderBottomThickness(
+                    rowElement.getFirstChildElement()) + 0.5d);
+            if (rowElement.getAbsoluteTop() >= escalator.getHeader()
+                    .getElement().getAbsoluteBottom()
+                    && rowElement.getAbsoluteBottom() <= escalator.getFooter()
+                            .getElement().getAbsoluteTop() + bottomBorder) {
+                whenVisible.run();
+                return;
+            }
+        }
+
+        Reference<HandlerRegistration> registration = new Reference<>();
+        registration.set(addScrollHandler(event -> {
+            if (escalator.getVisibleRowRange().contains(rowIndex)) {
+                registration.get().removeHandler();
+                whenVisible.run();
+            }
+        }));
+        scrollToRow(rowIndex, destination);
     }
 
     /**
@@ -8640,7 +8715,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Adds a spacer visibility changed handler to the underlying escalator.
      *
      * @param handler
-     *         the handler to be called when a spacer's visibility changes
+     *            the handler to be called when a spacer's visibility changes
      * @return the registration object with which the handler can be removed
      * @since 8.3.2
      */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -323,16 +323,25 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
 
         // if there are duplicates, some item is both added & removed, just
         // discard that and leave things as was before
-        addedItems.removeIf(item -> removedItems.remove(item));
+        DataProvider<T, ?> dataProvider = internalGetDataProvider();
+        addedItems.removeIf(item -> {
+            Object addedId = dataProvider.getId(item);
+            return removedItems.stream().map(dataProvider::getId).anyMatch(
+                    addedId::equals) ? removedItems.remove(item) : false;
+        });
 
-        if (selection.containsAll(addedItems)
-                && Collections.disjoint(selection, removedItems)) {
+        if (isAllSelected(addedItems) && isNoneSelected(removedItems)) {
             return;
         }
 
         updateSelection(set -> {
             // order of add / remove does not matter since no duplicates
-            set.removeAll(removedItems);
+            set.removeIf(item -> {
+                Object itemId = dataProvider.getId(item);
+
+                return removedItems.stream().map(dataProvider::getId)
+                        .anyMatch(itemId::equals);
+            });
             set.addAll(addedItems);
         }, userOriginated);
     }
@@ -357,6 +366,26 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
         Object id = dataProvider.getId(item);
         return selection.stream().map(dataProvider::getId).anyMatch(id::equals);
 
+    }
+
+    private boolean isAllSelected(Collection<T> items) {
+        for (T item : items) {
+            if (!isSelected(item)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean isNoneSelected(Collection<T> items) {
+        for (T item : items) {
+            if (isSelected(item)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

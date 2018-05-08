@@ -88,20 +88,23 @@
         </p>
 
         <p>
-            For enhancements introduced in Vaadin Framework 8.3, see the <a
-                href="http://vaadin.com/download/release/8.3/8.3.0/release-notes.html">Release
-                Notes for Vaadin Framework 8.3.0</a>.
+            For enhancements introduced in Vaadin Framework 8.4, see the <a
+                href="http://vaadin.com/download/release/8.4/8.4.0/release-notes.html">Release
+                Notes for Vaadin Framework 8.4.0</a>.
             For migrating from previous framework versions, see <a href="#incompatible">the list of incompatible changes</a> and <a href="#migrating">how to migrate
             to Vaadin Framework 8</a>.
         </p>
 
         <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h2>
 
-        <li><tt>BindingBuilder</tt> will now automatically mark bound field <i>read-only</i> when bound to a read-only property or a <tt>null</tt> setter.</li>
+        <li><tt>AbstractSingleSelect</tt> communication has been partially re-written. Some <tt>protected</tt> API was removed.</li>
+        <li><tt>setStyleName(String, boolean)</tt> has been moved from <tt>AbstractComponent</tt> to <tt>Component</tt> interface as a default method.</li>
+        <li><tt>Window</tt> closing animation disabled by default.</li>
+        <li><tt>FileTypeResolver</tt> icon features have been moved to a compatibility version of the class.</li>
 
-        <h2>For incompatible or behavior-altering changes in 8.3, please see <a href="https://vaadin.com/download/release/8.3/8.3.0/release-notes.html#incompatible">8.3 release notes</a></h2>
-        
-                
+        <h2>For incompatible or behavior-altering changes in 8.4, please see <a href="https://vaadin.com/download/release/8.4/8.4.0/release-notes.html#incompatible">8.4 release notes</a></h2>
+
+
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
             <li><tt>@PushStateNavigation</tt> can cause browser to load resources from wrong URLs
@@ -400,30 +403,31 @@
         <h2 id="vaadinontheweb">Vaadin on the Web</h2>
 
         <ul>
-            <li><a href="http://vaadin.com">vaadin.com - The
+            <li><a href="https://vaadin.com">vaadin.com - The
                     developer portal containing everything you need to
                     know about Vaadin</a></li>
-            <li><a href="http://vaadin.com/demo">vaadin.com/demo
+            <li><a href="https://vaadin.com/framework/demos">vaadin.com/framework/demos
                     - A collection of demos for Vaadin Framework</a></li>
-            <li><a href="http://vaadin.com/learn">vaadin.com/learn
+            <li><a href="https://vaadin.com/docs/v8/framework/tutorial.html">vaadin.com/docs/v8/framework/tutorial.html
                     - Getting started with Vaadin Framework</a></li>
-            <li><a href="http://vaadin.com/forum">vaadin.com/forum
+            <li><a href="https://vaadin.com/forum">vaadin.com/forum
                     - Forums for Vaadin Framework related discussions</a></li>
-            <li><a href="http://vaadin.com/book">vaadin.com/book
-                    - Book of Vaadin - everything you need to know about
-                    Vaadin Framework</a></li>
-            <li><a href="http://vaadin.com/api">vaadin.com/api
+            <li><a href="https://vaadin.com/docs/v8/">vaadin.com/docs/v8
+                    - Vaadin Docs - complete reference manual for all Vaadin products</a></li>
+            <li><a href="https://vaadin.com/api">vaadin.com/api
                     - Online javadocs</a></li>
-            <li><a href="http://vaadin.com/directory">vaadin.com/directory
+            <li><a href="https://vaadin.com/directory">vaadin.com/directory
                     - Add-ons for Vaadin Framework</a></li>
 
+<!--TODO change to something reasonable or remove
             <li><a href="http://vaadin.com/pro-tools">vaadin.com/pro-tools
                     - Commercial tools for Vaadin Framework</a></li>
-            <li><a href="http://vaadin.com/support">vaadin.com/support
+-->
+            <li><a href="https://vaadin.com/support">vaadin.com/support
                     - Commercial support for Vaadin Framework</a></li>
-            <li><a href="http://vaadin.com/services">vaadin.com/services
+            <li><a href="https://vaadin.com/consulting">vaadin.com/consulting
                     - Expert services for Vaadin Framework users</a></li>
-            <li><a href="http://vaadin.com/company">vaadin.com/company
+            <li><a href="https://vaadin.com/company">vaadin.com/company
                     - Information about the company behind Vaadin Framework</a></li>
             <li><a href="https://vaadin.com/contribute">vaadin.com/contribute - Contribution quide</a></li>
             <li><a href="https://github.com/vaadin/framework/issues">github.com/vaadin/framework - Github repository</a></li>

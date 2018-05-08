@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[changing-theme-on-the-fly]]
-Changing theme on the fly
--------------------------
+= Changing theme on the fly
 
 Starting from Vaadin 7.3, you can change themes in the application
 without reloading the page. To do this, simply use the

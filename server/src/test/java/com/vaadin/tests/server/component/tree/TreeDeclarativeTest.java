@@ -1,9 +1,13 @@
 package com.vaadin.tests.server.component.tree;
 
+import java.io.ByteArrayInputStream;
+
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.vaadin.data.SelectionModel;
 import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.shared.ui.ContentMode;
@@ -13,6 +17,7 @@ import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.IconGenerator;
 import com.vaadin.ui.ItemCaptionGenerator;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.declarative.Design;
 
 public class TreeDeclarativeTest
         extends AbstractComponentDeclarativeTestBase<Tree> {
@@ -138,6 +143,27 @@ public class TreeDeclarativeTest
         tree.setWidthUndefined();
         testRead(design, tree);
         testWrite(design, tree);
+    }
+
+    @Test
+    public void testUpdateExisting() {
+        Tree tree = new Tree();
+
+        String treeDesign = "<vaadin-tree selection-mode=\"MULTI\">"
+                + "<node item=\"A\">A</node>" + "<node item=\"B\">B</node>"
+                + "<node item=\"AA\" parent=\"A\">AA</node>" + "</vaadin-tree>";
+
+        Design.read(new ByteArrayInputStream(treeDesign.getBytes()), tree);
+        Object[] items = tree.getDataProvider()
+                .fetchChildren(new HierarchicalQuery(null, null)).toArray();
+        assertArrayEquals(new Object[] { "A", "B" }, items);
+        Object[] itemsA = tree.getDataProvider()
+                .fetchChildren(new HierarchicalQuery(null, "A")).toArray();
+        assertArrayEquals(new Object[] { "AA" }, itemsA);
+        long countB = tree.getDataProvider()
+                .fetchChildren(new HierarchicalQuery(null, "B")).count();
+        assertEquals(0L, countB);
+        assertTrue(tree.getSelectionModel() instanceof SelectionModel.Multi);
     }
 
     @Override

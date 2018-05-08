@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-multi-tab-applications]]
-Creating multi-tab applications
--------------------------------
+= Creating multi-tab applications
 
 Every new request to the server gets a new session and UI instance.
 Having the application open in separate tabs or windows means that the

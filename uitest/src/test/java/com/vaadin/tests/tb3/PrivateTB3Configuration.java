@@ -1,19 +1,3 @@
-/*
- * Copyright 2000-2013 Vaadind Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests.tb3;
 
 import static org.junit.Assert.fail;
@@ -24,14 +8,17 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.Parameters;
 import com.vaadin.testbench.annotations.BrowserFactory;
 import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.annotations.RunOnHub;
@@ -48,9 +35,7 @@ import com.vaadin.testbench.parallel.BrowserUtil;
 @RunOnHub("tb3-hub.intra.itmill.com")
 @BrowserFactory(VaadinBrowserFactory.class)
 public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
-    /**
-     *
-     */
+    private static final String BROWSER_FACTORY = "browser.factory";
     public static final String SCREENSHOT_DIRECTORY = "com.vaadin.testbench.screenshot.directory";
     private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
     private static final String RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.runLocally";
@@ -63,28 +48,47 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
             "eclipse-run-selected-test.properties");
     private static final String FIREFOX_PATH = "firefox.path";
     private static final String PHANTOMJS_PATH = "phantomjs.binary.path";
+    private static final String BROWSERS_EXCLUDE = "browsers.exclude";
 
     static {
         if (propertiesFile.exists()) {
             try {
                 properties.load(new FileInputStream(propertiesFile));
-                if (properties.containsKey(RUN_LOCALLY_PROPERTY)) {
-                    System.setProperty("useLocalWebDriver", "true");
-                    DesiredCapabilities localBrowser = getRunLocallyCapabilities();
-                    System.setProperty("browsers.include",
-                            localBrowser.getBrowserName()
-                                    + localBrowser.getVersion());
-                }
-                if (properties.containsKey(FIREFOX_PATH)) {
-                    System.setProperty(FIREFOX_PATH,
-                            properties.getProperty(FIREFOX_PATH));
-                }
-                if (properties.containsKey(PHANTOMJS_PATH)) {
-                    System.setProperty(PHANTOMJS_PATH,
-                            properties.getProperty(PHANTOMJS_PATH));
-                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+        }
+        if (properties.containsKey(RUN_LOCALLY_PROPERTY)) {
+            System.setProperty("useLocalWebDriver", "true");
+            DesiredCapabilities localBrowser = getRunLocallyCapabilities();
+            System.setProperty("browsers.include",
+                    localBrowser.getBrowserName() + localBrowser.getVersion());
+        }
+
+        // Read properties from the file.
+        Stream.of(FIREFOX_PATH, PHANTOMJS_PATH, BROWSER_FACTORY,
+                BROWSERS_EXCLUDE).filter(properties::containsKey)
+                .forEach(property -> System.setProperty(property,
+                        properties.getProperty(property)));
+
+        String dir = System.getProperty(SCREENSHOT_DIRECTORY,
+                properties.getProperty(SCREENSHOT_DIRECTORY));
+        if (dir != null && !dir.isEmpty()) {
+            String reference = Paths.get(dir, "reference").toString();
+            String errors = Paths.get(dir, "errors").toString();
+            Parameters.setScreenshotReferenceDirectory(reference);
+            Parameters.setScreenshotErrorDirectory(errors);
+        } else {
+            // Attempt to pass specific values to Parameters based on
+            // real property name
+            final String base = Parameters.class.getName() + ".";
+            if (properties.containsKey(base + "screenshotReferenceDirectory")) {
+                Parameters.setScreenshotReferenceDirectory(properties
+                        .getProperty(base + "screenshotReferenceDirectory"));
+            }
+            if (properties.containsKey(base + "screenshotErrorDirectory")) {
+                Parameters.setScreenshotErrorDirectory(properties
+                        .getProperty(base + "screenshotErrorDirectory"));
             }
         }
     }
@@ -131,10 +135,21 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     protected static DesiredCapabilities getRunLocallyCapabilities() {
         VaadinBrowserFactory factory = new VaadinBrowserFactory();
+
         try {
-            return factory.create(
-                    Browser.valueOf(properties.getProperty(RUN_LOCALLY_PROPERTY)
-                            .toUpperCase(Locale.ROOT)));
+            if (properties.containsKey(RUN_LOCALLY_PROPERTY)) {
+                // RunLocally defined in propeties file
+                return factory.create(Browser
+                        .valueOf(properties.getProperty(RUN_LOCALLY_PROPERTY)
+                                .toUpperCase(Locale.ROOT)));
+            } else if (System.getProperties().containsKey("browsers.include")) {
+                // Use first included browser as the run locally browser.
+                String property = System.getProperty("browsers.include");
+                String firstBrowser = property.split(",")[0];
+
+                return factory.create(Browser.valueOf(firstBrowser
+                        .replaceAll("[0-9]+$", "").toUpperCase(Locale.ROOT)));
+            }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             System.err.println("Falling back to FireFox");
@@ -149,16 +164,6 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         }
 
         return property;
-    }
-
-    @Override
-    protected String getScreenshotDirectory() {
-        String screenshotDirectory = getProperty(SCREENSHOT_DIRECTORY);
-        if (screenshotDirectory == null) {
-            throw new RuntimeException("No screenshot directory defined. Use -D"
-                    + SCREENSHOT_DIRECTORY + "=<path>");
-        }
-        return screenshotDirectory;
     }
 
     @Override
@@ -202,7 +207,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
             return true;
         }
 
-        return false;
+        return "true".equals(System.getProperty("useLocalWebDriver", "false"));
     }
 
     /**

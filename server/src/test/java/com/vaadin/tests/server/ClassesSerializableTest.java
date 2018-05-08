@@ -54,6 +54,7 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.ui\\.themes\\..*", //
             // exact class level filtering
             "com\\.vaadin\\.event\\.FieldEvents", //
+            "com\\.vaadin\\.util\\.FileTypeResolver",
             "com\\.vaadin\\.event\\.LayoutEvents", //
             "com\\.vaadin\\.event\\.MouseEvents", //
             "com\\.vaadin\\.event\\.UIEvents", //
@@ -94,6 +95,7 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.server\\.JsonCodec\\$1", //
             "com\\.vaadin\\.server\\.communication\\.PushConnection", //
             "com\\.vaadin\\.server\\.communication\\.AtmospherePushConnection.*", //
+            "com\\.vaadin\\.ui\\.components\\.colorpicker\\.ColorUtil", //
             "com\\.vaadin\\.util\\.ConnectorHelper", //
             "com\\.vaadin\\.server\\.VaadinSession\\$FutureAccess", //
             "com\\.vaadin\\.external\\..*", //

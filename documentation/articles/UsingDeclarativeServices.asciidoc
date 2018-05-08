@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[using-declarative-services]]
-Using declarative services
---------------------------
+= Using declarative services
 
 Declarative Services (DS) are very common to define OSGi services. The
 DS bundle scans all bundles (extender pattern), parses the component

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -176,8 +176,8 @@ public class AriaHelper {
      * @param element
      *            Element to move out of sight
      * @param assistiveOnly
-     *            {@code true} when element should only be visible for
-     *            assistive devices, {@code false} to make the element visible for all
+     *            {@code true} when element should only be visible for assistive
+     *            devices, {@code false} to make the element visible for all
      */
     public static void setVisibleForAssistiveDevicesOnly(Element element,
             boolean assistiveOnly) {

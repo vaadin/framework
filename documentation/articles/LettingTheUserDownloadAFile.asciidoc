@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[letting-the-user-download-a-file]]
-Letting The User Download A File
---------------------------------
+= Letting The User Download A File
 
 Providing a file for download to the user might be trickier that what it
 seems - the file should be downloaded instead of just opened by the
@@ -56,7 +55,7 @@ public class LettingUserDownladFile extends UI {
 ....
 
 To use `FileDownloader`, you just create an instance of the extension
-and use it to extend the component that should start the download. You
+and use it to extend the component or `MenuItem` that should start the download. You
 should also note that `FileDownloader` works best with resources that
 are served by Vaadin as it relies on sending some special HTTP headers
 along with the file to ensure the browser doesn't try to open the file

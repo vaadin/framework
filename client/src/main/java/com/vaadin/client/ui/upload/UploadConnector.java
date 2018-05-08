@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -70,8 +70,8 @@ public class UploadConnector extends AbstractComponentConnector
             upload.submitButton
                     .setText(uidl.getStringAttribute("buttoncaption"));
             if (uidl.hasAttribute("buttonstylename")) {
-                upload.submitButton
-                        .setStyleName(uidl.getStringAttribute("buttonstylename"));
+                upload.submitButton.setStyleName(
+                        uidl.getStringAttribute("buttonstylename"));
             }
             upload.submitButton.setVisible(true);
         } else {

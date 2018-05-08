@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,7 +31,7 @@ public interface FileDropTargetRpc extends ServerRpc {
      * Called when files are dropped onto the file drop target.
      *
      * @param fileParams
-     *         Generated file IDs and file parameters of dropped files.
+     *            Generated file IDs and file parameters of dropped files.
      */
     public void drop(Map<String, FileParameters> fileParams);
 

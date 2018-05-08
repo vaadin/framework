@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,8 +24,8 @@ import com.vaadin.event.SerializableEventListener;
  * {@link BindingBuilder#withValidationStatusHandler(BindingValidationStatusHandler)}
  * Register} an instance of this class to be able to override the default
  * handling, which is to show
- * {@link com.vaadin.ui.AbstractComponent#setComponentError(com.vaadin.server.ErrorMessage) an
- * error message} for failed field validations.
+ * {@link com.vaadin.ui.AbstractComponent#setComponentError(com.vaadin.server.ErrorMessage)
+ * an error message} for failed field validations.
  *
  * @author Vaadin Ltd
  *

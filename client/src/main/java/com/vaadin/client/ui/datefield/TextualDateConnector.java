@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -123,8 +123,8 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
         super.onStateChanged(stateChangeEvent);
 
         getWidget().setTextFieldEnabled(getState().textFieldEnabled);
-        getWidget().setRangeStart(nullSafeDateClone(getState().rangeStart));
-        getWidget().setRangeEnd(nullSafeDateClone(getState().rangeEnd));
+        getWidget().setRangeStart(getState().rangeStart);
+        getWidget().setRangeEnd(getState().rangeEnd);
 
         getWidget().calendar.setDateStyles(getState().dateStyles);
         getWidget().calendar
@@ -165,13 +165,6 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
                 getState().descriptionForAssistiveDevices);
 
         getWidget().setTextFieldTabIndex();
-    }
-
-    private Date nullSafeDateClone(Date date) {
-        if (date != null) {
-            return (Date) date.clone();
-        }
-        return null;
     }
 
     @Override

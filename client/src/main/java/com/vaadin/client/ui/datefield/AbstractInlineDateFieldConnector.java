@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -51,24 +51,22 @@ public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCa
     protected void updateListeners() {
         VAbstractDateFieldCalendar<PANEL, R> widget = getWidget();
         if (isResolutionMonthOrHigher()) {
-            widget.calendarPanel
-                    .setFocusChangeListener(date -> {
-                        Date date2 = new Date();
-                        if (widget.calendarPanel.getDate() != null) {
-                            date2.setTime(widget.calendarPanel.getDate()
-                                    .getTime());
-                        }
-                        /*
-                         * Update the value of calendarPanel
-                         */
-                        date2.setYear(date.getYear());
-                        date2.setMonth(date.getMonth());
-                        widget.calendarPanel.setDate(date2);
-                        /*
-                         * Then update the value from panel to server
-                         */
-                        widget.updateValueFromPanel();
-                    });
+            widget.calendarPanel.setFocusChangeListener(date -> {
+                Date date2 = new Date();
+                if (widget.calendarPanel.getDate() != null) {
+                    date2.setTime(widget.calendarPanel.getDate().getTime());
+                }
+                /*
+                 * Update the value of calendarPanel
+                 */
+                date2.setYear(date.getYear());
+                date2.setMonth(date.getMonth());
+                widget.calendarPanel.setDate(date2);
+                /*
+                 * Then update the value from panel to server
+                 */
+                widget.updateValueFromPanel();
+            });
         } else {
             widget.calendarPanel.setFocusChangeListener(null);
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -124,8 +124,8 @@ public interface SelectionModel<T> {
      * Checks if the user is allowed to have more than on item selected.
      * <p>
      *
-     * @return <code>true</code> if the user is allowed to select multiple items,
-     *         <code>false</code> otherwise
+     * @return <code>true</code> if the user is allowed to select multiple
+     *         items, <code>false</code> otherwise
      * @since 8.2
      */
     boolean isMultiSelectionAllowed();

@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[accessing-web-page-and-browser-information]]
-Accessing web page and browser information
-------------------------------------------
+= Accessing web page and browser information
 
 Vaadin 7 includes a new *Page* class offering access to various
 client-side information and events concerning the web page and browser

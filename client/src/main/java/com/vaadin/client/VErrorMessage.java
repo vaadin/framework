@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -64,7 +64,7 @@ public class VErrorMessage extends FlowPanel {
      * all previous style names.
      *
      * @param errorLevel
-     *         error level
+     *            error level
      * @since 8.2
      */
     public void updateErrorLevel(ErrorLevel errorLevel) {

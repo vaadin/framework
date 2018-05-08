@@ -38,11 +38,6 @@ public class DateTimeFieldIsValid extends AbstractTestUIWithLog {
                         + (dateField.getErrorMessage() == null)));
     }
 
-    /**
-     * @since
-     * @param value
-     * @return
-     */
     protected String format(LocalDateTime value) {
         if (value != null) {
             return format.format(value);

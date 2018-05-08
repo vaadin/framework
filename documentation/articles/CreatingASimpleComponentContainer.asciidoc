@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-a-simple-component-container]]
-Creating a simple component container
--------------------------------------
+= Creating a simple component container
 
 Components in Vaadin can be roughly split into two groups, `Component`{empty}s
 and `ComponentContainer`{empty}s. ComponentContainers are Components in

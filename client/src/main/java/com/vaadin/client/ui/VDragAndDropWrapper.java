@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -387,8 +387,8 @@ public class VDragAndDropWrapper extends VCustomComponent
                 if (event.isFile(i)) {
                     final int fileId = filecounter++;
                     final VHtml5File file = event.getFile(i);
-                    getLogger().info("Preparing to upload file " + file.getName()
-                            + " with id " + fileId + ", size="
+                    getLogger().info("Preparing to upload file "
+                            + file.getName() + " with id " + fileId + ", size="
                             + file.getSize());
                     transferable.setData("fi" + fileIndex, "" + fileId);
                     transferable.setData("fn" + fileIndex, file.getName());

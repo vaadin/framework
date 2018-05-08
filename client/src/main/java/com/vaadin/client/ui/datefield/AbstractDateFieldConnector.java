@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -150,17 +150,17 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
      * updates these labels.
      *
      * @param calendar
-     *         the calendar panel for which to set the assistive labels
-     * @since
+     *            the calendar panel for which to set the assistive labels
+     * @since 8.4
      */
     protected void setAndUpdateAssistiveLabels(
             VAbstractCalendarPanel calendar) {
-        calendar.setAssistiveLabelPreviousMonth(
-                getState().assistiveLabels.get(AccessibleElement.PREVIOUS_MONTH));
+        calendar.setAssistiveLabelPreviousMonth(getState().assistiveLabels
+                .get(AccessibleElement.PREVIOUS_MONTH));
         calendar.setAssistiveLabelNextMonth(
                 getState().assistiveLabels.get(AccessibleElement.NEXT_MONTH));
-        calendar.setAssistiveLabelPreviousYear(
-                getState().assistiveLabels.get(AccessibleElement.PREVIOUS_YEAR));
+        calendar.setAssistiveLabelPreviousYear(getState().assistiveLabels
+                .get(AccessibleElement.PREVIOUS_YEAR));
         calendar.setAssistiveLabelNextYear(
                 getState().assistiveLabels.get(AccessibleElement.NEXT_YEAR));
 

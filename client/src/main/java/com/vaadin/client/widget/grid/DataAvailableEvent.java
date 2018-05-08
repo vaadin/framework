@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,8 +34,8 @@ public class DataAvailableEvent extends GwtEvent<DataAvailableHandler> {
     }
 
     /**
-     * Returns the range of available rows in {@link com.vaadin.client.data.DataSource DataSource}
-     * for this event.
+     * Returns the range of available rows in
+     * {@link com.vaadin.client.data.DataSource DataSource} for this event.
      *
      * @return range of available rows
      */

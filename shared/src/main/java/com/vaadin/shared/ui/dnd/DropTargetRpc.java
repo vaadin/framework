@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,15 +34,16 @@ public interface DropTargetRpc extends ServerRpc {
      * Called when drop event happens on client side.
      *
      * @param types
-     *         List of data types from {@code DataTransfer.types} object.
+     *            List of data types from {@code DataTransfer.types} object.
      * @param data
-     *         Map containing all types and corresponding data from the {@code
+     *            Map containing all types and corresponding data from the
+     *            {@code
      *         DataTransfer} object.
      * @param dropEffect
-     *         The desired drop effect.
+     *            The desired drop effect.
      * @param mouseEventDetails
-     *         mouse event details object containing information about the drop
-     *         event
+     *            mouse event details object containing information about the
+     *            drop event
      */
     public void drop(List<String> types, Map<String, String> data,
             String dropEffect, MouseEventDetails mouseEventDetails);

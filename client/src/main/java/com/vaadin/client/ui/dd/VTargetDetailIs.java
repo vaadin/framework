@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,7 +34,8 @@ public final class VTargetDetailIs extends VAcceptCriterion {
     protected boolean accept(VDragEvent drag, UIDL configuration) {
         String name = configuration.getStringAttribute("p");
         String t = configuration.hasAttribute("t")
-                ? configuration.getStringAttribute("t").intern() : "s";
+                ? configuration.getStringAttribute("t").intern()
+                : "s";
         Object value = null;
         if (t == "s") {
             value = configuration.getStringAttribute("v");

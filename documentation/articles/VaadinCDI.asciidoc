@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[vaadin-cdi]]
-Vaadin CDI
-----------
+= Vaadin CDI
 
 During these tutorials we will be solving a number of common problems
 when using the https://vaadin.com/directory/component/vaadin-cdi[Vaadin CDI plugin].

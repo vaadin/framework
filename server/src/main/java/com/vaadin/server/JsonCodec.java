@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -329,7 +329,8 @@ public class JsonCodec implements Serializable {
             Class<?> classForType = getClassForType(targetType);
             return decodeEnum(classForType.asSubclass(Enum.class),
                     (JsonString) value);
-        } else if (CUSTOM_SERIALIZERS.containsKey(getClassForType(targetType))) {
+        } else if (CUSTOM_SERIALIZERS
+                .containsKey(getClassForType(targetType))) {
             return CUSTOM_SERIALIZERS.get(getClassForType(targetType))
                     .deserialize(targetType, value, connectorTracker);
         } else {
@@ -695,7 +696,8 @@ public class JsonCodec implements Serializable {
 
     public static Collection<BeanProperty> getProperties(Class<?> type)
             throws IntrospectionException {
-        Collection<BeanProperty> cachedProperties = TYPE_PROPERTY_CACHE.get(type);
+        Collection<BeanProperty> cachedProperties = TYPE_PROPERTY_CACHE
+                .get(type);
         if (cachedProperties != null) {
             return cachedProperties;
         }

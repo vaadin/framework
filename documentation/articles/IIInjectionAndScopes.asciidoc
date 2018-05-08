@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[ii-injection-and-scopes]]
-II - Injection and scopes
--------------------------
+= II - Injection and scopes
 
 In this tutorial we'll take a closer look at the @CDIUI annotation and
 use CDI to inject some beans to our application.
