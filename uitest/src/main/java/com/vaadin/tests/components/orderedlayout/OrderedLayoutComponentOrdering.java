@@ -41,8 +41,7 @@ public class OrderedLayoutComponentOrdering extends TestBase {
         addComponent(addThird);
 
         Button move = new Button("move last to first");
-        move.addClickListener(event ->
-                hl.addComponentAsFirst(
+        move.addClickListener(event -> hl.addComponentAsFirst(
                 hl.getComponent(hl.getComponentCount() - 1)));
         addComponent(move);
 

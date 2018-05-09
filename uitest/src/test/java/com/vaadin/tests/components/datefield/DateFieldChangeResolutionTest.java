@@ -30,7 +30,8 @@ public class DateFieldChangeResolutionTest extends MultiBrowserTest {
     @Test
     public void changeResolutionToDayThenMonth() throws Exception {
         initialize();
-        checkHeaderAndBody(DateResolution.YEAR, true); // check the initial state
+        checkHeaderAndBody(DateResolution.YEAR, true); // check the initial
+                                                       // state
         click(resolutionDay);
         checkHeaderAndBody(DateResolution.DAY, true);
         click(resolutionMonth);

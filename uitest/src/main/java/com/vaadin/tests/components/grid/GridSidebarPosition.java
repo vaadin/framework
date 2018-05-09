@@ -23,10 +23,9 @@ public class GridSidebarPosition extends AbstractTestUI {
         grid.setId(POPUP_WINDOW_HEIGHT);
         grid.setWidth("100px");
         for (int i = 0; i < 30; i++) {
-            grid.addColumn(ValueProvider.identity())
-                    .setCaption(
-                            "This is a really really really really long column name "
-                                    + i)
+            grid.addColumn(ValueProvider.identity()).setCaption(
+                    "This is a really really really really long column name "
+                            + i)
                     .setHidable(true);
         }
         hl.addComponent(grid);

@@ -581,8 +581,8 @@ public class CalendarTest extends GridLayout implements View {
         });
 
         calendarComponent
-                .setHandler((EventClickHandler)
-        event -> showEventPopup(event.getCalendarEvent(), false));
+                .setHandler((EventClickHandler) event -> showEventPopup(
+                        event.getCalendarEvent(), false));
 
         calendarComponent.setHandler(new BasicDateClickHandler() {
 
@@ -595,9 +595,8 @@ public class CalendarTest extends GridLayout implements View {
             }
         });
 
-        calendarComponent
-                .setHandler(
-                        (RangeSelectHandler) event -> handleRangeSelect(event));
+        calendarComponent.setHandler(
+                (RangeSelectHandler) event -> handleRangeSelect(event));
     }
 
     private ComboBox createTimeZoneSelect() {

@@ -27,12 +27,10 @@ public class NativeButtonClick extends AbstractReindeerTestUI {
         final Label label1 = new Label("0,0");
         final Label label2 = new Label("0,0");
 
-        Button button1 = new NativeButton("Button1",
-                event -> label1.setValue(
-                        event.getClientX() + "," + event.getClientY()));
-        Button button2 = new NativeButton("Button2",
-                event -> label2.setValue(
-                        event.getClientX() + "," + event.getClientY()));
+        Button button1 = new NativeButton("Button1", event -> label1
+                .setValue(event.getClientX() + "," + event.getClientY()));
+        Button button2 = new NativeButton("Button2", event -> label2
+                .setValue(event.getClientX() + "," + event.getClientY()));
 
         HorizontalLayout layout = new HorizontalLayout();
         layout.addComponents(button1, button2, label1, label2);

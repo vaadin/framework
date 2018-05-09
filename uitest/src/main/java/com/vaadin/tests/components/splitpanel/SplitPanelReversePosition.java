@@ -48,19 +48,18 @@ public class SplitPanelReversePosition extends TestBase {
         HorizontalLayout buttons = new HorizontalLayout();
         buttons.setSpacing(true);
 
-        buttons.addComponent(new Button("Swap horizontal positioning",
-                event -> {
+        buttons.addComponent(
+                new Button("Swap horizontal positioning", event -> {
                     hsplitReversed = !hsplitReversed;
                     hsplit.setSplitPosition(100, Sizeable.UNITS_PIXELS,
                             hsplitReversed);
                 }));
 
-        buttons.addComponent(new Button("Swap vertical positioning",
-                event -> {
-                    vsplitReversed = !vsplitReversed;
-                    vsplit.setSplitPosition(10, Sizeable.UNITS_PERCENTAGE,
-                            vsplitReversed);
-                }));
+        buttons.addComponent(new Button("Swap vertical positioning", event -> {
+            vsplitReversed = !vsplitReversed;
+            vsplit.setSplitPosition(10, Sizeable.UNITS_PERCENTAGE,
+                    vsplitReversed);
+        }));
 
         addComponent(buttons);
 

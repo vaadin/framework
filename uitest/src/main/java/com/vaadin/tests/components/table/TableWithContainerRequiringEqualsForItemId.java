@@ -55,9 +55,8 @@ public class TableWithContainerRequiringEqualsForItemId
             public Component generateCell(final Table source,
                     final Object itemId, final Object columnId) {
                 Button tripFolderLink = new Button("Button" + itemId);
-                tripFolderLink.addClickListener(event ->
-                        log.log("Button " + event.getButton().getCaption()
-                        + " clicked"));
+                tripFolderLink.addClickListener(event -> log.log("Button "
+                        + event.getButton().getCaption() + " clicked"));
                 tripFolderLink.setStyleName(Reindeer.BUTTON_SMALL);
                 return tripFolderLink;
             }

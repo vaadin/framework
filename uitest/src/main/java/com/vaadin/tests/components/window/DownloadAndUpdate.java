@@ -9,9 +9,8 @@ public class DownloadAndUpdate extends TestBase {
 
     @Override
     protected void setup() {
-        addComponent(
-                new Button("Download and update",
-                        event -> downloadAndUpdate()));
+        addComponent(new Button("Download and update",
+                event -> downloadAndUpdate()));
     }
 
     protected void downloadAndUpdate() {

@@ -20,19 +20,17 @@ public class DefaultCaptionWidth extends AbstractReindeerTestUI {
         addComponent(colorPicker);
         colorPicker.setDefaultCaptionEnabled(true);
 
-        Button setWidth = new Button("Set explicit width",
-                event -> {
-                    colorPicker.setCaption(null);
-                    colorPicker.setWidth("150px");
-                });
+        Button setWidth = new Button("Set explicit width", event -> {
+            colorPicker.setCaption(null);
+            colorPicker.setWidth("150px");
+        });
         setWidth.addStyleName("set-width");
         addComponent(setWidth);
 
-        Button setCaption = new Button("Set explicit caption",
-                event -> {
-                    colorPicker.setCaption("caption");
-                    colorPicker.setWidthUndefined();
-                });
+        Button setCaption = new Button("Set explicit caption", event -> {
+            colorPicker.setCaption("caption");
+            colorPicker.setWidthUndefined();
+        });
         setCaption.addStyleName("set-caption");
         addComponent(setCaption);
     }

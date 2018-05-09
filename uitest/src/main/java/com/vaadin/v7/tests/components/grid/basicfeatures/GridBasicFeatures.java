@@ -664,11 +664,13 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
         createSelectAction("Row description generator", "State", contentModes,
                 "None", new Command<Grid, ContentMode>() {
                     @Override
-                    public void execute(Grid grid, ContentMode mode, Object data) {
+                    public void execute(Grid grid, ContentMode mode,
+                            Object data) {
                         if (mode == null) {
                             grid.setRowDescriptionGenerator(null);
                         } else if (mode == ContentMode.PREFORMATTED) {
-                            grid.setRowDescriptionGenerator(rowDescriptionGenerator);
+                            grid.setRowDescriptionGenerator(
+                                    rowDescriptionGenerator);
                         } else {
                             grid.setRowDescriptionGenerator(
                                     rowDescriptionGenerator, mode);
@@ -676,14 +678,16 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 });
 
-        createSelectAction("Cell description generator", "State",
-                contentModes, "None", new Command<Grid, ContentMode>() {
+        createSelectAction("Cell description generator", "State", contentModes,
+                "None", new Command<Grid, ContentMode>() {
                     @Override
-                    public void execute(Grid grid, ContentMode mode, Object data) {
+                    public void execute(Grid grid, ContentMode mode,
+                            Object data) {
                         if (mode == null) {
                             grid.setCellDescriptionGenerator(null);
                         } else if (mode == ContentMode.PREFORMATTED) {
-                            grid.setCellDescriptionGenerator(cellDescriptionGenerator);
+                            grid.setCellDescriptionGenerator(
+                                    cellDescriptionGenerator);
                         } else {
                             grid.setCellDescriptionGenerator(
                                     cellDescriptionGenerator, mode);

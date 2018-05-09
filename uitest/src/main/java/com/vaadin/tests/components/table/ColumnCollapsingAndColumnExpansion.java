@@ -49,10 +49,9 @@ public class ColumnCollapsingAndColumnExpansion
                     "cell " + 2 + "-" + y, "cell " + 3 + "-" + y, },
                     new Object());
         }
-        table.addColumnCollapseListener(event ->
-                log("Collapse state for " + event.getPropertyId()
-                        + " changed to "
-                + table.isColumnCollapsed(event.getPropertyId())));
+        table.addColumnCollapseListener(event -> log(
+                "Collapse state for " + event.getPropertyId() + " changed to "
+                        + table.isColumnCollapsed(event.getPropertyId())));
         addComponent(table);
 
         for (int i = 1; i <= 3; i++) {

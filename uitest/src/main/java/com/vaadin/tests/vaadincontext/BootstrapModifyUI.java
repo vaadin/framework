@@ -18,14 +18,11 @@ public class BootstrapModifyUI extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Button c = new Button("Add bootstrap listener",
-                event->{
-                    getSession().addBootstrapListener(
-                            createBootstrapListener());
-                    event.getButton().setEnabled(false);
-                    getSession().setAttribute(INSTALLED_ATRIBUTE_NAME,
-                            Boolean.TRUE);
-                });
+        Button c = new Button("Add bootstrap listener", event -> {
+            getSession().addBootstrapListener(createBootstrapListener());
+            event.getButton().setEnabled(false);
+            getSession().setAttribute(INSTALLED_ATRIBUTE_NAME, Boolean.TRUE);
+        });
         addComponent(c);
         c.setEnabled(
                 getSession().getAttribute(INSTALLED_ATRIBUTE_NAME) == null);

@@ -16,12 +16,10 @@ public class ButtonClick extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest request) {
         final VerticalLayout rootLayout = new VerticalLayout();
         final Label statusLabel = new Label("Test initialized");
-        rootLayout.addComponent(new Button("Click here", event ->
-            statusLabel.setValue(SUCCESS_TEXT)));
+        rootLayout.addComponent(new Button("Click here",
+                event -> statusLabel.setValue(SUCCESS_TEXT)));
         Button visitLocation = new Button("Drag here",
-                event ->
-                statusLabel.setValue(WRONG_BUTTON_TEXT)
-        );
+                event -> statusLabel.setValue(WRONG_BUTTON_TEXT));
         rootLayout.addComponent(statusLabel);
         rootLayout.addComponent(visitLocation);
         rootLayout.setComponentAlignment(visitLocation, Alignment.BOTTOM_RIGHT);

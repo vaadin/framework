@@ -26,17 +26,16 @@ public class PrimaryStyle extends AbstractReindeerTestUI {
         tf.setStyleName("state");
         addComponent(tf);
 
-        Button updateButton = new Button("Update styles",
-                event -> {
-                    label.setPrimaryStyleName("updated");
-                    label.setStyleName("correctly");
+        Button updateButton = new Button("Update styles", event -> {
+            label.setPrimaryStyleName("updated");
+            label.setStyleName("correctly");
 
-                    button.setPrimaryStyleName("updated");
-                    button.setStyleName("correctly");
+            button.setPrimaryStyleName("updated");
+            button.setStyleName("correctly");
 
-                    tf.setPrimaryStyleName("updated");
-                    tf.setStyleName("correctly");
-                });
+            tf.setPrimaryStyleName("updated");
+            tf.setStyleName("correctly");
+        });
         updateButton.setId("update-button");
         addComponent(updateButton);
     }

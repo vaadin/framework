@@ -26,31 +26,31 @@ public class CriticalNotifications extends AbstractReindeerTestUI {
 
         Button sessionExpired = new Button("Session expired");
         addComponent(sessionExpired);
-        sessionExpired.addClickListener(event ->
-            showCriticalNotification(systemMessages.getSessionExpiredCaption(),
+        sessionExpired.addClickListener(event -> showCriticalNotification(
+                systemMessages.getSessionExpiredCaption(),
                 systemMessages.getSessionExpiredMessage(), getDetailsMessage(),
                 systemMessages.getSessionExpiredURL()));
 
         Button authenticationError = new Button("Authentication error");
         addComponent(authenticationError);
-        authenticationError.addClickListener(event ->
-            showCriticalNotification(systemMessages.getAuthenticationErrorCaption(),
+        authenticationError.addClickListener(event -> showCriticalNotification(
+                systemMessages.getAuthenticationErrorCaption(),
                 systemMessages.getAuthenticationErrorMessage(),
                 getDetailsMessage(),
                 systemMessages.getAuthenticationErrorURL()));
 
         Button communicationError = new Button("Communication error");
         addComponent(communicationError);
-        communicationError.addClickListener(event ->
-            showCriticalNotification(systemMessages.getCommunicationErrorCaption(),
+        communicationError.addClickListener(event -> showCriticalNotification(
+                systemMessages.getCommunicationErrorCaption(),
                 systemMessages.getCommunicationErrorMessage(),
                 getDetailsMessage(),
                 systemMessages.getCommunicationErrorURL()));
 
         Button internalError = new Button("Internal error");
         addComponent(internalError);
-        internalError.addClickListener(event ->
-            showCriticalNotification(systemMessages.getInternalErrorCaption(),
+        internalError.addClickListener(event -> showCriticalNotification(
+                systemMessages.getInternalErrorCaption(),
                 systemMessages.getInternalErrorMessage(), getDetailsMessage(),
                 systemMessages.getInternalErrorURL()));
 
@@ -63,9 +63,8 @@ public class CriticalNotifications extends AbstractReindeerTestUI {
         Button custom = new Button("Custom");
         addComponent(custom);
         custom.addClickListener(
-                event ->
-                showCriticalNotification("Custom caption", "Custom message",
-                "Custom details", "custom url"));
+                event -> showCriticalNotification("Custom caption",
+                        "Custom message", "Custom details", "custom url"));
     }
 
     protected String getDetailsMessage() {

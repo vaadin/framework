@@ -69,7 +69,8 @@ public class AbsoluteLayoutResizeComponents extends AbstractReindeerTestUI {
     /**
      * Create size change button for component
      *
-     * @param component Component to controll with button
+     * @param component
+     *            Component to controll with button
      * @return Created Expand Button
      */
     private Button expandButton(Component component) {

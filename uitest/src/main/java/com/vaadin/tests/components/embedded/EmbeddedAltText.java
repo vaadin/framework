@@ -35,11 +35,10 @@ public class EmbeddedAltText extends TestBase {
         player.setParameter("allowFullScreen", "true");
         addComponent(player);
 
-        Button changeAltTexts = new Button("Change alt texts",
-                event -> {
-                    e.setAlternateText("New alt text of the image!");
-                    player.setAlternateText("New alt text of the object!");
-                });
+        Button changeAltTexts = new Button("Change alt texts", event -> {
+            e.setAlternateText("New alt text of the image!");
+            player.setAlternateText("New alt text of the object!");
+        });
         addComponent(changeAltTexts);
     }
 }

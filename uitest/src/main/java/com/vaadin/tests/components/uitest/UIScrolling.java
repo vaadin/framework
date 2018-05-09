@@ -17,8 +17,7 @@ public class UIScrolling extends AbstractReindeerTestUI {
         addComponent(new Button(
                 "This button is halfway down. Click to report scroll position.",
                 event -> Notification.show("Scrolled to "
-                        + event.getButton().getUI().getScrollTop()
-                        + " px")));
+                        + event.getButton().getUI().getScrollTop() + " px")));
     }
 
     @Override

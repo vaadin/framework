@@ -33,25 +33,22 @@ public class TableUndefinedSize extends TestBase {
 
         log = new Log(5);
 
-        controls.addComponent(
-                new Button("Fixed size (200x200)", event -> {
-                    tbl.setWidth("200px");
-                    tbl.setHeight("200px");
-                    log.log("Size 200x200 pixels");
-                }));
+        controls.addComponent(new Button("Fixed size (200x200)", event -> {
+            tbl.setWidth("200px");
+            tbl.setHeight("200px");
+            log.log("Size 200x200 pixels");
+        }));
 
-        controls.addComponent(
-                new Button("Fixed size (600x200)", event -> {
-                    tbl.setWidth("600px");
-                    tbl.setHeight("200px");
-                    log.log("Size 600x200 pixels");
-                }));
+        controls.addComponent(new Button("Fixed size (600x200)", event -> {
+            tbl.setWidth("600px");
+            tbl.setHeight("200px");
+            log.log("Size 600x200 pixels");
+        }));
 
-        controls.addComponent(
-                new Button("Undefined size", event -> {
-                    tbl.setSizeUndefined();
-                    log.log("Size undefined");
-                }));
+        controls.addComponent(new Button("Undefined size", event -> {
+            tbl.setSizeUndefined();
+            log.log("Size undefined");
+        }));
 
         NativeSelect pageLength = new NativeSelect("PageLength",
                 Arrays.asList(0, 1, 2, 4, 8, 10));

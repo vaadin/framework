@@ -186,26 +186,32 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         openTestURL("theme=valo");
         selectMenuPath("Component", "Selection", "Toggle Item 5");
 
-        String className = getSelect().findElements(By.tagName("span")).get(5).getAttribute("className");
-        assertTrue("No v-select-option-selected class, was " + className, className.contains("v-select-option-selected")
-        );
+        String className = getSelect().findElements(By.tagName("span")).get(5)
+                .getAttribute("className");
+        assertTrue("No v-select-option-selected class, was " + className,
+                className.contains("v-select-option-selected"));
 
         getSelect().selectByText("Item 5");
-        className = getSelect().findElements(By.tagName("span")).get(5).getAttribute("className");
-        assertTrue("No v-select-option-selected class, was " + className, className.contains("v-select-option-selected"));
+        className = getSelect().findElements(By.tagName("span")).get(5)
+                .getAttribute("className");
+        assertTrue("No v-select-option-selected class, was " + className,
+                className.contains("v-select-option-selected"));
 
         getSelect().selectByText("Item 10");
         List<WebElement> options = getSelect().findElements(By.tagName("span"));
         className = options.get(5).getAttribute("className");
-        assertFalse("Extra v-select-option-selected class, was " + className, className.contains("v-select-option-selected"));
+        assertFalse("Extra v-select-option-selected class, was " + className,
+                className.contains("v-select-option-selected"));
         className = options.get(10).getAttribute("className");
-        assertTrue("No v-select-option-selected class, was " + className, className.contains("v-select-option-selected"));
+        assertTrue("No v-select-option-selected class, was " + className,
+                className.contains("v-select-option-selected"));
 
         selectMenuPath("Component", "Selection", "Toggle Item 10");
-        className = getSelect().findElements(By.tagName("span")).get(10).getAttribute("className");
-        assertFalse("Extra v-select-option-selected class, was " + className, className.contains("v-select-option-selected"));
+        className = getSelect().findElements(By.tagName("span")).get(10)
+                .getAttribute("className");
+        assertFalse("Extra v-select-option-selected class, was " + className,
+                className.contains("v-select-option-selected"));
     }
-
 
     @Test
     public void itemIconGenerator() {

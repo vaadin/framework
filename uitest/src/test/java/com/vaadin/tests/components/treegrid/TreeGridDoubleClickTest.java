@@ -30,7 +30,7 @@ public class TreeGridDoubleClickTest extends SingleBrowserTest {
     private boolean isDoubleClickNotificationPresent() {
         ElementQuery<NotificationElement> notification = $(
                 NotificationElement.class);
-        return notification.exists() && "Double click"
-                .equals(notification.first().getCaption());
+        return notification.exists()
+                && "Double click".equals(notification.first().getCaption());
     }
 }

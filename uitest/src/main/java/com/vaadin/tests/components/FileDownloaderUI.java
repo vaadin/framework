@@ -87,19 +87,17 @@ public class FileDownloaderUI extends AbstractTestUIWithLog {
         fd.extend(downloadUtf8File);
         addComponent(downloadUtf8File);
 
-        addComponent(
-                new Button("Remove first download button", event -> {
-                    Layout parent = (Layout) firstDownloadComponent.getParent();
-                    parent.removeComponent(firstDownloadComponent);
+        addComponent(new Button("Remove first download button", event -> {
+            Layout parent = (Layout) firstDownloadComponent.getParent();
+            parent.removeComponent(firstDownloadComponent);
+        }));
+        addComponent(new Button(
+                "Detach FileDownloader from first download button", event -> {
+                    FileDownloader e = (FileDownloader) firstDownloadComponent
+                            .getExtensions().iterator().next();
+                    e.remove();
+                    log("FileDownload detached");
                 }));
-        addComponent(
-                new Button("Detach FileDownloader from first download button",
-                        event -> {
-                            FileDownloader e = (FileDownloader) firstDownloadComponent
-                                    .getExtensions().iterator().next();
-                            e.remove();
-                            log("FileDownload detached");
-                        }));
     }
 
     public void addComponents(String caption, ConnectorResource resource,

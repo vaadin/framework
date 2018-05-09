@@ -15,10 +15,9 @@ public class ComboBoxHeight extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.setPageLength(0);
-        comboBox.setItems(
-                IntStream.range(0, 100)
-                        .mapToObj(i -> "Item number " + String.valueOf(i))
-                        .collect(Collectors.toList()));
+        comboBox.setItems(IntStream.range(0, 100)
+                .mapToObj(i -> "Item number " + String.valueOf(i))
+                .collect(Collectors.toList()));
 
         addComponent(comboBox);
     }

@@ -49,8 +49,9 @@ public class ComboBoxOnSmallScreen extends AbstractReindeerTestUI {
             Item item = cb.getItem(itemId);
             item.getItemProperty(PID).setValue(v);
             int flagIndex = i % 3;
-            cb.setItemIcon(itemId, new ClassResource(flagIndex == 0
-                    ? "fi_small.png" : flagIndex == 1 ? "fi.gif" : "se.gif"));
+            cb.setItemIcon(itemId,
+                    new ClassResource(flagIndex == 0 ? "fi_small.png"
+                            : flagIndex == 1 ? "fi.gif" : "se.gif"));
         }
 
         cb.select(selectId);

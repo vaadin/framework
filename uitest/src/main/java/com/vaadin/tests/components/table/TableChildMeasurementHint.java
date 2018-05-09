@@ -45,23 +45,20 @@ public class TableChildMeasurementHint extends AbstractReindeerTestUI {
         table3.setSizeFull();
         table3.setChildMeasurementHint(ChildMeasurementHint.MEASURE_NEVER);
 
-        buttonLayout
-                .addComponent(new Button("Show table1", event -> {
-                    layout.addComponent(table1);
-                    table1.focus();
-                }));
-        buttonLayout
-                .addComponent(new Button("Show table2", event -> {
-                    layout.removeComponent(table1);
-                    layout.addComponent(table2);
-                    table2.focus();
-                }));
-        buttonLayout
-                .addComponent(new Button("Show table3", event -> {
-                    layout.removeComponent(table2);
-                    layout.addComponent(table3);
-                    table3.focus();
-                }));
+        buttonLayout.addComponent(new Button("Show table1", event -> {
+            layout.addComponent(table1);
+            table1.focus();
+        }));
+        buttonLayout.addComponent(new Button("Show table2", event -> {
+            layout.removeComponent(table1);
+            layout.addComponent(table2);
+            table2.focus();
+        }));
+        buttonLayout.addComponent(new Button("Show table3", event -> {
+            layout.removeComponent(table2);
+            layout.addComponent(table3);
+            table3.focus();
+        }));
 
     }
 

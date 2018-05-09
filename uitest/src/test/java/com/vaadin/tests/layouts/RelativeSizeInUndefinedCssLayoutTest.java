@@ -9,8 +9,7 @@ import com.vaadin.testbench.elements.FormLayoutElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class RelativeSizeInUndefinedCssLayoutTest
-        extends SingleBrowserTest {
+public class RelativeSizeInUndefinedCssLayoutTest extends SingleBrowserTest {
 
     @Test
     public void relativeSizeInUndefinedCssLayout() {

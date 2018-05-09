@@ -32,10 +32,8 @@ public class TablePushStreaming extends AbstractReindeerTestUI {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                access(() ->
-                        t.setContainerDataSource(
-                                generateContainer(t.getVisibleColumns().length,
-                                t.size(), iteration++)));
+                access(() -> t.setContainerDataSource(generateContainer(
+                        t.getVisibleColumns().length, t.size(), iteration++)));
             }
         };
         Thread tr = new Thread(r);

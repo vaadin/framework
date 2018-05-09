@@ -9,7 +9,7 @@ public class WindowWithInvalidCloseListener extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         Window w = new Window("Close me");
-        w.addCloseListener(event-> {
+        w.addCloseListener(event -> {
             throw new RuntimeException("Close listener intentionally failed");
         });
         addWindow(w);

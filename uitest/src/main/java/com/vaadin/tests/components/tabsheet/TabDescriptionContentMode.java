@@ -34,10 +34,9 @@ public class TabDescriptionContentMode extends AbstractTestUI {
 
         Button changeFourthTabDescription = new Button(
                 "Change fourth tab description");
-        changeFourthTabDescription.addClickListener(
-                event -> fourthTab.setDescription(
-                        "Fourth tab description, changed",
-                        ContentMode.TEXT));
+        changeFourthTabDescription
+                .addClickListener(event -> fourthTab.setDescription(
+                        "Fourth tab description, changed", ContentMode.TEXT));
 
         addComponents(tabSheet, changeFourthTabDescription);
     }

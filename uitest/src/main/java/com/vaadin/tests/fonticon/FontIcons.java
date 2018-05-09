@@ -60,11 +60,10 @@ public class FontIcons extends AbstractReindeerTestUI {
 
         layout.setIcon(icon);
 
-        layout.addComponent(
-                new Button("Switch icon type",
-                        event -> buildUI(icon instanceof FontIcon
-                                ? new ThemeResource("../runo/icons/16/user.png")
-                                : FontAwesome.ANDROID)));
+        layout.addComponent(new Button("Switch icon type",
+                event -> buildUI(icon instanceof FontIcon
+                        ? new ThemeResource("../runo/icons/16/user.png")
+                        : FontAwesome.ANDROID)));
 
         Handler actionHandler = new Handler() {
             Action[] actions = { new Action("Do it!", icon) };

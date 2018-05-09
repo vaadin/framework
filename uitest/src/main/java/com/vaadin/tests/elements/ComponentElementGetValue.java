@@ -24,7 +24,6 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.RichTextArea;
 
-
 /**
  * UI test for getValue() method of components: TextField, TextArea,
  * PasswordField, ComboBox, ListSelect, NativeSelect, OptionGroup, CheckBox,

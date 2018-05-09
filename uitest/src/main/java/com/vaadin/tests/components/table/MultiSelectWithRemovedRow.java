@@ -61,14 +61,13 @@ public class MultiSelectWithRemovedRow extends TestBase {
         });
         addComponent(removeButton);
 
-        addComponent(new Button("Remove first selected row",
-                event -> {
-                    Collection<?> selection = (Collection<?>) table.getValue();
-                    if (!selection.isEmpty()) {
-                        Object firstSelected = selection.iterator().next();
-                        container.removeItem(firstSelected);
-                    }
-                }));
+        addComponent(new Button("Remove first selected row", event -> {
+            Collection<?> selection = (Collection<?>) table.getValue();
+            if (!selection.isEmpty()) {
+                Object firstSelected = selection.iterator().next();
+                container.removeItem(firstSelected);
+            }
+        }));
     }
 
     @Override

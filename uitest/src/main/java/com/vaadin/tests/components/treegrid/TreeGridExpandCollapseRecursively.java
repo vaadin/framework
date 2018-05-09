@@ -39,8 +39,7 @@ public class TreeGridExpandCollapseRecursively extends AbstractTestUI {
             return parent;
         }
 
-        public void setParent(
-                Directory parent) {
+        public void setParent(Directory parent) {
             this.parent = parent;
         }
 
@@ -72,8 +71,8 @@ public class TreeGridExpandCollapseRecursively extends AbstractTestUI {
         depthSelector.setValue(3);
 
         HorizontalLayout buttons = new HorizontalLayout();
-        buttons.addComponent(new Button("Expand recursively", e -> grid
-                .expandRecursively(roots, depthSelector.getValue())));
+        buttons.addComponent(new Button("Expand recursively",
+                e -> grid.expandRecursively(roots, depthSelector.getValue())));
         buttons.addComponent(new Button("Collapse recursively", e -> grid
                 .collapseRecursively(roots, depthSelector.getValue())));
 
@@ -89,8 +88,7 @@ public class TreeGridExpandCollapseRecursively extends AbstractTestUI {
         Collection<Directory> dirs = new ArrayList<>();
         if (depth >= 0) {
             for (int i = 0; i < childCount; i++) {
-                String name = parent != null
-                        ? parent.getName() + "-" + i
+                String name = parent != null ? parent.getName() + "-" + i
                         : "-" + i;
                 Directory dir = new Directory(name, parent);
                 if (parent != null) {

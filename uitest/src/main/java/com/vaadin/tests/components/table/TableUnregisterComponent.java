@@ -74,9 +74,8 @@ public class TableUnregisterComponent extends TestBase {
         addComponent(log);
         addComponent(table);
 
-        addComponent(new Button("Switch column collapse",
-                event -> table.setColumnCollapsed(COL_A,
-                        !table.isColumnCollapsed(COL_A))));
+        addComponent(new Button("Switch column collapse", event -> table
+                .setColumnCollapsed(COL_A, !table.isColumnCollapsed(COL_A))));
 
         addComponent(new Button("Switch editable",
                 event -> table.setEditable(!table.isEditable())));

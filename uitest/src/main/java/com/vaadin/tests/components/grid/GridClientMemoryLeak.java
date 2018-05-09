@@ -11,8 +11,7 @@ import com.vaadin.ui.VerticalLayout;
 public class GridClientMemoryLeak extends AbstractTestUI {
 
     private static final String INSTRUCTIONS = "This UI is for manually testing that the client side grid does not leak memory. "
-            + "Steps to take:\n"
-            + "\t1. Click the newGrid button 1-n times\n"
+            + "Steps to take:\n" + "\t1. Click the newGrid button 1-n times\n"
             + "\t2. Capture a JS heap dump in your browser\n"
             + "\t3. The heap dump should only contain 1 instance of each of the following:\n"
             + "\t\tGrid, GridKeyDownEvent, GridKeyPressEvent, GridKeyUpEvent, GridClickEvent, GridDoubleClickEvent";

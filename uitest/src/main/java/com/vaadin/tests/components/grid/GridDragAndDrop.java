@@ -99,7 +99,8 @@ public class GridDragAndDrop extends AbstractGridDnD {
                     if (event.getDropTargetRow().isPresent()) {
                         index = items.indexOf(event.getDropTargetRow().get())
                                 + (event.getDropLocation() == DropLocation.BELOW
-                                        ? 1 : 0);
+                                        ? 1
+                                        : 0);
                     }
 
                     // Add dragged items to the target Grid
@@ -110,11 +111,12 @@ public class GridDragAndDrop extends AbstractGridDnD {
                             + ", dragDataJson="
                             + event.getDataTransferData("application/json")
                             + ", target="
-                            + (event.getDropTargetRow().isPresent() ? event
-                                    .getDropTargetRow().get().getFirstName()
-                                    + " "
-                                    + event.getDropTargetRow().get()
-                                            .getLastName()
+                            + (event.getDropTargetRow().isPresent()
+                                    ? event.getDropTargetRow().get()
+                                            .getFirstName()
+                                            + " "
+                                            + event.getDropTargetRow().get()
+                                                    .getLastName()
                                     : "[BODY]")
                             + ", location=" + event.getDropLocation()
                             + ", mouseEventDetails="
