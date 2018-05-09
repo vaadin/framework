@@ -71,7 +71,6 @@ import com.vaadin.v7.ui.renderers.NumberRenderer;
 /**
  * Tests the basic features like columns, footers and headers
  *
- * @since
  * @author Vaadin Ltd
  */
 @Theme("valo")
