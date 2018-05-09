@@ -30,12 +30,11 @@ public class ServletIntegrationJSR356WebsocketIT
 
     static {
         nonJSR356Servers.add("jetty8");
-        nonJSR356Servers.add("liberty-microprofile");
     }
 
     @Override
     public void setup() throws Exception {
-        Assume.assumeFalse("Jetty 8 does not support JSR356",
+        Assume.assumeFalse("This server does not support JSR356",
                 nonJSR356Servers.contains(System.getProperty("server-name")));
 
         super.setup();
