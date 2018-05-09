@@ -6,6 +6,8 @@ import com.vaadin.ui.Upload;
 
 public class ImmediateUpload extends AbstractTestUI {
 
+    public static final String TEST_MIME_TYPE = "image/png";
+
     /*
      * (non-Javadoc)
      *
@@ -18,6 +20,7 @@ public class ImmediateUpload extends AbstractTestUI {
         // by default is in immediate mode (since 8.0)
         Upload immediateUpload = new Upload();
         immediateUpload.setId("immediateupload");
+        immediateUpload.setAcceptMimeTypes(TEST_MIME_TYPE);
         addComponent(immediateUpload);
 
         Upload upload = new Upload();

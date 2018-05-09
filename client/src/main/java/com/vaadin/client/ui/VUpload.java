@@ -405,4 +405,12 @@ public class VUpload extends SimplePanel {
     private static Logger getLogger() {
         return Logger.getLogger(VUpload.class.getName());
     }
+
+    public void setAcceptMimeTypes(String acceptMimeTypes) {
+        if (acceptMimeTypes == null || acceptMimeTypes.isEmpty()) {
+            fu.getElement().removeAttribute("accept");
+        } else {
+            fu.getElement().setAttribute("accept", acceptMimeTypes);
+        }
+    }
 }
