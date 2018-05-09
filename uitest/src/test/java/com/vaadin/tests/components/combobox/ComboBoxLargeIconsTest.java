@@ -42,6 +42,11 @@ public class ComboBoxLargeIconsTest extends MultiBrowserTest {
         ComboBoxElement pageLength0cb = $(ComboBoxElement.class)
                 .caption("Pagelength 0").first();
         pageLength0cb.openPopup();
+
+        // Using a larger icon size causes some flickering in the position of
+        // popup. Wait for it to stabilize.
+        Thread.sleep(1000);
+
         clickElement(pageLength0cb.findElement(By.vaadin("#popup/item1")));
 
         ComboBoxElement cb200px = $(ComboBoxElement.class)

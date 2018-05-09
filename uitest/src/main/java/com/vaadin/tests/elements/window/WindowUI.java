@@ -1,10 +1,12 @@
 package com.vaadin.tests.elements.window;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
+@Theme("tests-valo-disabled-animations")
 public class WindowUI extends AbstractTestUI {
 
     @Override

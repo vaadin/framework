@@ -181,6 +181,22 @@ public abstract class AbstractTB3Test extends ParallelTest {
                 message)));
     }
 
+    protected void minimizeDebugWindow() {
+        if (findElement(By.className("v-debugwindow-tabs")).isDisplayed()) {
+            findElements(By.className("v-debugwindow-button")).stream()
+                    .filter(e -> e.getAttribute("title").equals("Minimize"))
+                    .findFirst().ifPresent(WebElement::click);
+        }
+    }
+
+    protected void showDebugWindow() {
+        if (!findElement(By.className("v-debugwindow-tabs")).isDisplayed()) {
+            findElements(By.className("v-debugwindow-button")).stream()
+                    .filter(e -> e.getAttribute("title").equals("Minimize"))
+                    .findFirst().ifPresent(WebElement::click);
+        }
+    }
+
     protected void waitForDebugMessage(final String expectedMessage) {
         waitForDebugMessage(expectedMessage, 30);
     }

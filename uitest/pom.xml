@@ -15,6 +15,9 @@
         <skip.uitest.failsafe>true</skip.uitest.failsafe>
         <!-- Don't care about coding style for tests -->
         <sonar.skip>true</sonar.skip>
+
+        <!-- Parallel test count -->
+        <parallel.tests>12</parallel.tests>
     </properties>
 
     <url>https://vaadin.com/</url>
@@ -218,14 +221,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-testbench-api</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-        
+
     </dependencies>
 
     <build>
@@ -264,24 +267,6 @@
             </plugin>
 
             <plugin>
-                <groupId>com.github.klieber</groupId>
-                <artifactId>phantomjs-maven-plugin</artifactId>
-                <configuration>
-                    <skip>${skip.uitest.failsafe}</skip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>install</goal>
-                        </goals>
-                        <configuration>
-                            <version>${phantomjs.version}</version>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
@@ -314,18 +299,20 @@
                     <skip>${skip.uitest.failsafe}</skip>
                     <systemPropertyVariables>
                         <!-- Static path for screenshots pointing to submodule -->
-                        <com.vaadin.testbench.screenshot.directory>${project.parent.basedir}/tests/screenshots</com.vaadin.testbench.screenshot.directory>
+                        <com.vaadin.testbench.Parameters.screenshotReferenceDirectory>${project.basedir}/reference-screenshots</com.vaadin.testbench.Parameters.screenshotReferenceDirectory>
+                        <com.vaadin.testbench.Parameters.screenshotErrorDirectory>${project.build.directory}/error-screenshots</com.vaadin.testbench.Parameters.screenshotErrorDirectory>
 
                         <!-- Optional properties for the test build -->
                         <vaadin.testbench.developer.license>${vaadin.testbench.developer.license}</vaadin.testbench.developer.license>
                         <com.vaadin.testbench.max.retries>${com.vaadin.testbench.max.retries}</com.vaadin.testbench.max.retries>
+                        <com.vaadin.testbench.Parameters.testsInParallel>${parallel.tests}</com.vaadin.testbench.Parameters.testsInParallel>
+                        <com.vaadin.testbench.hub.url>${com.vaadin.testbench.hub.url}</com.vaadin.testbench.hub.url>
+                        <browser.factory>${browser.factory}</browser.factory>
                         <browsers.include>${browsers.include}</browsers.include>
                         <browsers.exclude>${browsers.exclude}</browsers.exclude>
                         <categories.include>${categories.include}</categories.include>
                         <categories.exclude>${categories.exclude}</categories.exclude>
                         <useLocalWebDriver>${useLocalWebDriver}</useLocalWebDriver>
-                        <!-- PhantomJS binary downloaded by phantomjs-maven-plugin -->
-<!--                        <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path> -->
                     </systemPropertyVariables>
                     <includes>
                         <include>**/AllTB3Tests.java</include>
@@ -367,7 +354,7 @@
                             <arguments>
                                 <argument>-ea</argument>
                                 <argument>-classpath</argument>
-                                <classpath/>
+                                <classpath />
                                 <argument>com.vaadin.launcher.DevelopmentServerLauncher</argument>
                             </arguments>
                             <classpathScope>test</classpathScope>
@@ -384,7 +371,7 @@
                                 <argument>-ea</argument>
                                 <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argument>
                                 <argument>-classpath</argument>
-                                <classpath/>
+                                <classpath />
                                 <argument>com.vaadin.launcher.DevelopmentServerLauncher</argument>
                             </arguments>
                             <classpathScope>test</classpathScope>
@@ -460,7 +447,6 @@
                     </plugins>
                 </pluginManagement>
             </build>
-
         </profile>
         <profile>
             <id>measurements</id>
