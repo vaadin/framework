@@ -122,8 +122,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
                 match = testBench(driver).compareScreen(referenceFile);
             } else {
                 // Only the element
-                match = customTestBench(driver).compareScreen(element,
-                        referenceFile);
+                match = customTestBench.compareScreen(element, referenceFile);
             }
             if (match) {
                 // There might be failure files because of retries in TestBench.
@@ -178,12 +177,12 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
 
     private CustomTestBenchCommandExecutor customTestBench = null;
 
-    private CustomTestBenchCommandExecutor customTestBench(WebDriver driver) {
-        if (customTestBench == null) {
-            customTestBench = new CustomTestBenchCommandExecutor(driver);
-        }
+    @Override
+    public void setDriver(WebDriver driver) {
+        super.setDriver(driver);
 
-        return customTestBench;
+        // Set custom command executor
+        customTestBench = new CustomTestBenchCommandExecutor(getDriver());
     }
 
     private void enableAutoswitch(File htmlFile)

@@ -49,6 +49,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     private static final String FIREFOX_PATH = "firefox.path";
     private static final String PHANTOMJS_PATH = "phantomjs.binary.path";
     private static final String BROWSERS_EXCLUDE = "browsers.exclude";
+    private static final String MAX_ATTEMPTS = "com.vaadin.testbench.Parameters.maxAttempts";
 
     static {
         if (propertiesFile.exists()) {
@@ -70,6 +71,11 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                 BROWSERS_EXCLUDE).filter(properties::containsKey)
                 .forEach(property -> System.setProperty(property,
                         properties.getProperty(property)));
+
+        if (properties.containsKey(MAX_ATTEMPTS)) {
+            Parameters.setMaxAttempts(
+                    Integer.parseInt(properties.getProperty(MAX_ATTEMPTS)));
+        }
 
         String dir = System.getProperty(SCREENSHOT_DIRECTORY,
                 properties.getProperty(SCREENSHOT_DIRECTORY));
