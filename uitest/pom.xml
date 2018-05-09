@@ -304,7 +304,7 @@
 
                         <!-- Optional properties for the test build -->
                         <vaadin.testbench.developer.license>${vaadin.testbench.developer.license}</vaadin.testbench.developer.license>
-                        <com.vaadin.testbench.max.retries>${com.vaadin.testbench.max.retries}</com.vaadin.testbench.max.retries>
+                        <com.vaadin.testbench.Parameters.maxAttempts>${com.vaadin.testbench.Parameters.maxAttempts}</com.vaadin.testbench.Parameters.maxAttempts>
                         <com.vaadin.testbench.Parameters.testsInParallel>${parallel.tests}</com.vaadin.testbench.Parameters.testsInParallel>
                         <com.vaadin.testbench.hub.url>${com.vaadin.testbench.hub.url}</com.vaadin.testbench.hub.url>
                         <browser.factory>${browser.factory}</browser.factory>
