@@ -87,9 +87,6 @@ public abstract class AbstractTB3Test extends ParallelTest {
     @Rule
     public TestName testName = new TestName();
 
-    @Rule
-    public RetryOnFail retry = new RetryOnFail();
-
     /**
      * Height of the screenshots we want to capture
      */
