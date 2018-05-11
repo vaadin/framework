@@ -208,9 +208,11 @@ public class Binder<BEAN> implements Serializable {
         public boolean isReadOnly();
 
         /**
-         * Sets the binding as enabled depending on the value returned by isEnabledSupplier.
+         * Sets the binding as enabled depending on the value returned by
+         * isEnabledSupplier.
          *
-         * @param isEnabledSupplier supplies if the binding is enabled or not
+         * @param isEnabledSupplier
+         *            supplies if the binding is enabled or not
          * @since
          */
         public void setEnabled(SerializableSupplier<Boolean> isEnabledSupplier);
@@ -1246,7 +1248,8 @@ public class Binder<BEAN> implements Serializable {
         }
 
         @Override
-        public void setEnabled(SerializableSupplier<Boolean> isEnabledSupplier) {
+        public void setEnabled(
+                SerializableSupplier<Boolean> isEnabledSupplier) {
             if (isEnabledSupplier == null) {
                 throw new IllegalStateException(
                         "Enabled supplier cannot be null.");
@@ -1402,7 +1405,9 @@ public class Binder<BEAN> implements Serializable {
     protected void handleFieldValueChange(Binding<BEAN, ?> binding,
             ValueChangeEvent<?> event) {
         if (!getBindingsEnabled().contains(binding)) {
-            getLogger().log(Level.WARNING, "Ignoring explicit call to handleFieldValueChange passing a disabled binding: {0}.", binding.getField());
+            getLogger().log(Level.WARNING,
+                    "Ignoring explicit call to handleFieldValueChange passing a disabled binding: {0}.",
+                    binding.getField());
             return;
         }
 
@@ -1727,7 +1732,8 @@ public class Binder<BEAN> implements Serializable {
             clearFields();
         } else {
             changedBindings.clear();
-            getBindingsEnabled().forEach(binding -> binding.initFieldValue(bean));
+            getBindingsEnabled()
+                    .forEach(binding -> binding.initFieldValue(bean));
             getValidationStatusHandler().statusChange(
                     BinderValidationStatus.createUnresolvedStatus(this));
             fireStatusChangeEvent(false);
@@ -1787,7 +1793,8 @@ public class Binder<BEAN> implements Serializable {
      *         updated, {@code false} otherwise
      */
     public boolean writeBeanIfValid(BEAN bean) {
-        return doWriteIfValid(bean, new ArrayList<>(getBindingsEnabled())).isOk();
+        return doWriteIfValid(bean, new ArrayList<>(getBindingsEnabled()))
+                .isOk();
     }
 
     /**
@@ -2367,8 +2374,7 @@ public class Binder<BEAN> implements Serializable {
      * @since
      */
     protected Collection<BindingImpl<BEAN, ?, ?>> getBindingsEnabled() {
-        return bindings.stream()
-                .filter(b -> b.isEnabled())
+        return bindings.stream().filter(b -> b.isEnabled())
                 .map(b -> ((BindingImpl<BEAN, ?, ?>) b))
                 .collect(Collectors.toList());
     }
@@ -2453,7 +2459,8 @@ public class Binder<BEAN> implements Serializable {
      * @since
      */
     protected Set<Binding<BEAN, ?>> getChangedBindingsEnabled() {
-        return changedBindings.stream().filter(b -> b.isEnabled()).collect(Collectors.toSet());
+        return changedBindings.stream().filter(b -> b.isEnabled())
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -2468,7 +2475,8 @@ public class Binder<BEAN> implements Serializable {
      *            to set them to read-write
      */
     public void setReadOnly(boolean readOnly) {
-        getBindingsEnabled().stream().filter(binding -> binding.getSetter() != null)
+        getBindingsEnabled().stream()
+                .filter(binding -> binding.getSetter() != null)
                 .forEach(binding -> binding.setReadOnly(readOnly));
     }
 
