@@ -716,8 +716,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
      *         otherwise.
      * @throws IOException
      * @throws ServletException
+     * 
+     * @since
      */
-    private boolean serveStaticResources(HttpServletRequest request,
+    protected boolean serveStaticResources(HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException {
 
         String pathInfo = request.getPathInfo();
@@ -754,8 +756,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @param response
      * @throws IOException
      * @throws ServletException
+     * 
+     * @since
      */
-    private void serveStaticResourcesInVAADIN(String filename,
+    protected void serveStaticResourcesInVAADIN(String filename,
             HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
