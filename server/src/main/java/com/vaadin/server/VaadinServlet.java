@@ -15,6 +15,12 @@
  */
 package com.vaadin.server;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,12 +50,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.VaadinServletConfiguration.InitParameterName;
@@ -717,7 +717,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws IOException
      * @throws ServletException
      */
-    private boolean serveStaticResources(HttpServletRequest request,
+    protected boolean serveStaticResources(HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException {
 
         String pathInfo = request.getPathInfo();
@@ -755,7 +755,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws IOException
      * @throws ServletException
      */
-    private void serveStaticResourcesInVAADIN(String filename,
+    protected void serveStaticResourcesInVAADIN(String filename,
             HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
