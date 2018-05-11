@@ -384,4 +384,21 @@ public class BinderConditionalBindingTest
 
         assertTrue(binder.getBindings().isEmpty());
     }
+
+    @Test
+    public void hasChanges_binding_disabled() {
+        binder.forField(nameField)
+                .bind(Person::getFirstName, Person::setFirstName)
+                .setEnabled(() -> nameField.isEnabled());
+
+        Person person = new Person();
+        binder.readBean(person);
+
+        nameField.setEnabled(true);
+        nameField.setValue("John Wayne");
+        assertTrue(binder.hasChanges());
+
+        nameField.setEnabled(false);
+        assertFalse(binder.hasChanges());
+    }
 }

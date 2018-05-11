@@ -2449,7 +2449,7 @@ public class Binder<BEAN> implements Serializable {
      *         setBean, readBean, writeBean or writeBeanIfValid
      */
     public boolean hasChanges() {
-        return !changedBindings.isEmpty();
+        return !getChangedBindingsEnabled().isEmpty();
     }
 
     /**
