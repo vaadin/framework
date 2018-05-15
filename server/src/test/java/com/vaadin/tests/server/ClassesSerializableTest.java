@@ -97,6 +97,7 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.server\\.communication\\.PushConnection", //
             "com\\.vaadin\\.server\\.communication\\.AtmospherePushConnection.*", //
             "com\\.vaadin\\.ui\\.components\\.colorpicker\\.ColorUtil", //
+            "com\\.vaadin\\.ui\\.renderers\\.LocalDateRenderer\\$.*", //
             "com\\.vaadin\\.util\\.ConnectorHelper", //
             "com\\.vaadin\\.server\\.VaadinSession\\$FutureAccess", //
             "com\\.vaadin\\.external\\..*", //
