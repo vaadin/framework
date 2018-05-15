@@ -101,6 +101,7 @@
         <li><tt>setStyleName(String, boolean)</tt> has been moved from <tt>AbstractComponent</tt> to <tt>Component</tt> interface as a default method.</li>
         <li><tt>Window</tt> closing animation disabled by default.</li>
         <li><tt>FileTypeResolver</tt> icon features have been moved to a compatibility version of the class.</li>
+        <li><tt>LocalDateRenderer</tt> and <tt>LocalDateTimeRenderer</tt> should not be created from <tt>LocalDateTimeFormatter</tt> because of serialization issues. Alternative providers are available.</li>
 
         <h2>For incompatible or behavior-altering changes in 8.4, please see <a href="https://vaadin.com/download/release/8.4/8.4.0/release-notes.html#incompatible">8.4 release notes</a></h2>
 
