@@ -42,11 +42,11 @@ import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.GridSortOrder;
 import com.vaadin.data.provider.QuerySortOrder;
-import com.vaadin.data.provider.SortOrder;
 import com.vaadin.data.provider.bov.Person;
 import com.vaadin.event.selection.SelectionEvent;
 import com.vaadin.server.SerializableComparator;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.util.MockUI;
 import com.vaadin.ui.Grid;
@@ -286,13 +286,20 @@ public class GridTest {
     }
 
     @Test
-    public void clearSortOrder() {
+    public void clearSortOrder() throws Exception {
         Column<String, ?> column = grid.getColumns().get(1);
         grid.sort(column);
 
         grid.clearSortOrder();
 
         assertEquals(0, grid.getSortOrder().size());
+
+        // Make sure state is updated.
+        Method stateMethod = grid.getClass().getDeclaredMethod("getState");
+        stateMethod.setAccessible(true);
+        GridState state = (GridState) stateMethod.invoke(grid);
+        assertEquals(0, state.sortColumns.length);
+        assertEquals(0, state.sortDirs.length);
     }
 
     @Test

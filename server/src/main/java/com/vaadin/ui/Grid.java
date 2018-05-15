@@ -4111,8 +4111,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Clear the current sort order, and re-sort the grid.
      */
     public void clearSortOrder() {
-        sortOrder.clear();
-        sort(false);
+        setSortOrder(Collections.emptyList());
     }
 
     /**
@@ -4721,14 +4720,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         getState().sortDirs = directions.toArray(new SortDirection[0]);
 
         sortOrder.clear();
-        if (order.isEmpty()) {
-            // Grid is not sorted anymore.
-            getDataCommunicator().setBackEndSorting(Collections.emptyList());
-            getDataCommunicator().setInMemorySorting(null);
-            fireEvent(new SortEvent<>(this, new ArrayList<>(sortOrder),
-                    userOriginated));
-            return;
-        }
         sortOrder.addAll(order);
         sort(userOriginated);
     }
