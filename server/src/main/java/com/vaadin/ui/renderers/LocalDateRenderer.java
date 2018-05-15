@@ -26,6 +26,7 @@ import com.vaadin.server.SerializableSupplier;
 import com.vaadin.shared.ui.grid.renderers.LocalDateRendererState;
 
 import elemental.json.JsonValue;
+import static java.util.Objects.*;
 
 /**
  * A renderer for presenting date values.
@@ -43,7 +44,7 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
      * <p>
      * The renderer is configured to render with the grid's locale it is
      * attached to, with the format style being {@code FormatStyle.LONG} and an
-     * empty string as its null representation.
+     * empty string as its {@code null} representation.
      *
      * @see <a href=
      *      "https://docs.oracle.com/javase/8/docs/api/java/time/format/FormatStyle.html#LONG">
@@ -59,13 +60,13 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
      * <p>
      * The renderer is configured to render with the given string format, as
      * displayed in the grid's locale it is attached to, with an empty string as
-     * its null representation.
+     * its {@code null} representation.
      *
      * @param formatPattern
      *            the format pattern to format the date with, not {@code null}
      *
-     * @throws IllegalArgumentException
-     *             if format pattern is null
+     * @throws NullPointerException
+     *             if format pattern is {@code null}
      *
      * @see <a href=
      *      "https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns">
@@ -80,7 +81,7 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
      * Creates a new LocalDateRenderer.
      * <p>
      * The renderer is configured to render with the given string format, as
-     * displayed in the given locale, with an empty string as its null
+     * displayed in the given locale, with an empty string as its {@code null}
      * representation.
      *
      * @param formatPattern
@@ -88,10 +89,10 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
      * @param locale
      *            the locale to use, not {@code null}
      *
-     * @throws IllegalArgumentException
-     *             if format pattern is null
-     * @throws IllegalArgumentException
-     *             if locale is null
+     * @throws NullPointerException
+     *             if format pattern is {@code null}
+     * @throws NullPointerException
+     *             if locale is {@code null}
      *
      * @see <a href=
      *      "https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns">
@@ -114,10 +115,10 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
      * @param nullRepresentation
      *            the textual representation of the {@code null} value
      *
-     * @throws IllegalArgumentException
-     *             if format pattern is null
-     * @throws IllegalArgumentException
-     *             if locale is null
+     * @throws NullPointerException
+     *             if format pattern is {@code null}
+     * @throws NullPointerException
+     *             if locale is {@code null}
      *
      * @see <a href=
      *      "https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns">
@@ -127,24 +128,16 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
             String nullRepresentation) {
         super(LocalDate.class, nullRepresentation);
 
-        if (formatPattern == null) {
-            throw new IllegalArgumentException(
-                    "format pattern may not be null");
-        }
-
-        if (locale == null) {
-            throw new IllegalArgumentException("locale may not be null");
-        }
-
-        formatterSupplier = () -> DateTimeFormatter.ofPattern(formatPattern,
-                locale);
+        formatterSupplier = () -> DateTimeFormatter.ofPattern(
+                requireNonNull(formatPattern, "format pattern may not be null"),
+                requireNonNull(locale, "locale may not be null"));
     }
 
     /**
      * Creates a new LocalDateRenderer.
      * <p>
      * The renderer is configured to render with the given formatter, with an
-     * empty string as its null representation.
+     * empty string as its {@code null} representation.
      *
      * <p>
      * <b>Note</b> the {@code DateTimeFormatter} is not a serializable class, so
@@ -154,8 +147,8 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
      * @param formatter
      *            the formatter to use, not {@code null}
      *
-     * @throws IllegalArgumentException
-     *             if formatter is null
+     * @throws NullPointerException
+     *             if formatter is {@code null}
      * @deprecated the method is unsafe for serialization, may produce troubles
      *             in a cluster environment
      * @see #LocalDateRenderer(SerializableSupplier)
@@ -176,19 +169,16 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
      * @param nullRepresentation
      *            the textual representation of the {@code null} value
      *
-     * @throws IllegalArgumentException
-     *             if formatterSupplier is null
+     * @throws NullPointerException
+     *             if formatterSupplier is {@code null}
      */
     public LocalDateRenderer(
             SerializableSupplier<DateTimeFormatter> formatterSupplier,
             String nullRepresentation) {
         super(LocalDate.class, nullRepresentation);
 
-        if (formatterSupplier == null) {
-            throw new IllegalArgumentException(
-                    "formatterSupplier may not be null");
-        }
-        this.formatterSupplier = formatterSupplier;
+        this.formatterSupplier = requireNonNull(formatterSupplier,
+                "formatterSupplier may not be null");
         assert checkSerialization(formatterSupplier);
     }
 
@@ -200,7 +190,7 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
                 }
             }).writeObject(obj);
         } catch (Throwable e) {
-            throw new AssertionError(e);
+            throw new AssertionError("Non-serializable object " + obj, e);
         }
         return true;
     }
@@ -213,8 +203,8 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
      * @param formatterSupplier
      *            the formatterSupplier supplier to use, not {@code null}, it
      *            should not supply {@code null} either
-     * @throws IllegalArgumentException
-     *             if formatterSupplier is null
+     * @throws NullPointerException
+     *             if formatterSupplier is {@code null}
      */
     public LocalDateRenderer(
             SerializableSupplier<DateTimeFormatter> formatterSupplier) {
@@ -236,10 +226,10 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
      * @param nullRepresentation
      *            the textual representation of the {@code null} value
      *
-     * @throws IllegalArgumentException
-     *             if formatter is null
+     * @throws NullPointerException
+     *             if formatter is {@code null}
      * @deprecated the method is unsafe for serialization, may produce troubles
-     *             in acluster environment
+     *             in a cluster environment
      * @see #LocalDateRenderer(SerializableSupplier, String)
      */
     @Deprecated
@@ -248,7 +238,7 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
         super(LocalDate.class, nullRepresentation);
 
         if (formatter == null) {
-            throw new IllegalArgumentException("formatter may not be null");
+            throw new NullPointerException("formatter may not be null");
         }
 
         this.formatterSupplier = () -> formatter;
