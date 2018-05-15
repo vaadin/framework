@@ -293,7 +293,7 @@ public class VaadinSessionTest implements Serializable {
 
         VaadinSession deserializedSession = (VaadinSession) in.readObject();
 
-        assertNull("Current session shouldn't leak from deserialisation",
+        assertNull("Current session shouldn't leak from deserialization",
                 VaadinSession.getCurrent());
 
         assertNotSame("Should get a new session", session, deserializedSession);
