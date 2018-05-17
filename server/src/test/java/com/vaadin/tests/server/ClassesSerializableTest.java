@@ -69,6 +69,7 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.server\\.communication\\.PushHandler.*", // PushHandler
             "com\\.vaadin\\.server\\.communication\\.DateSerializer", //
             "com\\.vaadin\\.server\\.communication\\.JSONSerializer", //
+            "com\\.vaadin\\.ui\\.declarative\\.DesignContext", //
             // and its inner classes do not need to be serializable
             "com\\.vaadin\\.util\\.SerializerHelper", // fully static
             // class level filtering, also affecting nested classes and
@@ -96,6 +97,7 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.server\\.communication\\.PushConnection", //
             "com\\.vaadin\\.server\\.communication\\.AtmospherePushConnection.*", //
             "com\\.vaadin\\.ui\\.components\\.colorpicker\\.ColorUtil", //
+            "com\\.vaadin\\.ui\\.renderers\\.LocalDateRenderer\\$.*", //
             "com\\.vaadin\\.util\\.ConnectorHelper", //
             "com\\.vaadin\\.server\\.VaadinSession\\$FutureAccess", //
             "com\\.vaadin\\.external\\..*", //
@@ -142,7 +144,7 @@ public class ClassesSerializableTest {
                 continue;
             }
 
-            if (Component.class.isAssignableFrom(cls) && !cls.isInterface()
+            if (!cls.isInterface()
                     && !Modifier.isAbstract(cls.getModifiers())) {
                 serializeAndDeserialize(cls);
             }
