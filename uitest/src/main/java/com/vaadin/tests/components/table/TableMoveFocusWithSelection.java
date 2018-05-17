@@ -50,8 +50,9 @@ public class TableMoveFocusWithSelection extends AbstractReindeerTestUI {
         addComponent(t);
 
         // Select mode
-        Button toggleSelectMode = new Button(t.isMultiSelect()
-                ? "Press to use single select" : "Press to use multi select");
+        Button toggleSelectMode = new Button(
+                t.isMultiSelect() ? "Press to use single select"
+                        : "Press to use multi select");
         toggleSelectMode.setId("toggle-mode");
         toggleSelectMode.addClickListener(event -> {
             t.setMultiSelect(!t.isMultiSelect());

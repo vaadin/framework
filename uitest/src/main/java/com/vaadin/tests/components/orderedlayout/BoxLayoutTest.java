@@ -110,32 +110,29 @@ public class BoxLayoutTest extends AbstractReindeerTestUI {
         });
         header.addComponent(vertical);
 
-        Button addComponent = new Button("Add Component",
-                event -> {
-                    GridLayout grid = new GridLayout(2, 2);
-                    Button grow = new Button("Grow Me",
-                            event2 -> {
-                                if (event2.getButton().getWidth() == -1) {
-                                    event2.getButton().setHeight("50px");
-                                    event2.getButton().setWidth("200px");
-                                } else {
-                                    event2.getButton().setSizeUndefined();
-                                }
-                            });
-                    grid.addComponent(new Label("Grid cell 1"));
-                    grid.addComponent(new Label("Grid cell 2"));
-                    grid.addComponent(grow);
-                    grid.addComponent(new Label("Grid cell 4"));
-                    l.addComponent(grid);
-                    // l.addComponent(new TextField("Some field"));
-                });
+        Button addComponent = new Button("Add Component", event -> {
+            GridLayout grid = new GridLayout(2, 2);
+            Button grow = new Button("Grow Me", event2 -> {
+                if (event2.getButton().getWidth() == -1) {
+                    event2.getButton().setHeight("50px");
+                    event2.getButton().setWidth("200px");
+                } else {
+                    event2.getButton().setSizeUndefined();
+                }
+            });
+            grid.addComponent(new Label("Grid cell 1"));
+            grid.addComponent(new Label("Grid cell 2"));
+            grid.addComponent(grow);
+            grid.addComponent(new Label("Grid cell 4"));
+            l.addComponent(grid);
+            // l.addComponent(new TextField("Some field"));
+        });
         header.addComponent(addComponent);
 
-        Button removeComponent = new Button("Remove Component",
-                event -> {
-                    Component last = l.getComponent(l.getComponentCount() - 1);
-                    l.removeComponent(last);
-                });
+        Button removeComponent = new Button("Remove Component", event -> {
+            Component last = l.getComponent(l.getComponentCount() - 1);
+            l.removeComponent(last);
+        });
         header.addComponent(removeComponent);
 
         // Second row

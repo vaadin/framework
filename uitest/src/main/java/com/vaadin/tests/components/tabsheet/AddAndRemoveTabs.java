@@ -16,8 +16,7 @@ public class AddAndRemoveTabs extends TestBase {
         addTab();
         addComponent(tabSheet);
 
-        Button addTabBtn = new Button("Add new tab",
-                event -> addTab());
+        Button addTabBtn = new Button("Add new tab", event -> addTab());
         addComponent(addTabBtn);
     }
 

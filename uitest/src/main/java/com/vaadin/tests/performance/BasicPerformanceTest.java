@@ -68,74 +68,68 @@ public class BasicPerformanceTest extends UI {
         leftBar.addComponent(performanceReportArea);
         leftBar.addComponent(reportPerformanceButton);
 
-        leftBar.addComponent(new Button("Set 20 panels as content",
-                event -> {
-                    popupateContent(contentLayout, 20, true);
-                    updatePerformanceReporting("20 panels", 100, 100);
-                }));
-        leftBar.addComponent(new Button("Set 40 panels as content",
-                event -> {
-                    popupateContent(contentLayout, 40, true);
-                    updatePerformanceReporting("40 panels", 100, 100);
-                }));
-        leftBar.addComponent(new Button("Set 40 layouts as content",
-                event -> {
-                    popupateContent(contentLayout, 40, false);
-                    updatePerformanceReporting("40 layouts", 100, 100);
-                }));
+        leftBar.addComponent(new Button("Set 20 panels as content", event -> {
+            popupateContent(contentLayout, 20, true);
+            updatePerformanceReporting("20 panels", 100, 100);
+        }));
+        leftBar.addComponent(new Button("Set 40 panels as content", event -> {
+            popupateContent(contentLayout, 40, true);
+            updatePerformanceReporting("40 panels", 100, 100);
+        }));
+        leftBar.addComponent(new Button("Set 40 layouts as content", event -> {
+            popupateContent(contentLayout, 40, false);
+            updatePerformanceReporting("40 layouts", 100, 100);
+        }));
 
-        leftBar.addComponent(
-                new Button("Update all labels", event -> {
-                    Iterator<Component> componentIterator = contentLayout
+        leftBar.addComponent(new Button("Update all labels", event -> {
+            Iterator<Component> componentIterator = contentLayout
+                    .getComponentIterator();
+            while (componentIterator.hasNext()) {
+
+                Iterator<Component> columHolderIterator;
+                Component child = componentIterator.next();
+                if (child instanceof Panel) {
+                    columHolderIterator = ((ComponentContainer) ((Panel) child)
+                            .getContent()).getComponentIterator();
+                } else {
+                    columHolderIterator = ((ComponentContainer) child)
                             .getComponentIterator();
-                    while (componentIterator.hasNext()) {
-
-                        Iterator<Component> columHolderIterator;
-                        Component child = componentIterator.next();
-                        if (child instanceof Panel) {
-                            columHolderIterator = ((ComponentContainer) ((Panel) child)
-                                    .getContent()).getComponentIterator();
-                        } else {
-                            columHolderIterator = ((ComponentContainer) child)
-                                    .getComponentIterator();
-                        }
-                        while (columHolderIterator.hasNext()) {
-                            VerticalLayout column = (VerticalLayout) columHolderIterator
-                                    .next();
-                            Iterator<Component> columnIterator = column
-                                    .getComponentIterator();
-                            while (columnIterator.hasNext()) {
-                                Label label = (Label) columnIterator.next();
-                                label.setValue("New value");
-                            }
-                        }
+                }
+                while (columHolderIterator.hasNext()) {
+                    VerticalLayout column = (VerticalLayout) columHolderIterator
+                            .next();
+                    Iterator<Component> columnIterator = column
+                            .getComponentIterator();
+                    while (columnIterator.hasNext()) {
+                        Label label = (Label) columnIterator.next();
+                        label.setValue("New value");
                     }
-                    updatePerformanceReporting("Update labels", 100, 100);
-                }));
+                }
+            }
+            updatePerformanceReporting("Update labels", 100, 100);
+        }));
 
-        leftBar.addComponent(
-                new Button("Update one label", event -> {
-                    Component child = contentLayout.getComponent(0);
-                    if (child instanceof Panel) {
-                        Panel panel = (Panel) child;
-                        child = panel.getContent();
-                    }
+        leftBar.addComponent(new Button("Update one label", event -> {
+            Component child = contentLayout.getComponent(0);
+            if (child instanceof Panel) {
+                Panel panel = (Panel) child;
+                child = panel.getContent();
+            }
 
-                    AbstractOrderedLayout layout = (AbstractOrderedLayout) ((AbstractOrderedLayout) child)
-                            .getComponent(0);
-                    Label label = (Label) layout.getComponent(0);
+            AbstractOrderedLayout layout = (AbstractOrderedLayout) ((AbstractOrderedLayout) child)
+                    .getComponent(0);
+            Label label = (Label) layout.getComponent(0);
 
-                    label.setValue("New value " + updateOneCount++);
+            label.setValue("New value " + updateOneCount++);
 
-                    updatePerformanceReporting("Update one", 10, 10);
-                }));
+            updatePerformanceReporting("Update one", 10, 10);
+        }));
 
-        leftBar.addComponent(
-                new Button("Clear content", event -> {
-                    contentLayout.removeAllComponents();
-                    contentLayout.addComponent(new Label("No content"));
-                    updatePerformanceReporting("No content", 100, 100);
-                }));
+        leftBar.addComponent(new Button("Clear content", event -> {
+            contentLayout.removeAllComponents();
+            contentLayout.addComponent(new Label("No content"));
+            updatePerformanceReporting("No content", 100, 100);
+        }));
 
         HorizontalLayout intermediateLayout = new HorizontalLayout();
         intermediateLayout.setSizeFull();

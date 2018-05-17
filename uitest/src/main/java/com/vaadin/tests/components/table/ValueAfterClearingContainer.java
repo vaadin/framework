@@ -33,18 +33,16 @@ public class ValueAfterClearingContainer extends TestBase {
             table.setMultiSelect(value == null ? false : value);
         });
         addComponent(multiselect);
-        Button addItemsButton = new Button("Add table items",
-                event -> {
-                    if (!table.getItemIds().isEmpty()) {
-                        Notification
-                                .show("Only possible when the table is empty");
-                        return;
-                    }
-                    for (int i = 0; i < 5; i++) {
-                        table.addItem(new Object[] { Integer.valueOf(i) },
-                                Integer.valueOf(i));
-                    }
-                });
+        Button addItemsButton = new Button("Add table items", event -> {
+            if (!table.getItemIds().isEmpty()) {
+                Notification.show("Only possible when the table is empty");
+                return;
+            }
+            for (int i = 0; i < 5; i++) {
+                table.addItem(new Object[] { Integer.valueOf(i) },
+                        Integer.valueOf(i));
+            }
+        });
         addItemsButton.setId("addItemsButton");
         addComponent(addItemsButton);
 
@@ -64,8 +62,7 @@ public class ValueAfterClearingContainer extends TestBase {
         removeItemsFromContainerButton.setId("removeItemsFromContainerButton");
         addComponent(removeItemsFromContainerButton);
         Button removeItemsFromContainerAndSanitizeButton = new Button(
-                "Remove items from container and sanitize",
-                event -> {
+                "Remove items from container and sanitize", event -> {
                     table.getContainerDataSource().removeAllItems();
                     table.sanitizeSelection();
                 });
@@ -84,8 +81,7 @@ public class ValueAfterClearingContainer extends TestBase {
         removeSelectedFromTableButton.setId("removeSelectedFromTableButton");
         addComponent(removeSelectedFromTableButton);
         Button removeSelectedFromContainer = new Button(
-                "Remove selected item from container",
-                event -> {
+                "Remove selected item from container", event -> {
                     Object selection = table.getValue();
                     if (selection == null) {
                         Notification.show("There is no selection");

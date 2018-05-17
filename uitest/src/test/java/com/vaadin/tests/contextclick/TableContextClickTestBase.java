@@ -15,16 +15,14 @@ public abstract class TableContextClickTestBase
     protected void assertTypedContextClickListener(int startIndex) {
         contextClick($(TableElement.class).first().getCell(0, 0));
 
-        assertEquals(
-                (startIndex++)
-                        + ". ContextClickEvent value: Lisa Schneider, propertyId: address, section: BODY",
+        assertEquals((startIndex++)
+                + ". ContextClickEvent value: Lisa Schneider, propertyId: address, section: BODY",
                 getLogRow(0));
 
         contextClick($(TableElement.class).first().getCell(0, 3));
 
-        assertEquals(
-                startIndex
-                        + ". ContextClickEvent value: Lisa Schneider, propertyId: lastName, section: BODY",
+        assertEquals(startIndex
+                + ". ContextClickEvent value: Lisa Schneider, propertyId: lastName, section: BODY",
                 getLogRow(0));
     }
 }

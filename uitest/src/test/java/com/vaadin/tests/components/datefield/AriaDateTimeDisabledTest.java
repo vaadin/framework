@@ -14,9 +14,8 @@ public class AriaDateTimeDisabledTest extends MultiBrowserTest {
         openTestURL();
 
         // Expect aria-disabled="false" on the enabled DateField.
-        String ariaDisabled = driver
-                .findElement(By
-                        .vaadin("/VVerticalLayout[0]/VPopupTimeCalendar[1]#popupButton"))
+        String ariaDisabled = driver.findElement(By.vaadin(
+                "/VVerticalLayout[0]/VPopupTimeCalendar[1]#popupButton"))
                 .getAttribute("aria-disabled");
         assertEquals("false", ariaDisabled);
 

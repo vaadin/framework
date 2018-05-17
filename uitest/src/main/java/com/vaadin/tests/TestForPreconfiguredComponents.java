@@ -19,12 +19,11 @@ import com.vaadin.v7.ui.TwinColSelect;
  */
 public class TestForPreconfiguredComponents extends CustomComponent {
 
-    private static final String[] firstnames = { "John", "Mary",
-            "Joe", "Sarah", "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
+    private static final String[] firstnames = { "John", "Mary", "Joe", "Sarah",
+            "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
 
-    private static final String[] lastnames = { "Torvalds",
-            "Smith", "Jones", "Beck", "Sheridan", "Picard", "Hill", "Fielding",
-            "Einstein" };
+    private static final String[] lastnames = { "Torvalds", "Smith", "Jones",
+            "Beck", "Sheridan", "Picard", "Hill", "Fielding", "Einstein" };
 
     private final VerticalLayout main = new VerticalLayout();
 

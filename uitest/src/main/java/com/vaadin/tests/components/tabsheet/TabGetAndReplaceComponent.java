@@ -22,18 +22,17 @@ public class TabGetAndReplaceComponent extends TestBase {
         tabs.addTab(new Label("Content 5"), "Content 5", null);
         addComponent(tabs);
 
-        Button replace2 = new Button("Replace Content 2",
-                event -> {
-                    Iterator<Component> iter = tabs.getComponentIterator();
-                    iter.next();
+        Button replace2 = new Button("Replace Content 2", event -> {
+            Iterator<Component> iter = tabs.getComponentIterator();
+            iter.next();
 
-                    Component content2 = iter.next();
-                    Tab tab = tabs.getTab(content2);
+            Component content2 = iter.next();
+            Tab tab = tabs.getTab(content2);
 
-                    // Replace content
-                    tabs.replaceComponent(tab.getComponent(),
-                            new Label("Replacement 2"));
-                });
+            // Replace content
+            tabs.replaceComponent(tab.getComponent(),
+                    new Label("Replacement 2"));
+        });
         addComponent(replace2);
     }
 

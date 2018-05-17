@@ -18,9 +18,8 @@ public class TooltipStyling extends AbstractTestUI {
         addComponent(defaultLabel);
 
         Label htmlLabel = new Label("I have a tooltip with HTML contents");
-        htmlLabel.setDescription(
-                "This is regular text in a tooltip."
-                        + "<pre>This is a pre tag inside a HTML tooltip. It should use a monospace font and by default not break to multiple lines.</pre>",
+        htmlLabel.setDescription("This is regular text in a tooltip."
+                + "<pre>This is a pre tag inside a HTML tooltip. It should use a monospace font and by default not break to multiple lines.</pre>",
                 ContentMode.HTML);
         htmlLabel.setId("html");
         addComponent(htmlLabel);

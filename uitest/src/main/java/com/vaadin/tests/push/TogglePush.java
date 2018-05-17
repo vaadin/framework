@@ -21,7 +21,8 @@ public class TogglePush extends AbstractReindeerTestUI {
 
         getPushConfiguration()
                 .setPushMode("disabled".equals(request.getParameter("push"))
-                        ? PushMode.DISABLED : PushMode.AUTOMATIC);
+                        ? PushMode.DISABLED
+                        : PushMode.AUTOMATIC);
 
         CheckBox pushSetting = new CheckBox("Push enabled");
         pushSetting.setValue(Boolean
@@ -38,15 +39,14 @@ public class TogglePush extends AbstractReindeerTestUI {
         addComponent(
                 new Button("Update counter now", event -> updateCounter()));
 
-        addComponent(new Button("Update counter in 1 sec",
-                event -> {
-                    new Timer().schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            access(() -> updateCounter());
-                        }
-                    }, 1000);
-                }));
+        addComponent(new Button("Update counter in 1 sec", event -> {
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    access(() -> updateCounter());
+                }
+            }, 1000);
+        }));
     }
 
     public void updateCounter() {

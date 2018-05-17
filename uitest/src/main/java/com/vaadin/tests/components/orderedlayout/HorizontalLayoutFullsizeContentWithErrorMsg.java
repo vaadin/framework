@@ -40,10 +40,8 @@ public class HorizontalLayoutFullsizeContentWithErrorMsg
 
         Button toggleError = new Button("Toggle error");
         toggleError.setId(BUTTON_ID);
-        toggleError.addClickListener(event ->
-                tf.setComponentError(tf.getComponentError() == null
-                ? new UserError("foo")
-                : null));
+        toggleError.addClickListener(event -> tf.setComponentError(
+                tf.getComponentError() == null ? new UserError("foo") : null));
         hl.addComponent(toggleError);
 
         addComponent(hl);

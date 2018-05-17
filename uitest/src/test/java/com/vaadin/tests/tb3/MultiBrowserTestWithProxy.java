@@ -18,9 +18,8 @@ public abstract class MultiBrowserTestWithProxy extends MultiBrowserTest {
     private Integer proxyPort = null;
     private JSch jsch;
     private static String sshDir = System.getProperty("user.home") + "/.ssh/";
-    private String[] publicKeys = {
-            System.getProperty("sshkey.file"), sshDir + "id_rsa",
-            sshDir + "id_dsa", sshDir + "id_rsa2" };
+    private String[] publicKeys = { System.getProperty("sshkey.file"),
+            sshDir + "id_rsa", sshDir + "id_dsa", sshDir + "id_rsa2" };
 
     @Override
     public void setup() throws Exception {

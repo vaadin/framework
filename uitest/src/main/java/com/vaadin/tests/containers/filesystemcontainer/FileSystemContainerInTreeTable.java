@@ -55,16 +55,14 @@ public class FileSystemContainerInTreeTable extends TestBase {
 
             HorizontalLayout buttonLayout = new HorizontalLayout();
             buttonLayout.setSpacing(true);
-            buttonLayout.addComponent(
-                    new Button("Create dir11", event -> {
-                        new File(folder, "dir11").mkdir();
-                        log.log("Row dir11 created");
-                    }));
-            buttonLayout.addComponent(
-                    new Button("Delete dir11", event -> {
-                        new File(folder, "dir11").delete();
-                        log.log("Row dir11 deleted");
-                    }));
+            buttonLayout.addComponent(new Button("Create dir11", event -> {
+                new File(folder, "dir11").mkdir();
+                log.log("Row dir11 created");
+            }));
+            buttonLayout.addComponent(new Button("Delete dir11", event -> {
+                new File(folder, "dir11").delete();
+                log.log("Row dir11 deleted");
+            }));
             // to clean up explicitly before ending an automated test
             buttonLayout.addComponent(
                     new Button("Clean all files", event -> folder.delete()));

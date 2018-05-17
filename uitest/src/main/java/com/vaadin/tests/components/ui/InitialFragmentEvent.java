@@ -9,13 +9,12 @@ public class InitialFragmentEvent extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        getPage().addUriFragmentChangedListener(
-                event -> {
-                    String newFragment = event.getUriFragment();
-                    log("Fragment changed from " + lastKnownFragment + " to "
-                            + newFragment);
-                    lastKnownFragment = newFragment;
-                });
+        getPage().addUriFragmentChangedListener(event -> {
+            String newFragment = event.getUriFragment();
+            log("Fragment changed from " + lastKnownFragment + " to "
+                    + newFragment);
+            lastKnownFragment = newFragment;
+        });
         addButton("Set fragment to 'foo'", event -> setFragment("foo"));
         addButton("Set fragment to 'bar'", event -> setFragment("bar"));
     }

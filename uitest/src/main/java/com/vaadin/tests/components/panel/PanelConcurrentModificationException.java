@@ -18,10 +18,8 @@ public class PanelConcurrentModificationException extends TestBase {
 
         addComponent(new Button("Click here for exception",
                 event -> panelLayout.addComponent(new Label("Label"))));
-        addComponent(
-                new Button("Or click here first", event ->
-                        Notification.show(
-                        "It is now safe to click the other button")));
+        addComponent(new Button("Or click here first", event -> Notification
+                .show("It is now safe to click the other button")));
         addComponent(panel);
     }
 

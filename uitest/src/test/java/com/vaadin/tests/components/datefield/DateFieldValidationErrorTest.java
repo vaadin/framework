@@ -13,7 +13,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 public class DateFieldValidationErrorTest extends MultiBrowserTest {
 
     @Test
-    public void testComponentErrorShouldBeShownWhenEnteringInvalidDate() throws InterruptedException {
+    public void testComponentErrorShouldBeShownWhenEnteringInvalidDate()
+            throws InterruptedException {
         openTestURL();
         DateFieldElement dateField = $(DateFieldElement.class).first();
         dateField.getInputElement().click();
@@ -23,16 +24,20 @@ public class DateFieldValidationErrorTest extends MultiBrowserTest {
     }
 
     @Test
-    public void testComponentErrorShouldBeShownWhenSelectingInvalidDate() throws InterruptedException {
+    public void testComponentErrorShouldBeShownWhenSelectingInvalidDate()
+            throws InterruptedException {
         openTestURL();
         DateFieldElement dateField = $(DateFieldElement.class).first();
         dateField.setDate(LocalDate.now());
         dateField.openPopup();
-        waitUntil(ExpectedConditions.visibilityOfElementLocated(By.className("v-datefield-popup")));
+        waitUntil(ExpectedConditions
+                .visibilityOfElementLocated(By.className("v-datefield-popup")));
 
-        WebElement popup = findElement(com.vaadin.testbench.By.className("v-datefield-popup"));
+        WebElement popup = findElement(
+                com.vaadin.testbench.By.className("v-datefield-popup"));
         // select day before today
-        WebElement popupBody = popup.findElement(By.className("v-datefield-calendarpanel"));
+        WebElement popupBody = popup
+                .findElement(By.className("v-datefield-calendarpanel"));
         popupBody.sendKeys(Keys.ARROW_LEFT, Keys.ENTER);
 
         // move focus away otherwise tooltip is not shown
@@ -46,7 +51,8 @@ public class DateFieldValidationErrorTest extends MultiBrowserTest {
     private void assertHasErrorMessage(DateFieldElement dateField) {
         waitForElementPresent(By.className("v-errorindicator"));
         dateField.showTooltip();
-        waitUntil(driver -> "Invalid date".equals(getTooltipErrorElement().getText()));
+        waitUntil(driver -> "Invalid date"
+                .equals(getTooltipErrorElement().getText()));
     }
 
     @Override

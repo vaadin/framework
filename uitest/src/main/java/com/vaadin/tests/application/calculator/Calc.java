@@ -195,8 +195,8 @@ public class Calc extends AbstractReindeerTestUI {
 
         // The operations for the calculator in the order they appear on the
         // screen (left to right, top to bottom)
-        String[] operations = { "7", "8", "9", "/", "4", "5", "6",
-                "*", "1", "2", "3", "-", "0", "=", "C", "+" };
+        String[] operations = { "7", "8", "9", "/", "4", "5", "6", "*", "1",
+                "2", "3", "-", "0", "=", "C", "+" };
 
         for (String caption : operations) {
 

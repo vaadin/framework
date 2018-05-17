@@ -49,15 +49,13 @@ public class CloseSession extends AbstractReindeerTestUI {
                 + OLD_SESSION_ID_PARAM + "=" + sessionId;
 
         addComponent(log);
-        addComponent(
-                new Button("Close VaadinServiceSession and redirect elsewhere",
-                        event -> {
-                            // Assuming Vaadin is deployed to the root
-                            // context
-                            getPage().setLocation(
-                                    "/statictestfiles/static.html");
-                            getSession().close();
-                        }));
+        addComponent(new Button(
+                "Close VaadinServiceSession and redirect elsewhere", event -> {
+                    // Assuming Vaadin is deployed to the root
+                    // context
+                    getPage().setLocation("/statictestfiles/static.html");
+                    getSession().close();
+                }));
         addComponent(new Button("Close VaadinServiceSession and reopen page",
                 event -> {
                     getPage().setLocation(reopenUrl);
@@ -67,8 +65,8 @@ public class CloseSession extends AbstractReindeerTestUI {
                 event -> getSession().close()));
         addComponent(new Button("Just close HttpSession",
                 event -> getSession().getSession().invalidate()));
-        addComponent(new Button("Invalidate HttpSession and reopen page",
-                event -> {
+        addComponent(
+                new Button("Invalidate HttpSession and reopen page", event -> {
                     VaadinService.getCurrentRequest().getWrappedSession()
                             .invalidate();
                     getPage().setLocation(reopenUrl);

@@ -32,9 +32,9 @@ public class HiddenColumnsExpandRatios extends TestBase {
             item.getItemProperty("dfgh").setValue(genValue());
         }
 
-        addComponent(new Button("All", event ->table.setVisibleColumns(
-                table.getContainerPropertyIds().toArray())));
-        addComponent(new Button("Some", event ->{
+        addComponent(new Button("All", event -> table
+                .setVisibleColumns(table.getContainerPropertyIds().toArray())));
+        addComponent(new Button("Some", event -> {
             table.setWidth("100px");
             table.setWidth("800px");
             table.setVisibleColumns("foo", "bar", "baz");

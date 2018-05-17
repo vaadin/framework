@@ -27,8 +27,9 @@ public class FormLayoutClickListener extends AbstractTestUIWithLog {
         layout.addLayoutClickListener(event -> {
             log("Child component: " + (event.getChildComponent() == null ? null
                     : event.getChildComponent().getId()));
-            log("Clicked component: " + (event.getClickedComponent() == null ? null
-                    : event.getClickedComponent().getId()));
+            log("Clicked component: "
+                    + (event.getClickedComponent() == null ? null
+                            : event.getClickedComponent().getId()));
             log("Source component: " + event.getComponent().getId());
         });
 

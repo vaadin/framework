@@ -53,23 +53,21 @@ public class TooltipConfiguration extends AbstractReindeerTestUIWithLog {
 
         quickOpenDelay = createIntegerTextField("Quick open delay",
                 getState().tooltipConfiguration.quickOpenDelay);
-        quickOpenDelay
-                .addValueChangeListener(event -> {
-                    if (quickOpenDelay.getConvertedValue() != null) {
-                        getTooltipConfiguration().setQuickOpenDelay(
-                                (Integer) quickOpenDelay.getConvertedValue());
-                    }
-                });
+        quickOpenDelay.addValueChangeListener(event -> {
+            if (quickOpenDelay.getConvertedValue() != null) {
+                getTooltipConfiguration().setQuickOpenDelay(
+                        (Integer) quickOpenDelay.getConvertedValue());
+            }
+        });
 
         quickOpenTimeout = createIntegerTextField("Quick open timeout",
                 getState().tooltipConfiguration.quickOpenTimeout);
-        quickOpenTimeout
-                .addValueChangeListener(event -> {
-                    if (quickOpenTimeout.getConvertedValue() != null) {
-                        getTooltipConfiguration().setQuickOpenTimeout(
-                                (Integer) quickOpenTimeout.getConvertedValue());
-                    }
-                });
+        quickOpenTimeout.addValueChangeListener(event -> {
+            if (quickOpenTimeout.getConvertedValue() != null) {
+                getTooltipConfiguration().setQuickOpenTimeout(
+                        (Integer) quickOpenTimeout.getConvertedValue());
+            }
+        });
 
         getLayout().addComponents(closeTimeout, openDelay, quickOpenDelay,
                 quickOpenTimeout, maxWidth);

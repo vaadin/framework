@@ -22,7 +22,7 @@ public class GridSortIndicator extends AbstractTestUI {
         addComponent(new Button("Sort both",
                 event -> grid
                         .setSortOrder(GridSortOrder.asc(grid.getColumn("name"))
-                        .thenAsc(grid.getColumn("age")))));
+                                .thenAsc(grid.getColumn("age")))));
     }
 
     private final Grid<Person> getGrid() {

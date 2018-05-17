@@ -26,9 +26,8 @@ public class ComboBoxHeightTest extends SingleBrowserTest {
         comboBox.openPopup();
         WebElement suggestionPopup = comboBox.getSuggestionPopup();
 
-        int suggestionPopupBottom =
-                suggestionPopup.getLocation().getY() + suggestionPopup.getSize()
-                        .getHeight();
+        int suggestionPopupBottom = suggestionPopup.getLocation().getY()
+                + suggestionPopup.getSize().getHeight();
 
         assertGreaterOrEqual(
                 "Combo box suggestion popup should not exceed the browser's viewport",

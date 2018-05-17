@@ -25,8 +25,8 @@ public class GridThemeUI extends AbstractTestUIWithLog {
 
     private Grid grid;
 
-    protected static String[] columns = { "firstName", "lastName",
-            "gender", "birthDate", "age", "alive", "address.streetAddress",
+    protected static String[] columns = { "firstName", "lastName", "gender",
+            "birthDate", "age", "alive", "address.streetAddress",
             "address.postalCode", "address.city", "address.country" };
 
     protected BeanItemContainer<ComplexPerson> container = ComplexPerson

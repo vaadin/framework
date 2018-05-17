@@ -115,8 +115,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     @Override
     protected void servletInitialized() throws ServletException {
         super.servletInitialized();
-        getService().addSessionInitListener(
-                event -> onVaadinSessionStarted(event.getRequest(), event.getSession()));
+        getService().addSessionInitListener(event -> onVaadinSessionStarted(
+                event.getRequest(), event.getSession()));
     }
 
     private void addDirectories(File parent, LinkedHashSet<String> packages,

@@ -9,8 +9,7 @@ public class CheckboxContextClick extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         final CheckBox cb = new CheckBox("Right-click me", true);
-        cb.addContextClickListener(
-                event -> log("checkbox context clicked"));
+        cb.addContextClickListener(event -> log("checkbox context clicked"));
 
         addComponent(cb);
     }

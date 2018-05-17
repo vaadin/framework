@@ -57,12 +57,11 @@ public class WindowOrder extends AbstractTestUI {
         addComponent(first);
         getLayout().setComponentAlignment(first, Alignment.MIDDLE_RIGHT);
 
-        Button all = new Button("Bring to front all windows",
-                event -> {
-                    w3.bringToFront();
-                    w1.bringToFront();
-                    w2.bringToFront();
-                });
+        Button all = new Button("Bring to front all windows", event -> {
+            w3.bringToFront();
+            w1.bringToFront();
+            w2.bringToFront();
+        });
         all.addStyleName("bring-to-front-all");
         addComponent(all);
         getLayout().setComponentAlignment(all, Alignment.MIDDLE_RIGHT);

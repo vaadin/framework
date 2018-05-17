@@ -21,51 +21,49 @@ public class NativeWindowing extends LegacyApplication {
 
         setMainWindow(main);
 
-        main.addComponent(
-                new Button("Add new subwindow", event -> {
-                    VerticalLayout layout = new VerticalLayout();
-                    layout.setMargin(true);
-                    final Window w = new Window(
-                            "sw " + System.currentTimeMillis(), layout);
-                    main.addWindow(w);
-                    w.setPositionX(100);
-                    w.setPositionY(100);
-                    w.setWidth("200px");
-                    w.setHeight("200px");
+        main.addComponent(new Button("Add new subwindow", event -> {
+            VerticalLayout layout = new VerticalLayout();
+            layout.setMargin(true);
+            final Window w = new Window("sw " + System.currentTimeMillis(),
+                    layout);
+            main.addWindow(w);
+            w.setPositionX(100);
+            w.setPositionY(100);
+            w.setWidth("200px");
+            w.setHeight("200px");
 
-                    w.setWidth("100px");
-                    w.setHeight("400px");
+            w.setWidth("100px");
+            w.setHeight("400px");
 
-                    final Button closebutton = new Button(
-                            "Close " + w.getCaption(),
-                            clickEvent -> main.removeWindow(w));
-                    layout.addComponent(closebutton);
+            final Button closebutton = new Button("Close " + w.getCaption(),
+                    clickEvent -> main.removeWindow(w));
+            layout.addComponent(closebutton);
 
-                    layout.addComponent(new Label(
-                            "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>"
-                                    + "<p>Lorem ipsum dolor sit amet.</p>",
-                            ContentMode.HTML));
-                }));
+            layout.addComponent(new Label(
+                    "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>"
+                            + "<p>Lorem ipsum dolor sit amet.</p>",
+                    ContentMode.HTML));
+        }));
 
         main.addComponent(new Button(
                 "Open a currently uncreated application level window",

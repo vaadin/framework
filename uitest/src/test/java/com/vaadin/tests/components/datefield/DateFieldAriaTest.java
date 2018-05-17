@@ -25,7 +25,7 @@ public class DateFieldAriaTest extends SingleBrowserTest {
         Assert.assertEquals("Previous month",
                 prevMonthButton.getAttribute("aria-label"));
 
-        dateField.openPopup();  // This actually closes the calendar popup
+        dateField.openPopup(); // This actually closes the calendar popup
 
         ButtonElement changeLabelsButton = $(ButtonElement.class).first();
         changeLabelsButton.click();
