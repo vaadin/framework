@@ -280,6 +280,13 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         setItems(options);
     }
 
+    /**
+     * Constructs and initializes an empty combo box.
+     *
+     * @param dataCommunicator
+     *            the data comnunicator to use with this ComboBox
+     * @since
+     */
     protected ComboBox(DataCommunicator<T> dataCommunicator) {
         super(dataCommunicator);
         init();
