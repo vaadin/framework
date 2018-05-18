@@ -2894,6 +2894,14 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             getFooter().removeColumn(columnId);
             getState(true).columnOrder.remove(columnId);
 
+            // Remove column from sorted columns.
+            List<GridSortOrder<T>> filteredSortOrder = sortOrder.stream()
+                    .filter(order -> !order.getSorted().equals(column))
+                    .collect(Collectors.toList());
+            if (filteredSortOrder.size() < sortOrder.size()) {
+                setSortOrder(filteredSortOrder);
+            }
+
             if (displayIndex < getFrozenColumnCount()) {
                 setFrozenColumnCount(getFrozenColumnCount() - 1);
             }
