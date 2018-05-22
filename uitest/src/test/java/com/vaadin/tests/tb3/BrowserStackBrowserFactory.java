@@ -63,14 +63,16 @@ public class BrowserStackBrowserFactory extends DefaultBrowserFactory {
 
         // tunnel
         caps.setCapability("browserstack.local", "true");
-        String localIdentifier = System.getProperty("browserstack.identifier");
-        if (localIdentifier != null && !localIdentifier.isEmpty()) {
+        String localIdentifier = System.getProperty("browserstack.identifier",
+                "");
+        if (!localIdentifier.isEmpty()) {
             caps.setCapability("browserstack.localIdentifier", localIdentifier);
         }
 
-        // build and project for easy identification in BrowserStack UI
-        caps.setCapability("project", "vaadin");
-        caps.setCapability("build", Version.getFullVersion());
+        // build name for easy identification in BrowserStack UI
+        caps.setCapability("build",
+                "BrowserStack Tests" + (localIdentifier.isEmpty() ? ""
+                        : " [" + localIdentifier + "]"));
 
         // accept self-signed certificates
         caps.setCapability("acceptSslCerts", "true");
