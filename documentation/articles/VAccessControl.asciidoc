@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[v-access-control]]
-Access control
---------------
+= Access control
 
 In this tutorial we will look into access control.
 

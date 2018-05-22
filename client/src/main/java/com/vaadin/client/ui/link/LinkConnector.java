@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +18,9 @@ package com.vaadin.client.ui.link;
 
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.DOM;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VCaption;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
@@ -75,8 +77,13 @@ public class LinkConnector extends AbstractComponentConnector {
             if (getWidget().errorIndicatorElement == null) {
                 getWidget().errorIndicatorElement = DOM.createDiv();
                 DOM.setElementProperty(getWidget().errorIndicatorElement,
-                        "className", "v-errorindicator");
+                        "className", StyleConstants.STYLE_NAME_ERROR_INDICATOR);
             }
+
+            ErrorUtil.setErrorLevelStyle(getWidget().errorIndicatorElement,
+                    StyleConstants.STYLE_NAME_ERROR_INDICATOR,
+                    getState().errorLevel);
+
             DOM.insertChild(getWidget().getElement(),
                     getWidget().errorIndicatorElement, 0);
         } else if (getWidget().errorIndicatorElement != null) {

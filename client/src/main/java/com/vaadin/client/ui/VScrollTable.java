@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -6473,7 +6473,7 @@ public class VScrollTable extends FlowPanel
 
             private Element getElementTdOrTr(Element element) {
 
-                Widget widget = WidgetUtil.findWidget(element, null);
+                Widget widget = WidgetUtil.findWidget(element);
 
                 if (widget != this) {
                     /*
@@ -8339,7 +8339,7 @@ public class VScrollTable extends FlowPanel
     @Override
     public String getSubPartName(
             com.google.gwt.user.client.Element subElement) {
-        Widget widget = WidgetUtil.findWidget(subElement, null);
+        Widget widget = WidgetUtil.findWidget(subElement);
         if (widget instanceof HeaderCell) {
             return SUBPART_HEADER + "[" + tHead.visibleCells.indexOf(widget)
                     + "]";

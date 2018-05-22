@@ -307,6 +307,12 @@ public class NestedMethodPropertyTest {
         Address address2 = new Address("Other street", 12345);
         addressProperty.setValue(address2);
         Assert.assertEquals("Other street", streetProperty.getValue());
+
+        Address address3 = null;
+        addressProperty.setValue(address3);
+        Assert.assertEquals(null, addressProperty.getValue());
+        streetProperty.setValue("Ruukinkatu");
+        Assert.assertEquals(null, streetProperty.getValue());
     }
 
     @Test

@@ -51,7 +51,9 @@ ttable.setParent(6, 2);
 
 Some container types may allow defining hierarchies if the container data
 itself, without explicitly setting the parent-child relationships with
-[methodname]#setParent()#.
+[methodname]#setParent()#. These containers should be used if there is going
+to be a lot of data. Setting up a [interfacename]#Container.Hierarchical# before
+setting it to the [classname]#TreeTable# will improve the initial performance.
 
 Unlike [classname]#Tree#, a [classname]#TreeTable# can have components in the
 hierarchical column, both when the property type is a component type and when

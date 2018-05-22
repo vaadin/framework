@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -1264,9 +1264,16 @@ public class TabSheet extends AbstractComponentContainer
         public void setComponentError(ErrorMessage componentError) {
             this.componentError = componentError;
 
-            String formattedHtmlMessage = componentError != null
-                    ? componentError.getFormattedHtmlMessage() : null;
-            tabState.componentError = formattedHtmlMessage;
+            if (componentError != null) {
+                tabState.componentError = componentError
+                        .getFormattedHtmlMessage();
+                tabState.componentErrorLevel = componentError.getErrorLevel()
+                        .convertToShared();
+            } else {
+                tabState.componentError = null;
+                tabState.componentErrorLevel = null;
+            }
+
 
             markAsDirty();
         }

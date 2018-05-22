@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,10 +34,12 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VTooltip;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.ComponentStateUtil;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.shared.ui.MarginInfo;
 
 /**
@@ -201,10 +203,10 @@ public class VFormLayout extends SimplePanel {
         }
 
         public void updateError(Widget widget, String errorMessage,
-                boolean hideErrors) {
+                ErrorLevel errorLevel, boolean hideErrors) {
             final ErrorFlag e = widgetToError.get(widget);
             if (e != null) {
-                e.updateError(errorMessage, hideErrors);
+                e.updateError(errorMessage, errorLevel, hideErrors);
             }
 
         }
@@ -360,7 +362,8 @@ public class VFormLayout extends SimplePanel {
             return owner;
         }
 
-        public void updateError(String errorMessage, boolean hideErrors) {
+        public void updateError(String errorMessage, ErrorLevel errorLevel,
+                boolean hideErrors) {
             boolean showError = null != errorMessage;
             if (hideErrors) {
                 showError = false;
@@ -373,7 +376,7 @@ public class VFormLayout extends SimplePanel {
                     errorIndicatorElement = DOM.createDiv();
                     DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
                     DOM.setElementProperty(errorIndicatorElement, "className",
-                            "v-errorindicator");
+                            StyleConstants.STYLE_NAME_ERROR_INDICATOR);
                     DOM.appendChild(getElement(), errorIndicatorElement);
 
                     // Hide the error indicator from screen reader, as this
@@ -381,6 +384,9 @@ public class VFormLayout extends SimplePanel {
                     Roles.getFormRole()
                             .setAriaHiddenState(errorIndicatorElement, true);
                 }
+
+                ErrorUtil.setErrorLevelStyle(errorIndicatorElement,
+                        StyleConstants.STYLE_NAME_ERROR_INDICATOR, errorLevel);
 
             } else if (errorIndicatorElement != null) {
                 DOM.removeChild(getElement(), errorIndicatorElement);

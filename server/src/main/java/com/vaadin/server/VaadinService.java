@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -1291,12 +1291,25 @@ public abstract class VaadinService implements Serializable {
     private boolean isUIActive(UI ui) {
         if (ui.isClosing()) {
             return false;
-        } else {
-            long now = System.currentTimeMillis();
-            int timeout = 1000 * getHeartbeatTimeout();
-            return timeout < 0
-                    || now - ui.getLastHeartbeatTimestamp() < timeout;
         }
+
+        // Check for long running tasks
+        Lock lockInstance = ui.getSession().getLockInstance();
+        if (lockInstance instanceof ReentrantLock) {
+            if (((ReentrantLock) lockInstance).hasQueuedThreads()) {
+                /*
+                 * Someone is trying to access the session. Leaving all UIs
+                 * alive for now. A possible kill decision will be made at a
+                 * later time when the session access has ended.
+                 */
+                return true;
+            }
+        }
+
+        // Check timeout
+        long now = System.currentTimeMillis();
+        int timeout = 1000 * getHeartbeatTimeout();
+        return timeout < 0 || now - ui.getLastHeartbeatTimestamp() < timeout;
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -276,8 +276,9 @@ public abstract class AbstractOrderedLayoutConnector
             slot.setCaptionResizeListener(null);
         }
 
-        slot.setCaption(caption, icon, styles, error, showError, required,
-                enabled, child.getState().captionAsHtml);
+        slot.setCaption(caption, icon, styles, error,
+                child.getState().errorLevel, showError, required, enabled,
+                child.getState().captionAsHtml);
 
         AriaHelper.handleInputRequired(child.getWidget(), required);
         AriaHelper.handleInputInvalid(child.getWidget(), showError);

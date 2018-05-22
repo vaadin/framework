@@ -63,6 +63,46 @@ $v-tooltip-error-message-background-color: #fff !default;
 $v-tooltip-error-message-font-color: $v-error-indicator-color !default;
 
 /**
+ * The font color for error tooltips for level 'info'.
+ *
+ * @type color
+ * @group tooltip
+ */
+$v-tooltip-error-message-level-info-font-color: $v-error-indicator-level-info-color !default;
+
+/**
+ * The font color for error tooltips for level 'warning'.
+ *
+ * @type color
+ * @group tooltip
+ */
+$v-tooltip-error-message-level-warning-font-color: $v-error-indicator-level-warning-color !default;
+
+/**
+ * The font color for error tooltips for level 'error'.
+ *
+ * @type color
+ * @group tooltip
+ */
+$v-tooltip-error-message-level-error-font-color: $v-error-indicator-level-error-color !default;
+
+/**
+ * The font color for error tooltips for level 'critical'.
+ *
+ * @type color
+ * @group tooltip
+ */
+$v-tooltip-error-message-level-critical-font-color: $v-error-indicator-level-critical-color !default;
+
+/**
+ * The font color for error tooltips for level 'system'.
+ *
+ * @type color
+ * @group tooltip
+ */
+$v-tooltip-error-message-level-system-font-color: $v-error-indicator-level-system-color !default;
+
+/**
  * The corner radius for tooltips.
  *
  * @type size
@@ -100,6 +140,26 @@ $v-tooltip-border-radius: $v-border-radius - 1px !default;
       }
     }
 
+    .v-errormessage-info {
+      color: $v-tooltip-error-message-level-info-font-color;
+    }
+
+    .v-errormessage-warning {
+      color: $v-tooltip-error-message-level-warning-font-color;
+    }
+
+    .v-errormessage-error {
+      color: $v-tooltip-error-message-level-error-font-color;
+    }
+
+    .v-errormessage-critical {
+      color: $v-tooltip-error-message-level-critical-font-color;
+    }
+
+    .v-errormessage-system {
+      color: $v-tooltip-error-message-level-system-font-color;
+    }
+
     .v-tooltip-text {
       max-height: 10em;
       overflow: auto;
@@ -115,6 +175,12 @@ $v-tooltip-border-radius: $v-border-radius - 1px !default;
     h3,
     h4 {
       color: inherit;
+    }
+
+    pre.v-tooltip-pre {
+      font: inherit;
+      white-space: pre-wrap;
+      margin: 0;
     }
   }
 }

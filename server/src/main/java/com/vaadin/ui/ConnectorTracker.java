@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,12 +23,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.vaadin.event.MarkedAsDirtyConnectorEvent;
+import com.vaadin.event.MarkedAsDirtyListener;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.DragAndDropService;
@@ -68,6 +71,9 @@ public class ConnectorTracker implements Serializable {
     private final HashMap<String, ClientConnector> connectorIdToConnector = new HashMap<String, ClientConnector>();
     private Set<ClientConnector> dirtyConnectors = new HashSet<ClientConnector>();
     private Set<ClientConnector> uninitializedConnectors = new HashSet<ClientConnector>();
+
+    private List<MarkedAsDirtyListener> markedDirtyListeners = new ArrayList<MarkedAsDirtyListener>(
+            0);
 
     /**
      * Connectors that have been unregistered and should be cleaned up the next
@@ -443,7 +449,6 @@ public class ConnectorTracker implements Serializable {
      *
      * @return <code>true</code> if the hierarchy is consistent,
      *         <code>false</code> otherwise
-     * @since
      */
     private boolean isHierarchyComplete() {
         boolean noErrors = true;
@@ -485,8 +490,8 @@ public class ConnectorTracker implements Serializable {
     }
 
     /**
-     * Mark the connector as dirty. This should not be done while the response
-     * is being written.
+     * Mark the connector as dirty and notifies any marked as dirty listeners.
+     * This should not be done while the response is being written.
      *
      * @see #getDirtyConnectors()
      * @see #isWritingResponse()
@@ -501,10 +506,14 @@ public class ConnectorTracker implements Serializable {
         }
 
         if (getLogger().isLoggable(Level.FINE)) {
-            if (!dirtyConnectors.contains(connector)) {
+            if (!isDirty(connector)) {
                 getLogger().log(Level.FINE, "{0} is now dirty",
                         getConnectorAndParentInfo(connector));
             }
+        }
+
+        if (!isDirty(connector)) {
+            notifyMarkedAsDirtyListeners(connector);
         }
 
         dirtyConnectors.add(connector);
@@ -878,4 +887,47 @@ public class ConnectorTracker implements Serializable {
     public int getCurrentSyncId() {
         return currentSyncId;
     }
+
+    /**
+     * Adds a marked as dirty listener that will be called when a client
+     * connector is marked as dirty.
+     *
+     * @param listener
+     *            listener to add
+     * @since
+     */
+    public void addMarkedAsDirtyListener(MarkedAsDirtyListener listener) {
+        markedDirtyListeners.add(listener);
+    }
+
+    /**
+     * Removes a marked as dirty listener.
+     *
+     * @param listener
+     *            listener to remove
+     * @since
+     */
+    public void removeMarkedAsDirtyListener(MarkedAsDirtyListener listener) {
+        markedDirtyListeners.remove(listener);
+    }
+
+    /**
+     * Notify all registered MarkedAsDirtyListeners the given client connector
+     * has been marked as dirty.
+     *
+     * @param connector
+     *            client connector marked as dirty
+     * @since
+     */
+    public void notifyMarkedAsDirtyListeners(ClientConnector connector) {
+        MarkedAsDirtyConnectorEvent event = new MarkedAsDirtyConnectorEvent(
+                connector, uI);
+
+        List<MarkedAsDirtyListener> copy = new ArrayList<MarkedAsDirtyListener>(
+                markedDirtyListeners);
+        for (MarkedAsDirtyListener listener : copy) {
+            listener.connectorMarkedAsDirty(event);
+        }
+    }
+
 }

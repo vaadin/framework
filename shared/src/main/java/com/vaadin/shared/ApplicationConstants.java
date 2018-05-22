@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -49,6 +49,11 @@ public class ApplicationConstants implements Serializable {
 
     public static final String UIDL_SECURITY_TOKEN_ID = "Vaadin-Security-Key";
 
+    /**
+     * Name for push connection identifier.
+     * 
+     * @since 7.7.11
+     */
     public static final String UIDL_PUSH_ID = "Vaadin-Push-ID";
 
     @Deprecated

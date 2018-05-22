@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -125,6 +125,7 @@ public class FormConnector extends AbstractComponentContainerConnector
 
         if (null != getState().errorMessage) {
             getWidget().errorMessage.updateMessage(getState().errorMessage);
+            getWidget().errorMessage.updateErrorLevel(getState().errorLevel);
             getWidget().errorMessage.setVisible(true);
         } else {
             getWidget().errorMessage.setVisible(false);

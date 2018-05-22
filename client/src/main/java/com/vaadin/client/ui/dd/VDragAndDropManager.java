@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -412,7 +412,7 @@ public class VDragAndDropManager {
      */
     protected VDropHandler findDragTarget(Element element) {
         try {
-            Widget w = WidgetUtil.findWidget(element, null);
+            Widget w = WidgetUtil.findWidget(element);
             if (w == null) {
                 return null;
             }

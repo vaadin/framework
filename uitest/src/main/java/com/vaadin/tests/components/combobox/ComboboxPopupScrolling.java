@@ -5,6 +5,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 
 @Theme("valo")
 public class ComboboxPopupScrolling extends AbstractTestUIWithLog {
@@ -35,6 +36,10 @@ public class ComboboxPopupScrolling extends AbstractTestUIWithLog {
         HorizontalLayout hl = new HorizontalLayout(combobox, combobox2,
                 combobox3, combobox4);
         addComponent(hl);
+
+        Label spacer = new Label();
+        spacer.setHeight("800px");
+        addComponent(spacer);
     }
 
 }

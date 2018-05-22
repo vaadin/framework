@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[building-vaadin-applications-on-top-of-activiti]]
-Building Vaadin applications on top of Activiti
------------------------------------------------
+= Building Vaadin applications on top of Activiti
 
 by Petter Holmström
 

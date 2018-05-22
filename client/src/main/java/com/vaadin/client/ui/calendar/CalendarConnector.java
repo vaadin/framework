@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -428,7 +428,7 @@ public class CalendarConnector extends AbstractComponentConnector
     public TooltipInfo getTooltipInfo(
             com.google.gwt.dom.client.Element element) {
         TooltipInfo tooltipInfo = null;
-        Widget w = WidgetUtil.findWidget(element, null);
+        Widget w = WidgetUtil.findWidget(element);
         if (w instanceof HasTooltipKey) {
             tooltipInfo = GWT.create(TooltipInfo.class);
             String title = tooltips.get(((HasTooltipKey) w).getTooltipKey());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,6 +32,7 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.data.Collapsible;
 import com.vaadin.data.Container;
+import com.vaadin.data.Item;
 import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.util.ContainerHierarchicalWrapper;
@@ -66,6 +67,11 @@ import com.vaadin.ui.declarative.DesignException;
  * standard Hierarchical implementations. Developer must however note that
  * {@link Collapsible} containers can not be shared among several users as they
  * share UI state in the container.
+ * <p>
+ * <strong>Note:</strong> Constructing a big hierarchical data set using the
+ * methods in {@link TreeTable} may cause a decrease in performance. Instead a
+ * {@link Container.Hierarchical} container should be populated before setting it
+ * to the {@code TreeTable}.
  */
 @SuppressWarnings({ "serial" })
 public class TreeTable extends Table implements Hierarchical {
@@ -703,10 +709,112 @@ public class TreeTable extends Table implements Hierarchical {
                 areChildrenAllowed);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * <strong>Note:</strong> Constructing a big hierarchical data set using the
+     * methods in {@link TreeTable} may cause a decrease in performance.
+     */
     @Override
     public boolean setParent(Object itemId, Object newParentId)
             throws UnsupportedOperationException {
         return getContainerDataSource().setParent(itemId, newParentId);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * <strong>Note:</strong> Constructing a big hierarchical data set using the
+     * methods in {@link TreeTable} may cause a decrease in performance. Instead a
+     * {@link Container.Hierarchical} container should be populated before setting it
+     * to the {@code TreeTable}.
+     */
+    @Override
+    public Object addItem() throws UnsupportedOperationException {
+        return super.addItem();
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * <strong>Note:</strong> Constructing a big hierarchical data set using the
+     * methods in {@link TreeTable} may cause a decrease in performance. Instead a
+     * {@link Container.Hierarchical} container should be populated before setting it
+     * to the {@code TreeTable}.
+     */
+    @Override
+    public Item addItem(Object itemId) throws UnsupportedOperationException {
+        return super.addItem(itemId);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * <strong>Note:</strong> Constructing a big hierarchical data set using the
+     * methods in {@link TreeTable} may cause a decrease in performance. Instead a
+     * {@link Container.Hierarchical} container should be populated before setting it
+     * to the {@code TreeTable}.
+     */
+    @Override
+    public Object addItem(Object[] cells, Object itemId)
+            throws UnsupportedOperationException {
+        return super.addItem(cells, itemId);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * <strong>Note:</strong> Constructing a big hierarchical data set using the
+     * methods in {@link TreeTable} may cause a decrease in performance. Instead a
+     * {@link Container.Hierarchical} container should be populated before setting it
+     * to the {@code TreeTable}.
+     */
+    @Override
+    public Item addItemAfter(Object previousItemId, Object newItemId)
+            throws UnsupportedOperationException {
+        return super.addItemAfter(previousItemId, newItemId);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * <strong>Note:</strong> Constructing a big hierarchical data set using the
+     * methods in {@link TreeTable} may cause a decrease in performance. Instead a
+     * {@link Container.Hierarchical} container should be populated before setting it
+     * to the {@code TreeTable}.
+     */
+    @Override
+    public Object addItemAfter(Object previousItemId)
+            throws UnsupportedOperationException {
+        return super.addItemAfter(previousItemId);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * <strong>Note:</strong> Constructing a big hierarchical data set using the
+     * methods in {@link TreeTable} may cause a decrease in performance. Instead a
+     * {@link Container.Hierarchical} container should be populated before setting it
+     * to the {@code TreeTable}.
+     */
+    @Override
+    public void addItems(Collection<?> itemIds)
+            throws UnsupportedOperationException {
+        super.addItems(itemIds);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * <strong>Note:</strong> Constructing a big hierarchical data set using the
+     * methods in {@link TreeTable} may cause a decrease in performance. Instead a
+     * {@link Container.Hierarchical} container should be populated before setting it
+     * to the {@code TreeTable}.
+     */
+    @Override
+    public void addItems(Object... itemId)
+            throws UnsupportedOperationException {
+        super.addItems(itemId);
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,7 +20,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VCaption;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
@@ -50,14 +52,19 @@ public class ButtonConnector extends AbstractComponentConnector
         ConnectorFocusAndBlurHandler.addHandlers(this);
     }
 
-    @OnStateChange("errorMessage")
-    void setErrorMessage() {
+    @OnStateChange({"errorMessage", "errorLevel"})
+    void setErrorMessageAndLevel() {
         if (null != getState().errorMessage) {
             if (getWidget().errorIndicatorElement == null) {
                 getWidget().errorIndicatorElement = DOM.createSpan();
-                getWidget().errorIndicatorElement
-                        .setClassName("v-errorindicator");
+                getWidget().errorIndicatorElement.setClassName(
+                        StyleConstants.STYLE_NAME_ERROR_INDICATOR);
             }
+
+            ErrorUtil.setErrorLevelStyle(getWidget().errorIndicatorElement,
+                    StyleConstants.STYLE_NAME_ERROR_INDICATOR,
+                    getState().errorLevel);
+
             getWidget().wrapper.insertFirst(getWidget().errorIndicatorElement);
 
         } else if (getWidget().errorIndicatorElement != null) {

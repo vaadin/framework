@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -364,8 +364,10 @@ public class VAccordion extends VTabsheetBase {
             caption.updateCaptionWithoutOwner(tabState.caption,
                     !tabState.enabled, hasAttribute(tabState.description),
                     hasAttribute(tabState.componentError),
+                    tabState.componentErrorLevel,
                     connector.getResourceUrl(
-                            ComponentConstants.ICON_RESOURCE + tabState.key));
+                            ComponentConstants.ICON_RESOURCE + tabState.key),
+                    tabState.iconAltText);
         }
 
         private boolean hasAttribute(String string) {

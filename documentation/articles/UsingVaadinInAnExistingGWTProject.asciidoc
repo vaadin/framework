@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[using-vaadin-in-an-existing-gwt-project]]
-Using Vaadin in an existing GWT project
----------------------------------------
+= Using Vaadin in an existing GWT project
 
 [[using-vaadin-jar-with-google-eclipse-plugin-in-a-gwt-project]]
 Using Vaadin JAR with Google Eclipse plugin in a GWT project
