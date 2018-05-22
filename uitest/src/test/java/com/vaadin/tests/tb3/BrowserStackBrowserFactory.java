@@ -15,11 +15,6 @@ import com.vaadin.testbench.parallel.DefaultBrowserFactory;
  */
 public class BrowserStackBrowserFactory extends DefaultBrowserFactory {
 
-    static {
-        // Force the use of IE11 and Edge when running BrowserStack.
-        System.setProperty("browsers.include", "internet explorer11,edge");
-    }
-
     @Override
     public DesiredCapabilities create(Browser browser, String version,
             Platform platform) {
