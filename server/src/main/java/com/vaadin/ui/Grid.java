@@ -103,7 +103,9 @@ import com.vaadin.ui.components.grid.Editor;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
 import com.vaadin.ui.components.grid.FooterRow;
+import com.vaadin.ui.components.grid.GridMultiSelect;
 import com.vaadin.ui.components.grid.GridSelectionModel;
+import com.vaadin.ui.components.grid.GridSingleSelect;
 import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.components.grid.Header.Row;
 import com.vaadin.ui.components.grid.HeaderCell;
@@ -3886,14 +3888,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @throws IllegalStateException
      *             if not using a single selection model
      */
-    public SingleSelect<T> asSingleSelect() {
-        GridSelectionModel<T> model = getSelectionModel();
-        if (!(model instanceof SingleSelectionModel)) {
-            throw new IllegalStateException(
-                    "Grid is not in single select mode, it needs to be explicitly set to such with setSelectionModel(SingleSelectionModel) before being able to use single selection features.");
-        }
-
-        return ((SingleSelectionModel<T>) model).asSingleSelect();
+    public GridSingleSelect<T> asSingleSelect() {
+        return new GridSingleSelect<>(this);
     }
 
     public Editor<T> getEditor() {
@@ -3910,13 +3906,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @throws IllegalStateException
      *             if not using a multiselection model
      */
-    public MultiSelect<T> asMultiSelect() {
-        GridSelectionModel<T> model = getSelectionModel();
-        if (!(model instanceof MultiSelectionModel)) {
-            throw new IllegalStateException(
-                    "Grid is not in multiselect mode, it needs to be explicitly set to such with setSelectionModel(MultiSelectionModel) before being able to use multiselection features.");
-        }
-        return ((MultiSelectionModel<T>) model).asMultiSelect();
+    public GridMultiSelect<T> asMultiSelect() {
+        return new GridMultiSelect<>(this);
     }
 
     /**
