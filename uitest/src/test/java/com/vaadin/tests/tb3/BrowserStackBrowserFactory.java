@@ -15,28 +15,31 @@ import com.vaadin.testbench.parallel.DefaultBrowserFactory;
  */
 public class BrowserStackBrowserFactory extends DefaultBrowserFactory {
 
+    static {
+        // Force the use of IE11 and Edge when running BrowserStack.
+        System.setProperty("browsers.include", "internet explorer11,edge");
+    }
+
     @Override
     public DesiredCapabilities create(Browser browser, String version,
             Platform platform) {
         DesiredCapabilities caps;
 
         switch (browser) {
+        /* Ignored browsers */
         case CHROME:
             caps = DesiredCapabilities.chrome();
-            caps.setVersion(version);
             break;
         case PHANTOMJS:
-            // This will not work on BrowserStack - should be filtered with
-            // browsers.exclude. However, we cannot throw an exception here as
-            // filtering only takes place if there is no exception.
             caps = DesiredCapabilities.phantomjs();
-            caps.setVersion("1");
-            caps.setPlatform(Platform.LINUX);
             break;
         case SAFARI:
             caps = DesiredCapabilities.safari();
-            caps.setVersion(version);
             break;
+        case FIREFOX:
+            caps = DesiredCapabilities.firefox();
+            break;
+        /* Actual browsers */
         case IE11:
             caps = DesiredCapabilities.internetExplorer();
             caps.setVersion("11");
@@ -49,32 +52,26 @@ public class BrowserStackBrowserFactory extends DefaultBrowserFactory {
             caps.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION,
                     true);
             break;
-        case FIREFOX:
-            caps = DesiredCapabilities.firefox();
-            caps.setVersion(version);
-            break;
         default:
             caps = DesiredCapabilities.firefox();
-            caps.setVersion(version);
-            caps.setPlatform(platform);
         }
 
         // BrowserStack specific parts
 
         // for now, run all tests on Windows 7
-        if (!Browser.PHANTOMJS.equals(browser)) {
-            caps.setCapability("os", "Windows");
-            caps.setCapability("os_version", "7");
-            caps.setPlatform(Platform.WINDOWS);
-        }
+        caps.setCapability("os", "Windows");
+        caps.setCapability("os_version", "7");
+        caps.setPlatform(Platform.WINDOWS);
 
         // enable logging on BrowserStack
         caps.setCapability("browserstack.debug", "true");
 
         // tunnel
         caps.setCapability("browserstack.local", "true");
-        // optionally, could also set browserstack.localIdentifier if we have a
-        // tunnel name
+        String localIdentifier = System.getProperty("browserstack.identifier");
+        if (localIdentifier != null && !localIdentifier.isEmpty()) {
+            caps.setCapability("browserstack.localIdentifier", localIdentifier);
+        }
 
         // build and project for easy identification in BrowserStack UI
         caps.setCapability("project", "vaadin");

@@ -97,6 +97,14 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                         .getProperty(base + "screenshotErrorDirectory"));
             }
         }
+
+        if ("true".equals(getProperty("browserstack"))) {
+            properties.setProperty(HUB_URL,
+                    "https://" + getProperty("browserstack.username") + ":"
+                            + getProperty("browserstack.key")
+                            + "@hub-cloud.browserstack.com/wd/hub");
+        }
+
     }
 
     @Override
