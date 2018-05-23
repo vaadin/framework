@@ -653,10 +653,8 @@ public class MultiSelectionRenderer<T>
                         && event.getButton() == NativeEvent.BUTTON_LEFT)) {
             startDragSelect(event, Element.as(event.getEventTarget()));
             return true;
-        } else {
-            throw new IllegalStateException(
-                    "received unexpected event: " + event.getType());
         }
+        return false;
     }
 
     private void startDragSelect(NativeEvent event, final Element target) {
