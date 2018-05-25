@@ -30,8 +30,6 @@ import java.util.stream.Stream;
 
 import org.junit.Test;
 
-import com.vaadin.ui.Component;
-
 public class ClassesSerializableTest {
 
     /**
