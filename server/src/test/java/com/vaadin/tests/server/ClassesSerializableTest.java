@@ -150,7 +150,7 @@ public class ClassesSerializableTest {
                 {
                     serializeAndDeserialize(cls);
                 } else {
-                    LoggerFactory.getLogger(ClassesSerializableTest.class).error(cls.getName());
+                    System.err.println("NOTE CLASS:###" + cls.getName());
                 }
             }
 
