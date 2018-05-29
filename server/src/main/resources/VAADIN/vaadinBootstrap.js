@@ -36,6 +36,22 @@
             themesLoaded[url] = true;
         }
     };
+    
+    var getCookie = function (cname) {
+        var name = cname + "=";
+	    var decodedCookie = decodeURIComponent(document.cookie);
+	    var ca = decodedCookie.split(';');
+	    for (var i = 0; i < ca.length; i++) {
+	        var c = ca[i];
+	        while (c.charAt(0) == ' ') {
+	            c = c.substring(1);
+	        }
+	        if (c.indexOf(name) == 0) {
+	            return c.substring(name.length, c.length);
+	        }
+	    }
+	    return "";
+	};
 
     var isWidgetsetLoaded = function (widgetset) {
         var className = widgetset.replace(/\./g, "_");
@@ -195,6 +211,12 @@
                 };
                 // send parameters as POST data
                 r.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                
+                var xsrfToken = getCookie("XSRF-TOKEN");
+                if (xsrfToken && xsrfToken.length > 0) {
+                    r.setRequestHeader("X-XSRF-TOKEN", xsrfToken);
+                }
+                
                 r.send(params);
 
                 log('sending request to ', url);

@@ -49,6 +49,9 @@ import elemental.json.JsonObject;
  */
 public class XhrConnection {
 
+    private static final String XSRF_HEADER_NAME = "X-XSRF-TOKEN";
+	private static final String XSRF_COOKIE_NAME = "XSRF-TOKEN";
+
     private ApplicationConnection connection;
 
     /**
@@ -183,6 +186,9 @@ public class XhrConnection {
      */
     public void send(JsonObject payload) {
         RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, getUri());
+        
+        addXsrfHeaderFromCookie(rb);
+        
         // TODO enable timeout
         // rb.setTimeoutMillis(timeoutMillis);
         // TODO this should be configurable
@@ -243,7 +249,14 @@ public class XhrConnection {
     private MessageHandler getMessageHandler() {
         return connection.getMessageHandler();
     }
-
+    
+    public static void addXsrfHeaderFromCookie(RequestBuilder rb) {
+   	 String xsrfTokenVal = Cookies.getCookie(XSRF_COOKIE_NAME);
+        if (xsrfTokenVal != null && !xsrfTokenVal.isEmpty()) {
+            rb.setHeader(XSRF_HEADER_NAME, xsrfTokenVal);
+        }
+    }
+    
     private static native boolean resendRequest(Request request)
     /*-{
         var xhr = request.@com.google.gwt.http.client.Request::xmlHttpRequest
