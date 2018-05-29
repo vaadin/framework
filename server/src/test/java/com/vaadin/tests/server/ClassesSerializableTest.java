@@ -146,14 +146,16 @@ public class ClassesSerializableTest {
             }
 
             if (!cls.isInterface() && !Modifier.isAbstract(cls.getModifiers())) {
-                serializeAndDeserialize(cls);
+                if(Component.class.isAssignableFrom(cls) )
+                {
+                    serializeAndDeserialize(cls);
+                } else {
+                    LoggerFactory.getLogger(ClassesSerializableTest.class).error(cls.getName());
+                }
             }
 
             // report non-serializable classes and interfaces
             if (!Serializable.class.isAssignableFrom(cls)) {
-                if(!Component.class.isAssignableFrom(cls) ) {
-                    LoggerFactory.getLogger(ClassesSerializableTest.class).error(cls.getName());
-                }
                 if (cls.getSuperclass() == Object.class
                         && cls.getInterfaces().length == 1) {
                     // Single interface implementors
