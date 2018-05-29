@@ -36,6 +36,11 @@
             themesLoaded[url] = true;
         }
     };
+    
+    var getCookie = function (cname) {
+        var b = document.cookie.match('(^|;)\\s*' + cname + '\\s*=\\s*([^;]+)');
+        return b ? b.pop() : '';
+    };
 
     var isWidgetsetLoaded = function (widgetset) {
         var className = widgetset.replace(/\./g, "_");
@@ -195,6 +200,12 @@
                 };
                 // send parameters as POST data
                 r.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                
+                var xsrfToken = getCookie("XSRF-TOKEN");
+                if (xsrfToken && xsrfToken.length > 0) {
+                    r.setRequestHeader("X-XSRF-TOKEN", xsrfToken);
+                }
+                
                 r.send(params);
 
                 log('sending request to ', url);
