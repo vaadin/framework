@@ -29,6 +29,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Component;
 
@@ -149,6 +151,9 @@ public class ClassesSerializableTest {
 
             // report non-serializable classes and interfaces
             if (!Serializable.class.isAssignableFrom(cls)) {
+                if(!Component.class.isAssignableFrom(cls) ) {
+                    LoggerFactory.getLogger(ClassesSerializableTest.class).error(cls.getName());
+                }
                 if (cls.getSuperclass() == Object.class
                         && cls.getInterfaces().length == 1) {
                     // Single interface implementors
