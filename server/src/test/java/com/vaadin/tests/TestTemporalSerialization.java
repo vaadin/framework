@@ -33,7 +33,7 @@ import static java.lang.reflect.Modifier.isStatic;
 import static junit.framework.TestCase.assertNotNull;
 
 @Ignore
-//todo take into use
+// todo take into use
 public class TestTemporalSerialization {
 
     @Test
@@ -68,7 +68,7 @@ public class TestTemporalSerialization {
 
     @Test(expected = AssertionError.class)
     public void testAssertionFail() {
-// todo uncomment        new LocalDateRenderer(new NonSerializableThing());
+        // todo uncomment new LocalDateRenderer(new NonSerializableThing());
     }
 
     private static class NonSerializableThing

@@ -143,8 +143,7 @@ public class ClassesSerializableTest {
                 continue;
             }
 
-            if (Component.class.isAssignableFrom(cls) && !cls.isInterface()
-                    && !Modifier.isAbstract(cls.getModifiers())) {
+            if (!cls.isInterface() && !Modifier.isAbstract(cls.getModifiers())) {
                 serializeAndDeserialize(cls);
             }
 
