@@ -97,6 +97,14 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                         .getProperty(base + "screenshotErrorDirectory"));
             }
         }
+
+        if ("true".equals(getProperty("browserstack"))) {
+            properties.setProperty(HUB_URL,
+                    "https://" + getProperty("browserstack.username") + ":"
+                            + getProperty("browserstack.key")
+                            + "@hub-cloud.browserstack.com/wd/hub");
+        }
+
     }
 
     @Override
@@ -132,9 +140,13 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
             }
         }
 
-        desiredCapabilities.setCapability("project", "Vaadin Framework");
-        desiredCapabilities.setCapability("build", String.format("%s / %s",
-                getDeploymentHostname(), Calendar.getInstance().getTime()));
+        if (desiredCapabilities.getCapability("project") == null) {
+            desiredCapabilities.setCapability("project", "Vaadin Framework");
+        }
+        if (desiredCapabilities.getCapability("build") == null) {
+            desiredCapabilities.setCapability("build", String.format("%s / %s",
+                    getDeploymentHostname(), Calendar.getInstance().getTime()));
+        }
         desiredCapabilities.setCapability("name", String.format("%s.%s",
                 getClass().getCanonicalName(), testName.getMethodName()));
     }
