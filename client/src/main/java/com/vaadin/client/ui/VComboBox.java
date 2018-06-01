@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import com.google.gwt.animation.client.AnimationScheduler;
@@ -1371,7 +1372,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
              * way, and they might be useful in a combo box where new items are
              * allowed.
              */
-            getElement().setAttribute("autocomplete", "nope");
+            getElement().setAttribute("autocomplete", Math.random() + "");
         }
 
         /**
