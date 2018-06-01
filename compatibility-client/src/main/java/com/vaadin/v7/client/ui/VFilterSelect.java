@@ -1359,7 +1359,7 @@ public class VFilterSelect extends Composite
              * way, and they might be useful in a combo box where new items are
              * allowed.
              */
-            getElement().setAttribute("autocomplete", "nope");
+            getElement().setAttribute("autocomplete", Math.random() + "");
         }
 
         /**
