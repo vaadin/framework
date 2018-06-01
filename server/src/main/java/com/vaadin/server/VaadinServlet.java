@@ -777,7 +777,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      *         otherwise.
      * @throws IOException
      * @throws ServletException
-     * 
+     *
      * @since
      */
     protected boolean serveStaticResources(HttpServletRequest request,
@@ -801,7 +801,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @param response
      * @throws IOException
      * @throws ServletException
-     * 
+     *
      * @since
      */
     protected void serveStaticResourcesInVAADIN(String filename,

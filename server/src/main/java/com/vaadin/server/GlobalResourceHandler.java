@@ -122,7 +122,6 @@ public class GlobalResourceHandler implements RequestHandler {
         return true;
     }
 
-
     private String urlEncodedKey(String key) {
         // getPathInfo return path decoded but without decoding plus as spaces
         return ResourceReference.encodeFileName(key.replace("+", " "));
