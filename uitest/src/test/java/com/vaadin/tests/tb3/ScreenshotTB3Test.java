@@ -36,14 +36,14 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
         String testClassName = getClass().getSimpleName();
         testBench().setReferenceNameGenerator((identifier, capabilities) -> {
             // Make sure error screenshot directory exists.
+            String browserFolder = capabilities.getBrowserName().toLowerCase()
+                    .replaceAll(" ", "");
             Paths.get(ImageFileUtil.getScreenshotErrorDirectory(),
-                    capabilities.getBrowserName().toLowerCase()).toFile()
-                    .mkdirs();
-            return Paths.get(capabilities.getBrowserName().toLowerCase(),
-                    String.format("%s-%s%s%s", testClassName,
+                    browserFolder).toFile().mkdirs();
+            return Paths.get(browserFolder,
+                    String.format("%s-%s%s", testClassName,
                             testName.getMethodName().replace('[', '_')
-                                    .replace(']', '_'),
-                            getDesiredCapabilities().getVersion(), identifier))
+                                    .replace(']', '_'), identifier))
                     .toString();
         });
     }
