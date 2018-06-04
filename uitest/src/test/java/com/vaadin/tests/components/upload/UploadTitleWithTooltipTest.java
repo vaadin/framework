@@ -33,7 +33,7 @@ public class UploadTitleWithTooltipTest extends TooltipTest {
 
         checkTooltip(input, "tooltip");
 
-        compareScreen(getScreenshotBaseName());
+        compareScreen("init");
     }
 
 }

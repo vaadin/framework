@@ -25,6 +25,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.junit.Rule;
+import org.junit.rules.ExternalResource;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -45,7 +46,6 @@ import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UIProvider;
@@ -86,6 +86,17 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     @Rule
     public TestName testName = new TestName();
+
+    /*
+     * Rule for closing the application after test is done.
+     */
+    @Rule
+    public ExternalResource rule = new ExternalResource() {
+        @Override
+        protected void after() {
+            closeApplication();
+        }
+    };
 
     /**
      * Height of the screenshots we want to capture

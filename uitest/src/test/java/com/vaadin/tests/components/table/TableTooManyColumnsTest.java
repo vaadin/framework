@@ -25,7 +25,7 @@ public class TableTooManyColumnsTest extends MultiBrowserTest {
         TestBenchElementCommands scrollable = testBenchElement(menu);
         scrollable.scroll(3000);
 
-        compareScreen(getScreenshotBaseName());
+        compareScreen("init");
     }
 
 }
