@@ -46,20 +46,19 @@ public class GridContextClickTest extends AbstractContextClickTest {
     }
 
     @Test
-    @Ignore("Footer is not currently implemented in grid")
     public void testFooterContextClickWithTypedListener() {
         addOrRemoveTypedListener();
 
         contextClick($(GridElement.class).first().getFooterCell(0, 0));
 
         assertEquals(
-                "1. ContextClickEvent value: , column: Address, section: FOOTER",
+                "1. ContextClickEvent value: Address, column: Address, section: FOOTER",
                 getLogRow(0));
 
         contextClick($(GridElement.class).first().getFooterCell(0, 3));
 
         assertEquals(
-                "2. ContextClickEvent value: , column: Last Name, section: FOOTER",
+                "2. ContextClickEvent value: Last Name, column: Last Name, section: FOOTER",
                 getLogRow(0));
     }
 
