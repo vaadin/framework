@@ -29,6 +29,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Component;
 
@@ -69,6 +71,7 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.server\\.communication\\.PushHandler.*", // PushHandler
             "com\\.vaadin\\.server\\.communication\\.DateSerializer", //
             "com\\.vaadin\\.server\\.communication\\.JSONSerializer", //
+            "com\\.vaadin\\.ui\\.declarative\\.DesignContext", //
             // and its inner classes do not need to be serializable
             "com\\.vaadin\\.util\\.SerializerHelper", // fully static
             // class level filtering, also affecting nested classes and
@@ -142,9 +145,13 @@ public class ClassesSerializableTest {
                 continue;
             }
 
-            if (Component.class.isAssignableFrom(cls) && !cls.isInterface()
-                    && !Modifier.isAbstract(cls.getModifiers())) {
-                serializeAndDeserialize(cls);
+            if (!cls.isInterface() && !Modifier.isAbstract(cls.getModifiers())) {
+                if(Component.class.isAssignableFrom(cls) )
+                {
+                    serializeAndDeserialize(cls);
+                } else {
+                    System.err.println("NOTE CLASS:###" + cls.getName());
+                }
             }
 
             // report non-serializable classes and interfaces
