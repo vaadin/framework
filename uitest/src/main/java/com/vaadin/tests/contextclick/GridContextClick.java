@@ -33,8 +33,8 @@ public class GridContextClick extends
         grid.addColumn(person -> String.valueOf(person.getAddress().getCity()))
                 .setCaption("City");
 
-        // grid.setFooterVisible(true);
-        // grid.appendFooterRow();
+        grid.setFooterVisible(true);
+        grid.appendFooterRow();
 
         // grid.setColumnOrder("address", "email", "firstName", "lastName",
         // "phoneNumber", "address.streetAddress", "address.postalCode",
