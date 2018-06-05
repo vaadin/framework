@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -489,13 +490,12 @@ public class BinderValidationStatusTest
 
     @Test
     public void binderValidationStatus_nullBindingStatuses() {
-        boolean nonEmptyNPEThrown = false;
         try {
-            BinderValidationStatus<Person> bvs = new BinderValidationStatus<>(
-                    new Binder<Person>(), null, new ArrayList<>());
+            new BinderValidationStatus<>(new Binder<Person>(), null,
+                    new ArrayList<>());
+            Assert.fail("Binder should throw an NPE");
         } catch (NullPointerException npe) {
-            nonEmptyNPEThrown = npe.getMessage() != null;
+            assertNotNull(npe.getMessage());
         }
-        assertTrue(nonEmptyNPEThrown);
     }
 }
