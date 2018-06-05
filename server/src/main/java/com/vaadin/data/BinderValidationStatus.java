@@ -90,7 +90,7 @@ public class BinderValidationStatus<BEAN> implements Serializable {
     public BinderValidationStatus(Binder<BEAN> source,
             List<BindingValidationStatus<?>> bindingStatuses,
             List<ValidationResult> binderStatuses) {
-        Objects.requireNonNull(binderStatuses,
+        Objects.requireNonNull(bindingStatuses,
                 "binding statuses cannot be null");
         Objects.requireNonNull(binderStatuses,
                 "binder statuses cannot be null");
