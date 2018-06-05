@@ -27,6 +27,7 @@ import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.junit.Rule;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.TestName;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -49,6 +50,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UIProvider;
+import com.vaadin.testbench.ScreenshotOnFailureRule;
 import com.vaadin.testbench.TestBenchDriverProxy;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.annotations.BrowserConfiguration;
@@ -87,16 +89,16 @@ public abstract class AbstractTB3Test extends ParallelTest {
     @Rule
     public TestName testName = new TestName();
 
-    /*
-     * Rule for closing the application after test is done.
-     */
-    @Rule
-    public ExternalResource rule = new ExternalResource() {
-        @Override
-        protected void after() {
-            closeApplication();
-        }
-    };
+    {
+        // Override default screenshotOnFailureRule to close application
+        screenshotOnFailure = new ScreenshotOnFailureRule(this, true) {
+            @Override
+            protected void finished(Description description) {
+                closeApplication();
+                super.finished(description);
+            }
+        };
+    }
 
     /**
      * Height of the screenshots we want to capture
@@ -149,7 +151,6 @@ public abstract class AbstractTB3Test extends ParallelTest {
         } catch (UnsupportedOperationException e) {
             // Opera does not support this...
         }
-        screenshotOnFailure.setQuitDriverOnFinish(false);
     }
 
     /**
@@ -162,8 +163,6 @@ public abstract class AbstractTB3Test extends ParallelTest {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            // Finally quit the driver.
-            driver.quit();
         }
     }
 
