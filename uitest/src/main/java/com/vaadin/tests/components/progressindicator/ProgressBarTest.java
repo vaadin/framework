@@ -42,9 +42,8 @@ public class ProgressBarTest extends AbstractReindeerTestUI {
         addComponent(new Button("Use ProgressBar",
                 event -> useComponent(new ProgressBar())));
 
-        addComponent(
-                new Button("Use ProgressIndicator",
-                        event -> useComponent(new ProgressIndicator())));
+        addComponent(new Button("Use ProgressIndicator",
+                event -> useComponent(new ProgressIndicator())));
 
         addComponent(new Button("Stop background thread",
                 event -> stopUpdateThread()));

@@ -313,8 +313,8 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         // addCommands.put("HorizontalLayout", addHorizontalLayoutCommand);
         // addCommands.put("VerticalLayout", addVerticalLayoutCommand);
 
-        ComponentSize[] sizes = {
-                new ComponentSize(null, null), new ComponentSize("200px", null),
+        ComponentSize[] sizes = { new ComponentSize(null, null),
+                new ComponentSize("200px", null),
                 new ComponentSize("100%", null),
                 new ComponentSize(null, "200px"),
                 new ComponentSize(null, "100%"),

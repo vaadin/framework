@@ -10,7 +10,8 @@ import org.openqa.selenium.WebElement;
 
 import static org.junit.Assert.assertEquals;
 
-public class GridLayoutCaptionOnBottomAlignedComponentTest extends MultiBrowserTest {
+public class GridLayoutCaptionOnBottomAlignedComponentTest
+        extends MultiBrowserTest {
 
     @Test
     public void captionShouldBeImmediatelyAboveItsComponent() {
@@ -20,12 +21,15 @@ public class GridLayoutCaptionOnBottomAlignedComponentTest extends MultiBrowserT
         TextFieldElement component = $(TextFieldElement.class).first();
 
         assertEquals("Caption and component have the same horizontal alignment",
-            caption.getLocation().x, component.getLocation().x);
+                caption.getLocation().x, component.getLocation().x);
 
-        // We have to do the assertion in this way because different browsers on different operating systems
+        // We have to do the assertion in this way because different browsers on
+        // different operating systems
         // measure the height of the caption in different ways.
-        int diff = Math.abs(caption.getLocation().y - component.getLocation().y + caption.getSize().height);
-        assertLessThanOrEqual("Caption is placed directly above the component", diff, 1);
+        int diff = Math.abs(caption.getLocation().y - component.getLocation().y
+                + caption.getSize().height);
+        assertLessThanOrEqual("Caption is placed directly above the component",
+                diff, 1);
     }
 
     @Test
@@ -39,9 +43,9 @@ public class GridLayoutCaptionOnBottomAlignedComponentTest extends MultiBrowserT
         $(ButtonElement.class).first().click();
 
         assertEquals("Caption and component have the same horizontal alignment",
-            caption.getLocation().x, component.getLocation().x);
+                caption.getLocation().x, component.getLocation().x);
 
         assertEquals("Caption is placed in the top-left corner",
-            gridLayout.getLocation().y, caption.getLocation().y);
+                gridLayout.getLocation().y, caption.getLocation().y);
     }
 }

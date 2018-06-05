@@ -71,7 +71,8 @@ public class Html5FileDragAndDropUpload extends AbstractTestUIWithLog {
 
                         @Override
                         public void streamingFinished(StreamingEndEvent event) {
-                            gridItems.add(new FileParameters(event.getFileName(),
+                            gridItems
+                                    .add(new FileParameters(event.getFileName(),
                                             event.getContentLength(),
                                             event.getMimeType()));
                             grid.setItems(gridItems);

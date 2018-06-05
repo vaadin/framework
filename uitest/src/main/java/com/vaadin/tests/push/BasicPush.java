@@ -43,11 +43,10 @@ public class BasicPush extends AbstractReindeerTestUI {
         lbl.setId(CLIENT_COUNTER_ID);
         addComponent(lbl);
 
-        Button incrementButton = new Button("Increment",
-                event -> {
-                    clientCounter++;
-                    lbl.setValue(String.valueOf(clientCounter));
-                });
+        Button incrementButton = new Button("Increment", event -> {
+            clientCounter++;
+            lbl.setValue(String.valueOf(clientCounter));
+        });
         incrementButton.setId(INCREMENT_BUTTON_ID);
         addComponent(incrementButton);
 

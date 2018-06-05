@@ -15,14 +15,13 @@ public class GridInWindow extends AbstractTestUIWithLog {
         grid.addColumn("Hidable column").setHidable(true);
         grid.addRow("Close and reopen and it vanishes");
 
-        Button popupButton = new Button("Open PopUp",
-                event -> {
-                    Window subWindow = new Window("Sub-window");
-                    subWindow.setContent(grid);
-                    subWindow.setWidth(600, Unit.PIXELS);
-                    subWindow.setWidth(400, Unit.PIXELS);
-                    getUI().addWindow(subWindow);
-                });
+        Button popupButton = new Button("Open PopUp", event -> {
+            Window subWindow = new Window("Sub-window");
+            subWindow.setContent(grid);
+            subWindow.setWidth(600, Unit.PIXELS);
+            subWindow.setWidth(400, Unit.PIXELS);
+            getUI().addWindow(subWindow);
+        });
 
         addComponent(popupButton);
 

@@ -44,15 +44,14 @@ public class SplitPanelSplitterWidth extends TestBase {
         p.setSizeFull();
         split2.addComponent(p);
 
-        getLayout()
-                .addComponent(new Button("Unlock", event -> {
-                    split.setLocked(false);
-                    split2.setLocked(false);
-                    getMainWindow().showNotification(
-                            "Try moving split. Then reload page.",
-                            Notification.TYPE_WARNING_MESSAGE);
-                    getLayout().removeComponent(event.getButton());
-                }));
+        getLayout().addComponent(new Button("Unlock", event -> {
+            split.setLocked(false);
+            split2.setLocked(false);
+            getMainWindow().showNotification(
+                    "Try moving split. Then reload page.",
+                    Notification.TYPE_WARNING_MESSAGE);
+            getLayout().removeComponent(event.getButton());
+        }));
         getLayout().addComponent(split);
         getLayout().addComponent(split2);
 

@@ -69,6 +69,9 @@ public abstract class AbstractWidgetSetIT extends TestBenchTestCase {
     }
 
     protected void assertHasDebugMessage(String message) {
+        // Make sure the correct debug window tab is open.
+        findElements(By.className("v-debugwindow-tab")).get(0).click();
+
         List<WebElement> elements = getDriver().findElements(
                 By.xpath("//span[@class='v-debugwindow-message']"));
         boolean found = false;

@@ -42,11 +42,12 @@ import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.GridSortOrder;
 import com.vaadin.data.provider.QuerySortOrder;
-import com.vaadin.data.provider.SortOrder;
 import com.vaadin.data.provider.bov.Person;
 import com.vaadin.event.selection.SelectionEvent;
 import com.vaadin.server.SerializableComparator;
+import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.util.MockUI;
 import com.vaadin.ui.Grid;
@@ -66,13 +67,18 @@ public class GridTest {
     private Column<String, Integer> lengthColumn;
     private Column<String, Object> objectColumn;
     private Column<String, String> randomColumn;
+    private GridState state;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
-        grid = new Grid<>();
+        grid = new Grid<String>() {
+            {
+                state = getState(false);
+            }
+        };
 
         fooColumn = grid.addColumn(ValueProvider.identity()).setId("foo");
         lengthColumn = grid.addColumn(String::length, new NumberRenderer())
@@ -286,13 +292,33 @@ public class GridTest {
     }
 
     @Test
-    public void clearSortOrder() {
+    public void clearSortOrder() throws Exception {
         Column<String, ?> column = grid.getColumns().get(1);
         grid.sort(column);
 
         grid.clearSortOrder();
 
         assertEquals(0, grid.getSortOrder().size());
+
+        // Make sure state is updated.
+        assertEquals(0, state.sortColumns.length);
+        assertEquals(0, state.sortDirs.length);
+    }
+
+    @Test
+    public void sortOrderDoesnotContainRemovedColumns() {
+        Column<String, ?> sortColumn = grid.getColumns().get(1);
+        grid.sort(sortColumn);
+
+        // Get id of column and check it's sorted.
+        String id = state.columnOrder.get(1);
+        assertEquals(id, state.sortColumns[0]);
+
+        // Remove column and make sure it's cleared correctly
+        grid.removeColumn(sortColumn);
+        assertFalse("Column not removed", state.columnOrder.contains(id));
+        assertEquals(0, state.sortColumns.length);
+        assertEquals(0, state.sortDirs.length);
     }
 
     @Test

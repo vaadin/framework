@@ -12,7 +12,8 @@ public class CheckBoxGroupInGridLayout extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        CheckBoxGroup<String> cbGroup = new CheckBoxGroup<>(null, DataProvider.ofItems("A", "B", "C"));
+        CheckBoxGroup<String> cbGroup = new CheckBoxGroup<>(null,
+                DataProvider.ofItems("A", "B", "C"));
         cbGroup.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
 
         GridLayout gridLayout = new GridLayout(2, 1);

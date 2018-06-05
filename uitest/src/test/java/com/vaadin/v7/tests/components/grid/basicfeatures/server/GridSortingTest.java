@@ -43,12 +43,13 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         }
     }
 
-    private static SortInfo getSortInfo(int sortOrder, SortDirection sortDirection) {
+    private static SortInfo getSortInfo(int sortOrder,
+            SortDirection sortDirection) {
         return new SortInfo(sortOrder, sortDirection);
     }
 
-    private static SortInfoWithColumn getSortInfo(int columnIndex, int sortOrder,
-            SortDirection sortDirection) {
+    private static SortInfoWithColumn getSortInfo(int columnIndex,
+            int sortOrder, SortDirection sortDirection) {
         return new SortInfoWithColumn(columnIndex, sortOrder, sortDirection);
     }
 
@@ -262,7 +263,8 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         sendKey(Keys.ENTER);
         releaseKey(Keys.SHIFT);
         assertColumnsAreSortedAs(getSortInfo(1, SortDirection.ASCENDING),
-                getSortInfo(2, SortDirection.ASCENDING), getSortInfo(3, SortDirection.ASCENDING));
+                getSortInfo(2, SortDirection.ASCENDING),
+                getSortInfo(3, SortDirection.ASCENDING));
 
         // Move back to the second column
         sendKey(Keys.LEFT);
@@ -272,7 +274,8 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         sendKey(Keys.ENTER);
         releaseKey(Keys.SHIFT);
         assertColumnsAreSortedAs(getSortInfo(1, SortDirection.ASCENDING),
-                getSortInfo(2, SortDirection.DESCENDING), getSortInfo(3, SortDirection.ASCENDING));
+                getSortInfo(2, SortDirection.DESCENDING),
+                getSortInfo(3, SortDirection.ASCENDING));
 
         // Move back to the third column
         sendKey(Keys.RIGHT);

@@ -9,7 +9,8 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.widgetset.server.ConnectorBundleStatusDisplay;
 
 @Connect(ConnectorBundleStatusDisplay.class)
-public class ConnectorBundleStatusDisplayConnector extends AbstractComponentConnector {
+public class ConnectorBundleStatusDisplayConnector
+        extends AbstractComponentConnector {
     @Override
     public Label getWidget() {
         return (Label) super.getWidget();

@@ -16,7 +16,8 @@ public class GridAssistiveCaption extends AbstractTestUI {
         addComponent(grid);
 
         addComponent(new Button("addAssistiveCaption", event -> {
-            grid.getColumns().get(0).setAssistiveCaption("Press Enter to sort.");
+            grid.getColumns().get(0)
+                    .setAssistiveCaption("Press Enter to sort.");
         }));
         addComponent(new Button("removeAssistiveCaption", event -> {
             grid.getColumns().get(0).setAssistiveCaption(null);

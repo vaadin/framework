@@ -33,8 +33,8 @@ public class GridContextClick extends
         grid.addColumn(person -> String.valueOf(person.getAddress().getCity()))
                 .setCaption("City");
 
-        // grid.setFooterVisible(true);
-        // grid.appendFooterRow();
+        grid.setFooterVisible(true);
+        grid.appendFooterRow();
 
         // grid.setColumnOrder("address", "email", "firstName", "lastName",
         // "phoneNumber", "address.streetAddress", "address.postalCode",
@@ -73,9 +73,8 @@ public class GridContextClick extends
     @Override
     protected HorizontalLayout createContextClickControls() {
         HorizontalLayout controls = super.createContextClickControls();
-        controls.addComponent(
-                new Button("Remove all content", event -> testComponent
-                        .setItems(Collections.emptyList())));
+        controls.addComponent(new Button("Remove all content",
+                event -> testComponent.setItems(Collections.emptyList())));
         return controls;
     }
 }

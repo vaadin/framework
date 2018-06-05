@@ -263,12 +263,6 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
                 .isElementPresent(By.className("v-treegrid-expander")));
     }
 
-    @Override
-    protected boolean useNativeEventsForIE() {
-        // Fixes IE11 selectMenuPath troubles
-        return false;
-    }
-
     @Test
     public void expand_and_collapse_listeners() {
         selectMenuPath("Component", "State", "Expand listener");

@@ -19,7 +19,8 @@ import com.vaadin.ui.VerticalLayout;
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class DateTextHandling extends AbstractTestUI {
 
-    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(Locale.UK);
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
+            .ofLocalizedDate(FormatStyle.MEDIUM).withLocale(Locale.UK);
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -27,7 +28,8 @@ public class DateTextHandling extends AbstractTestUI {
 
         DateField dateField = new DateField("Date") {
             @Override
-            protected Result<LocalDate> handleUnparsableDateString(String dateString) {
+            protected Result<LocalDate> handleUnparsableDateString(
+                    String dateString) {
                 if (dateString.equalsIgnoreCase("Y2K")) {
                     return Result.ok(LocalDate.of(2000, 1, 1));
                 } else {
@@ -45,7 +47,9 @@ public class DateTextHandling extends AbstractTestUI {
         layout.addComponent(errorLabel);
 
         Binder<Void> binder = new Binder<>();
-        binder.forField(dateField).withStatusLabel(errorLabel).bind(o -> dateField.getValue(), (aVoid, date) -> {});
+        binder.forField(dateField).withStatusLabel(errorLabel)
+                .bind(o -> dateField.getValue(), (aVoid, date) -> {
+                });
 
         Button buttonValidate = new Button("Validate!");
         buttonValidate.addClickListener(event1 -> {
@@ -53,7 +57,8 @@ public class DateTextHandling extends AbstractTestUI {
             if (dateField.getValue() == null) {
                 Notification.show("NULL");
             } else {
-                Notification.show(DATE_TIME_FORMATTER.format(dateField.getValue()));
+                Notification
+                        .show(DATE_TIME_FORMATTER.format(dateField.getValue()));
             }
 
         });

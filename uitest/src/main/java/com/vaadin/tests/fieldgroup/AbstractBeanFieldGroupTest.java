@@ -33,9 +33,8 @@ public abstract class AbstractBeanFieldGroupTest<T> extends TestBase {
 
     protected Button getShowBeanButton() {
         if (showBeanButton == null) {
-            showBeanButton = new Button("Show bean values",
-                    event -> log.log(getFieldBinder().getItemDataSource()
-                            .getBean().toString()));
+            showBeanButton = new Button("Show bean values", event -> log.log(
+                    getFieldBinder().getItemDataSource().getBean().toString()));
         }
         return showBeanButton;
     }

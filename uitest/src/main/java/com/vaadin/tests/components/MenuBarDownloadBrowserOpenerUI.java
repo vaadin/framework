@@ -37,7 +37,8 @@ public class MenuBarDownloadBrowserOpenerUI extends AbstractTestUIWithLog {
 
         MenuItem open = menuBar.addItem("Open");
         MenuItem openNoLog = open.addItem("Open without logging...");
-        MenuItem openLog = open.addItem("Open with logging...", item -> log("Open triggered"));
+        MenuItem openLog = open.addItem("Open with logging...",
+                item -> log("Open triggered"));
 
         BrowserWindowOpener bwo = new BrowserWindowOpener(openResource);
         bwo.extend(openNoLog);

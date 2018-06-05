@@ -45,8 +45,7 @@ public class ResizeTerrorizerControlConnector extends AbstractComponentConnector
         private final Button terrorizeButton = new Button("Terrorize",
                 (ClickHandler) event -> terrorize(startWidth.getValue(),
                         endWidth.getValue(), startHeight.getValue(),
-                        endHeight.getValue(),
-                        1000));
+                        endHeight.getValue(), 1000));
 
         private HandlerRegistration historyHandlerRegistration;
 
@@ -225,15 +224,13 @@ public class ResizeTerrorizerControlConnector extends AbstractComponentConnector
         if (panel.startWidth.getValue() == null) {
             int width = getTarget().getWidget().getElement().getOffsetWidth();
             panel.startWidth.setValue(width);
-            panel.endWidth
-                    .setValue(width + getState().defaultWidthOffset);
+            panel.endWidth.setValue(width + getState().defaultWidthOffset);
         }
 
         if (panel.startHeight.getValue() == null) {
             int height = getTarget().getWidget().getElement().getOffsetHeight();
             panel.startHeight.setValue(height);
-            panel.endHeight
-                    .setValue(height + getState().defaultHeightOffset);
+            panel.endHeight.setValue(height + getState().defaultHeightOffset);
         }
     }
 

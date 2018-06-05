@@ -20,9 +20,8 @@ public class TextFieldTruncatesUnderscoresInModalDialogs
         FormLayout formLayout = new FormLayout();
         formLayout.setSpacing(true);
 
-        formLayout.addComponent(
-                new Button("Disappear",
-                        event -> event.getButton().setVisible(false)));
+        formLayout.addComponent(new Button("Disappear",
+                event -> event.getButton().setVisible(false)));
 
         formLayout.addComponent(new TextField(null, "____pqjgy____"));
 

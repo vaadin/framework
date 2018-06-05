@@ -67,11 +67,9 @@ public class DateFieldUnparsableDateString extends AbstractTestUI {
                 case 8:
                     // Long year ddMMyyyy
                     parseableString = StringUtils.leftPad(dateString, 8, "0");
-                    return Result
-                            .ok(LocalDate.parse(parseableString,
-                                    new DateTimeFormatterBuilder()
-                                            .appendPattern("ddMMyyyy")
-                                            .toFormatter()));
+                    return Result.ok(LocalDate.parse(parseableString,
+                            new DateTimeFormatterBuilder()
+                                    .appendPattern("ddMMyyyy").toFormatter()));
                 default:
                     break;
                 }

@@ -9,7 +9,8 @@ import com.vaadin.ui.TreeGrid;
 
 @Theme("valo")
 @Widgetset("com.vaadin.DefaultWidgetSet")
-public class TreeGridHugeTreeNavigation extends AbstractComponentTest<TreeGrid> {
+public class TreeGridHugeTreeNavigation
+        extends AbstractComponentTest<TreeGrid> {
 
     private TreeGrid<String> treeGrid;
     private TreeDataProvider<String> inMemoryDataProvider;

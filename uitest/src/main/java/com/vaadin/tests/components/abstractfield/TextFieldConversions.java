@@ -25,9 +25,8 @@ public class TextFieldConversions extends AbstractComponentDataBindingTest {
         dataType.addItem(Date.class);
         dataType.addItem(String.class);
 
-        dataType.addValueChangeListener(event ->
-                tf.setPropertyDataSource(new ObjectProperty<>(o,
-                (Class<Object>) dataType.getValue())));
+        dataType.addValueChangeListener(event -> tf.setPropertyDataSource(
+                new ObjectProperty<>(o, (Class<Object>) dataType.getValue())));
         addComponent(dataType);
 
         tf = new TextField("TextField");

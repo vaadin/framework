@@ -14,7 +14,6 @@ import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeatures;
 /**
  * Abstract base class for header and footer tests.
  *
- * @since
  * @author Vaadin Ltd
  */
 public abstract class GridStaticSectionTest

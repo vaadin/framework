@@ -50,9 +50,8 @@ public class TableScrollAfterAddRow extends AbstractReindeerTestUI {
                 "Jump to first row", event -> jumpToFirstRow(table));
 
         NativeButton updateLabelButton = new NativeButton("UpdateLabel",
-                event ->
-                        label.setValue(Integer.toString(
-                        table.getCurrentPageFirstItemIndex())));
+                event -> label.setValue(Integer
+                        .toString(table.getCurrentPageFirstItemIndex())));
         layout.addComponent(addRowButton);
         layout.addComponent(jumpToLastRowButton);
         layout.addComponent(jumpTo15thRowButton);

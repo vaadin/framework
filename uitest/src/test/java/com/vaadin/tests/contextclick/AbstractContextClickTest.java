@@ -27,11 +27,6 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
             .compile("[0-9]+. ContextClickEvent: [(]([0-9]+), ([0-9]+)[)]");
 
     @Override
-    protected boolean useNativeEventsForIE() {
-        return false;
-    }
-
-    @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
         return getBrowsersSupportingContextMenu();
     }

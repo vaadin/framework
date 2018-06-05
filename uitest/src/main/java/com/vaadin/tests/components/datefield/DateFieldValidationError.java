@@ -20,10 +20,13 @@ public class DateFieldValidationError extends AbstractTestUI {
         df.setLocale(Locale.US);
         Binder<Void> binder = new Binder<>();
         binder.forField(df)
-            .withValidator(localDate -> localDate != null && localDate.isAfter(LocalDate.now()), "Invalid date")
-            .bind(v -> LocalDate.now(), (v, t) -> {
-            /* NO-OP */
-            });
+                .withValidator(
+                        localDate -> localDate != null
+                                && localDate.isAfter(LocalDate.now()),
+                        "Invalid date")
+                .bind(v -> LocalDate.now(), (v, t) -> {
+                    /* NO-OP */
+                });
         addComponent(df);
         addComponent(new Button("Validate", event -> Notification
                 .show(binder.validate().isOk() ? "OK" : "Fail")));

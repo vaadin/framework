@@ -11,7 +11,6 @@ import com.vaadin.testbench.elements.GridElement;
 /**
  * GridBasicClientFeatures.
  *
- * @since
  * @author Vaadin Ltd
  */
 public abstract class GridBasicClientFeaturesTest

@@ -236,7 +236,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * {@link #setItems(Collection)}
      */
     public ComboBox() {
-        super(new DataCommunicator<T>() {
+        this(new DataCommunicator<T>() {
             @Override
             protected DataKeyMapper<T> createKeyMapper(
                     ValueProvider<T, Object> identifierGetter) {
@@ -249,8 +249,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                 };
             }
         });
-
-        init();
     }
 
     /**
@@ -280,6 +278,18 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         this(caption);
 
         setItems(options);
+    }
+
+    /**
+     * Constructs and initializes an empty combo box.
+     *
+     * @param dataCommunicator
+     *            the data comnunicator to use with this ComboBox
+     * @since
+     */
+    protected ComboBox(DataCommunicator<T> dataCommunicator) {
+        super(dataCommunicator);
+        init();
     }
 
     /**

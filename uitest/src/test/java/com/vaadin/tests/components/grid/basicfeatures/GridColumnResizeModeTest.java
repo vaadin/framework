@@ -103,28 +103,28 @@ public class GridColumnResizeModeTest extends GridBasicsTest {
 
         // ANIMATED resize mode
         drag(handle, 100);
-        assertTrue(getLogRow(0).contains(
-                "Column resized: caption=Column 1, width=" + cell.getSize()
-                        .getWidth()));
+        assertTrue(
+                getLogRow(0).contains("Column resized: caption=Column 1, width="
+                        + cell.getSize().getWidth()));
 
         drag(handle, -100);
-        assertTrue(getLogRow(0).contains(
-                "Column resized: caption=Column 1, width=" + cell.getSize()
-                        .getWidth()));
+        assertTrue(
+                getLogRow(0).contains("Column resized: caption=Column 1, width="
+                        + cell.getSize().getWidth()));
 
         // SIMPLE resize mode
         selectMenuPath("Component", "Columns", "Simple resize mode");
         sleep(250);
 
         drag(handle, 100);
-        assertTrue(getLogRow(0).contains(
-                "Column resized: caption=Column 1, width=" + cell.getSize()
-                        .getWidth()));
+        assertTrue(
+                getLogRow(0).contains("Column resized: caption=Column 1, width="
+                        + cell.getSize().getWidth()));
 
         drag(handle, -100);
-        assertTrue(getLogRow(0).contains(
-                "Column resized: caption=Column 1, width=" + cell.getSize()
-                        .getWidth()));
+        assertTrue(
+                getLogRow(0).contains("Column resized: caption=Column 1, width="
+                        + cell.getSize().getWidth()));
     }
 
     private void drag(WebElement handle, int xOffset) {

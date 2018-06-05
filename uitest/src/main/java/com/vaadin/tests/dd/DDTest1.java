@@ -57,7 +57,8 @@ public class DDTest1 extends TestBase {
         DragDropPane pane2 = new DragDropPane();
         pane2.setCaption(
                 "Pane2 (accept needs server side visit, check for \"Bar\")");
-        final AcceptCriterion crit = new ServerSideCriterion() {            private static final long serialVersionUID = 1L;
+        final AcceptCriterion crit = new ServerSideCriterion() {
+            private static final long serialVersionUID = 1L;
 
             @Override
             public boolean accept(DragAndDropEvent dragEvent) {

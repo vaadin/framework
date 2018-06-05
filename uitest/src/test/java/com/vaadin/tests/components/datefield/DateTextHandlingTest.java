@@ -21,13 +21,14 @@ public class DateTextHandlingTest extends SingleBrowserTest {
         ButtonElement validate = $(ButtonElement.class).first();
         WebElement dateTextbox = dateFieldElement.getInputElement();
 
-        dateTextbox.sendKeys("Y2K",Keys.TAB);
+        dateTextbox.sendKeys("Y2K", Keys.TAB);
         validate.click();
-        assertNotification("Y2K Should be converted to " + Y2K_GB_LOCALE, Y2K_GB_LOCALE);
+        assertNotification("Y2K Should be converted to " + Y2K_GB_LOCALE,
+                Y2K_GB_LOCALE);
 
         dateTextbox.clear();
         validate.click();
-        assertNotification("Null for empty string","NULL");
+        assertNotification("Null for empty string", "NULL");
     }
 
     protected void assertNotification(String message, String expected) {

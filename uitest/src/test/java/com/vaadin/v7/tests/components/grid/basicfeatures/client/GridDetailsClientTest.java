@@ -25,12 +25,12 @@ import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicClientFeatures
 
 public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
 
-    private static final String[] SET_GENERATOR = { "Component",
-            "Row details", "Set generator" };
-    private static final String[] SET_FAULTY_GENERATOR = {
-            "Component", "Row details", "Set faulty generator" };
-    private static final String[] SET_EMPTY_GENERATOR = {
-            "Component", "Row details", "Set empty generator" };
+    private static final String[] SET_GENERATOR = { "Component", "Row details",
+            "Set generator" };
+    private static final String[] SET_FAULTY_GENERATOR = { "Component",
+            "Row details", "Set faulty generator" };
+    private static final String[] SET_EMPTY_GENERATOR = { "Component",
+            "Row details", "Set empty generator" };
 
     @Before
     public void setUp() {

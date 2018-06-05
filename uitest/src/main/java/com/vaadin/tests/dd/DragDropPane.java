@@ -35,7 +35,9 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
 
     public void addComponent(Component c) {
         root.addComponent(c);
-    }    private static final long serialVersionUID = 1L;
+    }
+
+    private static final long serialVersionUID = 1L;
 
     public void addComponent(Component l, String string) {
         root.addComponent(l, string);

@@ -48,10 +48,11 @@ public class AsyncPushUpdates extends AbstractReindeerTestUI {
                         ++id;
                         container.removeAllItems();
                         for (int i = 0; i < 11; i++) {
-                            container.getContainerProperty(
-                                    container.addItem(), VALUE_PROPERTY_ID)
-                            .setValue(clickCount + " - " + id
-                                    + " - " + i);
+                            container
+                                    .getContainerProperty(container.addItem(),
+                                            VALUE_PROPERTY_ID)
+                                    .setValue(clickCount + " - " + id + " - "
+                                            + i);
                         }
 
                     } catch (InterruptedException e) {

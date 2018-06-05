@@ -81,10 +81,6 @@ public class GridThemeUITest extends MultiBrowserThemeTest {
         new Actions(getDriver()).doubleClick(targetCell).perform();
     }
 
-    /**
-     * @since
-     * @param string
-     */
     private void selectPage(String string) {
         $(NativeSelectElement.class).id("page").selectByText(string);
         grid = $(GridElement.class).first();

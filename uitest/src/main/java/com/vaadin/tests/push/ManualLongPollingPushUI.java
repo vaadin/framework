@@ -17,38 +17,36 @@ public class ManualLongPollingPushUI extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Button b = new Button("Manual push after 1s",
-                event -> {
-                    executor.submit(() -> {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        access(() -> {
-                            log("Logged after 1s, followed by manual push");
-                            push();
-                        });
-                    });
+        Button b = new Button("Manual push after 1s", event -> {
+            executor.submit(() -> {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                access(() -> {
+                    log("Logged after 1s, followed by manual push");
+                    push();
                 });
+            });
+        });
         addComponent(b);
 
-        b = new Button("Double manual push after 1s",
-                event -> {
-                    executor.submit(() -> {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        access(() -> {
-                            log("First message logged after 1s, followed by manual push");
-                            push();
-                            log("Second message logged after 1s, followed by manual push");
-                            push();
-                        });
-                    });
+        b = new Button("Double manual push after 1s", event -> {
+            executor.submit(() -> {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                access(() -> {
+                    log("First message logged after 1s, followed by manual push");
+                    push();
+                    log("Second message logged after 1s, followed by manual push");
+                    push();
                 });
+            });
+        });
         addComponent(b);
     }
 

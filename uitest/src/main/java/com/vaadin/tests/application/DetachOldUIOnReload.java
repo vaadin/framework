@@ -16,12 +16,11 @@ public class DetachOldUIOnReload extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
         addComponent(new Label("This is UI " + getUIId()));
         addComponent(new Button("Reload page", event -> getPage().reload()));
-        addComponent(new Button("Read log messages from session",
-                event -> {
-                    for (String message : getSessionMessages(false)) {
-                        log(message);
-                    }
-                }));
+        addComponent(new Button("Read log messages from session", event -> {
+            for (String message : getSessionMessages(false)) {
+                log(message);
+            }
+        }));
     }
 
     private List<String> getSessionMessages(boolean storeIfNeeded) {

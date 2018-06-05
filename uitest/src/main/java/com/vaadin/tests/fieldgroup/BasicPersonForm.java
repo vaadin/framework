@@ -133,11 +133,10 @@ public class BasicPersonForm extends AbstractTestUIWithLog {
             notification.show(getPage());
             log(msg);
         });
-        Button discardButton = new Button("Discard",
-                event -> {
-                    fieldGroup.discard();
-                    log("Discarded changes");
-                });
+        Button discardButton = new Button("Discard", event -> {
+            fieldGroup.discard();
+            log("Discarded changes");
+        });
         Button showBean = new Button("Show bean values",
                 event -> log(getPerson(fieldGroup).toString()));
         addComponent(commitButton);

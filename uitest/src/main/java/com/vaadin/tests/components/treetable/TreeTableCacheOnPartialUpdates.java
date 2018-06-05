@@ -54,7 +54,8 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
 
         @Override
         public String toString() {
-            return "HierarchicalTestBean [col1=" + col1 + ", col2=" + col2 + "]";
+            return "HierarchicalTestBean [col1=" + col1 + ", col2=" + col2
+                    + "]";
         }
 
     }
@@ -68,10 +69,9 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
             Button btnCol3 = new NativeButton(identifier);
             btnCol3.setId(
                     "cacheTestButton-" + tb.getCol1() + "-" + tb.getCol2());
-            btnCol3.addClickListener(
-                    event -> log.log("Button " + event.getButton().getCaption()
-                            + " clicked. Row index: "
-                            + indexOfId(source, itemId)));
+            btnCol3.addClickListener(event -> log.log("Button "
+                    + event.getButton().getCaption() + " clicked. Row index: "
+                    + indexOfId(source, itemId)));
             return btnCol3;
         }
 
@@ -105,10 +105,8 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
 
     private TreeTable treeTable;
     private BeanItemContainer<TestBean> testBeanContainer;
-    private static String[] columnHeaders = { "Col1", "Col2",
-            "Col3", "Col4" };
-    private static Object[] visibleColumns = { "col1", "col2",
-            "col3", "col4" };
+    private static String[] columnHeaders = { "Col1", "Col2", "Col3", "Col4" };
+    private static Object[] visibleColumns = { "col1", "col2", "col3", "col4" };
 
     @Override
     public void setup() {

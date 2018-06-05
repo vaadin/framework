@@ -8,13 +8,12 @@ public class ChangeStateWhenReattaching extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Button button = new Button("Reattach and remove caption",
-                event -> {
-                    Button b = event.getButton();
-                    removeComponent(b);
-                    addComponent(b);
-                    b.setCaption(null);
-                });
+        Button button = new Button("Reattach and remove caption", event -> {
+            Button b = event.getButton();
+            removeComponent(b);
+            addComponent(b);
+            b.setCaption(null);
+        });
         addComponent(button);
     }
 

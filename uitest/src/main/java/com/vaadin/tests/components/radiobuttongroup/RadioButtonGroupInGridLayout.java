@@ -12,7 +12,8 @@ public class RadioButtonGroupInGridLayout extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        RadioButtonGroup<String> cbGroup = new RadioButtonGroup<>(null, DataProvider.ofItems("A", "B", "C"));
+        RadioButtonGroup<String> cbGroup = new RadioButtonGroup<>(null,
+                DataProvider.ofItems("A", "B", "C"));
         cbGroup.addStyleName(ValoTheme.OPTIONGROUP_HORIZONTAL);
 
         GridLayout gridLayout = new GridLayout(2, 1);

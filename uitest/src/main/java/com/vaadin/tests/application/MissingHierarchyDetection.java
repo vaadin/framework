@@ -36,8 +36,7 @@ public class MissingHierarchyDetection extends AbstractReindeerTestUIWithLog {
         addComponent(brokenLayout);
         addComponent(normalLayout);
         addComponent(new Button("Toggle properly", event -> toggle(true)));
-        addComponent(
-                new Button("Toggle improperly", event -> toggle(false)));
+        addComponent(new Button("Toggle improperly", event -> toggle(false)));
     }
 
     private void toggle(boolean properly) {

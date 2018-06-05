@@ -51,7 +51,7 @@ public class PushConfiguration extends AbstractReindeerTestUI {
                 "Server counter (updates each 1s by server thread) :");
         addComponent(serverCounterLabel);
 
-        addComponent(new Button("Reset", event ->{
+        addComponent(new Button("Reset", event -> {
             counter2 = 0;
             serverCounterLabel.setValue("0");
         }));

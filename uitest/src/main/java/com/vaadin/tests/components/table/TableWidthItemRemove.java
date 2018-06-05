@@ -30,9 +30,10 @@ public class TableWidthItemRemove extends AbstractReindeerTestUI {
 
         addButton("Clean", event -> table.removeAllItems());
 
-        addButton("Populate", event ->
-                table.addItem(new Object[] { "John", "Doe", new Integer(1980) },
-                Math.random() * 1000));
+        addButton("Populate",
+                event -> table.addItem(
+                        new Object[] { "John", "Doe", new Integer(1980) },
+                        Math.random() * 1000));
 
         addComponent(table);
     }

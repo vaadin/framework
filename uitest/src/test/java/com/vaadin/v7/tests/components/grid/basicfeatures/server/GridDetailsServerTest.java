@@ -23,20 +23,20 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
      * awkward with two scroll commands back to back.
      */
     private static final int ALMOST_LAST_INDEX = 995;
-    private static final String[] OPEN_ALMOST_LAST_ITEM_DETAILS = {
-            "Component", "Details", "Open " + ALMOST_LAST_INDEX };
-    private static final String[] OPEN_FIRST_ITEM_DETAILS = {
-            "Component", "Details", "Open firstItemId" };
-    private static final String[] TOGGLE_FIRST_ITEM_DETAILS = {
-            "Component", "Details", "Toggle firstItemId" };
-    private static final String[] DETAILS_GENERATOR_NULL = {
-            "Component", "Details", "Generators", "NULL" };
-    private static final String[] DETAILS_GENERATOR_WATCHING = {
-            "Component", "Details", "Generators", "\"Watching\"" };
-    private static final String[] DETAILS_GENERATOR_PERSISTING = {
-            "Component", "Details", "Generators", "Persisting" };
-    private static final String[] CHANGE_HIERARCHY = { "Component",
-            "Details", "Generators", "- Change Component" };
+    private static final String[] OPEN_ALMOST_LAST_ITEM_DETAILS = { "Component",
+            "Details", "Open " + ALMOST_LAST_INDEX };
+    private static final String[] OPEN_FIRST_ITEM_DETAILS = { "Component",
+            "Details", "Open firstItemId" };
+    private static final String[] TOGGLE_FIRST_ITEM_DETAILS = { "Component",
+            "Details", "Toggle firstItemId" };
+    private static final String[] DETAILS_GENERATOR_NULL = { "Component",
+            "Details", "Generators", "NULL" };
+    private static final String[] DETAILS_GENERATOR_WATCHING = { "Component",
+            "Details", "Generators", "\"Watching\"" };
+    private static final String[] DETAILS_GENERATOR_PERSISTING = { "Component",
+            "Details", "Generators", "Persisting" };
+    private static final String[] CHANGE_HIERARCHY = { "Component", "Details",
+            "Generators", "- Change Component" };
 
     @Before
     public void setUp() {

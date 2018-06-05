@@ -84,10 +84,8 @@ public class SimpleJavaScriptExtensionTest extends AbstractReindeerTestUI {
         final SimpleJavascriptExtension simpleJavascriptExtension = new SimpleJavascriptExtension();
         simpleJavascriptExtension.setPrefix("Prefix: ");
         addExtension(simpleJavascriptExtension);
-        addComponent(
-                new Button("Send rpc greeting",
-                        event -> simpleJavascriptExtension
-                                .greetRpc("Rpc greeting")));
+        addComponent(new Button("Send rpc greeting",
+                event -> simpleJavascriptExtension.greetRpc("Rpc greeting")));
         addComponent(new Button("Send callback greeting",
                 event -> simpleJavascriptExtension
                         .greetCallback("Callback greeting")));

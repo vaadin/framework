@@ -48,9 +48,9 @@ public class BackspaceKeyWithModalOpenedTest extends MultiBrowserTest {
     /**
      * Tests that backspace action in the bottom component is prevented.
      *
-     * Ignored because the fix to #8855 stops the top and bottom components
-     * from functioning as focus traps. Meanwhile, navigation with Backspace
-     * is not anymore supported by reasonable browsers.
+     * Ignored because the fix to #8855 stops the top and bottom components from
+     * functioning as focus traps. Meanwhile, navigation with Backspace is not
+     * anymore supported by reasonable browsers.
      */
     @Test
     @Ignore

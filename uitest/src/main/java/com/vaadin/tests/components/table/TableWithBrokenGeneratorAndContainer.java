@@ -82,11 +82,10 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
         table.addGeneratedColumn("Gen", new BrokenColumnGenerator(4));
         table.setPageLength(20);
 
-        Button refreshTableCache = new Button("Refresh table cache",
-                event -> {
-                    table.markAsDirty();
-                    table.refreshRowCache();
-                });
+        Button refreshTableCache = new Button("Refresh table cache", event -> {
+            table.markAsDirty();
+            table.refreshRowCache();
+        });
         addComponent(refreshTableCache);
         addComponent(brokenContainer);
         addComponent(brokenGenerator);

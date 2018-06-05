@@ -44,27 +44,26 @@ public class BackspaceKeyWithModalOpened extends AbstractTestUI {
 
         @Override
         public void enter(ViewChangeEvent event) {
-            Button btnOpenModal = new Button("Open modal",
-                    clickEvent -> {
-                        Window window = new Window("Caption");
-                        window.setId(MODAL_ID);
+            Button btnOpenModal = new Button("Open modal", clickEvent -> {
+                Window window = new Window("Caption");
+                window.setId(MODAL_ID);
 
-                        VerticalLayout layout = new VerticalLayout();
-                        layout.setWidth("300px");
-                        layout.setHeight("300px");
+                VerticalLayout layout = new VerticalLayout();
+                layout.setWidth("300px");
+                layout.setHeight("300px");
 
-                        TextField textField = new TextField();
-                        textField.setId(TEXT_FIELD_IN_MODAL);
+                TextField textField = new TextField();
+                textField.setId(TEXT_FIELD_IN_MODAL);
 
-                        layout.addComponent(textField);
-                        window.setContent(layout);
+                layout.addComponent(textField);
+                window.setContent(layout);
 
-                        addWindow(window);
+                addWindow(window);
 
-                        window.setModal(true);
+                window.setModal(true);
 
-                        setFocusedComponent(window);
-                    });
+                setFocusedComponent(window);
+            });
 
             btnOpenModal.setId(BTN_OPEN_MODAL_ID);
             addComponent(btnOpenModal);

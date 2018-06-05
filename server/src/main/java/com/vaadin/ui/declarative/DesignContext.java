@@ -729,6 +729,17 @@ public class DesignContext implements Serializable {
         public Component getComponent() {
             return component;
         }
+
+        /**
+         * Returns the new component context.
+         *
+         * @return the context
+         *
+         * @since
+         */
+        public DesignContext getContext() {
+            return context;
+        }
     }
 
     /**

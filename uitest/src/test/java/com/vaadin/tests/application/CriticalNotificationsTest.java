@@ -5,20 +5,9 @@ import org.junit.Test;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.NotificationElement;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserThemeTest;
 
 public class CriticalNotificationsTest extends MultiBrowserThemeTest {
-
-    @Override
-    protected boolean useNativeEventsForIE() {
-        if (BrowserUtil.isIE(getDesiredCapabilities(), 11)) {
-            // Use JavaScript events only for IE11
-            return false;
-        } else {
-            return true;
-        }
-    }
 
     @Test
     public void internalError() throws Exception {

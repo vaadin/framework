@@ -14,7 +14,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class MenuBarDownloadBrowserOpenerUITest extends MultiBrowserTest {
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        //alerts do not work properly on PhantomJS
+        // alerts do not work properly on PhantomJS
         return getBrowserCapabilities(Browser.CHROME);
     }
 
@@ -37,7 +37,7 @@ public class MenuBarDownloadBrowserOpenerUITest extends MultiBrowserTest {
 
     private void checkAndCloseAlert() {
         Alert alert = getDriver().switchTo().alert();
-        Assert.assertEquals("Trigger",alert.getText());
+        Assert.assertEquals("Trigger", alert.getText());
         alert.dismiss();
     }
 

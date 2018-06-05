@@ -58,6 +58,7 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.tree.TreeMultiSelectionModelState;
 import com.vaadin.shared.ui.tree.TreeRendererState;
+import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.components.grid.NoSelectionModel;
@@ -80,7 +81,7 @@ import elemental.json.JsonObject;
  *            the data type
  */
 public class Tree<T> extends Composite
-        implements HasHierarchicalDataProvider<T> {
+        implements HasHierarchicalDataProvider<T>, Focusable {
 
     @Deprecated
     private static final Method ITEM_CLICK_METHOD = ReflectTools
@@ -1263,4 +1264,18 @@ public class Tree<T> extends Composite
         treeGrid.scrollToEnd();
     }
 
+    @Override
+    public int getTabIndex() {
+        return treeGrid.getTabIndex();
+    }
+
+    @Override
+    public void setTabIndex(int tabIndex) {
+        treeGrid.setTabIndex(tabIndex);
+    }
+
+    @Override
+    public void focus() {
+        treeGrid.focus();
+    }
 }

@@ -247,6 +247,15 @@
 
         <plugins>
             <plugin>
+                <groupId>net.revelc.code.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.github.dantwining.whitespace-maven-plugin</groupId>
+                <artifactId>whitespace-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <configuration>
@@ -304,7 +313,7 @@
 
                         <!-- Optional properties for the test build -->
                         <vaadin.testbench.developer.license>${vaadin.testbench.developer.license}</vaadin.testbench.developer.license>
-                        <com.vaadin.testbench.max.retries>${com.vaadin.testbench.max.retries}</com.vaadin.testbench.max.retries>
+                        <com.vaadin.testbench.Parameters.maxAttempts>${com.vaadin.testbench.Parameters.maxAttempts}</com.vaadin.testbench.Parameters.maxAttempts>
                         <com.vaadin.testbench.Parameters.testsInParallel>${parallel.tests}</com.vaadin.testbench.Parameters.testsInParallel>
                         <com.vaadin.testbench.hub.url>${com.vaadin.testbench.hub.url}</com.vaadin.testbench.hub.url>
                         <browser.factory>${browser.factory}</browser.factory>
@@ -313,6 +322,7 @@
                         <categories.include>${categories.include}</categories.include>
                         <categories.exclude>${categories.exclude}</categories.exclude>
                         <useLocalWebDriver>${useLocalWebDriver}</useLocalWebDriver>
+                        <browserstack.identifier>${browserstack.identifier}</browserstack.identifier>
                     </systemPropertyVariables>
                     <includes>
                         <include>**/AllTB3Tests.java</include>
