@@ -5,7 +5,6 @@ import org.junit.Test;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.NotificationElement;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserThemeTest;
 
 public class CriticalNotificationsTest extends MultiBrowserThemeTest {

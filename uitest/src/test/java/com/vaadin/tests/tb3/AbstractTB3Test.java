@@ -149,18 +149,21 @@ public abstract class AbstractTB3Test extends ParallelTest {
         } catch (UnsupportedOperationException e) {
             // Opera does not support this...
         }
+        screenshotOnFailure.setQuitDriverOnFinish(false);
     }
 
     /**
      * Method for closing the tested application.
      */
     protected void closeApplication() {
-        if (driver != null) {
+        if (getDriver() != null) {
             try {
                 openTestURL("closeApplication");
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            // Finally quit the driver.
+            driver.quit();
         }
     }
 
