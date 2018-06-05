@@ -36,10 +36,22 @@ public class BinderConditionalBindingTest
     }
 
     @Test
+    public void setEnabledSupplier_notNull() {
+        Binder.Binding<Person, String> nameBinding = binder.forField(nameField)
+                .bind(Person::getFirstName, Person::setFirstName);
+        try {
+            nameBinding.setEnabledSupplier(null);
+            fail();
+        } catch (NullPointerException e) {
+            assertEquals("Enabled supplier cannot be null.", e.getMessage());
+        }
+    }
+
+    @Test
     public void getBindings_enabled_and_disabled() {
         Binder.Binding<Person, String> nameBinding = binder.forField(nameField)
                 .bind(Person::getFirstName, Person::setFirstName);
-        nameBinding.setEnabled(() -> nameField.isVisible());
+        nameBinding.setEnabledSupplier(() -> nameField.isVisible());
         Binder.Binding<Person, Integer> ageBinding = binder.forField(ageField)
                 .withConverter(stringToInteger)
                 .bind(Person::getAge, Person::setAge);
@@ -54,7 +66,7 @@ public class BinderConditionalBindingTest
     public void getBindingsEnabled() {
         Binder.Binding<Person, String> nameBinding = binder.forField(nameField)
                 .bind(Person::getFirstName, Person::setFirstName);
-        nameBinding.setEnabled(() -> nameField.isVisible());
+        nameBinding.setEnabledSupplier(() -> nameField.isVisible());
         Binder.Binding<Person, Integer> ageBinding = binder.forField(ageField)
                 .withConverter(stringToInteger)
                 .bind(Person::getAge, Person::setAge);
@@ -65,7 +77,14 @@ public class BinderConditionalBindingTest
     }
 
     @Test
-    public void binding_enabled_by_default() {
+    public void isEnabled_true_by_default() {
+        Binder.Binding<Person, String> nameBinding = binder.forField(nameField)
+                .bind(Person::getFirstName, Person::setFirstName);
+        assertTrue(nameBinding.isEnabled());
+    }
+
+    @Test
+    public void allBindings_enabled_by_default() {
         binder.forField(nameField).asRequired().bind(Person::getFirstName,
                 Person::setFirstName);
 
@@ -76,7 +95,7 @@ public class BinderConditionalBindingTest
     public void asRequired_binding_disabled() {
         binder.forField(nameField).asRequired()
                 .bind(Person::getFirstName, Person::setFirstName)
-                .setEnabled(() -> nameField.isVisible());
+                .setEnabledSupplier(() -> nameField.isVisible());
 
         nameField.setVisible(true);
         nameField.setValue("");
@@ -97,7 +116,7 @@ public class BinderConditionalBindingTest
             }
             return ValidationResult.ok();
         }).bind(Person::getFirstName, Person::setFirstName)
-                .setEnabled(() -> nameField.isVisible());
+                .setEnabledSupplier(() -> nameField.isVisible());
 
         nameField.setVisible(true);
         nameField.setValue("   ");
@@ -114,7 +133,7 @@ public class BinderConditionalBindingTest
     public void withConverter_binding_disabled() {
         binder.forField(ageField).withConverter(stringToInteger)
                 .bind(Person::getAge, Person::setAge)
-                .setEnabled(() -> ageField.isEnabled());
+                .setEnabledSupplier(() -> ageField.isEnabled());
 
         ageField.setEnabled(true);
         ageField.setValue("not an integer");
@@ -133,7 +152,7 @@ public class BinderConditionalBindingTest
             throws ValidationException {
         binder.forField(nameField).withNullRepresentation("")
                 .bind(Person::getFirstName, Person::setFirstName)
-                .setEnabled(() -> nameField.isEnabled());
+                .setEnabledSupplier(() -> nameField.isEnabled());
 
         nameField.setEnabled(true);
         Person person = new Person();
@@ -154,7 +173,7 @@ public class BinderConditionalBindingTest
     public void setBean_binding_disabled() {
         binder.forField(nameField)
                 .bind(Person::getFirstName, Person::setFirstName)
-                .setEnabled(() -> nameField.isVisible());
+                .setEnabledSupplier(() -> nameField.isVisible());
 
         Person person = new Person();
         binder.setBean(person);
@@ -174,7 +193,7 @@ public class BinderConditionalBindingTest
     public void readBean_binding_disabled() {
         binder.forField(nameField)
                 .bind(Person::getFirstName, Person::setFirstName)
-                .setEnabled(() -> nameField.isEnabled());
+                .setEnabledSupplier(() -> nameField.isEnabled());
 
         binder.forField(ageField).withConverter(stringToInteger)
                 .bind(Person::getAge, Person::setAge);
@@ -209,7 +228,7 @@ public class BinderConditionalBindingTest
 
         binder.forField(nameField)
                 .bind(Person::getFirstName, Person::setFirstName)
-                .setEnabled(() -> nameField.isEnabled());
+                .setEnabledSupplier(() -> nameField.isEnabled());
 
         nameField.setEnabled(true);
         String firstName = "Chuck Liddell";
@@ -238,7 +257,7 @@ public class BinderConditionalBindingTest
 
         binder.forField(nameField)
                 .bind(Person::getFirstName, Person::setFirstName)
-                .setEnabled(() -> nameField.isEnabled());
+                .setEnabledSupplier(() -> nameField.isEnabled());
 
         binder.forField(ageField).withConverter(stringToInteger)
                 .bind(Person::getAge, Person::setAge);
@@ -270,7 +289,7 @@ public class BinderConditionalBindingTest
 
         binder.forField(ageField).withConverter(stringToInteger)
                 .bind(Person::getAge, Person::setAge)
-                .setEnabled(() -> ageField.isVisible());
+                .setEnabledSupplier(() -> ageField.isVisible());
 
         AtomicInteger valueChangeEventCount = new AtomicInteger(0);
         binder.addValueChangeListener(
@@ -289,7 +308,7 @@ public class BinderConditionalBindingTest
     public void handleFieldValueChange_setBean_binding_disabled() {
         Binder.Binding<Person, String> binding = binder.forField(nameField)
                 .bind(Person::getFirstName, Person::setFirstName);
-        binding.setEnabled(() -> nameField.isVisible());
+        binding.setEnabledSupplier(() -> nameField.isVisible());
 
         Person person = new Person();
         binder.setBean(person);
@@ -311,7 +330,7 @@ public class BinderConditionalBindingTest
             throws ValidationException {
         Binder.Binding<Person, String> binding = binder.forField(nameField)
                 .bind(Person::getFirstName, Person::setFirstName);
-        binding.setEnabled(() -> nameField.isVisible());
+        binding.setEnabledSupplier(() -> nameField.isVisible());
 
         Person person = new Person();
         binder.readBean(person);
@@ -335,7 +354,7 @@ public class BinderConditionalBindingTest
         Binder.Binding<Person, String> bindingNameField = binder
                 .forField(nameField)
                 .bind(Person::getFirstName, Person::setFirstName);
-        bindingNameField.setEnabled(() -> nameField.isVisible());
+        bindingNameField.setEnabledSupplier(() -> nameField.isVisible());
 
         Binder.Binding<Person, Integer> bindingAgeField = binder
                 .forField(ageField).withConverter(stringToInteger)
@@ -352,7 +371,7 @@ public class BinderConditionalBindingTest
     public void removeBinding_field_even_if_disabled() {
         binder.forField(nameField)
                 .bind(Person::getFirstName, Person::setFirstName)
-                .setEnabled(() -> nameField.isVisible());
+                .setEnabledSupplier(() -> nameField.isVisible());
 
         nameField.setVisible(false);
         binder.removeBinding(nameField);
@@ -365,7 +384,7 @@ public class BinderConditionalBindingTest
         String propertyName = "firstName";
         binder = new Binder<>(Person.class);
         binder.forField(nameField).bind(propertyName)
-                .setEnabled(() -> nameField.isVisible());
+                .setEnabledSupplier(() -> nameField.isVisible());
 
         nameField.setVisible(false);
         binder.removeBinding(propertyName);
@@ -377,7 +396,7 @@ public class BinderConditionalBindingTest
     public void removeBinding_even_if_disabled() {
         Binder.Binding<Person, String> binding = binder.forField(nameField)
                 .bind(Person::getFirstName, Person::setFirstName);
-        binding.setEnabled(() -> nameField.isVisible());
+        binding.setEnabledSupplier(() -> nameField.isVisible());
 
         nameField.setVisible(false);
         binder.removeBinding(binding);
@@ -389,7 +408,7 @@ public class BinderConditionalBindingTest
     public void hasChanges_binding_disabled() {
         binder.forField(nameField)
                 .bind(Person::getFirstName, Person::setFirstName)
-                .setEnabled(() -> nameField.isEnabled());
+                .setEnabledSupplier(() -> nameField.isEnabled());
 
         Person person = new Person();
         binder.readBean(person);

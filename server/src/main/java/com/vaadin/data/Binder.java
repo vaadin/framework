@@ -49,7 +49,7 @@ import com.vaadin.server.AbstractErrorMessage.ContentMode;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializablePredicate;
-import com.vaadin.server.SerializableSupplier;
+import com.vaadin.server.SerializableBooleanSupplier;
 import com.vaadin.server.Setter;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.Registration;
@@ -208,14 +208,28 @@ public class Binder<BEAN> implements Serializable {
         public boolean isReadOnly();
 
         /**
-         * Sets the binding as enabled depending on the value returned by
-         * isEnabledSupplier.
+         * Sets a boolean supplier which should return if the binding is currently
+         * enabled or not.
          *
-         * @param isEnabledSupplier
-         *            supplies if the binding is enabled or not
+         * @param supplier supplies if the binding is enabled or not
          * @since
          */
-        public void setEnabled(SerializableSupplier<Boolean> isEnabledSupplier);
+        public void setEnabledSupplier(SerializableBooleanSupplier supplier);
+
+        /**
+         * Gets the binding's enabled supplier.
+         *
+         * @return enabled supplier
+         * @since
+         */
+        public SerializableBooleanSupplier getEnabledSupplier();
+
+        /**
+         * Sets if the binding is enabled or not.
+         *
+         * @param enabled if the binding should be enabled or not
+         */
+        public void setEnabled(boolean enabled);
 
         /**
          * Returns if the binding is enabled.
@@ -1015,7 +1029,7 @@ public class Binder<BEAN> implements Serializable {
     protected static class BindingImpl<BEAN, FIELDVALUE, TARGET>
             implements Binding<BEAN, TARGET> {
 
-        private static final SerializableSupplier<Boolean> ENABLED_TRUE_SUPPLIER = () -> true;
+        private static final SerializableBooleanSupplier ENABLED_TRUE_SUPPLIER = () -> true;
 
         private Binder<BEAN> binder;
 
@@ -1026,7 +1040,7 @@ public class Binder<BEAN> implements Serializable {
         private final Setter<BEAN, TARGET> setter;
 
         private boolean readOnly;
-        private SerializableSupplier<Boolean> isEnabledSupplier = ENABLED_TRUE_SUPPLIER;
+        private SerializableBooleanSupplier isEnabledSupplier = ENABLED_TRUE_SUPPLIER;
 
         private final Registration onValueChange;
         private boolean valueInit = false;
@@ -1248,18 +1262,25 @@ public class Binder<BEAN> implements Serializable {
         }
 
         @Override
-        public void setEnabled(
-                SerializableSupplier<Boolean> isEnabledSupplier) {
-            if (isEnabledSupplier == null) {
-                throw new IllegalStateException(
-                        "Enabled supplier cannot be null.");
-            }
-            this.isEnabledSupplier = isEnabledSupplier;
+        public void setEnabledSupplier(
+                SerializableBooleanSupplier supplier) {
+            Objects.requireNonNull(supplier, "Enabled supplier cannot be null.");
+            this.isEnabledSupplier = supplier;
+        }
+
+        @Override
+        public SerializableBooleanSupplier getEnabledSupplier() {
+            return isEnabledSupplier;
         }
 
         @Override
         public boolean isEnabled() {
-            return Boolean.TRUE == isEnabledSupplier.get();
+            return isEnabledSupplier.getAsBoolean();
+        }
+
+        @Override
+        public void setEnabled(boolean enabled) {
+            setEnabledSupplier(() -> enabled);
         }
 
         @Override
