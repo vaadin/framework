@@ -8,9 +8,11 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -484,5 +486,16 @@ public class BinderValidationStatusTest
         assertNotNull(results);
         assertEquals(1, results.size());
         assertFalse(results.get(0).isError());
+    }
+
+    @Test
+    public void binderValidationStatus_nullBindingStatuses() {
+        try {
+            new BinderValidationStatus<>(new Binder<Person>(), null,
+                    new ArrayList<>());
+            Assert.fail("Binder should throw an NPE");
+        } catch (NullPointerException npe) {
+            assertNotNull(npe.getMessage());
+        }
     }
 }
