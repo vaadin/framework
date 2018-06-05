@@ -1040,7 +1040,7 @@ public class Binder<BEAN> implements Serializable {
         private final Setter<BEAN, TARGET> setter;
 
         private boolean readOnly;
-        private SerializableBooleanSupplier isEnabledSupplier = ENABLED_TRUE_SUPPLIER;
+        private SerializableBooleanSupplier enabledSupplier = ENABLED_TRUE_SUPPLIER;
 
         private final Registration onValueChange;
         private boolean valueInit = false;
@@ -1265,17 +1265,17 @@ public class Binder<BEAN> implements Serializable {
         public void setEnabledSupplier(
                 SerializableBooleanSupplier supplier) {
             Objects.requireNonNull(supplier, "Enabled supplier cannot be null.");
-            this.isEnabledSupplier = supplier;
+            this.enabledSupplier = supplier;
         }
 
         @Override
         public SerializableBooleanSupplier getEnabledSupplier() {
-            return isEnabledSupplier;
+            return enabledSupplier;
         }
 
         @Override
         public boolean isEnabled() {
-            return isEnabledSupplier.getAsBoolean();
+            return enabledSupplier.getAsBoolean();
         }
 
         @Override
