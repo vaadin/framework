@@ -2060,10 +2060,10 @@ public class Binder<BEAN> implements Serializable {
             validationStatus = new BinderValidationStatus<>(this,
                     bindingStatuses, Collections.emptyList());
         } else {
-            Set<Binding<BEAN, ?>> changedBindingsEnabled = getEnabledChangedBindings();
+            Set<Binding<BEAN, ?>> enabledChangedBindings = getEnabledChangedBindings();
             Map<Binding<BEAN, ?>, Object> beanState = getBeanState(getBean(),
-                    changedBindingsEnabled);
-            changedBindingsEnabled
+                    enabledChangedBindings);
+            enabledChangedBindings
                     .forEach(binding -> ((BindingImpl<BEAN, ?, ?>) binding)
                             .writeFieldValue(getBean()));
             validationStatus = new BinderValidationStatus<>(this,
