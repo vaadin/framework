@@ -17,6 +17,7 @@ package com.vaadin.ui.renderers;
 
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -194,11 +195,7 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
 
     public static boolean checkSerialization(Object obj) {
         try {
-            new ObjectOutputStream(new OutputStream() {
-                @Override
-                public void write(int b) {
-                }
-            }).writeObject(obj);
+            new ObjectOutputStream(new DummyOutputStream()).writeObject(obj);
         } catch (Throwable e) {
             throw new AssertionError(e);
         }
@@ -282,5 +279,11 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
     @Override
     protected LocalDateRendererState getState(boolean markAsDirty) {
         return (LocalDateRendererState) super.getState(markAsDirty);
+    }
+
+    private static class DummyOutputStream extends OutputStream implements Serializable {
+        @Override
+        public void write(int b) {
+        }
     }
 }
