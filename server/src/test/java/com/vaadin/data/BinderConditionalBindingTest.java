@@ -73,7 +73,7 @@ public class BinderConditionalBindingTest
 
         nameField.setVisible(false);
         List<Binder.Binding> expectedBindings = Arrays.asList(ageBinding);
-        assertEquals(expectedBindings, binder.getBindingsEnabled());
+        assertEquals(expectedBindings, binder.getEnabledBindings());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class BinderConditionalBindingTest
         binder.forField(nameField).asRequired().bind(Person::getFirstName,
                 Person::setFirstName);
 
-        assertEquals(binder.getBindings(), binder.getBindingsEnabled());
+        assertEquals(binder.getBindings(), binder.getEnabledBindings());
     }
 
     @Test
@@ -100,11 +100,11 @@ public class BinderConditionalBindingTest
         nameField.setVisible(true);
         nameField.setValue("");
         assertFalse(binder.isValid());
-        assertEquals(binder.getBindings(), binder.getBindingsEnabled());
+        assertEquals(binder.getBindings(), binder.getEnabledBindings());
 
         nameField.setVisible(false);
         assertTrue(binder.isValid());
-        assertEquals(0, binder.getBindingsEnabled().size());
+        assertEquals(0, binder.getEnabledBindings().size());
         assertEquals(1, binder.getBindings().size());
     }
 
@@ -121,11 +121,11 @@ public class BinderConditionalBindingTest
         nameField.setVisible(true);
         nameField.setValue("   ");
         assertFalse(binder.isValid());
-        assertEquals(binder.getBindings(), binder.getBindingsEnabled());
+        assertEquals(binder.getBindings(), binder.getEnabledBindings());
 
         nameField.setVisible(false);
         assertTrue(binder.isValid());
-        assertEquals(0, binder.getBindingsEnabled().size());
+        assertEquals(0, binder.getEnabledBindings().size());
         assertEquals(1, binder.getBindings().size());
     }
 
@@ -138,12 +138,12 @@ public class BinderConditionalBindingTest
         ageField.setEnabled(true);
         ageField.setValue("not an integer");
         assertFalse(binder.isValid());
-        assertEquals(binder.getBindings(), binder.getBindingsEnabled());
+        assertEquals(binder.getBindings(), binder.getEnabledBindings());
 
         ageField.setEnabled(false);
         ageField.setValue("still not an integer");
         assertTrue(binder.isValid());
-        assertEquals(0, binder.getBindingsEnabled().size());
+        assertEquals(0, binder.getEnabledBindings().size());
         assertEquals(1, binder.getBindings().size());
     }
 
@@ -159,13 +159,13 @@ public class BinderConditionalBindingTest
         person.setFirstName("something that will be deleted");
         binder.writeBean(person);
         assertNull(person.getFirstName());
-        assertEquals(binder.getBindings(), binder.getBindingsEnabled());
+        assertEquals(binder.getBindings(), binder.getEnabledBindings());
 
         nameField.setEnabled(false);
         person.setFirstName("something that will NOT be deleted");
         binder.writeBean(person);
         assertNotNull(person.getFirstName());
-        assertEquals(0, binder.getBindingsEnabled().size());
+        assertEquals(0, binder.getEnabledBindings().size());
         assertEquals(1, binder.getBindings().size());
     }
 
