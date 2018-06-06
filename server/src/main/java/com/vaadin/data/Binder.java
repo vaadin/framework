@@ -228,6 +228,7 @@ public class Binder<BEAN> implements Serializable {
          * Sets if the binding is enabled or not.
          *
          * @param enabled if the binding should be enabled or not
+         * @since
          */
         public void setEnabled(boolean enabled);
 
