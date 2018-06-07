@@ -362,7 +362,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.7.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
@@ -944,6 +944,15 @@
             <id>measurements</id>
             <properties>
                 <skipTests>true</skipTests>
+            </properties>
+        </profile>
+        <profile>
+            <id>java10</id>
+            <activation>
+                <jdk>10</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.release>8</maven.compiler.release>
             </properties>
         </profile>
     </profiles>

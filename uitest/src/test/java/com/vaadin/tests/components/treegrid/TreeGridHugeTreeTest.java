@@ -2,12 +2,10 @@ package com.vaadin.tests.components.treegrid;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TreeGridElement;
-import com.vaadin.tests.performance.TreeGridMemory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class TreeGridHugeTreeTest extends SingleBrowserTest {
@@ -63,24 +61,6 @@ public class TreeGridHugeTreeTest extends SingleBrowserTest {
         grid.expandWithClick(1);
         assertCellTexts(0, 0,
                 new String[] { "Granddad 0", "Dad 0/0", "Son 0/0/0" });
-    }
-
-    @Test
-    public void collapsed_subtrees_outside_of_cache_stay_expanded() {
-        getDriver().get(StringUtils.strip(getBaseURL(), "/")
-                + TreeGridMemory.PATH + "?items=200&initiallyExpanded");
-        grid = $(TreeGridElement.class).first();
-
-        String[] cellTexts = new String[100];
-        for (int i = 0; i < 100; i++) {
-            cellTexts[i] = grid.getRow(i).getCell(0).getText();
-        }
-        grid.scrollToRow(0);
-
-        grid.collapseWithClick(1);
-        grid.expandWithClick(1);
-
-        assertCellTexts(0, 0, cellTexts);
     }
 
     private void assertCellTexts(int startRowIndex, int cellIndex,
