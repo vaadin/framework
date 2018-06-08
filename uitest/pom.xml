@@ -477,7 +477,33 @@
                 </plugins>
             </build>
         </profile>
-
+        <profile>
+            <!--TODO make those tests compatible with Java 10-->
+            <id>java10</id>
+            <activation>
+                <jdk>10</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>com/vaadin/tests/performance/AbstractBeansMemoryTest.java</exclude>
+                                <exclude>com/vaadin/tests/performance/CompatibilityGridMemory.java</exclude>
+                                <exclude>com/vaadin/tests/performance/GridMemory.java</exclude>
+                                <exclude>com/vaadin/tests/performance/ThreadMemoryLeaksTest.java</exclude>
+                                <exclude>com/vaadin/tests/performance/TreeGridMemory.java</exclude>
+                                <exclude>com/vaadin/tests/performance/TreeTableMemory.java</exclude>
+                            </excludes>
+                            <testExcludes>
+                                <exclude>com/vaadin/tests/performance/MemoryIT.java</exclude>
+                            </testExcludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 </project>
