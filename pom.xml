@@ -954,6 +954,27 @@
             <properties>
                 <maven.compiler.release>8</maven.compiler.release>
             </properties>
+            <modules>
+                <module>shared</module>
+                <module>push</module>
+                <module>server</module>
+                <module>client</module>
+                <module>client-compiler</module>
+                <module>client-compiled</module>
+                <module>themes</module>
+                <module>uitest</module>
+                <module>liferay</module>
+                <module>liferay-integration</module>
+                <module>osgi-integration</module>
+                <module>all</module>
+                <module>compatibility-server</module>
+                <module>compatibility-server-gae</module>
+                <module>compatibility-client</module>
+                <module>compatibility-shared</module>
+                <module>compatibility-themes</module>
+                <module>testbench-api</module>
+                <module>bom</module>
+            </modules>
         </profile>
     </profiles>
 
