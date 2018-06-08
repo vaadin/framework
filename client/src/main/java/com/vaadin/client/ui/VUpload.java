@@ -25,6 +25,7 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FormElement;
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -408,9 +409,9 @@ public class VUpload extends SimplePanel {
 
     public void setAcceptMimeTypes(String acceptMimeTypes) {
         if (acceptMimeTypes == null || acceptMimeTypes.isEmpty()) {
-            fu.getElement().removeAttribute("accept");
+            InputElement.as(fu.getElement()).setAccept(null);
         } else {
-            fu.getElement().setAttribute("accept", acceptMimeTypes);
+            InputElement.as(fu.getElement()).setAccept(acceptMimeTypes);
         }
     }
 }
