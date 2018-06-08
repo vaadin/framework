@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,6 +61,7 @@ public class CurrentInstance implements Serializable {
     private static final Object NULL_OBJECT = new Object();
     private static final CurrentInstance CURRENT_INSTANCE_NULL = new CurrentInstance(
             NULL_OBJECT, true);
+    private static final Map<Class<?>, CurrentInstanceFallbackResolver<?>> fallbackResolvers = new ConcurrentHashMap<Class<?>, CurrentInstanceFallbackResolver<?>>();
 
     private final WeakReference<Object> instance;
     private final boolean inheritable;
@@ -92,6 +94,11 @@ public class CurrentInstance implements Serializable {
 
     /**
      * Gets the current instance of a specific type if available.
+     * <p>
+     * When a current instance of the specific type is not found, the
+     * {@link CurrentInstanceFallbackResolver} registered via
+     * {@link #addFallbackResolver(Class, CurrentInstanceFallbackResolver)} (if
+     * any) is invoked.
      *
      * @param type
      *            the class to get an instance of
@@ -99,6 +106,19 @@ public class CurrentInstance implements Serializable {
      *         if there is no current instance.
      */
     public static <T> T get(Class<T> type) {
+        T result = doGet(type);
+        if (result != null) {
+            return result;
+        }
+        CurrentInstanceFallbackResolver<?> fallbackResolver = fallbackResolvers
+                .get(type);
+        if (fallbackResolver != null) {
+            return (T) fallbackResolver.resolve();
+        }
+        return null;
+    }
+
+    private static <T> T doGet(Class<T> type) {
         Map<Class<?>, CurrentInstance> map = instances.get();
         if (map == null) {
             return null;
@@ -132,6 +152,34 @@ public class CurrentInstance implements Serializable {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Adds a CurrentInstanceFallbackResolver, that is triggered when
+     * {@link #get(Class)} can't find a suitable instance for the given type
+     * parameter.
+     * 
+     * @param type
+     *            the class used on {@link #get(Class)} invocations to retrive
+     *            the current instance
+     * @param fallbackResolver
+     *            the resolver
+     * @since
+     */
+    public static <T> void addFallbackResolver(Class<T> type,
+            CurrentInstanceFallbackResolver<T> fallbackResolver) {
+        fallbackResolvers.put(type, fallbackResolver);
+    }
+
+    /**
+     * Removes the {@link CurrentInstanceFallbackResolver} for the given type.
+     * 
+     * @param type
+     *            the class associated with the resolver
+     * @since
+     */
+    public static void removeFallbackResolver(Class<?> type) {
+        fallbackResolvers.remove(type);
     }
 
     private static void removeStaleInstances(
