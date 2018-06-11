@@ -1,7 +1,5 @@
 package com.vaadin.util;
 
-import static org.junit.Assert.assertNull;
-
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -14,8 +12,11 @@ import org.junit.Test;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
+
+import static org.junit.Assert.assertNull;
 
 public class CurrentInstanceTest {
 
@@ -219,6 +220,42 @@ public class CurrentInstanceTest {
         Assert.assertNull(VaadinSession.getCurrent());
     }
 
+    @Test
+    public void testFallbackResolvers() {
+        TestFallbackResolver<UI> uiResolver = new TestFallbackResolver<UI>();
+        CurrentInstance.setFallbackResolver(UI.class, uiResolver);
+
+        UI.getCurrent();
+        Assert.assertEquals(
+                "The UI fallback resolver should have been called exactly once",
+                1, uiResolver.getCalled());
+
+        TestFallbackResolver<VaadinSession> sessionResolver = new TestFallbackResolver<VaadinSession>();
+        CurrentInstance.setFallbackResolver(VaadinSession.class,
+                sessionResolver);
+
+        VaadinSession.getCurrent();
+        Assert.assertEquals(
+                "The VaadinSession fallback resolver should have been called exactly once",
+                1, sessionResolver.getCalled());
+
+        TestFallbackResolver<VaadinService> serviceResolver = new TestFallbackResolver<VaadinService>();
+        CurrentInstance.setFallbackResolver(VaadinService.class,
+                serviceResolver);
+
+        VaadinService.getCurrent();
+        Assert.assertEquals(
+                "The VaadinService fallback resolver should have been called exactly once",
+                1, serviceResolver.getCalled());
+
+        // the VaadinServlet.getCurrent() resolution uses the VaadinService type
+        VaadinServlet.getCurrent();
+        Assert.assertEquals(
+                "The VaadinService fallback resolver should have been called exactly twice",
+                2, serviceResolver.getCalled());
+
+    }
+
     public static void waitUntilGarbageCollected(WeakReference<?> ref)
             throws InterruptedException {
         for (int i = 0; i < 50; i++) {
@@ -229,5 +266,21 @@ public class CurrentInstanceTest {
             Thread.sleep(100);
         }
         Assert.fail("Value was not garbage collected.");
+    }
+
+    private static class TestFallbackResolver<T>
+            implements CurrentInstanceFallbackResolver<T> {
+
+        private int called;
+
+        @Override
+        public T resolve() {
+            called++;
+            return null;
+        }
+
+        public int getCalled() {
+            return called;
+        }
     }
 }

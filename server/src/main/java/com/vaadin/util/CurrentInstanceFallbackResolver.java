@@ -21,6 +21,9 @@ import java.io.Serializable;
 /**
  * Fallback that is used to revolve current instances when they are not
  * available by regular means.
+ * <p>
+ * This interface is used internally by the framework and it's not meant for
+ * public usage.
  * 
  * @author Vaadin Ltd.
  *
@@ -28,7 +31,7 @@ import java.io.Serializable;
  *            the type of the instances returned by this resolver
  * 
  * @see CurrentInstance#get(Class)
- * @see CurrentInstance#addFallbackResolver(Class,
+ * @see CurrentInstance#setFallbackResolver(Class,
  *      CurrentInstanceFallbackResolver)
  * 
  * @since

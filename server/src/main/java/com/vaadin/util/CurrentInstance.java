@@ -87,6 +87,10 @@ public class CurrentInstance implements Serializable {
         }
     };
 
+    protected CurrentInstance() {
+        this(null, false);
+    }
+
     private CurrentInstance(Object instance, boolean inheritable) {
         this.instance = new WeakReference<Object>(instance);
         this.inheritable = inheritable;
@@ -97,7 +101,7 @@ public class CurrentInstance implements Serializable {
      * <p>
      * When a current instance of the specific type is not found, the
      * {@link CurrentInstanceFallbackResolver} registered via
-     * {@link #addFallbackResolver(Class, CurrentInstanceFallbackResolver)} (if
+     * {@link #setFallbackResolver(Class, CurrentInstanceFallbackResolver)} (if
      * any) is invoked.
      *
      * @param type
@@ -163,23 +167,17 @@ public class CurrentInstance implements Serializable {
      *            the class used on {@link #get(Class)} invocations to retrive
      *            the current instance
      * @param fallbackResolver
-     *            the resolver
+     *            the resolver, of <code>null</code> to clean any resolver that
+     *            was previously set for the given type
      * @since
      */
-    public static <T> void addFallbackResolver(Class<T> type,
+    protected static <T> void setFallbackResolver(Class<T> type,
             CurrentInstanceFallbackResolver<T> fallbackResolver) {
-        fallbackResolvers.put(type, fallbackResolver);
-    }
-
-    /**
-     * Removes the {@link CurrentInstanceFallbackResolver} for the given type.
-     * 
-     * @param type
-     *            the class associated with the resolver
-     * @since
-     */
-    public static void removeFallbackResolver(Class<?> type) {
-        fallbackResolvers.remove(type);
+        if (fallbackResolver == null) {
+            fallbackResolvers.remove(type);
+        } else {
+            fallbackResolvers.put(type, fallbackResolver);
+        }
     }
 
     private static void removeStaleInstances(
