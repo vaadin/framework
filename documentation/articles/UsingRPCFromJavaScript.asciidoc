@@ -7,9 +7,8 @@ layout: page
 [[using-rpc-from-javascript]]
 = Using RPC from JavaScript
 
-This tutorial continues where
-link:IntegratingAJavaScriptComponent.asciidoc[Integrating a JavaScript
-component] ended. We will now add RPC functionality to the JavaScript
+This tutorial continues where <<IntegratingAJavaScriptComponent.asciidoc#,"Integrating a JavaScript
+component">> ended. We will now add RPC functionality to the JavaScript
 Flot component. RPC can be used in the same way as with ordinary GWT
 components.
 
