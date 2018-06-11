@@ -225,31 +225,28 @@ public class CurrentInstanceTest {
         TestFallbackResolver<UI> uiResolver = new TestFallbackResolver<UI>();
         CurrentInstance.setFallbackResolver(UI.class, uiResolver);
 
-        UI.getCurrent();
-        Assert.assertEquals(
-                "The UI fallback resolver should have been called exactly once",
-                1, uiResolver.getCalled());
-
         TestFallbackResolver<VaadinSession> sessionResolver = new TestFallbackResolver<VaadinSession>();
         CurrentInstance.setFallbackResolver(VaadinSession.class,
                 sessionResolver);
-
-        VaadinSession.getCurrent();
-        Assert.assertEquals(
-                "The VaadinSession fallback resolver should have been called exactly once",
-                1, sessionResolver.getCalled());
 
         TestFallbackResolver<VaadinService> serviceResolver = new TestFallbackResolver<VaadinService>();
         CurrentInstance.setFallbackResolver(VaadinService.class,
                 serviceResolver);
 
+        UI.getCurrent();
+        VaadinSession.getCurrent();
         VaadinService.getCurrent();
+        VaadinServlet.getCurrent();
+
         Assert.assertEquals(
-                "The VaadinService fallback resolver should have been called exactly once",
-                1, serviceResolver.getCalled());
+                "The UI fallback resolver should have been called exactly once",
+                1, uiResolver.getCalled());
+
+        Assert.assertEquals(
+                "The VaadinSession fallback resolver should have been called exactly once",
+                1, sessionResolver.getCalled());
 
         // the VaadinServlet.getCurrent() resolution uses the VaadinService type
-        VaadinServlet.getCurrent();
         Assert.assertEquals(
                 "The VaadinService fallback resolver should have been called exactly twice",
                 2, serviceResolver.getCalled());

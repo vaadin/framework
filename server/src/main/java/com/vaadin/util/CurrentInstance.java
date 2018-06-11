@@ -87,11 +87,7 @@ public class CurrentInstance implements Serializable {
         }
     };
 
-    protected CurrentInstance() {
-        this(null, false);
-    }
-
-    private CurrentInstance(Object instance, boolean inheritable) {
+    protected CurrentInstance(Object instance, boolean inheritable) {
         this.instance = new WeakReference<Object>(instance);
         this.inheritable = inheritable;
     }
