@@ -1427,7 +1427,7 @@ public class Binder<BEAN> implements Serializable {
     protected void handleFieldValueChange(Binding<BEAN, ?> binding,
             ValueChangeEvent<?> event) {
         if (!getEnabledBindings().contains(binding)) {
-            getLogger().log(Level.WARNING,
+            getLogger().log(Level.FINE,
                     "Ignoring explicit call to handleFieldValueChange passing a disabled binding: {0}.",
                     binding.getField());
             return;
