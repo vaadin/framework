@@ -172,16 +172,15 @@ public class CurrentInstance implements Serializable {
      */
     public static <T> void defineFallbackResolver(Class<T> type,
             CurrentInstanceFallbackResolver<T> fallbackResolver) {
-        if (fallbackResolvers.containsKey(type)) {
-            throw new IllegalArgumentException(
-                    "A fallback resolver for the type " + type
-                            + " is already defined.");
-        }
         if (fallbackResolver == null) {
             throw new IllegalArgumentException(
                     "The fallback resolver can not be null.");
         }
-        fallbackResolvers.put(type, fallbackResolver);
+        if (fallbackResolvers.putIfAbsent(type, fallbackResolver) != null) {
+            throw new IllegalArgumentException(
+                    "A fallback resolver for the type " + type
+                            + " is already defined.");
+        }
     }
 
     private static void removeStaleInstances(
