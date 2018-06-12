@@ -61,7 +61,7 @@ public class CurrentInstance implements Serializable {
     private static final Object NULL_OBJECT = new Object();
     private static final CurrentInstance CURRENT_INSTANCE_NULL = new CurrentInstance(
             NULL_OBJECT, true);
-    private static final Map<Class<?>, CurrentInstanceFallbackResolver<?>> fallbackResolvers = new ConcurrentHashMap<Class<?>, CurrentInstanceFallbackResolver<?>>();
+    private static final ConcurrentHashMap<Class<?>, CurrentInstanceFallbackResolver<?>> fallbackResolvers = new ConcurrentHashMap<Class<?>, CurrentInstanceFallbackResolver<?>>();
 
     private final WeakReference<Object> instance;
     private final boolean inheritable;
@@ -176,13 +176,10 @@ public class CurrentInstance implements Serializable {
             throw new IllegalArgumentException(
                     "The fallback resolver can not be null.");
         }
-        synchronized (fallbackResolvers) {
-            if (fallbackResolvers.containsKey(type)) {
-                throw new IllegalArgumentException(
-                        "A fallback resolver for the type " + type
-                                + " is already defined.");
-            }
-            fallbackResolvers.put(type, fallbackResolver);
+        if (fallbackResolvers.putIfAbsent(type, fallbackResolver) != null) {
+            throw new IllegalArgumentException(
+                    "A fallback resolver for the type " + type
+                            + " is already defined.");
         }
     }
 
