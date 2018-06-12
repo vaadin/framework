@@ -176,10 +176,13 @@ public class CurrentInstance implements Serializable {
             throw new IllegalArgumentException(
                     "The fallback resolver can not be null.");
         }
-        if (fallbackResolvers.putIfAbsent(type, fallbackResolver) != null) {
-            throw new IllegalArgumentException(
-                    "A fallback resolver for the type " + type
-                            + " is already defined.");
+        synchronized (fallbackResolvers) {
+            if (fallbackResolvers.containsKey(type)) {
+                throw new IllegalArgumentException(
+                        "A fallback resolver for the type " + type
+                                + " is already defined.");
+            }
+            fallbackResolvers.put(type, fallbackResolver);
         }
     }
 
