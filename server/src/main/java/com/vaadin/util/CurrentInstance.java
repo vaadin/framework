@@ -87,7 +87,7 @@ public class CurrentInstance implements Serializable {
         }
     };
 
-    protected CurrentInstance(Object instance, boolean inheritable) {
+    private CurrentInstance(Object instance, boolean inheritable) {
         this.instance = new WeakReference<Object>(instance);
         this.inheritable = inheritable;
     }
@@ -160,14 +160,14 @@ public class CurrentInstance implements Serializable {
      * parameter.
      * 
      * @param type
-     *            the class used on {@link #get(Class)} invocations to retrive
+     *            the class used on {@link #get(Class)} invocations to retrieve
      *            the current instance
      * @param fallbackResolver
-     *            the resolver, of <code>null</code> to clean any resolver that
+     *            the resolver, or <code>null</code> to clean any resolver that
      *            was previously set for the given type
      * @since
      */
-    protected static <T> void setFallbackResolver(Class<T> type,
+    public static <T> void setFallbackResolver(Class<T> type,
             CurrentInstanceFallbackResolver<T> fallbackResolver) {
         if (fallbackResolver == null) {
             fallbackResolvers.remove(type);
