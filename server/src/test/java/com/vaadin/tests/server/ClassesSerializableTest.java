@@ -103,14 +103,12 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.screenshotbrowser\\.ScreenshotBrowser.*", //
             "com\\.vaadin\\.osgi.*", //
             "com\\.vaadin\\.server\\.osgi.*",
-            "org.atmosphere.handler.*",//todo
             //V7
-            "com.vaadin.v7.ui.themes.BaseTheme",
-            "com.vaadin.v7.ui.themes.ChameleonTheme",
-            "com.vaadin.v7.ui.themes.Reindeer",
-            "com.vaadin.v7.ui.themes.Runo",
-            "com.vaadin.v7.tests.VaadinClasses",
-            "com.vaadin.v7.shared.ui.grid.DetailsConnectorChange\\$1",
+            "com\\.vaadin\\.v7\\.ui\\.themes\\.BaseTheme",
+            "com\\.vaadin\\.v7\\.ui\\.themes\\.ChameleonTheme",
+            "com\\.vaadin\\.v7\\.ui\\.themes\\.Reindeer",
+            "com\\.vaadin\\.v7\\.ui\\.themes\\.Runo",
+            "com\\.vaadin\\.v7\\.tests\\.VaadinClasses",
             "com\\.vaadin\\.v7\\.event\\.FieldEvents", //
             "com\\.vaadin\\.v7\\.data\\.util.BeanItemContainerGenerator.*",
             "com\\.vaadin\\.v7\\.data\\.util\\.sqlcontainer\\.connection\\.MockInitialContextFactory",
