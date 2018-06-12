@@ -31,7 +31,7 @@ import java.io.Serializable;
  *            the type of the instances returned by this resolver
  * 
  * @see CurrentInstance#get(Class)
- * @see CurrentInstance#setFallbackResolver(Class,
+ * @see CurrentInstance#defineFallbackResolver(Class,
  *      CurrentInstanceFallbackResolver)
  * 
  * @since

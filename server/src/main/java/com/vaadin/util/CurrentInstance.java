@@ -97,8 +97,8 @@ public class CurrentInstance implements Serializable {
      * <p>
      * When a current instance of the specific type is not found, the
      * {@link CurrentInstanceFallbackResolver} registered via
-     * {@link #setFallbackResolver(Class, CurrentInstanceFallbackResolver)} (if
-     * any) is invoked.
+     * {@link #defineFallbackResolver(Class, CurrentInstanceFallbackResolver)}
+     * (if any) is invoked.
      *
      * @param type
      *            the class to get an instance of
@@ -163,17 +163,25 @@ public class CurrentInstance implements Serializable {
      *            the class used on {@link #get(Class)} invocations to retrieve
      *            the current instance
      * @param fallbackResolver
-     *            the resolver, or <code>null</code> to clean any resolver that
-     *            was previously set for the given type
+     *            the resolver, not <code>null</code>
+     * 
+     * @throws IllegalArgumentException
+     *             if there's already a defined fallback resolver for the given
+     *             type
      * @since
      */
-    public static <T> void setFallbackResolver(Class<T> type,
+    public static <T> void defineFallbackResolver(Class<T> type,
             CurrentInstanceFallbackResolver<T> fallbackResolver) {
-        if (fallbackResolver == null) {
-            fallbackResolvers.remove(type);
-        } else {
-            fallbackResolvers.put(type, fallbackResolver);
+        if (fallbackResolvers.containsKey(type)) {
+            throw new IllegalArgumentException(
+                    "A fallback resolver for the type " + type
+                            + " is already defined.");
         }
+        if (fallbackResolver == null) {
+            throw new IllegalArgumentException(
+                    "The fallback resolver can not be null.");
+        }
+        fallbackResolvers.put(type, fallbackResolver);
     }
 
     private static void removeStaleInstances(

@@ -26,6 +26,16 @@ public class CurrentInstanceTest {
         CurrentInstance.clearAll();
     }
 
+    @Before
+    public void clearExistingFallbackResolvers() throws Exception {
+        // Removes all static fallback resolvers
+        Field field = CurrentInstance.class
+                .getDeclaredField("fallbackResolvers");
+        field.setAccessible(true);
+        Map<?, ?> map = (Map<?, ?>) field.get(null);
+        map.clear();
+    }
+
     @Test
     public void testInitiallyCleared() throws Exception {
         assertCleared();
@@ -223,14 +233,14 @@ public class CurrentInstanceTest {
     @Test
     public void testFallbackResolvers() {
         TestFallbackResolver<UI> uiResolver = new TestFallbackResolver<UI>();
-        CurrentInstance.setFallbackResolver(UI.class, uiResolver);
+        CurrentInstance.defineFallbackResolver(UI.class, uiResolver);
 
         TestFallbackResolver<VaadinSession> sessionResolver = new TestFallbackResolver<VaadinSession>();
-        CurrentInstance.setFallbackResolver(VaadinSession.class,
+        CurrentInstance.defineFallbackResolver(VaadinSession.class,
                 sessionResolver);
 
         TestFallbackResolver<VaadinService> serviceResolver = new TestFallbackResolver<VaadinService>();
-        CurrentInstance.setFallbackResolver(VaadinService.class,
+        CurrentInstance.defineFallbackResolver(VaadinService.class,
                 serviceResolver);
 
         UI.getCurrent();
@@ -251,6 +261,18 @@ public class CurrentInstanceTest {
                 "The VaadinService fallback resolver should have been called exactly twice",
                 2, serviceResolver.getCalled());
 
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testFallbackResolversWithAlreadyDefinedResolver() {
+        TestFallbackResolver<UI> uiResolver = new TestFallbackResolver<UI>();
+        CurrentInstance.defineFallbackResolver(UI.class, uiResolver);
+        CurrentInstance.defineFallbackResolver(UI.class, uiResolver);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testFallbackResolversWithNullResolver() {
+        CurrentInstance.defineFallbackResolver(UI.class, null);
     }
 
     public static void waitUntilGarbageCollected(WeakReference<?> ref)
