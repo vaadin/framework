@@ -24,7 +24,7 @@ import com.vaadin.server.SerializableSupplier;
 import com.vaadin.shared.ui.grid.renderers.LocalDateTimeRendererState;
 
 import elemental.json.JsonValue;
-import static com.vaadin.ui.renderers.LocalDateRenderer.checkSerialization;
+import static com.vaadin.data.util.BeanUtil.checkSerialization;
 
 /**
  * A renderer for presenting {@code LocalDateTime} objects.

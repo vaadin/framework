@@ -15,14 +15,12 @@
  */
 package com.vaadin.ui.renderers;
 
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 
+import com.vaadin.data.util.BeanUtil;
 import com.vaadin.server.SerializableSupplier;
 import com.vaadin.shared.ui.grid.renderers.LocalDateRendererState;
 
@@ -190,16 +188,7 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
                     "formatterSupplier may not be null");
         }
         this.formatterSupplier = formatterSupplier;
-        assert checkSerialization(formatterSupplier);
-    }
-
-    public static boolean checkSerialization(Object obj) {
-        try {
-            new ObjectOutputStream(new DummyOutputStream()).writeObject(obj);
-        } catch (Throwable e) {
-            throw new AssertionError(e);
-        }
-        return true;
+        assert BeanUtil.checkSerialization(formatterSupplier);
     }
 
     /**
@@ -281,9 +270,4 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
         return (LocalDateRendererState) super.getState(markAsDirty);
     }
 
-    private static class DummyOutputStream extends OutputStream implements Serializable {
-        @Override
-        public void write(int b) {
-        }
-    }
 }
