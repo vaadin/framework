@@ -1896,7 +1896,7 @@ public class Binder<BEAN> implements Serializable {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     protected void restoreBeanState(BEAN bean,
             Map<Binding<BEAN, ?>, Object> oldValues) {
-        getEnabledBindings().stream().filter(oldValues::containsKey)
+        getBindings().stream().filter(oldValues::containsKey)
                 .forEach(binding -> {
                     Setter setter = binding.setter;
                     if (setter != null) {
