@@ -3,16 +3,21 @@ package com.vaadin.util;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.easymock.EasyMock;
+import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.server.DefaultDeploymentConfiguration;
+import com.vaadin.server.ServiceException;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 
@@ -231,22 +236,27 @@ public class CurrentInstanceTest {
     }
 
     @Test
-    public void testFallbackResolvers() {
-        TestFallbackResolver<UI> uiResolver = new TestFallbackResolver<UI>();
+    public void testFallbackResolvers() throws Exception {
+        TestFallbackResolver<UI> uiResolver = new TestFallbackResolver<UI>(
+                new FakeUI());
         CurrentInstance.defineFallbackResolver(UI.class, uiResolver);
 
-        TestFallbackResolver<VaadinSession> sessionResolver = new TestFallbackResolver<VaadinSession>();
+        TestFallbackResolver<VaadinSession> sessionResolver = new TestFallbackResolver<VaadinSession>(
+                new FakeSession());
         CurrentInstance.defineFallbackResolver(VaadinSession.class,
                 sessionResolver);
 
-        TestFallbackResolver<VaadinService> serviceResolver = new TestFallbackResolver<VaadinService>();
+        TestFallbackResolver<VaadinService> serviceResolver = new TestFallbackResolver<VaadinService>(
+                new FakeService(new FakeServlet()));
         CurrentInstance.defineFallbackResolver(VaadinService.class,
                 serviceResolver);
 
-        UI.getCurrent();
-        VaadinSession.getCurrent();
-        VaadinService.getCurrent();
-        VaadinServlet.getCurrent();
+        Assert.assertThat(UI.getCurrent(),
+                CoreMatchers.instanceOf(FakeUI.class));
+        Assert.assertThat(VaadinSession.getCurrent(),
+                CoreMatchers.instanceOf(FakeSession.class));
+        Assert.assertThat(VaadinService.getCurrent(),
+                CoreMatchers.instanceOf(FakeService.class));
 
         Assert.assertEquals(
                 "The UI fallback resolver should have been called exactly once",
@@ -256,7 +266,13 @@ public class CurrentInstanceTest {
                 "The VaadinSession fallback resolver should have been called exactly once",
                 1, sessionResolver.getCalled());
 
+        Assert.assertEquals(
+                "The VaadinService fallback resolver should have been called exactly once",
+                1, serviceResolver.getCalled());
+
         // the VaadinServlet.getCurrent() resolution uses the VaadinService type
+        Assert.assertThat(VaadinServlet.getCurrent(),
+                CoreMatchers.instanceOf(FakeServlet.class));
         Assert.assertEquals(
                 "The VaadinService fallback resolver should have been called exactly twice",
                 2, serviceResolver.getCalled());
@@ -265,7 +281,8 @@ public class CurrentInstanceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testFallbackResolversWithAlreadyDefinedResolver() {
-        TestFallbackResolver<UI> uiResolver = new TestFallbackResolver<UI>();
+        TestFallbackResolver<UI> uiResolver = new TestFallbackResolver<UI>(
+                new FakeUI());
         CurrentInstance.defineFallbackResolver(UI.class, uiResolver);
         CurrentInstance.defineFallbackResolver(UI.class, uiResolver);
     }
@@ -291,15 +308,44 @@ public class CurrentInstanceTest {
             implements CurrentInstanceFallbackResolver<T> {
 
         private int called;
+        private final T instance;
+
+        public TestFallbackResolver(T instance) {
+            this.instance = instance;
+        }
 
         @Override
         public T resolve() {
             called++;
-            return null;
+            return instance;
         }
 
         public int getCalled() {
             return called;
         }
     }
+
+    private static class FakeUI extends UI {
+        @Override
+        protected void init(VaadinRequest request) {
+        }
+    }
+
+    private static class FakeServlet extends VaadinServlet {
+    }
+
+    private static class FakeService extends VaadinServletService {
+        public FakeService(VaadinServlet servlet) throws ServiceException {
+            super(servlet, new DefaultDeploymentConfiguration(FakeService.class,
+                    new Properties()));
+        }
+    }
+
+    private static class FakeSession extends VaadinSession {
+        public FakeSession() {
+            super(null);
+        }
+
+    }
+
 }
