@@ -52,6 +52,18 @@
             <artifactId>hsqldb</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>javax.portlet</groupId>
+            <artifactId>portlet-api</artifactId>
+            <version>${javax.portlet.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin.external.atmosphere</groupId>
+            <artifactId>atmosphere-runtime</artifactId>
+            <version>${atmosphere.runtime.version}</version>
+            <scope>test</scope>
+        </dependency>
         <!-- Bean Validation API -->
         <dependency>
             <groupId>javax.validation</groupId>
