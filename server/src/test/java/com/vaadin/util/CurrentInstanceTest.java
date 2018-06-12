@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.easymock.EasyMock;
 import org.hamcrest.CoreMatchers;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +33,7 @@ public class CurrentInstanceTest {
     }
 
     @Before
+    @After
     public void clearExistingFallbackResolvers() throws Exception {
         // Removes all static fallback resolvers
         Field field = CurrentInstance.class
