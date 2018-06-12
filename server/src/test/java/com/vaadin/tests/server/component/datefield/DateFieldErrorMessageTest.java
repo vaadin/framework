@@ -39,11 +39,14 @@ public class DateFieldErrorMessageTest
     public void testErrorMessageRemoved() throws Exception {
         InlineDateField field = new InlineDateField("Day is",
                 LocalDate.of(2003, 2, 27));
-        checkValueAndComponentError(field, "2003-02-27", LocalDate.of(2003, 2, 27), false);
+        checkValueAndComponentError(field, "2003-02-27",
+                LocalDate.of(2003, 2, 27), false);
         checkValueAndComponentError(field, "", null, false);
-        checkValueAndComponentError(field, "2003-04-27", LocalDate.of(2003, 4, 27), false);
+        checkValueAndComponentError(field, "2003-04-27",
+                LocalDate.of(2003, 4, 27), false);
         checkValueAndComponentError(field, "foo", null, true);
-        checkValueAndComponentError(field, "2013-07-03", LocalDate.of(2013, 7, 3), false);
+        checkValueAndComponentError(field, "2013-07-03",
+                LocalDate.of(2013, 7, 3), false);
         checkValueAndComponentError(field, "foo", null, true);
         checkValueAndComponentError(field, "", null, false);
     }
@@ -58,24 +61,28 @@ public class DateFieldErrorMessageTest
         return InlineDateField.class;
     }
 
-    private void checkValueAndComponentError(InlineDateField field, String newInput, LocalDate expectedFieldValue, boolean componentErrorExpected) throws Exception {
+    private void checkValueAndComponentError(InlineDateField field,
+            String newInput, LocalDate expectedFieldValue,
+            boolean componentErrorExpected) throws Exception {
         setDateByText(field, newInput);
         assertEquals(expectedFieldValue, field.getValue());
-        assertEquals(componentErrorExpected, field.getComponentError()!=null);
+        assertEquals(componentErrorExpected, field.getComponentError() != null);
     }
 
-    private void setDateByText(InlineDateField field, String dateText) throws Exception {
+    private void setDateByText(InlineDateField field, String dateText)
+            throws Exception {
         Field rcpField = AbstractDateField.class.getDeclaredField("rpc");
         rcpField.setAccessible(true);
-        AbstractDateFieldServerRpc rcp = (AbstractDateFieldServerRpc)rcpField.get(field);
-        Map<String, Integer> resolutions=new HashMap<String, Integer>();
+        AbstractDateFieldServerRpc rcp = (AbstractDateFieldServerRpc) rcpField
+                .get(field);
+        Map<String, Integer> resolutions = new HashMap<String, Integer>();
         try {
             LocalDate date = LocalDate.parse(dateText);
             resolutions.put(DateResolution.YEAR.name(), date.getYear());
             resolutions.put(DateResolution.MONTH.name(), date.getMonthValue());
             resolutions.put(DateResolution.DAY.name(), date.getDayOfMonth());
-        }catch (Exception e) {
-            //ignore
+        } catch (Exception e) {
+            // ignore
         }
         rcp.update(dateText, resolutions);
     }
