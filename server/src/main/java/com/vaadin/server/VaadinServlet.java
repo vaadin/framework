@@ -1436,7 +1436,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Override
     public void destroy() {
         super.destroy();
-        getService().destroy();
+        if (getService() != null) {
+            getService().destroy();
+        }
     }
 
     private static void persistCacheEntry(ScssCacheEntry cacheEntry) {
