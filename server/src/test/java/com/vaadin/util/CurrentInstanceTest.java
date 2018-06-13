@@ -1,21 +1,28 @@
 package com.vaadin.util;
 
-import static org.junit.Assert.assertNull;
-
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.easymock.EasyMock;
+import org.hamcrest.CoreMatchers;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.server.DefaultDeploymentConfiguration;
+import com.vaadin.server.ServiceException;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
+
+import static org.junit.Assert.assertNull;
 
 public class CurrentInstanceTest {
 
@@ -23,6 +30,17 @@ public class CurrentInstanceTest {
     public void clearExistingThreadLocals() {
         // Ensure no previous test left some thread locals hanging
         CurrentInstance.clearAll();
+    }
+
+    @Before
+    @After
+    public void clearExistingFallbackResolvers() throws Exception {
+        // Removes all static fallback resolvers
+        Field field = CurrentInstance.class
+                .getDeclaredField("fallbackResolvers");
+        field.setAccessible(true);
+        Map<?, ?> map = (Map<?, ?>) field.get(null);
+        map.clear();
     }
 
     @Test
@@ -219,6 +237,63 @@ public class CurrentInstanceTest {
         Assert.assertNull(VaadinSession.getCurrent());
     }
 
+    @Test
+    public void testFallbackResolvers() throws Exception {
+        TestFallbackResolver<UI> uiResolver = new TestFallbackResolver<UI>(
+                new FakeUI());
+        CurrentInstance.defineFallbackResolver(UI.class, uiResolver);
+
+        TestFallbackResolver<VaadinSession> sessionResolver = new TestFallbackResolver<VaadinSession>(
+                new FakeSession());
+        CurrentInstance.defineFallbackResolver(VaadinSession.class,
+                sessionResolver);
+
+        TestFallbackResolver<VaadinService> serviceResolver = new TestFallbackResolver<VaadinService>(
+                new FakeService(new FakeServlet()));
+        CurrentInstance.defineFallbackResolver(VaadinService.class,
+                serviceResolver);
+
+        Assert.assertThat(UI.getCurrent(),
+                CoreMatchers.instanceOf(FakeUI.class));
+        Assert.assertThat(VaadinSession.getCurrent(),
+                CoreMatchers.instanceOf(FakeSession.class));
+        Assert.assertThat(VaadinService.getCurrent(),
+                CoreMatchers.instanceOf(FakeService.class));
+
+        Assert.assertEquals(
+                "The UI fallback resolver should have been called exactly once",
+                1, uiResolver.getCalled());
+
+        Assert.assertEquals(
+                "The VaadinSession fallback resolver should have been called exactly once",
+                1, sessionResolver.getCalled());
+
+        Assert.assertEquals(
+                "The VaadinService fallback resolver should have been called exactly once",
+                1, serviceResolver.getCalled());
+
+        // the VaadinServlet.getCurrent() resolution uses the VaadinService type
+        Assert.assertThat(VaadinServlet.getCurrent(),
+                CoreMatchers.instanceOf(FakeServlet.class));
+        Assert.assertEquals(
+                "The VaadinService fallback resolver should have been called exactly twice",
+                2, serviceResolver.getCalled());
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testFallbackResolversWithAlreadyDefinedResolver() {
+        TestFallbackResolver<UI> uiResolver = new TestFallbackResolver<UI>(
+                new FakeUI());
+        CurrentInstance.defineFallbackResolver(UI.class, uiResolver);
+        CurrentInstance.defineFallbackResolver(UI.class, uiResolver);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testFallbackResolversWithNullResolver() {
+        CurrentInstance.defineFallbackResolver(UI.class, null);
+    }
+
     public static void waitUntilGarbageCollected(WeakReference<?> ref)
             throws InterruptedException {
         for (int i = 0; i < 50; i++) {
@@ -230,4 +305,49 @@ public class CurrentInstanceTest {
         }
         Assert.fail("Value was not garbage collected.");
     }
+
+    private static class TestFallbackResolver<T>
+            implements CurrentInstanceFallbackResolver<T> {
+
+        private int called;
+        private final T instance;
+
+        public TestFallbackResolver(T instance) {
+            this.instance = instance;
+        }
+
+        @Override
+        public T resolve() {
+            called++;
+            return instance;
+        }
+
+        public int getCalled() {
+            return called;
+        }
+    }
+
+    private static class FakeUI extends UI {
+        @Override
+        protected void init(VaadinRequest request) {
+        }
+    }
+
+    private static class FakeServlet extends VaadinServlet {
+    }
+
+    private static class FakeService extends VaadinServletService {
+        public FakeService(VaadinServlet servlet) throws ServiceException {
+            super(servlet, new DefaultDeploymentConfiguration(FakeService.class,
+                    new Properties()));
+        }
+    }
+
+    private static class FakeSession extends VaadinSession {
+        public FakeSession() {
+            super(null);
+        }
+
+    }
+
 }
