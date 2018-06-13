@@ -19,6 +19,8 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -224,6 +226,38 @@ public final class BeanUtil implements Serializable {
         } catch (NoSuchMethodException e) {
             return null;
         }
+    }
+
+    /**
+     * Checks if the object is serializable or not. To be used in assertion checks only,
+     * since the check might be a bit heavyweight.
+     *
+     * @param obj to be checked
+     * @return {@code true}
+     * @throws AssertionError if the object is not serializable
+     */
+    public static boolean checkSerialization(Object obj) {
+        try {
+            ObjectOutputStream dummyObjectOutputStream = new ObjectOutputStream(new OutputStream() {
+                @Override
+                public void write(int b) {
+                }
+
+                @SuppressWarnings("NullableProblems")
+                @Override
+                public void write(byte[] ignored) {
+                }
+
+                @SuppressWarnings("NullableProblems")
+                @Override
+                public void write(byte[] b, int off, int len) {
+                }
+            });
+            dummyObjectOutputStream.writeObject(obj);
+        } catch (Throwable e) {
+            throw new AssertionError("Formatter supplier should be serializable", e);
+        }
+        return true;
     }
 
     private static class LazyValidationAvailability implements Serializable {

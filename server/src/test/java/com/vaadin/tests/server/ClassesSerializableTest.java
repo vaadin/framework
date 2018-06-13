@@ -69,8 +69,9 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.server\\.communication\\.PushHandler.*", // PushHandler
             "com\\.vaadin\\.server\\.communication\\.DateSerializer", //
             "com\\.vaadin\\.server\\.communication\\.JSONSerializer", //
+            "com\\.vaadin\\.ui\\.declarative\\.DesignContext", //
             // and its inner classes do not need to be serializable
-            "com\\.vaadin\\.util\\.SerializerHelper", // fully static
+            "com\\.vaadin\\.v7\\.util\\.SerializerHelper", // fully static
             // class level filtering, also affecting nested classes and
             // interfaces
             "com\\.vaadin\\.server\\.LegacyCommunicationManager.*", //
@@ -81,10 +82,11 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.data\\.provider\\.HierarchyMapper\\$TreeLevelQuery",
             "com\\.vaadin\\.data\\.util\\.ReflectTools.*", //
             "com\\.vaadin\\.data\\.util\\.JsonUtil.*", //
-            "com\\.vaadin\\.data\\.util.BeanItemContainerGenerator.*",
-            "com\\.vaadin\\.data\\.util\\.sqlcontainer\\.connection\\.MockInitialContextFactory",
-            "com\\.vaadin\\.data\\.util\\.sqlcontainer\\.DataGenerator",
-            "com\\.vaadin\\.data\\.util\\.sqlcontainer\\.FreeformQueryUtil",
+            "com\\.vaadin\\.v7\\.data\\.util.BeanItemContainerGenerator.*",
+            "com\\.vaadin\\.v7\\.data\\.util\\.sqlcontainer\\.connection\\.MockInitialContextFactory",
+            "com\\.vaadin\\.v7\\.data\\.util\\.sqlcontainer\\.DataGenerator",
+            "com\\.vaadin\\.v7\\.data\\.util\\.sqlcontainer\\.FreeformQueryUtil",
+            "com\\.vaadin\\.data\\.util\\.BeanUtil.*",
             // the JSR-303 constraint interpolation context
             "com\\.vaadin\\.data\\.validator\\.BeanValidator\\$1", //
             "com\\.vaadin\\.sass.*", //
@@ -142,7 +144,7 @@ public class ClassesSerializableTest {
                 continue;
             }
 
-            if (Component.class.isAssignableFrom(cls) && !cls.isInterface()
+            if (!cls.isInterface()
                     && !Modifier.isAbstract(cls.getModifiers())) {
                 serializeAndDeserialize(cls);
             }
