@@ -5,8 +5,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.eclipse.jdt.internal.core.search.matching.SecondaryTypeDeclarationPattern;
+
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.ValueProvider;
+import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.VaadinRequest;
@@ -14,7 +17,9 @@ import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Slider;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.renderers.NumberRenderer;
 
 @Widgetset("com.vaadin.DefaultWidgetSet")
@@ -48,7 +53,12 @@ public class GridInTabSheet extends AbstractTestUIWithLog {
         final Grid<Integer> grid = new Grid<>();
         grid.setSelectionMode(SelectionMode.MULTI);
         grid.addColumn(ValueProvider.identity(), new NumberRenderer())
-                .setId("count");
+                .setId("count").setEditorBinding(
+                        grid.getEditor().getBinder().forField(new TextField())
+                                .withConverter(new StringToIntegerConverter(""))
+                                .bind(i -> i, (i, v) -> {
+                                }));
+        grid.getEditor().setEnabled(true);
 
         LinkedList<Integer> items = IntStream.range(0, 3).boxed()
                 .collect(Collectors.toCollection(LinkedList::new));
