@@ -1198,4 +1198,35 @@ public class Upload extends AbstractComponent
     protected UploadState getState(boolean markAsDirty) {
         return (UploadState) super.getState(markAsDirty);
     }
+
+    /**
+     * Returns the component's list of accepted content-types. According to RFC
+     * 1867, the attributeis present, the browser might constrain the file
+     * patterns prompted for to match those with the corresponding appropriate
+     * file extensions for the platform.
+     *
+     * @return comma-separated list of desired mime types to be uploaded
+     * @see #setAcceptMimeTypes
+     * @since
+     */
+    public String getAcceptMimeTypes() {
+        return getState(false).acceptMimeTypes;
+    }
+
+    /**
+     * Sets the component's list of accepted content-types. According to RFC
+     * 1867, the attributeis present, the browser might constrain the file
+     * patterns prompted for to match those with the corresponding appropriate
+     * file extensions for the platform. Good examples are: {@code image/*} or
+     * {@code image/png,text/plain}
+     *
+     * @param acceptMimeTypes
+     *            comma-separated list of desired mime types to be uploaded
+     * @see #getAcceptMimeTypes
+     * @since
+     */
+    public void setAcceptMimeTypes(String acceptMimeTypes) {
+        getState().acceptMimeTypes = acceptMimeTypes;
+    }
+
 }
