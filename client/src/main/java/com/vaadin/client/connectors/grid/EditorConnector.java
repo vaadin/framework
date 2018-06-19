@@ -72,8 +72,11 @@ public class EditorConnector extends AbstractExtensionConnector {
 
                 @Override
                 public void cancel() {
-                    serverInitiated = true;
-                    getParent().getWidget().cancelEditor();
+                    // Canceling an editor that is not open is a no-op.
+                    if (getParent().getWidget().isEditorActive()) {
+                        serverInitiated = true;
+                        getParent().getWidget().cancelEditor();
+                    }
                 }
 
                 @Override

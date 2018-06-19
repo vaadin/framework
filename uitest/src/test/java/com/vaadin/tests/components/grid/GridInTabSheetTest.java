@@ -2,11 +2,12 @@ package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
+import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.NotificationElement;
@@ -83,6 +84,39 @@ public class GridInTabSheetTest extends MultiBrowserTest {
                 "There should be no logged requests, was: " + logText,
                 logText.trim().isEmpty()));
         assertNoNotification();
+    }
+
+    @Test
+    public void testEditorOpenWhenSwitchingTab() {
+        setDebug(true);
+        openTestURL();
+
+        GridElement grid = $(GridElement.class).first();
+
+        grid.getCell(0, 1).doubleClick();
+        assertEquals("Editor should be open", "0",
+                grid.getEditor().getField(1).getAttribute("value"));
+
+        TabSheetElement tabsheet = $(TabSheetElement.class).first();
+        tabsheet.openTab("Label");
+        tabsheet.openTab("Grid");
+
+        grid = $(GridElement.class).first();
+        assertFalse("Editor should be closed.",
+                grid.isElementPresent(By.vaadin("#editor")));
+
+        grid.getCell(1, 1).doubleClick();
+        assertEquals("Editor should open after tab switch", "1",
+                grid.getEditor().getField(1).getAttribute("value"));
+
+        // Close the current editor and reopen on a different row
+        grid.sendKeys(Keys.ESCAPE);
+
+        grid.getCell(0, 1).doubleClick();
+        assertEquals("Editor should move", "0",
+                grid.getEditor().getField(1).getAttribute("value"));
+
+        assertNoErrorNotifications();
     }
 
     private void removeGridRow() {
