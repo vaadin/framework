@@ -93,8 +93,7 @@ public class GridInTabSheetTest extends MultiBrowserTest {
 
         GridElement grid = $(GridElement.class).first();
 
-        grid.getCell(0, 1).click();
-        grid.sendKeys(Keys.RETURN);
+        grid.getCell(0, 1).doubleClick();
         assertEquals("Editor should be open", "0",
                 grid.getEditor().getField(1).getAttribute("value"));
 
@@ -106,14 +105,12 @@ public class GridInTabSheetTest extends MultiBrowserTest {
         assertFalse("Editor should be closed.",
                 grid.isElementPresent(By.vaadin("#editor")));
 
-        grid.getCell(1, 1).click();
-        grid.sendKeys(Keys.RETURN);
+        grid.getCell(1, 1).doubleClick();
         assertEquals("Editor should open after tab switch", "1",
                 grid.getEditor().getField(1).getAttribute("value"));
         grid.sendKeys(Keys.ESCAPE);
 
-        grid.getCell(0, 1).click();
-        grid.sendKeys(Keys.RETURN);
+        grid.getCell(0, 1).doubleClick();
         assertEquals("Editor should move", "0",
                 grid.getEditor().getField(1).getAttribute("value"));
 
