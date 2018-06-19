@@ -108,6 +108,8 @@ public class GridInTabSheetTest extends MultiBrowserTest {
         grid.getCell(1, 1).doubleClick();
         assertEquals("Editor should open after tab switch", "1",
                 grid.getEditor().getField(1).getAttribute("value"));
+
+        // Close the current editor and reopen on a different row
         grid.sendKeys(Keys.ESCAPE);
 
         grid.getCell(0, 1).doubleClick();
