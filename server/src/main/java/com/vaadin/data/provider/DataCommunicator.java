@@ -220,11 +220,6 @@ public class DataCommunicator<T> extends AbstractExtension {
     public void attach() {
         super.attach();
         attachDataProviderListener();
-
-        if (getPushRows().isEmpty()) {
-            // Make sure rows are pushed when component is attached.
-            setPushRows(Range.withLength(0, getMinPushSize()));
-        }
     }
 
     @Override
@@ -312,6 +307,11 @@ public class DataCommunicator<T> extends AbstractExtension {
     @Override
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
+
+        if (initial && getPushRows().isEmpty()) {
+            // Make sure rows are pushed when component is attached.
+            setPushRows(Range.withLength(0, getMinPushSize()));
+        }
 
         sendDataToClient(initial);
     }
