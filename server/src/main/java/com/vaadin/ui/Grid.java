@@ -2507,6 +2507,16 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 .forEach(this::addColumn);
     }
 
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
+
+        if (initial && editor.isOpen()) {
+            // Re-attaching grid. Any old editor should be closed.
+            editor.cancel();
+        }
+    }
+
     /**
      * Sets the property set to use for this grid. Does not create or update
      * columns in any way but will delete and re-create the editor.
@@ -4775,21 +4785,5 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         for (Column<T, ?> column : getColumns()) {
             column.updateSortable();
         }
-    }
-
-    @Override
-    public void setVisible(boolean visible) {
-        if (getEditor().isOpen() && !visible) {
-            getEditor().cancel();
-        }
-        super.setVisible(visible);
-    }
-
-    @Override
-    public void detach() {
-        if (getEditor().isOpen()) {
-            getEditor().cancel();
-        }
-        super.detach();
     }
 }

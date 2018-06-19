@@ -585,10 +585,6 @@ public class TabSheet extends AbstractComponentContainer
      */
     private void setSelected(Component component) {
         Tab tab = tabs.get(selected);
-        if (tab != null && !Objects.equals(tab.getComponent(), component) && tab.getComponent() != null && tab.getComponent().isAttached()) {
-            tab.getComponent().detach();
-            tab.getComponent().attach(); // ugly hack
-        }
 
         selected = component;
         // Repaint of the selected component is needed as only the selected
@@ -1507,7 +1503,6 @@ public class TabSheet extends AbstractComponentContainer
 
     /*
      * (non-Javadoc)
-     *
      * @see com.vaadin.ui.AbstractComponent#readDesign(org.jsoup.nodes .Element,
      * com.vaadin.ui.declarative.DesignContext)
      */
@@ -1643,7 +1638,6 @@ public class TabSheet extends AbstractComponentContainer
 
     /*
      * (non-Javadoc)
-     *
      * @see com.vaadin.ui.AbstractComponent#getCustomAttributes()
      */
     @Override
@@ -1655,7 +1649,6 @@ public class TabSheet extends AbstractComponentContainer
 
     /*
      * (non-Javadoc)
-     *
      * @see com.vaadin.ui.AbstractComponent#writeDesign(org.jsoup.nodes.Element
      * , com.vaadin.ui.declarative.DesignContext)
      */
