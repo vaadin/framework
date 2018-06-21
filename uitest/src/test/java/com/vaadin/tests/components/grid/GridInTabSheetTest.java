@@ -10,8 +10,10 @@ import org.openqa.selenium.Keys;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.elements.TabSheetElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -93,7 +95,7 @@ public class GridInTabSheetTest extends MultiBrowserTest {
 
         GridElement grid = $(GridElement.class).first();
 
-        grid.getCell(0, 1).doubleClick();
+        editRow(grid, 0);
         assertEquals("Editor should be open", "0",
                 grid.getEditor().getField(1).getAttribute("value"));
 
@@ -105,18 +107,28 @@ public class GridInTabSheetTest extends MultiBrowserTest {
         assertFalse("Editor should be closed.",
                 grid.isElementPresent(By.vaadin("#editor")));
 
-        grid.getCell(1, 1).doubleClick();
+        editRow(grid, 1);
         assertEquals("Editor should open after tab switch", "1",
                 grid.getEditor().getField(1).getAttribute("value"));
 
         // Close the current editor and reopen on a different row
         grid.sendKeys(Keys.ESCAPE);
 
-        grid.getCell(0, 1).doubleClick();
+        editRow(grid, 0);
         assertEquals("Editor should move", "0",
                 grid.getEditor().getField(1).getAttribute("value"));
 
         assertNoErrorNotifications();
+    }
+
+    protected void editRow(GridElement grid, int row) {
+        GridCellElement cell = grid.getCell(row, 1);
+        if (BrowserUtil.isFirefox(getDesiredCapabilities())) {
+            cell.click();
+            grid.sendKeys(Keys.RETURN);
+        } else {
+            cell.doubleClick();
+        }
     }
 
     private void removeGridRow() {
