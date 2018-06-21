@@ -82,10 +82,6 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.data\\.provider\\.HierarchyMapper\\$TreeLevelQuery",
             "com\\.vaadin\\.data\\.util\\.ReflectTools.*", //
             "com\\.vaadin\\.data\\.util\\.JsonUtil.*", //
-            "com\\.vaadin\\.v7\\.data\\.util.BeanItemContainerGenerator.*",
-            "com\\.vaadin\\.v7\\.data\\.util\\.sqlcontainer\\.connection\\.MockInitialContextFactory",
-            "com\\.vaadin\\.v7\\.data\\.util\\.sqlcontainer\\.DataGenerator",
-            "com\\.vaadin\\.v7\\.data\\.util\\.sqlcontainer\\.FreeformQueryUtil",
             "com\\.vaadin\\.data\\.util\\.BeanUtil.*",
             // the JSR-303 constraint interpolation context
             "com\\.vaadin\\.data\\.validator\\.BeanValidator\\$1", //
@@ -106,7 +102,19 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.server\\.communication\\.JSR356WebsocketInitializer.*", //
             "com\\.vaadin\\.screenshotbrowser\\.ScreenshotBrowser.*", //
             "com\\.vaadin\\.osgi.*", //
-            "com\\.vaadin\\.server\\.osgi.*" };
+            "com\\.vaadin\\.server\\.osgi.*",
+            //V7
+            "com\\.vaadin\\.v7\\.ui\\.themes\\.BaseTheme",
+            "com\\.vaadin\\.v7\\.ui\\.themes\\.ChameleonTheme",
+            "com\\.vaadin\\.v7\\.ui\\.themes\\.Reindeer",
+            "com\\.vaadin\\.v7\\.ui\\.themes\\.Runo",
+            "com\\.vaadin\\.v7\\.tests\\.VaadinClasses",
+            "com\\.vaadin\\.v7\\.event\\.FieldEvents", //
+            "com\\.vaadin\\.v7\\.data\\.util.BeanItemContainerGenerator.*",
+            "com\\.vaadin\\.v7\\.data\\.util\\.sqlcontainer\\.connection\\.MockInitialContextFactory",
+            "com\\.vaadin\\.v7\\.data\\.util\\.sqlcontainer\\.DataGenerator",
+            "com\\.vaadin\\.v7\\.data\\.util\\.sqlcontainer\\.FreeformQueryUtil",
+    };
 
     /**
      * Tests that all the relevant classes and interfaces under
