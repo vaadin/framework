@@ -2919,6 +2919,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private CheckBox selectAllCheckBox;
         private boolean userSelectionAllowed = true;
         private boolean enabled = true;
+        private HandlerRegistration headerClickHandler;
 
         SelectionColumn(final Renderer<Boolean> selectColumnRenderer) {
             super(selectColumnRenderer);
@@ -2972,7 +2973,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         });
                 selectAllCheckBox.setValue(selected);
 
-                addHeaderClickHandler(new HeaderClickHandler() {
+                headerClickHandler = addHeaderClickHandler(new HeaderClickHandler() {
                     @Override
                     public void onClick(GridClickEvent event) {
                         if (!userSelectionAllowed) {
@@ -3127,6 +3128,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             // Re-render select checkboxes
             getEscalator().getBody().refreshRows(0,
                     getEscalator().getBody().getRowCount());
+        }
+
+        public void cleanup() {
+            if (headerClickHandler != null) {
+                headerClickHandler.removeHandler();
+                headerClickHandler = null;
+            }
         }
     }
 
@@ -7857,6 +7865,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             final Renderer<Boolean> selectColumnRenderer) {
         if (this.selectColumnRenderer == selectColumnRenderer) {
             return;
+        }
+
+        if (this.selectionColumn != null) {
+            selectionColumn.cleanup();
         }
 
         if (this.selectColumnRenderer != null) {
