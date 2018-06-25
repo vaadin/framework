@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[lazy-query-container]]
-Lazy query container
---------------------
+= Lazy query container
 
 [[when-to-use-lazy-query-container]]
 When to Use Lazy Query Container?

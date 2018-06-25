@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -659,10 +659,8 @@ public class MultiSelectionRenderer<T>
                         && event.getButton() == NativeEvent.BUTTON_LEFT)) {
             startDragSelect(event, Element.as(event.getEventTarget()));
             return true;
-        } else {
-            throw new IllegalStateException(
-                    "received unexpected event: " + event.getType());
         }
+        return false;
     }
 
     private void startDragSelect(NativeEvent event, final Element target) {

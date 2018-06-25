@@ -5,13 +5,12 @@ layout: page
 ---
 
 [[configuring-grid-column-widths]]
-Configuring Grid column widths
-------------------------------
+= Configuring Grid column widths
 
 To try out how the widths of Grid columns work in different situations,
 we'll use the same base implementation as in the
-link:UsingGridWithAContainer.asciidoc[Using Grid with a Container]
-example.
+<<UsingGridWithAContainer#using-grid-with-a-container,
+Using Grid with a Container>> example.
 
 Grid does by default check the widths of all cells on the first pageful
 of data and allocate column widths based on that. If there's room to
