@@ -4,13 +4,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.internal.WrapsElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebElement;
 
@@ -22,12 +20,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * Upload right after uploading is succeeded (#8728)
  */
 public class UploadInTabsheetTest extends MultiBrowserTest {
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        // PhantomJS fails to upload files for unknown reasons
-        return getBrowsersExcludingPhantomJS();
-    }
 
     @Test
     public void testThatChangingTabAfterUploadDoesntCauseErrors()

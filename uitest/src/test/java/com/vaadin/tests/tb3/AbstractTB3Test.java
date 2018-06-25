@@ -25,7 +25,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.junit.Rule;
-import org.junit.rules.ExternalResource;
 import org.junit.rules.TestName;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
@@ -114,15 +113,6 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Timeout used by the TB grid
      */
     private static final int BROWSER_TIMEOUT_IN_MS = 30 * 1000;
-
-    protected static DesiredCapabilities PHANTOMJS2() {
-        DesiredCapabilities phantomjs2 = new VaadinBrowserFactory()
-                .create(Browser.PHANTOMJS, "2");
-        // Hack for the test cluster
-        phantomjs2.setCapability("phantomjs.binary.path",
-                "/usr/bin/phantomjs2");
-        return phantomjs2;
-    }
 
     private boolean debug = false;
 

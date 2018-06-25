@@ -4,13 +4,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.lessThan;
 
-import java.util.List;
-
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -20,11 +17,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * @author Vaadin Ltd
  */
 public class ContextMenuSizeTest extends MultiBrowserTest {
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsersSupportingContextMenu();
-    }
 
     @Override
     public void setup() throws Exception {

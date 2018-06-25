@@ -1,25 +1,15 @@
 package com.vaadin.tests.resources;
 
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class FrontendLaterLoadedResourceUITest extends MultiBrowserTest {
-
-    @Override
-    protected List<DesiredCapabilities> getBrowserCapabilities(Browser... browsers) {
-        return getBrowsersExcludingPhantomJS();
-    }
-
     @Test
     public void correctEs5Es6FileImportedThroughFrontend() {
         openTestURL();

@@ -3,7 +3,6 @@ package com.vaadin.tests.contextclick;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +11,6 @@ import org.junit.Test;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.AbstractComponentElement;
 import com.vaadin.testbench.elements.ButtonElement;
@@ -25,11 +23,6 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
 
     private Pattern defaultLog = Pattern
             .compile("[0-9]+. ContextClickEvent: [(]([0-9]+), ([0-9]+)[)]");
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsersSupportingContextMenu();
-    }
 
     @Before
     public void setUp() {

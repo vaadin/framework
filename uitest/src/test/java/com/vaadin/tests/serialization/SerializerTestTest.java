@@ -3,33 +3,22 @@ package com.vaadin.tests.serialization;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import org.junit.Test;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.testbench.annotations.RunLocally;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class SerializerTestTest extends MultiBrowserTest {
 
     private static final SimpleDateFormat FORMAT = new SimpleDateFormat(
             "EEE MMM dd HH:mm:ss 'GMT'Z yyyy", new Locale("en", "fi"));
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        // IE11 and PhantomJS don't support getting timezone
-        return getBrowsersExcludingPhantomJS();
-    }
 
     @Test
     public void testSerialization() {

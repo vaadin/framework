@@ -4,17 +4,9 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.util.List;
-
 import org.junit.Test;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 public class PushConfigurationWebSocketTest extends PushConfigurationTest {
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsersSupportingWebSocket();
-    }
 
     @Test
     public void testWebsocket() throws InterruptedException {
