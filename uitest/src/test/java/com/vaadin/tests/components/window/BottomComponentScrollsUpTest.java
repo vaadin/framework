@@ -1,10 +1,13 @@
 package com.vaadin.tests.components.window;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
@@ -38,6 +41,7 @@ public class BottomComponentScrollsUpTest extends MultiBrowserTest {
         Dimension verticalLayoutSize = verticalLayout.getSize();
 
         panelScrollable.scroll(verticalLayoutSize.height);
+        int beforeClick = getScrollTop(panelScrollable);
 
         WebElement button = verticalLayout
                 .findElement(By.className("v-button"));
@@ -50,6 +54,13 @@ public class BottomComponentScrollsUpTest extends MultiBrowserTest {
                         panelScrollableSize.height / 2)
                 .click().build().perform();
 
-        compareScreen("window");
+        assertEquals(
+                "Clicking a button or the panel should not cause scrolling.",
+                beforeClick, getScrollTop(panelScrollable));
+    }
+
+    private int getScrollTop(WebElement e) {
+        return Integer.parseInt(((JavascriptExecutor) getDriver())
+                .executeScript("return arguments[0].scrollTop;", e).toString());
     }
 }
