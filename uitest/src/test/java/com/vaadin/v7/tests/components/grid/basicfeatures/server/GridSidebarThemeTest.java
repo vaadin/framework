@@ -1,11 +1,9 @@
 package com.vaadin.v7.tests.components.grid.basicfeatures.server;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 import com.vaadin.v7.tests.components.grid.basicfeatures.GridSidebarFeatures;
@@ -59,11 +57,5 @@ public class GridSidebarThemeTest extends GridBasicFeaturesTest {
         getSidebarOpenButton().click();
 
         compareScreen(theme + "-SidebarClosed2");
-    }
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        // phantom JS looks wrong from the beginning, so not tested
-        return getBrowsersExcludingPhantomJS();
     }
 }

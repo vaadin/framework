@@ -8,7 +8,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -28,9 +27,8 @@ public class ComboboxSelectedItemTextTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        // Ignoring Chrome 40 because of a regression. See #16636.
-        return getBrowserCapabilities(Browser.IE11, Browser.FIREFOX,
-                Browser.PHANTOMJS);
+        // Regression. See #16636.
+        return getBrowsersExcludingChrome();
     }
 
     @Test

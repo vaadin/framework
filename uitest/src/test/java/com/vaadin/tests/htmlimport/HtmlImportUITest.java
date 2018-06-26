@@ -7,35 +7,14 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class HtmlImportUITest extends MultiBrowserTest {
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-
-        List<DesiredCapabilities> browsers = getBrowsersExcludingPhantomJS();
-        browsers.add(PHANTOMJS2());
-
-        return browsers.stream().filter(dc -> {
-            // Won't work on Firefox 24, will work when testing is done on a
-            // modern Firefox
-            if (BrowserUtil.isFirefox(dc) && dc.getVersion().equals("24")) {
-                return false;
-            }
-
-            return true;
-
-        }).collect(Collectors.toList());
-    }
 
     @Test
     public void importsLoadedAfterJs() {

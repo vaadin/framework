@@ -3,22 +3,14 @@ package com.vaadin.tests.components.abstractcomponent;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-
 import org.junit.Test;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.UIElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ContextClickUITest extends MultiBrowserTest {
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsersSupportingContextMenu();
-    }
 
     @Test
     public void testContextClick() {

@@ -2,22 +2,14 @@ package com.vaadin.tests.components.checkbox;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class CheckboxContextClickTest extends MultiBrowserTest {
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsersSupportingContextMenu();
-    }
 
     @Test
     public void contextClickCheckboxAndText() {
