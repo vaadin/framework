@@ -2,13 +2,9 @@ package com.vaadin.tests.extensions;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
@@ -22,13 +18,6 @@ public class SetThemeAndResponsiveLayoutTest extends MultiBrowserTest {
         // We need this in order to ensure that the initial width-range is
         // width: 600px- and height: 500px-
         testBench().resizeViewPortTo(1024, 768);
-    }
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        // Seems like stylesheet onload is not fired on PhantomJS
-        // https://github.com/ariya/phantomjs/issues/12332
-        return getBrowsersExcludingPhantomJS();
     }
 
     @Test

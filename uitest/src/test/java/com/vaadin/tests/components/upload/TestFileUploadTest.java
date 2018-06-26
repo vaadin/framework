@@ -9,13 +9,11 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.internal.WrapsElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebElement;
 
@@ -23,12 +21,6 @@ import com.vaadin.testbench.elements.UploadElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TestFileUploadTest extends MultiBrowserTest {
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        // PhantomJS fails to upload files for unknown reasons
-        return getBrowsersExcludingPhantomJS();
-    }
 
     @Test
     public void testUploadAnyFile() throws Exception {

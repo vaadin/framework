@@ -2,22 +2,13 @@ package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-
 import org.junit.Test;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class GridMultiSelectEmptyTest extends MultiBrowserTest {
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        // On PhantomJS the result is more correct before recalculation.
-        return getBrowsersExcludingPhantomJS();
-    }
 
     @Test
     public void testCheckBoxColumnCorrectSize() {

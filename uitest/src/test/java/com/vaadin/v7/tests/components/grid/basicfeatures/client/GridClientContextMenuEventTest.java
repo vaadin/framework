@@ -2,23 +2,14 @@ package com.vaadin.v7.tests.components.grid.basicfeatures.client;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
 
 public class GridClientContextMenuEventTest
         extends GridBasicClientFeaturesTest {
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        // PhantomJS doesn't support context click..
-        return getBrowsersExcludingPhantomJS();
-    }
 
     @Test
     public void testContextMenuEventIsHandledCorrectly() {

@@ -9,7 +9,6 @@ import java.util.Set;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 /**
  * Test which uses theme returned by {@link #getTheme()} for running the test
@@ -42,12 +41,5 @@ public abstract class MultiBrowserThemeTest extends MultiBrowserTest {
         Set<String> params = new HashSet<>(Arrays.asList(parameters));
         params.add("theme=" + theme);
         super.openTestURL(uiClass, params.toArray(new String[params.size()]));
-    }
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsersToTest = getBrowsersExcludingPhantomJS();
-        browsersToTest.add(PHANTOMJS2());
-        return browsersToTest;
     }
 }
