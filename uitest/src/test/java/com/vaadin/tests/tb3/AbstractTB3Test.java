@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.logging.Level;
 
 import org.apache.commons.io.IOUtils;
@@ -1183,6 +1184,11 @@ public abstract class AbstractTB3Test extends ParallelTest {
                 element)).intValue();
     }
 
+    protected int getScrollTop(WebElement element) {
+        return ((Number) executeScript("return arguments[0].scrollTop;",
+                element)).intValue();
+    }
+
     /**
      * Returns client height rounded up instead of as double because of IE9
      * issues: https://dev.vaadin.com/ticket/18469
@@ -1203,6 +1209,15 @@ public abstract class AbstractTB3Test extends ParallelTest {
                 + "return Math.ceil(h);";
 
         return ((Number) executeScript(script, e)).intValue();
+    }
+
+    protected TimeZone getBrowserTimeZone() {
+        // Ask TimeZone from browser
+        String browserTimeZone = ((JavascriptExecutor) getDriver())
+                .executeScript(
+                        "return Intl.DateTimeFormat().resolvedOptions().timeZone;")
+                .toString();
+        return TimeZone.getTimeZone(browserTimeZone);
     }
 
     protected void assertElementsEquals(WebElement expectedElement,
