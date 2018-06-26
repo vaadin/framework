@@ -2,13 +2,10 @@ package com.vaadin.v7.tests.components.tree;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-
 import org.junit.Test;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -18,11 +15,6 @@ public class TreeContextMenuAndIconsTest extends MultiBrowserTest {
     @Override
     protected Class<?> getUIClass() {
         return Trees.class;
-    }
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsersSupportingContextMenu();
     }
 
     @Test

@@ -15,7 +15,6 @@ import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.EmbeddedElement;
 import com.vaadin.testbench.elements.MenuBarElement;
 import com.vaadin.testbench.elements.TableElement;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -23,14 +22,9 @@ public class LegacyComponentThemeChangeTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        // Seems like stylesheet onload is not fired on PhantomJS
-        // https://github.com/ariya/phantomjs/issues/12332
-        List<DesiredCapabilities> l = getBrowsersExcludingPhantomJS();
-
         // For some reason, IE times out when trying to open the combobox,
         // #18341
-        l.remove(Browser.IE11.getDesiredCapabilities());
-        return l;
+        return getBrowsersExcludingIE();
     }
 
     @Test

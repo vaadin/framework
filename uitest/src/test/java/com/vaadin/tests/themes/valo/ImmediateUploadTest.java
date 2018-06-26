@@ -77,9 +77,8 @@ public class ImmediateUploadTest extends MultiBrowserTest {
     }
 
     @Test
-    public void testAcceptAttribute()
-    {
+    public void testAcceptAttribute() {
         WebElement input = getUploadFileInput("immediateupload");
-        assertThat(input.getAttribute("accept"),is(TEST_MIME_TYPE));
+        assertThat(input.getAttribute("accept"), is(TEST_MIME_TYPE));
     }
 }
