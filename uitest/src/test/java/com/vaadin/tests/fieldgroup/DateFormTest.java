@@ -3,6 +3,9 @@ package com.vaadin.tests.fieldgroup;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -13,6 +16,9 @@ import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateFormTest extends MultiBrowserTest {
+
+    private final SimpleDateFormat FORMAT = new SimpleDateFormat(
+            "MMM dd, yyyy h:mm:ss a");
 
     @Test
     public void testCorrectDateFormat() throws Exception {
@@ -26,8 +32,9 @@ public class DateFormTest extends MultiBrowserTest {
         assertTrue("Unexpected InlineDateField state, 20th not selected.",
                 hasCssClass(day20,
                         "v-inline-datefield-calendarpanel-day-selected"));
+        // Depends on the TZ offset on the server
         assertEquals("Unexpected TextField contents,",
-                "Jan 20, 1984 4:34:49 PM",
+                FORMAT.format(DateForm.DATE),
                 $(TextFieldElement.class).first().getValue());
     }
 
