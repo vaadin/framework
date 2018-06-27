@@ -46,7 +46,7 @@ public interface SerializablePredicate<T> extends Predicate<T>, Serializable {
      *         AND of this predicate and the {@code other} predicate
      * @throws NullPointerException
      *             if other is null
-     * @since
+     * @since 8.5
      */
     default SerializablePredicate<T> and(
             SerializablePredicate<? super T> other) {
@@ -60,7 +60,7 @@ public interface SerializablePredicate<T> extends Predicate<T>, Serializable {
      *
      * @return a predicate that represents the logical negation of this
      *         predicate
-     * @since
+     * @since 8.5
      */
     default SerializablePredicate<T> negate() {
         return t -> !test(t);
@@ -83,7 +83,7 @@ public interface SerializablePredicate<T> extends Predicate<T>, Serializable {
      *         OR of this predicate and the {@code other} predicate
      * @throws NullPointerException
      *             if other is null
-     * @since
+     * @since 8.5
      */
     default SerializablePredicate<T> or(
             SerializablePredicate<? super T> other) {
@@ -102,7 +102,7 @@ public interface SerializablePredicate<T> extends Predicate<T>, Serializable {
      *            may be {@code null}
      * @return a predicate that tests if two arguments are equal according to
      *         {@link Objects#equals(Object, Object)}
-     * @since
+     * @since 8.5
      */
     static <T> SerializablePredicate<T> isEqual(Serializable targetRef) {
         return (null == targetRef) ? Objects::isNull
