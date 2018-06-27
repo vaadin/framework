@@ -7,17 +7,15 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import org.junit.Test;
-import org.openqa.selenium.JavascriptExecutor;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class SerializerTestTest extends MultiBrowserTest {
 
-    private static final SimpleDateFormat FORMAT = new SimpleDateFormat(
+    private final SimpleDateFormat FORMAT = new SimpleDateFormat(
             "EEE MMM dd HH:mm:ss 'GMT'Z yyyy", new Locale("en", "fi"));
 
     @Test
@@ -127,15 +125,6 @@ public class SerializerTestTest extends MultiBrowserTest {
         assertEquals(
                 "state.booleanArray: [true, true, false, true, false, false]",
                 getLogRow(logRow++));
-    }
-
-    private TimeZone getBrowserTimeZone() {
-        // Ask TimeZone from browser
-        String browserTimeZone = ((JavascriptExecutor) getDriver())
-                .executeScript(
-                        "return Intl.DateTimeFormat().resolvedOptions().timeZone;")
-                .toString();
-        return TimeZone.getTimeZone(browserTimeZone);
     }
 
     private String formatDate(Date date) {

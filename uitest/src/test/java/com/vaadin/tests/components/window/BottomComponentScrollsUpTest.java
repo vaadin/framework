@@ -1,5 +1,7 @@
 package com.vaadin.tests.components.window;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
 import org.junit.Test;
@@ -38,6 +40,7 @@ public class BottomComponentScrollsUpTest extends MultiBrowserTest {
         Dimension verticalLayoutSize = verticalLayout.getSize();
 
         panelScrollable.scroll(verticalLayoutSize.height);
+        int beforeClick = getScrollTop(panelScrollable);
 
         WebElement button = verticalLayout
                 .findElement(By.className("v-button"));
@@ -50,6 +53,8 @@ public class BottomComponentScrollsUpTest extends MultiBrowserTest {
                         panelScrollableSize.height / 2)
                 .click().build().perform();
 
-        compareScreen("window");
+        assertEquals(
+                "Clicking a button or the panel should not cause scrolling.",
+                beforeClick, getScrollTop(panelScrollable));
     }
 }

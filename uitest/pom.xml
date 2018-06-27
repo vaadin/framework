@@ -30,11 +30,6 @@
         </repository>
     </repositories>
 
-    <prerequisites>
-        <!-- phantomjs-maven-plugin required maven 3.1 or newer -->
-        <maven>3.1</maven>
-    </prerequisites>
-
     <dependencies>
 
         <!-- API DEPENDENCIES -->
@@ -312,7 +307,6 @@
                         <browsers.exclude>${browsers.exclude}</browsers.exclude>
                         <categories.include>${categories.include}</categories.include>
                         <categories.exclude>${categories.exclude}</categories.exclude>
-                        <useLocalWebDriver>${useLocalWebDriver}</useLocalWebDriver>
                         <browserstack.identifier>${browserstack.identifier}</browserstack.identifier>
                     </systemPropertyVariables>
                     <includes>
