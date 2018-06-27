@@ -71,11 +71,6 @@ public class FormLayoutResizingTest extends MultiBrowserThemeTest {
                 originalWidths[1] + 200, expandedWidths[1]);
     }
 
-    @Override
-    protected boolean useNativeEventsForIE() {
-        return !BrowserUtil.isIE(getDesiredCapabilities(), 11);
-    }
-
     private static int[] getWidths(List<TableElement> tables) {
         int[] widths = new int[tables.size()];
         for (int i = 0; i < widths.length; i++) {
