@@ -869,7 +869,8 @@ public class ConnectorTracker implements Serializable {
         }
         Map<String, StreamVariable> nameToStreamVar = pidToNameToStreamVariable
                 .get(connectorId);
-        nameToStreamVar.remove(variableName);
+        StreamVariable streamVar = nameToStreamVar.remove(variableName);
+        streamVariableToSeckey.remove(streamVar);
         if (nameToStreamVar.isEmpty()) {
             pidToNameToStreamVariable.remove(connectorId);
         }
