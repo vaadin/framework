@@ -170,7 +170,7 @@ public class PushHandler {
      * Creates the ServerRpcHandler to use.
      *
      * @return the ServerRpcHandler to use
-     * @since
+     * @since 8.5
      */
     protected ServerRpcHandler createRpcHandler() {
         return new ServerRpcHandler();
@@ -366,11 +366,10 @@ public class PushHandler {
                 /*
                  * UI not found, could be because FF has asynchronously closed
                  * the websocket connection and Atmosphere has already done
-                 * cleanup of the request attributes.
-                 *
-                 * In that case, we still have a chance of finding the right UI
-                 * by iterating through the UIs in the session looking for one
-                 * using the same AtmosphereResource.
+                 * cleanup of the request attributes. In that case, we still
+                 * have a chance of finding the right UI by iterating through
+                 * the UIs in the session looking for one using the same
+                 * AtmosphereResource.
                  */
                 ui = findUiUsingResource(resource, session.getUIs());
 

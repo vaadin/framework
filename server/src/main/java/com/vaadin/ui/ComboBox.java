@@ -285,7 +285,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      *
      * @param dataCommunicator
      *            the data comnunicator to use with this ComboBox
-     * @since
+     * @since 8.5
      */
     protected ComboBox(DataCommunicator<T> dataCommunicator) {
         super(dataCommunicator);

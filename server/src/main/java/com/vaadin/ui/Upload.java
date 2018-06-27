@@ -1207,7 +1207,7 @@ public class Upload extends AbstractComponent
      *
      * @return comma-separated list of desired mime types to be uploaded
      * @see #setAcceptMimeTypes
-     * @since
+     * @since 8.5
      */
     public String getAcceptMimeTypes() {
         return getState(false).acceptMimeTypes;
@@ -1223,7 +1223,7 @@ public class Upload extends AbstractComponent
      * @param acceptMimeTypes
      *            comma-separated list of desired mime types to be uploaded
      * @see #getAcceptMimeTypes
-     * @since
+     * @since 8.5
      */
     public void setAcceptMimeTypes(String acceptMimeTypes) {
         getState().acceptMimeTypes = acceptMimeTypes;
