@@ -52,7 +52,6 @@
             too early in case of errors -->
         <!-- See e.g. https://issues.apache.org/jira/browse/SOLR-8453 -->
         <jetty.version>9.2.9.v20150224</jetty.version>
-        <phantomjs.version>2.1.1</phantomjs.version>
 
         <!-- Sonar properties -->
         <sonar.java.source>8</sonar.java.source>
@@ -398,11 +397,6 @@
                     <version>2.19.1</version>
                 </plugin>
                 <plugin>
-                    <groupId>com.github.klieber</groupId>
-                    <artifactId>phantomjs-maven-plugin</artifactId>
-                    <version>0.7</version>
-                </plugin>
-                <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>1.8</version>
                 </plugin>
@@ -510,16 +504,35 @@
                                 <pluginExecution>
                                     <pluginExecutionFilter>
                                         <groupId>
-                                            com.github.klieber
+                                            net.revelc.code.formatter
                                         </groupId>
                                         <artifactId>
-                                            phantomjs-maven-plugin
+                                            formatter-maven-plugin
                                         </artifactId>
                                         <versionRange>
-                                            [0.7,)
+                                            [2.7.2,)
                                         </versionRange>
                                         <goals>
-                                            <goal>install</goal>
+                                            <goal>format</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            com.github.dantwining.whitespace-maven-plugin
+                                        </groupId>
+                                        <artifactId>
+                                            whitespace-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.0.4,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>trim</goal>
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
