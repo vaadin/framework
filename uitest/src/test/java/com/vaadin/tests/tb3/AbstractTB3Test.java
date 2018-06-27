@@ -25,6 +25,7 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.rules.TestName;
 import org.junit.runner.Description;
@@ -1212,6 +1213,10 @@ public abstract class AbstractTB3Test extends ParallelTest {
     }
 
     protected TimeZone getBrowserTimeZone() {
+        Assume.assumeFalse(
+                "Internet Explorer 11 does not support resolvedOptions timeZone",
+                BrowserUtil.isIE(getDesiredCapabilities(), 11));
+
         // Ask TimeZone from browser
         String browserTimeZone = ((JavascriptExecutor) getDriver())
                 .executeScript(
