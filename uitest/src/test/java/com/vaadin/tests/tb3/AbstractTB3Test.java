@@ -34,14 +34,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
-import org.openqa.selenium.interactions.internal.Coordinates;
-import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.internal.WrapsElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.HttpCommandExecutor;
@@ -167,10 +166,6 @@ public abstract class AbstractTB3Test extends ParallelTest {
     protected WebElement getTooltipElement() {
         return getDriver().findElement(
                 com.vaadin.testbench.By.className("v-tooltip-text"));
-    }
-
-    protected Coordinates getCoordinates(TestBenchElement element) {
-        return ((Locatable) element.getWrappedElement()).getCoordinates();
     }
 
     private boolean hasDebugMessage(String message) {

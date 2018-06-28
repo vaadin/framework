@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.menubar;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -7,9 +8,7 @@ import java.util.List;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.HasInputDevices;
-import org.openqa.selenium.interactions.Mouse;
-import org.openqa.selenium.internal.Locatable;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.MenuBarElement;
@@ -36,23 +35,22 @@ public class MenuBarSubmenusClosingValoTest extends MultiBrowserTest {
     }
 
     @Test
-    public void testEnableParentLayoutControlByMouse() {
+    public void testEnableParentLayoutControlByMouse()
+            throws InterruptedException {
         openTestURL();
-
-        Mouse mouse = ((HasInputDevices) getDriver()).getMouse();
 
         List<WebElement> menuItemList = driver
                 .findElements(By.className("v-menubar-menuitem"));
 
-        mouse.click(((Locatable) menuItemList.get(0)).getCoordinates());
+        new Actions(getDriver()).moveToElement(menuItemList.get(1)).click()
+                .perform();
         waitForElementPresent(By.className("v-menubar-popup"));
 
-        mouse.mouseMove(((Locatable) menuItemList.get(1)).getCoordinates());
-        mouse.mouseMove(((Locatable) menuItemList.get(2)).getCoordinates());
-
+        new Actions(getDriver()).moveToElement(menuItemList.get(1)).perform();
+        new Actions(getDriver()).moveToElement(menuItemList.get(2)).perform();
         waitForElementPresent(By.className("v-menubar-popup"));
 
         int count = driver.findElements(By.className("v-menubar-popup")).size();
-        assertTrue("The count of open popups should be one", count == 1);
+        assertEquals("The count of open popups should be one", 1, count);
     }
 }

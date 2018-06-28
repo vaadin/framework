@@ -8,8 +8,7 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 
 import org.junit.Test;
-import org.openqa.selenium.interactions.Mouse;
-import org.openqa.selenium.interactions.internal.Coordinates;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -31,24 +30,20 @@ public class AdjacentElementsWithTooltipsTest extends MultiBrowserTest {
     @Test
     public void tooltipsHaveQuickOpenDelay() throws InterruptedException {
         openTestURL();
-        Coordinates button0Coordinates = getButtonCoordinates("Button 0");
-        Coordinates button1Coordinates = getButtonCoordinates("Button 1");
 
-        Mouse mouse = getMouse();
-        mouse.mouseMove(button0Coordinates, 10, 10);
+        new Actions(getDriver()).moveToElement(getButton("Button 0")).perform();
         sleep(1000);
-        assertThat(getTooltipElement().getLocation().x, is(greaterThan(0)));
+        assertThat(getTooltipElement().getLocation().getX(),
+                is(greaterThan(0)));
 
-        mouse.mouseMove(button1Coordinates, 10, 10);
-        assertThat(getTooltipElement().getLocation().x, is(lessThan(-1000)));
+        ButtonElement button1 = getButton("Button 1");
+        new Actions(getDriver()).moveToElement(button1).perform();
+        assertThat(getTooltipElement().getLocation().getX(),
+                is(lessThan(-1000)));
 
         sleep(1000);
-        assertThat(getTooltipElement().getLocation().x,
-                is(greaterThan(button1Coordinates.onPage().x)));
-    }
-
-    private Coordinates getButtonCoordinates(String caption) {
-        return getCoordinates(getButton(caption));
+        assertThat(getTooltipElement().getLocation().getX(),
+                is(greaterThan(button1.getLocation().getX())));
     }
 
     private ButtonElement getButton(String caption) {
