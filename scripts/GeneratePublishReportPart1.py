@@ -14,8 +14,6 @@ metadataChecks = {
 	'https://vaadin.com/download/VERSIONS_7': '^7\..*',
 	'https://vaadin.com/download/release/7.7/LATEST': '^7\..*',
 	'https://vaadin.com/download/LATEST': '^6\..*',
-	'https://vaadin.com/download/LATEST8': '^8\.1\..*',
-	'https://vaadin.com/download/PRERELEASES': '^{ver}'
 }
 
 parser = argparse.ArgumentParser(description="Post-publish report generator")
@@ -37,10 +35,15 @@ elif not isdir(resultPath):
 	print("Result path is not a directory.")
 	sys.exit(1)
 
+# Latest 8 checks based on current version number.
 (major, minor, maintenance) = args.version.split(".", 2)
 prerelease = "." in maintenance
 if prerelease:
 	maintenance = maintenance.split('.')[0]
+	metadataChecks['https://vaadin.com/download/PRERELEASES'] = '^{ver}'
+	metadataChecks['https://vaadin.com/download/LATEST8'] = '^%d\.%d\..*' % (int(major), int(minor) - 1)
+else:
+	metadataChecks['https://vaadin.com/download/LATEST8'] = '^{ver}'
 
 def checkUrlContents(url, regexp):
 	r = requests.get(url)
@@ -52,7 +55,9 @@ def checkUrlStatus(url):
 
 metadataOk = True
 for url in metadataChecks:
-	metadataOk = metadataOk and checkUrlContents(url, metadataChecks[url].format(ver=args.version))
+	pattern = metadataChecks[url].format(ver=args.version)
+	print("Checking: %s with pattern %s" % (url, pattern))
+	metadataOk = metadataOk and checkUrlContents(url, pattern)
 
 tagOk = checkUrlStatus("https://github.com/vaadin/framework/releases/tag/{ver}".format(ver=args.version))
 
