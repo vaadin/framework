@@ -60,7 +60,7 @@
         <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
 
         <vaadin.icons.version>3.0.1</vaadin.icons.version>
-        <vaadin.testbench.version>5.1.2</vaadin.testbench.version>
+        <vaadin.testbench.version>5.2.0.beta1</vaadin.testbench.version>
     </properties>
 
     <pluginRepositories>
