@@ -4,7 +4,6 @@ import com.vaadin.data.Result;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.DateField;
-import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.Year;
@@ -31,7 +30,7 @@ public class DateFieldUnparsableDateString extends AbstractTestUI {
         protected Result<LocalDate> handleUnparsableDateString(
                 String dateString) {
             try {
-                String parseableString = StringUtils.remove(dateString, ' ');
+                String parseableString = dateString == null ? "" : dateString.replaceAll(" ", "");
                 if (parseableString.length() % 2 == 1) {
                     parseableString = "0" + parseableString;
                 }
@@ -66,7 +65,6 @@ public class DateFieldUnparsableDateString extends AbstractTestUI {
                                     .toFormatter()));
                 case 8:
                     // Long year ddMMyyyy
-                    parseableString = StringUtils.leftPad(dateString, 8, "0");
                     return Result.ok(LocalDate.parse(parseableString,
                             new DateTimeFormatterBuilder()
                                     .appendPattern("ddMMyyyy").toFormatter()));
