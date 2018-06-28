@@ -3,13 +3,11 @@ package com.vaadin.tests.components.menubar;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.HasInputDevices;
-import org.openqa.selenium.interactions.Mouse;
-import org.openqa.selenium.interactions.internal.Coordinates;
-import org.openqa.selenium.internal.Locatable;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.MenuBarElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -24,13 +22,21 @@ public class MenuBarTooltipsNearEdgeTest extends MultiBrowserTest {
     @Test
     public void testTooltipLocation() {
         openTestURL();
-        Mouse mouse = ((HasInputDevices) getDriver()).getMouse();
-        WebElement menu = $(MenuBarElement.class).first().getWrappedElement();
-        Coordinates menuLocation = ((Locatable) menu).getCoordinates();
-        mouse.click(menuLocation);
-        mouse.mouseMove(menuLocation, 5, -40);
+
+        final MenuBarElement menuBar = $(MenuBarElement.class).first();
+        new Actions(getDriver()).moveToElement(menuBar).click()
+                .moveByOffset(0, -40).perform();
+
         WebElement tooltip = getTooltipElement();
-        assertThat(tooltip.getLocation().x, is(lessThan(
-                menuLocation.onPage().x - tooltip.getSize().getWidth())));
+        assertTrue("Tooltip outside of the screen.",
+                tooltip.getLocation().getX() > 0
+                        && tooltip.getLocation().getY() > 0);
+        assertThat("Tooltip too far to the right",
+                tooltip.getLocation().getX() + tooltip.getSize().getWidth(),
+                is(lessThan(menuBar.getLocation().getX()
+                        + menuBar.getSize().getWidth() / 2)));
+        assertThat("Tooltip too low on the screen",
+                tooltip.getLocation().getY(),
+                is(lessThan(menuBar.getLocation().getY())));
     }
 }

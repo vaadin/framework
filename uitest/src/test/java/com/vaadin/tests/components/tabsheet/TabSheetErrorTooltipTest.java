@@ -9,10 +9,6 @@ import java.io.IOException;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.HasInputDevices;
-import org.openqa.selenium.interactions.Mouse;
-import org.openqa.selenium.interactions.internal.Coordinates;
-import org.openqa.selenium.internal.Locatable;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -34,13 +30,13 @@ public class TabSheetErrorTooltipTest extends MultiBrowserTest {
 
     private void assertTabHasTooltipAndError(int index, String tooltip,
             String errorMessage) {
-        showTooltip(index);
+        testBenchElement(getTab(index)).showTooltip();
         assertTooltip(tooltip);
         assertErrorMessage(errorMessage);
     }
 
     private void assertTabHasNoTooltipNorError(int index) {
-        showTooltip(index);
+        testBenchElement(getTab(index)).showTooltip();
         WebElement tooltip = getCurrentTooltip();
 
         assertThat(tooltip.getText(), is(""));
@@ -48,13 +44,6 @@ public class TabSheetErrorTooltipTest extends MultiBrowserTest {
         WebElement errorMessage = getCurrentErrorMessage();
         assertThat(errorMessage.isDisplayed(), is(false));
 
-    }
-
-    private void showTooltip(int index) {
-        Coordinates elementCoordinates = ((Locatable) getTab(index))
-                .getCoordinates();
-        Mouse mouse = ((HasInputDevices) getDriver()).getMouse();
-        mouse.mouseMove(elementCoordinates);
     }
 
     private WebElement getTab(int index) {
