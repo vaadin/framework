@@ -1020,10 +1020,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      */
     protected void selectMenu(String menuCaption, boolean click) {
         WebElement menuElement = getMenuElement(menuCaption);
-        Dimension size = menuElement.getSize();
-        new Actions(getDriver())
-                .moveToElement(menuElement, size.width - 10, size.height / 2)
-                .perform();
+        new Actions(getDriver()).moveToElement(menuElement).perform();
         if (click) {
             new Actions(getDriver()).click().perform();
         }
@@ -1055,6 +1052,10 @@ public abstract class AbstractTB3Test extends ParallelTest {
     protected void selectMenuPath(String... menuCaptions) {
         selectMenu(menuCaptions[0], true);
 
+        // Make sure menu popup is opened.
+        waitUntil(e -> isElementPresent(By.className("gwt-MenuBarPopup"))
+                || isElementPresent(By.className("v-menubar-popup")));
+
         // Move to the menu item opened below the menu bar.
         new Actions(getDriver())
                 .moveByOffset(0,
@@ -1063,7 +1064,9 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
         for (int i = 1; i < menuCaptions.length - 1; i++) {
             selectMenu(menuCaptions[i]);
-            new Actions(getDriver()).moveByOffset(40, 0).build().perform();
+            new Actions(getDriver()).moveByOffset(
+                    getMenuElement(menuCaptions[i]).getSize().getWidth(), 0)
+                    .build().perform();
         }
         selectMenu(menuCaptions[menuCaptions.length - 1], true);
     }
