@@ -665,7 +665,8 @@ public class DataCommunicator<T> extends AbstractExtension {
         if (isAttached()) {
             attachDataProviderListener();
         }
-        hardReset();
+        reset = true;
+        markAsDirty();
 
         return filter -> {
             if (this.dataProvider != dataProvider) {
@@ -764,14 +765,10 @@ public class DataCommunicator<T> extends AbstractExtension {
                         generators.forEach(g -> g.refreshData(item));
                         getUI().access(() -> refresh(item));
                     } else {
-                        getUI().access(this::hardReset);
+                        reset = true;
+                        getUI().access(() -> markAsDirty());
                     }
                 });
-    }
-
-    private void hardReset() {
-        reset = true;
-        markAsDirty();
     }
 
     private void detachDataProviderListener() {
