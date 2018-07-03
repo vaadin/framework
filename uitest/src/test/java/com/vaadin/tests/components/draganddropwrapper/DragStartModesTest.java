@@ -23,9 +23,13 @@ public class DragStartModesTest extends MultiBrowserTest {
     private void dragToTarget(String dragMode, WebElement dropTarget)
             throws IOException {
         WebElement draggable = vaadinElementById("label" + dragMode);
-        new Actions(driver).moveToElement(draggable, 10, 10).clickAndHold()
-                .moveByOffset(5, 0).perform();
-        new Actions(driver).moveToElement(dropTarget, 12, 10).perform();
+        new Actions(driver)
+                .moveToElement(draggable, getXOffset(draggable, 10),
+                        getYOffset(draggable, 10))
+                .clickAndHold().moveByOffset(5, 0).perform();
+        new Actions(driver).moveToElement(dropTarget,
+                getXOffset(dropTarget, 12), getYOffset(dropTarget, 10))
+                .perform();
         compareScreen("dragImageMode" + dragMode);
         new Actions(driver).release().perform();
     }
