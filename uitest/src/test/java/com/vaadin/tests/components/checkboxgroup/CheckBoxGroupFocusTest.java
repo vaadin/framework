@@ -1,8 +1,12 @@
 package com.vaadin.tests.components.checkboxgroup;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Assert;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxGroupElement;
@@ -25,6 +29,17 @@ public class CheckBoxGroupFocusTest extends FocusTest {
         CheckBoxGroupElement checkBoxGroup = $(CheckBoxGroupElement.class)
                 .last();
         assertTrue(isFocusInsideElement(checkBoxGroup));
+    }
+
+    @Test
+    public void focusDoesNotGoIntoWrapperElement() {
+        openTestURL();
+        new Actions(getDriver()).sendKeys(Keys.TAB, Keys.TAB, Keys.TAB)
+                .perform();
+        assertTrue("Focus not in the second check box group.",
+                isFocusInsideElement($(CheckBoxGroupElement.class).last()));
+        assertEquals("Focus should not be in the wrapping div.", "input",
+                getFocusedElement().getTagName());
     }
 
 }

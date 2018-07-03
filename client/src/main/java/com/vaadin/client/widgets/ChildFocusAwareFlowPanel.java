@@ -90,6 +90,8 @@ public class ChildFocusAwareFlowPanel extends FocusableFlowPanel
     public ChildFocusAwareFlowPanel() {
         eventBus = new HandlerManager(this);
         getElement().getStyle().setOutlineStyle(OutlineStyle.NONE);
+        // The panel itself should not be focused.
+        getElement().setTabIndex(-1);
         super.addFocusHandler(handler);
         super.addBlurHandler(handler);
     }
