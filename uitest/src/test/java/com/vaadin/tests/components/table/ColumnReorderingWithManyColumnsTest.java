@@ -31,9 +31,11 @@ public class ColumnReorderingWithManyColumnsTest extends MultiBrowserTest {
 
     private void drag(WebElement source, WebElement target) {
         Actions actions = new Actions(getDriver());
-        actions.moveToElement(source, 10, 10);
+        actions.moveToElement(source, getXOffset(source, 10),
+                getYOffset(source, 10));
         actions.clickAndHold(source);
-        actions.moveToElement(target, 10, 10);
+        actions.moveToElement(target, getXOffset(target, 10),
+                getYOffset(target, 10));
         actions.perform();
     }
 }
