@@ -40,8 +40,9 @@ public class TreeContextClickTest extends AbstractContextClickTest {
         List<WebElement> nodes = $(TreeElement.class).first()
                 .findElements(By.className("v-tree-node"));
 
-        new Actions(getDriver()).moveToElement(nodes.get(1), 10, 10).click()
-                .perform();
+        new Actions(getDriver()).moveToElement(nodes.get(1),
+                getXOffset(nodes.get(1), 10), getYOffset(nodes.get(1), 10))
+                .click().perform();
 
         nodes = $(TreeElement.class).first()
                 .findElements(By.className("v-tree-node"));

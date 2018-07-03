@@ -16,8 +16,9 @@ public class ContextClickUITest extends MultiBrowserTest {
     public void testContextClick() {
         openTestURL();
 
-        new Actions(getDriver())
-                .moveToElement($(UIElement.class).first(), 10, 10)
+        final UIElement uiElement = $(UIElement.class).first();
+        new Actions(getDriver()).moveToElement(uiElement,
+                getXOffset(uiElement, 10), getYOffset(uiElement, 10))
                 .contextClick().perform();
 
         assertEquals("Context click not received correctly",

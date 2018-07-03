@@ -1189,6 +1189,48 @@ public abstract class AbstractTB3Test extends ParallelTest {
     }
 
     /**
+     * Gets the X offset for
+     * {@link Actions#moveToElement(WebElement, int, int)}. This method takes
+     * into account the W3C specification in browsers that properly implement
+     * it.
+     * 
+     * @param element
+     *            the element
+     * @param targetX
+     *            the X coordinate where the move is wanted to go to
+     * @return the correct X offset
+     */
+    protected int getXOffset(WebElement element, int targetX) {
+        if (BrowserUtil.isFirefox(getDesiredCapabilities())) {
+            // Firefox follow W3C spec and moveToElement is relative to center
+            final int width = element.getSize().getWidth();
+            return targetX - ((width + width % 2) / 2);
+        }
+        return targetX;
+    }
+
+    /**
+     * Gets the Y offset for
+     * {@link Actions#moveToElement(WebElement, int, int)}. This method takes
+     * into account the W3C specification in browsers that properly implement
+     * it.
+     * 
+     * @param element
+     *            the element
+     * @param targetY
+     *            the Y coordinate where the move is wanted to go to
+     * @return the correct Y offset
+     */
+    protected int getYOffset(WebElement element, int targetY) {
+        if (BrowserUtil.isFirefox(getDesiredCapabilities())) {
+            // Firefox follow W3C spec and moveToElement is relative to center
+            final int height = element.getSize().getHeight();
+            return targetY - ((height + height % 2) / 2);
+        }
+        return targetY;
+    }
+
+    /**
      * Returns client height rounded up instead of as double because of IE9
      * issues: https://dev.vaadin.com/ticket/18469
      */
