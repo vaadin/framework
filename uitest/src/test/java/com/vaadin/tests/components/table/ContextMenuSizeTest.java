@@ -47,8 +47,14 @@ public class ContextMenuSizeTest extends MultiBrowserTest {
     }
 
     private WebElement openContextMenu() {
+        WebElement target = findElement(By.className("v-table-cell-wrapper"));
+
+        // Make sure target is visible.
+        target.click();
+
         Actions actions = new Actions(getDriver());
-        actions.contextClick(findElement(By.className("v-table-cell-wrapper")));
+        actions.moveToElement(target, getXOffset(target, 1),
+                getYOffset(target, 1)).contextClick();
         actions.perform();
         return findElement(By.className("v-contextmenu"));
     }

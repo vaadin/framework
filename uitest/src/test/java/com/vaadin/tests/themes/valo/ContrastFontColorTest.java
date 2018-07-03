@@ -5,14 +5,14 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
 /**
  * Test for default contrast color variable in valo-font-color function.
  *
  * @author Vaadin Ltd
  */
-public class ContrastFontColorTest extends MultiBrowserTest {
+public class ContrastFontColorTest extends SingleBrowserTest {
 
     @Test
     public void testTextColor() {

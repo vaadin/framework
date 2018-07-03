@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 
 import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.testbench.elements.RadioButtonGroupElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -83,7 +84,8 @@ public class GridHeightTest extends MultiBrowserTest {
                     fail();
                 }
 
-                grid.getRow(2).click(5, 5);
+                GridRowElement row = grid.getRow(2);
+                row.click(getXOffset(row, 5), getYOffset(row, 5));
                 waitForElementPresent(By.id("lbl1"));
 
                 int openHeight = grid.getSize().getHeight();
@@ -96,7 +98,7 @@ public class GridHeightTest extends MultiBrowserTest {
                             detailsRowHeight, "opened" });
                 }
 
-                grid.getRow(2).click(5, 5);
+                row.click(getXOffset(row, 5), getYOffset(row, 5));
                 waitForElementNotPresent(By.id("lbl1"));
 
                 int afterHeight = grid.getSize().getHeight();

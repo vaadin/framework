@@ -126,7 +126,9 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
                     "var ev = document.createEvent('MouseEvents'); ev.initMouseEvent('click', true, true, document.defaultView, 1, arguments[1]-5, arguments[2]-5, arguments[1]-5, arguments[2]-5, false, false, false, false, 1, null); arguments[0].dispatchEvent(ev);",
                     e, x, y);
         } else {
-            new Actions(getDriver()).moveToElement(e, xCoord, yCoord)
+            new Actions(getDriver())
+                    .moveToElement(e, getXOffset(e, xCoord),
+                            getYOffset(e, yCoord))
                     .contextClick().moveByOffset(-5, -5).click().perform();
         }
     }

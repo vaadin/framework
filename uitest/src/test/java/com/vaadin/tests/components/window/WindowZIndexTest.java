@@ -39,7 +39,8 @@ public class WindowZIndexTest extends MultiBrowserTest {
 
         WebElement window4 = driver
                 .findElement(By.xpath("//*[contains(text(), 'Window 4')]"));
-        new Actions(driver).moveToElement(window4, 1, 9).click().perform();
+        new Actions(driver).moveToElement(window4, getXOffset(window4, 1),
+                getYOffset(window4, 9)).click().perform();
 
         compareScreen("win4-on-top");
     }

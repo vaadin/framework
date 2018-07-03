@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.junit.Assume;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -18,20 +19,16 @@ import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class GridComponentsTest extends MultiBrowserTest {
 
     @Test
     public void testReuseTextFieldOnScroll() {
-        if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
-            // skip test on PhantomJS as it often crashes the browser
-            return;
-        }
         openTestURL();
         GridElement grid = $(GridElement.class).first();
         editTextFieldInCell(grid, 0, 1);
@@ -54,7 +51,7 @@ public class GridComponentsTest extends MultiBrowserTest {
         GridElement grid = $(GridElement.class).first();
         editTextFieldInCell(grid, 1, 1);
         // Select row
-        grid.getCell(1, 1).click(1, 1);
+        grid.getCell(1, 0).click();
 
         WebElement textField = grid.getCell(1, 1)
                 .findElement(By.tagName("input"));
@@ -186,6 +183,9 @@ public class GridComponentsTest extends MultiBrowserTest {
 
     @Test
     public void testTabNavigation() {
+        Assume.assumeFalse("Firefox has issues with Shift",
+                BrowserUtil.isFirefox(getDesiredCapabilities()));
+
         openTestURL();
 
         GridElement grid = $(GridElement.class).first();
