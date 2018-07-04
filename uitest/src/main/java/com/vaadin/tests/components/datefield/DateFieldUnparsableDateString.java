@@ -30,7 +30,8 @@ public class DateFieldUnparsableDateString extends AbstractTestUI {
         protected Result<LocalDate> handleUnparsableDateString(
                 String dateString) {
             try {
-                String parseableString = dateString == null ? "" : dateString.replaceAll(" ", "");
+                String parseableString = dateString == null ? ""
+                        : dateString.replaceAll(" ", "");
                 if (parseableString.length() % 2 == 1) {
                     parseableString = "0" + parseableString;
                 }

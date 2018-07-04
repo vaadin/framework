@@ -30,7 +30,7 @@ public class AbstractListingTest {
 
         /**
          * Used to execute data generation
-         * 
+         *
          * @param initial
          *            {@code true} to mock initial data request; {@code false}
          *            for follow-up request.
