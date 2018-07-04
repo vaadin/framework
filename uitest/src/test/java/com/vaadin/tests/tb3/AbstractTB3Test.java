@@ -1193,7 +1193,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * {@link Actions#moveToElement(WebElement, int, int)}. This method takes
      * into account the W3C specification in browsers that properly implement
      * it.
-     * 
+     *
      * @param element
      *            the element
      * @param targetX
@@ -1214,7 +1214,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * {@link Actions#moveToElement(WebElement, int, int)}. This method takes
      * into account the W3C specification in browsers that properly implement
      * it.
-     * 
+     *
      * @param element
      *            the element
      * @param targetY
