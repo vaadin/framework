@@ -1430,6 +1430,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     /*
      * (non-Javadoc)
+     *
      * @see javax.servlet.GenericServlet#destroy()
      */
     @Override

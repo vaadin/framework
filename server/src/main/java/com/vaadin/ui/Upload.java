@@ -1118,7 +1118,7 @@ public class Upload extends AbstractComponent
                     fireUploadSuccess(event.getFileName(), event.getMimeType(),
                             event.getContentLength());
                     endUpload();
-                    if(lastStartedEvent != null)
+                    if (lastStartedEvent != null)
                         lastStartedEvent.disposeStreamVariable();
                 }
 
@@ -1138,7 +1138,7 @@ public class Upload extends AbstractComponent
                         }
                     } finally {
                         endUpload();
-                        if(lastStartedEvent != null)
+                        if (lastStartedEvent != null)
                             lastStartedEvent.disposeStreamVariable();
                     }
                 }

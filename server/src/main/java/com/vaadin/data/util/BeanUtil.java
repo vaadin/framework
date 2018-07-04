@@ -229,33 +229,37 @@ public final class BeanUtil implements Serializable {
     }
 
     /**
-     * Checks if the object is serializable or not. To be used in assertion checks only,
-     * since the check might be a bit heavyweight.
+     * Checks if the object is serializable or not. To be used in assertion
+     * checks only, since the check might be a bit heavyweight.
      *
-     * @param obj to be checked
+     * @param obj
+     *            to be checked
      * @return {@code true}
-     * @throws AssertionError if the object is not serializable
+     * @throws AssertionError
+     *             if the object is not serializable
      */
     public static boolean checkSerialization(Object obj) {
         try {
-            ObjectOutputStream dummyObjectOutputStream = new ObjectOutputStream(new OutputStream() {
-                @Override
-                public void write(int b) {
-                }
+            ObjectOutputStream dummyObjectOutputStream = new ObjectOutputStream(
+                    new OutputStream() {
+                        @Override
+                        public void write(int b) {
+                        }
 
-                @SuppressWarnings("NullableProblems")
-                @Override
-                public void write(byte[] ignored) {
-                }
+                        @SuppressWarnings("NullableProblems")
+                        @Override
+                        public void write(byte[] ignored) {
+                        }
 
-                @SuppressWarnings("NullableProblems")
-                @Override
-                public void write(byte[] b, int off, int len) {
-                }
-            });
+                        @SuppressWarnings("NullableProblems")
+                        @Override
+                        public void write(byte[] b, int off, int len) {
+                        }
+                    });
             dummyObjectOutputStream.writeObject(obj);
         } catch (Throwable e) {
-            throw new AssertionError("Formatter supplier should be serializable", e);
+            throw new AssertionError(
+                    "Formatter supplier should be serializable", e);
         }
         return true;
     }
