@@ -1356,23 +1356,6 @@ public class Escalator extends Widget
              */
             if (isAttached()) {
                 paintInsertRows(index, numberOfRows);
-
-                if (rows == numberOfRows) {
-                    /*
-                     * We are inserting the first rows in this container. We
-                     * potentially need to set the widths for the cells for the
-                     * first time.
-                     */
-                    Map<Integer, Double> colWidths = new HashMap<Integer, Double>();
-                    for (int i = 0; i < getColumnConfiguration()
-                            .getColumnCount(); i++) {
-                        Double width = Double.valueOf(
-                                getColumnConfiguration().getColumnWidth(i));
-                        Integer col = Integer.valueOf(i);
-                        colWidths.put(col, width);
-                    }
-                    getColumnConfiguration().setColumnWidths(colWidths);
-                }
             }
         }
 
