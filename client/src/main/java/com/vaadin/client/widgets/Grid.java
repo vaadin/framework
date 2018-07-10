@@ -6485,9 +6485,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
 
     private <C extends Column<?, T>> void addColumnsSkipSelectionColumnCheck(Collection<C> columnCollection, int index) {
-//        final Map<Integer, Double> columnWidths = new HashMap<>();
         int visibleNewColumns = 0;
-//        int currentColumnIndex = index;
 
         for (final Column<?, T> column : columnCollection) {
             // Register column with grid
@@ -6500,16 +6498,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             if (!column.isHidden()) {
                 visibleNewColumns++;
-//                if (column.getWidth() > 0) {
-//                    columnWidths.put(currentColumnIndex, column.getWidth());
-//                }
             }
-//            currentColumnIndex++;
         }
         if (visibleNewColumns > 0) {
             final ColumnConfiguration columnConfiguration = this.escalator.getColumnConfiguration();
             columnConfiguration.insertColumns(index, visibleNewColumns);
-//            columnConfiguration.setColumnWidths(columnWidths);
         }
         for (final Column<?, T> column : columnCollection) {
             // Reapply column width
