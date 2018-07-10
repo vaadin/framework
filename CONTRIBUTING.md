@@ -144,6 +144,10 @@ You should receive comments within a week or so; if that does not happen, make s
 
 # Submitting the patches
 
+## Source code auto-formatting
+
+Before submitting changes to Github, run the command `mvn process-sources` from project's root. This maven goal automatically formats source code according to Vaadin standards. The same goal is run automatically if you invoke `mvn install` or `mvn compile`.   
+
 ## Creating a pull request in GitHub
 
 All our projects accept contributions as GitHub pull requests. The first time you create a pull request, you will be asked to electronically sign a contribution agreement.
