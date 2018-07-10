@@ -28,7 +28,8 @@ public class ComboBoxCaretNavigationTest extends SingleBrowserTest {
         comboBox.sendKeys(Keys.HOME);
         assertCaretPosition("Home key didn't work well.", 0, comboBox);
         comboBox.sendKeys(Keys.END);
-        assertCaretPosition("End key didn't work well.", text.length(), comboBox);
+        assertCaretPosition("End key didn't work well.", text.length(),
+                comboBox);
     }
 
     @Test
@@ -37,9 +38,11 @@ public class ComboBoxCaretNavigationTest extends SingleBrowserTest {
         String text = comboBox.getPopupSuggestions().get(1);
         comboBox.selectByText(text);
         comboBox.sendKeys(Keys.ARROW_LEFT);
-        assertCaretPosition("Left Arrow key didn't work well.", text.length() - 1, comboBox);
+        assertCaretPosition("Left Arrow key didn't work well.",
+                text.length() - 1, comboBox);
         comboBox.sendKeys(Keys.ARROW_RIGHT);
-        assertCaretPosition("Right Arrow key didn't work well.", text.length(), comboBox);
+        assertCaretPosition("Right Arrow key didn't work well.", text.length(),
+                comboBox);
     }
 
     @Test
@@ -59,13 +62,16 @@ public class ComboBoxCaretNavigationTest extends SingleBrowserTest {
         String text = comboBox.getPopupSuggestions().get(1);
         comboBox.selectByText(text);
         comboBox.sendKeys(Keys.ARROW_LEFT);
-        assertCaretPosition("Left Arrow key didn't work well.", text.length() - 1, comboBox);
+        assertCaretPosition("Left Arrow key didn't work well.",
+                text.length() - 1, comboBox);
         comboBox.sendKeys(Keys.END);
-        assertCaretPosition("End key didn't work well.", text.length(), comboBox);
+        assertCaretPosition("End key didn't work well.", text.length(),
+                comboBox);
     }
 
-    private void assertCaretPosition(String message, int position, ComboBoxElement comboBox) {
-        assertArrayEquals(message, new int[]{position, position},
+    private void assertCaretPosition(String message, int position,
+            ComboBoxElement comboBox) {
+        assertArrayEquals(message, new int[] { position, position },
                 getSelection(comboBox.getInputField()));
     }
 
@@ -74,7 +80,7 @@ public class ComboBoxCaretNavigationTest extends SingleBrowserTest {
         List<Long> range = (List<Long>) executeScript(
                 "return [arguments[0].selectionStart,arguments[0].selectionEnd]",
                 element);
-        return new int[]{range.get(0).intValue(), range.get(1).intValue()};
+        return new int[] { range.get(0).intValue(), range.get(1).intValue() };
     }
 
 }
