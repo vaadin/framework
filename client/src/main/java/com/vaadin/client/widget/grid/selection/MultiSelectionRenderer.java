@@ -644,7 +644,9 @@ public class MultiSelectionRenderer<T>
         checkBox.setValue(data, false);
         // this should be a temp fix.
         checkBox.setText("Selects row number " + getDOMRowIndex(cell) + ".");
-        checkBox.setEnabled(grid.isEnabled() && !grid.isEditorActive());
+        boolean editorOpen = grid.isEditorActive();
+        boolean editorBuffered = grid.isEditorBuffered();
+        checkBox.setEnabled(grid.isEnabled() && !(editorOpen && editorBuffered));
     }
 
     private int getDOMRowIndex(RendererCellReference cell) {
