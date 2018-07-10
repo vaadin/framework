@@ -4039,7 +4039,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          */
         private boolean hidingColumn;
 
-        private void updateColumnHidable(final Column<?, T> column) {
+        private void updateColumnHidable(final Column<?, T> column, boolean skipOrdering) {
             if (column.isHidable()) {
                 MenuItem toggle = columnToHidingToggleMap.get(column);
                 if (toggle == null) {
@@ -4050,7 +4050,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 sidebar.menuBar
                         .removeItem(columnToHidingToggleMap.remove(column));
             }
-            updateTogglesOrder();
+            if (!skipOrdering) {
+                updateTogglesOrder();
+            }
+
         }
 
         private MenuItem createToggle(final Column<?, T> column) {
@@ -5224,7 +5227,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         public Column<C, T> setHidable(boolean hidable) {
             if (this.hidable != hidable) {
                 this.hidable = hidable;
-                grid.columnHider.updateColumnHidable(this);
+                grid.columnHider.updateColumnHidable(this, false);
             }
             return this;
         }
@@ -6516,11 +6519,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             events.addAll(getConsumedEventsForRenderer(column.getRenderer()));
 
             if (column.isHidable()) {
-                this.columnHider.updateColumnHidable(column);
+                this.columnHider.updateColumnHidable(column, true);
             }
 
             sinkEvents(events);
         }
+        this.columnHider.updateTogglesOrder();
     }
 
 
