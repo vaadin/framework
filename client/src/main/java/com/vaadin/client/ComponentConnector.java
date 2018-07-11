@@ -28,7 +28,7 @@ import com.vaadin.shared.AbstractComponentState;
  * Updates can be sent back to the server using the
  * {@link ApplicationConnection#updateVariable()} methods.
  */
-public interface ComponentConnector extends ServerConnector {
+public interface ComponentConnector extends HasWidget {
 
     /*
      * (non-Javadoc)
@@ -37,11 +37,6 @@ public interface ComponentConnector extends ServerConnector {
      */
     @Override
     public AbstractComponentState getState();
-
-    /**
-     * Returns the widget for this {@link ComponentConnector}.
-     */
-    public Widget getWidget();
 
     public LayoutManager getLayoutManager();
 

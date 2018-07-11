@@ -18,7 +18,7 @@ package com.vaadin.client.extensions;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.HasWidget;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.shared.extension.PartInformationState;
 
@@ -50,7 +50,7 @@ public abstract class AbstractEventTriggerExtensionConnector
 
     @Override
     protected void extend(ServerConnector target) {
-        Widget targetWidget = ((ComponentConnector) target).getWidget();
+        Widget targetWidget = ((HasWidget) target).getWidget();
         if (targetWidget instanceof EventTrigger) {
             String partInformation = getState().partInformation;
             eventHandlerRegistration = ((EventTrigger) targetWidget)

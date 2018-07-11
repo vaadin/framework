@@ -225,13 +225,35 @@ public class VMenuBar extends FocusableFlowPanel implements
      * For internal use only. May be removed or replaced in the future.
      */
     public String buildItemHTML(UIDL item) {
+        return buildItemHTML(item.hasAttribute("separator"),
+                item.getChildCount() > 0, item.getStringAttribute("icon"),
+                item.getStringAttribute("text"));
+
+    }
+
+    /**
+     * Build the HTML content for a menu item.
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param separator
+     *            the menu item is separator
+     * @param subMenu
+     *            the menu item contains submenu
+     * @param iconUrl
+     *            the menu item icon URL or {@code null}
+     * @param text
+     *            the menu item text. May not be {@code null}
+     */
+    public String buildItemHTML(boolean separator, boolean subMenu,
+            String iconUrl, String text) {
         // Construct html from the text and the optional icon
         StringBuilder itemHTML = new StringBuilder();
-        if (item.hasAttribute("separator")) {
+        if (separator) {
             itemHTML.append("<span>---</span>");
         } else {
             // Add submenu indicator
-            if (item.getChildCount() > 0) {
+            if (subMenu) {
                 String bgStyle = "";
                 itemHTML.append("<span class=\"" + getStylePrimaryName()
                         + "-submenu-indicator\"" + bgStyle
@@ -240,11 +262,11 @@ public class VMenuBar extends FocusableFlowPanel implements
 
             itemHTML.append("<span class=\"" + getStylePrimaryName()
                     + "-menuitem-caption\">");
-            Icon icon = client.getIcon(item.getStringAttribute("icon"));
+            Icon icon = client.getIcon(iconUrl);
             if (icon != null) {
                 itemHTML.append(icon.getElement().getString());
             }
-            String itemText = item.getStringAttribute("text");
+            String itemText = text;
             if (!htmlContentAllowed) {
                 itemText = WidgetUtil.escapeHTML(itemText);
             }
@@ -701,9 +723,13 @@ public class VMenuBar extends FocusableFlowPanel implements
      */
     @Override
     public void onClose(CloseEvent<PopupPanel> event) {
-        hideChildren();
+        close(event, true);
+    }
+
+    protected void close(CloseEvent<PopupPanel> event, boolean animated) {
+        hideChildren(animated, animated);
         if (event.isAutoClosed()) {
-            hideParents(true);
+            hideParents(true, animated);
             menuVisible = false;
         }
         visibleChildMenu = null;
@@ -739,14 +765,18 @@ public class VMenuBar extends FocusableFlowPanel implements
      * Recursively hide all parent menus.
      */
     public void hideParents(boolean autoClosed) {
+        hideParents(autoClosed, true);
+    }
+
+    public void hideParents(boolean autoClosed, boolean animated) {
         if (visibleChildMenu != null) {
-            popup.hide();
+            popup.hide(false, animated, animated);
             setSelected(null);
             menuVisible = false;
         }
 
         if (getParentMenu() != null) {
-            getParentMenu().hideParents(autoClosed);
+            getParentMenu().hideParents(autoClosed, animated);
         }
     }
 
@@ -949,7 +979,7 @@ public class VMenuBar extends FocusableFlowPanel implements
             updateStyleNames();
         }
 
-        protected void updateStyleNames() {
+        public void updateStyleNames() {
             if (parentMenu == null) {
                 // Style names depend on the parent menu's primary style name so
                 // don't do updates until the item has a parent
@@ -1088,7 +1118,7 @@ public class VMenuBar extends FocusableFlowPanel implements
             return enabled;
         }
 
-        private void setSeparator(boolean separator) {
+        public void setSeparator(boolean separator) {
             isSeparator = separator;
             updateStyleNames();
             if (!separator) {
@@ -1185,6 +1215,14 @@ public class VMenuBar extends FocusableFlowPanel implements
             this.id = id;
         }
 
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public void setDescriptionContentMode(
+                ContentMode descriptionContentMode) {
+            this.descriptionContentMode = descriptionContentMode;
+        }
     }
 
     /**
@@ -1906,7 +1944,7 @@ public class VMenuBar extends FocusableFlowPanel implements
         LazyCloser.schedule();
     }
 
-    private VMenuBar getRoot() {
+    protected VMenuBar getRoot() {
         VMenuBar root = this;
 
         while (root.getParentMenu() != null) {
