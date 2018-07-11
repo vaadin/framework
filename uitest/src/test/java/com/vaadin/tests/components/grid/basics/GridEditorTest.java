@@ -239,6 +239,19 @@ public abstract class GridEditorTest extends GridBasicsTest {
                         .findElement(By.className("not-editable")).getText());
     }
 
+    @Test
+    public void testEditorCancelOnOpen() {
+        editRow(2);
+        getGridElement().sendKeys(Keys.ESCAPE);
+
+        selectMenuPath("Component", "Editor", "Cancel next edit");
+        getGridElement().getCell(2, 0).doubleClick();
+        assertEditorClosed();
+
+        editRow(2);
+        assertNoErrorNotifications();
+    }
+
     protected WebElement getSaveButton() {
         return getDriver().findElement(BY_EDITOR_SAVE);
     }
