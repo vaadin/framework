@@ -155,9 +155,11 @@ public class VOverlay extends Overlay {
 
     /**
      * Sets the {@link ApplicationConnection} that this overlay belongs to.
+     *
      * @see #getApplicationConnection()
      *
-     * @param ac the connection
+     * @param ac
+     *            the connection
      */
     public void setApplicationConnection(ApplicationConnection ac) {
         this.ac = ac;
