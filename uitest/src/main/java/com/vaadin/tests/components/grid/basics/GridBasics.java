@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -803,6 +804,14 @@ public class GridBasics extends AbstractTestUIWithLog {
                 menuItem -> grid.getEditor().editRow(i)));
         editorMenu.addItem("Edit last row", menuItem -> grid.getEditor()
                 .editRow(grid.getDataCommunicator().getDataProviderSize() - 1));
+
+        editorMenu.addItem("Cancel next edit", menuItem -> {
+            AtomicReference<Registration> reference = new AtomicReference<>();
+            reference.set(grid.getEditor().addOpenListener(e -> {
+                e.getGrid().getEditor().cancel();
+                reference.get().remove();
+            }));
+        });
 
         editorMenu.addItem("Change save caption",
                 event -> grid.getEditor().setSaveCaption("ǝʌɐS"));
