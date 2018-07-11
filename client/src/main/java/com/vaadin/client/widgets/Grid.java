@@ -2497,7 +2497,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     private class CellFocusHandler {
 
-        private RowContainer containerWithFocus = escalator.getHeader();
+        private RowContainer containerWithFocus = escalator.getBody();
         private int rowWithFocus = 0;
         private Range cellFocusRange = Range.withLength(0, 1);
         private int lastFocusedBodyRow = 0;

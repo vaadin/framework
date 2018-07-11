@@ -1144,7 +1144,7 @@ public class GridConnector extends AbstractHasComponentsConnector
      */
     private void addColumnsFromState() {
         this.columnsUpdatedFromState = true;
-        final List<Column<?, JsonObject>> columns = new ArrayList<>(getState().columns.size());
+        final List<Column<?, JsonObject>> columns = new ArrayList<Column<?, JsonObject>>(getState().columns.size());
         for (final GridColumnState state : getState().columns) {
             if (!this.columnIdToColumn.containsKey(state.id)) {
                 final CustomGridColumn column = new CustomGridColumn(state);
