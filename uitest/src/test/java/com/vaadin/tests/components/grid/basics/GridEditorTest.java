@@ -241,11 +241,14 @@ public abstract class GridEditorTest extends GridBasicsTest {
 
     @Test
     public void testEditorCancelOnOpen() {
+        editRow(2);
+        getGridElement().sendKeys(Keys.ESCAPE);
+
         selectMenuPath("Component", "Editor", "Cancel next edit");
-        editRow(2);
+        getGridElement().getCell(2, 0).doubleClick();
         assertEditorClosed();
+
         editRow(2);
-        assertEditorOpen();
         assertNoErrorNotifications();
     }
 
