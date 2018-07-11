@@ -236,10 +236,14 @@ public class VMenuBar extends FocusableFlowPanel implements
      * <p>
      * For internal use only. May be removed or replaced in the future.
      *
-     * @param separator the menu item is separator
-     * @param subMenu the menu item contains submenu
-     * @param iconUrl the menu item icon URL or {@code null}
-     * @param text the menu item text. May not be {@code null}
+     * @param separator
+     *            the menu item is separator
+     * @param subMenu
+     *            the menu item contains submenu
+     * @param iconUrl
+     *            the menu item icon URL or {@code null}
+     * @param text
+     *            the menu item text. May not be {@code null}
      */
     public String buildItemHTML(boolean separator, boolean subMenu,
             String iconUrl, String text) {
