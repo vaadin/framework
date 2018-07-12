@@ -6486,10 +6486,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     private <C extends Column<?, T>> void addColumnsSkipSelectionColumnCheck(Collection<C> columnCollection, int index) {
         int visibleNewColumns = 0;
+        int currentIndex = index;
 
         for (final Column<?, T> column : columnCollection) {
             // Register column with grid
-            this.columns.add(column);
+            this.columns.add(currentIndex++, column);
             this.footer.addColumn(column);
             this.header.addColumn(column);
 
