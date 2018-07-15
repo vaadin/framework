@@ -13,7 +13,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 
