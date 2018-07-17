@@ -182,12 +182,12 @@ public class GridConnector extends AbstractHasComponentsConnector
             this.resizable = state.resizable;
             this.sortable = state.sortable;
             this.headerCaption = state.headerCaption == null ? "" : state.headerCaption;
+            this.widthUser = state.width;
+            this.minimumWidthPx = state.minWidth;
+            this.maximumWidthPx = state.maxWidth;
+            this.expandRatio = state.expandRatio;
+            this.editable = state.editable;
 
-            setWidth(state.width);
-            setMinimumWidth(state.minWidth);
-            setMaximumWidth(state.maxWidth);
-            setExpandRatio(state.expandRatio);
-            setEditable(state.editable);
             setEditorConnector((AbstractComponentConnector) state.editorConnector);
         }
 
@@ -931,11 +931,10 @@ public class GridConnector extends AbstractHasComponentsConnector
             // Remove old columns
             purgeRemovedColumns();
 
-            // Add new columns
+            // Update all columns
             updateColumnsFromState();
 
             getWidget().updateHeaderAndColSpans();
-
         }
 
         if (stateChangeEvent.hasPropertyChanged("columnOrder")) {

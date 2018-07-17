@@ -4763,10 +4763,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private Grid<T> grid;
 
         /**
-         * Width of column in pixels as {@link #setWidth(double)} has been
-         * called
+         * Width of column in pixels as {@link #setWidth(double)} has been called.
          */
-        private double widthUser = GridConstants.DEFAULT_COLUMN_WIDTH_PX;
+        protected double widthUser = GridConstants.DEFAULT_COLUMN_WIDTH_PX;
 
         /**
          * Renderer for rendering a value into the cell
@@ -4808,9 +4807,20 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          */
         protected String hidingToggleCaption = null;
 
-        private double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
-        private double maximumWidthPx = GridConstants.DEFAULT_MAX_WIDTH;
-        private int expandRatio = GridConstants.DEFAULT_EXPAND_RATIO;
+        /**
+         * The minimum width in pixels of this column.
+         */
+        protected double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
+
+        /**
+         * The maximum width in pixels of this column.
+         */
+        protected double maximumWidthPx = GridConstants.DEFAULT_MAX_WIDTH;
+
+        /**
+         * The expand ratio of this column.
+         */
+        protected int expandRatio = GridConstants.DEFAULT_EXPAND_RATIO;
 
         /**
          * Constructs a new column with a simple TextRenderer.
@@ -6495,7 +6505,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             this.header.addColumn(column);
 
             // Register this grid instance with the column
-            ((Column<?, T>) column).setGrid(this);
+            column.setGrid(this);
 
             if (!column.isHidden()) {
                 visibleNewColumns++;
