@@ -9146,9 +9146,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
 
             if (getEscalatorInnerHeight() != autoColumnWidthsRecalculator.lastCalculatedInnerHeight) {
-                RowContainer.BodyRowContainer body = getEscalator().getBody();
-                // Trigger re-calculation of all row positions.
-                body.setDefaultRowHeight(body.getDefaultRowHeight());
+                Scheduler.get().scheduleFinally(() -> {
+                    // Trigger re-calculation of all row positions.
+                    RowContainer.BodyRowContainer body = getEscalator()
+                            .getBody();
+                    body.setDefaultRowHeight(body.getDefaultRowHeight());
+                });
             }
 
             // Vertical resizing could make editor positioning invalid so it
