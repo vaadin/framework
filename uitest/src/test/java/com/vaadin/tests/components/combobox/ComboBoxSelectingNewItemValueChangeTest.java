@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.combobox;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -190,19 +191,19 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
     }
 
     private void assertValueChange(int count) {
-        assertTrue(changeLabelElement.getText().equals(String.format(
+        assertEquals(String.format(
                 "Value change count: %s Selection change count: %s user originated: true",
-                count, count)));
+                count, count), changeLabelElement.getText());
     }
 
     private void assertRejected(String value) {
-        assertTrue(changeLabelElement.getText()
-                .equals(String.format("item %s discarded", value)));
+        assertEquals(String.format("item %s discarded", value),
+                changeLabelElement.getText());
     }
 
     private void assertItemCount(int count) {
-        assertTrue(changeLabelElement.getText()
-                .equals(String.format("adding new item... count: %s", count)));
+        assertEquals(String.format("adding new item... count: %s", count),
+                changeLabelElement.getText());
     }
 
     private void reject(boolean reject) {

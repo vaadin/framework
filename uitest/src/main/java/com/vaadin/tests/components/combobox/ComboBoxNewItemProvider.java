@@ -24,8 +24,8 @@ public class ComboBoxNewItemProvider
                 Collections.sort(items);
                 valueChangeLabel
                         .setValue("adding new item... count: " + items.size());
-                comboBox.getDataProvider().refreshAll();
                 if (Boolean.TRUE.equals(noSelection.getValue())) {
+                    comboBox.getDataProvider().refreshAll();
                     return Optional.empty();
                 }
             }
