@@ -195,6 +195,11 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                         getRpcProxy(ComboBoxClientRpc.class)
                                 .newItemNotAdded(itemValue);
                     }
+                    item.ifPresent(value -> {
+                        // Update state for the newly selected value
+                        setValue(value);
+                        getDataCommunicator().reset();
+                    });
                 } else if (getNewItemHandler() != null) {
                     getNewItemHandler().accept(itemValue);
                 } else {
