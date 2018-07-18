@@ -22,6 +22,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
@@ -50,6 +51,9 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd
  */
 public class XhrConnection {
+
+    private static final String XSRF_HEADER_NAME = "X-XSRF-TOKEN";
+    private static final String XSRF_COOKIE_NAME = "XSRF-TOKEN";
 
     private ApplicationConnection connection;
 
@@ -189,6 +193,9 @@ public class XhrConnection {
      */
     public void send(JsonObject payload) {
         RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, getUri());
+
+        addXsrfHeaderFromCookie(rb);
+
         // TODO enable timeout
         // rb.setTimeoutMillis(timeoutMillis);
         // TODO this should be configurable
@@ -248,6 +255,13 @@ public class XhrConnection {
 
     private MessageHandler getMessageHandler() {
         return connection.getMessageHandler();
+    }
+
+    public static void addXsrfHeaderFromCookie(RequestBuilder rb) {
+        String xsrfTokenVal = Cookies.getCookie(XSRF_COOKIE_NAME);
+        if (xsrfTokenVal != null && !xsrfTokenVal.isEmpty()) {
+            rb.setHeader(XSRF_HEADER_NAME, xsrfTokenVal);
+        }
     }
 
     private static native boolean resendRequest(Request request)
