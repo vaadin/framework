@@ -7098,7 +7098,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         assert escalator.getBody().getRowCount() == 0;
 
         int size = dataSource.size();
-
+        if (size == -1 && isAttached()) {
+            // Exact size is not yet known, start with some reasonable guess
+            // just to get an initial backend request going
+            size = getEscalator().getMaxVisibleRowCount();
+        }
         if (size > 0) {
             escalator.getBody().insertRows(0, size);
         }
