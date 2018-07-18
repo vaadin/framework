@@ -90,6 +90,8 @@ public class Heartbeat {
 
         final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
 
+        XhrConnection.addXsrfHeaderFromCookie(rb);
+
         final RequestCallback callback = new RequestCallback() {
 
             @Override
