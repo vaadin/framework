@@ -2,6 +2,9 @@ package com.vaadin.tests.components.tabsheet;
 
 import java.io.IOException;
 
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TabSheetElement;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
@@ -15,7 +18,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  *
  * @author Vaadin Ltd
  */
-public class TabsheetNotEnoughHorizontalSpaceTest extends MultiBrowserTest {
+public class TabsheetNotEnoughHorizontalSpaceTest extends SingleBrowserTest {
 
     @Test
     public void testThatTabScrollButtonsAreRenderedCorrectly()
@@ -28,4 +31,13 @@ public class TabsheetNotEnoughHorizontalSpaceTest extends MultiBrowserTest {
         compareScreen("init");
     }
 
+    @Test
+    public void deleteSelectedTab() {
+        openTestURL();
+        $(ButtonElement.class).caption("Select last tab").first().click();
+        assertElementPresent(By.className("v-tabsheet-tabitem"));
+        $(TabSheetElement.class).first().waitForVaadin();
+        $(ButtonElement.class).caption("Remove all tabs").first().click();
+        assertElementNotPresent(By.className("v-tabsheet-tabitem"));
+    }
 }
