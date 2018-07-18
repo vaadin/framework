@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.server.MockVaadinSession;
+import com.vaadin.server.SerializableConsumer;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
@@ -206,5 +208,47 @@ public class DataCommunicatorTest {
         communicator.beforeClientResponse(false);
         assertFalse("Stalled object in KeyMapper",
                 communicator.getKeyMapper().has(TEST_OBJECT));
+    }
+
+    @Test
+    public void testFilteringLock() {
+        session.lock();
+        UI ui = new TestUI(session);
+        TestDataCommunicator communicator = new TestDataCommunicator();
+        communicator.extend(ui);
+
+        ListDataProvider<Object> dataProvider = DataProvider.ofItems("one",
+                "two", "three");
+        SerializableConsumer<SerializablePredicate<Object>> filterSlot = communicator
+                .setDataProvider(dataProvider, null);
+        communicator.beforeClientResponse(true);
+
+        // Mock empty request
+        filterSlot.accept(t -> String.valueOf(t).contains("a"));
+        communicator.beforeClientResponse(false);
+
+        // Assume client clears up the filter
+        filterSlot.accept(t -> String.valueOf(t).contains(""));
+        communicator.beforeClientResponse(false);
+
+        // And in the next request sets a non-matching filter
+        // and has the data request for previous change
+        communicator.onRequestRows(0, 3, 0, 0);
+        filterSlot.accept(t -> String.valueOf(t).contains("a"));
+        communicator.beforeClientResponse(false);
+
+        // Mark communicator clean
+        ui.getConnectorTracker().markClean(communicator);
+
+        assertTrue("Communicator should be marked for hard reset",
+                communicator.reset);
+        assertFalse("DataCommunicator should not be marked as dirty",
+                ui.getConnectorTracker().isDirty(communicator));
+
+        // Set a filter that gets results again.
+        filterSlot.accept(t -> String.valueOf(t).contains(""));
+
+        assertTrue("DataCommunicator should be marked as dirty",
+                ui.getConnectorTracker().isDirty(communicator));
     }
 }
