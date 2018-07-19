@@ -27,14 +27,6 @@ public class TabsheetNotEnoughHorizontalSpace extends AbstractReindeerTestUI {
         generateTabs();
         tabsheet.setSizeFull();
         addComponent(tabsheet);
-        addButton("Select last tab", event -> {
-            tabsheet.setSelectedTab(tabsheet.getComponentCount() - 1);
-        });
-        addButton("Remove all tabs", event -> {
-            while (tabsheet.getComponentCount() > 0) {
-                tabsheet.removeTab(tabsheet.getTab(0));
-            }
-        });
 
     }
 
