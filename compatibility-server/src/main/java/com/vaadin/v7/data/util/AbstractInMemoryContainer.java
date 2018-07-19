@@ -441,7 +441,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
-                "Removing container properties not supported. Override the addContainerProperty() method if required.");
+                "Removing container properties not supported. Override the removeContainerProperty() method if required.");
     }
 
     // ItemSetChangeNotifier
