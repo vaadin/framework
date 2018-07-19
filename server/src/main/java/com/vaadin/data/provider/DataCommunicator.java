@@ -677,6 +677,9 @@ public class DataCommunicator<T> extends AbstractExtension {
             if (!Objects.equals(this.filter, filter)) {
                 setFilter(filter);
                 reset();
+
+                // Make sure filter change causes data to be sent again.
+                markAsDirty();
             }
         };
     }
