@@ -81,7 +81,6 @@ public class FileDownloader extends AbstractExtension {
      *
      * @param eventTrigger
      *            the trigger to attach this extension to
-     *
      * @since 8.4
      */
     public void extend(EventTrigger eventTrigger) {
@@ -132,16 +131,22 @@ public class FileDownloader extends AbstractExtension {
     /**
      * Checks whether the content type should be overridden.
      *
-     * @see #setOverrideContentType(boolean)
-     *
      * @return <code>true</code> if the content type will be overridden when
      *         possible; <code>false</code> if the original content type will be
      *         used.
+     * @see #setOverrideContentType(boolean)
      */
     public boolean isOverrideContentType() {
         return overrideContentType;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IOException
+     *             if something goes wrong with the download or the user
+     *             cancelled the file download process.
+     */
     @Override
     public boolean handleConnectorRequest(VaadinRequest request,
             VaadinResponse response, String path) throws IOException {
