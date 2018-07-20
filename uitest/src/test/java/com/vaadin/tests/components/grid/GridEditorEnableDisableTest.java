@@ -13,7 +13,6 @@ import org.openqa.selenium.interactions.Actions;
 
 import static org.junit.Assert.assertTrue;
 
-@RunLocally(value = Browser.CHROME)
 @TestCategory("grid")
 public class GridEditorEnableDisableTest extends SingleBrowserTest {
     @Override
