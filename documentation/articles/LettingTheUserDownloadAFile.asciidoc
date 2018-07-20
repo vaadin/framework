@@ -114,9 +114,8 @@ public class OnDemandFileDownloader extends FileDownloader {
 ==== Cancelled downloads
 
 Since downloadable files may be quite big, and the download process may take time, the user might decide to
-cancel the download process. It this case `IOException` may be thrown by the web server. In this case the exception
-does not mean that something went wrong with the application, but it the. To prevent those exceptions to be logged, you can catch
-and ignore it as here:
+cancel the download process. It this case `IOException` may be thrown by the web server. That
+does not mean something went wrong with the application, but the user pressed `Cancel` button during download. To prevent the exception to be logged, you can catch and ignore it as here:
 
 ```java
 public class IgnoreCancelDownloader extends FileDownloader {
@@ -134,4 +133,4 @@ public class IgnoreCancelDownloader extends FileDownloader {
 }
 
 ```
-Note that the exception is a sublclass of `IOException`, but the particular class depends of the web container.
+Note that the exception is a sublclass of `IOException`, but the particular class depends on the web container.
