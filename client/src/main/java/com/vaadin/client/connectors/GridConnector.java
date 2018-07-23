@@ -948,8 +948,6 @@ public class GridConnector extends AbstractHasComponentsConnector
 
             // Update all columns
             updateColumnsFromState();
-
-            getWidget().updateHeaderAndColSpans();
         }
         
         if (stateChangeEvent.hasPropertyChanged("columnOrder")) {
