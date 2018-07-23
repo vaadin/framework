@@ -6529,6 +6529,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             sinkEvents(events);
         }
         this.columnHider.updateTogglesOrder();
+        refreshHeader();
+        this.header.updateColSpans();
+        this.footer.updateColSpans();
     }
 
 
@@ -9354,15 +9357,5 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
         return ((HasUserSelectionAllowed) getSelectionModel())
                 .isUserSelectionAllowed();
-    }
-
-
-    /**
-     * Updates the header row container and the colspans.
-     */
-    public void updateHeaderAndColSpans() {
-        refreshHeader();
-        header.updateColSpans();
-        footer.updateColSpans();
     }
 }
