@@ -17,8 +17,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
+import com.vaadin.data.provider.CallbackDataProvider;
 import org.easymock.Capture;
 import org.junit.Before;
 import org.junit.Test;
@@ -703,6 +706,34 @@ public class GridMultiSelectionModelTest {
         assertFalse(model.isSelectAllCheckBoxVisible());
         assertEquals(SelectAllCheckBoxVisibility.DEFAULT,
                 model.getSelectAllCheckBoxVisibility());
+    }
+
+    @Test
+    public void testSelectAllWithProxyDataProvider() {
+        List<String> data = IntStream.range(0, 100).boxed()
+                .map(i -> "String " + i).collect(Collectors.toList());
+        Grid<AtomicReference<String>> proxyGrid = new Grid<>();
+        proxyGrid.setDataProvider(new CallbackDataProvider<>(
+                q -> data.stream().map(AtomicReference::new).skip(q.getOffset())
+                        .limit(q.getLimit()),
+                q -> data.size(), AtomicReference::get));
+        MultiSelectionModel<AtomicReference<String>> model = (MultiSelectionModel<AtomicReference<String>>) proxyGrid
+                .setSelectionMode(SelectionMode.MULTI);
+        List<Set<AtomicReference<String>>> selections = new ArrayList<>();
+        model.addSelectionListener(e -> {
+            selections.add(e.getAllSelectedItems());
+        });
+        model.selectAll();
+        model.deselect(model.getFirstSelectedItem().orElseThrow(
+                () -> new IllegalStateException("Items should be selected")));
+        model.selectAll();
+
+        assertEquals("Item count mismatch on first select all", 100,
+                selections.get(0).size());
+        assertEquals("Item count mismatch on deselect", 99,
+                selections.get(1).size());
+        assertEquals("Item count mismatch on second select all", 100,
+                selections.get(2).size());
 
     }
 }

@@ -445,9 +445,15 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
         }
 
         doUpdateSelection(set -> {
+            DataProvider<T, ?> dataProvider = getGrid().getDataProvider();
             // order of add / remove does not matter since no duplicates
-            set.removeAll(removedItems);
-            set.addAll(addedItems);
+            Set<Object> removedItemIds = removedItems.stream()
+                    .map(dataProvider::getId).collect(Collectors.toSet());
+            set.removeIf(
+                    item -> removedItemIds.contains(dataProvider.getId(item)));
+            addedItems.stream().filter(
+                    item -> !selectionContainsId(dataProvider.getId(item)))
+                    .forEach(set::add);
 
             // refresh method is NOOP for items that are not present client side
             DataCommunicator<T> dataCommunicator = getGrid()
