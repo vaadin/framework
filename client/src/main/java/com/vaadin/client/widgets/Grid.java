@@ -2136,8 +2136,22 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         private void updateHorizontalScrollPosition() {
             double scrollLeft = grid.getScrollLeft();
-            cellWrapper.getStyle().setLeft(
-                    frozenCellWrapper.getOffsetWidth() - scrollLeft, Unit.PX);
+            int frozenWidth = frozenCellWrapper.getOffsetWidth();
+            double newLeft = frozenWidth - scrollLeft;
+            cellWrapper.getStyle().setLeft(newLeft, Unit.PX);
+
+            // sometimes focus handling twists the editor row out of alignment
+            // with the grid itself and the position needs to be compensated for
+            if (!grid.getEditor().columnToWidget.isEmpty()) {
+                TableRowElement rowElement = grid.getEscalator().getBody()
+                        .getRowElement(grid.getEditor().getRow());
+                int rowLeft = rowElement.getAbsoluteLeft();
+                int editorLeft = cellWrapper.getAbsoluteLeft();
+                if (editorLeft != rowLeft + frozenWidth) {
+                    cellWrapper.getStyle()
+                            .setLeft(newLeft + rowLeft - editorLeft, Unit.PX);
+                }
+            }
         }
 
         /**
