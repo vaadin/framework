@@ -11,9 +11,6 @@ import com.vaadin.ui.Grid;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Vaadin Ltd
- */
 public class GridHeightByRow extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {

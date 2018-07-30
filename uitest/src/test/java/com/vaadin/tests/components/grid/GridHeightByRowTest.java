@@ -9,14 +9,10 @@ import org.junit.Test;
 
 @TestCategory("grid")
 public class GridHeightByRowTest extends MultiBrowserTest {
-    @Override
-    public void setup() throws Exception {
-        super.setup();
-        openTestURL();
-    }
-
     @Test
     public void testHeightByRow() {
+        openTestURL();
+
         GridElement grid = $(GridElement.class).first();
         ButtonElement addButton = $(ButtonElement.class).caption("Add Data")
                 .first();
