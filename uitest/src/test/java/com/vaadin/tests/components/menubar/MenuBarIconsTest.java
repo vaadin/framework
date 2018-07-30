@@ -1,17 +1,16 @@
 package com.vaadin.tests.components.menubar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Assume;
-import org.junit.Test;
-import org.openqa.selenium.WebElement;
-
 import com.vaadin.server.FontAwesome;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.MenuBarElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import org.junit.Assume;
+import org.junit.Test;
+import org.openqa.selenium.WebElement;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MenuBarIconsTest extends SingleBrowserTest {
 
@@ -70,6 +69,7 @@ public class MenuBarIconsTest extends SingleBrowserTest {
         assertImage(image, moreItem);
 
         moreItem.click();
+        waitForElementPresent(By.className("v-menubar-submenu"));
         WebElement filler5 = moreItem.findElement(By.vaadin("#Filler 5"));
         assertImage(image, filler5);
 
