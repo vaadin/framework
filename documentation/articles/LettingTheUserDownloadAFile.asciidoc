@@ -114,7 +114,7 @@ public class OnDemandFileDownloader extends FileDownloader {
 ==== Cancelled downloads
 
 Since downloadable files may be quite big, and the download process may take time, the user might decide to
-cancel the download process. It this case `IOException` may be thrown by the web server. That
+cancel the download process. In this case `IOException` may be thrown by the web server. That
 does not mean something went wrong with the application, but the user pressed `Cancel` button during download. To prevent the exception to be logged, you can catch and ignore it as here:
 
 ```java
