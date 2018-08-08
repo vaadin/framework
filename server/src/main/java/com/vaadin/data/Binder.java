@@ -2860,7 +2860,7 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Finds and removes the Binding for the given property name.\
+     * Finds and removes the Binding for the given property name.
      *
      * @see Binder#removeBinding(HasValue)
      * @see com.vaadin.ui.AbstractComponent#setComponentError
