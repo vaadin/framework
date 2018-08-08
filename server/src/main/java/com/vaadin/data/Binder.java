@@ -2787,8 +2787,13 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Finds and removes all Bindings for the given field.
-     *
+     * Finds and removes all Bindings for the given field. Note that this method
+     * and other overloads of removeBinding method do not reset component errors
+     * that might have been added to the field and do not remove required
+     * indicator of the field no matter if it was set by Binder or not. To reset
+     * component errors, <pre>field.setComponentError(null)</pre> must be called
+     * and to remove required indicator,
+     * <pre>field.setRequiredIndicatorVisible(false)</pre> must be called.
      * @param field
      *            the field to remove from bindings
      *
@@ -2804,6 +2809,7 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Removes the given Binding from this Binder.
+     * @see Binder#removeBinding(HasValue)
      *
      * @param binding
      *            the binding to remove
@@ -2848,6 +2854,7 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Finds and removes the Binding for the given property name.
+     * @see Binder#removeBinding(HasValue)
      *
      * @param propertyName
      *            the propertyName to remove from bindings
