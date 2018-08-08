@@ -2791,9 +2791,13 @@ public class Binder<BEAN> implements Serializable {
      * and other overloads of removeBinding method do not reset component errors
      * that might have been added to the field and do not remove required
      * indicator of the field no matter if it was set by Binder or not. To reset
-     * component errors, <pre>field.setComponentError(null)</pre> must be called
+     * component errors, {@code field.setComponentError(null)} should be called
      * and to remove required indicator,
-     * <pre>field.setRequiredIndicatorVisible(false)</pre> must be called.
+     * {@code field.setRequiredIndicatorVisible(false)} should be called.
+     *
+     * @see com.vaadin.ui.AbstractComponent#setComponentError
+     * @see com.vaadin.ui.AbstractComponent#setRequiredIndicatorVisible
+     *
      * @param field
      *            the field to remove from bindings
      *
@@ -2809,7 +2813,10 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Removes the given Binding from this Binder.
+     *
      * @see Binder#removeBinding(HasValue)
+     * @see com.vaadin.ui.AbstractComponent#setComponentError
+     * @see com.vaadin.ui.AbstractComponent#setRequiredIndicatorVisible
      *
      * @param binding
      *            the binding to remove
@@ -2853,8 +2860,11 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Finds and removes the Binding for the given property name.
+     * Finds and removes the Binding for the given property name.\
+     *
      * @see Binder#removeBinding(HasValue)
+     * @see com.vaadin.ui.AbstractComponent#setComponentError
+     * @see com.vaadin.ui.AbstractComponent#setRequiredIndicatorVisible
      *
      * @param propertyName
      *            the propertyName to remove from bindings
