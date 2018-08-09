@@ -74,9 +74,12 @@ almost any POJOs with minimal requirements.
 // Here is a bean (or more exactly a POJO)
 public class Person {
     String name;
-    int    yearOfBirth;
+    int yearOfBirth;
 
-    // Constructors omitted
+    public Person(String name, int yearOfBirth) {
+        this.name = name;
+        this.yearOfBirth = yearOfBirth;
+    }
     
     public String getName() {
         return name;
@@ -86,12 +89,12 @@ public class Person {
         this.name = name;
     }
     
-    public Integer getYearOfBirth() {
+    public int getYearOfBirth() {
         return yearOfBirth;
     }
     
-    public void setYearOfBirth(Integer yearOfBirth) {
-        this.yearOfBirth = yearOfBirth.intValue();
+    public void setYearOfBirth(int yearOfBirth) {
+        this.yearOfBirth = yearOfBirth;
     }
 }
 
