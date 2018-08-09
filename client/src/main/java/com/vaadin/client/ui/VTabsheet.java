@@ -634,7 +634,7 @@ public class VTabsheet extends VTabsheetBase
 
             for (int i = oldPosition - 1; i >= 0; i--) {
                 Tab tab = getTab(i);
-                if (!tab.isHiddenOnServer()) {
+                if (tab != null && !tab.isHiddenOnServer()) {
                     return i;
                 }
             }
