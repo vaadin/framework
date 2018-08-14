@@ -72,9 +72,14 @@ almost any POJOs with minimal requirements.
 
 ----
 // Here is a bean (or more exactly a POJO)
-class Person {
+public class Person {
     String name;
-    int    age;
+    int yearOfBirth;
+
+    public Person(String name, int yearOfBirth) {
+        this.name = name;
+        this.yearOfBirth = yearOfBirth;
+    }
     
     public String getName() {
         return name;
@@ -84,12 +89,12 @@ class Person {
         this.name = name;
     }
     
-    public Integer getAge() {
-        return age;
+    public int getYearOfBirth() {
+        return yearOfBirth;
     }
     
-    public void setAge(Integer age) {
-        this.age = age.intValue();
+    public void setYearOfBirth(int yearOfBirth) {
+        this.yearOfBirth = yearOfBirth;
     }
 }
 
@@ -156,7 +161,7 @@ item.addItemProperty("discoverername",
 // The other way is to use regular MethodProperty.
 item.addItemProperty("discovererborn",
      new MethodProperty<Person>(planet.getDiscoverer(),
-                                "born"));
+                                "yearOfBirth"));
 ----
 
 The difference is that [classname]#NestedMethodProperty# does not access the
