@@ -210,7 +210,7 @@ public class TooltipInfo {
     /**
      * Gets the tooltip title's content mode.
      * 
-     * @since
+     * @since 7.7.14
      *
      * @return the content mode
      */
@@ -221,7 +221,7 @@ public class TooltipInfo {
     /**
      * Sets the tooltip title's content mode.
      *
-     * @since
+     * @since 7.7.14
      * 
      * @param contentMode
      *            the content mode to set
