@@ -6702,7 +6702,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *            the content mode for cell tooltips, not <code>null</code>
      * @see #setRowDescriptionGenerator(RowDescriptionGenerator)
      *
-     * @since
+     * @since 7.7.14
      */
     public void setCellDescriptionGenerator(CellDescriptionGenerator generator,
             ContentMode contentMode) {
@@ -6781,7 +6781,7 @@ public class Grid extends AbstractFocusable implements SelectionNotifier,
      *
      * @see #setCellDescriptionGenerator(CellDescriptionGenerator)
      *
-     * @since
+     * @since 7.7.14
      */
     public void setRowDescriptionGenerator(RowDescriptionGenerator generator,
             ContentMode contentMode) {
