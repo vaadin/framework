@@ -2621,6 +2621,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * removes the style otherwise.
          */
         public void resetFocusedRowStyle() {
+
+            if (getEscalator() == null || getEscalator().getBody() == null
+                    || rowWithFocus > Grid.this.getLastVisibleRowIndex()
+                    || rowWithFocus < Grid.this.getFirstVisibleRowIndex())
+                return;
+
             TableRowElement tableRowElement = getEscalator().getBody()
                     .getRowElement(rowWithFocus);
             if (!Grid.this.getElement().equals(WidgetUtil.getFocusedElement()))
