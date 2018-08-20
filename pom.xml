@@ -87,6 +87,10 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>vaadin-staging</id>
+            <url>https://oss.sonatype.org/content/repositories/comvaadin-2574</url>
+        </repository>
     </repositories>
 
     <organization>
