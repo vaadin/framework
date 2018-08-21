@@ -12,6 +12,7 @@
     <packaging>war</packaging>
     <properties>
         <skip.uitest.deployment>true</skip.uitest.deployment>
+        <skip.uitest.failsafe>true</skip.uitest.failsafe>
     </properties>
 
     <url>https://vaadin.com/</url>
@@ -273,6 +274,8 @@
                     <httpConnector>
                         <port>8888</port>
                     </httpConnector>
+                    <stopKey>foo</stopKey>
+                    <stopPort>8889</stopPort>
                 </configuration>
             </plugin>
 
@@ -300,6 +303,32 @@
                 <configuration>
                     <skip>true</skip>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <skip>${skip.uitest.failsafe}</skip>
+                    <includes>
+                        <include>**/AllTB3Tests.java</include>
+                    </includes>
+                    <systemPropertyVariables>
+                        <com.vaadin.testbench.screenshot.directory>${project.parent.basedir}/tests/screenshots</com.vaadin.testbench.screenshot.directory>
+                        <com.vaadin.testbench.max.retries>${com.vaadin.testbench.max.retries}</com.vaadin.testbench.max.retries>
+                        <useLocalWebDriver>${useLocalWebDriver}</useLocalWebDriver>
+                        <browsers.include>${browsers.include}</browsers.include>
+                        <categories.include>${categoriess.include}</categories.include>
+                        <browsers.exclude>${browsers.exclude}</browsers.exclude>
+                        <categories.exclude>${categories.exclude}</categories.exclude>
+                    </systemPropertyVariables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -331,6 +360,75 @@
             <properties>
                 <skip.uitest.deployment>false</skip.uitest.deployment>
             </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <skip.uitest.failsafe>false</skip.uitest.failsafe>
+            </properties>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.eclipse.jetty</groupId>
+                            <artifactId>jetty-maven-plugin</artifactId>
+
+                            <executions>
+                                <!-- start and stop jetty (running our app)
+                                 when running integration tests -->
+                                <execution>
+                                    <id>start-jetty</id>
+                                    <phase>pre-integration-test</phase>
+                                    <goals>
+                                        <goal>start</goal>
+                                    </goals>
+                                </execution>
+                                <execution>
+                                    <id>stop-jetty</id>
+                                    <phase>post-integration-test</phase>
+                                    <goals>
+                                        <goal>stop</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+
+        </profile>
+        <profile>
+            <id>validation</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <artifactId>maven-failsafe-plugin</artifactId>
+                            <configuration>
+                                <systemPropertyVariables>
+                                    <useLocalWebDriver>true</useLocalWebDriver>
+                                    <browsers.include>phantomjs1</browsers.include>
+                                    <categories.exclude>push,needs-ssh</categories.exclude>
+                                </systemPropertyVariables>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <goals>
+                                        <goal>integration-test</goal>
+                                        <goal>verify</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
         </profile>
     </profiles>
 
