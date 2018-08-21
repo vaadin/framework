@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-servlet-containers-test</artifactId>
+        <version>7.7-SNAPSHOT</version>
+    </parent>
+    <artifactId>vaadin-test-liberty-microprofile-server</artifactId>
+    <name>Vaadin Liberty MicroProfile Test</name>
+    <packaging>war</packaging>
+    <properties>
+        <jetty.skip>true</jetty.skip>
+        <liberty.version>17.0.0.1</liberty.version>
+        <liberty.profile>wlp-microProfile1</liberty.profile>
+        <server.name>liberty-microprofile</server.name>
+    </properties>
+
+    <dependencies>
+        <!-- UI classes and tests from dependencies -->
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-test-server-ui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-test-server-tests</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <!-- FIXME: Fix liberty to use the same port as everything else. -->
+                        <deployment.url>http://localhost:9080</deployment.url>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+
+            <!-- Server configuration -->
+            <plugin>
+                <groupId>net.wasdev.wlp.maven.plugins</groupId>
+                <artifactId>liberty-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
