@@ -2,16 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-root</artifactId>
-        <version>7.7-SNAPSHOT</version>
-    </parent>
+    <groupId>com.vaadin</groupId>
     <artifactId>vaadin-test</artifactId>
+    <version>7.7-SNAPSHOT</version>
     <name>vaadin-test</name>
     <packaging>pom</packaging>
     <properties>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
         <failOnMissingWebXml>false</failOnMissingWebXml>
+        <jetty.version>9.3.7.v20160115</jetty.version>
+        <phantomjs.version>2.1.1</phantomjs.version>
+        <vaadin.version>7.7.14</vaadin.version>
+        <testbench.version>4.2.2</testbench.version>
     </properties>
 
     <repositories>
@@ -19,7 +22,60 @@
             <id>vaadin-addons</id>
             <url>http://maven.vaadin.com/vaadin-addons</url>
         </repository>
+        <repository>
+            <id>vaadin-prereleases</id>
+            <url>http://maven.vaadin.com/vaadin-prereleases</url>
+        </repository>
+        <repository>
+            <id>vaadin-snapshots</id>
+            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>vaadin-prereleases</id>
+            <url>http://maven.vaadin.com/vaadin-prereleases</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>vaadin-snapshots</id>
+            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-bom</artifactId>
+                <version>${vaadin.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.11</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-testbench-api</artifactId>
+                <version>${vaadin.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
 
@@ -28,12 +84,10 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-server</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-themes</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <!-- Servlet 3.0 API -->
@@ -49,7 +103,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -61,7 +114,7 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-testbench</artifactId>
-            <version>4.0.3</version>
+            <version>${testbench.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -75,9 +128,24 @@
         <module>addon-using-init-param-widget-set</module>
         <module>space in directory</module>
         <module>vaadinservletconfiguration-widget-set</module>
+        <module>servlet-containers</module>
     </modules>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.vaadin</groupId>
+                    <artifactId>vaadin-maven-plugin</artifactId>
+                    <version>${vaadin.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
@@ -111,6 +179,7 @@
             <plugin>
                 <groupId>com.github.klieber</groupId>
                 <artifactId>phantomjs-maven-plugin</artifactId>
+                <version>0.7</version>
                 <executions>
                     <execution>
                         <goals>
@@ -125,9 +194,11 @@
 
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.0</version>
             </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.22.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -139,7 +210,11 @@
                 <configuration>
                     <systemPropertyVariables>
                         <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
+                        <server-name>${server.name}</server-name>
+                        <com.vaadin.testbench.Parameters.screenshotReferenceDirectory>${reference.directory}</com.vaadin.testbench.Parameters.screenshotReferenceDirectory>
+                        <com.vaadin.testbench.Parameters.screenshotErrorDirectory>target/error-screenshots</com.vaadin.testbench.Parameters.screenshotErrorDirectory>
                     </systemPropertyVariables>
+                    <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
         </plugins>
