@@ -183,7 +183,7 @@ compatible browser, such as Mozilla Firefox 3.6 or newer.
 == Mobile Drag And Drop Support
 
 The HTML 5 Drag and Drop API is not yet supported by mobile browsers. To enable HTML5 DnD support on mobile devices, we have included
-an link:https://github.com/timruffles/ios-html5-drag-drop-shim/tree/rewrite:[external Polyfill]. Please note that this Polyfill is under the BSD 2 License.
+an link:https://github.com/timruffles/mobile-drag-drop[external Polyfill]. Please note that this Polyfill is under the BSD 2 License.
 
 By default, the mobile DnD support is disabled, but you can enable it any time for a [classname]#UI#. Starting from the request where the support was enabled, all the added [classname]#DragSourceExtension#, [classname]#DropTargetExtension# and their subclasses will also work on mobile devices for that UI. The Polyfill is only loaded when the user is using a touch device. 
 
