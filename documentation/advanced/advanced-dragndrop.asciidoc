@@ -420,7 +420,7 @@ When dropping on top of the grid's header or footer, the drop location will be `
 A drop target Grid's body has the style name `v-grid-body-droptarget` to indicate that it is a potential target for data to be dropped.
 
 When dragging data over a drop target Grid's row, depending on the drop mode and the mouse position relative to the row, a style name is applied to the row or to the grid body to indicate the drop location.
-When dragging on top of a row, `v-grid-row-drag-center` indicates ON_TOP, `v-grid-row-drag-top` indicates ABOVE and `v-grid-row-drag-bottom` indicates BELOW locations. When dragging on top of an empty grid, or when the drop location is ON_TOP and dragged below the last row in grid (and there is empty space visible), the `v-grid-body-body-drag-top` style is applied to the `v-grid-tablewrapper` element which surrounds the grid header, body and footer.
+When dragging on top of a row, `v-grid-row-drag-center` indicates ON_TOP, `v-grid-row-drag-top` indicates ABOVE and `v-grid-row-drag-bottom` indicates BELOW locations. When dragging on top of an empty grid, or when the drop location is ON_TOP and dragged below the last row in grid (and there is empty space visible), the `v-grid-body-drag-top` style is applied to the `v-grid-tablewrapper` element which surrounds the grid header, body and footer.
 
 (((range="endofrange", startref="term.advanced.dragndrop")))
 
