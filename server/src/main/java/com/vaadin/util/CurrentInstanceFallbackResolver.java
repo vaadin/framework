@@ -34,7 +34,7 @@ import java.io.Serializable;
  * @see CurrentInstance#defineFallbackResolver(Class,
  *      CurrentInstanceFallbackResolver)
  * 
- * @since
+ * @since 7.7.14
  * 
  */
 public interface CurrentInstanceFallbackResolver<T> extends Serializable {
