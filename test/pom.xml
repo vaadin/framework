@@ -13,8 +13,9 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <jetty.version>9.3.7.v20160115</jetty.version>
         <phantomjs.version>2.1.1</phantomjs.version>
-        <vaadin.version>7.7.14</vaadin.version>
         <testbench.version>4.2.2</testbench.version>
+        <vaadin.version>${project.version}</vaadin.version>
+        <vaadin.maven.version>${vaadin.version}</vaadin.maven.version>
     </properties>
 
     <repositories>
@@ -137,7 +138,7 @@
                 <plugin>
                     <groupId>com.vaadin</groupId>
                     <artifactId>vaadin-maven-plugin</artifactId>
-                    <version>${vaadin.version}</version>
+                    <version>${vaadin.maven.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
