@@ -14,6 +14,7 @@
         <jetty.version>9.3.7.v20160115</jetty.version>
         <phantomjs.version>2.1.1</phantomjs.version>
         <testbench.version>4.2.2</testbench.version>
+        <testbench.api.version>7.7.14</testbench.api.version>
         <vaadin.version>${project.version}</vaadin.version>
         <vaadin.maven.version>${vaadin.version}</vaadin.maven.version>
     </properties>
@@ -73,7 +74,7 @@
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-testbench-api</artifactId>
-                <version>${vaadin.version}</version>
+                <version>${testbench.api.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
