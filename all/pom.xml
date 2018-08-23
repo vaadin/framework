@@ -73,6 +73,14 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>com.github.siom79.japicmp</groupId>
+                <artifactId>japicmp-maven-plugin</artifactId>
+                <version>0.9.1</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
             <!-- Release Notes -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

@@ -417,6 +417,67 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <!-- This profile is disjoint with default profile. It allows
+             to prevent running build for all available modules but restricts a number
+             of modules to specified here only (which allows to avoid long time compilation
+             for projects that are not needed since japicmp works with compiled classes).
+             ! -->
+            <id>apicmp</id>
+            <modules>
+                <module>server</module>
+                <module>push</module>
+                <module>client</module>
+                <module>client-compiler</module>
+                <module>shared</module>
+            </modules>
+            <repositories>
+                <repository>
+                    <id>vaadin-prereleases</id>
+                    <url>http://maven.vaadin.com/vaadin-prereleases</url>
+                </repository>
+            </repositories>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.siom79.japicmp</groupId>
+                        <artifactId>japicmp-maven-plugin</artifactId>
+                        <version>0.9.1</version>
+                        <configuration>
+                            <oldVersion>
+                                <dependency>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.artifactId}</artifactId>
+                                    <version>${vaadin.api.reference.version}</version>
+                                    <type>jar</type>
+                                </dependency>
+                            </oldVersion>
+                            <newVersion>
+                                <file>
+                                    <path>${project.build.directory}/${project.artifactId}-${project.version}.${project.packaging}</path>
+                                </file>
+                            </newVersion>
+                            <parameter>
+                                <ignoreMissingClasses>true</ignoreMissingClasses>
+                                <onlyModified>true</onlyModified>
+                                <skipDiffReport>true</skipDiffReport>
+                                <skipXmlReport>true</skipXmlReport>
+                                <ignoreMissingOldVersion>true</ignoreMissingOldVersion>
+                                <ignoreMissingNewVersion>true</ignoreMissingNewVersion>
+                            </parameter>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>cmp</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 </project>
