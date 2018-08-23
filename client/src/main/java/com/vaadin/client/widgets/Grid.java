@@ -2617,6 +2617,25 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         /**
+         * Adds row focus style to the row with focus if the grid is focused and
+         * removes the style otherwise.
+         */
+        public void resetFocusedRowStyle() {
+
+            if (getEscalator() == null || getEscalator().getBody() == null
+                    || rowWithFocus > Grid.this.getLastVisibleRowIndex()
+                    || rowWithFocus < Grid.this.getFirstVisibleRowIndex())
+                return;
+
+            TableRowElement tableRowElement = getEscalator().getBody()
+                    .getRowElement(rowWithFocus);
+            if (!Grid.this.getElement().equals(WidgetUtil.getFocusedElement()))
+                setStyleName(tableRowElement, rowFocusStyleName, false);
+            else
+                setStyleName(tableRowElement, rowFocusStyleName, true);
+        }
+
+        /**
          * Sets focus style for the given row if needed.
          *
          * @param row
@@ -7666,6 +7685,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         if (eventType.equals(BrowserEvents.FOCUS)
                 || eventType.equals(BrowserEvents.BLUR)) {
             super.onBrowserEvent(event);
+
+            cellFocusHandler.resetFocusedRowStyle();
             return;
         }
 
