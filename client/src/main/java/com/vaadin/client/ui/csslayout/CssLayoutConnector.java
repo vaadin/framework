@@ -64,6 +64,22 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
     /*
      * (non-Javadoc)
      *
+     * @see com.vaadin.client.ui.AbstractComponentConnector#init()
+     */
+    @Override
+    public void init() {
+        super.init();
+        getWidget().setLayoutManager(getLayoutManager());
+        getWidget().setElementResizeListener(e -> {
+            for (ComponentConnector child : getChildComponents()) {
+                getLayoutManager().setNeedsMeasure(child);
+            }
+        });
+    }
+
+    /*
+     * (non-Javadoc)
+     *
      * @see com.vaadin.client.ui.AbstractLayoutConnector#getState()
      */
     @Override

@@ -18,8 +18,10 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.StyleConstants;
+import com.vaadin.client.ui.layout.ElementResizeListener;
 
 /**
  * VCssLayout is a layout which supports configuring it's children with CSS
@@ -28,6 +30,9 @@ import com.vaadin.client.StyleConstants;
 public class VCssLayout extends FlowPanel {
 
     public static final String CLASSNAME = "v-csslayout";
+
+    private LayoutManager layoutManager;
+    private ElementResizeListener elementResizeListener;
 
     /**
      * Default constructor.
@@ -64,5 +69,39 @@ public class VCssLayout extends FlowPanel {
         insert(child, index);
         Profiler.leave("VCssLayout.addOrMove insert");
         Profiler.leave("VCssLayout.addOrMove");
+    }
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public void setLayoutManager(LayoutManager manager) {
+        layoutManager = manager;
+    }
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public LayoutManager getLayoutManager() {
+        return layoutManager;
+    }
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public void setElementResizeListener(
+            ElementResizeListener elementResizeListener) {
+        this.elementResizeListener = elementResizeListener;
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        if (layoutManager != null && elementResizeListener != null) {
+            layoutManager.addElementResizeListener(
+                    getElement().getParentElement(), elementResizeListener);
+        }
+    }
+
+    @Override
+    protected void onDetach() {
+        if (layoutManager != null && elementResizeListener != null) {
+            layoutManager.removeElementResizeListener(
+                    getElement().getParentElement(), elementResizeListener);
+        }
+        super.onDetach();
     }
 }
