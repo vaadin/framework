@@ -51,35 +51,6 @@
                     </executions>
                 </plugin>
 
-                <!-- Payara Micro Configuration. Version selected with payara.version -->
-                <plugin>
-                    <groupId>fish.payara.maven.plugins</groupId>
-                    <artifactId>payara-micro-maven-plugin</artifactId>
-                    <version>1.0.0</version>
-                    <executions>
-                        <execution>
-                            <id>start-payara</id>
-                            <phase>pre-integration-test</phase>
-                            <goals>
-                                <goal>bundle</goal>
-                                <goal>start</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>stop-payara</id>
-                            <phase>post-integration-test</phase>
-                            <goals>
-                                <goal>stop</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <payaraVersion>${payara.version}</payaraVersion>
-                        <useUberJar>true</useUberJar>
-                        <daemon>true</daemon>
-                    </configuration>
-                </plugin>
-
                 <!-- Glassfish Embedded Configuration. -->
                 <plugin>
                     <groupId>org.glassfish.embedded</groupId>
@@ -242,10 +213,8 @@
                 <module>wildfly10</module>
                 <module>wildfly9</module>
                 <module>wildfly8</module>
-                <module>wildfly-swarm</module>
                 <module>jetty8</module>
                 <module>jetty9</module>
-                <module>payara-micro</module>
                 <module>glassfish</module>
                 <!-- TODO: Payara 5 and Glassfish 5 -->
                 <module>tomcat7</module>
@@ -254,7 +223,6 @@
                 <module>tomcat9</module>
                 <module>liberty-javaee</module>
                 <module>liberty-webprofile</module>
-                <module>liberty-microprofile</module>
             </modules>
         </profile>
         <profile>
@@ -302,14 +270,6 @@
                 <module>tomcat80</module>
                 <module>tomcat85</module>
                 <module>tomcat9</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>microprofile</id>
-            <modules>
-                <module>wildfly-swarm</module>
-                <module>payara-micro</module>
-                <module>liberty-microprofile</module>
             </modules>
         </profile>
     </profiles>
