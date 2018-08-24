@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ivy-module [
+    <!ENTITY jetty.version "8.1.12.v20130726">
+]>
+<ivy-module version="2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"
+    xmlns:m="http://ant.apache.org/ivy/maven">
+
+    <info organisation="com.vaadin" module="vaadin-uitest"
+        revision="${vaadin.version}" />
+
+    <configurations>
+        <conf name="build" />
+        <conf name="build-provided" visibility="private" />
+        <conf name="jetty-run" visibility="private" />
+    </configurations>
+    <dependencies defaultconf="build" defaultconfmapping="build->default">
+        <!-- API DEPENDENCIES -->
+        <dependency org="javax.portlet" name="portlet-api"
+            rev="2.0" conf="build-provided -> default" />
+
+        <dependency org="javax.validation" name="validation-api"
+            rev="1.0.0.GA" conf="build -> default,sources" />
+        <dependency org="org.hibernate" name="hibernate-validator"
+            rev="4.2.0.Final" conf="build -> default" />
+
+        <!-- LIBRARY DEPENDENCIES (compile time) -->
+        <!-- Project modules -->
+        <dependency org="com.vaadin" name="vaadin-server"
+            rev="${vaadin.version}" conf="build->default">
+            <exclude org="javax.servlet"></exclude>
+            <exclude type="pom" />
+        </dependency>
+        <dependency org="com.vaadin" name="vaadin-compatibility-server"
+            rev="${vaadin.version}" conf="build->default">
+            <exclude org="javax.servlet"></exclude>
+            <exclude type="pom" />
+        </dependency>
+        <dependency org="com.vaadin" name="vaadin-client"
+            rev="${vaadin.version}" conf="build->default">
+            <exclude org="javax.validation"></exclude>
+            <exclude type="pom" />
+        </dependency>
+        <dependency org="com.vaadin" name="vaadin-compatibility-client"
+            rev="${vaadin.version}" conf="build->default">
+            <exclude org="javax.validation"></exclude>
+            <exclude type="pom" />
+        </dependency>
+        <dependency org="com.vaadin" name="vaadin-client-compiled"
+            rev="${vaadin.version}" conf="build->default">
+            <exclude type="pom" />
+        </dependency>
+        <dependency org="com.vaadin" name="vaadin-compatibility-client-compiled"
+            rev="${vaadin.version}" conf="build->default">
+            <exclude type="pom" />
+        </dependency>
+        <dependency org="com.vaadin" name="vaadin-themes"
+            rev="${vaadin.version}" conf="build->default">
+            <exclude type="pom" />
+        </dependency>
+        <dependency org="com.vaadin" name="vaadin-push" rev="${vaadin.version}"
+            conf="build->default">
+            <exclude org="javax.servlet"></exclude>
+            <exclude type="pom" />
+        </dependency>
+
+        <!-- For compiling TestingWidgetSet -->
+        <dependency org="com.vaadin" name="vaadin-client-compiler"
+            rev="${vaadin.version}" conf="build-provided-> default">
+            <exclude type="pom" />
+        </dependency>
+
+        <!-- Servlet 3.0 API -->
+        <dependency org="javax.servlet" name="javax.servlet-api"
+            rev="3.0.1" conf="build-provided -> default" />
+
+        <dependency org="org.eclipse.jetty" name="jetty-server"
+            rev="&jetty.version;" conf="build-provided, jetty-run->default">
+            <exclude org="org.eclipse.jetty.orbit"></exclude>
+        </dependency>
+        <!-- jetty-servlets needed by ProxyTest, but not by jetty-runner -->
+        <dependency org="org.eclipse.jetty" name="jetty-servlets"
+            rev="&jetty.version;" conf="build-provided, jetty-run->default">
+            <exclude org="org.eclipse.jetty.orbit"></exclude>
+        </dependency>
+        <dependency org="org.eclipse.jetty" name="jetty-websocket"
+            rev="&jetty.version;" conf="build-provided, jetty-run->default">
+            <exclude org="org.eclipse.jetty.orbit"></exclude>
+        </dependency>
+        <dependency org="org.eclipse.jetty" name="jetty-webapp"
+            rev="&jetty.version;" conf="build-provided, jetty-run->default">
+            <exclude org="org.eclipse.jetty.orbit"></exclude>
+        </dependency>
+        <dependency org="org.eclipse.jetty" name="jetty-util"
+            rev="&jetty.version;" conf="build-provided, jetty-run->default">
+            <exclude org="org.eclipse.jetty.orbit"></exclude>
+        </dependency>
+        <dependency org="org.mortbay.jetty" name="jetty-runner"
+            rev="&jetty.version;" conf="build-provided, jetty-run->default">
+            <exclude org="org.eclipse.jetty.orbit"></exclude>
+        </dependency>
+
+        <dependency org="junit" name="junit" rev="4.12"
+            conf="build -> default" />
+        <dependency org="org.hamcrest" name="hamcrest-all"
+            rev="1.3" conf="build->default" />
+        <dependency org="com.jcraft" name="jsch" rev="0.1.52"
+            conf="build->default" />
+        <dependency org="commons-codec" name="commons-codec"
+            rev="1.5" conf="build->default" />
+        <dependency org="commons-io" name="commons-io"
+            rev="${commons-io.version}" conf="build->default" />
+        <!-- Mainly for SQLContainer tests -->
+        <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"
+            conf="build -> default" />
+        <dependency org="com.vaadin" name="vaadin-testbench-api"
+            rev="${vaadin.version}" conf="build-provided -> default" />
+        <!-- This should be removed once tests have been updated to use lang3 -->
+        <dependency org="commons-lang" name="commons-lang"
+            rev="2.6" conf="build -> default" />
+
+        <dependency org="org.eclipse.jgit" name="org.eclipse.jgit"
+            rev="3.5.1.201410131835-r" conf="build->default">
+            <exclude org="org.apache.httpcomponents"></exclude>
+        </dependency>
+
+    </dependencies>
+
+</ivy-module>

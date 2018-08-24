@@ -32,7 +32,6 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-client-compiled</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
     </dependencies>
