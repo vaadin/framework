@@ -10,7 +10,6 @@ from shutil import copy, rmtree
 from glob import glob
 
 # Directory where the resulting war files are stored
-# TODO: deploy results
 resultPath = join("result", "demos")
 
 if not exists(resultPath):
@@ -39,26 +38,27 @@ def parseArgs():
 		args = parser.parse_args()
 	return args
 
-# Function for determining the path for maven executable
-def getMavenCommand():
+# Function for determining the path for an executable
+def getCommand(command):
 	# This method uses .split("\n")[0] which basically chooses the first result where/which returns.
 	# Fixes the case with multiple maven installations available on PATH
 	if platform.system() == "Windows":
 		try:
-			return subprocess.check_output(["where", "mvn.cmd"], universal_newlines=True).split("\n")[0]
+			return subprocess.check_output(["where", "%s.cmd" % (command)], universal_newlines=True).split("\n")[0]
 		except:
 			try:
-				return subprocess.check_output(["where", "mvn.bat"], universal_newlines=True).split("\n")[0]
+				return subprocess.check_output(["where", "%s.bat" % (command)], universal_newlines=True).split("\n")[0]
 			except:
-				print("Unable to locate mvn with where. Is the maven executable in your PATH?")
+				print("Unable to locate command %s with where. Is it in your PATH?" % (command))
 	else:
 		try:
-			return subprocess.check_output(["which", "mvn"], universal_newlines=True).split("\n")[0]
+			return subprocess.check_output(["which", command], universal_newlines=True).split("\n")[0]
 		except:
-			print("Unable to locate maven executable with which. Is the maven executable in your PATH?")
+			print("Unable to locate command %s with which. Is it in your PATH?" % (command))
 	return None
 
-mavenCmd = getMavenCommand()
+mavenCmd = getCommand("mvn")
+dockerCmd = getCommand("docker")
 
 # Get command line arguments. Parses arguments if needed.
 def getArgs():
@@ -102,55 +102,26 @@ def copyWarFiles(artifactId, resultDir = resultPath, name = None):
 		copiedWars.append(join(resultDir, deployName))
 	return copiedWars
 
-def readPomFile(pomFile):
-	# pom.xml namespace workaround
-	root = ElementTree.parse(pomFile).getroot()
-	nameSpace = root.tag[1:root.tag.index('}')]
-	ElementTree.register_namespace('', nameSpace)
+# Generates and modifies a maven pom file
+def generateArchetype(archetype, artifactId, repo, logFile, group="testpkg", archetypeGroup="com.vaadin"):
+	# Generate the required command line for archetype generation
+	args = getArgs()
+	cmd = [mavenCmd, "archetype:generate"]
+	cmd.append("-DarchetypeGroupId=%s" % (archetypeGroup))
+	cmd.append("-DarchetypeArtifactId=%s" % (archetype))
+	cmd.append("-DarchetypeVersion=%s" % (args.version))
+	if repo is not None:
+		cmd.append("-DarchetypeRepository=%s" % repo)
+	cmd.append("-DgroupId=%s" % (group))
+	cmd.append("-DartifactId=%s" % (artifactId))
+	cmd.append("-Dversion=1.0-SNAPSHOT")
+	cmd.append("-DinteractiveMode=false")
+	if hasattr(args, "maven") and args.maven is not None:
+		cmd.extend(args.maven.strip('"').split(" "))
 
-	# Read the pom.xml correctly
-	return ElementTree.parse(pomFile), nameSpace 
-
-# Recursive pom.xml update script
-def updateRepositories(path, repoUrl = None, version = None, postfix = "staging"):
-	# If versions are not supplied, parse arguments
-	if version is None:
-		version = getArgs().version
-
-	# Read pom.xml
-	pomXml = join(path, "pom.xml")
-	if isfile(pomXml):
-		# Read the pom.xml correctly
-		tree, nameSpace = readPomFile(pomXml)
-		
-		# NameSpace needed for finding the repositories node
-		repoNode = tree.getroot().find("{%s}repositories" % (nameSpace))
-	else:
-		return
-	
-	if repoNode is not None:
-		print("Add staging repositories to " + pomXml)
-		
-		# Add framework staging repository
-		addRepo(repoNode, "repository", "vaadin-%s-%s" % (version, postfix), repoUrl)
-		
-		# Find the correct pluginRepositories node
-		pluginRepo = tree.getroot().find("{%s}pluginRepositories" % (nameSpace))
-		if pluginRepo is None:
-			# Add pluginRepositories node if needed
-			pluginRepo = ElementTree.SubElement(tree.getroot(), "pluginRepositories")
-		
-		# Add plugin staging repository
-		addRepo(pluginRepo, "pluginRepository", "vaadin-%s-%s" % (version, postfix), repoUrl)
-		
-		# Overwrite the modified pom.xml
-		tree.write(pomXml, encoding='UTF-8')
-	
-	# Recursive pom.xml search.
-	for i in listdir(path):
-		file = join(path, i)
-		if isdir(file):
-			updateRepositories(join(path, i), repoUrl, version, postfix)
+	# Generate pom.xml
+	print("Generating archetype %s" % (archetype))
+	subprocess.check_call(cmd, cwd=resultPath, stdout=logFile)
 
 # Add a repository of repoType to given repoNode with id and URL
 def addRepo(repoNode, repoType, id, url):
@@ -170,9 +141,51 @@ def removeDir(subdir):
 		return
 	rmtree(join(resultPath, subdir))
 
-def mavenInstall(pomFile, jarFile = None, mvnCmd = mavenCmd, logFile = sys.stdout):
-	cmd = [mvnCmd, "install:install-file"]
-	cmd.append("-Dfile=%s" % (jarFile if jarFile is not None else pomFile))
-	cmd.append("-DpomFile=%s" % (pomFile))
-	print("executing: %s" % (" ".join(cmd)))
-	subprocess.check_call(cmd, stdout=logFile)	
+def dockerWrap(imageVersion, imageName = "demo-validation"):
+	dockerFileContent = """FROM jtomass/alpine-jre-bash:latest
+LABEL maintainer="FrameworkTeam"
+
+COPY ./*.war /var/lib/jetty/webapps/
+USER root
+RUN mkdir /opt
+RUN chown -R jetty:jetty /opt
+COPY ./index-generate.sh /opt/
+RUN chmod +x /opt/index-generate.sh
+
+USER jetty
+RUN /opt/index-generate.sh
+
+RUN mkdir -p /var/lib/jetty/webapps/root && \
+    cp /opt/index.html /var/lib/jetty/webapps/root && \
+    chmod 644 /var/lib/jetty/webapps/root/index.html
+
+EXPOSE 8080
+"""
+	indexGenerateScript = """#!/bin/ash
+
+wars="/var/lib/jetty/webapps"
+OUTPUT="/opt/index.html"
+
+echo "<UL>" > $OUTPUT
+cd $wars
+for war in `ls -1 *.war`; do
+  nowar=`echo "$war" | sed -e 's/\(^.*\)\(.war$\)/\\1/'`
+  echo "<LI><a href=\"/$nowar/\">$nowar</a></LI>" >> $OUTPUT
+done
+echo "</UL>" >> $OUTPUT
+"""
+	with open(join(resultPath, "Dockerfile"), "w") as dockerFile:
+		dockerFile.write(dockerFileContent)
+	with open(join(resultPath, "index-generate.sh"), "w") as indexScript:
+		indexScript.write(indexGenerateScript)
+	# build image
+	cmd = [dockerCmd, "build", "-t", "%s:%s" % (imageName, imageVersion), resultPath]
+	subprocess.check_call(cmd)
+	# save to tgz
+	cmd = [dockerCmd, "save", imageName]
+	dockerSave = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+	subprocess.check_call(["gzip"], stdin=dockerSave.stdout, stdout=open(join(resultPath, "%s-%s.tgz" % (imageName, imageVersion)), "w"))
+	dockerSave.wait()
+	# delete from docker
+	cmd = [dockerCmd, "rmi", "%s:%s" % (imageName, imageVersion)]
+	subprocess.check_call(cmd)
