@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-servlet-containers-test</artifactId>
+        <version>7.7-SNAPSHOT</version>
+    </parent>
+    <artifactId>vaadin-test-server-ui</artifactId>
+    <name>vaadin-test-server-ui</name>
+    <packaging>jar</packaging>
+    <properties>
+        <jetty.skip>true</jetty.skip>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-client-compiled</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-push</artifactId>
+        </dependency>
+    </dependencies>
+</project>

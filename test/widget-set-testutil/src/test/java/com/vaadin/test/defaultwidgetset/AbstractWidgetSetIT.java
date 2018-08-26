@@ -14,6 +14,8 @@ import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.TextFieldElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public abstract class AbstractWidgetSetIT extends TestBenchTestCase {
 
@@ -68,11 +70,14 @@ public abstract class AbstractWidgetSetIT extends TestBenchTestCase {
     }
 
     protected void assertHasDebugMessage(String message) {
+        // Make sure the correct debug window tab is open.
+        findElements(By.className("v-debugwindow-tab")).get(0).click();
+
         List<WebElement> elements = getDriver().findElements(
                 By.xpath("//span[@class='v-debugwindow-message']"));
         boolean found = false;
         for (WebElement element : elements) {
-            if (element.getText().contains(message)) {
+            if (element.getAttribute("innerText").contains(message)) {
                 found = true;
                 break;
             }

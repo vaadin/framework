@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
     </parent>
     <artifactId>vaadin-root</artifactId>
     <name>vaadin-root</name>
@@ -320,6 +320,52 @@
             </modules>
         </profile>
         <profile>
+            <!-- Snapshot build only builds artifacts that are deployed or 
+                needed by them -->
+            <id>snapshot</id>
+            <properties>
+                <vaadin.plugin.version>${project.version}</vaadin.plugin.version>
+            </properties>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sources-jar</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- Only include java files -->
+                                    <includes>
+                                        <include>**/*.java</include>
+                                    </includes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.3</version>
+                        <executions>
+                            <execution>
+                                <id>generate-javadoc</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <failOnError>false</failOnError>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>release</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -367,6 +413,67 @@
                         <artifactId>nexus-staging-maven-plugin</artifactId>
                         <version>1.6.7</version>
                         <extensions>true</extensions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <!-- This profile is disjoint with default profile. It allows
+             to prevent running build for all available modules but restricts a number
+             of modules to specified here only (which allows to avoid long time compilation
+             for projects that are not needed since japicmp works with compiled classes).
+             ! -->
+            <id>apicmp</id>
+            <modules>
+                <module>server</module>
+                <module>push</module>
+                <module>client</module>
+                <module>client-compiler</module>
+                <module>shared</module>
+            </modules>
+            <repositories>
+                <repository>
+                    <id>vaadin-prereleases</id>
+                    <url>http://maven.vaadin.com/vaadin-prereleases</url>
+                </repository>
+            </repositories>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.siom79.japicmp</groupId>
+                        <artifactId>japicmp-maven-plugin</artifactId>
+                        <version>0.9.1</version>
+                        <configuration>
+                            <oldVersion>
+                                <dependency>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>${project.artifactId}</artifactId>
+                                    <version>${vaadin.api.reference.version}</version>
+                                    <type>jar</type>
+                                </dependency>
+                            </oldVersion>
+                            <newVersion>
+                                <file>
+                                    <path>${project.build.directory}/${project.artifactId}-${project.version}.${project.packaging}</path>
+                                </file>
+                            </newVersion>
+                            <parameter>
+                                <ignoreMissingClasses>true</ignoreMissingClasses>
+                                <onlyModified>true</onlyModified>
+                                <skipDiffReport>true</skipDiffReport>
+                                <skipXmlReport>true</skipXmlReport>
+                                <ignoreMissingOldVersion>true</ignoreMissingOldVersion>
+                                <ignoreMissingNewVersion>true</ignoreMissingNewVersion>
+                            </parameter>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>cmp</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>

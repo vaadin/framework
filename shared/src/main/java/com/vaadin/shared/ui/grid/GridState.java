@@ -213,7 +213,7 @@ public class GridState extends TabIndexState {
     /**
      * The content mode used for cell tooltips.
      * 
-     * @since
+     * @since 7.7.14
      */
     /*
      * When porting this to the v7 version in Framework 8, the default should be
@@ -225,7 +225,7 @@ public class GridState extends TabIndexState {
     /**
      * The content mode used for row tooltips.
      * 
-     * @since
+     * @since 7.7.14
      */
     /*
      * When porting this to the v7 version in Framework 8, the default should be
