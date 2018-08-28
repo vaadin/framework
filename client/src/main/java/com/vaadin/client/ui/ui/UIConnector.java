@@ -391,7 +391,18 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                  */
                 if (toBeFocused instanceof com.google.gwt.user.client.ui.Focusable) {
                     final com.google.gwt.user.client.ui.Focusable toBeFocusedWidget = (com.google.gwt.user.client.ui.Focusable) toBeFocused;
-                    toBeFocusedWidget.setFocus(true);
+                    if (BrowserInfo.get().isChrome()
+                            || BrowserInfo.get().isSafari()
+                            || BrowserInfo.get().isEdge()) {
+                        Timer timer = new Timer() {
+                            @Override
+                            public void run() {
+                                toBeFocusedWidget.setFocus(true);
+                            }
+                        };
+                        timer.schedule(0);
+                    } else
+                        toBeFocusedWidget.setFocus(true);
                 } else if (toBeFocused instanceof Focusable) {
                     ((Focusable) toBeFocused).focus();
                 } else {
