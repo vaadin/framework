@@ -13,6 +13,9 @@
     <properties>
         <skip.uitest.deployment>true</skip.uitest.deployment>
         <skip.uitest.failsafe>true</skip.uitest.failsafe>
+
+        <!-- Parallel test count -->
+        <parallel.tests>12</parallel.tests>
     </properties>
 
     <url>https://vaadin.com/</url>
@@ -22,6 +25,16 @@
         <repository>
             <id>vaadin-addons</id>
             <url>http://maven.vaadin.com/vaadin-addons</url>
+        </repository>
+        <repository>
+            <id>vaadin-snapshots</id>
+            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
@@ -205,7 +218,7 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-testbench</artifactId>
-            <version>4.0.3</version>
+            <version>4.3-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <!-- This should be removed once tests have been updated to use lang3 -->
@@ -262,6 +275,7 @@
                             <goal>compile</goal>
                             <goal>compile-theme</goal>
                         </goals>
+                        <phase>compile</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -312,13 +326,16 @@
                         <include>**/AllTB3Tests.java</include>
                     </includes>
                     <systemPropertyVariables>
-                        <com.vaadin.testbench.screenshot.directory>${project.parent.basedir}/tests/screenshots</com.vaadin.testbench.screenshot.directory>
-                        <com.vaadin.testbench.max.retries>${com.vaadin.testbench.max.retries}</com.vaadin.testbench.max.retries>
-                        <useLocalWebDriver>${useLocalWebDriver}</useLocalWebDriver>
+                        <com.vaadin.testbench.Parameters.screenshotReferenceDirectory>${project.parent.basedir}/tests/screenshots/reference</com.vaadin.testbench.Parameters.screenshotReferenceDirectory>
+                        <com.vaadin.testbench.Parameters.screenshotErrorDirectory>${project.build.directory}/error-screenshots</com.vaadin.testbench.Parameters.screenshotErrorDirectory>
+                        <com.vaadin.testbench.Parameters.maxAttempts>${com.vaadin.testbench.Parameters.maxAttempts}</com.vaadin.testbench.Parameters.maxAttempts>
+                        <com.vaadin.testbench.Parameters.testsInParallel>${parallel.tests}</com.vaadin.testbench.Parameters.testsInParallel>
+                        <com.vaadin.testbench.hub.url>${com.vaadin.testbench.hub.url}</com.vaadin.testbench.hub.url>
                         <browsers.include>${browsers.include}</browsers.include>
                         <categories.include>${categoriess.include}</categories.include>
                         <browsers.exclude>${browsers.exclude}</browsers.exclude>
                         <categories.exclude>${categories.exclude}</categories.exclude>
+                        <browser.factory>${browser.factory}</browser.factory>
                     </systemPropertyVariables>
                 </configuration>
                 <executions>
@@ -399,36 +416,6 @@
                 </pluginManagement>
             </build>
 
-        </profile>
-        <profile>
-            <id>validation</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <artifactId>maven-failsafe-plugin</artifactId>
-                            <configuration>
-                                <systemPropertyVariables>
-                                    <useLocalWebDriver>true</useLocalWebDriver>
-                                    <browsers.include>phantomjs1</browsers.include>
-                                    <categories.exclude>push,needs-ssh</categories.exclude>
-                                </systemPropertyVariables>
-                            </configuration>
-                            <executions>
-                                <execution>
-                                    <goals>
-                                        <goal>integration-test</goal>
-                                        <goal>verify</goal>
-                                    </goals>
-                                </execution>
-                            </executions>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
         </profile>
     </profiles>
 

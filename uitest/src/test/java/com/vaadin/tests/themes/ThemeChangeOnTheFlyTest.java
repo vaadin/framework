@@ -31,13 +31,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ThemeChangeOnTheFlyTest extends MultiBrowserTest {
 
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        // Seems like stylesheet onload is not fired on PhantomJS
-        // https://github.com/ariya/phantomjs/issues/12332
-        return getBrowsersExcludingPhantomJS();
-    }
-
     @Test
     public void injectedStyleAndThemeChange() throws IOException {
         openTestURL();

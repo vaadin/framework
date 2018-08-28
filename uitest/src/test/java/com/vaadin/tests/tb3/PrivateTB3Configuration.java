@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import com.vaadin.testbench.Parameters;
 import org.junit.Assert;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -49,7 +50,6 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     /**
      *
      */
-    public static final String SCREENSHOT_DIRECTORY = "com.vaadin.testbench.screenshot.directory";
     private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
     private static final String RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.runLocally";
     private static final String ALLOW_RUN_LOCALLY_PROPERTY = "com.vaadin.testbench.allowRunLocally";
@@ -66,24 +66,36 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         if (propertiesFile.exists()) {
             try {
                 properties.load(new FileInputStream(propertiesFile));
-                if (properties.containsKey(RUN_LOCALLY_PROPERTY)) {
-                    System.setProperty("useLocalWebDriver", "true");
-                    DesiredCapabilities localBrowser = getRunLocallyCapabilities();
-                    System.setProperty("browsers.include",
-                            localBrowser.getBrowserName()
-                                    + localBrowser.getVersion());
-                }
-                if (properties.containsKey(FIREFOX_PATH)) {
-                    System.setProperty(FIREFOX_PATH,
-                            properties.getProperty(FIREFOX_PATH));
-                }
-                if (properties.containsKey(PHANTOMJS_PATH)) {
-                    System.setProperty(PHANTOMJS_PATH,
-                            properties.getProperty(PHANTOMJS_PATH));
-                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+
+        if (properties.containsKey(RUN_LOCALLY_PROPERTY)) {
+            System.setProperty("useLocalWebDriver", "true");
+            DesiredCapabilities localBrowser = getRunLocallyCapabilities();
+            System.setProperty("browsers.include",
+                    localBrowser.getBrowserName()
+                            + localBrowser.getVersion());
+        }
+        if (properties.containsKey(FIREFOX_PATH)) {
+            System.setProperty(FIREFOX_PATH,
+                    properties.getProperty(FIREFOX_PATH));
+        }
+        if (properties.containsKey(PHANTOMJS_PATH)) {
+            System.setProperty(PHANTOMJS_PATH,
+                    properties.getProperty(PHANTOMJS_PATH));
+        }
+
+
+        final String base = Parameters.class.getName() + ".";
+        if (properties.containsKey(base + "screenshotReferenceDirectory")) {
+            Parameters.setScreenshotReferenceDirectory(properties
+                    .getProperty(base + "screenshotReferenceDirectory"));
+        }
+        if (properties.containsKey(base + "screenshotErrorDirectory")) {
+            Parameters.setScreenshotErrorDirectory(properties
+                    .getProperty(base + "screenshotErrorDirectory"));
         }
     }
 
@@ -147,16 +159,6 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         }
 
         return property;
-    }
-
-    @Override
-    protected String getScreenshotDirectory() {
-        String screenshotDirectory = getProperty(SCREENSHOT_DIRECTORY);
-        if (screenshotDirectory == null) {
-            throw new RuntimeException("No screenshot directory defined. Use -D"
-                    + SCREENSHOT_DIRECTORY + "=<path>");
-        }
-        return screenshotDirectory;
     }
 
     @Override

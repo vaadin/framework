@@ -8,11 +8,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.vaadin.testbench.parallel.ParallelRunner;
 import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
-
-import com.vaadin.tests.tb3.TB3Runner;
 
 /**
  * TestBench test runner which supports static @Parameters annotated methods
@@ -25,7 +24,7 @@ import com.vaadin.tests.tb3.TB3Runner;
  *
  * @author Vaadin Ltd
  */
-public class ParameterizedTB3Runner extends TB3Runner {
+public class ParameterizedTB3Runner extends ParallelRunner {
 
     public ParameterizedTB3Runner(Class<?> klass) throws InitializationError {
         super(klass);
