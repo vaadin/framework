@@ -14,9 +14,13 @@ from os.path import join, expanduser, basename
 from BuildHelpers import parser, getArgs
 from time import sleep
 
-parser.add_argument("--deployUrl", help="Wildfly management URL")
-parser.add_argument("--deployUser", help="Deployment user", default=None)
-parser.add_argument("--deployPass", help="Deployment password", default=None)
+group = parser.add_mutually_exclusive_group(required=True)
+group.add_argument("--deploy", dest="deploy_mode", help="Deploy to a remote Wildfly instance", action="store_true")
+group.add_argument("--docker", dest="deploy_mode", help="Wrap results into a Docker image", action="store_false")
+
+parser.add_argument("--deployUrl", help="Wildfly management URL to use with --deploy")
+parser.add_argument("--deployUser", help="Deployment user to use with --deploy", default=None)
+parser.add_argument("--deployPass", help="Deployment password to use with --deploy", default=None)
 
 serverUp = None
 
@@ -120,4 +124,4 @@ def getAuth():
 # Read the deploy url file and return the url
 def getUrl():
 	return getArgs().deployUrl
-	
+
