@@ -2054,7 +2054,6 @@ public class Escalator extends Widget
             defaultRowHeightShouldBeAutodetected = false;
             defaultRowHeight = px;
             reapplyDefaultRowHeights();
-            applyHeightByRows();
         }
 
         @Override
