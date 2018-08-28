@@ -172,6 +172,11 @@ public class EscalatorProxy extends Escalator {
         }
 
         @Override
+        public boolean isAutodetectingRowHeightLater() {
+            return false;
+        }
+
+        @Override
         public void setDefaultRowHeight(double px)
                 throws IllegalArgumentException {
             rowContainer.setDefaultRowHeight(px);

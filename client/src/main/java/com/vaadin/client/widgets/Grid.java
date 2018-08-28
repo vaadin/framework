@@ -9150,7 +9150,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     // Trigger re-calculation of all row positions.
                     RowContainer.BodyRowContainer body = getEscalator()
                             .getBody();
-                    body.setDefaultRowHeight(body.getDefaultRowHeight());
+                    if (!body.isAutodetectingRowHeightLater()) {
+                        body.setDefaultRowHeight(body.getDefaultRowHeight());
+                    }
                 });
             }
 
