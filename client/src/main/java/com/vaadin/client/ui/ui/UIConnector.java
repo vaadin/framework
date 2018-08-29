@@ -15,16 +15,6 @@
  */
 package com.vaadin.client.ui.ui;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -101,8 +91,17 @@ import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.UI;
-
 import elemental.client.Browser;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 @Connect(value = UI.class, loadStyle = LoadStyle.EAGER)
 public class UIConnector extends AbstractSingleComponentContainerConnector
@@ -375,45 +374,18 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         if (uidl.hasAttribute("focused")) {
             // set focused component when render phase is finished
             Scheduler.get().scheduleDeferred(() -> {
-                ComponentConnector connector = (ComponentConnector) uidl
-                        .getPaintableAttribute("focused", getConnection());
+                Timer timer = new Timer() {
+                    @Override
+                    public void run() {
+                        ComponentConnector connector = (ComponentConnector) uidl
+                                .getPaintableAttribute("focused",
+                                        getConnection());
 
-                if (connector == null) {
-                    // Do not try to focus invisible components which not
-                    // present in UIDL
-                    return;
-                }
+                        focus(connector);
+                    }
+                };
 
-                final Widget toBeFocused = connector.getWidget();
-                /*
-                 * Two types of Widgets can be focused, either implementing GWT
-                 * Focusable of a thinner Vaadin specific Focusable interface.
-                 */
-                if (toBeFocused instanceof com.google.gwt.user.client.ui.Focusable) {
-                    final com.google.gwt.user.client.ui.Focusable toBeFocusedWidget = (com.google.gwt.user.client.ui.Focusable) toBeFocused;
-                    if (BrowserInfo.get().isChrome()
-                            || BrowserInfo.get().isSafari()
-                            || BrowserInfo.get().isEdge()) {
-                        Timer timer = new Timer() {
-                            @Override
-                            public void run() {
-                                toBeFocusedWidget.setFocus(true);
-                            }
-                        };
-                        timer.schedule(0);
-                    } else
-                        toBeFocusedWidget.setFocus(true);
-                } else if (toBeFocused instanceof Focusable) {
-                    ((Focusable) toBeFocused).focus();
-                } else {
-                    getLogger().severe(
-                            "Server is trying to set focus to the widget of connector "
-                                    + Util.getConnectorString(connector)
-                                    + " but it is not focusable. The widget should implement either "
-                                    + com.google.gwt.user.client.ui.Focusable.class
-                                            .getName()
-                                    + " or " + Focusable.class.getName());
-                }
+                timer.schedule(0);
             });
         }
 
@@ -445,6 +417,34 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             // Queue the initial window size to be sent with the following
             // request.
             Scheduler.get().scheduleDeferred(() -> ui.sendClientResized());
+        }
+    }
+
+    private void focus(ComponentConnector connector) {
+        if (connector == null) {
+            // Do not try to focus invisible components which not
+            // present in UIDL
+            return;
+        }
+
+        final Widget toBeFocused = connector.getWidget();
+        /*
+         * Two types of Widgets can be focused, either implementing GWT
+         * Focusable of a thinner Vaadin specific Focusable interface.
+         */
+        if (toBeFocused instanceof com.google.gwt.user.client.ui.Focusable) {
+            final com.google.gwt.user.client.ui.Focusable toBeFocusedWidget = (com.google.gwt.user.client.ui.Focusable) toBeFocused;
+            toBeFocusedWidget.setFocus(true);
+        } else if (toBeFocused instanceof Focusable) {
+            ((Focusable) toBeFocused).focus();
+        } else {
+            getLogger().severe(
+                    "Server is trying to set focus to the widget of connector "
+                            + Util.getConnectorString(connector)
+                            + " but it is not focusable. The widget should implement either "
+                            + com.google.gwt.user.client.ui.Focusable.class
+                                    .getName()
+                            + " or " + Focusable.class.getName());
         }
     }
 
