@@ -16,6 +16,7 @@
 
         <!-- Parallel test count -->
         <parallel.tests>12</parallel.tests>
+        <reference.screenshot.dir>${project.parent.basedir}/tests/screenshots/reference</reference.screenshot.dir>
     </properties>
 
     <url>https://vaadin.com/</url>
@@ -275,7 +276,6 @@
                             <goal>compile</goal>
                             <goal>compile-theme</goal>
                         </goals>
-                        <phase>compile</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -326,7 +326,7 @@
                         <include>**/AllTB3Tests.java</include>
                     </includes>
                     <systemPropertyVariables>
-                        <com.vaadin.testbench.Parameters.screenshotReferenceDirectory>${project.parent.basedir}/tests/screenshots/reference</com.vaadin.testbench.Parameters.screenshotReferenceDirectory>
+                        <com.vaadin.testbench.Parameters.screenshotReferenceDirectory>${reference.screenshot.dir}</com.vaadin.testbench.Parameters.screenshotReferenceDirectory>
                         <com.vaadin.testbench.Parameters.screenshotErrorDirectory>${project.build.directory}/error-screenshots</com.vaadin.testbench.Parameters.screenshotErrorDirectory>
                         <com.vaadin.testbench.Parameters.maxAttempts>${com.vaadin.testbench.Parameters.maxAttempts}</com.vaadin.testbench.Parameters.maxAttempts>
                         <com.vaadin.testbench.Parameters.testsInParallel>${parallel.tests}</com.vaadin.testbench.Parameters.testsInParallel>
