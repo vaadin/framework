@@ -5,18 +5,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.After;
 
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
+import java.io.IOException;
 import com.vaadin.testbench.parallel.TestCategory;
 
 @TestCategory("push")
 public abstract class MultiBrowserTestWithProxy extends MultiBrowserTest {
 
     private static AtomicInteger availablePort = new AtomicInteger(2000);
-    private Session proxySession;
+    private SimpleProxy proxySession;
     private Integer proxyPort = null;
-    private JSch jsch;
     private static String sshDir = System.getProperty("user.home") + "/.ssh/";
     private String[] publicKeys = new String[] {
             System.getProperty("sshkey.file"), sshDir + "id_rsa",
@@ -61,7 +58,7 @@ public abstract class MultiBrowserTestWithProxy extends MultiBrowserTest {
     /**
      * Ensure the proxy is active. Does nothing if the proxy is already active.
      */
-    protected void connectProxy() throws JSchException {
+    protected void connectProxy() throws IOException {
         if (proxySession != null) {
             return;
         }
@@ -71,7 +68,7 @@ public abstract class MultiBrowserTestWithProxy extends MultiBrowserTest {
             try {
                 createProxy(getProxyPort());
                 break;
-            } catch (JSchException e) {
+            } catch (IOException e) {
                 try {
                     sleep(500);
                 } catch (InterruptedException e1) {
@@ -84,26 +81,9 @@ public abstract class MultiBrowserTestWithProxy extends MultiBrowserTest {
         }
     }
 
-    private void createProxy(int proxyPort) throws JSchException {
-        if (jsch == null) {
-            jsch = new JSch();
-
-            String keyFile = null;
-            for (String publicKey : publicKeys) {
-                if (publicKey != null) {
-                    if (new File(publicKey).exists()) {
-                        keyFile = publicKey;
-                        break;
-                    }
-                }
-            }
-            jsch.addIdentity(keyFile);
-        }
-        proxySession = jsch.getSession("localhost");
-        proxySession.setConfig("StrictHostKeyChecking", "no");
-        proxySession.setPortForwardingL("0.0.0.0", proxyPort,
-                super.getDeploymentHostname(), super.getDeploymentPort());
-        proxySession.connect();
+    private void createProxy(int proxyPort) throws IOException {
+        proxySession = new SimpleProxy(proxyPort, getDeploymentHostname(), getDeploymentPort());
+        proxySession.start();
     }
 
     @Override
