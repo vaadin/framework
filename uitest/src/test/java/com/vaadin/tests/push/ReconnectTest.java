@@ -6,8 +6,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import com.jcraft.jsch.JSchException;
 import com.vaadin.tests.tb3.MultiBrowserTestWithProxy;
+
+import java.io.IOException;
 
 public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
 
@@ -26,7 +27,7 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
     }
 
     @Test
-    public void messageIsQueuedOnDisconnect() throws JSchException {
+    public void messageIsQueuedOnDisconnect() throws IOException {
         disconnectProxy();
 
         clickButtonAndWaitForTwoReconnectAttempts();
@@ -37,7 +38,7 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
 
     @Test
     public void messageIsNotSentBeforeConnectionIsEstablished()
-            throws JSchException, InterruptedException {
+            throws IOException {
         disconnectProxy();
 
         waitForNextReconnectionAttempt();
@@ -68,7 +69,7 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
         waitForDebugMessage("Reopening push connection");
     }
 
-    private void connectAndVerifyConnectionEstablished() throws JSchException {
+    private void connectAndVerifyConnectionEstablished() throws IOException {
         connectProxy();
         waitUntilServerCounterChanges();
     }

@@ -7,7 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import com.jcraft.jsch.JSchException;
+import java.io.IOException;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTestWithProxy;
@@ -16,7 +16,7 @@ import com.vaadin.tests.tb3.MultiBrowserTestWithProxy;
 public class ReconnectDialogUITest extends MultiBrowserTestWithProxy {
 
     @Test
-    public void reconnectTogglesBodyStyle() throws JSchException {
+    public void reconnectTogglesBodyStyle() throws IOException {
         openTestURL();
         getButton().click();
         disconnectProxy();
@@ -33,7 +33,7 @@ public class ReconnectDialogUITest extends MultiBrowserTestWithProxy {
     }
 
     @Test
-    public void reconnectDialogShownAndDisappears() throws JSchException {
+    public void reconnectDialogShownAndDisappears() throws IOException {
         openTestURL();
         getButton().click();
         Assert.assertEquals("1. Hello from the server", getLogRow(0));
