@@ -74,29 +74,18 @@ The following preferences need to be set to keep the project consistent. You nee
 
 1. Open *Maven Projects*
 1. Open *vaadin-uitest* -> *Plugins* -> *jetty* -> *jetty:run-exploded*
-1. Open URL *http://localhost:8080/run/<testUI>*
+1. Open URL [http://localhost:8888/run/&lt;testUI&gt;](http://localhost:8888/run/<testUI>)
 
 ## Running a Development Server
 
-1. Open *File* -> *New* -> *Module...*
- 1. Choose type *Java* and click *Next*
- 1. Type in name <code>uitest-run</code> and set *Content Root* and *Module File Location* to <code>&lt;your project location&gt;/uitest-run</code>
- 1. Click *Finish*
-1. Open *File* -> *Project Structure...*
- 1. Choose <code>uitest-run</code> module
- 1. Open *Dependencies* tab
- 1. Click *+* -> *Module Dependency* -> *vaadin-uitest* -> *OK*
- 1. Click *+* -> *Library...* -> *New Library...* -> *From Maven*
- 1. Type in <code>org.eclipse.jetty.aggregate:jetty-all:9.4.0.M0</code> and press *Tab*
- 1. Wait a little while Idea is trying to download the library, then click *OK*
- 1. Close *Project Structure* dialog by pressing *OK*
-1. Open *Run* -> *Edit Configurations...* then create a new configuration of type *Application* named <code>DevelopmentServerLauncher</code>
- 1. Set *Main class* to <code>com.vaadin.launcher.DevelopmentServerLauncher</code>
- 1. Set *Single instance only* checkmark
- 1. Set *VM options* to <code>-ea</code>
- 1. Set *Use classpath options* to <code>uitest-run</code>
- 1. Set *Working directory* to <code>uitest</code>
- 1. Close *Run/Debug Configurations* dialog by pressing *OK*
+1. Open *Run* menu  and click *Edit Configurations*
+1. Click green ***+*** sign at top left corner, select *Maven* from popup
+1. In the run configuration page, set any name for the configuration, select *vaadin-uitest* project folder as *Working directory*
+1. Type <code>exec:exec@run-development-server</code> into *Command line* and save the configuration
+1. Run the configuration and open URL [http://localhost:8888/run/&lt;testUI&gt;](http://localhost:8888/run/<testUI>)
 
-The run configuration is ready.
+## Running a Development Server in a debug mode
 
+1. Type <code>exec:exec@debug-development-server</code> into *Command line* and save the configuration
+1. In the same dialog, create new "Remote" debug configuration, using *localhost* and *Port 5005*
+1. Start both configurations and open URL [http://localhost:8888/run/&lt;testUI&gt;](http://localhost:8888/run/<testUI>)
