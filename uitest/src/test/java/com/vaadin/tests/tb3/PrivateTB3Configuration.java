@@ -60,12 +60,17 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     private static final File propertiesFile = new File("../work",
             "eclipse-run-selected-test.properties");
     private static final String FIREFOX_PATH = "firefox.path";
-    private static final String PHANTOMJS_PATH = "phantomjs.binary.path";
+    private static final String BROWSER_FACTORY = "browser.factory";
+    private static final String BROWSERS_INCLUDE = "browsers.include";
+    private static final String BROWSERS_EXCLUDE = "browsers.exclude";
+    private static final String CATEGORIES_INCLUDE = "categories.include";
+    private static final String CATEGORIES_EXCLUDE = "categories.exclude";
 
     static {
         if (propertiesFile.exists()) {
             try {
                 properties.load(new FileInputStream(propertiesFile));
+                System.err.println("LOADED");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -78,15 +83,15 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                     localBrowser.getBrowserName()
                             + localBrowser.getVersion());
         }
-        if (properties.containsKey(FIREFOX_PATH)) {
-            System.setProperty(FIREFOX_PATH,
-                    properties.getProperty(FIREFOX_PATH));
-        }
-        if (properties.containsKey(PHANTOMJS_PATH)) {
-            System.setProperty(PHANTOMJS_PATH,
-                    properties.getProperty(PHANTOMJS_PATH));
-        }
 
+        String[] vars = new String[] {FIREFOX_PATH, BROWSER_FACTORY, BROWSERS_INCLUDE, BROWSERS_EXCLUDE, CATEGORIES_INCLUDE, CATEGORIES_EXCLUDE};
+
+        for (String var : vars) {
+            if (properties.containsKey(var)) {
+                System.err.println("Var; " + var + ", Value: " + properties.getProperty(var));
+                System.setProperty(var, properties.getProperty(var));
+            }
+        }
 
         final String base = Parameters.class.getName() + ".";
         if (properties.containsKey(base + "screenshotReferenceDirectory")) {

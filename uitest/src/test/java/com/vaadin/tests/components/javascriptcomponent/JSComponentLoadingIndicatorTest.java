@@ -12,6 +12,7 @@ public class JSComponentLoadingIndicatorTest extends SingleBrowserTest {
     @Test
     public void ensureLoadingIndicatorShown() {
         openTestURL();
+        waitForElementPresent(By.id("js"));
         testBench().disableWaitForVaadin();
 
         WebElement js = findElement(By.id("js"));

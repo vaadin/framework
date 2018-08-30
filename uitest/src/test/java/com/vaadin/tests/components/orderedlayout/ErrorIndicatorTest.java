@@ -20,18 +20,12 @@ public class ErrorIndicatorTest extends MultiBrowserTest {
         String tooltipText;
         openTestURL();
 
-        showTooltip($(TextFieldElement.class).first());
+        $(TextFieldElement.class).first().showTooltip();
         tooltipText = driver.findElement(By.className("v-tooltip")).getText();
         assertEquals(tooltipText, "Vertical layout tooltip");
 
-        showTooltip($(TextFieldElement.class).get(1));
+        $(TextFieldElement.class).get(1).showTooltip();
         tooltipText = driver.findElement(By.className("v-tooltip")).getText();
         assertEquals(tooltipText, "Horizontal layout tooltip");
-    }
-
-    private void showTooltip(WebElement element) {
-        Coordinates elementCoordinates = ((Locatable) element).getCoordinates();
-        Mouse mouse = ((HasInputDevices) getDriver()).getMouse();
-        mouse.mouseMove(elementCoordinates);
     }
 }
