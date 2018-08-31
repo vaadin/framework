@@ -25,8 +25,9 @@ public class InterruptUploadTest extends MultiBrowserTest {
         openTestURL();
 
         File tempFile = createTempFile();
-        // Schedule  upload cancel in a second
-        ((JavascriptExecutor)getDriver()).executeScript("setTimeout( function () {window.document.querySelector(\".v-window .v-button\").click()},2000)");
+        // Schedule upload cancel in a second
+        ((JavascriptExecutor) getDriver()).executeScript(
+                "setTimeout( function () {window.document.querySelector(\".v-window .v-button\").click()},2000)");
 
         fillPathToUploadInput(tempFile.getPath());
 
