@@ -21,7 +21,7 @@ public class ResponsiveLayoutUpdateTest extends MultiBrowserTest {
         compareScreen("large");
 
         // Resize below 600px width breakpoint
-        testBench().resizeViewPortTo(400, 768);
+        testBench().resizeViewPortTo(550, 768);
 
         waitUntil(input -> panelElement.getSize().getWidth() < 500);
         compareScreen("small");
