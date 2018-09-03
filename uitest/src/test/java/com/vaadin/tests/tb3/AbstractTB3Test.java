@@ -801,8 +801,12 @@ public abstract class AbstractTB3Test extends ParallelTest {
     protected void openDebugLogTab() {
 
         waitUntil(input -> {
-            WebElement element = getDebugLogButton();
-            return element != null;
+            try {
+                WebElement element = getDebugLogButton();
+                return element != null;
+            } catch (NoSuchElementException e) {
+                return false;
+            }
         }, 15);
         getDebugLogButton().click();
     }
