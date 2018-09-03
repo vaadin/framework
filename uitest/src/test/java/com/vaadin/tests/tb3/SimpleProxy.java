@@ -17,12 +17,14 @@ public class SimpleProxy extends Thread {
     private final String remoteHost;
     private final int remotePort;
 
-    public SimpleProxy(int localPort, String remoteHost, int remotePort) throws IOException {
+    public SimpleProxy(int localPort, String remoteHost, int remotePort)
+            throws IOException {
         super(new ThreadGroup("proxy " + localPort), "server");
         this.remoteHost = remoteHost;
         this.remotePort = remotePort;
         proxyThreads = getThreadGroup();
-        serverSocket = new ServerSocket(localPort, 100, InetAddress.getLoopbackAddress());
+        serverSocket = new ServerSocket(localPort, 100,
+                InetAddress.getLoopbackAddress());
 
         setDaemon(true);
     }
@@ -30,14 +32,20 @@ public class SimpleProxy extends Thread {
     @Override
     public void run() {
         try {
-            while (!isInterrupted()) {
+            while (!isInterrupted() && !serverSocket.isClosed()) {
                 try {
                     Socket proxySocket = serverSocket.accept();
                     sockets.add(proxySocket);
                     Socket remoteSocket = new Socket(remoteHost, remotePort);
                     sockets.add(remoteSocket);
-                    new CopySocket(proxyThreads, proxySocket, remoteSocket).start();
-                    new CopySocket(proxyThreads, remoteSocket, proxySocket).start();
+                    new CopySocket(proxyThreads, proxySocket, remoteSocket)
+                            .start();
+                    new CopySocket(proxyThreads, remoteSocket, proxySocket)
+                            .start();
+                } catch (SocketException e) {
+                    if (!serverSocket.isClosed()) {
+                        throw new RuntimeException(e);
+                    }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -66,7 +74,8 @@ public class SimpleProxy extends Thread {
         private final InputStream inputStream;
         private final OutputStream outputStream;
 
-        private CopySocket(ThreadGroup proxyThreads, Socket srcSocket, Socket dstSocket) throws IOException {
+        private CopySocket(ThreadGroup proxyThreads, Socket srcSocket,
+                Socket dstSocket) throws IOException {
             super(proxyThreads, "proxy worker");
             setDaemon(true);
             inputStream = srcSocket.getInputStream();
@@ -76,7 +85,7 @@ public class SimpleProxy extends Thread {
         @Override
         public void run() {
             try {
-                for (int b; (b = inputStream.read()) >= 0; ) {
+                for (int b; (b = inputStream.read()) >= 0;) {
                     outputStream.write(b);
                 }
             } catch (SocketException ignored) {

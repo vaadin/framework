@@ -73,7 +73,8 @@ public abstract class MultiBrowserTestWithProxy extends MultiBrowserTest {
     }
 
     private void createProxy(int proxyPort) throws IOException {
-        proxySession = new SimpleProxy(proxyPort, getDeploymentHostname(), getDeploymentPort());
+        proxySession = new SimpleProxy(proxyPort, getDeploymentHostname(),
+                getDeploymentPort());
         proxySession.start();
     }
 
