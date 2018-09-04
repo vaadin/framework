@@ -1,6 +1,7 @@
 package com.vaadin.tests.push;
 
 import org.junit.Test;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.tests.tb3.MultiBrowserTestWithProxy;
@@ -77,8 +78,14 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
 
     private void waitUntilServerCounterChanges() {
         final int counter = BasicPushTest.getServerCounter(this);
-        waitUntil(input -> BasicPushTest
-                .getServerCounter(ReconnectTest.this) > counter, 30);
+        waitUntil(input -> {
+            try {
+                return BasicPushTest
+                        .getServerCounter(ReconnectTest.this) > counter;
+            } catch (NoSuchElementException e) {
+                return false;
+            }
+        }, 30);
     }
 
     private void waitUntilClientCounterChanges(final int expectedValue) {
