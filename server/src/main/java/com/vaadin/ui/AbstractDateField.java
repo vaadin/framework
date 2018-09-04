@@ -111,7 +111,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                 hasChanges |= !Objects.equals(dateString, newDateString)
                         || !Objects.equals(oldDate, newDate)
                         || parseErrorWasSet;
-
                 if (hasChanges) {
                     dateString = newDateString;
                     currentParseErrorMessage = null;
@@ -140,7 +139,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                                 dateString = null;
                                 currentParseErrorMessage = parsedDate
                                         .getMessage().orElse("Parsing error");
-
                                 if (!isDifferentValue(null)) {
                                     doSetValue(null);
                                 } else {
@@ -520,6 +518,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             Integer defaultValuePart = getValuePart(defaultValue, resolution);
             resolutions.put("default-" + resolutionName, defaultValuePart);
         }
+        updateDiffstate("resolutions", Json.createObject());
     }
 
     private Integer getValuePart(T date, R resolution) {
@@ -794,7 +793,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             errorMessage = new UserError(currentParseErrorMessage);
         }
         setComponentError(errorMessage);
-
         updateResolutions();
     }
 
