@@ -43,7 +43,6 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UIProvider;
 import com.vaadin.testbench.TestBenchDriverProxy;
@@ -79,14 +78,10 @@ import elemental.json.impl.JsonUtil;
  *
  * @author Vaadin Ltd
  */
-@RunWith(TB3Runner.class)
 public abstract class AbstractTB3Test extends ParallelTest {
 
     @Rule
     public TestName testName = new TestName();
-
-    @Rule
-    public RetryOnFail retry = new RetryOnFail();
 
     /**
      * Height of the screenshots we want to capture
@@ -102,15 +97,6 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Timeout used by the TB grid
      */
     private static final int BROWSER_TIMEOUT_IN_MS = 30 * 1000;
-
-    protected static DesiredCapabilities PHANTOMJS2() {
-        DesiredCapabilities phantomjs2 = new VaadinBrowserFactory()
-                .create(Browser.PHANTOMJS, "2");
-        // Hack for the test cluster
-        phantomjs2.setCapability("phantomjs.binary.path",
-                "/usr/bin/phantomjs2");
-        return phantomjs2;
-    }
 
     private boolean debug = false;
 
@@ -820,14 +806,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     }
 
     public void hitButton(String id) {
-        if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
-            driver.findElement(By.id(id)).click();
-        } else {
-            WebDriverBackedSelenium selenium = new WebDriverBackedSelenium(
-                    driver, driver.getCurrentUrl());
-
-            selenium.keyPress("id=" + id, "\\13");
-        }
+        driver.findElement(By.id(id)).click();
     }
 
     protected void openDebugLogTab() {

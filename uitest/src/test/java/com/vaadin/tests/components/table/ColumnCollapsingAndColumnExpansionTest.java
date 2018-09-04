@@ -2,6 +2,7 @@ package com.vaadin.tests.components.table;
 
 import java.io.IOException;
 
+import com.vaadin.testbench.elements.TableElement;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.JavascriptExecutor;
@@ -10,7 +11,6 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
-import com.vaadin.tests.components.table.CustomTableElement.ContextMenuElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ColumnCollapsingAndColumnExpansionTest extends MultiBrowserTest {
@@ -40,7 +40,7 @@ public class ColumnCollapsingAndColumnExpansionTest extends MultiBrowserTest {
             show2.click();
         } else {
             contextClick(table.getCell(0, 0));
-            ContextMenuElement contextMenu = table.getContextMenu();
+            TableElement.ContextMenuElement contextMenu = table.getContextMenu();
             WebElement i = contextMenu.getItem(0);
             i.click();
         }

@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.TableElement;
-import com.vaadin.testbench.elementsbase.AbstractElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.Table")
@@ -17,26 +16,10 @@ public class CustomTableElement extends TableElement {
         return wrapElement(cm, getCommandExecutor()).wrap(CollapseMenu.class);
     }
 
-    public static class CollapseMenu extends ContextMenuElement {
+    public static class CollapseMenu extends TableElement.ContextMenuElement {
     }
 
     public WebElement getCollapseMenuToggle() {
         return findElement(By.className("v-table-column-selector"));
     }
-
-    public static class ContextMenuElement extends AbstractElement {
-
-        public WebElement getItem(int index) {
-            return findElement(
-                    By.xpath(".//table//tr[" + (index + 1) + "]//td/*"));
-        }
-
-    }
-
-    public ContextMenuElement getContextMenu() {
-        WebElement cm = getDriver().findElement(By.className("v-contextmenu"));
-        return wrapElement(cm, getCommandExecutor())
-                .wrap(ContextMenuElement.class);
-    }
-
 }

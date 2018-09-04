@@ -36,5 +36,4 @@ public class ShortcutWhenBodyFocused extends AbstractTestUIWithLog {
 
         getPage().getStyles().add("body { width: 50% !important}");
     }
-
 }

@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.internal.Locatable;
@@ -38,20 +39,18 @@ public class MenuBarSubmenusClosingValoTest extends MultiBrowserTest {
     public void testEnableParentLayoutControlByMouse() {
         openTestURL();
 
-        Mouse mouse = ((HasInputDevices) getDriver()).getMouse();
-
         List<WebElement> menuItemList = driver
                 .findElements(By.className("v-menubar-menuitem"));
 
-        mouse.click(((Locatable) menuItemList.get(0)).getCoordinates());
+        new Actions(getDriver()).moveToElement(menuItemList.get(1)).click()
+                .perform();
         waitForElementPresent(By.className("v-menubar-popup"));
 
-        mouse.mouseMove(((Locatable) menuItemList.get(1)).getCoordinates());
-        mouse.mouseMove(((Locatable) menuItemList.get(2)).getCoordinates());
-
+        new Actions(getDriver()).moveToElement(menuItemList.get(1)).perform();
+        new Actions(getDriver()).moveToElement(menuItemList.get(2)).perform();
         waitForElementPresent(By.className("v-menubar-popup"));
 
         int count = driver.findElements(By.className("v-menubar-popup")).size();
-        Assert.assertTrue("The count of open popups should be one", count == 1);
+        Assert.assertEquals("The count of open popups should be one", 1, count);
     }
 }

@@ -2,6 +2,7 @@ package com.vaadin.tests.fieldgroup;
 
 import java.util.List;
 
+import com.vaadin.tests.tb3.SingleBrowserTest;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,9 +10,8 @@ import com.vaadin.testbench.AbstractHasTestBenchCommandExecutor;
 import com.vaadin.testbench.elements.AbstractComponentElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
 
-public class BasicCrudGridTest extends SingleBrowserTestPhantomJS2 {
+public class BasicCrudGridTest extends SingleBrowserTest {
 
     @Test
     public void fieldsInitiallyEmpty() {

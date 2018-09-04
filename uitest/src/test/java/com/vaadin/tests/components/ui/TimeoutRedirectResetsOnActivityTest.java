@@ -5,19 +5,12 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.tb3.RetryOnFail;
 
 public class TimeoutRedirectResetsOnActivityTest extends MultiBrowserTest {
-
-    @Rule
-    // Timing issues are really hard to resolve in a way that this test would be
-    // 100% reliable on all browsers. Hence we shall allow one retry.
-    public RetryOnFail retry = new RetryOnFail();
 
     private int waitBeforeActivity = 4000;
     private int communicationOverhead = 2000;

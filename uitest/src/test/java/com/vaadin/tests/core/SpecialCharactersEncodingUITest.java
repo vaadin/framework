@@ -1,21 +1,14 @@
 package com.vaadin.tests.core;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.MenuBarElement;
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.testbench.parallel.Browser;
-import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
 
 public class SpecialCharactersEncodingUITest extends SingleBrowserTest {
 

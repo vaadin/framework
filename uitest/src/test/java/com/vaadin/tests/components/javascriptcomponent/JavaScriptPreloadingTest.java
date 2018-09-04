@@ -16,11 +16,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class JavaScriptPreloadingTest extends MultiBrowserTest {
 
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsersExcludingPhantomJS();
-    }
-
     @Test
     public void scriptsShouldPreloadAndExecuteInCorrectOrder()
             throws InterruptedException {
