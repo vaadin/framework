@@ -14,12 +14,19 @@ public class DateFieldResetValueWithinListenerTest extends MultiBrowserTest {
     @Test
     public void testValueReassigned() {
         openTestURL();
-        // Click button to change the value to be 5 days ahead. It should cause
-        // dateField to reset the value to today
-        findElement(By.id("setValueButton")).click();
-        String text = findElement(By.tagName("input")).getAttribute("value");
+
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("d.M.yyyy");
+        String textBefore = findElement(By.tagName("input"))
+                .getAttribute("value");
         assertEquals(
-                LocalDate.now().format(DateTimeFormatter.ofPattern("d.M.yyyy")),
-                text);
+                DateFieldResetValueWithinListener.initialValue.format(format),
+                textBefore);
+
+        findElement(By.id("setValueButton")).click();
+
+        String textAfter = findElement(By.tagName("input"))
+                .getAttribute("value");
+        assertEquals(DateFieldResetValueWithinListener.beforeInitialValue
+                .format(format), textAfter);
     }
 }
