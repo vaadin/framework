@@ -22,7 +22,8 @@ public class SimpleProxy extends Thread {
         this.remoteHost = remoteHost;
         this.remotePort = remotePort;
         proxyThreads = getThreadGroup();
-        serverSocket = new ServerSocket(localPort, 100, InetAddress.getLocalHost());
+        serverSocket = new ServerSocket(localPort, 100,
+                InetAddress.getByName("0.0.0.0"));
 
         setDaemon(true);
     }

@@ -2,6 +2,7 @@ package com.vaadin.tests.push;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -74,8 +75,12 @@ public abstract class BasicPushTest extends MultiBrowserTest {
 
             @Override
             public Boolean apply(WebDriver input) {
-                return BasicPushTest
-                        .getClientCounter(BasicPushTest.this) == expectedValue;
+                try {
+                    return BasicPushTest
+                            .getClientCounter(BasicPushTest.this) == expectedValue;
+                } catch (NoSuchElementException e) {
+                    return false;
+                }
             }
         }, 10);
     }

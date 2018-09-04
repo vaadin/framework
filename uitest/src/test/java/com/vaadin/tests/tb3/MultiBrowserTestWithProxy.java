@@ -1,6 +1,5 @@
 package com.vaadin.tests.tb3;
 
-import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.After;
@@ -14,10 +13,6 @@ public abstract class MultiBrowserTestWithProxy extends MultiBrowserTest {
     private static AtomicInteger availablePort = new AtomicInteger(2000);
     private SimpleProxy proxySession;
     private Integer proxyPort = null;
-    private static String sshDir = System.getProperty("user.home") + "/.ssh/";
-    private String[] publicKeys = new String[] {
-            System.getProperty("sshkey.file"), sshDir + "id_rsa",
-            sshDir + "id_dsa", sshDir + "id_rsa2" };
 
     @Override
     public void setup() throws Exception {

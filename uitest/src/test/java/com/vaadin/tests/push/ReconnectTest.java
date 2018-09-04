@@ -1,7 +1,7 @@
 package com.vaadin.tests.push;
 
 import org.junit.Test;
-import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -84,8 +84,12 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
 
             @Override
             public Boolean apply(WebDriver input) {
-                return BasicPushTest
-                        .getServerCounter(ReconnectTest.this) > counter;
+                try {
+                    return BasicPushTest
+                            .getServerCounter(ReconnectTest.this) > counter;
+                } catch (NoSuchElementException e) {
+                    return false;
+                }
             }
         }, 30);
     }
@@ -95,8 +99,12 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
 
             @Override
             public Boolean apply(WebDriver input) {
-                return BasicPushTest
-                        .getClientCounter(ReconnectTest.this) == expectedValue;
+                try {
+                    return BasicPushTest
+                            .getClientCounter(ReconnectTest.this) == expectedValue;
+                } catch (NoSuchElementException e) {
+                    return false;
+                }
             }
         }, 5);
     }
