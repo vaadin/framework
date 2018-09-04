@@ -9,22 +9,26 @@ import java.time.LocalDate;
 
 public class DateFieldResetValueWithinListener extends AbstractTestUI {
 
+    public static LocalDate initialValue = LocalDate.of(2018, 8, 4);
+    public static LocalDate beforeInitialValue = LocalDate.of(2018, 7, 13);
+
     @Override
     protected void setup(VaadinRequest request) {
-        LocalDate sourceDate = LocalDate.now();
-        DateField df = new DateField("Date: ");
+        LocalDate defaultDate = LocalDate.of(2018, 9, 4);
+        DateField df = new DateField("Date: ", defaultDate);
         df.setDateFormat("d.M.yyyy");
         df.setId("dateField1");
-        df.setValue(sourceDate);
+        df.setValue(initialValue);
         df.addValueChangeListener(evt -> {
-            if (evt.getValue().isAfter(sourceDate)) {
-                df.setValue(LocalDate.now());
+            if (evt.getValue().isAfter(initialValue)) {
+                df.setValue(beforeInitialValue);
             }
         });
 
         addComponent(df);
         Button setV = new Button("Set date after the current", e -> {
-            df.setValue(LocalDate.now().plusDays(5));
+            LocalDate afterButtonPress = LocalDate.of(2018, 9, 12);
+            df.setValue(afterButtonPress);
         });
         setV.setId("setValueButton");
         addComponent(setV);
