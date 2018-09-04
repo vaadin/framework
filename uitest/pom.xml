@@ -347,6 +347,45 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>run-development-server</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-ea</argument>
+                                <argument>-classpath</argument>
+                                <classpath />
+                                <argument>com.vaadin.launcher.DevelopmentServerLauncher</argument>
+                            </arguments>
+                            <classpathScope>test</classpathScope>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>debug-development-server</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-ea</argument>
+                                <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argument>
+                                <argument>-classpath</argument>
+                                <classpath />
+                                <argument>com.vaadin.launcher.DevelopmentServerLauncher</argument>
+                            </arguments>
+                            <classpathScope>test</classpathScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
