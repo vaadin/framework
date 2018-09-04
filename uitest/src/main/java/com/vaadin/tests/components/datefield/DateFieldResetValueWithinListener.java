@@ -6,6 +6,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 public class DateFieldResetValueWithinListener extends AbstractTestUI {
 
@@ -19,6 +20,7 @@ public class DateFieldResetValueWithinListener extends AbstractTestUI {
         df.setDateFormat("d.M.yyyy");
         df.setId("dateField1");
         df.setValue(initialValue);
+        df.setZoneId(ZoneId.of("Europe/Helsinki"));
         df.addValueChangeListener(evt -> {
             if (evt.getValue().isAfter(initialValue)) {
                 df.setValue(beforeInitialValue);
