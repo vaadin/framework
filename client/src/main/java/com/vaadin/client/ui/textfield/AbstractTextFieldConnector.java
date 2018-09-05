@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,7 +40,9 @@ public abstract class AbstractTextFieldConnector extends AbstractFieldConnector
         @Override
         public void selectRange(int start, int length) {
             int textLength = getAbstractTextField().getValue().length();
-            start = restrictTo(start, 0, textLength - 1);
+            // Enable setting cursor position after the last character
+            start = restrictTo(start, 0,
+                    length == 0 ? textLength : (textLength - 1));
             length = restrictTo(length, 0, textLength - start);
             getAbstractTextField().setSelectionRange(start, length);
         }

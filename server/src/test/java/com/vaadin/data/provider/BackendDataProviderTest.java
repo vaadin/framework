@@ -47,7 +47,6 @@ public class BackendDataProviderTest extends
                 }
                 List<StrBean> list = stream.skip(query.getOffset())
                         .limit(query.getLimit()).collect(Collectors.toList());
-                list.forEach(s -> System.err.println(s));
                 return list.stream();
             }, query -> (int) data.stream()
                     .filter(t -> query.getFilter().orElse(s -> true).test(t))

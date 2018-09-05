@@ -54,23 +54,22 @@ public class CustomComponentwithUndefinedSize extends TestBase {
             widePanel.setWidth("2000px");
             widePanel.setHeight("200px");
             layout.addComponent(widePanel);
-            Button button = new Button("Change panel size",
-                    event -> {
-                        switch (step++ % 4) {
-                        case 0:
-                            widePanel.setWidth("200px");
-                            break;
-                        case 1:
-                            widePanel.setHeight("2000px");
-                            break;
-                        case 2:
-                            widePanel.setWidth("2000px");
-                            break;
-                        case 3:
-                            widePanel.setHeight("200px");
-                            break;
-                        }
-                    });
+            Button button = new Button("Change panel size", event -> {
+                switch (step++ % 4) {
+                case 0:
+                    widePanel.setWidth("200px");
+                    break;
+                case 1:
+                    widePanel.setHeight("2000px");
+                    break;
+                case 2:
+                    widePanel.setWidth("2000px");
+                    break;
+                case 3:
+                    widePanel.setHeight("200px");
+                    break;
+                }
+            });
             panelLayout.addComponent(button);
             layout.setSizeUndefined();
             return layout;

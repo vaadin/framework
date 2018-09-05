@@ -44,12 +44,14 @@ public class LazyHierarchicalDataProvider extends
     protected Stream<HierarchicalTestBean> fetchChildrenFromBackEnd(
             HierarchicalQuery<HierarchicalTestBean, Void> query) {
         final int depth = query.getParentOptional().isPresent()
-                ? query.getParent().getDepth() + 1 : 0;
+                ? query.getParent().getDepth() + 1
+                : 0;
         final Optional<String> parentKey = query.getParentOptional()
                 .flatMap(parent -> Optional.of(parent.getId()));
 
         List<HierarchicalTestBean> list = new ArrayList<>();
-        for (int i = 0; i < query.getLimit(); i++) {
+        int limit = Math.min(query.getLimit(), nodesPerLevel);
+        for (int i = 0; i < limit; i++) {
             list.add(new HierarchicalTestBean(parentKey.orElse(null), depth,
                     i + query.getOffset()));
         }

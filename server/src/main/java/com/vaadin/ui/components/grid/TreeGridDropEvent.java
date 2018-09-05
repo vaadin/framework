@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,7 +29,7 @@ import com.vaadin.ui.dnd.DragSourceExtension;
  * Drop event on an HTML5 drop target {@link TreeGrid} row.
  *
  * @param <T>
- *         The TreeGrid bean type.
+ *            The TreeGrid bean type.
  * @author Vaadin Ltd.
  * @see TreeGridDropTarget#addTreeGridDropListener(TreeGridDropListener)
  * @since 8.1
@@ -43,27 +43,28 @@ public class TreeGridDropEvent<T> extends GridDropEvent<T> {
      * Creates a TreeGrid row drop event.
      *
      * @param target
-     *         TreeGrid that received the drop.
+     *            TreeGrid that received the drop.
      * @param data
-     *         Map containing all types and corresponding data from the {@code
+     *            Map containing all types and corresponding data from the
+     *            {@code
      *         DataTransfer} object.
      * @param dropEffect
-     *         the desired drop effect
+     *            the desired drop effect
      * @param dragSourceExtension
-     *         Drag source extension of the component that initiated the drop
-     *         event.
+     *            Drag source extension of the component that initiated the drop
+     *            event.
      * @param dropTargetRow
-     *         Target row that received the drop, or {@code null} if dropped on
-     *         empty grid
+     *            Target row that received the drop, or {@code null} if dropped
+     *            on empty grid
      * @param dropLocation
-     *         Location of the drop within the target row.
+     *            Location of the drop within the target row.
      * @param mouseEventDetails
-     *         Mouse event details object containing information about the drop
-     *         event
+     *            Mouse event details object containing information about the
+     *            drop event
      * @param depth
-     *         depth of the row in the hierarchy
+     *            depth of the row in the hierarchy
      * @param collapsed
-     *         whether the target row is collapsed
+     *            whether the target row is collapsed
      */
     public TreeGridDropEvent(TreeGrid<T> target, Map<String, String> data,
             DropEffect dropEffect,
@@ -91,7 +92,7 @@ public class TreeGridDropEvent<T> extends GridDropEvent<T> {
      * Tells whether the drop target row is collapsed.
      *
      * @return {@code true} if the drop target row is collapsed, {@code false}
-     * otherwise
+     *         otherwise
      */
     public Optional<Boolean> isDropTargetRowCollapsed() {
         return Optional.ofNullable(collapsed);

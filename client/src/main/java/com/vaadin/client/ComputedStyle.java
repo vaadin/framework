@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -263,8 +263,8 @@ public class ComputedStyle {
      *
      * @param String
      *            a value starting with a number
-     * @return the value from the string before any non-numeric characters.
-     *         If the value cannot be parsed to a number, returns 0.
+     * @return the value from the string before any non-numeric characters. If
+     *         the value cannot be parsed to a number, returns 0.
      */
     private static native int parseIntNative(final String value)
     /*-{

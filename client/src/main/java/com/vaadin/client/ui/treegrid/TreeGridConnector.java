@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -421,12 +421,11 @@ public class TreeGridConnector extends GridConnector {
     }
 
     private static boolean isCollapsed(JsonObject rowData) {
-        assert rowData
-                .hasKey(HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION) : "missing hierarchy data for row "
+        assert rowData.hasKey(
+                HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION) : "missing hierarchy data for row "
                         + rowData.asString();
-        return rowData
-                .getObject(
-                        HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION)
+        return rowData.getObject(
+                HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION)
                 .getBoolean(
                         HierarchicalDataCommunicatorConstants.ROW_COLLAPSED);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,10 +16,10 @@
 package com.vaadin.shared.ui.grid;
 
 /**
- * The modes for height calculation that are supported by Grid (
- * client ({@code com.vaadin.client.widgets.Grid}),
- * server ({@code com.vaadin.ui.Grid server}), and
- * Escalator ({@code com.vaadin.client.widgets.Escalator Escalator}).
+ * The modes for height calculation that are supported by Grid ( client
+ * ({@code com.vaadin.client.widgets.Grid}), server
+ * ({@code com.vaadin.ui.Grid server}), and Escalator
+ * ({@code com.vaadin.client.widgets.Escalator Escalator}).
  *
  * @since 7.4
  * @author Vaadin Ltd

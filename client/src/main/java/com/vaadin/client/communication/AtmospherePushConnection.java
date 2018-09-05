@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -149,16 +149,15 @@ public class AtmospherePushConnection implements PushConnection {
             final PushConfigurationState pushConfiguration) {
         this.connection = connection;
 
-        connection.addHandler(ApplicationStoppedEvent.TYPE,
-                event -> {
-                    if (state == State.DISCONNECT_PENDING
-                            || state == State.DISCONNECTED) {
-                        return;
-                    }
+        connection.addHandler(ApplicationStoppedEvent.TYPE, event -> {
+            if (state == State.DISCONNECT_PENDING
+                    || state == State.DISCONNECTED) {
+                return;
+            }
 
-                    disconnect(() -> {
-                    });
-                });
+            disconnect(() -> {
+            });
+        });
         config = createConfig();
         String debugParameter = Location.getParameter("debug");
         if ("push".equals(debugParameter)) {

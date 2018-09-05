@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -60,10 +60,11 @@ public interface AcceptCriterion extends Serializable {
     public void paint(PaintTarget target) throws PaintException;
 
     /**
-     * This needs to be implemented if and only if a criterion does some lazy server side
-     * initialization. The UIDL painted in this method will be passed to client
-     * side drop handler implementation. Implementation can assume that
-     * {@link #accept(DragAndDropEvent)} is called before this method.
+     * This needs to be implemented if and only if a criterion does some lazy
+     * server side initialization. The UIDL painted in this method will be
+     * passed to client side drop handler implementation. Implementation can
+     * assume that {@link #accept(DragAndDropEvent)} is called before this
+     * method.
      *
      * @param target
      * @throws PaintException

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -93,16 +93,14 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
 
             // Restore default stylenames
             panel.contentNode.setClassName(VPanel.CLASSNAME + "-content");
-            panel.bottomDecoration
-                    .setClassName(VPanel.CLASSNAME + "-deco");
+            panel.bottomDecoration.setClassName(VPanel.CLASSNAME + "-deco");
             panel.captionNode.setClassName(VPanel.CLASSNAME + "-caption");
             boolean hasCaption = hasCaption();
             if (hasCaption) {
                 panel.setCaption(getState().caption);
             } else {
                 panel.setCaption("");
-                panel.captionNode
-                        .setClassName(VPanel.CLASSNAME + "-nocaption");
+                panel.captionNode.setClassName(VPanel.CLASSNAME + "-nocaption");
             }
 
             // Add proper stylenames for all elements. This way we can prevent

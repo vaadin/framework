@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -264,8 +264,7 @@ public class Design implements Serializable {
             String packageName = getPackageName(componentClass);
             String prefix = context.getPackagePrefix(packageName);
             if (prefix == null) {
-                prefix = packageName.replace('.', '_')
-                        .toLowerCase(Locale.ROOT);
+                prefix = packageName.replace('.', '_').toLowerCase(Locale.ROOT);
                 context.addPackagePrefix(prefix, packageName);
             }
             prefix += "-";
@@ -495,8 +494,8 @@ public class Design implements Serializable {
             designContext.addComponentCreationListener(creationListener);
 
             // create subtree
-            if (componentRoot instanceof CustomComponent
-                    || componentRoot instanceof Composite) {
+
+            if (ComponentRootSetter.canSetRoot(componentRoot)) {
                 Component rootComponent = designContext.readDesign(element);
                 ComponentRootSetter.setRoot(componentRoot, rootComponent);
             } else {

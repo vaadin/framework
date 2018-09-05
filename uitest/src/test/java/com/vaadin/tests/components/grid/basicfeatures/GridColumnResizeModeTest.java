@@ -1,24 +1,10 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.grid.basicfeatures;
 
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -26,6 +12,7 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.components.grid.basics.GridBasicsTest;
 
@@ -80,4 +67,70 @@ public class GridColumnResizeModeTest extends GridBasicsTest {
 
     }
 
+    @Test
+    public void testSimpleResizeModeMultipleDrag() {
+        GridElement grid = getGridElement();
+
+        List<WebElement> handles = grid
+                .findElements(By.className("v-grid-column-resize-handle"));
+        WebElement handle = handles.get(1);
+
+        GridCellElement cell = grid.getHeaderCell(0, 1);
+
+        int initialWidth = cell.getSize().getWidth();
+
+        selectMenuPath("Component", "Columns", "Simple resize mode");
+        sleep(250);
+
+        drag(handle, 100);
+        Assert.assertEquals(initialWidth + 100, cell.getSize().getWidth());
+
+        drag(handle, -100);
+        Assert.assertEquals(initialWidth, cell.getSize().getWidth());
+    }
+
+    @Test
+    public void testResizeReportedWidth() {
+        GridElement grid = getGridElement();
+
+        selectMenuPath("Component", "Columns", "Add resize listener");
+
+        List<WebElement> handles = grid
+                .findElements(By.className("v-grid-column-resize-handle"));
+        WebElement handle = handles.get(1);
+
+        GridCellElement cell = grid.getHeaderCell(0, 1);
+
+        // ANIMATED resize mode
+        drag(handle, 100);
+        assertTrue(
+                getLogRow(0).contains("Column resized: caption=Column 1, width="
+                        + cell.getSize().getWidth()));
+
+        drag(handle, -100);
+        assertTrue(
+                getLogRow(0).contains("Column resized: caption=Column 1, width="
+                        + cell.getSize().getWidth()));
+
+        // SIMPLE resize mode
+        selectMenuPath("Component", "Columns", "Simple resize mode");
+        sleep(250);
+
+        drag(handle, 100);
+        assertTrue(
+                getLogRow(0).contains("Column resized: caption=Column 1, width="
+                        + cell.getSize().getWidth()));
+
+        drag(handle, -100);
+        assertTrue(
+                getLogRow(0).contains("Column resized: caption=Column 1, width="
+                        + cell.getSize().getWidth()));
+    }
+
+    private void drag(WebElement handle, int xOffset) {
+        new Actions(getDriver()).moveToElement(handle).clickAndHold()
+                .moveByOffset(20, 0).moveByOffset(xOffset - 20, 0).release()
+                .perform();
+        sleep(250);
+    }
 }

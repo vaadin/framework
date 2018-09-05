@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -235,4 +236,14 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
                 .remove(selectionChanged);
     }
 
+    /**
+     * Set focus to the first check box.
+     */
+    @Override
+    public void focus() {
+        // If focus is set on creation, need to wait until options are populated
+        Scheduler.get().scheduleDeferred(() -> {
+            getWidget().focusFirstEnabledChild();
+        });
+    }
 }

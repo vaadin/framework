@@ -1,24 +1,8 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.contextclick;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,7 +11,6 @@ import org.junit.Test;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.AbstractComponentElement;
 import com.vaadin.testbench.elements.ButtonElement;
@@ -40,16 +23,6 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
 
     private Pattern defaultLog = Pattern
             .compile("[0-9]+. ContextClickEvent: [(]([0-9]+), ([0-9]+)[)]");
-
-    @Override
-    protected boolean useNativeEventsForIE() {
-        return false;
-    }
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsersSupportingContextMenu();
-    }
 
     @Before
     public void setUp() {
@@ -153,7 +126,9 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
                     "var ev = document.createEvent('MouseEvents'); ev.initMouseEvent('click', true, true, document.defaultView, 1, arguments[1]-5, arguments[2]-5, arguments[1]-5, arguments[2]-5, false, false, false, false, 1, null); arguments[0].dispatchEvent(ev);",
                     e, x, y);
         } else {
-            new Actions(getDriver()).moveToElement(e, xCoord, yCoord)
+            new Actions(getDriver())
+                    .moveToElement(e, getXOffset(e, xCoord),
+                            getYOffset(e, yCoord))
                     .contextClick().moveByOffset(-5, -5).click().perform();
         }
     }

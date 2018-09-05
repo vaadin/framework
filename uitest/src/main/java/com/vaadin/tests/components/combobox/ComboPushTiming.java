@@ -37,8 +37,7 @@ public class ComboPushTiming extends TestBase {
         final ObjectProperty<String> log = new ObjectProperty<>("");
 
         cb.addFocusListener(event -> {
-            log.setValue(
-                    log.getValue() + "<br>" + counter + ": Focus event!");
+            log.setValue(log.getValue() + "<br>" + counter + ": Focus event!");
             counter++;
             changeValue(cb);
         });

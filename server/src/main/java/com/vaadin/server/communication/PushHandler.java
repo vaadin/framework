@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,6 +41,7 @@ import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 
@@ -56,6 +57,8 @@ import elemental.json.JsonException;
 public class PushHandler {
 
     private int longPollingSuspendTimeout = -1;
+
+    private final ServerRpcHandler rpcHandler = createRpcHandler();
 
     /**
      * Callback interface used internally to process an event with the
@@ -142,7 +145,7 @@ public class PushHandler {
         assert vaadinRequest != null;
 
         try {
-            new ServerRpcHandler().handleRpc(ui, reader, vaadinRequest);
+            rpcHandler.handleRpc(ui, reader, vaadinRequest);
             connection.push(false);
         } catch (JsonException e) {
             getLogger().log(Level.SEVERE, "Error writing JSON to response", e);
@@ -161,6 +164,16 @@ public class PushHandler {
 
     public PushHandler(VaadinServletService service) {
         this.service = service;
+    }
+
+    /**
+     * Creates the ServerRpcHandler to use.
+     *
+     * @return the ServerRpcHandler to use
+     * @since 8.5
+     */
+    protected ServerRpcHandler createRpcHandler() {
+        return new ServerRpcHandler();
     }
 
     /**
@@ -353,11 +366,10 @@ public class PushHandler {
                 /*
                  * UI not found, could be because FF has asynchronously closed
                  * the websocket connection and Atmosphere has already done
-                 * cleanup of the request attributes.
-                 *
-                 * In that case, we still have a chance of finding the right UI
-                 * by iterating through the UIs in the session looking for one
-                 * using the same AtmosphereResource.
+                 * cleanup of the request attributes. In that case, we still
+                 * have a chance of finding the right UI by iterating through
+                 * the UIs in the session looking for one using the same
+                 * AtmosphereResource.
                  */
                 ui = findUiUsingResource(resource, session.getUIs());
 
@@ -467,6 +479,8 @@ public class PushHandler {
                         "sendNotificationAndDisconnect called for resource no longer in scope");
                 return;
             }
+            resource.getResponse()
+                    .setContentType(JsonConstants.JSON_CONTENT_TYPE);
             resource.getResponse().getWriter().write(notificationJson);
             resource.resume();
         } catch (Exception e) {

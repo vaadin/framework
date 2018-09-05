@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -507,6 +507,19 @@ public class BrowserInfo {
      */
     public int getBrowserMinorVersion() {
         return browserDetails.getBrowserMinorVersion();
+    }
+
+    /**
+     * Gets the complete browser version in form of a string. The version is
+     * given by the browser through the user agent string and usually consists
+     * of dot-separated numbers. Note that the string may contain characters
+     * other than dots and digits.
+     *
+     * @return the complete browser version or {@code null} if unknown
+     * @since 8.4
+     */
+    public String getBrowserVersion() {
+        return browserDetails.getBrowserVersion();
     }
 
     /**

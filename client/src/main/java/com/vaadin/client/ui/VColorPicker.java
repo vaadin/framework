@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -45,6 +45,16 @@ public class VColorPicker extends VButton {
      */
     public void setColor(String color) {
         this.color = color;
+    }
+
+    /**
+     * Gets the color.
+     *
+     * @since 8.4
+     * @return the color
+     */
+    public String getColor() {
+        return color;
     }
 
     /**

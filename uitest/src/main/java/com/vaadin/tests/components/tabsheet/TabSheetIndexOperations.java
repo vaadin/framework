@@ -21,12 +21,11 @@ public class TabSheetIndexOperations extends TestBase {
 
         addComponent(tabs);
 
-        Button addTab = new Button("Add tab at index 2",
-                event -> {
-                    tabs.addTab(new Label("Content " + tabCounter),
-                            "Added Tab " + tabCounter, null, 2);
-                    tabCounter++;
-                });
+        Button addTab = new Button("Add tab at index 2", event -> {
+            tabs.addTab(new Label("Content " + tabCounter),
+                    "Added Tab " + tabCounter, null, 2);
+            tabCounter++;
+        });
         addComponent(addTab);
 
         Button setCaption = new Button("Invert tab caption at index 2",
@@ -37,9 +36,8 @@ public class TabSheetIndexOperations extends TestBase {
                 });
         addComponent(setCaption);
 
-        Button move = new Button("Move selected tab to index 2",
-                event -> tabs.setTabPosition(tabs.getTab(tabs.getSelectedTab()),
-                        2));
+        Button move = new Button("Move selected tab to index 2", event -> tabs
+                .setTabPosition(tabs.getTab(tabs.getSelectedTab()), 2));
         addComponent(move);
 
         Button getIndex = new Button("Get selected tab index",

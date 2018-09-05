@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -263,6 +263,19 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     }
 
     /**
+     * Update buffered values {@link #bufferedDateString} and
+     * {@link #bufferedResolutions} that will be sent to the server.
+     * <p>
+     * This method should NOT send values to the server.
+     * <p>
+     * This method can be implemented by subclasses to update buffered values
+     * from component values.
+     *
+     * @since 8.4
+     */
+    public abstract void updateBufferedValues();
+
+    /**
      * Sends the {@link #bufferedDateString} and {@link #bufferedResolutions} to
      * the server, and clears their values.
      *
@@ -270,8 +283,8 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      */
     public void sendBufferedValues() {
         rpc.update(bufferedDateString,
-                bufferedResolutions.entrySet().stream().collect(Collectors
-                        .toMap(entry -> entry.getKey().name(),
+                bufferedResolutions.entrySet().stream().collect(
+                        Collectors.toMap(entry -> entry.getKey().name(),
                                 entry -> entry.getValue())));
         bufferedDateString = null;
         bufferedResolutions.clear();

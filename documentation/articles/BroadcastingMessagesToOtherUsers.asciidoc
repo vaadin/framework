@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[broadcasting-messages-to-other-users]]
-Broadcasting messages to other users
-------------------------------------
+= Broadcasting messages to other users
 
 In this tutorial we will create an application where any user can send a
 broadcast message to all other active users. We will start from a

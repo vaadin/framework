@@ -40,11 +40,10 @@ public class ApplicationCloseTest extends TestBase {
         memoryConsumer = sb.toString();
         long totalUsage = Runtime.getRuntime().totalMemory();
         String totalUsageString = totalUsage / 1000 / 1000 + "MiB";
-        Label memoryUsage = new Label(
-                "Using about " + memoryConsumer.length() / 1000 / 1000
-                        + "MiB memory for this application.<br/>Total memory usage reported as "
-                        + totalUsageString + "<br/>",
-                ContentMode.HTML);
+        Label memoryUsage = new Label("Using about "
+                + memoryConsumer.length() / 1000 / 1000
+                + "MiB memory for this application.<br/>Total memory usage reported as "
+                + totalUsageString + "<br/>", ContentMode.HTML);
 
         addComponent(thisApp);
         addComponent(memoryUsage);

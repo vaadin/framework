@@ -38,7 +38,7 @@ public abstract class ThemeTest extends MultiBrowserTest {
         runThemeTest();
     }
 
-    private void runThemeTest() throws IOException {
+    private void runThemeTest() throws IOException, InterruptedException {
         TabSheetElement themeTabSheet = $(TabSheetElement.class).first();
 
         // Labels tab
@@ -187,15 +187,19 @@ public abstract class ThemeTest extends MultiBrowserTest {
         compareScreen("selects-fifth-open");
     }
 
-    private void testDates() throws IOException {
+    private void testDates() throws IOException, InterruptedException {
         compareScreen("dates");
         $(DateFieldElement.class).id("datefield0").openPopup();
+        Thread.sleep(200);
         compareScreen("dates-first-popup");
         $(DateFieldElement.class).id("datefield1").openPopup();
+        Thread.sleep(200);
         compareScreen("dates-second-popup");
         $(DateFieldElement.class).id("datefield2").openPopup();
+        Thread.sleep(200);
         compareScreen("dates-third-popup");
         $(DateFieldElement.class).id("datefield3").openPopup();
+        Thread.sleep(200);
         compareScreen("dates-fourth-popup");
     }
 }

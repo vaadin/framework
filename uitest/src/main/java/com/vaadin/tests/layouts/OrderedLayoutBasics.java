@@ -1030,9 +1030,10 @@ public class OrderedLayoutBasics extends TestBase {
     }
 
     private Button createAddButton(AbstractOrderedLayout ol) {
-        Button b = new Button("Add before", event ->
-                addBefore((AbstractOrderedLayout) event.getButton().getData(),
-                event.getButton().getParent(), ""));
+        Button b = new Button("Add before",
+                event -> addBefore(
+                        (AbstractOrderedLayout) event.getButton().getData(),
+                        event.getButton().getParent(), ""));
         b.setData(ol);
 
         return b;

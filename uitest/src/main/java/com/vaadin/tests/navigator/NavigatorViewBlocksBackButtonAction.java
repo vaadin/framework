@@ -87,8 +87,8 @@ public class NavigatorViewBlocksBackButtonAction
                 confirmationWindowLayout.setSpacing(true);
                 confirmationWindowLayout
                         .addComponent(new Label("Really exit this view?"));
-                confirmationWindowLayout.addComponent(
-                        new Button("Yeah, sure!", clickEvent -> {
+                confirmationWindowLayout
+                        .addComponent(new Button("Yeah, sure!", clickEvent -> {
                             okToLeave = true;
                             getUI().removeWindow(confirmationWindow);
                             event.getNavigator().navigateTo(event.getViewName()

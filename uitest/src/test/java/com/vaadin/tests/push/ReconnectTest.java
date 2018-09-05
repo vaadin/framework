@@ -1,25 +1,12 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.push;
 
 import org.junit.Test;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
-import com.jcraft.jsch.JSchException;
 import com.vaadin.tests.tb3.MultiBrowserTestWithProxy;
+
+import java.io.IOException;
 
 public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
 
@@ -38,7 +25,7 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
     }
 
     @Test
-    public void messageIsQueuedOnDisconnect() throws JSchException {
+    public void messageIsQueuedOnDisconnect() throws IOException {
         disconnectProxy();
 
         clickButtonAndWaitForTwoReconnectAttempts();
@@ -49,7 +36,7 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
 
     @Test
     public void messageIsNotSentBeforeConnectionIsEstablished()
-            throws JSchException, InterruptedException {
+            throws IOException, InterruptedException {
         disconnectProxy();
 
         waitForNextReconnectionAttempt();
@@ -80,7 +67,7 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
         waitForDebugMessage("Reopening push connection");
     }
 
-    private void connectAndVerifyConnectionEstablished() throws JSchException {
+    private void connectAndVerifyConnectionEstablished() throws IOException {
         connectProxy();
         waitUntilServerCounterChanges();
     }
@@ -91,8 +78,14 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
 
     private void waitUntilServerCounterChanges() {
         final int counter = BasicPushTest.getServerCounter(this);
-        waitUntil(input -> BasicPushTest
-                .getServerCounter(ReconnectTest.this) > counter, 30);
+        waitUntil(input -> {
+            try {
+                return BasicPushTest
+                        .getServerCounter(ReconnectTest.this) > counter;
+            } catch (NoSuchElementException e) {
+                return false;
+            }
+        }, 30);
     }
 
     private void waitUntilClientCounterChanges(final int expectedValue) {

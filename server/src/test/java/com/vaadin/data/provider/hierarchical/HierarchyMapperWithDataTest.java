@@ -209,11 +209,11 @@ public class HierarchyMapperWithDataTest {
     }
 
     private void expand(Node node) {
-        insertRows(mapper.doExpand(node, mapper.getIndexOf(node)));
+        insertRows(mapper.expand(node, mapper.getIndexOf(node).orElse(null)));
     }
 
     private void collapse(Node node) {
-        removeRows(mapper.doCollapse(node, mapper.getIndexOf(node)));
+        removeRows(mapper.collapse(node, mapper.getIndexOf(node).orElse(null)));
     }
 
     private void verifyFetchIsCorrect(List<Node> expectedResult, Range range) {
@@ -227,15 +227,16 @@ public class HierarchyMapperWithDataTest {
 
     static List<Node> generateTestData(int rootCount, int parentCount,
             int leafCount) {
+        int nodeCounter = 0;
         List<Node> nodes = new ArrayList<>();
         for (int i = 0; i < rootCount; ++i) {
-            Node root = new Node();
+            Node root = new Node(nodeCounter++);
             nodes.add(root);
             for (int j = 0; j < parentCount; ++j) {
-                Node parent = new Node(root);
+                Node parent = new Node(root, nodeCounter++);
                 nodes.add(parent);
                 for (int k = 0; k < leafCount; ++k) {
-                    nodes.add(new Node(parent));
+                    nodes.add(new Node(parent, nodeCounter++));
                 }
             }
         }

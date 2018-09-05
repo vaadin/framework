@@ -198,7 +198,7 @@ access to [classname]#MultiSelectionEvent#, which allows to easily access differ
 [source, java]
 ----
 // Grid in multi-selection mode
-Grid<Person> grid = Grid<>()
+Grid<Person> grid = new Grid<>()
 grid.setItems(people);
 MultiSelectionModel<Person> selectionModel
       = (MultiSelectionModel<Person>) grid.setSelectionMode(SelectionMode.MULTI);
@@ -504,7 +504,7 @@ Set the renderer in the [classname]#Grid.Column# object:
 +
 [source, java]
 ----
-Column<Person, String> htmlColumn grid.addColumn(person ->
+Column<Person, String> htmlColumn = grid.addColumn(person ->
       "<a href='" + person.getDetailsUrl() + "' target='_top'>info</a>",
       new HtmlRenderer());
 ----
@@ -533,18 +533,19 @@ Formats a column with the [classname]#LocalDate# type.
 The renderer can be constructed with a [classname]#DateTimeFormatter#, or with a custom pattern string.
 The locale is either given explicitly with the pattern, resolved from the given [classname]#DateTimeFormatter# or from the grid the renderer is attached to, if neither of the previous are given.
 For the pattern string syntax, refer to the following documentation: link:https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns[docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns].
-
+Note we should use `SerializableProvider&lt;DateTimeFormatter&gt;` or lambda in the first case, because
+`DateTimeFormatter` is not serializable, and that may lead to problems in certain cases, for instance in a cluster environment.
 +
 [source, java]
 ----
-DateTimeFormatter formatter = DateTimeFormatter
+LocalDateRenderer renderer = new LocalDateRenderer(() -> DateTimeFormatter
         .ofLocalizedDate(FormatStyle.LONG)
-        .withLocale(Locale.ENGLISH);
+        .withLocale(Locale.ENGLISH));
 
 Column<Person, LocalDate> bornColumn =
         grid.addColumn(
           Person::getBirthDate,
-          new LocalDateRenderer(formatter));
+          renderer);
 
 // Alternatively, with a custom pattern:
 Column<Person, LocalDate> bornColumn =
@@ -559,14 +560,14 @@ Otherwise the same as [classname]#LocalDateRenderer#, except for the [classname]
 +
 [source, java]
 ----
-DateTimeFormatter formatter = DateTimeFormatter
-        .ofLocalizedDate(FormatStyle.LONG, FormatStyle.SHORT)
-        .withLocale(Locale.ENGLISH);
+LocalDateTimeRenderer renderer = new LocalDateTimeRenderer(
+        () -> DateTimeFormatter
+            .ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT)
+            .withLocale(Locale.ENGLISH));
 
 Column<Person, LocalDateTime> bornColumn =
-        grid.addColumn(
-          Person::getBirthDateAndTime,
-          new LocalDateTimeRenderer(formatter));
+        grid.addColumn(Person::getBirthDateAndTime, renderer);
+
 
 // Alternatively, with a custom pattern:
 Column<Person, LocalDateTime> bornColumn =
@@ -957,9 +958,9 @@ You can style entire rows or individual cells with a
 [[components.grid.stylegeneration.row]]
 === Generating Row Styles
 
-You set a [interfacename]#StyleGenerator# to a grid with
-[methodname]#setStyleGenerator()#. The [methodname]#getStyle()# method gets a
-date item, and should return a style name or [parameter]#null# if
+The easiest way to style rows is to make a lambda and set it with
+[methodname]#setStyleGenerator()# to a grid.
+The lambda gets a data item, and should return a style name or [parameter]#null# if
 no style is generated.
 
 For example, to add a style names to rows having certain values in one

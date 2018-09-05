@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,9 @@
 
 package com.vaadin.client.ui;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.ApplicationConnection;
@@ -114,6 +116,23 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
         } else if (errorIndicatorElement != null) {
             getElement().removeChild(errorIndicatorElement);
             errorIndicatorElement = null;
+        }
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+
+        if (BrowserInfo.get().isSafari()) {
+            /*
+             * Sometimes Safari does not render checkbox correctly when
+             * attaching. Setting the visibility to hidden and a bit later
+             * restoring will make everything just fine.
+             */
+            getElement().getStyle().setVisibility(Visibility.HIDDEN);
+            Scheduler.get().scheduleFinally(() -> {
+                getElement().getStyle().setVisibility(Visibility.VISIBLE);
+            });
         }
     }
 }

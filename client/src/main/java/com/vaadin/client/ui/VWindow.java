@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -54,6 +54,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
+import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.debug.internal.VDebugWindow;
@@ -178,9 +179,11 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     private NativePreviewHandler topEventBlocker;
     private NativePreviewHandler bottomEventBlocker;
+    private NativePreviewHandler modalEventBlocker;
 
     private HandlerRegistration topBlockerRegistration;
     private HandlerRegistration bottomBlockerRegistration;
+    private HandlerRegistration modalBlockerRegistration;
 
     // Prevents leaving the window with the Tab key when true
     private boolean doTabStop;
@@ -250,12 +253,23 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
          * Restores the previously stored focused element.
          *
          * When the focus was changed outside the window while the window was
-         * open, the originally stored element is restored.
+         * open, the originally stored element is not restored.
+         *
+         * IE returns null and other browsers HTMLBodyElement, if no element is
+         * focused after window is closed.
          */
-        getApplicationConnection().getUIConnector().getWidget()
-                .focusStoredElement();
-
+        if (WidgetUtil.getFocusedElement() == null || "body".equalsIgnoreCase(
+                WidgetUtil.getFocusedElement().getTagName())) {
+            getApplicationConnection().getUIConnector().getWidget()
+                    .focusStoredElement();
+        }
         removeTabBlockHandlers();
+        // If you click while the window is being closed,
+        // a new dragging curtain might be added and will
+        // remain after detach. Theoretically a resize curtain can also remain
+        // if you manage to click on the resize element
+        hideDraggingCurtain();
+        hideResizingCurtain();
     }
 
     private void addTabBlockHandlers() {
@@ -264,6 +278,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                     .addNativePreviewHandler(topEventBlocker);
             bottomBlockerRegistration = Event
                     .addNativePreviewHandler(bottomEventBlocker);
+            modalBlockerRegistration = Event
+                    .addNativePreviewHandler(modalEventBlocker);
         }
     }
 
@@ -274,6 +290,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
             bottomBlockerRegistration.removeHandler();
             bottomBlockerRegistration = null;
+
+            modalBlockerRegistration.removeHandler();
+            modalBlockerRegistration = null;
         }
     }
 
@@ -468,6 +487,25 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 nativeEvent.preventDefault();
             }
         };
+
+        // Handle modal window + tabbing when the focus is not inside the
+        // window (custom tab order or tabbing in from browser url bar)
+        modalEventBlocker = event -> {
+            if (!vaadinModality
+                    || getElement().isOrHasChild(WidgetUtil.getFocusedElement())
+                    || (getTopmostWindow() != VWindow.this)) {
+                return;
+            }
+
+            NativeEvent nativeEvent = event.getNativeEvent();
+            if (nativeEvent.getType().equals("keyup")
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB) {
+                nativeEvent.preventDefault();
+                focus();
+
+            }
+        };
+
     }
 
     /**
@@ -601,6 +639,15 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
              */
             WidgetUtil
                     .runWebkitOverflowAutoFix(contents.getFirstChildElement());
+            Scheduler.get().scheduleFinally(() -> {
+                List<ComponentConnector> childComponents = ((HasComponentsConnector) ConnectorMap
+                        .get(client).getConnector(this)).getChildComponents();
+                if (!childComponents.isEmpty()) {
+                    LayoutManager layoutManager = getLayoutManager();
+                    layoutManager.setNeedsMeasure(childComponents.get(0));
+                    layoutManager.layoutNow();
+                }
+            });
         }
     }
 
@@ -684,7 +731,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             hideResizingCurtain();
         }
         super.hide();
-
         int curIndex = getWindowOrder();
         // Remove window from windowOrder to avoid references being left
         // hanging.

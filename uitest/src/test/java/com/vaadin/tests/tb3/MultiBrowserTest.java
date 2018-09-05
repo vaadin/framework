@@ -1,19 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests.tb3;
 
 import java.util.ArrayList;
@@ -41,27 +25,16 @@ import com.vaadin.testbench.parallel.Browser;
  */
 public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
-    protected List<DesiredCapabilities> getBrowsersSupportingWebSocket() {
-        // No WebSocket support in PhantomJS 1
-        return getBrowserCapabilities(Browser.IE11, Browser.FIREFOX,
-                Browser.CHROME);
-    }
-
-    protected List<DesiredCapabilities> getBrowsersExcludingPhantomJS() {
-        return getBrowserCapabilities(Browser.IE11, Browser.CHROME,
-                Browser.FIREFOX);
+    protected List<DesiredCapabilities> getBrowsersExcludingChrome() {
+        return getBrowserCapabilities(Browser.FIREFOX, Browser.IE11);
     }
 
     protected List<DesiredCapabilities> getBrowsersExcludingIE() {
-        return getBrowserCapabilities(Browser.FIREFOX, Browser.CHROME,
-                Browser.PHANTOMJS);
+        return getBrowserCapabilities(Browser.FIREFOX, Browser.CHROME);
     }
 
     protected List<DesiredCapabilities> getBrowsersExcludingFirefox() {
-        // this is sometimes needed as the Firefox driver causes extra mouseOut
-        // events that make tooltips disappear etc.
-        return getBrowserCapabilities(Browser.IE11, Browser.CHROME,
-                Browser.PHANTOMJS);
+        return getBrowserCapabilities(Browser.IE11, Browser.CHROME);
     }
 
     protected List<DesiredCapabilities> getBrowsersSupportingShiftClick() {
@@ -72,12 +45,6 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
         return getBrowserCapabilities(Browser.IE11);
     }
 
-    protected List<DesiredCapabilities> getBrowsersSupportingContextMenu() {
-        // context menu doesn't work in phantom JS
-        return getBrowserCapabilities(Browser.IE11, Browser.FIREFOX,
-                Browser.CHROME);
-    }
-
     protected List<DesiredCapabilities> getBrowsersSupportingTooltip() {
         // With IEDriver, the cursor seems to jump to default position after the
         // mouse move, so we are not able to test the tooltip behavior properly
@@ -86,13 +53,13 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
         // On Firefox, the driver causes additional mouseOut events causing the
         // tooltip to disappear immediately. Tooltips may work in some
         // particular cases, but not in general.
-        return getBrowserCapabilities(Browser.CHROME, Browser.PHANTOMJS);
+        return getBrowserCapabilities(Browser.CHROME);
     }
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
         return getBrowserCapabilities(Browser.IE11, Browser.FIREFOX,
-                Browser.CHROME, Browser.PHANTOMJS);
+                Browser.CHROME);
     }
 
     protected List<DesiredCapabilities> getBrowserCapabilities(

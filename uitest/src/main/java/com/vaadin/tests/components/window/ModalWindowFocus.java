@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.window;
 
 import com.vaadin.annotations.Widgetset;
@@ -31,6 +16,7 @@ public class ModalWindowFocus extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest req) {
 
         Button button = new Button("Open windows");
+        button.setTabIndex(2);
         button.setId("firstButton");
         addComponent(button);
         button.addClickListener(event -> {
@@ -57,6 +43,7 @@ public class ModalWindowFocus extends AbstractReindeerTestUI {
         });
         Button button2 = new Button(
                 "Open unclosable and unresizable modal window");
+        button2.setTabIndex(1);
         addComponent(button2);
         button2.setId("modalWindowButton");
         button2.addClickListener(event -> {

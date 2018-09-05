@@ -53,59 +53,55 @@ public class TableRepairsScrollPositionOnReAddingAllRows
                 "Replace by another items (via addAll())");
         buttonReplaceByAnotherCollectionViaAddAll
                 .setId("buttonReplaceByAnotherCollectionViaAddAll");
-        buttonReplaceByAnotherCollectionViaAddAll
-                .addClickListener(event -> {
-                    cont.removeAllItems();
-                    // create new collection (of different items) with other
-                    // size
-                    List<TableItem> itemList = new ArrayList<>();
-                    for (int i = 0; i < 79; i++) {
-                        TableItem ti = new TableItem();
-                        ti.setName("AnotherItem1_" + i);
-                        itemList.add(ti);
-                    }
-                    cont.addAll(itemList);
-                });
+        buttonReplaceByAnotherCollectionViaAddAll.addClickListener(event -> {
+            cont.removeAllItems();
+            // create new collection (of different items) with other
+            // size
+            List<TableItem> itemList = new ArrayList<>();
+            for (int i = 0; i < 79; i++) {
+                TableItem ti = new TableItem();
+                ti.setName("AnotherItem1_" + i);
+                itemList.add(ti);
+            }
+            cont.addAll(itemList);
+        });
 
         Button buttonReplaceByAnotherCollectionViaAdd = new Button(
                 "Replace by another items (via add(), add()..)");
         buttonReplaceByAnotherCollectionViaAdd
                 .setId("buttonReplaceByAnotherCollectionViaAdd");
-        buttonReplaceByAnotherCollectionViaAdd
-                .addClickListener(event -> {
-                    cont.removeAllItems();
-                    for (int i = 0; i < 81; i++) {
-                        TableItem ti = new TableItem();
-                        ti.setName("AnotherItem2_" + i);
-                        // add one by one in container
-                        cont.addBean(ti);
-                    }
-                });
+        buttonReplaceByAnotherCollectionViaAdd.addClickListener(event -> {
+            cont.removeAllItems();
+            for (int i = 0; i < 81; i++) {
+                TableItem ti = new TableItem();
+                ti.setName("AnotherItem2_" + i);
+                // add one by one in container
+                cont.addBean(ti);
+            }
+        });
 
         Button buttonReplaceBySubsetOfSmallerSize = new Button(
                 "Replace rows by sub-set of smaller size (size not enought for restoring scroll position)");
         buttonReplaceBySubsetOfSmallerSize
                 .setId("buttonReplaceBySubsetOfSmallerSize");
-        buttonReplaceBySubsetOfSmallerSize
-                .addClickListener(event -> {
-                    cont.removeAllItems();
-                    cont.addAll(restoringItemList.subList(0, 20));
-                });
+        buttonReplaceBySubsetOfSmallerSize.addClickListener(event -> {
+            cont.removeAllItems();
+            cont.addAll(restoringItemList.subList(0, 20));
+        });
 
         Button buttonReplaceByWholeSubsetPlusOneNew = new Button(
                 "Replace rows by whole subset plus one new item");
         buttonReplaceByWholeSubsetPlusOneNew
                 .setId("buttonReplaceByWholeSubsetPlusOneNew");
-        buttonReplaceByWholeSubsetPlusOneNew
-                .addClickListener(event -> {
-                    cont.removeAllItems();
+        buttonReplaceByWholeSubsetPlusOneNew.addClickListener(event -> {
+            cont.removeAllItems();
 
-                    List<TableItem> list = new ArrayList<>(restoringItemList);
-                    TableItem ti = new TableItem();
-                    ti.setName("AnotherItem3_" + 80);
-                    list.add(ti);
-                    cont.addAll(list);
-                });
+            List<TableItem> list = new ArrayList<>(restoringItemList);
+            TableItem ti = new TableItem();
+            ti.setName("AnotherItem3_" + 80);
+            list.add(ti);
+            cont.addAll(list);
+        });
 
         Button buttonRemoveAllAddOne = new Button(
                 "Remove all items and add only one new item");

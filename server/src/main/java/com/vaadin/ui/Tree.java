@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -58,6 +58,7 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.tree.TreeMultiSelectionModelState;
 import com.vaadin.shared.ui.tree.TreeRendererState;
+import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.components.grid.NoSelectionModel;
@@ -80,7 +81,7 @@ import elemental.json.JsonObject;
  *            the data type
  */
 public class Tree<T> extends Composite
-        implements HasHierarchicalDataProvider<T> {
+        implements HasHierarchicalDataProvider<T>, Focusable {
 
     @Deprecated
     private static final Method ITEM_CLICK_METHOD = ReflectTools
@@ -442,6 +443,25 @@ public class Tree<T> extends Composite
     }
 
     /**
+     * Expands the given items and their children recursively until the given
+     * depth.
+     * <p>
+     * {@code depth} describes the maximum distance between a given item and its
+     * descendant, meaning that {@code expandRecursively(items, 0)} expands only
+     * the given items while {@code expandRecursively(items, 2)} expands the
+     * given items as well as their children and grandchildren.
+     *
+     * @param items
+     *            the items to expand recursively
+     * @param depth
+     *            the maximum depth of recursion
+     * @since 8.4
+     */
+    public void expandRecursively(Collection<T> items, int depth) {
+        treeGrid.expandRecursively(items, depth);
+    }
+
+    /**
      * Collapse the given items.
      * <p>
      * For items that are already collapsed, does nothing.
@@ -463,6 +483,25 @@ public class Tree<T> extends Composite
      */
     public void collapse(Collection<T> items) {
         treeGrid.collapse(items);
+    }
+
+    /**
+     * Collapse the given items and their children recursively until the given
+     * depth.
+     * <p>
+     * {@code depth} describes the maximum distance between a given item and its
+     * descendant, meaning that {@code collapseRecursively(items, 0)} collapses
+     * only the given items while {@code collapseRecursively(items, 2)}
+     * collapses the given items as well as their children and grandchildren.
+     *
+     * @param items
+     *            the items to expand recursively
+     * @param depth
+     *            the maximum depth of recursion
+     * @since 8.4
+     */
+    public void collapseRecursively(Collection<T> items, int depth) {
+        treeGrid.collapseRecursively(items, depth);
     }
 
     /**
@@ -632,6 +671,24 @@ public class Tree<T> extends Composite
     public void setItemDescriptionGenerator(
             DescriptionGenerator<T> descriptionGenerator) {
         treeGrid.setDescriptionGenerator(descriptionGenerator);
+    }
+
+    /**
+     * Sets the description generator that is used for generating HTML tooltip
+     * descriptions for items.
+     *
+     * @param descriptionGenerator
+     *            the item description generator to set, or <code>null</code> to
+     *            remove a previously set generator
+     * @param contentMode
+     *            how client should interpret textual values
+     *
+     * @since 8.4
+     */
+    public void setItemDescriptionGenerator(
+            DescriptionGenerator<T> descriptionGenerator,
+            ContentMode contentMode) {
+        treeGrid.setDescriptionGenerator(descriptionGenerator, contentMode);
     }
 
     /**
@@ -1207,4 +1264,18 @@ public class Tree<T> extends Composite
         treeGrid.scrollToEnd();
     }
 
+    @Override
+    public int getTabIndex() {
+        return treeGrid.getTabIndex();
+    }
+
+    @Override
+    public void setTabIndex(int tabIndex) {
+        treeGrid.setTabIndex(tabIndex);
+    }
+
+    @Override
+    public void focus() {
+        treeGrid.focus();
+    }
 }

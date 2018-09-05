@@ -10,8 +10,8 @@ layout: page
 A common pattern in applications is that the user is first presented with a list of items, from which she selects one or several items to continue working with.
 These items could be inventory records to survey, messages to respond to or blog drafts to edit or publish.
 
-A [interfacename]#Listing# is a component that displays one or several properties from a list of item, allowing the user to inspect the data, mark items as selected and in some cases even edit the item directly through the component.
-While each listing component has it's own API for configuring exactly how the data is represented and how it can be manipulated, they all share the same mechanisms for receiving data to show.
+A [interfacename]#Listing# is a component that displays one or several properties from a list of items, allowing the user to inspect the data, mark items as selected and in some cases even edit the item directly through the component.
+While each listing component has its own API for configuring exactly how the data is represented and how it can be manipulated, they all share the same mechanisms for receiving data to show.
 
 The items are generally either loaded directly from memory or lazy loaded from some kind of backend.
 Regardless of how the items are loaded, the component is configured with one or several callbacks that define how the item should be displayed.
@@ -58,10 +58,10 @@ We can also define a custom [classname]#Comparator# if we want to customize the 
 
 [source, java]
 ----
-grid.addColumn("Name", Person::getName)
+grid.addColumn(Person::getName).setCaption("Name")
   // Override default natural sorting
-  .setComparator(Comparator.comparing(
-    person -> person.getName().toLowerCase()));
+  .setComparator(
+     Comparator.comparing(Person::getName)::compare);
 ----
 
 [NOTE]

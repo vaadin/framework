@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -47,9 +47,9 @@ public class VaadinServletService extends VaadinService {
     }
 
     /**
-     * Creates a servlet service. This method is for use by dependency
-     * injection frameworks etc. {@link #getServlet()} should be overridden (or otherwise intercepted)
-     * so it does not return <code>null</code>.
+     * Creates a servlet service. This method is for use by dependency injection
+     * frameworks etc. {@link #getServlet()} should be overridden (or otherwise
+     * intercepted) so it does not return <code>null</code>.
      *
      * @since 8.2
      */
@@ -79,9 +79,9 @@ public class VaadinServletService extends VaadinService {
     }
 
     /**
-     * Retrieves a reference to the servlet associated with this service.
-     * Should be overridden (or otherwise intercepted) if the no-arg
-     * constructor is used to prevent NPEs.
+     * Retrieves a reference to the servlet associated with this service. Should
+     * be overridden (or otherwise intercepted) if the no-arg constructor is
+     * used to prevent NPEs.
      *
      * @return A reference to the VaadinServlet this service is using
      */

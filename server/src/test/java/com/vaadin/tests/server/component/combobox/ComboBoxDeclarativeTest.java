@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.server.component.combobox;
 
 import java.lang.reflect.InvocationTargetException;
@@ -89,10 +74,10 @@ public class ComboBoxDeclarativeTest
             IllegalAccessException, InvocationTargetException {
         List<String> items = Arrays.asList("foo", "bar", "foobar");
 
-        String design = String.format(
-                "<%s>\n" + "<option item='foo' style='foo-style'>foo</option>\n"
-                        + "<option item='bar' style='bar-style'>bar</option>"
-                        + "<option item='foobar' style='foobar-style'>foobar</option></%s>",
+        String design = String.format("<%s>\n"
+                + "<option item='foo' style='foo-style'>foo</option>\n"
+                + "<option item='bar' style='bar-style'>bar</option>"
+                + "<option item='foobar' style='foobar-style'>foobar</option></%s>",
                 getComponentTag(), getComponentTag());
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.setItems(items);

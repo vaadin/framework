@@ -30,9 +30,8 @@ public class PushWebsocketDeadlockUI extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         WrappedSession wrappedSession = getSession().getSession();
-        request.getService()
-                .addSessionDestroyListener(event -> System.out.println(
-                        "Session " + event.getSession() + " destroyed"));
+        request.getService().addSessionDestroyListener(event -> System.out
+                .println("Session " + event.getSession() + " destroyed"));
         final Label l = new Label("Session timeout is "
                 + wrappedSession.getMaxInactiveInterval() + "s");
         addComponents(l);

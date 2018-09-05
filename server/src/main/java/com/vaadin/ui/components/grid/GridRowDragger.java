@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -489,17 +489,17 @@ public class GridRowDragger<T> implements Serializable {
 
     private static void throwUnsupportedOperationExceptionForUnsupportedDataProvider(
             boolean sourceGrid) {
-        throw new UnsupportedOperationException(
-                new StringBuilder().append(sourceGrid ? "Source " : "Target ")
-                        .append("grid does not have a ListDataProvider, cannot automatically ")
-                        .append(sourceGrid ? "remove " : "add ")
-                        .append("items. Use GridRowDragger.set")
-                        .append(sourceGrid ? "Source" : "Target")
-                        .append("DataProviderUpdater(...) ")
-                        .append(sourceGrid ? ""
-                                : "and setDropIndexCalculator(...) "
-                                        + "to customize how to handle updating the data provider.")
-                        .toString());
+        throw new UnsupportedOperationException(new StringBuilder()
+                .append(sourceGrid ? "Source " : "Target ")
+                .append("grid does not have a ListDataProvider, cannot automatically ")
+                .append(sourceGrid ? "remove " : "add ")
+                .append("items. Use GridRowDragger.set")
+                .append(sourceGrid ? "Source" : "Target")
+                .append("DataProviderUpdater(...) ")
+                .append(sourceGrid ? ""
+                        : "and setDropIndexCalculator(...) "
+                                + "to customize how to handle updating the data provider.")
+                .toString());
     }
 
     private static void throwUnsupportedOperationExceptionForUnsupportedCollectionInListDataProvider(

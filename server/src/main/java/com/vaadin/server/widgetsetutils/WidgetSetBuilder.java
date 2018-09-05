@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -87,7 +87,7 @@ public class WidgetSetBuilder {
             try (PrintStream printStream = new PrintStream(
                     new FileOutputStream(widgetsetFile))) {
                 printStream.print("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                        + "<!DOCTYPE module PUBLIC \"-//Google Inc.//DTD Google Web Toolkit 2.8.1//EN\" \"http://gwtproject.org/doctype/2.8.1/gwt-module.dtd\">\n");
+                        + "<!DOCTYPE module PUBLIC \"-//Google Inc.//DTD Google Web Toolkit 2.8.2//EN\" \"http://www.gwtproject.org/doctype/2.8.2/gwt-module.dtd\">\n");
                 printStream.print("<module>\n");
                 printStream.print("    <!--\n"
                         + "     Uncomment the following to compile the widgetset for one browser only.\n\n"

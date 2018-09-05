@@ -28,9 +28,9 @@ public class GridUndefinedHeight extends AbstractTestUI {
 
         layout.addComponents(grid, oldGrid,
                 new Button("Add header row", event -> {
-            grid.appendHeaderRow();
-            oldGrid.appendHeaderRow();
-        }));
+                    grid.appendHeaderRow();
+                    oldGrid.appendHeaderRow();
+                }));
         layout.setHeight("600px");
         layout.setExpandRatio(grid, 1.0f);
         layout.setExpandRatio(oldGrid, 1.0f);

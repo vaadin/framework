@@ -59,13 +59,13 @@ public class GridRefreshRow extends AbstractTestUIWithLog {
         addComponent(grid);
 
         addComponents(new HorizontalLayout(update(0), update(1), update(2)));
-        Button refresh10 = new Button("Refresh 0-9",
-                event -> grid
-                        .refreshRows(container.getItemIds(0, 9).toArray()));
+        Button refresh10 = new Button("Refresh 0-9", event -> grid
+                .refreshRows(container.getItemIds(0, 9).toArray()));
         refresh10.setId("refresh10");
-        addComponents(new HorizontalLayout(refresh(0), refresh(1), refresh(2),
-                new Button("Refresh non-existant",
-                        event -> grid.refreshRows("foobar"))),
+        addComponents(
+                new HorizontalLayout(refresh(0), refresh(1), refresh(2),
+                        new Button("Refresh non-existant",
+                                event -> grid.refreshRows("foobar"))),
                 refresh10);
         addComponents(new HorizontalLayout(style(0), style(1), style(2)));
     }

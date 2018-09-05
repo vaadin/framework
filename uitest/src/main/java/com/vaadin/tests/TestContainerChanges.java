@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.vaadin.tests;
 
 import com.vaadin.ui.Button;
@@ -89,9 +86,8 @@ public class TestContainerChanges extends CustomComponent {
                 event -> cont.removeItem(tbl.lastItemId()));
         buttons.addComponent(b);
 
-        b = new Button("indexedcontainer.addContainerProperty()",
-                event -> cont.addContainerProperty("prop" + cnt, String.class,
-                        "#" + cnt++));
+        b = new Button("indexedcontainer.addContainerProperty()", event -> cont
+                .addContainerProperty("prop" + cnt, String.class, "#" + cnt++));
         buttons.addComponent(b);
 
         b = new Button("indexedcontainer.clear()",

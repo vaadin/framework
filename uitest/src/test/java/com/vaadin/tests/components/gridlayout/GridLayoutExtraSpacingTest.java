@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.gridlayout;
 
 import static org.junit.Assert.assertEquals;
@@ -49,6 +34,7 @@ public class GridLayoutExtraSpacingTest extends MultiBrowserTest {
         // Spacing off, not hiding empty rows/columns
         // There should not be any spacing (red) above the csslayout
         verifySpacingAbove(0, gridLayout, component);
+        verifySpacingBelow(0, gridLayout, component);
 
         CheckBoxElement hideRowsColumnsCheckbox = $(CheckBoxElement.class)
                 .caption("hide empty rows/columns").first();
@@ -57,16 +43,14 @@ public class GridLayoutExtraSpacingTest extends MultiBrowserTest {
         // Spacing off, hiding empty rows/columns
         // There should not be any spacing (red) above the csslayout
         verifySpacingAbove(0, gridLayout, component);
+        verifySpacingBelow(0, gridLayout, component);
 
         check(spacingCheckbox);
         // Spacing on, hiding empty rows/columns
         // There should not be any spacing (red) above or below the csslayout
 
-        // Oh PhantomJs...
-        sleep(100);
-        // FIXME: This should be 0 but there is a bug somewhere
-        // verifySpacingAbove(0, gridLayout, component);
-        verifySpacingBelow(6, gridLayout, component);
+        verifySpacingAbove(0, gridLayout, component);
+        verifySpacingBelow(0, gridLayout, component);
 
     }
 

@@ -95,6 +95,25 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         assertEquals(3, grid.getRowCount());
         assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
 
+        // expand 0 | 0 recursively
+        selectMenuPath("Component", "Features", "Server-side expand",
+                "Expand 0 | 0 recursively");
+        assertEquals(15, grid.getRowCount());
+        assertCellTexts(0, 0, new String[] { "0 | 0", "1 | 0", "2 | 0" });
+
+        // collapse 0 | 0 recursively
+        selectMenuPath("Component", "Features", "Server-side collapse",
+                "Collapse 0 | 0 recursively");
+        assertEquals(3, grid.getRowCount());
+        assertCellTexts(0, 0, new String[] { "0 | 0", "0 | 1", "0 | 2" });
+
+        // expanding 0 | 0 should result in 3 additional nodes after recursive
+        // collapse
+        selectMenuPath("Component", "Features", "Server-side expand",
+                "Expand 0 | 0");
+        assertEquals(6, grid.getRowCount());
+        assertCellTexts(1, 0, new String[] { "1 | 0", "1 | 1", "1 | 2" });
+
         assertNoSystemNotifications();
         assertNoErrorNotifications();
     }
@@ -242,12 +261,6 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
                 .isElementPresent(By.className("v-treegrid-expander")));
         assertFalse(grid.getRow(0).getCell(1)
                 .isElementPresent(By.className("v-treegrid-expander")));
-    }
-
-    @Override
-    protected boolean useNativeEventsForIE() {
-        // Fixes IE11 selectMenuPath troubles
-        return false;
     }
 
     @Test

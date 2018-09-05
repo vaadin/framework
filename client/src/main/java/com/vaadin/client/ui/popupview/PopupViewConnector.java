@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -70,8 +70,8 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
             if (popup.captionWrapper != null) {
                 popup.captionWrapper.updateCaption();
             } else {
-                popup.captionWrapper = new VCaptionWrapper(
-                        childConnector, getConnection());
+                popup.captionWrapper = new VCaptionWrapper(childConnector,
+                        getConnection());
                 popup.setWidget(popup.captionWrapper);
                 popup.captionWrapper.updateCaption();
             }
@@ -135,7 +135,7 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
 
         } else {
             // The popup shouldn't be visible, try to hide it.
-            popup.hide();
+            popup.hide(false, false, false);
         }
     }
 

@@ -28,27 +28,24 @@ public class GridLayoutMoveComponent extends AbstractReindeerTestUI {
         grid.addComponent(b, 0, 1);
         grid.addComponent(tf, 0, 2);
 
-        addComponent(
-                new Button("Shift label right", event -> {
-                    // Moving component from 0,0 -> 1,0
-                    grid.removeComponent(l);
-                    grid.addComponent(l, 1, 0);
-                }));
+        addComponent(new Button("Shift label right", event -> {
+            // Moving component from 0,0 -> 1,0
+            grid.removeComponent(l);
+            grid.addComponent(l, 1, 0);
+        }));
 
-        addComponent(
-                new Button("Shift button right", event -> {
-                    grid.removeComponent(b);
-                    grid.addComponent(b, 1, 1);
-                }));
+        addComponent(new Button("Shift button right", event -> {
+            grid.removeComponent(b);
+            grid.addComponent(b, 1, 1);
+        }));
 
-        addComponent(new Button("Shift text field right",
-                event -> {
-                    grid.removeComponent(tf);
-                    Label label = new Label("I'm on left");
-                    label.setWidth("100%");
-                    grid.addComponent(label, 0, 2);
-                    grid.addComponent(tf, 1, 2);
-                }));
+        addComponent(new Button("Shift text field right", event -> {
+            grid.removeComponent(tf);
+            Label label = new Label("I'm on left");
+            label.setWidth("100%");
+            grid.addComponent(label, 0, 2);
+            grid.addComponent(tf, 1, 2);
+        }));
     }
 
     @Override

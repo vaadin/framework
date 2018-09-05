@@ -30,9 +30,6 @@ public class ProgressBarGenericTest
         createPrimaryStyleNameSelect();
     }
 
-    /**
-     * @since
-     */
     protected void createPrimaryStyleNameSelect() {
         LinkedHashMap<String, String> options = new LinkedHashMap<>();
         String primaryStyle = getComponent().getPrimaryStyleName();

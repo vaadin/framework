@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[using-a-javascript-library-or-a-style-sheet-in-an-addon]]
-Using a JavaScript library or a style sheet in an add-on
---------------------------------------------------------
+= Using a JavaScript library or a style sheet in an add-on
 
 Including style sheets or JavaScript files in your add-ons or as a part
 of your application can now be done by adding a `@StyleSheet` or

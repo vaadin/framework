@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-secure-vaadin-applications-using-jee6]]
-Creating secure Vaadin applications using JEE6
-----------------------------------------------
+= Creating secure Vaadin applications using JEE6
 
 by Petter Holmström
 

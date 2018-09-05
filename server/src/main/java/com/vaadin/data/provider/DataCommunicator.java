@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -91,8 +91,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * that are not in the given collection will be cleaned up and
      * {@link DataGenerator#destroyData(Object)} will be called for them.
      */
-    protected class ActiveDataHandler
-            implements DataGenerator<T> {
+    protected class ActiveDataHandler implements DataGenerator<T> {
 
         /**
          * Set of key strings for currently active data objects
@@ -308,6 +307,11 @@ public class DataCommunicator<T> extends AbstractExtension {
     @Override
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
+
+        if (initial && getPushRows().isEmpty()) {
+            // Make sure rows are pushed when component is attached.
+            setPushRows(Range.withLength(0, getMinPushSize()));
+        }
 
         sendDataToClient(initial);
     }
@@ -661,7 +665,8 @@ public class DataCommunicator<T> extends AbstractExtension {
         if (isAttached()) {
             attachDataProviderListener();
         }
-        hardReset();
+        reset = true;
+        markAsDirty();
 
         return filter -> {
             if (this.dataProvider != dataProvider) {
@@ -672,6 +677,9 @@ public class DataCommunicator<T> extends AbstractExtension {
             if (!Objects.equals(this.filter, filter)) {
                 setFilter(filter);
                 reset();
+
+                // Make sure filter change causes data to be sent again.
+                markAsDirty();
             }
         };
     }
@@ -754,22 +762,16 @@ public class DataCommunicator<T> extends AbstractExtension {
     private void attachDataProviderListener() {
         dataProviderUpdateRegistration = getDataProvider()
                 .addDataProviderListener(event -> {
-                    getUI().access(() -> {
-                        if (event instanceof DataRefreshEvent) {
-                            T item = ((DataRefreshEvent<T>) event).getItem();
-                            getKeyMapper().refresh(item);
-                            generators.forEach(g -> g.refreshData(item));
-                            refresh(item);
-                        } else {
-                            hardReset();
-                        }
-                    });
+                    if (event instanceof DataRefreshEvent) {
+                        T item = ((DataRefreshEvent<T>) event).getItem();
+                        getKeyMapper().refresh(item);
+                        generators.forEach(g -> g.refreshData(item));
+                        getUI().access(() -> refresh(item));
+                    } else {
+                        reset = true;
+                        getUI().access(() -> markAsDirty());
+                    }
                 });
-    }
-
-    private void hardReset() {
-        reset = true;
-        markAsDirty();
     }
 
     private void detachDataProviderListener() {

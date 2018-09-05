@@ -11,6 +11,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -29,6 +30,7 @@ import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.TextField;
+import org.apache.commons.lang.StringUtils;
 
 public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
@@ -501,6 +503,101 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     }
 
     @Test
+    public void setRequired_withCustomValidator_fieldGetsRequiredIndicatorAndValidator() {
+        TextField textField = new TextField();
+        textField.setLocale(Locale.CANADA);
+        assertFalse(textField.isRequiredIndicatorVisible());
+
+        BindingBuilder<Person, String> binding = binder.forField(textField);
+        assertFalse(textField.isRequiredIndicatorVisible());
+        AtomicInteger invokes = new AtomicInteger();
+
+        Validator<String> customRequiredValidator = (value, context) -> {
+            invokes.incrementAndGet();
+            if (StringUtils.isBlank(value)) {
+                return ValidationResult.error("Input is required.");
+            }
+            return ValidationResult.ok();
+        };
+        binding.asRequired(customRequiredValidator);
+        assertTrue(textField.isRequiredIndicatorVisible());
+
+        binding.bind(Person::getFirstName, Person::setFirstName);
+        binder.setBean(item);
+        assertNull(textField.getErrorMessage());
+        assertEquals(0, invokes.get());
+
+        textField.setValue("        ");
+        ErrorMessage errorMessage = textField.getErrorMessage();
+        assertNotNull(errorMessage);
+        assertEquals("Input&#32;is&#32;required&#46;",
+                errorMessage.getFormattedHtmlMessage());
+        // validation is done for all changed bindings once.
+        assertEquals(1, invokes.get());
+
+        textField.setValue("value");
+        assertNull(textField.getErrorMessage());
+        assertTrue(textField.isRequiredIndicatorVisible());
+    }
+
+    @Test
+    public void setRequired_withCustomValidator_modelConverterBeforeValidator() {
+        TextField textField = new TextField();
+        textField.setLocale(Locale.CANADA);
+        assertFalse(textField.isRequiredIndicatorVisible());
+
+        Converter<String, String> stringBasicPreProcessingConverter = new Converter<String, String>() {
+            @Override
+            public Result<String> convertToModel(String value,
+                    ValueContext context) {
+                if (StringUtils.isBlank(value)) {
+                    return Result.ok(null);
+                }
+                return Result.ok(StringUtils.trim(value));
+            }
+
+            @Override
+            public String convertToPresentation(String value,
+                    ValueContext context) {
+                if (value == null) {
+                    return "";
+                }
+                return value;
+            }
+        };
+
+        AtomicInteger invokes = new AtomicInteger();
+        Validator<String> customRequiredValidator = (value, context) -> {
+            invokes.incrementAndGet();
+            if (value == null) {
+                return ValidationResult.error("Input required.");
+            }
+            return ValidationResult.ok();
+        };
+
+        binder.forField(textField)
+                .withConverter(stringBasicPreProcessingConverter)
+                .asRequired(customRequiredValidator)
+                .bind(Person::getFirstName, Person::setFirstName);
+
+        binder.setBean(item);
+        assertNull(textField.getErrorMessage());
+        assertEquals(0, invokes.get());
+
+        textField.setValue("        ");
+        ErrorMessage errorMessage = textField.getErrorMessage();
+        assertNotNull(errorMessage);
+        assertEquals("Input&#32;required&#46;",
+                errorMessage.getFormattedHtmlMessage());
+        // validation is done for all changed bindings once.
+        assertEquals(1, invokes.get());
+
+        textField.setValue("value");
+        assertNull(textField.getErrorMessage());
+        assertTrue(textField.isRequiredIndicatorVisible());
+    }
+
+    @Test
     public void validationStatusHandler_onlyRunForChangedField() {
         TextField firstNameField = new TextField();
         TextField lastNameField = new TextField();
@@ -612,24 +709,28 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     public void setReadonlyShouldIgnoreBindingsWithNullSetter() {
         binder.bind(nameField, Person::getFirstName, null);
         binder.forField(ageField)
-            .withConverter(new StringToIntegerConverter(""))
-            .bind(Person::getAge, Person::setAge);
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
 
         binder.setReadOnly(true);
-        assertTrue("Name field should be ignored but should be readonly", nameField.isReadOnly());
+        assertTrue("Name field should be ignored but should be readonly",
+                nameField.isReadOnly());
         assertTrue("Age field should be readonly", ageField.isReadOnly());
 
         binder.setReadOnly(false);
-        assertTrue("Name field should be ignored and should remain readonly", nameField.isReadOnly());
+        assertTrue("Name field should be ignored and should remain readonly",
+                nameField.isReadOnly());
         assertFalse("Age field should not be readonly", ageField.isReadOnly());
 
         nameField.setReadOnly(false);
         binder.setReadOnly(false);
-        assertFalse("Name field should be ignored and remain not readonly", nameField.isReadOnly());
+        assertFalse("Name field should be ignored and remain not readonly",
+                nameField.isReadOnly());
         assertFalse("Age field should not be readonly", ageField.isReadOnly());
 
         binder.setReadOnly(true);
-        assertFalse("Name field should be ignored and remain not readonly", nameField.isReadOnly());
+        assertFalse("Name field should be ignored and remain not readonly",
+                nameField.isReadOnly());
         assertTrue("Age field should be readonly", ageField.isReadOnly());
     }
 
@@ -805,6 +906,25 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.setBean(item);
         assertNotEquals("Binding was not removed",
                 String.valueOf(item.getAge()), ageField.getValue());
+    }
+
+    @Test
+    public void remove_binding_fromFieldValueChangeListener() {
+        // Add listener before bind to make sure it will be executed first.
+        nameField.addValueChangeListener(e -> {
+            if (e.getValue() == "REMOVE") {
+                binder.removeBinding(nameField);
+            }
+        });
+
+        binder.bind(nameField, Person::getFirstName, Person::setFirstName);
+
+        binder.setBean(item);
+
+        nameField.setValue("REMOVE");
+
+        // Removed binding should not update bean.
+        assertNotEquals("REMOVE", item.getFirstName());
     }
 
     @Test
@@ -1045,14 +1165,85 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.removeBinding(binding);
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void bindWithNullSetterSetReadWrite() {
+        Binding<Person, String> binding = binder.bind(nameField,
+                Person::getFirstName, null);
+        binding.setReadOnly(false);
+    }
+
     @Test
     public void bindWithNullSetterShouldMarkFieldAsReadonly() {
-        binder.bind(nameField, Person::getFirstName, null);
+        Binding<Person, String> nameBinding = binder.bind(nameField,
+                Person::getFirstName, null);
         binder.forField(ageField)
-            .withConverter(new StringToIntegerConverter(""))
-            .bind(Person::getAge, Person::setAge);
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
 
         assertTrue("Name field should be readonly", nameField.isReadOnly());
-        assertFalse("Name field should be readonly", ageField.isReadOnly());
+        assertFalse("Age field should not be readonly", ageField.isReadOnly());
+        assertTrue("Binding should be marked readonly",
+                nameBinding.isReadOnly());
+    }
+
+    @Test
+    public void setReadOnly_binding() {
+        Binding<Person, String> binding = binder.bind(nameField,
+                Person::getFirstName, Person::setFirstName);
+
+        assertFalse("Binding should not be readonly", binding.isReadOnly());
+        assertFalse("Name field should not be readonly",
+                nameField.isReadOnly());
+
+        binding.setReadOnly(true);
+        assertTrue("Binding should be readonly", binding.isReadOnly());
+        assertTrue("Name field should be readonly", nameField.isReadOnly());
+    }
+
+    @Test
+    public void conversionWithLocaleBasedErrorMessage() {
+        String fiError = "VIRHE";
+        String otherError = "ERROR";
+
+        binder.forField(ageField).withConverter(new StringToIntegerConverter(
+                context -> context.getLocale().map(Locale::getLanguage)
+                        .orElse("en").equals("fi") ? fiError : otherError))
+                .bind(Person::getAge, Person::setAge);
+
+        binder.setBean(item);
+
+        ageField.setValue("not a number");
+
+        assertEquals(otherError,
+                ageField.getErrorMessage().getFormattedHtmlMessage());
+        ageField.setLocale(new Locale("fi"));
+        // Re-validate to get the error message with correct locale
+        binder.validate();
+        assertEquals(fiError,
+                ageField.getErrorMessage().getFormattedHtmlMessage());
+    }
+
+    @Test
+    public void valueChangeListenerOrder() {
+        AtomicBoolean beanSet = new AtomicBoolean();
+        nameField.addValueChangeListener(e -> {
+            if (!beanSet.get()) {
+                assertEquals("Value in bean updated earlier than expected",
+                        e.getOldValue(), item.getFirstName());
+            }
+        });
+        binder.bind(nameField, Person::getFirstName, Person::setFirstName);
+        nameField.addValueChangeListener(e -> {
+            if (!beanSet.get()) {
+                assertEquals("Value in bean not updated when expected",
+                        e.getValue(), item.getFirstName());
+            }
+        });
+
+        beanSet.set(true);
+        binder.setBean(item);
+        beanSet.set(false);
+
+        nameField.setValue("Foo");
     }
 }

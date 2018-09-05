@@ -79,16 +79,14 @@ public class EnableDisablePush extends AbstractReindeerTestUI {
             log.log("Poll enabled");
         }));
 
-        addComponent(
-                new Button("Disable push, re-enable from background thread",
-                        event -> {
-                            log.log("Disabling push, enabling polling");
-                            getPushConfiguration()
-                                    .setPushMode(PushMode.DISABLED);
-                            setPollInterval(1000);
-                            timer.schedule(new CounterTask(), new Date());
-                            log.log("Push disabled, polling enabled");
-                        }));
+        addComponent(new Button(
+                "Disable push, re-enable from background thread", event -> {
+                    log.log("Disabling push, enabling polling");
+                    getPushConfiguration().setPushMode(PushMode.DISABLED);
+                    setPollInterval(1000);
+                    timer.schedule(new CounterTask(), new Date());
+                    log.log("Push disabled, polling enabled");
+                }));
 
         addComponent(log);
     }

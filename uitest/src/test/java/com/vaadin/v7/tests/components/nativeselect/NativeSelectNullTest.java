@@ -5,9 +5,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.NativeSelectElement;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class NativeSelectNullTest extends SingleBrowserTestPhantomJS2 {
+public class NativeSelectNullTest extends SingleBrowserTest {
     @Test
     public void selectNull() {
         openTestURL();

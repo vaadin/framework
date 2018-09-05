@@ -62,7 +62,8 @@ public class GridDetailsLocation extends AbstractTestUI {
     }
 
     private void toggle() {
-        Person itemId = testData.get(Integer.parseInt(numberTextField.getValue()));
+        Person itemId = testData
+                .get(Integer.parseInt(numberTextField.getValue()));
         boolean isVisible = grid.isDetailsVisible(itemId);
         grid.setDetailsVisible(itemId, !isVisible);
     }

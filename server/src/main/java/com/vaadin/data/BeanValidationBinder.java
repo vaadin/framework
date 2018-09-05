@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -51,11 +51,11 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
     public BeanValidationBinder(Class<BEAN> beanType) {
         super(beanType);
         if (!BeanUtil.checkBeanValidationAvailable()) {
-            throw new IllegalStateException(
-                    BeanValidationBinder.class.getSimpleName()
-                            + " cannot be used because a JSR-303 Bean Validation "
-                            + "implementation not found on the classpath or could not be initialized. Use "
-                            + Binder.class.getSimpleName() + " instead");
+            throw new IllegalStateException(BeanValidationBinder.class
+                    .getSimpleName()
+                    + " cannot be used because a JSR-303 Bean Validation "
+                    + "implementation not found on the classpath or could not be initialized. Use "
+                    + Binder.class.getSimpleName() + " instead");
         }
         this.beanType = beanType;
     }

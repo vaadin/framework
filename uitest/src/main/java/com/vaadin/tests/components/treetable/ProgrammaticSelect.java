@@ -19,11 +19,10 @@ public class ProgrammaticSelect extends TestBase {
         tt.setSelectable(true);
         addComponent(tt);
 
-        Button selectItem = new Button("Select first row",
-                event -> {
-                    Object id = tt.getItemIds().iterator().next();
-                    tt.select(id);
-                });
+        Button selectItem = new Button("Select first row", event -> {
+            Object id = tt.getItemIds().iterator().next();
+            tt.select(id);
+        });
 
         addComponent(selectItem);
     }

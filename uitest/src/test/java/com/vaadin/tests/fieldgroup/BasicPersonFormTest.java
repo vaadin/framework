@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.fieldgroup;
 
 import static org.junit.Assert.assertEquals;
@@ -26,8 +11,11 @@ import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TableRowElement;
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.data.bean.Sex;
+import com.vaadin.tests.tb3.AbstractTB3Test;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.PrivateTB3Configuration;
 
 public abstract class BasicPersonFormTest extends MultiBrowserTest {
 
@@ -39,6 +27,11 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
         super.setup();
 
         logCounter = 0;
+
+        if (BrowserUtil.isFirefox(getDesiredCapabilities())) {
+            // Use larger view port to make sure everything is visible.
+            testBench().resizeViewPortTo(1500, 1500);
+        }
     }
 
     @Override

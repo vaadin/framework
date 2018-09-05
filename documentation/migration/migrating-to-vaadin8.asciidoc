@@ -4,7 +4,7 @@ order: 1
 layout: page
 ---
 [[migration]]
-== Migration from Framework 7 to Framework 8
+= Migration from Framework 7 to Framework 8
 
 Most Vaadin Framework 7 applications will need some changes when migrating to Vaadin Framework 8.
 To make migration from version 7 to 8 as straightforward as possible, Vaadin Framework 8 ships with compatibility packages that include all the old features and APIs that have changed between versions.

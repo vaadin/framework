@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[using-bean-validation-to-validate-input]]
-Using Bean Validation to validate input
----------------------------------------
+= Using Bean Validation to validate input
 
 Before you get started with Bean Validation you need to download a Bean
 Validation implementation and add it to your project. You can find one

@@ -16,11 +16,12 @@ public class GridColumnPresentationTest extends SingleBrowserTest {
         GridElement grid = $(GridElement.class).get(0);
         assertEquals("Turku FINLAND", grid.getCell(0, 0).getText());
         assertEquals("Amsterdam NETHERLANDS", grid.getCell(1, 0).getText());
-        //Activate editor
+        // Activate editor
         GridElement.GridCellElement cell = grid.getCell(1, 0);
         cell.doubleClick();
 
-        assertEquals("Address [streetAddress=Red street, postalCode=12, city=Amsterdam, country=Netherlands]",
+        assertEquals(
+                "Address [streetAddress=Red street, postalCode=12, city=Amsterdam, country=Netherlands]",
                 grid.getEditor().getField(0).getText());
 
     }

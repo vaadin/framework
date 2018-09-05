@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.grid.basics;
 
 import static org.junit.Assert.assertEquals;
@@ -46,6 +31,9 @@ public abstract class GridEditorTest extends GridBasicsTest {
     public void setUp() {
         setDebug(true);
         openTestURL();
+
+        minimizeDebugWindow();
+
         selectMenuPath(TOGGLE_EDIT_ENABLED);
     }
 
@@ -56,6 +44,16 @@ public abstract class GridEditorTest extends GridBasicsTest {
 
         selectMenuPath("Component", "Editor", "Cancel edit");
         assertEditorClosed();
+    }
+
+    public void testEditorReopenAfterHide() {
+        editRow(5);
+        assertEditorOpen();
+        selectMenuPath("Component", "Editor", "Hide grid");
+        selectMenuPath("Component", "Editor", "Show grid");
+        assertEditorClosed();
+        editRow(5);
+        assertEditorOpen();
     }
 
     @Test
@@ -239,6 +237,19 @@ public abstract class GridEditorTest extends GridBasicsTest {
         Assert.assertEquals("Unexpected not-editable column content",
                 "(999, 1)", getEditor()
                         .findElement(By.className("not-editable")).getText());
+    }
+
+    @Test
+    public void testEditorCancelOnOpen() {
+        editRow(2);
+        getGridElement().sendKeys(Keys.ESCAPE);
+
+        selectMenuPath("Component", "Editor", "Cancel next edit");
+        getGridElement().getCell(2, 0).doubleClick();
+        assertEditorClosed();
+
+        editRow(2);
+        assertNoErrorNotifications();
     }
 
     protected WebElement getSaveButton() {

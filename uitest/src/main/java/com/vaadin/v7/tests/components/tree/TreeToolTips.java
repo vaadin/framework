@@ -10,10 +10,9 @@ public class TreeToolTips extends TestBase {
     @Override
     protected void setup() {
         final Tree tree = new Tree(null, createContainer());
-        tree.setItemDescriptionGenerator(
-                (source, itemId,
-                        propertyId) -> "This is a tooltip for item id '"
-                                + itemId + "'");
+        tree.setItemDescriptionGenerator((source, itemId,
+                propertyId) -> "This is a tooltip for item id '" + itemId
+                        + "'");
 
         for (Object rootItems : tree.rootItemIds()) {
             tree.expandItemsRecursively(rootItems);

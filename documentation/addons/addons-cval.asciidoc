@@ -64,11 +64,6 @@ usually with a [literal]#++-D++# option. For example, on the command-line:
 
 where the [literal]`<product>` is the product ID, such as `charts`, `spreadsheet`, `designer`, or `testbench`.
 
-ifdef::web[]
-See link:https://vaadin.com/directory/help/installing-cval-license[the CVAL
-license key installation instructions] for more details.
-endif::web[]
-
 [[addons.cval.systemproperty.environments]]
 === Passing License Key in Different Environments
 

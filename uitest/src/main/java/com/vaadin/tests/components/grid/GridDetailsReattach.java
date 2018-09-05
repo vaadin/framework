@@ -26,8 +26,8 @@ public class GridDetailsReattach extends AbstractTestUI {
         Button addCaptionToLayoutWithGridButton = new Button(
                 "Add caption to 'layoutWithGrid' layout");
         addCaptionToLayoutWithGridButton
-                .addClickListener(event -> layoutWithGrid
-                .setCaption("Caption added to 'layoutWithGrid' layout"));
+                .addClickListener(event -> layoutWithGrid.setCaption(
+                        "Caption added to 'layoutWithGrid' layout"));
         layoutWithGrid.addComponent(addCaptionToLayoutWithGridButton);
 
         verticalMain.addComponent(layoutWithGrid);

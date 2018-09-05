@@ -1,19 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests.components.ui;
 
 import java.util.Map;
@@ -38,8 +22,8 @@ public class UIAccessExceptionHandling extends AbstractTestUIWithLog
     protected void setup(VaadinRequest request) {
         getSession().setErrorHandler(this);
 
-        addComponent(new Button("Throw RuntimeException on UI.access",
-                event -> {
+        addComponent(
+                new Button("Throw RuntimeException on UI.access", event -> {
                     log.clear();
 
                     // Ensure beforeClientResponse is invoked
@@ -64,29 +48,27 @@ public class UIAccessExceptionHandling extends AbstractTestUIWithLog
                     });
                 }));
 
-        addComponent(
-                new Button("Throw RuntimeException after removing instances",
-                        event -> {
-                            log.clear();
+        addComponent(new Button(
+                "Throw RuntimeException after removing instances", event -> {
+                    log.clear();
 
-                            // Ensure beforeClientResponse is invoked
-                            markAsDirty();
+                    // Ensure beforeClientResponse is invoked
+                    markAsDirty();
 
-                            assert UI
-                                    .getCurrent() == UIAccessExceptionHandling.this;
+                    assert UI.getCurrent() == UIAccessExceptionHandling.this;
 
-                            Map<Class<?>, CurrentInstance> instances = CurrentInstance
-                                    .getInstances();
-                            CurrentInstance.clearAll();
+                    Map<Class<?>, CurrentInstance> instances = CurrentInstance
+                            .getInstances();
+                    CurrentInstance.clearAll();
 
-                            assert UI.getCurrent() == null;
+                    assert UI.getCurrent() == null;
 
-                            future = access(() -> {
-                                throw new RuntimeException();
-                            });
+                    future = access(() -> {
+                        throw new RuntimeException();
+                    });
 
-                            CurrentInstance.restoreInstances(instances);
-                        }));
+                    CurrentInstance.restoreInstances(instances);
+                }));
 
         addComponent(new Button("Clear", event -> log.clear()));
     }

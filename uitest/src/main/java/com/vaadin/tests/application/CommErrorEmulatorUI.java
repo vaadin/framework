@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.application;
 
 import com.vaadin.server.VaadinRequest;
@@ -28,11 +13,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.TextField;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
 
     private static class Response {
@@ -76,10 +56,6 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         addComponent(new Button("Say hello", event -> log("Hello")));
     }
 
-    /**
-     * @since
-     * @return
-     */
     private Component createServerConfigPanel() {
         Panel p = new Panel("Server config (NOTE: affects all users)");
         VerticalLayout vl = new VerticalLayout();
@@ -118,10 +94,9 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         reconnectDialogMessage.setWidth("50em");
         reconnectDialogMessage
                 .setValue(getReconnectDialogConfiguration().getDialogText());
-        reconnectDialogMessage
-                .addValueChangeListener(event ->
-                        getReconnectDialogConfiguration().setDialogText(
-                reconnectDialogMessage.getValue()));
+        reconnectDialogMessage.addValueChangeListener(
+                event -> getReconnectDialogConfiguration()
+                        .setDialogText(reconnectDialogMessage.getValue()));
 
         final TextField reconnectDialogGaveUpMessage = new TextField(
                 "Reconnect gave up message");
@@ -129,42 +104,37 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
 
         reconnectDialogGaveUpMessage.setValue(
                 getReconnectDialogConfiguration().getDialogTextGaveUp());
-        reconnectDialogGaveUpMessage
-                .addValueChangeListener(event ->
-                        getReconnectDialogConfiguration().setDialogTextGaveUp(
-                reconnectDialogGaveUpMessage.getValue()));
+        reconnectDialogGaveUpMessage.addValueChangeListener(
+                event -> getReconnectDialogConfiguration().setDialogTextGaveUp(
+                        reconnectDialogGaveUpMessage.getValue()));
         final TextField reconnectDialogReconnectAttempts = new TextField(
                 "Reconnect attempts");
         reconnectDialogReconnectAttempts.setConverter(Integer.class);
         reconnectDialogReconnectAttempts.setConvertedValue(
                 getReconnectDialogConfiguration().getReconnectAttempts());
-        reconnectDialogReconnectAttempts
-                .addValueChangeListener(event ->
-                        getReconnectDialogConfiguration().setReconnectAttempts(
-                                (Integer) reconnectDialogReconnectAttempts
-                        .getConvertedValue()));
+        reconnectDialogReconnectAttempts.addValueChangeListener(
+                event -> getReconnectDialogConfiguration().setReconnectAttempts(
+                        (Integer) reconnectDialogReconnectAttempts
+                                .getConvertedValue()));
         final TextField reconnectDialogReconnectInterval = new TextField(
                 "Reconnect interval (ms)");
         reconnectDialogReconnectInterval.setConverter(Integer.class);
         reconnectDialogReconnectInterval.setConvertedValue(
                 getReconnectDialogConfiguration().getReconnectInterval());
-        reconnectDialogReconnectInterval
-                .addValueChangeListener(event ->
-                        getReconnectDialogConfiguration().setReconnectInterval(
-                                (Integer) reconnectDialogReconnectInterval
-                        .getConvertedValue()));
+        reconnectDialogReconnectInterval.addValueChangeListener(
+                event -> getReconnectDialogConfiguration().setReconnectInterval(
+                        (Integer) reconnectDialogReconnectInterval
+                                .getConvertedValue()));
 
         final TextField reconnectDialogGracePeriod = new TextField(
                 "Reconnect dialog grace period (ms)");
         reconnectDialogGracePeriod.setConverter(Integer.class);
         reconnectDialogGracePeriod.setConvertedValue(
                 getReconnectDialogConfiguration().getDialogGracePeriod());
-        reconnectDialogGracePeriod
-                .addValueChangeListener(
-                        event -> getReconnectDialogConfiguration()
-                        .setDialogGracePeriod(
-                                (Integer) reconnectDialogGracePeriod
-                                        .getConvertedValue()));
+        reconnectDialogGracePeriod.addValueChangeListener(
+                event -> getReconnectDialogConfiguration().setDialogGracePeriod(
+                        (Integer) reconnectDialogGracePeriod
+                                .getConvertedValue()));
 
         final CheckBox reconnectDialogModal = new CheckBox(
                 "Reconnect dialog modality");

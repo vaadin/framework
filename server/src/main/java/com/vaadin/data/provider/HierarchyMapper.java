@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -123,44 +123,87 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * @param item
      *            the item to expand
      * @param position
-     *            the index of item
+     *            the index of the item
      * @return range of rows added by expanding the item
      */
-    public Range doExpand(T item, Optional<Integer> position) {
-        Range rows = Range.withLength(0, 0);
-        if (!isExpanded(item) && hasChildren(item)) {
-            Object id = getDataProvider().getId(item);
-            expandedItemIds.add(id);
-            if (position.isPresent()) {
-                rows = Range.withLength(position.get() + 1,
-                        (int) getHierarchy(item, false).count());
-            }
+    public Range expand(T item, Integer position) {
+        if (doExpand(item) && position != null) {
+            return Range.withLength(position + 1,
+                    (int) getHierarchy(item, false).count());
         }
-        return rows;
+
+        return Range.emptyRange();
+    }
+
+    /**
+     * Expands the given item.
+     *
+     * @param item
+     *            the item to expand
+     * @param position
+     *            the index of item
+     * @return range of rows added by expanding the item
+     * @deprecated Use {@link #expand(Object, Integer)} instead.
+     */
+    @Deprecated
+    public Range doExpand(T item, Optional<Integer> position) {
+        return expand(item, position.orElse(null));
+    }
+
+    /**
+     * Expands the given item if it is collapsed and has children, and returns
+     * whether this method expanded the item.
+     *
+     * @param item
+     *            the item to expand
+     * @return {@code true} if this method expanded the item, {@code false}
+     *         otherwise
+     */
+    private boolean doExpand(T item) {
+        boolean expanded = false;
+        if (!isExpanded(item) && hasChildren(item)) {
+            expandedItemIds.add(getDataProvider().getId(item));
+            expanded = true;
+        }
+        return expanded;
     }
 
     /**
      * Collapses the given item.
      *
      * @param item
-     *            the item to expand
+     *            the item to collapse
+     * @param position
+     *            the index of the item
+     *
+     * @return range of rows removed by collapsing the item
+     */
+    public Range collapse(T item, Integer position) {
+        Range removedRows = Range.emptyRange();
+        if (isExpanded(item)) {
+            if (position != null) {
+                removedRows = Range.withLength(position + 1,
+                        (int) getHierarchy(item, false).count());
+            }
+            expandedItemIds.remove(getDataProvider().getId(item));
+        }
+        return removedRows;
+    }
+
+    /**
+     * Collapses the given item.
+     *
+     * @param item
+     *            the item to collapse
      * @param position
      *            the index of item
      *
      * @return range of rows removed by collapsing the item
+     * @deprecated Use {@link #collapse(Object, Integer)} instead.
      */
+    @Deprecated
     public Range doCollapse(T item, Optional<Integer> position) {
-        Range removedRows = Range.withLength(0, 0);
-        if (isExpanded(item)) {
-            Object id = getDataProvider().getId(item);
-            if (position.isPresent()) {
-                long childCount = getHierarchy(item, false).count();
-                removedRows = Range.withLength(position.get() + 1,
-                        (int) childCount);
-            }
-            expandedItemIds.remove(id);
-        }
-        return removedRows;
+        return collapse(item, position.orElse(null));
     }
 
     @Override
@@ -354,8 +397,11 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     /**
      * Find parent for the given item among open folders.
-     * @param item the item
-     * @return parent item or {@code null} for root items or if the parent is closed
+     *
+     * @param item
+     *            the item
+     * @return parent item or {@code null} for root items or if the parent is
+     *         closed
      */
     protected T getParentOfItem(T item) {
         Objects.requireNonNull(item, "Can not find the parent of null");
@@ -365,8 +411,8 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     /**
      * Removes all children of an item identified by a given id. Items removed
      * by this method as well as the original item are all marked to be
-     * collapsed.
-     * May be overridden in subclasses for removing obsolete data to avoid memory leaks.
+     * collapsed. May be overridden in subclasses for removing obsolete data to
+     * avoid memory leaks.
      *
      * @param id
      *            the item id
@@ -384,10 +430,11 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
             }
         }
         expandedItemIds.remove(id);
-        invalidatedChildren.stream().map(getDataProvider()::getId).forEach(x -> {
-            removeChildren(x);
-            parentIdMap.remove(x);
-        });
+        invalidatedChildren.stream().map(getDataProvider()::getId)
+                .forEach(x -> {
+                    removeChildren(x);
+                    parentIdMap.remove(x);
+                });
     }
 
     /**
@@ -489,15 +536,18 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     }
 
     /**
-     * Register parent and children items into inner structures.
-     * May be overridden in subclasses.
+     * Register parent and children items into inner structures. May be
+     * overridden in subclasses.
      *
-     * @param parent the parent item
-     * @param childList list of parents children to be registered.
+     * @param parent
+     *            the parent item
+     * @param childList
+     *            list of parents children to be registered.
      */
     protected void registerChildren(T parent, List<T> childList) {
         childMap.put(parent, new HashSet<>(childList));
-        childList.forEach(x -> parentIdMap.put(getDataProvider().getId(x), parent));
+        childList.forEach(
+                x -> parentIdMap.put(getDataProvider().getId(x), parent));
     }
 
     /**

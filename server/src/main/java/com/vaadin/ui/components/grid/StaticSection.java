@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,6 +35,7 @@ import java.util.stream.Stream;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.ui.grid.SectionState.CellState;
@@ -614,6 +615,75 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
 
         void detach() {
             removeComponentIfPresent();
+        }
+
+        /**
+         * Gets the tooltip for the cell.
+         * <p>
+         * The tooltip is shown in the mode returned by
+         * {@link #getDescriptionContentMode()}.
+         *
+         * @since 8.4
+         */
+        public String getDescription() {
+            return cellState.description;
+        }
+
+        /**
+         * Sets the tooltip for the cell.
+         * <p>
+         * By default, tooltips are shown as plain text. For HTML tooltips, see
+         * {@link #setDescription(String, ContentMode)} or
+         * {@link #setDescriptionContentMode(ContentMode)}.
+         *
+         * @param description
+         *            the tooltip to show when hovering the cell
+         * @since 8.4
+         */
+        public void setDescription(String description) {
+            cellState.description = description;
+        }
+
+        /**
+         * Sets the tooltip for the cell to be shown with the given content
+         * mode.
+         *
+         * @see ContentMode
+         * @param description
+         *            the tooltip to show when hovering the cell
+         * @param descriptionContentMode
+         *            the content mode to use for the tooltip (HTML or plain
+         *            text)
+         * @since 8.4
+         */
+        public void setDescription(String description,
+                ContentMode descriptionContentMode) {
+            setDescription(description);
+            setDescriptionContentMode(descriptionContentMode);
+        }
+
+        /**
+         * Gets the content mode for the tooltip.
+         *
+         * @see ContentMode
+         * @return the content mode for the tooltip
+         * @since 8.4
+         */
+        public ContentMode getDescriptionContentMode() {
+            return cellState.descriptionContentMode;
+        }
+
+        /**
+         * Sets the content mode for the tooltip.
+         *
+         * @see ContentMode
+         * @param descriptionContentMode
+         *            the content mode for the tooltip
+         * @since 8.4
+         */
+        public void setDescriptionContentMode(
+                ContentMode descriptionContentMode) {
+            cellState.descriptionContentMode = descriptionContentMode;
         }
     }
 

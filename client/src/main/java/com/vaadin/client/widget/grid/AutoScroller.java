@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -356,8 +356,9 @@ public class AutoScroller {
                 endBound = Math.max(finalEndBound, pageCordinate);
             } else {
                 /*
-                 * Subsequent runs make sure that the scroll area grows (but doesn't
-                 * shrink) with the finger, but no further than the final bound.
+                 * Subsequent runs make sure that the scroll area grows (but
+                 * doesn't shrink) with the finger, but no further than the
+                 * final bound.
                  */
                 int oldTopBound = startBound;
                 if (startBound < finalStartBound) {

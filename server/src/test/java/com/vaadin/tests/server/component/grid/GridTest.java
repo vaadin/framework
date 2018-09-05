@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.easymock.Capture;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,12 +39,15 @@ import com.vaadin.data.ValidationException;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataGenerator;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.GridSortOrder;
 import com.vaadin.data.provider.QuerySortOrder;
 import com.vaadin.data.provider.bov.Person;
 import com.vaadin.event.selection.SelectionEvent;
 import com.vaadin.server.SerializableComparator;
+import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.grid.GridState;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.util.MockUI;
 import com.vaadin.ui.Grid;
@@ -63,13 +67,18 @@ public class GridTest {
     private Column<String, Integer> lengthColumn;
     private Column<String, Object> objectColumn;
     private Column<String, String> randomColumn;
+    private GridState state;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
-        grid = new Grid<>();
+        grid = new Grid<String>() {
+            {
+                state = getState(false);
+            }
+        };
 
         fooColumn = grid.addColumn(ValueProvider.identity()).setId("foo");
         lengthColumn = grid.addColumn(String::length, new NumberRenderer())
@@ -283,13 +292,33 @@ public class GridTest {
     }
 
     @Test
-    public void clearSortOrder() {
+    public void clearSortOrder() throws Exception {
         Column<String, ?> column = grid.getColumns().get(1);
         grid.sort(column);
 
         grid.clearSortOrder();
 
         assertEquals(0, grid.getSortOrder().size());
+
+        // Make sure state is updated.
+        assertEquals(0, state.sortColumns.length);
+        assertEquals(0, state.sortDirs.length);
+    }
+
+    @Test
+    public void sortOrderDoesnotContainRemovedColumns() {
+        Column<String, ?> sortColumn = grid.getColumns().get(1);
+        grid.sort(sortColumn);
+
+        // Get id of column and check it's sorted.
+        String id = state.columnOrder.get(1);
+        assertEquals(id, state.sortColumns[0]);
+
+        // Remove column and make sure it's cleared correctly
+        grid.removeColumn(sortColumn);
+        assertFalse("Column not removed", state.columnOrder.contains(id));
+        assertEquals(0, state.sortColumns.length);
+        assertEquals(0, state.sortDirs.length);
     }
 
     @Test
@@ -553,7 +582,7 @@ public class GridTest {
     public void setColumnOrder_byColumn_removedColumn() {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("setColumnOrder should not be called "
-                        + "with columns that are not in the grid.");
+                + "with columns that are not in the grid.");
 
         grid.removeColumn(randomColumn);
         grid.setColumnOrder(randomColumn, lengthColumn);
@@ -732,4 +761,51 @@ public class GridTest {
         Column<Person, ?> column1 = grid1.addColumn(ValueProvider.identity());
         grid2.removeColumn(column1);
     }
+
+    @Test
+    public void testColumnSortable() {
+        Column<String, String> column = grid.addColumn(String::toString);
+
+        // Use in-memory data provider
+        grid.setItems(Collections.emptyList());
+
+        Assert.assertTrue("Column should be initially sortable",
+                column.isSortable());
+        Assert.assertTrue("User should be able to sort the column",
+                column.isSortableByUser());
+
+        column.setSortable(false);
+
+        Assert.assertFalse("Column should not be sortable",
+                column.isSortable());
+        Assert.assertFalse(
+                "User should not be able to sort the column with in-memory data",
+                column.isSortableByUser());
+
+        // Use CallBackDataProvider
+        grid.setDataProvider(
+                DataProvider.fromCallbacks(q -> Stream.of(), q -> 0));
+
+        Assert.assertFalse("Column should not be sortable",
+                column.isSortable());
+        Assert.assertFalse("User should not be able to sort the column",
+                column.isSortableByUser());
+
+        column.setSortable(true);
+
+        Assert.assertTrue("Column should be marked sortable",
+                column.isSortable());
+        Assert.assertFalse(
+                "User should not be able to sort the column since no sort order is provided",
+                column.isSortableByUser());
+
+        column.setSortProperty("toString");
+
+        Assert.assertTrue("Column should be marked sortable",
+                column.isSortable());
+        Assert.assertTrue(
+                "User should be able to sort the column with the sort order",
+                column.isSortableByUser());
+    }
+
 }

@@ -5,12 +5,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 
 @SuppressWarnings("serial")
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class DateFields extends ComponentTestCase<DateField> {
 
     private static final Locale[] LOCALES = { Locale.US, Locale.TAIWAN,

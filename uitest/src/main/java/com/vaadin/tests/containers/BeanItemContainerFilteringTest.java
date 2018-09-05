@@ -99,13 +99,12 @@ public class BeanItemContainerFilteringTest extends TestBase {
 
             // addItemAt(idx), addItemAfter(selection), addItem()
 
-            final Button addItemButton = new Button("addItem()",
-                    event -> {
-                        container.addItem(new TestBean("addItem() " + nextToAdd,
-                                "value " + nextToAdd));
-                        nextToAdd++;
-                        nextLabel.setCaption("Next id: " + nextToAdd);
-                    });
+            final Button addItemButton = new Button("addItem()", event -> {
+                container.addItem(new TestBean("addItem() " + nextToAdd,
+                        "value " + nextToAdd));
+                nextToAdd++;
+                nextLabel.setCaption("Next id: " + nextToAdd);
+            });
             vl.addComponent(addItemButton);
 
             final Button addItemAfterButton = new Button("addItemAfter()",
@@ -131,20 +130,18 @@ public class BeanItemContainerFilteringTest extends TestBase {
             position = new TextField("Position:", "0");
             vl.addComponent(position);
 
-            final Button addItemAtButton = new Button("addItemAt()",
-                    event -> {
-                        int index = Integer.parseInt(position.getValue());
-                        TestBean bean = new TestBean("addItemAt() " + nextToAdd,
-                                "value " + nextToAdd);
-                        Item item = container.addItemAt(index, bean);
-                        if (item == null) {
-                            getMainWindow()
-                                    .showNotification("Adding item at index "
-                                            + position.getValue() + " failed");
-                        }
-                        nextToAdd++;
-                        nextLabel.setCaption("Next id: " + nextToAdd);
-                    });
+            final Button addItemAtButton = new Button("addItemAt()", event -> {
+                int index = Integer.parseInt(position.getValue());
+                TestBean bean = new TestBean("addItemAt() " + nextToAdd,
+                        "value " + nextToAdd);
+                Item item = container.addItemAt(index, bean);
+                if (item == null) {
+                    getMainWindow().showNotification("Adding item at index "
+                            + position.getValue() + " failed");
+                }
+                nextToAdd++;
+                nextLabel.setCaption("Next id: " + nextToAdd);
+            });
             vl.addComponent(addItemAtButton);
 
             getLayout().addComponent(table);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -83,10 +83,8 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
                         }
                     } else {
                         if (widget.fileIdToReceiver.containsKey(fileId)
-                                && receiverUrl != null
-                                && !receiverUrl
-                                        .equals(widget.fileIdToReceiver
-                                                .get(fileId))) {
+                                && receiverUrl != null && !receiverUrl.equals(
+                                        widget.fileIdToReceiver.get(fileId))) {
                             getLogger().severe(
                                     "Overwriting file receiver mapping for fileId "
                                             + fileId + " . Old receiver URL: "

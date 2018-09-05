@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -55,9 +55,8 @@ import com.vaadin.shared.EventId;
  */
 public abstract class VAbstractTextualDate<R extends Enum<R>>
         extends VDateField<R>
-        implements ChangeHandler, Focusable,
-        SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
-        HandlesAriaRequired, KeyDownHandler {
+        implements ChangeHandler, Focusable, SubPartAware, HandlesAriaCaption,
+        HandlesAriaInvalid, HandlesAriaRequired, KeyDownHandler {
 
     private static final String PARSE_ERROR_CLASSNAME = "-parseerror";
     private static final String ISO_DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
@@ -86,10 +85,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         super(resoluton);
         text = new TextBox();
         text.addChangeHandler(this);
-        text.addFocusHandler(
-                event -> fireBlurFocusEvent(event, true));
-        text.addBlurHandler(
-                event -> fireBlurFocusEvent(event, false));
+        text.addFocusHandler(event -> fireBlurFocusEvent(event, true));
+        text.addBlurHandler(event -> fireBlurFocusEvent(event, false));
         if (BrowserInfo.get().isIE()) {
             addDomHandler(this, KeyDownEvent.getType());
         }
@@ -227,8 +224,19 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void onChange(ChangeEvent event) {
+        updateBufferedValues();
+        sendBufferedValues();
+    }
+
+    @Override
+    public void updateBufferedValues() {
+        updateDate();
+        bufferedDateString = text.getText();
+        updateBufferedResolutions();
+    }
+
+    private void updateDate() {
         if (!text.getText().isEmpty()) {
             try {
                 String enteredDate = text.getText();
@@ -259,10 +267,6 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             // remove possibly added invalid value indication
             removeStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
         }
-
-        // always send the date string
-        bufferedDateString = text.getText();
-        updateAndSendBufferedValues();
     }
 
     /**
@@ -270,7 +274,10 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * then {@link #sendBufferedValues() sends} the values to the server.
      *
      * @since 8.2
+     * @deprecated Use {@link #updateBufferedResolutions()} and
+     *             {@link #sendBufferedValues()} instead.
      */
+    @Deprecated
     protected final void updateAndSendBufferedValues() {
         updateBufferedResolutions();
         sendBufferedValues();
@@ -285,8 +292,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * method.
      *
      * <p>
-     * Note that this method should not send the buffered values, but use
-     * {@link #updateAndSendBufferedValues()} instead
+     * Note that this method should not send the buffered values. For that, use
+     * {@link #sendBufferedValues()}.
      *
      * @since 8.2
      */
@@ -399,8 +406,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         }
     }
 
-    private void fireBlurFocusEvent(DomEvent<?> event,
-            boolean focus) {
+    private void fireBlurFocusEvent(DomEvent<?> event, boolean focus) {
         String styleName = VTextField.CLASSNAME + "-"
                 + VTextField.CLASSNAME_FOCUS;
         if (focus) {
@@ -482,7 +488,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             date = getIsoFormatter().parse(isoDate);
         }
         setDate(date);
-        updateAndSendBufferedValues();
+        updateBufferedResolutions();
+        sendBufferedValues();
     }
 
     /**

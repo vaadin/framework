@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.datefield;
 
 import static com.vaadin.tests.components.datefield.DateTimeFieldZoneId.INITIAL_DATE_TIME;
@@ -27,33 +12,29 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.TimeZone;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.DateTimeFieldElement;
 import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateTimeFieldZoneIdTest extends MultiBrowserTest {
 
-    private static TimeZone defaultTimeZone;
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // IE11 and PhantomJS don't support getting timezone
+        return getBrowserCapabilities(Browser.CHROME, Browser.FIREFOX);
+    }
+
     private static LocalDateTime THIRTY_OF_JULY = INITIAL_DATE_TIME
             .plus(6, MONTHS).withDayOfMonth(30);
-
-    @BeforeClass
-    public static void init() {
-        defaultTimeZone = TimeZone.getDefault();
-        TimeZone.setDefault(TimeZone.getTimeZone("Brazil/Acre"));
-    }
-
-    @AfterClass
-    public static void cleanup() {
-        TimeZone.setDefault(defaultTimeZone);
-    }
 
     @Test
     public void defaultDisplayName() {
@@ -172,11 +153,18 @@ public class DateTimeFieldZoneIdTest extends MultiBrowserTest {
      *
      * The {@link ZoneId} used is the operating system default
      */
-    private static String getUTCString(LocalDate localDate) {
-        Instant instant = localDate.atStartOfDay()
-                .atZone(defaultTimeZone.toZoneId()).toInstant();
+    private String getUTCString(LocalDate localDate) {
+        // Get the TimeZone from browser
+        String browserTimeZone = ((JavascriptExecutor) getDriver())
+                .executeScript(
+                        "return Intl.DateTimeFormat().resolvedOptions().timeZone;")
+                .toString();
+
+        TimeZone timeZone = TimeZone.getTimeZone(browserTimeZone);
+        Instant instant = localDate.atStartOfDay().atZone(timeZone.toZoneId())
+                .toInstant();
         Duration duration = Duration
-                .ofMillis(defaultTimeZone.getOffset(instant.toEpochMilli()));
+                .ofMillis(timeZone.getOffset(instant.toEpochMilli()));
 
         String suffix;
         if (duration.toMinutes() == 0) {

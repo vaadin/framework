@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -138,7 +138,8 @@ public class SystemMessages implements Serializable {
      */
     public String getCommunicationErrorCaption() {
         return (communicationErrorNotificationEnabled
-                ? communicationErrorCaption : null);
+                ? communicationErrorCaption
+                : null);
     }
 
     /**
@@ -147,7 +148,8 @@ public class SystemMessages implements Serializable {
      */
     public String getCommunicationErrorMessage() {
         return (communicationErrorNotificationEnabled
-                ? communicationErrorMessage : null);
+                ? communicationErrorMessage
+                : null);
     }
 
     /**
@@ -170,7 +172,8 @@ public class SystemMessages implements Serializable {
      */
     public String getAuthenticationErrorCaption() {
         return (authenticationErrorNotificationEnabled
-                ? authenticationErrorCaption : null);
+                ? authenticationErrorCaption
+                : null);
     }
 
     /**
@@ -179,7 +182,8 @@ public class SystemMessages implements Serializable {
      */
     public String getAuthenticationErrorMessage() {
         return (authenticationErrorNotificationEnabled
-                ? authenticationErrorMessage : null);
+                ? authenticationErrorMessage
+                : null);
     }
 
     /**

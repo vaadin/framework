@@ -4,9 +4,12 @@ order: 56
 layout: page
 ---
 
+[NOTE]
+*Partially outdated*:
+This article was written before Vaadin 7.3, and is referring to the previous default theme, Reindeer. The visual appearance of read-only fields is different in the newer default theme, Valo. In Valo, read-only fields retain the border around the input field.
+
 [[read-only-vs-disabled-fields]]
-Read-only vs Disabled fields
-----------------------------
+= Read-only vs Disabled fields
 
 Vaadin input field components have both a _disabled_ and a _read-only_
 state (which can be set through the *setEnabled(false)* and

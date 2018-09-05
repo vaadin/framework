@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -1118,6 +1118,8 @@ public class Upload extends AbstractComponent
                     fireUploadSuccess(event.getFileName(), event.getMimeType(),
                             event.getContentLength());
                     endUpload();
+                    if (lastStartedEvent != null)
+                        lastStartedEvent.disposeStreamVariable();
                 }
 
                 @Override
@@ -1136,6 +1138,8 @@ public class Upload extends AbstractComponent
                         }
                     } finally {
                         endUpload();
+                        if (lastStartedEvent != null)
+                            lastStartedEvent.disposeStreamVariable();
                     }
                 }
             };
@@ -1198,4 +1202,35 @@ public class Upload extends AbstractComponent
     protected UploadState getState(boolean markAsDirty) {
         return (UploadState) super.getState(markAsDirty);
     }
+
+    /**
+     * Returns the component's list of accepted content-types. According to RFC
+     * 1867, the attributeis present, the browser might constrain the file
+     * patterns prompted for to match those with the corresponding appropriate
+     * file extensions for the platform.
+     *
+     * @return comma-separated list of desired mime types to be uploaded
+     * @see #setAcceptMimeTypes
+     * @since 8.5
+     */
+    public String getAcceptMimeTypes() {
+        return getState(false).acceptMimeTypes;
+    }
+
+    /**
+     * Sets the component's list of accepted content-types. According to RFC
+     * 1867, the attributeis present, the browser might constrain the file
+     * patterns prompted for to match those with the corresponding appropriate
+     * file extensions for the platform. Good examples are: {@code image/*} or
+     * {@code image/png,text/plain}
+     *
+     * @param acceptMimeTypes
+     *            comma-separated list of desired mime types to be uploaded
+     * @see #getAcceptMimeTypes
+     * @since 8.5
+     */
+    public void setAcceptMimeTypes(String acceptMimeTypes) {
+        getState().acceptMimeTypes = acceptMimeTypes;
+    }
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,21 +35,25 @@ import com.vaadin.ui.InlineDateTimeField;
  * @author Vaadin Ltd
  * @since 8.0
  */
-public class LocalDateTimeToDateConverter implements Converter<LocalDateTime, Date> {
+public class LocalDateTimeToDateConverter
+        implements Converter<LocalDateTime, Date> {
 
     private ZoneId zoneId;
 
     /**
      * Creates a new converter using the given time zone.
      *
-     * @param zoneId the time zone to use, not <code>null</code>
+     * @param zoneId
+     *            the time zone to use, not <code>null</code>
      */
     public LocalDateTimeToDateConverter(ZoneId zoneId) {
-        this.zoneId = Objects.requireNonNull(zoneId, "Zone identifier cannot be null");
+        this.zoneId = Objects.requireNonNull(zoneId,
+                "Zone identifier cannot be null");
     }
 
     @Override
-    public Result<Date> convertToModel(LocalDateTime localDate, ValueContext context) {
+    public Result<Date> convertToModel(LocalDateTime localDate,
+            ValueContext context) {
         if (localDate == null) {
             return Result.ok(null);
         }
@@ -58,12 +62,14 @@ public class LocalDateTimeToDateConverter implements Converter<LocalDateTime, Da
     }
 
     @Override
-    public LocalDateTime convertToPresentation(Date date, ValueContext context) {
+    public LocalDateTime convertToPresentation(Date date,
+            ValueContext context) {
         if (date == null) {
             return null;
         }
 
-        return Instant.ofEpochMilli(date.getTime()).atZone(zoneId).toLocalDateTime();
+        return Instant.ofEpochMilli(date.getTime()).atZone(zoneId)
+                .toLocalDateTime();
     }
 
 }

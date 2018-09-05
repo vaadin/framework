@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[developing-portlets-for-the-websphere-portal-server]]
-Developing portlets for the Websphere Portal Server
----------------------------------------------------
+= Developing portlets for the Websphere Portal Server
 
 When creating portlets for the Websphere Portal Server (aka WPS) you
 have the choice between different frameworks

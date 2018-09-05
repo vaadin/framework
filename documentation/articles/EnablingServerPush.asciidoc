@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[enabling-server-push]]
-Enabling server push
---------------------
+= Enabling server push
 
 The traditional way of communication between client and server in Vaadin
 has been through XHR, i.e. AJAX requests. The client does a request to

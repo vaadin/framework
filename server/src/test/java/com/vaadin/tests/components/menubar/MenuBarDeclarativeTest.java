@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.menubar;
 
 import static org.junit.Assert.assertNotNull;
@@ -78,13 +63,15 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
                 + "<menu descriptioncontentmode=\"TEXT\" description=\"Just plain text\">plain text</menu>"
                 + "</vaadin-menu-bar>";
         MenuBar menuBar = new MenuBar();
-        menuBar.addItem("One", null).setDescription("This description is implicitly preformatted");
-        menuBar.addItem("preformatted", null)
-                .setDescription("This description\nis explicitly\n\npreformatted", ContentMode.PREFORMATTED);
-        menuBar.addItem("HTML", null)
-                .setDescription("<b>I</b> contain <br/> <e>html</e>", ContentMode.HTML);
-        menuBar.addItem("plain text", null)
-                .setDescription("Just plain text", ContentMode.TEXT);
+        menuBar.addItem("One", null)
+                .setDescription("This description is implicitly preformatted");
+        menuBar.addItem("preformatted", null).setDescription(
+                "This description\nis explicitly\n\npreformatted",
+                ContentMode.PREFORMATTED);
+        menuBar.addItem("HTML", null).setDescription(
+                "<b>I</b> contain <br/> <e>html</e>", ContentMode.HTML);
+        menuBar.addItem("plain text", null).setDescription("Just plain text",
+                ContentMode.TEXT);
 
         testWrite(design, menuBar);
         testRead(design, menuBar);
@@ -192,7 +179,8 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
                 actual.getDescription());
         assertEquals(baseError + "Style Name", expected.getStyleName(),
                 actual.getStyleName());
-        assertEquals(baseError + "Content Mode", expected.getDescriptionContentMode(),
+        assertEquals(baseError + "Content Mode",
+                expected.getDescriptionContentMode(),
                 actual.getDescriptionContentMode());
 
         if (expected.getIcon() != null) {

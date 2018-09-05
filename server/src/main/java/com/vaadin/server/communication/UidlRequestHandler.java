@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -164,7 +164,8 @@ public class UidlRequestHandler extends SynchronizedRequestHandler
         SystemMessages systemMessages = service.getSystemMessages(
                 ServletPortletHelper.findLocale(null, null, request), request);
 
-        service.writeStringResponse(response, JsonConstants.JSON_CONTENT_TYPE,
+        service.writeUncachedStringResponse(response,
+                JsonConstants.JSON_CONTENT_TYPE,
                 VaadinService.createCriticalNotificationJSON(
                         systemMessages.getSessionExpiredCaption(),
                         systemMessages.getSessionExpiredMessage(), null,

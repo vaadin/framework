@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[enable-and-disable-buttons-to-indicate-state]]
-Enable and disable buttons to indicate state
---------------------------------------------
+= Enable and disable buttons to indicate state
 
 Most user interfaces have actions that can only be performed if certain
 conditions are met. In other cases, the actions can be performed at any

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -578,7 +578,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 SystemMessages systemMessages = getService().getSystemMessages(
                         ServletPortletHelper.findLocale(null, null, request),
                         request);
-                getService().writeStringResponse(response,
+                getService().writeUncachedStringResponse(response,
                         JsonConstants.JSON_CONTENT_TYPE,
                         VaadinService.createCriticalNotificationJSON(
                                 systemMessages.getCookiesDisabledCaption(),
@@ -625,7 +625,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         if (ServletPortletHelper.isUIDLRequest(request)) {
             String output = VaadinService.createCriticalNotificationJSON(
                     caption, message, details, url);
-            getService().writeStringResponse(response,
+            getService().writeUncachedStringResponse(response,
                     JsonConstants.JSON_CONTENT_TYPE, output);
         } else {
             // Create an HTML reponse with the error
@@ -649,7 +649,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             if (url != null) {
                 output += "</a>";
             }
-            getService().writeStringResponse(response,
+            getService().writeUncachedStringResponse(response,
                     ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8, output);
         }
     }
@@ -772,13 +772,17 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * resource to the client.
      *
      * @param request
+     *            The request
      * @param response
-     * @return true if a file was served and the request has been handled, false
-     *         otherwise.
+     *            The response
+     * @return {@code true} if a file was served and the request has been
+     *         handled; {@code false} otherwise.
      * @throws IOException
      * @throws ServletException
+     *
+     * @since 8.5
      */
-    private boolean serveStaticResources(HttpServletRequest request,
+    protected boolean serveStaticResources(HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException {
 
         String filePath = getStaticFilePath(request);
@@ -796,11 +800,15 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @param filename
      *            The filename to serve. Should always start with /VAADIN/.
      * @param request
+     *            The request
      * @param response
+     *            The response
      * @throws IOException
      * @throws ServletException
+     *
+     * @since 8.5
      */
-    private void serveStaticResourcesInVAADIN(String filename,
+    protected void serveStaticResourcesInVAADIN(String filename,
             HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
@@ -896,19 +904,15 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * web.xml using resourceCacheTime (defaults to 1 hour).
      *
      * @param filename
+     *            the filename
      * @return cache lifetime for the given filename in seconds
      */
     protected int getCacheTime(String filename) {
-        /*
-         * GWT conventions:
-         *
-         * - files containing .nocache. will not be cached.
-         *
-         * - files containing .cache. will be cached for one year.
-         *
-         * https://developers.google.com/web-toolkit/doc/latest/
-         * DevGuideCompilingAndDebugging#perfect_caching
-         */
+        // GWT conventions:
+        // - files containing .nocache. will not be cached.
+        // - files containing .cache. will be cached for one year.
+        // https://developers.google.com/web-toolkit/doc/latest/DevGuideCompilingAndDebugging#perfect_caching
+
         if (filename.contains(".nocache.")) {
             return 0;
         }
@@ -1432,7 +1436,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Override
     public void destroy() {
         super.destroy();
-        getService().destroy();
+        if (getService() != null) {
+            getService().destroy();
+        }
     }
 
     private static void persistCacheEntry(ScssCacheEntry cacheEntry) {

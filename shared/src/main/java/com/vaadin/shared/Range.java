@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,6 +31,9 @@ import java.io.Serializable;
  * @author Vaadin Ltd
  */
 public final class Range implements Serializable {
+
+    private static final Range EMPTY = Range.withLength(0, 0);
+
     private final int start;
     private final int end;
 
@@ -88,6 +91,10 @@ public final class Range implements Serializable {
             throw new IllegalArgumentException("length must not be negative");
         }
         return new Range(start, start + length);
+    }
+
+    public static Range emptyRange() {
+        return EMPTY;
     }
 
     /**
@@ -291,8 +298,7 @@ public final class Range implements Serializable {
      *
      * @param other
      *            the other range to compare against
-     * @return <code>true</code> if this range ends after the
-     *         <code>other</code>
+     * @return <code>true</code> if this range ends after the <code>other</code>
      */
     public boolean endsAfter(final Range other) {
         return getEnd() > other.getEnd();

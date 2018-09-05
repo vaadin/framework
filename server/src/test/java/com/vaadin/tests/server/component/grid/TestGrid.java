@@ -5,6 +5,7 @@ import com.vaadin.ui.Grid;
 
 /**
  * {@link Grid} class for testing purposes
+ *
  * @param <T>
  *            the grid bean type
  */

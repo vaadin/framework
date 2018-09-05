@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[access-control-for-views]]
-Access control for views
-------------------------
+= Access control for views
 
 The Navigator API provides a simple mechanism to allow or disallow
 navigating to a View. Before a View is shown, each ViewChangeListener

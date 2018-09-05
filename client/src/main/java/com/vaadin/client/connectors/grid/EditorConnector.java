@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -66,19 +66,17 @@ public class EditorConnector extends AbstractExtensionConnector {
                 public void bind(final int rowIndex) {
                     // call this deferred to avoid issues with editing on init
                     Scheduler.get().scheduleDeferred(() -> {
-                        currentEditedRow = rowIndex;
-                        // might need to wait for available data,
-                        // if data is available, ensureAvailability will immediately trigger the handler anyway,
-                        // so no need for alternative "immediately available" logic
-                        waitingForAvailableData = true;
-                        getParent().getDataSource().ensureAvailability(rowIndex, 1);
+                        getParent().getWidget().editRow(rowIndex);
                     });
                 }
 
                 @Override
                 public void cancel() {
-                    serverInitiated = true;
-                    getParent().getWidget().cancelEditor();
+                    // Canceling an editor that is not open is a no-op.
+                    if (getParent().getWidget().isEditorActive()) {
+                        serverInitiated = true;
+                        getParent().getWidget().cancelEditor();
+                    }
                 }
 
                 @Override
@@ -199,7 +197,17 @@ public class EditorConnector extends AbstractExtensionConnector {
 
     @OnStateChange("enabled")
     void updateEnabled() {
-        getParent().getWidget().getEditor().setEnabled(getState().enabled);
+        boolean enabled = getState().enabled;
+
+        Scheduler.ScheduledCommand setEnabledCommand = () -> {
+            getParent().getWidget().getEditor().setEnabled(enabled);
+        };
+
+        if (!enabled) {
+            Scheduler.get().scheduleFinally(setEnabledCommand);
+        } else {
+            setEnabledCommand.execute();
+        }
     }
 
     @OnStateChange("saveCaption")
@@ -218,13 +226,6 @@ public class EditorConnector extends AbstractExtensionConnector {
     protected void extend(ServerConnector target) {
         Grid<JsonObject> grid = getParent().getWidget();
         grid.getEditor().setHandler(new CustomEditorHandler());
-        grid.addDataAvailableHandler((event) -> {
-            Range range = event.getAvailableRows();
-            if (waitingForAvailableData && currentEditedRow != null && range.contains(currentEditedRow)) {
-                getParent().getWidget().editRow(currentEditedRow);
-                waitingForAvailableData = false;
-            }
-        });
     }
 
     @Override

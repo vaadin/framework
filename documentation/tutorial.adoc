@@ -120,7 +120,7 @@ Enter the following values:
 [guilabel]#Artifact ID#::
  Give `vaadin-archetype-application`
 [guilabel]#Version#::
- You can find the latest Vaadin version number from http://vaadin.com/download/[vaadin.com/download].
+ You can find the latest Vaadin version number from https://vaadin.com/framework/releases[vaadin.com/framework/releases].
 [guilabel]#Repository URL#::
  This can be left blank.
 
@@ -444,13 +444,13 @@ to the init method, for example right after your _filterText_ configuration:
 
 [source,java]
 ----
-Button clearFilterTextBtn = new Button(FontAwesome.TIMES);
+Button clearFilterTextBtn = new Button(VaadinIcons.CLOSE);
 clearFilterTextBtn.setDescription("Clear the current filter");
 clearFilterTextBtn.addClickListener(e -> filterText.clear());
 ----
 
 Vaadin contains a set of built in icons, from which we use the "X" icon,
-_FontAwesome.TIMES_, here, which most users will recognise as a functionality to clear
+_VaadinIcons.CLOSE_, here, which most users will recognise as a functionality to clear
 the value. If we set the description to a component, it will be shown as a
 tooltip for those users who hover the cursor over the button and wonder what to
 do with it. In the click listener, we simply clear the text from the field.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -50,6 +50,37 @@ import com.vaadin.shared.util.SharedUtil;
  * Utility methods which are related to client side code only.
  */
 public class WidgetUtil {
+
+    /**
+     * Simple object to store another object.
+     *
+     * @param <T>
+     *            the object type to store
+     * @since 8.4
+     */
+    public static class Reference<T> {
+
+        T reference = null;
+
+        /**
+         * Gets the current object.
+         *
+         * @return the stored object
+         */
+        public T get() {
+            return reference;
+        }
+
+        /**
+         * Sets the current object.
+         *
+         * @param reference
+         *            the object to store
+         */
+        public void set(T reference) {
+            this.reference = reference;
+        }
+    }
 
     /**
      * Helper method for debugging purposes.
@@ -457,7 +488,7 @@ public class WidgetUtil {
             final int scrollleft = elem.getScrollLeft();
             elem.getStyle().setProperty("overflow", "hidden");
 
-            Scheduler.get().scheduleDeferred(() -> {
+            Scheduler.get().scheduleFinally(() -> {
                 // Dough, Safari scroll auto means actually just a moped
                 elem.getStyle().setProperty("overflow", originalOverflow);
                 if (!originalOverflowX.isEmpty()) {
@@ -885,8 +916,10 @@ public class WidgetUtil {
             EventListener eventListener = null;
             while (eventListener == null && element != null) {
                 eventListener = Event.getEventListener(element);
-                if (eventListener == null) {
+                if (eventListener == null
+                        || !(eventListener instanceof Widget)) {
                     element = element.getParentElement();
+                    eventListener = null;
                 }
             }
             if (eventListener instanceof Widget) {
@@ -1864,6 +1897,26 @@ public class WidgetUtil {
     public static native boolean isString(Object obj)
     /*-{
         return typeof obj === 'string' || obj instanceof String;
+    }-*/;
+
+    /**
+     * Returns whether the given element is displayed.
+     * <p>
+     * This method returns false if either the given element or any of its
+     * ancestors has the style {@code display: none} applied.
+     *
+     * @param element
+     *            the element to test for visibility
+     * @return {@code true} if the element is displayed, {@code false} otherwise
+     * @since 8.3.2
+     */
+    public static native boolean isDisplayed(Element element)
+    /*-{
+        // This measurement is borrowed from JQuery and measures the visible
+        // size of the element. The measurement should return false when either
+        // the element or any of its ancestors has "display: none" style.
+        return !!(element.offsetWidth || element.offsetHeight
+            || element.getClientRects().length);
     }-*/;
 
     /**

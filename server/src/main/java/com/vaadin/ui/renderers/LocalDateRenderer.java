@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,6 +20,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 
+import com.vaadin.data.util.BeanUtil;
+import com.vaadin.server.SerializableSupplier;
 import com.vaadin.shared.ui.grid.renderers.LocalDateRendererState;
 
 import elemental.json.JsonValue;
@@ -32,7 +34,7 @@ import elemental.json.JsonValue;
  */
 public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
 
-    private DateTimeFormatter formatter;
+    private SerializableSupplier<DateTimeFormatter> formatterSupplier;
     private boolean getLocaleFromGrid;
 
     /**
@@ -47,7 +49,7 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
      *      FormatStyle.LONG</a>
      */
     public LocalDateRenderer() {
-        this(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG), "");
+        this(() -> DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG), "");
         getLocaleFromGrid = true;
     }
 
@@ -133,7 +135,8 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
             throw new IllegalArgumentException("locale may not be null");
         }
 
-        formatter = DateTimeFormatter.ofPattern(formatPattern, locale);
+        formatterSupplier = () -> DateTimeFormatter.ofPattern(formatPattern,
+                locale);
     }
 
     /**
@@ -142,12 +145,21 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
      * The renderer is configured to render with the given formatter, with an
      * empty string as its null representation.
      *
+     * <p>
+     * <b>Note</b> the {@code DateTimeFormatter} is not a serializable class, so
+     * using this method in an environment which requires session persistence
+     * may produce {@link java.io.NotSerializableException}.
+     *
      * @param formatter
      *            the formatter to use, not {@code null}
      *
      * @throws IllegalArgumentException
      *             if formatter is null
+     * @deprecated the method is unsafe for serialization, may produce troubles
+     *             in a cluster environment
+     * @see #LocalDateRenderer(SerializableSupplier)
      */
+    @Deprecated
     public LocalDateRenderer(DateTimeFormatter formatter) {
         this(formatter, "");
     }
@@ -155,7 +167,55 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
     /**
      * Creates a new LocalDateRenderer.
      * <p>
+     * The renderer is configured to render with the given formatterSupplier.
+     *
+     * @param formatterSupplier
+     *            the formatterSupplier supplier to use, not {@code null}, it
+     *            should not supply {@code null} either
+     * @param nullRepresentation
+     *            the textual representation of the {@code null} value
+     *
+     * @throws IllegalArgumentException
+     *             if formatterSupplier is null
+     */
+    public LocalDateRenderer(
+            SerializableSupplier<DateTimeFormatter> formatterSupplier,
+            String nullRepresentation) {
+        super(LocalDate.class, nullRepresentation);
+
+        if (formatterSupplier == null) {
+            throw new IllegalArgumentException(
+                    "formatterSupplier may not be null");
+        }
+        this.formatterSupplier = formatterSupplier;
+        assert BeanUtil.checkSerialization(formatterSupplier);
+    }
+
+    /**
+     * Creates a new LocalDateRenderer.
+     * <p>
+     * The renderer is configured to render with the given formatterSupplier.
+     *
+     * @param formatterSupplier
+     *            the formatterSupplier supplier to use, not {@code null}, it
+     *            should not supply {@code null} either
+     * @throws IllegalArgumentException
+     *             if formatterSupplier is null
+     */
+    public LocalDateRenderer(
+            SerializableSupplier<DateTimeFormatter> formatterSupplier) {
+        this(formatterSupplier, "");
+    }
+
+    /**
+     * Creates a new LocalDateRenderer.
+     * <p>
      * The renderer is configured to render with the given formatter.
+     *
+     * <p>
+     * <b>Note</b> the {@code DateTimeFormatter} is not a serializable class, so
+     * using this method in an environment which requires session persistence
+     * may produce {@link java.io.NotSerializableException}.
      *
      * @param formatter
      *            the formatter to use, not {@code null}
@@ -164,7 +224,11 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
      *
      * @throws IllegalArgumentException
      *             if formatter is null
+     * @deprecated the method is unsafe for serialization, may produce troubles
+     *             in acluster environment
+     * @see #LocalDateRenderer(SerializableSupplier, String)
      */
+    @Deprecated
     public LocalDateRenderer(DateTimeFormatter formatter,
             String nullRepresentation) {
         super(LocalDate.class, nullRepresentation);
@@ -173,7 +237,7 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
             throw new IllegalArgumentException("formatter may not be null");
         }
 
-        this.formatter = formatter;
+        this.formatterSupplier = () -> formatter;
     }
 
     @Override
@@ -188,10 +252,10 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
                                 + "this renderer should either be attached to a grid "
                                 + "or constructed with locale information");
             }
-            dateString = value
-                    .format(formatter.withLocale(getParentGrid().getLocale()));
+            dateString = value.format(formatterSupplier.get()
+                    .withLocale(getParentGrid().getLocale()));
         } else {
-            dateString = value.format(formatter);
+            dateString = value.format(formatterSupplier.get());
         }
         return encode(dateString, String.class);
     }
@@ -205,4 +269,5 @@ public class LocalDateRenderer extends AbstractRenderer<Object, LocalDate> {
     protected LocalDateRendererState getState(boolean markAsDirty) {
         return (LocalDateRendererState) super.getState(markAsDirty);
     }
+
 }

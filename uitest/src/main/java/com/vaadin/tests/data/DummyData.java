@@ -47,8 +47,6 @@ public class DummyData extends AbstractTestUIWithLog {
     public static class DummyComponent extends AbstractSingleSelect<String>
             implements HasDataProvider<String> {
 
-        private String selected;
-
         private DummyComponent() {
             addDataGenerator((str, json) -> {
                 json.put(DataCommunicatorConstants.DATA, str);
@@ -56,22 +54,6 @@ public class DummyData extends AbstractTestUIWithLog {
                     json.put(DataCommunicatorConstants.SELECTED, true);
                 }
             });
-        }
-
-        @Override
-        public Optional<String> getSelectedItem() {
-            return Optional.ofNullable(selected);
-        }
-
-        @Override
-        public void setValue(String item) {
-            if (selected != null) {
-                getDataCommunicator().refresh(selected);
-            }
-            selected = item;
-            if (selected != null) {
-                getDataCommunicator().refresh(selected);
-            }
         }
 
         @Override
@@ -98,12 +80,10 @@ public class DummyData extends AbstractTestUIWithLog {
 
         HorizontalLayout controls = new HorizontalLayout();
         addComponent(controls);
-        controls.addComponent(
-                new Button("Select Foo 20",
-                        event -> dummy.setValue("Foo " + 20)));
-        controls.addComponent(new Button("Reset data provider",
-                event -> dummy
-                        .setDataProvider(new LoggingDataProvider(items))));
+        controls.addComponent(new Button("Select Foo 20",
+                event -> dummy.setValue("Foo " + 20)));
+        controls.addComponent(new Button("Reset data provider", event -> dummy
+                .setDataProvider(new LoggingDataProvider(items))));
         controls.addComponent(
                 new Button("Remove all data", event -> dummy.setDataProvider(
                         new LoggingDataProvider(Collections.emptyList()))));

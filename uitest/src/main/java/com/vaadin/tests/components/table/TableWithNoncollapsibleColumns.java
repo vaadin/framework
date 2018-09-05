@@ -30,23 +30,21 @@ public class TableWithNoncollapsibleColumns extends TestBase {
 
         final Button button1 = new Button("Column 1: collapse/show",
                 event -> table.setColumnCollapsed("Column 1 - noncollapsible",
-                                !table.isColumnCollapsed(
-                                "Column 1 - noncollapsible")));
+                        !table.isColumnCollapsed("Column 1 - noncollapsible")));
         final Button button2 = new Button("Column 2: collapse/show",
                 event -> table.setColumnCollapsed("Column 2 - collapsible",
-                                !table.isColumnCollapsed(
-                                "Column 2 - collapsible")));
+                        !table.isColumnCollapsed("Column 2 - collapsible")));
 
         final Button button3 = new Button("Column 3: collapse/show",
                 event -> table.setColumnCollapsed(
                         "Column 3 - toggle collapsing",
-                                !table.isColumnCollapsed(
+                        !table.isColumnCollapsed(
                                 "Column 3 - toggle collapsing")));
         final Button button4 = new Button(
                 "Column 3: make noncollapsible/collapsible",
                 event -> table.setColumnCollapsible(
-                                "Column 3 - toggle collapsing",
-                                !table.isColumnCollapsible(
+                        "Column 3 - toggle collapsing",
+                        !table.isColumnCollapsible(
                                 "Column 3 - toggle collapsing")));
 
         layout.addComponent(button1);

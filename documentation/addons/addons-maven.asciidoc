@@ -78,14 +78,14 @@ image::img/directory-activate.png[width=50%, scaledwidth=70%]
 +
 For official Vaadin add-ons, see <<addons-cval#addons.cval, "Installing Commercial Vaadin Add-on License">> for more information.
 
-. _In Vaadin 7.6 and older_: You need to compile the widget set as described in <<addons.maven.compiling>>.
+. _In Vaadin 7.6 and older_: You need to configure the widget set as described in <<addons.maven.compiling>>.
 
 [[addons.maven.compiling]]
-== Compiling the Application Widget Set
+== Configuring the Application Widget Set
 
 [NOTE]
 ====
-The widget set is automatically compiled in Vaadin 7.7 and later.
+The widget set is automatically configured in Vaadin 7.7 and later.
 The plugin will attempt to detect any add-ons that need the widget set to be compiled.
 
 Just note that it can take a bit time to compile.
@@ -94,10 +94,10 @@ To speed up, instead of compiling it locally, you can also use a public cloud se
 See <<addons.maven.modes>> for instructions.
 ====
 
-In projects that use Vaadin 7.6 or older, you need to manually compile the widget set as follows.
+In projects that use Vaadin 7.6 or older, you need to manually configure the widget set as follows.
 
 [[addons.maven.widgetset]]
-=== Enabling Widget Set Compilation
+=== Configuring Widget Set Compilation
 
 Compiling the widget set in Maven projects requires the Vaadin Maven plugin.
 It is included in Maven projects created with a current Vaadin archetype.
