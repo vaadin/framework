@@ -65,12 +65,12 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     private static final String BROWSERS_EXCLUDE = "browsers.exclude";
     private static final String CATEGORIES_INCLUDE = "categories.include";
     private static final String CATEGORIES_EXCLUDE = "categories.exclude";
+    private static final String BROWSERSTACK_IDENTIFIER = "browserstack.identifier";
 
     static {
         if (propertiesFile.exists()) {
             try {
                 properties.load(new FileInputStream(propertiesFile));
-                System.err.println("LOADED");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -84,7 +84,14 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                             + localBrowser.getVersion());
         }
 
-        String[] vars = new String[] {FIREFOX_PATH, BROWSER_FACTORY, BROWSERS_INCLUDE, BROWSERS_EXCLUDE, CATEGORIES_INCLUDE, CATEGORIES_EXCLUDE};
+        if ("true".equals(getProperty("browserstack"))) {
+            properties.setProperty(HUB_URL,
+                    "https://" + getProperty("browserstack.username") + ":"
+                            + getProperty("browserstack.key")
+                            + "@hub-cloud.browserstack.com/wd/hub");
+        }
+
+        String[] vars = new String[] {FIREFOX_PATH, BROWSER_FACTORY, BROWSERS_INCLUDE, BROWSERS_EXCLUDE, CATEGORIES_INCLUDE, CATEGORIES_EXCLUDE, BROWSERSTACK_IDENTIFIER};
 
         for (String var : vars) {
             if (properties.containsKey(var)) {
@@ -138,9 +145,13 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
             }
         }
 
-        desiredCapabilities.setCapability("project", "Vaadin Framework");
-        desiredCapabilities.setCapability("build", String.format("%s / %s",
-                getDeploymentHostname(), Calendar.getInstance().getTime()));
+        if (desiredCapabilities.getCapability("project") == null) {
+            desiredCapabilities.setCapability("project", "Vaadin Framework");
+        }
+        if (desiredCapabilities.getCapability("build") == null) {
+            desiredCapabilities.setCapability("build", String.format("%s / %s",
+                    getDeploymentHostname(), Calendar.getInstance().getTime()));
+        }
         desiredCapabilities.setCapability("name", String.format("%s.%s",
                 getClass().getCanonicalName(), testName.getMethodName()));
     }

@@ -331,6 +331,7 @@
                         <browsers.exclude>${browsers.exclude}</browsers.exclude>
                         <categories.exclude>${categories.exclude}</categories.exclude>
                         <browser.factory>${browser.factory}</browser.factory>
+                        <browserstack.identifier>${browserstack.identifier}</browserstack.identifier>
                     </systemPropertyVariables>
                 </configuration>
                 <executions>
