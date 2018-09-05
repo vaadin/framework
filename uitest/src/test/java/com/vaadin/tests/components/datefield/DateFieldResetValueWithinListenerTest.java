@@ -4,8 +4,8 @@ import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import org.junit.Test;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,7 +15,8 @@ public class DateFieldResetValueWithinListenerTest extends MultiBrowserTest {
     public void testValueReassigned() {
         openTestURL();
 
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("d.M.yyyy");
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("d.M.yyyy",
+                Locale.ENGLISH);
         String textBefore = findElement(By.tagName("input"))
                 .getAttribute("value");
         assertEquals(
