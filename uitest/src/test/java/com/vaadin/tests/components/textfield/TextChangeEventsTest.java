@@ -7,6 +7,8 @@ import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
+import static org.junit.Assert.assertTrue;
+
 public class TextChangeEventsTest extends SingleBrowserTest {
 
     @Test
@@ -43,16 +45,15 @@ public class TextChangeEventsTest extends SingleBrowserTest {
         TextFieldElement tfEager = $(TextFieldElement.class).caption("Eager")
                 .first();
         tfEager.sendKeys("abc");
-        Assert.assertEquals(
-                "2. Text change event for Eager, text content currently:'abc' Cursor at index:3",
-                getLogRow(0));
+        assertTrue(getLogRow(0).contains(
+                "Text change event for Eager, text content currently:'abc' Cursor at index:3"));
 
         TextFieldElement tfTimeout = $(TextFieldElement.class)
                 .caption("Timeout 3s").first();
         tfTimeout.sendKeys("abc");
-        Assert.assertEquals(
-                "3. Text change event for Timeout 3s, text content currently:'abc' Cursor at index:3",
-                getLogRow(0));
+        assertTrue(getLogRow(0).contains(
+                "Text change event for Timeout 3s, text content currently:'abc' Cursor at index:3"));
+                getLogRow(0);
 
     }
 }
