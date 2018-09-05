@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.testbench.Parameters;
 import org.eclipse.jgit.api.DiffCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -105,8 +106,7 @@ public class ChangedTB3TestLocator extends TB3TestLocator {
     }
 
     private String getScreenshotDirectory() {
-        return PrivateTB3Configuration
-                .getProperty(PrivateTB3Configuration.SCREENSHOT_DIRECTORY);
+        return Parameters.getScreenshotReferenceDirectory();
     }
 
     private List<DiffEntry> getDiffsInHead(Repository repository)

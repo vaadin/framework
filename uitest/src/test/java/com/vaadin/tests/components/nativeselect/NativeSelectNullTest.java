@@ -1,13 +1,12 @@
 package com.vaadin.tests.components.nativeselect;
 
+import com.vaadin.tests.tb3.SingleBrowserTest;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.NativeSelectElement;
-import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
 
-public class NativeSelectNullTest extends SingleBrowserTestPhantomJS2 {
+public class NativeSelectNullTest extends SingleBrowserTest {
     @Test
     public void selectNull() {
         openTestURL();

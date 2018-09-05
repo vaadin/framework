@@ -2,6 +2,7 @@ package com.vaadin.tests.components.listselect;
 
 import java.util.List;
 
+import com.vaadin.tests.tb3.SingleBrowserTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -11,10 +12,9 @@ import org.openqa.selenium.support.ui.Select;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.ListSelectElement;
 import com.vaadin.testbench.elements.OptionGroupElement;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
 
 public class ListSelectPushSelectionChangesTest
-        extends SingleBrowserTestPhantomJS2 {
+        extends SingleBrowserTest {
     @Test
     public void testMultiSelectBehavior() {
         openTestURL();

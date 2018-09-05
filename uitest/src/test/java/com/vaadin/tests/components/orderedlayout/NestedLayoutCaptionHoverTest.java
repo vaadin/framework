@@ -8,9 +8,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.HasInputDevices;
-import org.openqa.selenium.interactions.internal.Coordinates;
-import org.openqa.selenium.internal.Locatable;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -29,8 +27,7 @@ public class NestedLayoutCaptionHoverTest extends MultiBrowserTest {
         assertEquals("inner layout", caption.getText());
 
         // Hover over the caption
-        Coordinates coords = ((Locatable) caption).getCoordinates();
-        ((HasInputDevices) getDriver()).getMouse().mouseMove(coords);
+        new Actions(getDriver()).moveToElement(caption).perform();
         sleep(1000);
 
         String selector = "Root/VNotification[0]";

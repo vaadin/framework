@@ -21,6 +21,7 @@ import com.vaadin.ui.TextField;
 
 public class DateForm extends AbstractTestUIWithLog {
 
+    static final Date DATE = new Date(443457289789L);
     @PropertyId("date1")
     private DateField dateField;
     @PropertyId("date2")
@@ -127,9 +128,9 @@ public class DateForm extends AbstractTestUIWithLog {
         addComponent(discardButton);
         addComponent(showBean);
 
-        DateObject d = new DateObject(new Date(443457289789L),
-                new Date(443457289789L), new Date(443457289789L),
-                new Date(443457289789L));
+        DateObject d = new DateObject(DATE,
+                new Date(443543689789L), DATE,
+                DATE);
         fieldGroup.setItemDataSource(new BeanItem<DateObject>(d));
     }
 
