@@ -131,15 +131,7 @@ public class VaadinResourceTrackerComponent {
         VaadinResourceService service = OsgiVaadinResources.getService();
         Long serviceId = (Long) resourceRef.getProperty(Constants.SERVICE_ID);
         try {
-            if (resource instanceof OsgiVaadinTheme) {
-                registerTheme(service, bundle, serviceId,
-                        (OsgiVaadinTheme) resource);
-            } else if (resource instanceof OsgiVaadinWidgetset) {
-                registerWidget(service, bundle, serviceId,
-                        (OsgiVaadinWidgetset) resource);
-            } else {
-                registerResource(service, bundle, serviceId, resource);
-            }
+            registerResource(service, bundle, serviceId, resource);
         } finally {
             context.ungetService(resourceRef);
         }
