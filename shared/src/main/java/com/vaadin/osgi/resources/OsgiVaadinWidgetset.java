@@ -30,11 +30,21 @@ package com.vaadin.osgi.resources;
  *
  * @since 8.1
  */
-public interface OsgiVaadinWidgetset {
+public interface OsgiVaadinWidgetset extends OsgiVaadinResource {
     /**
      * Return the widgetset name to publish for OSGi.
      *
      * @return widgetset name, not null
      */
+    @Override
     public String getName();
+
+    public static OsgiVaadinWidgetset create(final String name) {
+        return new OsgiVaadinWidgetset() {
+            @Override
+            public String getName() {
+                return name;
+            }
+        };
+    }
 }
