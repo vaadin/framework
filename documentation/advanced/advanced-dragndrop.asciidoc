@@ -183,7 +183,7 @@ compatible browser, such as Mozilla Firefox 3.6 or newer.
 == Mobile Drag And Drop Support
 
 The HTML 5 Drag and Drop API is not yet supported by mobile browsers. To enable HTML5 DnD support on mobile devices, we have included
-an link:https://github.com/timruffles/ios-html5-drag-drop-shim/tree/rewrite:[external Polyfill]. Please note that this Polyfill is under the BSD 2 License.
+an link:https://github.com/timruffles/mobile-drag-drop[external Polyfill]. Please note that this Polyfill is under the BSD 2 License.
 
 By default, the mobile DnD support is disabled, but you can enable it any time for a [classname]#UI#. Starting from the request where the support was enabled, all the added [classname]#DragSourceExtension#, [classname]#DropTargetExtension# and their subclasses will also work on mobile devices for that UI. The Polyfill is only loaded when the user is using a touch device. 
 
@@ -420,7 +420,7 @@ When dropping on top of the grid's header or footer, the drop location will be `
 A drop target Grid's body has the style name `v-grid-body-droptarget` to indicate that it is a potential target for data to be dropped.
 
 When dragging data over a drop target Grid's row, depending on the drop mode and the mouse position relative to the row, a style name is applied to the row or to the grid body to indicate the drop location.
-When dragging on top of a row, `v-grid-row-drag-center` indicates ON_TOP, `v-grid-row-drag-top` indicates ABOVE and `v-grid-row-drag-bottom` indicates BELOW locations. When dragging on top of an empty grid, or when the drop location is ON_TOP and dragged below the last row in grid (and there is empty space visible), the `v-grid-body-body-drag-top` style is applied to the `v-grid-tablewrapper` element which surrounds the grid header, body and footer.
+When dragging on top of a row, `v-grid-row-drag-center` indicates ON_TOP, `v-grid-row-drag-top` indicates ABOVE and `v-grid-row-drag-bottom` indicates BELOW locations. When dragging on top of an empty grid, or when the drop location is ON_TOP and dragged below the last row in grid (and there is empty space visible), the `v-grid-body-drag-top` style is applied to the `v-grid-tablewrapper` element which surrounds the grid header, body and footer.
 
 (((range="endofrange", startref="term.advanced.dragndrop")))
 
