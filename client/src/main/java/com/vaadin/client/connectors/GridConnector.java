@@ -171,11 +171,22 @@ public class GridConnector extends AbstractHasComponentsConnector
 
         private HandlerRegistration errorStateHandler;
 
+        public CustomGridColumn(String id,
+                AbstractRendererConnector<Object> rendererConnector) {
+            super(rendererConnector.getRenderer());
+            this.rendererConnector = rendererConnector;
+            this.id = id;
+        }
+
+
+        /**
+         * Creates and initializes a custom grid column with attributes of given state.
+         *
+         * @param state with attributes to initialize the column.
+         */
         @SuppressWarnings("unchecked")
-        public CustomGridColumn(GridColumnState state) {
-            super(((AbstractRendererConnector<Object>) state.rendererConnector).getRenderer());
-            this.rendererConnector = (AbstractRendererConnector<Object>) state.rendererConnector;
-            this.id = state.id;
+        private CustomGridColumn(GridColumnState state) {
+            this(state.id, (AbstractRendererConnector<Object>)state.rendererConnector);
             this.hidingToggleCaption = state.hidingToggleCaption;
             this.hidden = state.hidden;
             this.hidable = state.hidable;
