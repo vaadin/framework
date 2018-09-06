@@ -141,6 +141,8 @@ public class DataCommunicator<T> extends AbstractExtension {
 
         /**
          * Marks all currently active data objects to be dropped.
+         *
+         * @since
          */
         public void dropAllActiveData() {
             activeData.forEach(this::dropActiveData);
@@ -162,6 +164,8 @@ public class DataCommunicator<T> extends AbstractExtension {
          * Returns all dropped data mapped by their id from DataProvider.
          *
          * @return map of ids to dropped data objects
+         *
+         * @since
          */
         protected Map<Object, T> getDroppedData() {
             Function<T, Object> getId = getDataProvider()::getId;

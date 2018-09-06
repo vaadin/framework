@@ -227,11 +227,12 @@ public class DataCommunicatorTest {
 
         communicator.beforeClientResponse(false);
 
-        //assert that test object is marked as removed
+        // assert that test object is marked as removed
         assertTrue("Object not marked as dropped",
                 handler.getDroppedData().containsKey(TEST_OBJECT));
 
-        communicator.setPushRows(Range.between(0, communicator.getMinPushSize()));
+        communicator
+                .setPushRows(Range.between(0, communicator.getMinPushSize()));
         communicator.beforeClientResponse(false);
 
         assertFalse("Object still mapped by key mapper",
