@@ -520,6 +520,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             Integer defaultValuePart = getValuePart(defaultValue, resolution);
             resolutions.put("default-" + resolutionName, defaultValuePart);
         }
+        updateDiffstate("resolutions", Json.createObject());
     }
 
     private Integer getValuePart(T date, R resolution) {
