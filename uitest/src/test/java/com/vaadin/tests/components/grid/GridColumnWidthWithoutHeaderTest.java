@@ -8,7 +8,7 @@ import org.openqa.selenium.By;
 import static org.junit.Assert.assertTrue;
 
 public class GridColumnWidthWithoutHeaderTest extends MultiBrowserTest {
-    public static final int THREASHOLD = 2;
+    public static final int THREASHOLD = 3;
 
     @Test
     public void testWidthWithoutHeader() {
@@ -16,10 +16,6 @@ public class GridColumnWidthWithoutHeaderTest extends MultiBrowserTest {
 
         GridElement grid = $(GridElement.class).first();
         int columnsWidth = getColWidthsRounded(grid);
-        // int gridWrapperWidth=
-        // getDriver().findElement(By.className("v-grid-tablewrapper")).getSize().getWidth();
-        System.out.println(grid.getSize().getWidth());
-        System.out.println(columnsWidth);
         assertTrue(Math
                 .abs(columnsWidth - grid.getSize().getWidth()) <= THREASHOLD);
     }
@@ -27,7 +23,7 @@ public class GridColumnWidthWithoutHeaderTest extends MultiBrowserTest {
     private int getColWidthsRounded(GridElement grid) {
         GridElement.GridRowElement firstRow = grid.getRow(0);
         int width = 0;
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             width = width + firstRow.getCell(i).getSize().getWidth();
         }
         return width;
