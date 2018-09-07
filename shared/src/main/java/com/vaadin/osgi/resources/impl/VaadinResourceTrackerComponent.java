@@ -145,7 +145,7 @@ public class VaadinResourceTrackerComponent {
         }
     }
 
-    @Reference(cardinality = ReferenceCardinality.MULTIPLE, service = OsgiVaadinResource.class, policy = ReferencePolicy.DYNAMIC)
+    @Reference(cardinality = ReferenceCardinality.MULTIPLE, service = OsgiVaadinContributor.class, policy = ReferencePolicy.DYNAMIC)
     void bindContributor(ServiceReference<OsgiVaadinContributor> contributorRef)
             throws ResourceBundleInactiveException, NamespaceException {
         Bundle bundle = contributorRef.getBundle();
