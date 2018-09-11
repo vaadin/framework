@@ -40,7 +40,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
             Paths.get(ImageFileUtil.getScreenshotErrorDirectory(),
                     browserFolder).toFile().mkdirs();
             return Paths
-                    .get(browserFolder,
+                    .get("",
                             String.format("%s-%s%s", testClassName,
                                     testName.getMethodName().replace('[', '_')
                                             .replace(']', '_'),
