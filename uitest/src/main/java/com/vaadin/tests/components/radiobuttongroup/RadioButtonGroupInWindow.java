@@ -1,9 +1,7 @@
 package com.vaadin.tests.components.radiobuttongroup;
 
-import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.TextField;
@@ -11,7 +9,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-@Widgetset(TestingWidgetSet.NAME)
 public class RadioButtonGroupInWindow extends AbstractTestUI {
     public static final String DEFAULT_DAY_TEXT_FIELD_ID = "defaultDay";
     public static final String OPEN_WINDOW_BUTTON_ID = "openWindowButton";

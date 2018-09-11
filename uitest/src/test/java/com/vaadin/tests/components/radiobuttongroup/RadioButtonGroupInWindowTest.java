@@ -1,16 +1,13 @@
 package com.vaadin.tests.components.radiobuttongroup;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.RadioButtonGroupElement;
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import org.junit.Assert;
 import org.junit.Test;
 
-@RunLocally(Browser.CHROME)
 public class RadioButtonGroupInWindowTest extends MultiBrowserTest {
     @Test
     public void radioButtonGroup_setFirstItemInWindow_valueShouldBeSet() {
