@@ -39,6 +39,7 @@ public class ResponsiveStylesTest extends MultiBrowserTest {
     @Test
     public void testValoMenuResponsiveParentSize() throws Exception {
         openTestURL();
+        waitUntilLoadingIndicatorNotVisible();
 
         List<WebElement> menus = findElements(
                 com.vaadin.testbench.By.className(MENU_STYLENAME));
@@ -50,6 +51,7 @@ public class ResponsiveStylesTest extends MultiBrowserTest {
         WebElement wideMenu = menus.get(WIDE_ELEMENT_INDEX);
         int wideWidth = wideMenu.getSize().width;
         assertThat(wideWidth, equalTo(WIDE_WIDTH));
+        wait(200);
 
         compareScreen("defaultMenuWidths");
     }
@@ -62,6 +64,7 @@ public class ResponsiveStylesTest extends MultiBrowserTest {
     @Test
     public void testValoMenuResponsiveHover() throws Exception {
         openTestURL(COLLAPSED_MENU_TEST_PARAM);
+        waitUntilLoadingIndicatorNotVisible();
 
         // Make sure mouse is not hovering the menu
         new Actions(getDriver()).moveToElement($(LabelElement.class).first())
@@ -78,6 +81,7 @@ public class ResponsiveStylesTest extends MultiBrowserTest {
         Actions actions = new Actions(getDriver());
         actions.moveToElement(toggle);
         actions.perform();
+        wait(200);
 
         compareScreen("expandedMenu");
     }
