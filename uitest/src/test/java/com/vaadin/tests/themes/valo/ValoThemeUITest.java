@@ -151,7 +151,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
     public void tabs() throws Exception {
         openTestURL("test");
         open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
-        wait(100);
+        sleep(200);
         compareScreen("tabs");
 
     }
@@ -163,7 +163,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
         check("Closable");
         check("Disable tabs");
         check("Overflow");
-        wait(100);
+        sleep(200);
         compareScreen("tabs-closable-disabled");
     }
 
@@ -175,7 +175,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
         // Framed option is checked by default so we are actually unchecking
         check("Framed");
         check("Overflow");
-        wait(100);
+        sleep(200);
         compareScreen("tabs-closable-unframed");
     }
 
@@ -184,7 +184,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
         openTestURL("test");
         open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
         check("Right-aligned tabs");
-        wait(100);
+        sleep(200);
         compareScreen("tabs-align-right");
     }
 
@@ -200,7 +200,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
         openTestURL("test");
         open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
         check("Centered tabs");
-        wait(100);
+        sleep(200);
         compareScreen("tabs-align-center");
     }
 
@@ -209,7 +209,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
         openTestURL("test");
         open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
         check("Icons on top");
-        wait(100);
+        sleep(200);
         compareScreen("tabs-icons-on-top");
     }
 
@@ -220,7 +220,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
         check("Equal-width tabs");
         check("Padded tabbar");
         check("Compact");
-        wait(100);
+
         compareScreen("tabs-equal-compact-padded");
     }
 
