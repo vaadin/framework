@@ -17,6 +17,7 @@ public class TableSortIndicatorTest extends MultiBrowserTest {
     @Test
     public void ascendingIndicatorIsShown() throws IOException {
         openTestURL();
+        waitUntilLoadingIndicatorNotVisible();
 
         clickOnCellHeader();
 
@@ -26,6 +27,7 @@ public class TableSortIndicatorTest extends MultiBrowserTest {
     @Test
     public void descendingIndicatorIsShown() throws IOException {
         openTestURL();
+        waitUntilLoadingIndicatorNotVisible();
 
         clickOnCellHeader();
         clickOnSortIndicator();
