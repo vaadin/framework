@@ -12,6 +12,7 @@ public class GridDisabledTest extends MultiBrowserTest {
     @Test
     public void disabledGrid() throws IOException {
         openTestURL();
+        waitUntilLoadingIndicatorNotVisible();
 
         $(ButtonElement.class).caption("Disable").first().click();
 

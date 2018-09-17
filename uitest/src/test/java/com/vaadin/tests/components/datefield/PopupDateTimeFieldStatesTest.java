@@ -16,12 +16,7 @@ public class PopupDateTimeFieldStatesTest extends MultiBrowserTest {
             throws IOException, InterruptedException {
         openTestURL();
 
-        // wait until loading indicator becomes invisible
-        WebElement loadingIndicator = findElement(
-                By.className("v-loading-indicator"));
-        Pattern pattern = Pattern.compile("display: *none;");
-        waitUntil(driver -> pattern
-                .matcher(loadingIndicator.getAttribute("style")).find());
+        waitUntilLoadingIndicatorNotVisible();
 
         compareScreen("dateFieldStates");
     }
