@@ -496,6 +496,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         Range newUsefulData = partition[1];
         if (!newUsefulData.isEmpty()) {
+            if (!cached.isEmpty())
+                discardStaleCacheEntries();
+
             // Update the parts that are actually inside
             int start = newUsefulData.getStart();
             for (int i = start; i < newUsefulData.getEnd(); i++) {
@@ -515,7 +518,6 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             if (cached.isEmpty()) {
                 cached = newUsefulData;
             } else {
-                discardStaleCacheEntries();
 
                 /*
                  * everything might've become stale so we need to re-check for
