@@ -9,7 +9,7 @@ public class MinimalWidthColumnsTest extends MultiBrowserTest {
     @Test
     public void testFor1pxDifference() throws Exception {
         openTestURL();
-        sleep(500);
+        waitUntilLoadingIndicatorNotVisible();
         compareScreen("onepixdifference");
     }
 
