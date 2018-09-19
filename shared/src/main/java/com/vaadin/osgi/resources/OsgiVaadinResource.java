@@ -25,6 +25,8 @@ package com.vaadin.osgi.resources;
  * registered as an OSGi service, which makes
  * <code>VaadinResourceTrackerComponent</code> automatically publish the
  * resource with the given name.
+ *
+ * @since 
  */
 public interface OsgiVaadinResource {
     /**

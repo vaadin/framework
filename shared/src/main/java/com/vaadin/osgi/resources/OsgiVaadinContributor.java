@@ -21,6 +21,8 @@ import java.util.List;
  * Used to declare multiple OsgiVaadinResources with a single OSGi component.
  * Each vaadin resource will be checked for the type (theme, widgetset,
  * resource) and registered to the OSGi context with the appropriate type.
+ *
+ * @since
  */
 public interface OsgiVaadinContributor {
     List<OsgiVaadinResource> getContributions();

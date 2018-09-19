@@ -197,6 +197,11 @@ public class VaadinResourceTrackerComponent {
         this.httpService = null;
     }
 
+    /**
+     *
+     * @throws NamespaceException
+     * @since
+     */
     @Activate
     protected void activate() throws NamespaceException {
         for(Delegate registration : resourceToRegistration.values()) {
@@ -205,6 +210,9 @@ public class VaadinResourceTrackerComponent {
         }
     }
 
+    /**
+     * @since
+     */
     @Deactivate
     protected void deactivate() {
         for(final Delegate registration : resourceToRegistration.values()) {
