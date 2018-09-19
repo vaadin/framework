@@ -63,7 +63,6 @@ public class VaadinResourceTrackerComponent {
             .synchronizedMap(new LinkedHashMap<>());
     private final Map<Long, List<ServiceRegistration<? extends OsgiVaadinResource>>> contributorToRegistrations = Collections
             .synchronizedMap(new LinkedHashMap<>());
-    
     private HttpService httpService;
 
     @Reference(cardinality = ReferenceCardinality.MULTIPLE, service = OsgiVaadinTheme.class, policy = ReferencePolicy.DYNAMIC)
@@ -197,7 +196,7 @@ public class VaadinResourceTrackerComponent {
     void unsetHttpService(HttpService service) {
         this.httpService = null;
     }
-    
+
     @Activate
     protected void activate() throws NamespaceException {
         for(Delegate registration : resourceToRegistration.values()) {
@@ -205,7 +204,7 @@ public class VaadinResourceTrackerComponent {
             httpService.registerResources(registration.alias, registration.path, registration);
         }
     }
-    
+
     @Deactivate
     protected void deactivate() {
         for(final Delegate registration : resourceToRegistration.values()) {
@@ -263,18 +262,18 @@ public class VaadinResourceTrackerComponent {
         Delegate registration = resourceToRegistration.remove(serviceId);
         unregisterResource(registration);
     }
-    
+
     private void unregisterResource(Delegate registration) {
         if (registration != null && httpService != null) {
             httpService.unregister(registration.alias);
         }
     }
-    
+
     static final class Delegate implements HttpContext {
         private final String alias;
         private final String path;
         private final Bundle bundle;
-        
+
         private volatile HttpContext context;
 
         public Delegate(String alias, String path, Bundle bundle) {
@@ -282,7 +281,7 @@ public class VaadinResourceTrackerComponent {
             this.path = path;
             this.bundle = bundle;
         }
-        
+
         public void init(HttpService service) {
             context = service.createDefaultHttpContext();
         }
