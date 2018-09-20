@@ -10,6 +10,7 @@ public class LayoutComponentGroupTest extends SingleBrowserTest {
     @Test
     public void renderedWithoutRoundedBordersInTheMiddle() throws Exception {
         openTestURL();
+        sleep(500);
         compareScreen($(VerticalLayoutElement.class).id("container"),
                 "buttongroups");
     }
