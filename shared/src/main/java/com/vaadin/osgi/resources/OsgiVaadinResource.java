@@ -26,7 +26,7 @@ package com.vaadin.osgi.resources;
  * <code>VaadinResourceTrackerComponent</code> automatically publish the
  * resource with the given name.
  *
- * @since 
+ * @since 8.6.0
  */
 public interface OsgiVaadinResource {
     /**
