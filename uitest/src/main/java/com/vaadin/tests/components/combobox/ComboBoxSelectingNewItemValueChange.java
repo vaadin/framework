@@ -21,11 +21,6 @@ public class ComboBoxSelectingNewItemValueChange extends ComboBoxSelecting {
             super(caption, options);
         }
 
-        @Override
-        public void beforeClientResponse(boolean initial) {
-            super.beforeClientResponse(initial);
-        }
-
         public ComboBoxClientRpc getComboBoxClientRpc() {
             return getRpcProxy(ComboBoxClientRpc.class);
         }

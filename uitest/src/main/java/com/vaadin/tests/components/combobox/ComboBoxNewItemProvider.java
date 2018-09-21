@@ -1,20 +1,13 @@
 package com.vaadin.tests.components.combobox;
 
-import com.vaadin.annotations.Widgetset;
-import com.vaadin.tests.widgetset.TestingWidgetSet;
-
 import java.util.Collections;
 import java.util.Optional;
 
-@Widgetset(TestingWidgetSet.NAME)
 public class ComboBoxNewItemProvider
         extends ComboBoxSelectingNewItemValueChange {
 
     @Override
     protected void configureNewItemHandling() {
-        comboBox.addValueChangeListener(e -> {
-            System.out.println("e.getValue() = " + e.getValue());
-        });
         comboBox.setNewItemProvider(text -> {
             if (delay.getValue()) {
                 try {
@@ -32,7 +25,7 @@ public class ComboBoxNewItemProvider
                 valueChangeLabel
                         .setValue("adding new item... count: " + items.size());
                 comboBox.getDataProvider().refreshAll();
-                if (Boolean.TRUE.equals(noSelection.getValue())) {
+                if (noSelection.getValue()) {
                     return Optional.empty();
                 }
             }
