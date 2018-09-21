@@ -908,67 +908,74 @@ public class GridConnector extends AbstractHasComponentsConnector
     public void onStateChanged(final StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        initialChange = stateChangeEvent.isInitialStateChange();
+        // Deferring updates to scheduleFinally, otherwise updates are
+        // performed immediatelly, and again later when state change happens
+        Scheduler.get().scheduleFinally(new ScheduledCommand() {
+            @Override
+            public void execute() {
+                initialChange = stateChangeEvent.isInitialStateChange();
 
-        // Column updates
-        if (stateChangeEvent.hasPropertyChanged("columns")) {
+                // Column updates
+                if (stateChangeEvent.hasPropertyChanged("columns")) {
 
-            // Remove old columns
-            purgeRemovedColumns();
+                    // Remove old columns
+                    purgeRemovedColumns();
 
-            // Add new columns
-            for (GridColumnState state : getState().columns) {
-                if (!columnIdToColumn.containsKey(state.id)) {
-                    addColumnFromStateChangeEvent(state);
+                    // Add new columns
+                    for (GridColumnState state : getState().columns) {
+                        if (!columnIdToColumn.containsKey(state.id)) {
+                            addColumnFromStateChangeEvent(state);
+                        }
+                        updateColumnFromStateChangeEvent(state);
+                    }
                 }
-                updateColumnFromStateChangeEvent(state);
+
+                if (stateChangeEvent.hasPropertyChanged("columnOrder")) {
+                    if (orderNeedsUpdate(getState().columnOrder)) {
+                        updateColumnOrderFromState(getState().columnOrder);
+                    }
+                }
+
+                // Column resize mode
+                if (stateChangeEvent.hasPropertyChanged("columnResizeMode")) {
+                    getWidget().setColumnResizeMode(getState().columnResizeMode);
+                }
+
+                // Header and footer
+                if (stateChangeEvent.hasPropertyChanged("header")) {
+                    updateHeaderFromState(getState().header);
+                }
+
+                if (stateChangeEvent.hasPropertyChanged("footer")) {
+                    updateFooterFromState(getState().footer);
+                }
+
+                // Sorting
+                if (stateChangeEvent.hasPropertyChanged("sortColumns")
+                        || stateChangeEvent.hasPropertyChanged("sortDirs")) {
+                    onSortStateChange();
+                }
+
+                // Editor
+                if (stateChangeEvent.hasPropertyChanged("editorEnabled")) {
+                    getWidget().setEditorEnabled(getState().editorEnabled);
+                }
+
+                // Frozen columns
+                if (stateChangeEvent.hasPropertyChanged("frozenColumnCount")) {
+                    getWidget().setFrozenColumnCount(getState().frozenColumnCount);
+                }
+
+                // Theme features
+                String activeTheme = getConnection().getUIConnector().getActiveTheme();
+                if (lastKnownTheme == null) {
+                    lastKnownTheme = activeTheme;
+                } else if (!lastKnownTheme.equals(activeTheme)) {
+                    getWidget().resetSizesFromDom();
+                    lastKnownTheme = activeTheme;
+                }
             }
-        }
-
-        if (stateChangeEvent.hasPropertyChanged("columnOrder")) {
-            if (orderNeedsUpdate(getState().columnOrder)) {
-                updateColumnOrderFromState(getState().columnOrder);
-            }
-        }
-
-        // Column resize mode
-        if (stateChangeEvent.hasPropertyChanged("columnResizeMode")) {
-            getWidget().setColumnResizeMode(getState().columnResizeMode);
-        }
-
-        // Header and footer
-        if (stateChangeEvent.hasPropertyChanged("header")) {
-            updateHeaderFromState(getState().header);
-        }
-
-        if (stateChangeEvent.hasPropertyChanged("footer")) {
-            updateFooterFromState(getState().footer);
-        }
-
-        // Sorting
-        if (stateChangeEvent.hasPropertyChanged("sortColumns")
-                || stateChangeEvent.hasPropertyChanged("sortDirs")) {
-            onSortStateChange();
-        }
-
-        // Editor
-        if (stateChangeEvent.hasPropertyChanged("editorEnabled")) {
-            getWidget().setEditorEnabled(getState().editorEnabled);
-        }
-
-        // Frozen columns
-        if (stateChangeEvent.hasPropertyChanged("frozenColumnCount")) {
-            getWidget().setFrozenColumnCount(getState().frozenColumnCount);
-        }
-
-        // Theme features
-        String activeTheme = getConnection().getUIConnector().getActiveTheme();
-        if (lastKnownTheme == null) {
-            lastKnownTheme = activeTheme;
-        } else if (!lastKnownTheme.equals(activeTheme)) {
-            getWidget().resetSizesFromDom();
-            lastKnownTheme = activeTheme;
-        }
+        });
     }
 
     private void updateColumnOrderFromState(List<String> stateColumnOrder) {
