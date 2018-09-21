@@ -30,7 +30,7 @@ import com.vaadin.ui.SingleSelect;
  *
  * @param <T>
  *            the bean type of grid
- * @since
+ * @since 8.6.0
  */
 public class GridSingleSelect<T> implements SingleSelect<T> {
 

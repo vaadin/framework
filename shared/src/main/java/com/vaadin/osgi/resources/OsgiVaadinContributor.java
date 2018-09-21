@@ -22,7 +22,7 @@ import java.util.List;
  * Each vaadin resource will be checked for the type (theme, widgetset,
  * resource) and registered to the OSGi context with the appropriate type.
  *
- * @since
+ * @since 8.6.0
  */
 public interface OsgiVaadinContributor {
     List<OsgiVaadinResource> getContributions();
