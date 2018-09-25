@@ -13,16 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.osgi.themes;
+package com.vaadin.osgi.resources;
 
-import org.osgi.service.component.annotations.Component;
+import java.util.List;
 
-import com.vaadin.osgi.resources.OsgiVaadinTheme;
-
-@Component
-public class ValoThemeContribution implements OsgiVaadinTheme {
-    @Override
-    public String getName() {
-        return "valo";
-    }
+/**
+ * Used to declare multiple OsgiVaadinResources with a single OSGi component.
+ * Each vaadin resource will be checked for the type (theme, widgetset,
+ * resource) and registered to the OSGi context with the appropriate type.
+ *
+ * @since
+ */
+public interface OsgiVaadinContributor {
+    List<OsgiVaadinResource> getContributions();
 }
