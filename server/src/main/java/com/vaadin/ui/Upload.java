@@ -1205,7 +1205,7 @@ public class Upload extends AbstractComponent
 
     /**
      * Returns the component's list of accepted content-types. According to RFC
-     * 1867, the attributeis present, the browser might constrain the file
+     * 1867, if the attribute is present, the browser might constrain the file
      * patterns prompted for to match those with the corresponding appropriate
      * file extensions for the platform.
      *
@@ -1219,7 +1219,7 @@ public class Upload extends AbstractComponent
 
     /**
      * Sets the component's list of accepted content-types. According to RFC
-     * 1867, the attributeis present, the browser might constrain the file
+     * 1867, if the attribute is present, the browser might constrain the file
      * patterns prompted for to match those with the corresponding appropriate
      * file extensions for the platform. Good examples are: {@code image/*} or
      * {@code image/png,text/plain}
