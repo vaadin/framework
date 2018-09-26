@@ -3413,6 +3413,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             // Make SelectAllCheckbox visible
             getSelectionColumn().ifPresent(col -> {
+                if (getDefaultHeaderRow() == null)
+                    return;
                 HeaderCell headerCell = getDefaultHeaderRow().getCell(col);
                 if (headerCell.getType().equals(GridStaticCellType.WIDGET)) {
                     // SelectAllCheckbox is present already
