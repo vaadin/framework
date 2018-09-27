@@ -141,6 +141,7 @@ public abstract class ThemeTest extends MultiBrowserTest {
 
     protected void testWindow(int id, String identifier) throws IOException {
         $(ButtonElement.class).id("windButton" + id).click();
+        sleep(200);
         compareScreen(identifier);
         WindowElement window = $(WindowElement.class).first();
         if (getTheme() == "chameleon"
