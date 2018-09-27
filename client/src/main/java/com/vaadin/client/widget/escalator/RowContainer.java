@@ -236,6 +236,13 @@ public interface RowContainer {
     public int getRowCount();
 
     /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @return {@code true} if row height calculations have been scheduled
+     */
+    boolean isAutodetectingRowHeightLater();
+
+    /**
      * The default height of the rows in this RowContainer.
      *
      * @param px
