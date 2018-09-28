@@ -31,7 +31,7 @@ import com.vaadin.ui.components.grid.MultiSelectionModel.SelectAllCheckBoxVisibi
  *
  * @param <T>
  *            the bean type of grid
- * @since
+ * @since 8.6.0
  */
 public class GridMultiSelect<T> implements MultiSelect<T> {
 
