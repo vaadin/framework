@@ -200,7 +200,7 @@ public class VaadinResourceTrackerComponent {
     /**
      *
      * @throws NamespaceException
-     * @since
+     * @since 8.6.0
      */
     @Activate
     protected void activate() throws NamespaceException {
@@ -211,7 +211,7 @@ public class VaadinResourceTrackerComponent {
     }
 
     /**
-     * @since
+     * @since 8.6.0
      */
     @Deactivate
     protected void deactivate() {
