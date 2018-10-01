@@ -67,7 +67,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.DeferredWorker;
-import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.SubPartAware;
@@ -3896,6 +3895,7 @@ public class Escalator extends Widget
                                 visualRowOrder.getLast()) + 1;
                         moveAndUpdateEscalatorRows(Range.withOnly(0),
                                 visualRowOrder.size(), newLogicalIndex);
+                        updateTopRowLogicalIndex(1);
                     }
                 }
             }
