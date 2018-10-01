@@ -46,7 +46,7 @@ public class GridSingleSelect<T> implements SingleSelect<T> {
         GridSelectionModel<T> selectionModel = grid.getSelectionModel();
         if (!(selectionModel instanceof SingleSelectionModel)) {
             throw new IllegalStateException(
-                    "Grid is not in singleiselect mode, it needs to be explicitly set to such with setSelectionModel(SingleSelectionModel) before being able to use singleselection features.");
+                    "Grid is not in single select mode, it needs to be explicitly set to such with setSelectionModel(SingleSelectionModel) before being able to use single selection features.");
         }
         model = (SingleSelectionModel<T>) selectionModel;
     }
