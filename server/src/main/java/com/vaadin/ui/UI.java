@@ -1574,7 +1574,7 @@ public abstract class UI extends AbstractSingleComponentContainer
                         assert session != null;
                         /*
                          * UI was detached after access was run, but before
-                         * accessSynchronously. Furthermore, there wasn't a
+                         * accessSynchronously. Furthermore, there wasn't an
                          * ErrorHandlingRunnable that handled the exception.
                          */
                         getLogger().log(Level.WARNING,

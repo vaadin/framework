@@ -16,6 +16,7 @@
 package com.vaadin.server;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Defines the interface to handle exceptions thrown during the execution of a
@@ -55,6 +56,7 @@ public interface ErrorHandlingRunnable extends Runnable, Serializable {
      */
     public static Exception processException(Runnable runnable,
             Exception exception) {
+        Objects.requireNonNull(runnable, "The runnable cannot be null.");
         if (runnable instanceof ErrorHandlingRunnable) {
             ErrorHandlingRunnable errorHandlingRunnable = (ErrorHandlingRunnable) runnable;
 
