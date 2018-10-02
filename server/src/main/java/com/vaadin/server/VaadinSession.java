@@ -123,11 +123,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
          */
         public void handleError(Exception exception) {
             try {
-                if (runnable instanceof ErrorHandlingRunnable) {
-                    ErrorHandlingRunnable errorHandlingRunnable = (ErrorHandlingRunnable) runnable;
+                exception = ErrorHandlingRunnable.processException(runnable,
+                        exception);
 
-                    errorHandlingRunnable.handleError(exception);
-                } else {
+                if (exception != null) {
                     ErrorEvent errorEvent = new ErrorEvent(exception);
 
                     ErrorHandler errorHandler = ErrorEvent

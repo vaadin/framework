@@ -6,6 +6,7 @@ import java.util.concurrent.Future;
 
 import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.ErrorHandler;
+import com.vaadin.server.ErrorHandlingRunnable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -68,6 +69,27 @@ public class UIAccessExceptionHandling extends AbstractTestUIWithLog
                     });
 
                     CurrentInstance.restoreInstances(instances);
+                }));
+
+        addComponent(
+                new Button("Throw through ErrorHandlingRunnable", event -> {
+                    access(new ErrorHandlingRunnable() {
+                        @Override
+                        public void run() {
+                            log.clear();
+                            throw new NullPointerException();
+                        }
+
+                        @Override
+                        public void handleError(Exception exception) {
+                            // "Handle" other exceptions, but leave NPE for
+                            // default handler
+                            if (exception instanceof NullPointerException) {
+                                NullPointerException npe = (NullPointerException) exception;
+                                throw npe;
+                            }
+                        }
+                    });
                 }));
 
         addComponent(new Button("Clear", event -> log.clear()));
