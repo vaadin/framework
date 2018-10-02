@@ -46,6 +46,7 @@ public interface ErrorHandlingRunnable extends Runnable, Serializable {
      * returned. If the runnable does not extend {@link ErrorHandlingRunnable},
      * then the original exception is returned.
      *
+     * @since 
      * @param runnable
      *            the runnable for which the exception should be processed, not
      *            <code>null</code>
