@@ -142,7 +142,7 @@ public class CurrentInstance implements Serializable {
      * @throws IllegalArgumentException
      *             if there's already a defined fallback resolver for the given
      *             type
-     * @since
+     * @since 8.5.2
      */
     public static <T> void defineFallbackResolver(Class<T> type,
             CurrentInstanceFallbackResolver<T> fallbackResolver) {

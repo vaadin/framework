@@ -30,11 +30,21 @@ package com.vaadin.osgi.resources;
  *
  * @since 8.1
  */
-public interface OsgiVaadinTheme {
+public interface OsgiVaadinTheme extends OsgiVaadinResource {
     /**
      * Return the theme name to publish for OSGi.
      *
      * @return theme name, not null
      */
+    @Override
     public String getName();
+
+    public static OsgiVaadinTheme create(final String name) {
+        return new OsgiVaadinTheme() {
+            @Override
+            public String getName() {
+                return name;
+            }
+        };
+    }
 }
