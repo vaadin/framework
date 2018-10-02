@@ -186,20 +186,23 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         @Override
         public void createNewItem(String itemValue) {
             // New option entered
-            boolean added = false;
+            boolean clientSideHandling = false;
             if (itemValue != null && !itemValue.isEmpty()) {
                 if (getNewItemProvider() != null) {
-                    Optional<T> item = getNewItemProvider().apply(itemValue);
-                    added = item.isPresent();
+                    getNewItemProvider().apply(itemValue).ifPresent(value -> {
+                        // Update state for the newly selected value
+                        setSelectedItem(value, true);
+                        getDataCommunicator().reset();
+                    });
                 } else if (getNewItemHandler() != null) {
                     getNewItemHandler().accept(itemValue);
                     // Up to the user to tell if no item was added.
-                    added = true;
+                    clientSideHandling = true;
                 }
             }
 
-            if (!added) {
-                // New item was not handled.
+            if (!clientSideHandling) {
+                // New item was maybe added with NewItemHandler
                 getRpcProxy(ComboBoxClientRpc.class).newItemNotAdded(itemValue);
             }
         }

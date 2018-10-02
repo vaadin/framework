@@ -29,7 +29,12 @@ public class ContextMenuSize extends AbstractReindeerTestUI {
             public Action[] getActions(Object target, Object sender) {
                 return new Action[] { new Action("action1"),
                         new Action("action2"), new Action("action3"),
-                        new Action("action4") };
+                        new Action("action4"), new Action("action5"),
+                        new Action("action6"), new Action("action7"),
+                        new Action("action8"), new Action("action9"),
+                        new Action("action10"), new Action("action11"),
+                        new Action("action12"), new Action("action13"),
+                        new Action("action14") };
             }
         });
         BeanItemContainer<Bean> container = new BeanItemContainer<>(Bean.class);
