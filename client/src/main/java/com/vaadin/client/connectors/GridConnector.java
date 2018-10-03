@@ -909,8 +909,23 @@ public class GridConnector extends AbstractHasComponentsConnector
         super.onStateChanged(stateChangeEvent);
 
         initialChange = stateChangeEvent.isInitialStateChange();
+        
+        if (initialChange) {
+            Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    doUpdateFromStateChangeEvent(stateChangeEvent);
+                }
+            });
+        } else {
+            doUpdateFromStateChangeEvent(stateChangeEvent);
+        }
+    }
 
-        // Column updates
+    private void doUpdateFromStateChangeEvent(
+            final StateChangeEvent stateChangeEvent) {
+
+    	// Column updates
         if (stateChangeEvent.hasPropertyChanged("columns")) {
 
             // Remove old columns
@@ -924,7 +939,7 @@ public class GridConnector extends AbstractHasComponentsConnector
                 updateColumnFromStateChangeEvent(state);
             }
         }
-
+        
         if (stateChangeEvent.hasPropertyChanged("columnOrder")) {
             if (orderNeedsUpdate(getState().columnOrder)) {
                 updateColumnOrderFromState(getState().columnOrder);
