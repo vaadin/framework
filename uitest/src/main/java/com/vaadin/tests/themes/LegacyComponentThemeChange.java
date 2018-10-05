@@ -28,6 +28,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Table;
@@ -39,6 +40,7 @@ public class LegacyComponentThemeChange extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         VerticalLayout vl = new VerticalLayout();
+        vl.setSpacing(true);
         vl.setCaption("Change theme by clicking a button");
         HorizontalLayout hl = new HorizontalLayout();
         for (final String theme : new String[] { "reindeer", "runo" }) {
@@ -67,6 +69,7 @@ public class LegacyComponentThemeChange extends AbstractTestUIWithLog {
         sub.addItem("selectedtheme", varyingIcon, null);
 
         vl.addComponent(bar);
+        vl.addComponent(new Label("gap"));
 
         ComboBox cb = new ComboBox("ComboBox");
         cb.addItem("No icon");
