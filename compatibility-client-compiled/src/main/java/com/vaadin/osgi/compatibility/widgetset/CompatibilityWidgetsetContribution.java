@@ -15,33 +15,16 @@
  */
 package com.vaadin.osgi.compatibility.widgetset;
 
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.http.HttpService;
 
-import com.vaadin.osgi.resources.OsgiVaadinResources;
-import com.vaadin.osgi.resources.VaadinResourceService;
+import com.vaadin.osgi.resources.OsgiVaadinWidgetset;
 
-@Component(immediate = true)
-public class CompatibilityWidgetsetContribution {
-    private HttpService httpService;
-
+@Component
+public class CompatibilityWidgetsetContribution implements OsgiVaadinWidgetset {
     private static final String WIDGETSET_NAME = "com.vaadin.v7.Vaadin7WidgetSet";
 
-    @Activate
-    void startup(ComponentContext context) throws Exception {
-        VaadinResourceService service = OsgiVaadinResources.getService();
-        service.publishWidgetset(WIDGETSET_NAME, httpService);
-    }
-
-    @Reference
-    void setHttpService(HttpService httpService) {
-        this.httpService = httpService;
-    }
-
-    void unsetHttpService(HttpService httpService) {
-        this.httpService = null;
+    @Override
+    public String getName() {
+        return WIDGETSET_NAME;
     }
 }

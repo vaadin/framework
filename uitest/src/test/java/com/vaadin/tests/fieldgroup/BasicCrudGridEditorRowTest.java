@@ -35,10 +35,12 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
     @Test
     public void lookAndFeel() throws Exception {
         GridCellElement ritaBirthdate = grid.getCell(2, 3);
+        waitUntilLoadingIndicatorNotVisible();
         compareScreen("grid");
 
         // Open editor row
         new Actions(getDriver()).doubleClick(ritaBirthdate).perform();
+        sleep(200);
         compareScreen("editorrow");
     }
 

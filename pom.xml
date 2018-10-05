@@ -10,7 +10,7 @@
     <artifactId>vaadin-root</artifactId>
     <name>vaadin-root</name>
     <packaging>pom</packaging>
-    <version>8.6-SNAPSHOT</version>
+    <version>8.7-SNAPSHOT</version>
 
     <prerequisites>
         <maven>3.1.0</maven>
@@ -35,7 +35,7 @@
         <javax.portlet.version>2.0</javax.portlet.version>
         <vaadin.sass.version>0.9.13</vaadin.sass.version>
         <!-- Note that this should be kept in sync with the class Constants -->
-        <atmosphere.runtime.version>2.4.24.vaadin1</atmosphere.runtime.version>
+        <atmosphere.runtime.version>2.4.30.vaadin1</atmosphere.runtime.version>
 
         <!-- OSGi -->
         <osgi.execution.environment>JavaSE-1.8</osgi.execution.environment>
@@ -280,11 +280,6 @@
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-proxy</artifactId>
                 <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jcraft</groupId>
-                <artifactId>jsch</artifactId>
-                <version>0.1.52</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jgit</groupId>

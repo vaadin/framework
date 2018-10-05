@@ -2,6 +2,7 @@ package com.vaadin.tests.push;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.parallel.TestCategory;
@@ -68,10 +69,14 @@ public abstract class BasicPushTest extends MultiBrowserTest {
     }
 
     protected void waitUntilClientCounterChanges(final int expectedValue) {
-        waitUntil(
-                input -> BasicPushTest
-                        .getClientCounter(BasicPushTest.this) == expectedValue,
-                10);
+        waitUntil(input -> {
+            try {
+                return BasicPushTest
+                        .getClientCounter(BasicPushTest.this) == expectedValue;
+            } catch (NoSuchElementException e) {
+                return false;
+            }
+        }, 10);
     }
 
     protected void waitUntilServerCounterChanges() {
