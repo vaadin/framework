@@ -23,8 +23,7 @@ public class GridComponentsVisibilityTest extends MultiBrowserTest {
 
     @Test
     public void changingVisibilityOfComponentShouldNotThrowClientSideExceptions() {
-        testHideComponent(grid -> ThreadLocalRandom.current().nextInt(1,
-                (int) grid.getRowCount() - 1));
+        testHideComponent(grid -> ThreadLocalRandom.current().nextInt(1, (int) grid.getRowCount() - 1));
     }
 
     @Test
@@ -32,13 +31,12 @@ public class GridComponentsVisibilityTest extends MultiBrowserTest {
         testHideComponent(grid -> (int) grid.getRowCount() - 1);
     }
 
-    private void testHideComponent(
-            Function<GridElement, Integer> rowUnderTestSupplier) {
+    private void testHideComponent(Function<GridElement, Integer> rowUnderTestSupplier) {
         openTestURL("debug");
         GridElement grid = $(GridElement.class).first();
         int rowUnderTest = rowUnderTestSupplier.apply(grid);
         assertTrue("Text field should be visible", grid.getCell(rowUnderTest, 1)
-                .isElementPresent(TextFieldElement.class));
+            .isElementPresent(TextFieldElement.class));
         assertOtherConnectorsArePresent(grid, rowUnderTest);
 
         clearDebugMessages();
@@ -59,40 +57,34 @@ public class GridComponentsVisibilityTest extends MultiBrowserTest {
         clickVisibilityToggleButton(grid, rowUnderTest);
     }
 
-    private void assertOnlyTextFieldOnTestedRowIsNotPresent(GridElement grid,
-            int rowUnderTest) {
-        assertFalse("Text field should not be visible",
-                grid.getCell(rowUnderTest, 1)
-                        .isElementPresent(TextFieldElement.class));
+    private void assertOnlyTextFieldOnTestedRowIsNotPresent(GridElement grid, int rowUnderTest) {
+        assertFalse("Text field should not be visible", grid.getCell(rowUnderTest, 1)
+            .isElementPresent(TextFieldElement.class));
         assertOtherConnectorsArePresent(grid, rowUnderTest);
     }
 
-    private void assertAllTextFieldsArePresent(GridElement grid,
-            int rowUnderTest) {
+    private void assertAllTextFieldsArePresent(GridElement grid, int rowUnderTest) {
         assertTrue("Text field should be visible", grid.getCell(rowUnderTest, 1)
-                .isElementPresent(TextFieldElement.class));
+            .isElementPresent(TextFieldElement.class));
         assertOtherConnectorsArePresent(grid, rowUnderTest);
     }
 
     private void assertNotClientSideErrors() {
         assertNoErrorNotifications();
-        // Should not log "Widget is still attached to the DOM ..." error
-        // message
+        // Should not log "Widget is still attached to the DOM ..." error message
         assertNoDebugMessage(Level.SEVERE);
     }
 
-    private void clickVisibilityToggleButton(GridElement grid,
-            int rowUnderTest) {
-        grid.getRow(rowUnderTest).getCell(2)
-                .findElement(By.className("v-button")).click();
+    private void clickVisibilityToggleButton(GridElement grid, int rowUnderTest) {
+        grid.getRow(rowUnderTest).getCell(2).findElement(By.className("v-button")).click();
     }
 
-    private void assertOtherConnectorsArePresent(GridElement grid,
-            int rowUnderTest) {
+    private void assertOtherConnectorsArePresent(GridElement grid, int rowUnderTest) {
         IntStream.range(1, (int) grid.getRowCount())
-                .filter(row -> row != rowUnderTest)
-                .forEach(row -> assertTrue("Text field should be visible",
-                        grid.getCell(row, 1)
-                                .isElementPresent(TextFieldElement.class)));
+            .filter(row -> row != rowUnderTest)
+            .forEach(row ->
+                assertTrue("Text field should be visible", grid.getCell(row, 1)
+                    .isElementPresent(TextFieldElement.class))
+            );
     }
 }
