@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import com.vaadin.testbench.By;
@@ -38,8 +39,11 @@ public class SetThemeAndResponsiveLayoutTest extends MultiBrowserTest {
                 $(CssLayoutElement.class).first().getAttribute("height-range"));
 
         // Resize
-        testBench().resizeViewPortTo(550, 450);
+       // testBench().resizeViewPortTo(550, 450);
 
+        int extrah = 106;
+        int extraw = 0;
+        this.getDriver().manage().window().setSize(new Dimension(550 + extraw, 450 + extrah));
         // Verify updated width-range and height-range.
         assertEquals("0-599px",
                 $(CssLayoutElement.class).first().getAttribute("width-range"));

@@ -26,8 +26,8 @@ public class ContextMenuSizeTest extends MultiBrowserTest {
     }
 
     private void resizeViewPortHeightTo(int windowHeight) {
-        // viewport width doesn't matter, let's use a magic number of 500.
-        testBench().resizeViewPortTo(500, windowHeight);
+        // viewport width doesn't matter, let's use a magic number of 650.
+        testBench().resizeViewPortTo(650, windowHeight);
     }
 
     private int getContextMenuY() {

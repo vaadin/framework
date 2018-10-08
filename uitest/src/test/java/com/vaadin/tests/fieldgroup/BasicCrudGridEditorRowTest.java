@@ -40,7 +40,7 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
 
         // Open editor row
         new Actions(getDriver()).doubleClick(ritaBirthdate).perform();
-        sleep(200);
+        sleep(300);
         compareScreen("editorrow");
     }
 

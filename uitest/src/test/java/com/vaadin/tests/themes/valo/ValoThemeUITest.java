@@ -17,6 +17,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
     public void labels() throws Exception {
         openTestURL("test");
         open("Labels");
+        sleep(200);
         compareScreen("labels");
     }
 
@@ -77,6 +78,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
     public void sliders() throws Exception {
         openTestURL("test");
         open("Sliders & Progress Bars", "Sliders");
+        sleep(200);
         compareScreen("sliders");
     }
 

@@ -5,6 +5,7 @@ import org.junit.Test;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.PanelElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import org.openqa.selenium.Dimension;
 
 public class ResponsiveLayoutUpdateTest extends MultiBrowserTest {
 
@@ -21,8 +22,8 @@ public class ResponsiveLayoutUpdateTest extends MultiBrowserTest {
         compareScreen("large");
 
         // Resize below 600px width breakpoint
-        testBench().resizeViewPortTo(550, 768);
-
+        //testBench().resizeViewPortTo(550, 768);
+        this.getDriver().manage().window().setSize(new Dimension(550,768));
         waitUntil(input -> panelElement.getSize().getWidth() < 500);
         compareScreen("small");
     }
