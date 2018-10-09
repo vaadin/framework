@@ -65,7 +65,7 @@
                         </goals>
                         <configuration>
                             <classpathScope>compile</classpathScope>
-                            <executable>${java.home}/bin/java</executable>
+                            <executable>${env.JAVA_HOME}/bin/java</executable>
                             <arguments>
                                 <argument>-Dvaadin.version=${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</argument>
                                 <argument>-DincludeNumberPackages=1</argument>
