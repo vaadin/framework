@@ -230,8 +230,8 @@ public abstract class UI extends AbstractSingleComponentContainer
             }
             json.append("]}");
             getRpcProxy(DebugWindowClientRpc.class)
-                            .reportLayoutProblems(json.toString());
-}
+                    .reportLayoutProblems(json.toString());
+        }
 
         @Override
         public void showServerDesign(Connector connector) {
@@ -1581,10 +1581,10 @@ public abstract class UI extends AbstractSingleComponentContainer
                                 "access() task ignored because UI got detached after the task was enqueued."
                                         + " To suppress this message, change the task to implement {} and make it handle {}."
                                         + " Affected task: {}",
-                                        new Object[] {
-                                                ErrorHandlingRunnable.class.getName(),
-                                                UIDetachedException.class.getName(),
-                                                runnable });
+                                new Object[] {
+                                        ErrorHandlingRunnable.class.getName(),
+                                        UIDetachedException.class.getName(),
+                                        runnable });
                     } else if (exception != null) {
                         /*
                          * If no ErrorHandlingRunnable, or if it threw an
@@ -1727,7 +1727,7 @@ public abstract class UI extends AbstractSingleComponentContainer
         // If pushMode is disabled then there should never be a pushConnection;
         // if enabled there should always be
         assert (pushConnection == null)
-        ^ getPushConfiguration().getPushMode().isEnabled();
+                ^ getPushConfiguration().getPushMode().isEnabled();
 
         if (pushConnection == this.pushConnection) {
             return;
