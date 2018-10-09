@@ -63,7 +63,9 @@
                         <goals>
                             <goal>exec</goal>
                         </goals>
-                        <configuration>
+                    </execution>
+                </executions>
+                 <configuration>
                             <classpathScope>compile</classpathScope>
                             <executable>${java.home}/bin/java</executable>
                             <arguments>
@@ -79,8 +81,6 @@
                                 <argument>VAADIN/widgetsets</argument>
                             </arguments>
                         </configuration>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>
