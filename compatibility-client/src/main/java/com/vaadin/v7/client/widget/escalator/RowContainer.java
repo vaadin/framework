@@ -221,6 +221,22 @@ public interface RowContainer {
     public int getRowCount();
 
     /**
+     * This method calculates the current row count directly from the DOM.
+     * <p>
+     * While the container is stable, this value should equal to
+     * {@link #getRowCount()}, but while row counts are being updated, these two
+     * values might differ for a short while.
+     * <p>
+     * Any extra content, such as spacers for the body, should not be included
+     * in this count.
+     *
+     * @since
+     *
+     * @return the actual DOM count of rows
+     */
+    public int getDomRowCount();
+
+    /**
      * The default height of the rows in this RowContainer.
      *
      * @param px
