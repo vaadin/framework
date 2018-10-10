@@ -49,6 +49,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
         // Note that this can look broken in IE9 because of some browser
         // rendering issue... The problem seems to be in the customized
         // horizontal layout in the test app
+        sleep(100);
         compareScreen("datefields-localdate-with-range");
     }
 

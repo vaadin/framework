@@ -23,6 +23,7 @@ public class GridEditorFrozenColumnsUITest extends MultiBrowserTest {
 
         openEditor(10);
 
+        sleep(500);
         compareScreen("noscroll");
 
         scrollGridHorizontallyTo(100);
