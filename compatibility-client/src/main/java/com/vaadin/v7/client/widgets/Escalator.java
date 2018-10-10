@@ -1291,22 +1291,6 @@ public class Escalator extends Widget
         }
 
         /**
-         * This method calculates the current row count directly from the DOM.
-         * <p>
-         * While Escalator is stable, this value should equal to
-         * {@link #getRowCount()}, but while row counts are being updated, these
-         * two values might differ for a short while.
-         * <p>
-         * Any extra content, such as spacers for the body, should not be
-         * included in this count.
-         *
-         * @since 7.5.0
-         *
-         * @return the actual DOM count of rows
-         */
-        public abstract int getDomRowCount();
-
-        /**
          * {@inheritDoc}
          * <p>
          * <em>Implementation detail:</em> This method does no DOM modifications
