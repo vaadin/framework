@@ -200,25 +200,27 @@ public class VaadinResourceTrackerComponent {
     /**
      *
      * @throws NamespaceException
-     * @since
+     * @since 8.6.0
      */
     @Activate
     protected void activate() throws NamespaceException {
-        for(Delegate registration : resourceToRegistration.values()) {
+        for (Delegate registration : resourceToRegistration.values()) {
             registration.init(httpService);
-            httpService.registerResources(registration.alias, registration.path, registration);
+            httpService.registerResources(registration.alias, registration.path,
+                    registration);
         }
     }
 
     /**
-     * @since
+     * @since 8.6.0
      */
     @Deactivate
     protected void deactivate() {
-        for(final Delegate registration : resourceToRegistration.values()) {
+        for (final Delegate registration : resourceToRegistration.values()) {
             unregisterResource(registration);
         }
-        for(List<ServiceRegistration<? extends OsgiVaadinResource>> registrations : contributorToRegistrations.values()) {
+        for (List<ServiceRegistration<? extends OsgiVaadinResource>> registrations : contributorToRegistrations
+                .values()) {
             for (ServiceRegistration<? extends OsgiVaadinResource> reg : registrations) {
                 reg.unregister();
             }
@@ -263,7 +265,8 @@ public class VaadinResourceTrackerComponent {
 
     private void registerResource(String alias, String path, Bundle bundle,
             Long serviceId) {
-        resourceToRegistration.put(serviceId, new Delegate(alias, path, bundle));
+        resourceToRegistration.put(serviceId,
+                new Delegate(alias, path, bundle));
     }
 
     private void unregisterResource(Long serviceId) {

@@ -177,6 +177,11 @@ public abstract class AbstractTestUI extends UI {
         getLayout().addComponent(c);
     }
 
+    public void addComponent(Component c, String id) {
+        c.setId(id);
+        addComponent(c);
+    }
+
     public void addComponents(Component... c) {
         getLayout().addComponents(c);
     }
