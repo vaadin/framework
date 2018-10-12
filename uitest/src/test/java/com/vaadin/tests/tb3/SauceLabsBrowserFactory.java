@@ -1,8 +1,14 @@
 package com.vaadin.tests.tb3;
 
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.Platform;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.safari.SafariOptions;
 
 import com.vaadin.shared.Version;
 import com.vaadin.testbench.parallel.Browser;
@@ -25,47 +31,46 @@ public class SauceLabsBrowserFactory extends DefaultBrowserFactory {
     @Override
     public DesiredCapabilities create(Browser browser, String version,
             Platform platform) {
-        DesiredCapabilities caps;
+        MutableCapabilities caps;
 
         switch (browser) {
         case CHROME:
-            caps = DesiredCapabilities.chrome();
-            caps.setVersion(version);
+            caps = new ChromeOptions();
+            caps.setCapability(CapabilityType.VERSION, version);
             break;
         case PHANTOMJS:
             // This will not work on SauceLabs - should be filtered with
             // browsers.exclude. However, we cannot throw an exception here as
             // filtering only takes place if there is no exception.
             caps = DesiredCapabilities.phantomjs();
-            caps.setVersion("1");
-            caps.setPlatform(Platform.LINUX);
+            caps.setCapability(CapabilityType.VERSION, "1");
+            caps.setCapability(CapabilityType.PLATFORM, Platform.LINUX);
             break;
         case SAFARI:
-            caps = DesiredCapabilities.safari();
-            caps.setVersion(version);
+            caps = new SafariOptions();
+            caps.setCapability(CapabilityType.VERSION, version);
             break;
         case IE11:
-            caps = DesiredCapabilities.internetExplorer();
-            caps.setVersion("11.0");
+            caps = new InternetExplorerOptions();
+            caps.setCapability(CapabilityType.VERSION, "11.0");
             // There are 2 capabilities ie.ensureCleanSession and
             // ensureCleanSession in Selenium
             // IE 11 uses ie.ensureCleanSession
-            caps.setCapability("ie.ensureCleanSession", true);
             caps.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION,
                     true);
             break;
         case FIREFOX:
-            caps = DesiredCapabilities.firefox();
-            caps.setVersion(version);
+            caps = new FirefoxOptions();
+            caps.setCapability(CapabilityType.VERSION, version);
             break;
         default:
             caps = DesiredCapabilities.firefox();
-            caps.setVersion(version);
-            caps.setPlatform(platform);
+            caps.setCapability(CapabilityType.VERSION, version);
+            caps.setCapability(CapabilityType.PLATFORM, platform);
         }
 
         if (!Browser.PHANTOMJS.equals(browser)) {
-            caps.setCapability("platform", "Windows 7");
+            caps.setCapability(CapabilityType.PLATFORM, "Windows 7");
         }
 
         // accept self-signed certificates
@@ -78,7 +83,7 @@ public class SauceLabsBrowserFactory extends DefaultBrowserFactory {
         // build and project for easy identification in SauceLabs UI
         caps.setCapability("build", Version.getFullVersion());
 
-        return caps;
+        return new DesiredCapabilities(caps);
     }
 
 }
