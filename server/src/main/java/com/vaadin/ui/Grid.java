@@ -3010,8 +3010,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Gets a {@link Column} of this grid by its identifying string.
      *
-     * When you use the Grid constructor with bean class, the columns are 
-     * initialised with columnId being the property name. 
+     * When you use the Grid constructor with bean class, the columns are
+     * initialised with columnId being the property name.
      *
      * @see Column#setId(String)
      *

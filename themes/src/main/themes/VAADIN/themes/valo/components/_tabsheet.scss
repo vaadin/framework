@@ -131,6 +131,14 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
 
     .#{$primary-stylename}-right-aligned-tabs {
       @include valo-tabsheet-align-tabs-style($align: right);
+
+      .#{$primary-stylename}-spacertd {
+        display: inline-block !important;
+      }
+
+      .#{$primary-stylename}-scroller {
+        padding-left: 9px;
+      }
     }
 
     .#{$primary-stylename}-padded-tabbar {
