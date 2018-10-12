@@ -2,6 +2,7 @@ package com.vaadin.tests.tb3;
 
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.shared.Version;
@@ -29,7 +30,7 @@ public class SauceLabsBrowserFactory extends DefaultBrowserFactory {
 
         switch (browser) {
         case CHROME:
-            caps = DesiredCapabilities.chrome();
+            caps = new DesiredCapabilities(BrowserType.ANDROID, "", Platform.ANDROID);
             caps.setVersion(version);
             break;
         case PHANTOMJS:
@@ -55,7 +56,8 @@ public class SauceLabsBrowserFactory extends DefaultBrowserFactory {
                     true);
             break;
         case FIREFOX:
-            caps = DesiredCapabilities.firefox();
+            caps = new DesiredCapabilities(BrowserType.FIREFOX,"", Platform.ANY);
+            caps.setCapability("acceptInsecureCerts", true);
             caps.setVersion(version);
             break;
         default:
