@@ -64,7 +64,7 @@ public class CriticalNotificationsTest extends MultiBrowserThemeTest {
         testBench().disableWaitForVaadin();
 
         // Give the notification some time to animate
-        sleep(1000);
+        sleep(2000);
         compareScreen($(NotificationElement.class).first(),
                 "systemnotification");
     }
