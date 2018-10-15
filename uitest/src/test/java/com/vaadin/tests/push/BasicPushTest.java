@@ -70,14 +70,13 @@ public abstract class BasicPushTest extends MultiBrowserTest {
 
     protected void waitUntilClientCounterChanges(final int expectedValue) {
         waitUntil(input -> {
-                    try {
-                        return BasicPushTest
-                                .getClientCounter(BasicPushTest.this) == expectedValue;
-                    } catch (NoSuchElementException e) {
-                        return false;
-                    }
-                },
-                10);
+            try {
+                return BasicPushTest
+                        .getClientCounter(BasicPushTest.this) == expectedValue;
+            } catch (NoSuchElementException e) {
+                return false;
+            }
+        }, 10);
     }
 
     protected void waitUntilServerCounterChanges() {

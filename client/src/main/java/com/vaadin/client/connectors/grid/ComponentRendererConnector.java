@@ -43,7 +43,7 @@ import com.vaadin.ui.renderers.ComponentRenderer;
  */
 @Connect(ComponentRenderer.class)
 public class ComponentRendererConnector
-    extends AbstractGridRendererConnector<String> {
+        extends AbstractGridRendererConnector<String> {
 
     private HashSet<String> knownConnectors = new HashSet<>();
     private HandlerRegistration handlerRegistration;
