@@ -24,9 +24,9 @@ public class GridComponentsVisibility extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
         Grid<String> grid = new Grid<>();
         grid.addColumn(string -> new Label(string), new ComponentRenderer())
-            .setId("label").setCaption("Column 0");
+                .setId("label").setCaption("Column 0");
         grid.getDefaultHeaderRow().getCell("label")
-            .setComponent(new Label("Label"));
+                .setComponent(new Label("Label"));
         grid.addComponentColumn(string -> {
             if (textFields.containsKey(string)) {
                 log("Reusing old text field for: " + string);
@@ -41,7 +41,7 @@ public class GridComponentsVisibility extends AbstractTestUIWithLog {
         grid.addColumn(string -> {
 
             Button button = new Button("Click Me!",
-                event -> toggleFieldVisibility(string));
+                    event -> toggleFieldVisibility(string));
             button.setId(string.replace(' ', '_').toLowerCase(Locale.ROOT));
             return button;
         }, new ComponentRenderer()).setId("button").setCaption("Button");
@@ -49,13 +49,13 @@ public class GridComponentsVisibility extends AbstractTestUIWithLog {
         grid.setRowHeight(40);
 
         grid.getDefaultHeaderRow().join("textField", "button")
-            .setText("Other Components");
+                .setText("Other Components");
 
         addComponent(grid);
         grid.setSizeFull();
 
         grid.setItems(IntStream.range(0, 5).boxed()
-            .map(i -> "Row " + (i + (counter * 1000))));
+                .map(i -> "Row " + (i + (counter * 1000))));
 
     }
 
