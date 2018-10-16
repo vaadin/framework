@@ -159,6 +159,10 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
         } else {
             getWidget().calendarToggle.removeStyleName(
                     VAbstractPopupCalendar.CLASSNAME + "-button-readonly");
+            if (stateChangeEvent.hasPropertyChanged("readOnly")
+                    && getWidget().calendar.isInitialRenderDone()) {
+                getWidget().calendar.renderCalendar();
+            }
         }
 
         getWidget().setDescriptionForAssistiveDevices(
