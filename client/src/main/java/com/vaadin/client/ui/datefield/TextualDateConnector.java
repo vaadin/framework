@@ -117,7 +117,7 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         String oldLocale = getWidget().getCurrentLocale();
-
+        boolean isReadOnly = getWidget().isReadonly();
         getWidget().parsable = getState().parsable;
 
         super.onStateChanged(stateChangeEvent);
@@ -159,7 +159,7 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
         } else {
             getWidget().calendarToggle.removeStyleName(
                     VAbstractPopupCalendar.CLASSNAME + "-button-readonly");
-            if (stateChangeEvent.hasPropertyChanged("readOnly")
+            if (getState().readOnly != isReadOnly
                     && getWidget().calendar.isInitialRenderDone()) {
                 getWidget().calendar.renderCalendar();
             }
