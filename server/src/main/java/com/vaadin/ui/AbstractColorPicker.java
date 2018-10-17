@@ -464,7 +464,7 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
                 window.addCloseListener(
                         event -> getState().popupVisible = false);
                 window.addValueChangeListener(event -> {
-                    setValue(event.getValue());
+                    setValue(event.getValue(), true);
                     rpc.changeColor(event.getValue().getCSS());
                 });
                 window.getHistory().setValue(color);
