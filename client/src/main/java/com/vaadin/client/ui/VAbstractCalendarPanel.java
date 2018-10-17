@@ -939,6 +939,15 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     }
 
     /**
+     * Returns the value of initialRenderDone
+     *
+     * @since
+     */
+    public boolean isInitialRenderDone() {
+        return initialRenderDone;
+    }
+
+    /**
      * For internal use only. May be removed or replaced in the future.
      *
      * Updates the calendar and text field with the selected dates.
