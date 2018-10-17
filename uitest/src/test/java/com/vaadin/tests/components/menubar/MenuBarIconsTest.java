@@ -41,7 +41,7 @@ public class MenuBarIconsTest extends SingleBrowserTest {
     }
 
     @Test
-    public void imageIconsRendered() {
+    public void imageIconsRendered() throws Exception {
         openTestURL();
         MenuBarElement menu = $(MenuBarElement.class).id("image");
         WebElement moreItem = menu
@@ -58,7 +58,8 @@ public class MenuBarIconsTest extends SingleBrowserTest {
         assertImage(image, hasSubElement.findElement(By.vaadin("#Sub item")));
         // Close sub menu
         hasSubElement.click();
-
+        
+        sleep(500);
         assertImage(image, moreItem);
 
         moreItem.click();
