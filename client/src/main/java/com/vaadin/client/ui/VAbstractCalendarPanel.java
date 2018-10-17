@@ -941,7 +941,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     /**
      * Returns the value of initialRenderDone
      *
-     * @since
+     * @since 8.6
      */
     public boolean isInitialRenderDone() {
         return initialRenderDone;
