@@ -931,12 +931,16 @@ public class GridConnector extends AbstractHasComponentsConnector
             // Remove old columns
             purgeRemovedColumns();
 
-            // Add new columns
-            for (GridColumnState state : getState().columns) {
-                if (!columnIdToColumn.containsKey(state.id)) {
-                    addColumnFromStateChangeEvent(state);
+            // Add new columns in right order to avoid re-render
+            for (String columnId : getState().columnOrder) {
+                for (GridColumnState state : getState().columns) {
+                    if (state.id.equals(columnId)) {
+                        if (!columnIdToColumn.containsKey(state.id)) {
+                            addColumnFromStateChangeEvent(state);
+                        }
+                        updateColumnFromStateChangeEvent(state);            			
+                    }
                 }
-                updateColumnFromStateChangeEvent(state);
             }
         }
         
