@@ -6419,9 +6419,24 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *            the columns to add
      */
     public void addColumns(Column<?, T>... columns) {
-        int count = getColumnCount();
+        final int count = getColumnCount();
         for (Column<?, T> column : columns) {
-            addColumn(column, count++);
+            checkColumnIsValidToAdd(column, count);
+        }
+        addColumnsSkipSelectionColumnCheck(Arrays.asList(columns), count);
+    }
+
+
+    /**
+     * Checks the given column is valid to add at the given index.
+     */
+    private void checkColumnIsValidToAdd(Column<?, T> column, int index) {
+        if (column == this.selectionColumn) {
+            throw new IllegalArgumentException(
+                    "The selection column many " + "not be added manually");
+        } else if (this.selectionColumn != null && index == 0) {
+            throw new IllegalStateException("A column cannot be inserted "
+                    + "before the selection column");
         }
     }
 
@@ -6451,53 +6466,47 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *             and {@code index} is 0.
      */
     public <C extends Column<?, T>> C addColumn(C column, int index) {
-        if (column == selectionColumn) {
-            throw new IllegalArgumentException(
-                    "The selection column many " + "not be added manually");
-        } else if (selectionColumn != null && index == 0) {
-            throw new IllegalStateException("A column cannot be inserted "
-                    + "before the selection column");
-        }
-
-        addColumnSkipSelectionColumnCheck(column, index);
+        checkColumnIsValidToAdd(column, index);
+        addColumnsSkipSelectionColumnCheck(Collections.singleton(column), index);
         return column;
     }
 
-    private void addColumnSkipSelectionColumnCheck(Column<?, T> column,
-            int index) {
-        // Register column with grid
-        columns.add(index, column);
 
-        header.addColumn(column);
-        footer.addColumn(column);
+    private <C extends Column<?, T>> void addColumnsSkipSelectionColumnCheck(Collection<C> columnCollection, int index) {
+        int visibleNewColumns = 0;
+        int currentIndex = index;
 
-        // Register this grid instance with the column
-        ((Column<?, T>) column).setGrid(this);
 
-        // Grid knows about hidden columns, Escalator only knows about what is
-        // visible so column indexes do not match
-        if (!column.isHidden()) {
-            int escalatorIndex = index;
-            for (int existingColumn = 0; existingColumn < index; existingColumn++) {
-                if (getColumn(existingColumn).isHidden()) {
-                    escalatorIndex--;
-                }
+        for (final Column<?, T> column : columnCollection) {
+            // Register column with grid
+            this.columns.add(currentIndex++, column);
+            this.footer.addColumn(column);
+            this.header.addColumn(column);
+
+            // Register this grid instance with the column
+            column.setGrid(this);
+
+            if (!column.isHidden()) {
+                visibleNewColumns++;
             }
-            escalator.getColumnConfiguration().insertColumns(escalatorIndex, 1);
+        }
+        if (visibleNewColumns > 0) {
+            final ColumnConfiguration columnConfiguration = this.escalator.getColumnConfiguration();
+            columnConfiguration.insertColumns(index, visibleNewColumns);
         }
 
-        // Reapply column width
-        column.reapplyWidth();
+        for (final Column<?, T> column : columnCollection) {
+            // Reapply column width
+            column.reapplyWidth();
+            // Sink all renderer events
+            final Set<String> events = new HashSet<String>();
+            events.addAll(getConsumedEventsForRenderer(column.getRenderer()));
 
-        // Sink all renderer events
-        Set<String> events = new HashSet<String>();
-        events.addAll(getConsumedEventsForRenderer(column.getRenderer()));
-
-        if (column.isHidable()) {
-            columnHider.updateColumnHidable(column);
+            if (column.isHidable()) {
+                this.columnHider.updateColumnHidable(column);
+            }
+            sinkEvents(events);
         }
-
-        sinkEvents(events);
     }
 
     private void sinkEvents(Collection<String> events) {
@@ -7891,7 +7900,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             cellFocusHandler.offsetRangeBy(1);
             selectionColumn = new SelectionColumn(selectColumnRenderer);
 
-            addColumnSkipSelectionColumnCheck(selectionColumn, 0);
+            addColumnsSkipSelectionColumnCheck(Collections.singleton(selectionColumn), 0);
 
             selectionColumn.setEnabled(isEnabled());
             selectionColumn.initDone();
