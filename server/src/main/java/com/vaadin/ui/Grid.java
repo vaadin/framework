@@ -1398,6 +1398,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * cells in this column. Returning null from the generator results in no
          * custom style name being set.
          *
+         * Note: The style generator is applied only to the body cells, not to
+         * the Editor.
+         *
          * @param cellStyleGenerator
          *            the cell style generator to set, not null
          * @return this column
@@ -3310,6 +3313,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Sets the style generator that is used for generating class names for rows
      * in this grid. Returning null from the generator results in no custom
      * style name being set.
+     *
+     * Note: The style generator is applied only to the body cells, not to
+     * the Editor.
      *
      * @see StyleGenerator
      *
