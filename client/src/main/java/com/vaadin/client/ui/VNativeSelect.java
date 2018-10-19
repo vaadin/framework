@@ -29,6 +29,7 @@ import com.vaadin.shared.ui.nativeselect.NativeSelectState;
 public class VNativeSelect extends FocusableFlowPanelComposite {
 
     private final ListBox listBox = new ListBox();
+    private boolean emptySelectionAllowed = true;
 
     /**
      * Creates a new {@code VNativeSelect} instance.
@@ -55,7 +56,11 @@ public class VNativeSelect extends FocusableFlowPanelComposite {
      */
     public void setSelectedItem(String value) {
         if (value == null) {
-            getListBox().setSelectedIndex(-1);
+            if (emptySelectionAllowed) {
+                getListBox().setSelectedIndex(0);
+            } else {
+                getListBox().setSelectedIndex(-1);
+            }
         } else {
             for (int i = 0; i < getListBox().getItemCount(); i++) {
                 if (Objects.equals(value, getListBox().getValue(i))) {
@@ -132,4 +137,23 @@ public class VNativeSelect extends FocusableFlowPanelComposite {
         return getListBox().getVisibleItemCount();
     }
 
+    /**
+     * Returns true if empty selection is allowed.
+     *
+     * @since
+     * @return empty selection is allowed
+     */
+    public boolean isEmptySelectionAllowed() {
+        return emptySelectionAllowed;
+    }
+
+    /**
+     * Sets true if empty selection is allowed.
+     *
+     * @since
+     * @param emptySelectionAllowed
+     */
+    public void setEmptySelectionAllowed(boolean emptySelectionAllowed) {
+        this.emptySelectionAllowed = emptySelectionAllowed;
+    }
 }
