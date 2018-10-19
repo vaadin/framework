@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<features name="enterprise-4.2.1" xmlns="http://karaf.apache.org/xmlns/features/v1.3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
+
+    <!-- NB: this file is not the one really used. This file is used by the karaf-maven-plugin to define the start-level of bundles in the generated feature.xml -->
+
+    <repository>mvn:org.hibernate.validator/hibernate-validator-osgi-karaf-features/6.0.12.Final/xml/features</repository>
+    <repository>mvn:org.hibernate/hibernate-osgi/5.2.9.Final/xml/karaf</repository>
+    <repository>mvn:org.ops4j.pax.cdi/pax-cdi-features/1.0.0/xml/features</repository>
+    <repository>mvn:org.ops4j.pax.jdbc/pax-jdbc-features/1.3.0/xml/features</repository>
+    <repository>mvn:org.ops4j.pax.jms/pax-jms-features/1.0.1/xml/features</repository>
+    <repository>mvn:org.ops4j.pax.transx/pax-transx-features/0.4.0/xml/features</repository>
+    <repository>mvn:org.apache.karaf.features/standard/4.2.1/xml/features</repository>
+    <repository>mvn:org.apache.aries.jpa/jpa-features/2.7.0/xml/features</repository>
+    <repository>mvn:org.apache.openjpa/openjpa-features/3.0.0/xml/features</repository>
+
+    <feature name="transaction-api" version="1.2.0">
+        <bundle dependency="true">mvn:javax.interceptor/javax.interceptor-api/1.2</bundle>
+        <bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.javax-inject/1_2</bundle>
+        <bundle dependency="true">mvn:javax.el/javax.el-api/3.0.0</bundle>
+        <bundle dependency="true">mvn:javax.enterprise/cdi-api/1.2</bundle>
+        <bundle>mvn:javax.transaction/javax.transaction-api/1.2</bundle>
+        <feature>pax-transx-tm-api</feature>
+    </feature>
+
+    <feature name="transaction-manager-geronimo" description="Geronimo Transaction Manager" version="3.1.3">
+        <details>JTA implementation provided by Apache Aries Transaction</details>
+        <config name="org.ops4j.pax.transx.tm.geronimo">
+################################################################################
+#
+#    Licensed to the Apache Software Foundation (ASF) under one or more
+#    contributor license agreements.  See the NOTICE file distributed with
+#    this work for additional information regarding copyright ownership.
+#    The ASF licenses this file to You under the Apache License, Version 2.0
+#    (the "License"); you may not use this file except in compliance with
+#    the License.  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+#
+################################################################################
+
+org.apache.geronimo.tm.recoverable = true
+org.apache.geronimo.tm.timeout = 600
+org.apache.geronimo.tm.howl.logFileDir = ${karaf.data}/txlog
+org.apache.geronimo.tm.howl.maxLogFiles = 2
+org.apache.geronimo.tm.howl.maxBlocksPerFile = 512
+org.apache.geronimo.tm.howl.bufferSize = 4
+        </config>
+        <feature version="[1.1,2)">transaction-api</feature>
+        <feature>pax-transx-tm-geronimo</feature>
+        <capability>
+            transaction-manager;provider:=geronimo
+        </capability>
+    </feature>
+
+    <feature name="transaction-manager-narayana" description="Narayana Transaction Manager" version="5.9.0.Final">
+        <details>JTA implementation provided by Narayana</details>
+        <config name="org.ops4j.pax.transx.tm.narayana">
+################################################################################
+#
+#    Licensed to the Apache Software Foundation (ASF) under one or more
+#    contributor license agreements.  See the NOTICE file distributed with
+#    this work for additional information regarding copyright ownership.
+#    The ASF licenses this file to You under the Apache License, Version 2.0
+#    (the "License"); you may not use this file except in compliance with
+#    the License.  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+#
+################################################################################
+
+com.arjuna.ats.arjuna.objectstore.objectStoreDir=${karaf.data}/narayana
+com.arjuna.ats.arjuna.objectstore.communicationStore.objectStoreDir=${karaf.data}/narayana
+com.arjuna.ats.arjuna.hornetqjournal.storeDir=${karaf.data}/narayana/hornetq
+        </config>
+        <feature version="[1.1,2)">transaction-api</feature>
+        <feature>pax-transx-tm-narayana</feature>
+        <capability>
+            transaction-manager;provider:=narayana
+        </capability>
+    </feature>
+
+    <feature name="transaction-manager-atomikos" description="Atomikos Transaction Manager" version="4.0.4">
+        <details>JTA implementation provided by Atomikos</details>
+        <config name="org.ops4j.pax.transx.tm.atomikos">
+################################################################################
+#
+#    Licensed to the Apache Software Foundation (ASF) under one or more
+#    contributor license agreements.  See the NOTICE file distributed with
+#    this work for additional information regarding copyright ownership.
+#    The ASF licenses this file to You under the Apache License, Version 2.0
+#    (the "License"); you may not use this file except in compliance with
+#    the License.  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+#
+################################################################################
+
+com.atomikos.icatch.log_base_dir=${karaf.data}/atomikos
+        </config>
+        <feature version="[1.1,2)">transaction-api</feature>
+        <feature>pax-transx-tm-atomikos</feature>
+        <capability>
+            transaction-manager;provider:=atomikos
+        </capability>
+    </feature>
+
+    <feature name="transaction" description="OSGi Transaction Manager" version="2.0">
+        <details>JTA Support</details>
+        <feature dependency="true">transaction-manager-geronimo</feature>
+        <requirement>
+            transaction-manager
+        </requirement>
+        <conditional>
+            <condition>aries-blueprint</condition>
+            <bundle dependency="true">mvn:org.apache.felix/org.apache.felix.coordinator/1.0.2</bundle>
+            <bundle>mvn:org.apache.aries.transaction/org.apache.aries.transaction.blueprint/1.1.1</bundle>
+            <bundle>mvn:org.apache.aries.transaction/org.apache.aries.transaction.blueprint/2.2.0</bundle>
+        </conditional>
+    </feature>
+
+    <feature name="connector" description="OSGi support for JCA Connector 1.6" version="3.1.1">
+        <details>OSGi support for JCA Connector 1.6</details>
+        <feature version="[2,3)">transaction</feature>
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-j2ee-connector_1.6_spec/1.0</bundle>
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-validation_1.0_spec/1.1</bundle>
+        <bundle>mvn:org.apache.geronimo.components/geronimo-connector/3.1.1</bundle>
+    </feature>
+
+    <feature name="openjpa3" description="OpenJPA engine support" version="3.0.0">
+        <bundle dependency="true">mvn:org.apache.xbean/xbean-asm6-shaded/4.9</bundle>
+        <feature version="3.0.0">openjpa</feature>
+        <capability>
+            osgi.service;objectClass=javax.persistence.spi.PersistenceProvider;effective:=active;javax.persistence.provider=org.apache.openjpa.persistence.PersistenceProviderImpl
+        </capability>
+    </feature>
+
+    <feature name="hibernate" description="Hibernate JPA engine support" version="5.2.9.Final">
+        <feature prerequisite="true">wrap</feature>
+        <feature version="5.2.9.Final">hibernate-orm</feature>
+        <bundle dependency="true">mvn:net.bytebuddy/byte-buddy/1.6.6</bundle>
+        <capability>
+            osgi.service;objectClass=javax.persistence.spi.PersistenceProvider;effective:=active;javax.persistence.provider=org.hibernate.jpa.HibernatePersistenceProvider
+        </capability>
+    </feature>
+
+    <feature name="eclipselink" description="Eclipselink JPA persistence engine support" version="2.7.3">
+        <details>Eclipselink persistence engine.</details>
+        <feature version="[2,3)">jpa</feature>
+        <bundle dependency="true">mvn:org.eclipse.persistence/javax.persistence/2.2.0</bundle>
+        <feature version="[2,3)">transaction</feature>
+        <bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.jpa/2.7.3</bundle>
+        <bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.core/2.7.3</bundle>
+        <bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.asm/2.7.3</bundle>
+        <bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.antlr/2.7.3</bundle>
+        <bundle>mvn:org.eclipse.persistence/org.eclipse.persistence.jpa.jpql/2.7.3</bundle>
+        <bundle>mvn:org.apache.aries.jpa/org.apache.aries.jpa.eclipselink.adapter/2.7.0</bundle>
+        <capability>
+            osgi.service;objectClass=javax.persistence.spi.PersistenceProvider;effective:=active;javax.persistence.provider=org.eclipse.persistence.jpa.PersistenceProvider
+        </capability>
+    </feature>
+
+    <feature name="jndi" description="OSGi Service Registry JNDI access" version="4.2.1">
+        <details>JNDI support provided by Apache Aries JNDI 1.0.0, including additional service, commands, and MBean.</details>
+        <feature>aries-proxy</feature>
+        <bundle dependency="true" start-level="30">mvn:org.apache.aries/org.apache.aries.util/1.1.3</bundle>
+        <bundle start-level="30">mvn:org.apache.xbean/xbean-naming/4.9</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.jndi/org.apache.aries.jndi.api/1.1.0</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.jndi/org.apache.aries.jndi.core/1.0.2</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.jndi/org.apache.aries.jndi.rmi/1.0.0</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.jndi/org.apache.aries.jndi.url/1.1.0</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.jndi/org.apache.aries.jndi.legacy.support/1.0.0</bundle>
+        <bundle start-level="30">mvn:org.apache.karaf.jndi/org.apache.karaf.jndi.core/4.2.1</bundle>
+    </feature>
+
+    <feature name="jdbc" description="JDBC service and commands" version="4.2.1">
+        <details>JDBC support providing service, commands, and MBean.</details>
+        <feature prerequisite="true">pax-jdbc</feature>
+        <feature prerequisite="true">pax-jdbc-config</feature>
+        <bundle dependency="true">mvn:org.osgi/org.osgi.service.jdbc/1.0.0</bundle>
+        <bundle>mvn:org.apache.karaf.jdbc/org.apache.karaf.jdbc.core/4.2.1</bundle>
+    </feature>
+
+    <feature name="jms" description="JMS service and commands" version="4.2.1">
+        <details>JMS support providing service, commands, and MBean.</details>
+        <feature>pax-jms-pool</feature>
+        <feature>pax-jms-config</feature>
+        <feature>pax-jms-pool-transx</feature>
+        <feature>transaction</feature>
+        <bundle dependency="true">mvn:javax.jms/javax.jms-api/2.0</bundle>
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jta_1.1_spec/1.1.1</bundle>
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jms_1.1_spec/1.1.1</bundle>
+        <bundle dependency="true">mvn:org.apache.commons/commons-pool2/2.4.2</bundle>
+        <bundle>mvn:org.apache.karaf.jms/org.apache.karaf.jms.core/4.2.1</bundle>
+    </feature>
+
+    <feature name="application-without-isolation" description="Provide EBA archive support" version="1.0.0">
+        <details>Support of the Aries EBA archives</details>
+        <!-- pre-requisites-->
+        <feature version="4.2.1">obr</feature>
+        <feature>aries-blueprint</feature>
+        <!-- common -->
+        <bundle dependency="true" start-level="30">mvn:org.apache.aries/org.apache.aries.util/1.1.3</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.application/org.apache.aries.application.resolver.obr/1.0.0</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.application/org.apache.aries.application.install/1.0.0</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.application/org.apache.aries.application.api/1.0.0</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.application/org.apache.aries.application.management/1.0.0</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.application/org.apache.aries.application.utils/1.0.0</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.application/org.apache.aries.application.modeller/1.0.0</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.application/org.apache.aries.application.default.local.platform/1.0.0</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.application/org.apache.aries.application.resolver.noop/1.0.0</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.application/org.apache.aries.application.deployment.management/1.0.0</bundle>
+        <!-- without isolation -->
+        <bundle start-level="30">mvn:org.apache.aries.application/org.apache.aries.application.runtime/1.0.0</bundle>
+    </feature>
+
+    <feature name="subsystems" description="Support for OSGi subsystems" version="2.0.10">
+        <details>Support for Aries OSGi subsystems</details>
+        <bundle dependency="true" start-level="30">mvn:org.apache.aries/org.apache.aries.util/1.1.3</bundle>
+        <bundle dependency="true" start-level="30">mvn:org.apache.karaf.services/org.apache.karaf.services.coordinator/4.2.1</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.subsystem/org.apache.aries.subsystem.api/2.0.10</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.subsystem/org.apache.aries.subsystem.core/2.0.10</bundle>
+        <conditional>
+            <condition>shell</condition>
+            <bundle start-level="30">mvn:org.apache.karaf.subsystem/org.apache.karaf.subsystem.core/4.2.1</bundle>
+        </conditional>
+    </feature>
+
+    <feature name="docker" description="Docker service and commands" version="4.2.1">
+        <details>Docker support providing service, commands, and MBean.</details>
+        <bundle dependency="true">mvn:com.fasterxml.jackson.core/jackson-core/2.9.6</bundle>
+        <bundle dependency="true">mvn:com.fasterxml.jackson.core/jackson-annotations/2.9.6</bundle>
+        <bundle dependency="true">mvn:com.fasterxml.jackson.core/jackson-databind/2.9.6</bundle>
+        <bundle>mvn:org.apache.karaf.docker/org.apache.karaf.docker.core/4.2.1</bundle>
+    </feature>
+
+</features>

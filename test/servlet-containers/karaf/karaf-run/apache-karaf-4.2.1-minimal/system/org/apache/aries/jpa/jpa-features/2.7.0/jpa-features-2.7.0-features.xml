@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.3.0" name="aries-jpa-2.7.0">
+    <feature name="jpa" description="OSGi Persistence Container" version="2.7.0">
+        <details>JPA implementation provided by Apache Aries JPA 2.x. NB: this feature doesn't provide the JPA engine, you have to install one by yourself (OpenJPA for instance)</details>
+        <bundle dependency="true">mvn:org.apache.aries.jpa.javax.persistence/javax.persistence_2.1/2.7.0</bundle>
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jta_1.1_spec/1.1.1</bundle>
+        <bundle dependency="true">mvn:org.osgi/org.osgi.service.jdbc/1.0.0</bundle>
+        <bundle start-level="30" dependency="true">mvn:org.apache.felix/org.apache.felix.coordinator/1.0.2</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.jpa/org.apache.aries.jpa.api/2.7.0</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.jpa/org.apache.aries.jpa.container/2.7.0</bundle>
+        <bundle start-level="30">mvn:org.apache.aries.jpa/org.apache.aries.jpa.support/2.7.0</bundle>
+        <conditional>
+            <condition>aries-blueprint</condition>
+            <bundle start-level="30">mvn:org.apache.aries.jpa/org.apache.aries.jpa.blueprint/2.7.0</bundle>
+        </conditional>
+        <capability>
+            osgi.service;effective:=active;objectClass=javax.persistence.spi.PersistenceProvider
+        </capability>
+    </feature>
+</features>

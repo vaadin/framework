@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<features name="pax-transx-0.4.0"
+        xmlns="http://karaf.apache.org/xmlns/features/v1.3.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://karaf.apache.org/xmlns/features/v1.3.0
+            http://karaf.apache.org/xmlns/features/v1.3.0">
+
+    <feature name="pax-transx-tm-api" version="0.4.0">
+        <!--
+            That's only a dependency="true". Karaf's "transaction" feature installs javax.transaction:javax.transaction-api:1.2
+            together with cdi-api, el-api, interceptor-api and javax.inject bundles
+        -->
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jta_1.1_spec/1.1.1</bundle>
+        <bundle>mvn:org.ops4j.pax.transx/pax-transx-tm-api/0.4.0</bundle>
+    </feature>
+
+    <feature name="pax-transx-tm-geronimo" version="0.4.0">
+        <config name="org.ops4j.pax.transx.tm.geronimo">
+            org.apache.geronimo.tm.recoverable = true
+            org.apache.geronimo.tm.timeout = 600
+            org.apache.geronimo.tm.howl.logFileDir = ${karaf.data}/txlog
+            org.apache.geronimo.tm.howl.maxLogFiles = 2
+            org.apache.geronimo.tm.howl.maxBlocksPerFile = 512
+            org.apache.geronimo.tm.howl.bufferSize = 4
+        </config>
+        <feature>pax-transx-tm-api</feature>
+        <bundle>mvn:org.ops4j.pax.transx/pax-transx-tm-geronimo/0.4.0</bundle>
+    </feature>
+
+    <feature name="pax-transx-tm-atomikos" version="0.4.0">
+        <feature>pax-transx-tm-api</feature>
+        <bundle>mvn:org.ops4j.pax.transx/pax-transx-tm-atomikos/0.4.0</bundle>
+    </feature>
+
+    <feature name="pax-transx-tm-narayana" version="0.4.0">
+        <feature>pax-transx-tm-api</feature>
+        <bundle>mvn:org.ops4j.pax.transx/pax-transx-tm-narayana/0.4.0</bundle>
+    </feature>
+
+    <feature name="pax-transx-tm" version="0.4.0">
+        <feature dependency="true">pax-transx-tm-geronimo</feature>
+        <requirement>
+            osgi.service;objectClass="org.ops4j.pax.transx.tm.TransactionManager"
+        </requirement>
+    </feature>
+
+    <feature name="pax-transx-connector" version="0.4.0">
+        <feature version="0.4.0">pax-transx-tm-api</feature>
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-j2ee-connector_1.6_spec/1.0</bundle>
+        <bundle>mvn:org.ops4j.pax.transx/pax-transx-connector/0.4.0</bundle>
+    </feature>
+
+    <feature name="pax-transx-jdbc" version="0.4.0">
+        <feature version="0.4.0">pax-transx-connector</feature>
+        <bundle>mvn:org.ops4j.pax.transx/pax-transx-jdbc/0.4.0</bundle>
+    </feature>
+
+    <feature name="pax-transx-jms" version="0.4.0">
+        <feature version="0.4.0">pax-transx-connector</feature>
+        <bundle dependency="true">mvn:javax.jms/javax.jms-api/2.0.1</bundle>
+        <bundle>mvn:org.ops4j.pax.transx/pax-transx-jms/0.4.0</bundle>
+    </feature>
+
+</features>
