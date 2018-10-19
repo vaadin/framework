@@ -50,6 +50,9 @@ public class AbstractSingleSelection extends AbstractTestUI {
                     .newInstance();
             select.setItems("Foo", "Bar", "Baz", "Reset");
             select.setSelectedItem("Bar");
+            if (select instanceof NativeSelect) {
+                ((NativeSelect) select).setEmptySelectionAllowed(false);
+            }
 
             select.addValueChangeListener(event -> {
                 if ("Reset".equals(event.getValue())) {
