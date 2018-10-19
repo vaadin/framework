@@ -24,7 +24,37 @@
             <artifactId>vaadin-themes</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-karaf-bundle1</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-karaf-bundle2</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
+    <profiles>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <karaf.script>karaf.bat</karaf.script>
+            </properties>
+        </profile>
+    </profiles>
+
+    <properties>
+        <karaf.script>karaf</karaf.script>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -33,24 +63,30 @@
                 <version>1.6.0</version>
                 <executions>
                     <execution>
+                        <id>start-karaf-background</id>
                         <phase>pre-integration-test</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>mvn</executable>
+                            <executable>${project.basedir}/apache-karaf-${karaf.plugin.version}-minimal/bin/${karaf.script}
+                            </executable>
                             <async>true</async>
                             <asyncDestroyOnShutdown>true</asyncDestroyOnShutdown>
-                            <commandlineArgs>-f karaf-run-pom.xml karaf:run</commandlineArgs>
+                            <commandlineArgs>server</commandlineArgs>
+                            <environmentVariables>
+                                <KARAF_DATA>
+                                    ${project.build.directory}/karaf-run/data
+                                </KARAF_DATA>
+                            </environmentVariables>
                         </configuration>
                     </execution>
                 </executions>
-
             </plugin>
             <plugin>
                 <groupId>org.apache.karaf.tooling</groupId>
                 <artifactId>karaf-maven-plugin</artifactId>
-                <version>4.0.8</version>
+                <version>4.2.1</version>
                 <executions>
                     <execution>
                         <id>karaf-client-ctrl</id>
@@ -66,18 +102,21 @@
                                 <command>shutdown -f +10</command>
                                 <command>feature:install http</command>
                                 <command>feature:install http-whiteboard</command>
-                                <command>bundle:install -s mvn:org.jsoup/jsoup/1.8.3</command>
+                                <command>bundle:install -s mvn:org.jsoup/jsoup/1.11.2</command>
                                 <command>bundle:install -s mvn:com.vaadin.external/gentyref/1.2.0.vaadin1</command>
                                 <command>bundle:install -s mvn:com.vaadin/vaadin-shared/${vaadin.version}</command>
                                 <command>bundle:install -s mvn:com.vaadin/vaadin-server/${vaadin.version}</command>
-                                <command>bundle:install -s mvn:com.vaadin/vaadin-osgi-integration/${vaadin.version}</command>
-                                <command>bundle:install -s mvn:com.vaadin/vaadin-client-compiled/${vaadin.version}</command>
+                                <command>bundle:install -s mvn:com.vaadin/vaadin-osgi-integration/${vaadin.version}
+                                </command>
+                                <command>bundle:install -s mvn:com.vaadin/vaadin-client-compiled/${vaadin.version}
+                                </command>
                                 <command>bundle:install -s mvn:com.vaadin/vaadin-themes/${vaadin.version}</command>
                                 <command>
-                                    <![CDATA[bundle:install -s file:./../vaadin-karaf-bundle1/target/vaadin-karaf-bundle1-${project.version}.jar]]></command>
+                                    <![CDATA[bundle:install -s file:./../../vaadin-karaf-bundle1/target/vaadin-karaf-bundle1-${project.version}.jar]]></command>
                                 <command>
-                                    <![CDATA[bundle:install -s file:./../vaadin-karaf-bundle2/target/vaadin-karaf-bundle2-${project.version}.jar]]></command>
+                                    <![CDATA[bundle:install -s file:./../../vaadin-karaf-bundle2/target/vaadin-karaf-bundle2-${project.version}.jar]]></command>
                             </commands>
+                            <workingDirectory>${project.build.directory}</workingDirectory>
                         </configuration>
                     </execution>
                     <execution>
