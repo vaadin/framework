@@ -1164,15 +1164,19 @@ public class GridConnector extends AbstractHasComponentsConnector
     private void updateColumnsFromState() {
         this.columnsUpdatedFromState = true;
         final List<Column<?, JsonObject>> columns = new ArrayList<Column<?, JsonObject>>(getState().columns.size());
-        for (final GridColumnState state : getState().columns) {
-            CustomGridColumn column = this.columnIdToColumn.get(state.id);
-            if (column == null) {
-                column = new CustomGridColumn(state);
-                this.columnIdToColumn.put(state.id, column);
-                this.columnOrder.add(state.id);
-                columns.add(column);
-            } else {
-                updateColumnFromState(column, state);
+        for (String columnId : getState().columnOrder) {
+            for (GridColumnState state : getState().columns) {
+                if (state.id.equals(columnId)) {
+                    CustomGridColumn column = this.columnIdToColumn.get(state.id);
+                    if (column == null) {
+                        column = new CustomGridColumn(state);
+                        this.columnIdToColumn.put(state.id, column);
+                        this.columnOrder.add(state.id);
+                        columns.add(column);
+                    } else {
+                        updateColumnFromState(column, state);
+                    }
+                }
             }
         }
         @SuppressWarnings("unchecked")
