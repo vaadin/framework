@@ -4772,33 +4772,65 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private Grid<T> grid;
 
         /**
-         * Width of column in pixels as {@link #setWidth(double)} has been
-         * called
+         * Width of column in pixels as {@link #setWidth(double)} has been called.
          */
-        private double widthUser = GridConstants.DEFAULT_COLUMN_WIDTH_PX;
+        protected double widthUser = GridConstants.DEFAULT_COLUMN_WIDTH_PX;
 
         /**
          * Renderer for rendering a value into the cell
          */
         private Renderer<? super C> bodyRenderer;
 
-        private boolean sortable = false;
+        /**
+         * The sortable state of this column.
+         */
+        protected boolean sortable = false;
 
-        private boolean editable = true;
+        /**
+         * The editable state of this column.
+         */
+        protected boolean editable = true;
 
-        private boolean resizable = true;
+        /**
+         * The resizable state of this column.
+         */
+        protected boolean resizable = true;
 
-        private boolean hidden = false;
+        /**
+         * The hidden state of this column.
+         */
+        protected boolean hidden = false;
 
-        private boolean hidable = false;
+        /**
+         * The hidable state of this column.
+         */
+        protected boolean hidable = false;
 
-        private String headerCaption = "";
+        /**
+         * The header-caption of this column.
+         */
+        protected String headerCaption = "";
 
-        private String hidingToggleCaption = null;
+        /**
+         * The hiding-toggle-caption of this column.
+         */
+        protected String hidingToggleCaption = null;
 
-        private double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
-        private double maximumWidthPx = GridConstants.DEFAULT_MAX_WIDTH;
-        private int expandRatio = GridConstants.DEFAULT_EXPAND_RATIO;
+        /**
+         * The minimum width in pixels of this column.
+         */
+        protected double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
+
+        /**
+         * The maximum width in pixels of this column.
+         */
+        protected double maximumWidthPx = GridConstants.DEFAULT_MAX_WIDTH;
+
+        /**
+         * The expand ratio of this column.
+         */
+        protected int expandRatio = GridConstants.DEFAULT_EXPAND_RATIO;
+
 
         /**
          * Constructs a new column with a simple TextRenderer.
@@ -6476,6 +6508,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         int visibleNewColumns = 0;
         int currentIndex = index;
 
+        //prevent updates of hiding toggles.
+        //it will be updated finally all at once.
+        this.columnHider.hidingColumn = true;
 
         for (final Column<?, T> column : columnCollection) {
             // Register column with grid
@@ -6507,6 +6542,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
             sinkEvents(events);
         }
+        //now we do the update of the hiding toggles.
+        this.columnHider.hidingColumn = false;
+        this.columnHider.updateTogglesOrder();
+        refreshHeader();
+        this.header.updateColSpans();
+        this.footer.updateColSpans();
     }
 
     private void sinkEvents(Collection<String> events) {
