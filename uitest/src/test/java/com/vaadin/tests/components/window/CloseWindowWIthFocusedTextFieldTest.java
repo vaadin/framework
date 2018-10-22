@@ -13,11 +13,10 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@RunLocally(Browser.CHROME)
 public class CloseWindowWIthFocusedTextFieldTest extends MultiBrowserTest {
 
     @Test
-    public void OpenWindow_CloseWithEscapeKey_WindowClosed (){
+    public void OpenWindow_CloseWithEscapeKey_WindowClosed() {
         openTestURL();
         $(ButtonElement.class).first().click();
         assertTrue("Window should be opened", $(WindowElement.class).exists());
