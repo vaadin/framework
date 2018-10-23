@@ -245,53 +245,7 @@
             </activation>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>fetch-release-notes-tickets</id>
-                                <phase>process-classes</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <classpathScope>compile</classpathScope>
-                                    <executable>${java.home}/bin/java</executable>
-                                    <arguments>
-                                        <argument>-Dvaadin.version=${project.version}</argument>
-                                        <argument>-classpath</argument>
-                                        <classpath />
-
-                                        <argument>com.vaadin.buildhelpers.FetchReleaseNotesTickets
-                                        </argument>
-                                    </arguments>
-                                    <outputFile>${relnotes.tickets.file}</outputFile>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>fetch-release-notes-authors</id>
-                                <phase>process-classes</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <classpathScope>compile</classpathScope>
-                                    <executable>${java.home}/bin/java</executable>
-                                    <arguments>
-                                        <argument>-Dvaadin.version=${project.version}</argument>
-                                        <argument>-classpath</argument>
-                                        <classpath />
-
-                                        <argument>com.vaadin.buildhelpers.FetchReleaseNotesAuthors
-                                        </argument>
-                                    </arguments>
-                                    <outputFile>${relnotes.authors.file}</outputFile>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
+                
                     <!-- Extract sources for JavaDoc -->
                     <plugin>
                         <artifactId>maven-dependency-plugin</artifactId>
