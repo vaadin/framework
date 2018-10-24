@@ -274,7 +274,7 @@ public class ActionManager implements Action.Handler, Action.Notifier {
 
         @Override
         protected String createKey() {
-            return String.valueOf(lastKey.getAndIncrement());
+            return String.valueOf(lastKey.incrementAndGet());
         }
     }
 
