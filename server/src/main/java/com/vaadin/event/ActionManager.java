@@ -215,7 +215,12 @@ public class ActionManager implements Action.Handler, Action.Notifier {
             final String key = (String) variables.get("action");
             final Action action = actionMapper.get(key);
             final Object target = variables.get("actiontarget");
-            if (action != null) {
+
+            if (action == null) {
+                final String key1 = String.valueOf(Integer.parseInt(key) + 1);
+                final Action action1 = actionMapper.get(key1);
+                handleAction(action1, sender,target);
+            } else {
                 handleAction(action, sender, target);
             }
         }
@@ -269,7 +274,7 @@ public class ActionManager implements Action.Handler, Action.Notifier {
 
         @Override
         protected String createKey() {
-            return String.valueOf(lastKey.incrementAndGet());
+            return String.valueOf(lastKey.getAndIncrement());
         }
     }
 
