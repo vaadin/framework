@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.LinkElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class AppResource404Test extends MultiBrowserTest {
@@ -21,9 +22,9 @@ public class AppResource404Test extends MultiBrowserTest {
         openTestURL();
         $(LinkElement.class).get(1).click(5, 5);
         disableWaitingAndWait();
+        String errorText = BrowserUtil.isIE(getDesiredCapabilities()) ? "HTTP ERROR 404" : "/APP/connector/0/4/asdfasdf can not be found";
         Assert.assertTrue("Page does not contain the given text",
-                driver.getPageSource().contains(
-                        "/APP/connector/0/4/asdfasdf can not be found"));
+                driver.getPageSource().contains(errorText));
     }
 
     @Test
@@ -33,8 +34,10 @@ public class AppResource404Test extends MultiBrowserTest {
         disableWaitingAndWait();
         Assert.assertTrue("Page does not contain the given text",
                 driver.getPageSource().contains("HTTP ERROR 404"));
-        Assert.assertTrue("Page does not contain the given text",
+        if (!BrowserUtil.isIE(getDesiredCapabilities())) {
+        	Assert.assertTrue("Page does not contain the given text",
                 driver.getPageSource().contains("Problem accessing /run/APP/"));
+        }
     }
 
     @Test
