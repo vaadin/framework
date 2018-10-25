@@ -1,13 +1,17 @@
 package com.vaadin.tests.components.window;
 
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class CloseWindowWIthFocusedTextField extends AbstractTestUI {
+public class CloseWindowWithFocusedTextField extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -21,8 +25,8 @@ public class CloseWindowWIthFocusedTextField extends AbstractTestUI {
 
             TextField textField = new TextField("focus me");
             textField.focus();
-            window.setContent(textField);
 
+            window.setContent(textField);
             getUI().addWindow(window);
         });
 

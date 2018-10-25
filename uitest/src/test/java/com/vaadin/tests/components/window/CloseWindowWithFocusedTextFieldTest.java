@@ -13,7 +13,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class CloseWindowWIthFocusedTextFieldTest extends MultiBrowserTest {
+public class CloseWindowWithFocusedTextFieldTest extends MultiBrowserTest {
 
     @Test
     public void OpenWindow_CloseWithEscapeKey_WindowClosed() {
