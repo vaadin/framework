@@ -147,6 +147,15 @@ public class KeyMapper<V> implements DataKeyMapper<V> {
         keyObjectMap.clear();
     }
 
+    /**
+     * Merge Objects into the mapper.
+     * <p>
+     * This method will add the new objects to the mapper and remove inactive
+     * objects from it.
+     *
+     * @param objects
+     *            new objects set needs to be merged.
+     */
     public void merge(Set<V> objects) {
         final Set<String> keys = new HashSet<>(keyObjectMap.size());
 
