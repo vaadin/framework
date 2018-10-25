@@ -184,9 +184,8 @@ public class GridConnector extends AbstractHasComponentsConnector
          * @param state with attributes to initialize the column.
          */
         @SuppressWarnings("unchecked")
-        private CustomGridColumn(GridColumnState state)
-        {
-            this(state.id, (AbstractRendererConnector<Object>)state.rendererConnector);
+        private CustomGridColumn(GridColumnState state) {
+            this(state.id, (AbstractRendererConnector<Object>) state.rendererConnector);
             this.hidingToggleCaption = state.hidingToggleCaption;
             this.hidden = state.hidden;
             this.hidable = state.hidable;
