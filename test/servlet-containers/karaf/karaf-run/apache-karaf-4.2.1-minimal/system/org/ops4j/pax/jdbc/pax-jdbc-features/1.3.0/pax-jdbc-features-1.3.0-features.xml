@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<features name="org.ops4j.pax.jdbc-1.3.0" xmlns="http://karaf.apache.org/xmlns/features/v1.4.0">
+
+    <repository>
+        mvn:org.ops4j.pax.transx/pax-transx-features/0.3.0/xml/features
+    </repository>
+
+    <feature name="pax-jdbc-spec" description="Provides OSGi JDBC Service spec" version="1.3.0">
+        <bundle>mvn:org.osgi/org.osgi.service.jdbc/1.0.0</bundle>
+    </feature>
+
+    <feature name="pax-jdbc" description="Provides JDBC Service support" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc/1.3.0</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-config" description="Provides JDBC Config support" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jta_1.1_spec/1.1.1</bundle>
+        <bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jasypt/1.9.2_1</bundle>
+        <bundle dependency="true">mvn:org.ops4j.pax.jdbc/pax-jdbc-pool-common/1.3.0</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-config/1.3.0</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-db2" description="Provides JDBC DB2 DataSourceFactory" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-db2/1.3.0</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-teradata" description="Provides JDBC Teradata DataSourceFactory" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-teradata/1.3.0</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-derby" description="Provides JDBC Derbi Embedded DataSourceFactory" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle dependency="true">mvn:org.apache.derby/derby/10.13.1.1</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-derby/1.3.0</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-derbyclient" description="Provides JDBC Derbi Client DataSourceFactory" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle dependency="true">mvn:org.apache.derby/derbyclient/10.13.1.1</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-derbyclient/1.3.0</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-h2" description="Provides JDBC H2 DataSourceFactory" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle>mvn:com.h2database/h2/1.3.172</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-hsqldb" description="Provides JDBC HSQLDB DataSourceFactory" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle dependency="true">mvn:org.hsqldb/hsqldb/2.3.4</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-hsqldb/1.3.0</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-mariadb" description="Provides JDBC Mariadb DataSourceFactory" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle dependency="true">mvn:org.mariadb.jdbc/mariadb-java-client/1.5.9</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-mariadb/1.3.0</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-oracle" description="Provides JDBC Oracle DataSourceFactory" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-oracle/1.3.0</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-postgresql" description="Provides JDBC PostgreSQL DataSourceFactory" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jta_1.1_spec/1.1.1</bundle>
+        <bundle>mvn:org.postgresql/postgresql/9.4.1212.jre7</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-sqlite" description="Provides JDBC SQLite DataSourceFactory" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle dependency="true">mvn:org.xerial/sqlite-jdbc/3.16.1</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-sqlite/1.3.0</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-mssql" description="Provides JDBC MSSQL DataSourceFactory" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-mssql/1.3.0</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-jtds" description="Provides JDBC jTDS DataSourceFactory" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle>wrap:mvn:net.sourceforge.jtds/jtds/1.3.1</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-jtds/1.3.0</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-pool-dbcp2" description="Provides JDBC Pooling DataSourceFactory" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle dependency="true">mvn:org.apache.commons/commons-dbcp2/2.1.1</bundle>
+        <bundle dependency="true">mvn:org.apache.commons/commons-pool2/2.5.0</bundle>
+        <bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.cglib/3.2.4_1</bundle>
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jta_1.1_spec/1.1.1</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-pool-common/1.3.0</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-pool-dbcp2/1.3.0</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-pool-c3p0" description="Provides JDBC Pooling using C3P0" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.c3p0/0.9.5.2_1</bundle>
+        <bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.cglib/3.2.4_1</bundle>
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jta_1.1_spec/1.1.1</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-pool-common/1.3.0</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-pool-c3p0/1.3.0</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-pool-hikaricp" description="Provides JDBC Pooling DataSourceFactory using HikariCP" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.cglib/3.2.4_1</bundle>
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jta_1.1_spec/1.1.1</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-pool-common/1.3.0</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-pool-hikaricp/1.3.0</bundle>
+        <bundle>mvn:com.zaxxer/HikariCP-java7/2.4.11</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-pool-aries" description="Provides JDBC Pooling DataSourceFactory using Aries Transaction JDBC" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jta_1.1_spec/1.1.1</bundle>
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-j2ee-connector_1.6_spec/1.0</bundle>
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-validation_1.0_spec/1.1</bundle>
+        <bundle dependency="true">mvn:org.apache.geronimo.components/geronimo-connector/3.1.1</bundle>
+
+        <bundle dependency="true">mvn:org.apache.aries/org.apache.aries.util/1.1.3</bundle>
+        <bundle dependency="true">mvn:org.apache.aries.transaction/org.apache.aries.transaction.manager/1.3.3</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-pool-common/1.3.0</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-pool-aries/1.3.0</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-pool-narayana" description="Provides JDBC Pooling DataSourceFactory using Narayana Transaction Manager" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+
+        <bundle dependency="true">mvn:org.apache.commons/commons-dbcp2/2.1.1</bundle>
+        <bundle dependency="true">mvn:org.apache.commons/commons-pool2/2.5.0</bundle>
+        <bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.cglib/3.2.4_1</bundle>
+        <bundle dependency="true">mvn:org.jboss.narayana.osgi/narayana-osgi-jta/5.2.8.Final</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-pool-common/1.3.0</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-pool-narayana/1.3.0</bundle>
+    </feature>
+
+    <feature name="pax-jdbc-pool-transx" description="Provides JDBC Pooling DataSourceFactory using Pax TransX JDBC" version="1.3.0">
+        <feature>pax-jdbc-spec</feature>
+        <feature>pax-transx-jdbc</feature>
+        <feature>pax-transx-tm</feature>
+
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-pool-common/1.3.0</bundle>
+        <bundle>mvn:org.ops4j.pax.jdbc/pax-jdbc-pool-transx/1.3.0</bundle>
+    </feature>
+
+</features>

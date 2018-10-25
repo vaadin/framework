@@ -1,0 +1,360 @@
+#!/bin/sh
+#
+#    Licensed to the Apache Software Foundation (ASF) under one or more
+#    contributor license agreements.  See the NOTICE file distributed with
+#    this work for additional information regarding copyright ownership.
+#    The ASF licenses this file to You under the Apache License, Version 2.0
+#    (the "License"); you may not use this file except in compliance with
+#    the License.  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+#
+
+realpath() {
+  # Use in priority xpg4 awk or nawk on SunOS as standard awk is outdated
+  AWK=awk
+  if ${solaris}; then
+      if [ -x /usr/xpg4/bin/awk ]; then
+          AWK=/usr/xpg4/bin/awk
+      elif [ -x /usr/bin/nawk ]; then
+          AWK=/usr/bin/nawk
+      fi
+  fi
+
+  READLINK_EXISTS=$(command -v readlink &> /dev/null)
+  if [ -z "$READLINK_EXISTS" ]; then
+    OURPWD=${PWD}
+    cd "$(dirname "${1}")" || exit 2
+    LINK=$(ls -l "$(basename "${1}")" | ${AWK} -F"-> " '{print $2}')
+    while [ "${LINK}" ]; do
+        echo "link: ${LINK}" >&2
+        cd "$(dirname "${LINK}")" || exit 2
+        LINK=$(ls -l "$(basename "${1}")" | ${AWK} -F"-> " '{print $2}')
+    done
+    REALPATH="${PWD}/$(basename "${1}")"
+    cd "${OURPWD}" || exit 2
+    echo "${REALPATH}"
+  else
+    OURPWD=${PWD}
+    cd "$(dirname "${1}")" || exit 2
+    LINK=$(readlink "$(basename "${1}")")
+    while [ "${LINK}" ]; do
+	    echo "link: ${LINK}" >&2
+        cd "$(dirname "${LINK}")" || exit 2
+        LINK=$(readlink "$(basename "${1}")")
+    done
+    REALPATH="${PWD}/$(basename "${1}")"
+    cd "${OURPWD}" || exit 2
+    echo "${REALPATH}"
+  fi
+}
+
+REALNAME=$(realpath "$0")
+DIRNAME=$(dirname "${REALNAME}")
+PROGNAME=$(basename "${REALNAME}")
+LOCAL_CLASSPATH=$CLASSPATH
+
+#
+# Load common functions
+#
+. "${DIRNAME}/inc"
+
+#
+# Sourcing environment settings for karaf similar to tomcats setenv
+#
+KARAF_SCRIPT="${PROGNAME}"
+export KARAF_SCRIPT
+if [ -f "${DIRNAME}/setenv" ]; then
+  . "${DIRNAME}/setenv"
+fi
+
+forceNoRoot() {
+    # If configured, prevent execution as root
+    if [ "${KARAF_NOROOT}" ] && [ "$(id -u)" -eq 0 ]; then
+        die "Do not run as root!"
+    fi
+}
+
+setupClassPath() {
+    # Add the jars in the lib dir
+    for file in "${KARAF_HOME}"/lib/boot/*.jar
+    do
+        if [ -z "${CLASSPATH}" ]; then
+            CLASSPATH="${file}"
+        else
+            CLASSPATH="${CLASSPATH}:${file}"
+        fi
+    done
+}
+
+checkRootInstance() {
+   ROOT_INSTANCE_RUNNING=false
+   if [ -f "${KARAF_HOME}/instances/instance.properties" ];
+   then
+      ROOT_INSTANCE_PID=$(sed -n -e '/item.0.pid/ s/.*\= *//p' "${KARAF_HOME}/instances/instance.properties")
+      ROOT_INSTANCE_NAME=$(sed -n -e '/item.0.name/ s/.*\= *//p' "${KARAF_HOME}/instances/instance.properties")
+      if [ "${ROOT_INSTANCE_PID}" -ne "0" ]; then
+          if ps -p "${ROOT_INSTANCE_PID}" > /dev/null
+          then
+              MAIN=org.apache.karaf.main.Main
+              PID_COMMAND=$("${PS_PREFIX}"ps -p "${ROOT_INSTANCE_PID}" -o args | sed 1d)
+
+              if [ "${PID_COMMAND#*$MAIN}" != "$PID_COMMAND" ]; then
+                ROOT_INSTANCE_RUNNING=true
+              fi
+          fi
+      fi
+   fi
+}
+
+init() {
+    # Prevent root execution if configured
+    forceNoRoot
+
+    # Determine if there is special OS handling we must perform
+    detectOS
+
+    # Unlimit the number of file descriptors if possible
+    unlimitFD
+
+    # Locate the Karaf home directory
+    locateHome
+
+    # Locate the Karaf base directory
+    locateBase
+
+    # Locate the Karaf data directory
+    locateData
+
+    # Locate the Karaf etc directory
+    locateEtc
+
+    # Setup the native library path
+    setupNativePath
+
+    # Locate the Java VM to execute
+    locateJava
+
+    # Determine the JVM vendor
+    detectJVM
+
+    # Determine the JVM version >= 1.6
+    checkJvmVersion
+
+    # Check if a root instance is already running
+    checkRootInstance
+
+    # Setup default options
+    setupDefaults
+
+    # Setup classpath
+    setupClassPath
+
+    # Install debug options
+    setupDebugOptions
+
+}
+
+run() {
+    OPTS="-Dkaraf.startLocalConsole=true -Dkaraf.startRemoteShell=true"
+    MAIN=org.apache.karaf.main.Main
+    if [ "x$CHECK_ROOT_INSTANCE_RUNNING" = "x" ]; then
+        CHECK_ROOT_INSTANCE_RUNNING=true
+    fi
+    JAVA_ENDORSED_DIRS="${JAVA_HOME}/jre/lib/endorsed:${JAVA_HOME}/lib/endorsed:${KARAF_HOME}/lib/endorsed"
+    JAVA_EXT_DIRS="${JAVA_HOME}/jre/lib/ext:${JAVA_HOME}/lib/ext:${KARAF_HOME}/lib/ext"
+    if ${cygwin}; then
+        JAVA_HOME=$(cygpath --path --windows "${JAVA_HOME}")
+        JAVA_ENDORSED_DIRS=$(cygpath --path --windows "${JAVA_ENDORSED_DIRS}")
+        JAVA_EXT_DIRS=$(cygpath --path --windows "${JAVA_EXT_DIRS}")
+    fi
+    convertPaths
+    cd "${KARAF_BASE}" || exit 2
+
+    if [ -z "${KARAF_EXEC}" ]; then
+        KARAF_EXEC=""
+    fi
+
+    debug=false
+    debugs=false
+    nodebug=false
+    while [ "${1}" != "" ]; do
+        case "${1}" in
+            'clean')
+                rm -rf "${KARAF_DATA:?}"
+                shift
+                ;;
+            'debug')
+                debug=true
+                shift
+                ;;
+            'debugs')
+                debug=true
+                debugs=true
+                shift
+                ;;
+            'status')
+                MAIN=org.apache.karaf.main.Status
+                CHECK_ROOT_INSTANCE_RUNNING=false
+                nodebug=true
+                shift
+                ;;
+            'stop')
+                MAIN=org.apache.karaf.main.Stop
+                CHECK_ROOT_INSTANCE_RUNNING=false
+                nodebug=true
+                shift
+                ;;
+            'console')
+                CHECK_ROOT_INSTANCE_RUNNING=false
+                shift
+                ;;
+            'server')
+                OPTS="-Dkaraf.startLocalConsole=false -Dkaraf.startRemoteShell=true"
+                shift
+                ;;
+            'run')
+                OPTS="-Dkaraf.startLocalConsole=false -Dkaraf.startRemoteShell=true -Dkaraf.log.console=ALL"
+                shift
+                ;;
+            'daemon')
+                OPTS="-Dkaraf.startLocalConsole=false -Dkaraf.startRemoteShell=true"
+                KARAF_DAEMON="true"
+                KARAF_EXEC="exec"
+                shift
+                ;;
+            'client')
+                OPTS="-Dkaraf.startLocalConsole=true -Dkaraf.startRemoteShell=false"
+                CHECK_ROOT_INSTANCE_RUNNING=false
+                nodebug=true
+                shift
+                ;;
+            'classpath')
+                echo "Classpath: ${CLASSPATH}"
+                shift
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+
+    if ${nodebug}; then
+        debug=false
+    fi
+    if ${debug}; then
+        if [ "x${JAVA_DEBUG_OPTS}" = "x" ]; then
+            if ${debugs}; then
+                JAVA_DEBUG_OPTS="${DEFAULT_JAVA_DEBUGS_OPTS}"
+            else
+                JAVA_DEBUG_OPTS="${DEFAULT_JAVA_DEBUG_OPTS}"
+            fi
+        fi
+        JAVA_OPTS="${JAVA_DEBUG_OPTS} ${JAVA_OPTS}"
+    fi
+
+    while true; do
+        # When users want to update the lib version of, they just need to create
+        # a lib.next directory and on the new restart, it will replace the current lib directory.
+        if [ -d "${KARAF_HOME:?}/lib.next" ] ; then
+            echo "Updating libs..."
+            rm -rf "${KARAF_HOME:?}/lib"
+            mv -f "${KARAF_HOME:?}/lib.next" "${KARAF_HOME}/lib"
+
+            echo "Updating classpath..."
+            CLASSPATH=$LOCAL_CLASSPATH
+            setupClassPath
+        fi
+
+        # Ensure the log directory exists
+        # We may need to have a place to redirect stdout/stderr
+        if [ ! -d "${KARAF_DATA}/log" ]; then
+            mkdir -p "${KARAF_DATA}/log"
+        fi
+        if [ ! -d "${KARAF_DATA}/tmp" ]; then
+            mkdir -p "${KARAF_DATA}/tmp"
+        fi
+
+        if [ "${ROOT_INSTANCE_RUNNING}" = "false" ] || [ "${CHECK_ROOT_INSTANCE_RUNNING}" = "false" ] ; then
+            if [ "${VERSION}" -gt "8" ]; then
+                ${KARAF_EXEC} "${JAVA}" ${JAVA_OPTS} \
+                    --add-reads=java.xml=java.logging \
+                    --patch-module java.base=lib/endorsed/org.apache.karaf.specs.locator-4.2.1.jar \
+                    --patch-module java.xml=lib/endorsed/org.apache.karaf.specs.java.xml-4.2.1.jar \
+                    --add-opens java.base/java.security=ALL-UNNAMED \
+                    --add-opens java.base/java.net=ALL-UNNAMED \
+                    --add-opens java.base/java.lang=ALL-UNNAMED \
+                    --add-opens java.base/java.util=ALL-UNNAMED \
+                    --add-opens java.naming/javax.naming.spi=ALL-UNNAMED \
+                    --add-opens java.rmi/sun.rmi.transport.tcp=ALL-UNNAMED \
+                    --add-exports=java.base/sun.net.www.protocol.http=ALL-UNNAMED \
+                    --add-exports=java.base/sun.net.www.protocol.https=ALL-UNNAMED \
+                    --add-exports=java.base/sun.net.www.protocol.jar=ALL-UNNAMED \
+                    --add-exports=jdk.xml.dom/org.w3c.dom.html=ALL-UNNAMED \
+                    --add-exports=jdk.naming.rmi/com.sun.jndi.url.rmi=ALL-UNNAMED \
+                    -Dkaraf.instances="${KARAF_HOME}/instances" \
+                    -Dkaraf.home="${KARAF_HOME}" \
+                    -Dkaraf.base="${KARAF_BASE}" \
+                    -Dkaraf.data="${KARAF_DATA}" \
+                    -Dkaraf.etc="${KARAF_ETC}" \
+                    -Dkaraf.restart.jvm.supported=true \
+                    -Djava.io.tmpdir="${KARAF_DATA}/tmp" \
+                    -Djava.util.logging.config.file="${KARAF_BASE}/etc/java.util.logging.properties" \
+                    ${KARAF_SYSTEM_OPTS} \
+                    ${KARAF_OPTS} \
+                    ${OPTS} \
+                    -classpath "${CLASSPATH}" \
+                    ${MAIN} "$@"
+            else
+                ${KARAF_EXEC} "${JAVA}" ${JAVA_OPTS} \
+                    -Djava.endorsed.dirs="${JAVA_ENDORSED_DIRS}" \
+                    -Djava.ext.dirs="${JAVA_EXT_DIRS}" \
+                    -Dkaraf.instances="${KARAF_HOME}/instances" \
+                    -Dkaraf.home="${KARAF_HOME}" \
+                    -Dkaraf.base="${KARAF_BASE}" \
+                    -Dkaraf.data="${KARAF_DATA}" \
+                    -Dkaraf.etc="${KARAF_ETC}" \
+                    -Dkaraf.restart.jvm.supported=true \
+                    -Djava.io.tmpdir="${KARAF_DATA}/tmp" \
+                    -Djava.util.logging.config.file="${KARAF_BASE}/etc/java.util.logging.properties" \
+                    ${KARAF_SYSTEM_OPTS} \
+                    ${KARAF_OPTS} \
+                    ${OPTS} \
+                    -classpath "${CLASSPATH}" \
+                    ${MAIN} "$@"
+            fi
+        else
+            die "There is a Root instance already running with name ${ROOT_INSTANCE_NAME} and pid ${ROOT_INSTANCE_PID}. If you know what you are doing and want to force the run anyway, export CHECK_ROOT_INSTANCE_RUNNING=false and re run the command."
+        fi
+
+        KARAF_RC=$?
+        if [ ${KARAF_DAEMON} ] ; then
+            exit ${KARAF_RC}
+        else
+            if [ "${KARAF_RC}" -eq 10 ]; then
+               echo "Restarting JVM..."
+            else
+               exit ${KARAF_RC}
+            fi
+        fi
+    done
+}
+
+nothing() {
+   # nothing to do here
+   a=a
+}
+
+main() {
+    init
+    trap 'nothing' TSTP
+    run "$@"
+}
+
+main "$@"

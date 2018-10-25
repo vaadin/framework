@@ -1,0 +1,27 @@
+################################################################################
+#
+#    Licensed to the Apache Software Foundation (ASF) under one or more
+#    contributor license agreements.  See the NOTICE file distributed with
+#    this work for additional information regarding copyright ownership.
+#    The ASF licenses this file to You under the Apache License, Version 2.0
+#    (the "License"); you may not use this file except in compliance with
+#    the License.  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+#
+################################################################################
+
+This directory is the standard Java classpath directory.
+Any jar in this folder will be part of the main classloader used to load Karaf.
+However, in OSGi, classes defined in these jars won't be available to other
+bundles unless one of the org.osgi.framework.system.packages.extra or
+org.osgi.framework.bootdelegation properties in the etc/config.properties file
+is modified to export or delegate the packages.
+Please refer to the OSGi Core Specification for more information on these
+properties and the OSGi classloading mechanism.
