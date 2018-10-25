@@ -1,0 +1,143 @@
+#!/bin/sh
+#
+#    Licensed to the Apache Software Foundation (ASF) under one or more
+#    contributor license agreements.  See the NOTICE file distributed with
+#    this work for additional information regarding copyright ownership.
+#    The ASF licenses this file to You under the Apache License, Version 2.0
+#    (the "License"); you may not use this file except in compliance with
+#    the License.  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+#
+
+realpath() {
+  # Use in priority xpg4 awk or nawk on SunOS as standard awk is outdated
+  AWK=awk
+  if ${solaris}; then
+      if [ -x /usr/xpg4/bin/awk ]; then
+          AWK=/usr/xpg4/bin/awk
+      elif [ -x /usr/bin/nawk ]; then
+          AWK=/usr/bin/nawk
+      fi
+  fi
+
+  READLINK_EXISTS=$(command -v readlink &> /dev/null)
+  if [ -z "$READLINK_EXISTS" ]; then
+    OURPWD=${PWD}
+    cd "$(dirname "${1}")" || exit 2
+    LINK=$(ls -l "$(basename "${1}")" | ${AWK} -F"-> " '{print $2}')
+    while [ "${LINK}" ]; do
+        echo "link: ${LINK}" >&2
+        cd "$(dirname "${LINK}")" || exit 2
+        LINK=$(ls -l "$(basename "${1}")" | ${AWK} -F"-> " '{print $2}')
+    done
+    REALPATH="${PWD}/$(basename "${1}")"
+    cd "${OURPWD}" || exit 2
+    echo "${REALPATH}"
+  else
+    OURPWD=${PWD}
+    cd "$(dirname "${1}")" || exit 2
+    LINK=$(readlink "$(basename "${1}")")
+    while [ "${LINK}" ]; do
+            echo "link: ${LINK}" >&2
+        cd "$(dirname "${LINK}")" || exit 2
+        LINK=$(readlink "$(basename "${1}")")
+    done
+    REALPATH="${PWD}/$(basename "${1}")"
+    cd "${OURPWD}" || exit 2
+    echo "${REALPATH}"
+  fi
+}
+
+REALNAME=$(realpath "$0")
+DIRNAME=$(dirname "${REALNAME}")
+PROGNAME=$(basename "${REALNAME}")
+
+#
+# Load common functions
+#
+. "${DIRNAME}/inc"
+
+#
+# Sourcing environment settings for karaf similar to tomcats setenv
+#
+KARAF_SCRIPT="${PROGNAME}"
+export KARAF_SCRIPT
+if [ -f "${DIRNAME}/setenv" ]; then
+  . "${DIRNAME}/setenv"
+fi
+
+setupClassPath() {
+    # Setup classpath
+    CLASSPATH="${KARAF_HOME}/system/org/apache/karaf/instance/org.apache.karaf.instance.core/4.2.1/org.apache.karaf.instance.core-4.2.1.jar"
+    CLASSPATH="${CLASSPATH}:${KARAF_HOME}/system/org/apache/karaf/shell/org.apache.karaf.shell.core/4.2.1/org.apache.karaf.shell.core-4.2.1.jar"
+    CLASSPATH="${CLASSPATH}:${KARAF_HOME}/system/org/ops4j/pax/logging/pax-logging-api/1.10.1/pax-logging-api-1.10.1.jar"
+    CLASSPATH="${CLASSPATH}:${KARAF_HOME}/system/org/jline/jline/3.9.0/jline-3.9.0.jar"
+}
+
+init() {
+    # Determine if there is special OS handling we must perform
+    detectOS
+
+    # Unlimit the number of file descriptors if possible
+    unlimitFD
+
+    # Locate the Karaf home directory
+    locateHome
+
+    # Locate the Karaf base directory
+    locateBase
+
+    # Locate the Karaf data directory
+    locateData
+
+    # Locate the Karaf etc directory
+    locateEtc
+
+    # Setup the native library path
+    setupNativePath
+
+    # Locate the Java VM to execute
+    locateJava
+
+    # Determine the JVM vendor
+    detectJVM
+
+    # Setup default options
+    setupDefaults
+
+    # Setup classpath
+    setupClassPath
+
+    # Install debug options
+    setupDebugOptions
+
+}
+
+run() {
+    convertPaths
+    exec "${JAVA}" ${JAVA_OPTS} \
+        -Dkaraf.instances="${KARAF_HOME}/instances" \
+        -Dkaraf.home="${KARAF_HOME}" \
+        -Dkaraf.base="${KARAF_BASE}" \
+        -Dkaraf.etc="${KARAF_ETC}" \
+        -Djava.io.tmpdir="${KARAF_DATA}/tmp" \
+        -Djava.util.logging.config.file="${KARAF_BASE}/etc/java.util.logging.properties" \
+        ${KARAF_OPTS} ${OPTS} \
+        -classpath "${CLASSPATH}" \
+        org.apache.karaf.instance.main.Execute "$@"
+}
+
+main() {
+    init
+    run "$@"
+}
+
+main "$@"
+
