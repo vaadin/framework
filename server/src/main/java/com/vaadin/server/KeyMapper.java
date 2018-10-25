@@ -161,9 +161,9 @@ public class KeyMapper<V> implements DataKeyMapper<V> {
         final Set<String> keys = new HashSet<>(keyObjectMap.size());
 
         for (V object : objects) {
-            if (object == null)
+            if (object == null) {
                 continue;
-
+            }
             String key = key(object);
             keys.add(key);
         }
