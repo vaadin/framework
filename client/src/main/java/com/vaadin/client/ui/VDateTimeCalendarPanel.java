@@ -119,6 +119,9 @@ public class VDateTimeCalendarPanel
                 sec.addChangeHandler(this);
             }
 
+            // Update times
+            updateTimes();
+
             final String delimiter = getDateTimeService().getClockDelimeter();
             if (isReadonly()) {
                 int h = 0;
@@ -170,9 +173,6 @@ public class VDateTimeCalendarPanel
             if (isReadonly()) {
                 return;
             }
-
-            // Update times
-            updateTimes();
 
             ListBox lastDropDown = getLastDropDown();
             lastDropDown.addKeyDownHandler(event -> {
