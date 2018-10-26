@@ -7,6 +7,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.annotations.RunLocally;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -25,7 +27,7 @@ public class VerifyBrowserVersionTest extends MultiBrowserTest {
             // Chrome version does not necessarily match the desired version
             // because of auto updates...
             browserIdentifier = getExpectedUserAgentString(
-                    getDesiredCapabilities()) + "69";
+                    getDesiredCapabilities()) + "70";
         } else if (BrowserUtil.isFirefox(getDesiredCapabilities())) {
             browserIdentifier = getExpectedUserAgentString(
                     getDesiredCapabilities()) + "58";
