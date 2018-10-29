@@ -8,6 +8,7 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 
 import org.junit.Test;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.interactions.internal.Coordinates;
@@ -32,24 +33,21 @@ public class MenuTooltipTest extends MultiBrowserTest {
     public void testToolTipDelay() throws InterruptedException {
         openTestURL();
 
-        Coordinates elementCoordinates = getCoordinates(
-                $(MenuBarElement.class).first());
-        sleep(1000);
+        final MenuBarElement menuBar = $(MenuBarElement.class).first();
+        // Open menu bar and move on top of the first menu item
+        new Actions(getDriver()).moveToElement(menuBar).click()
+                .moveByOffset(0, menuBar.getSize().getHeight()).perform();
 
-        Mouse mouse = ((HasInputDevices) getDriver()).getMouse();
-
-        mouse.click(elementCoordinates);
-        mouse.mouseMove(elementCoordinates, 15, 40);
-
-        sleep(1000);
-
+        // Make sure tooltip is outside of the screen
         assertThat(getTooltipElement().getLocation().getX(),
                 is(lessThan(-1000)));
 
+        // Wait for tooltip to open up
         sleep(3000);
 
+        // Make sure it's the correct tooltip
         assertThat(getTooltipElement().getLocation().getX(),
-                is(greaterThan(elementCoordinates.onPage().getX())));
+                is(greaterThan(menuBar.getLocation().getX())));
         assertThat(getTooltipElement().getText(), is("TOOLTIP 1"));
     }
 }

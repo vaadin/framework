@@ -25,10 +25,6 @@ public class WindowElement extends com.vaadin.testbench.elements.WindowElement {
         }
     }
 
-    private boolean isMaximized() {
-        return isElementPresent(By.className(restoreBoxClass));
-    }
-
     private WebElement getRestoreButton() {
         return findElement(By.className("v-window-restorebox"));
     }

@@ -38,7 +38,7 @@ public class LegacyComponentThemeChangeTest extends MultiBrowserTest {
     public List<DesiredCapabilities> getBrowsersToTest() {
         // Seems like stylesheet onload is not fired on PhantomJS
         // https://github.com/ariya/phantomjs/issues/12332
-        List<DesiredCapabilities> l = getBrowsersExcludingPhantomJS();
+        List<DesiredCapabilities> l = super.getBrowsersToTest();
 
         // For some reason, IE times out when trying to open the combobox,
         // #18341

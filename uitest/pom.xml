@@ -13,6 +13,10 @@
     <properties>
         <skip.uitest.deployment>true</skip.uitest.deployment>
         <skip.uitest.failsafe>true</skip.uitest.failsafe>
+
+        <!-- Parallel test count -->
+        <parallel.tests>12</parallel.tests>
+        <reference.screenshot.dir>${project.parent.basedir}/tests/screenshots/reference</reference.screenshot.dir>
     </properties>
 
     <url>https://vaadin.com/</url>
@@ -22,6 +26,16 @@
         <repository>
             <id>vaadin-addons</id>
             <url>http://maven.vaadin.com/vaadin-addons</url>
+        </repository>
+        <repository>
+            <id>vaadin-snapshots</id>
+            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
@@ -182,11 +196,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>0.1.52</version>
-        </dependency>
-        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.5</version>
@@ -205,7 +214,7 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-testbench</artifactId>
-            <version>4.0.3</version>
+            <version>4.3-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <!-- This should be removed once tests have been updated to use lang3 -->
@@ -312,13 +321,17 @@
                         <include>**/AllTB3Tests.java</include>
                     </includes>
                     <systemPropertyVariables>
-                        <com.vaadin.testbench.screenshot.directory>${project.parent.basedir}/tests/screenshots</com.vaadin.testbench.screenshot.directory>
-                        <com.vaadin.testbench.max.retries>${com.vaadin.testbench.max.retries}</com.vaadin.testbench.max.retries>
-                        <useLocalWebDriver>${useLocalWebDriver}</useLocalWebDriver>
+                        <com.vaadin.testbench.Parameters.screenshotReferenceDirectory>${reference.screenshot.dir}</com.vaadin.testbench.Parameters.screenshotReferenceDirectory>
+                        <com.vaadin.testbench.Parameters.screenshotErrorDirectory>${project.build.directory}/error-screenshots</com.vaadin.testbench.Parameters.screenshotErrorDirectory>
+                        <com.vaadin.testbench.Parameters.maxAttempts>${com.vaadin.testbench.Parameters.maxAttempts}</com.vaadin.testbench.Parameters.maxAttempts>
+                        <com.vaadin.testbench.Parameters.testsInParallel>${parallel.tests}</com.vaadin.testbench.Parameters.testsInParallel>
+                        <com.vaadin.testbench.hub.url>${com.vaadin.testbench.hub.url}</com.vaadin.testbench.hub.url>
                         <browsers.include>${browsers.include}</browsers.include>
                         <categories.include>${categoriess.include}</categories.include>
                         <browsers.exclude>${browsers.exclude}</browsers.exclude>
                         <categories.exclude>${categories.exclude}</categories.exclude>
+                        <browser.factory>${browser.factory}</browser.factory>
+                        <browserstack.identifier>${browserstack.identifier}</browserstack.identifier>
                     </systemPropertyVariables>
                 </configuration>
                 <executions>
@@ -327,6 +340,45 @@
                             <goal>integration-test</goal>
                             <goal>verify</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>run-development-server</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-ea</argument>
+                                <argument>-classpath</argument>
+                                <classpath />
+                                <argument>com.vaadin.launcher.DevelopmentServerLauncher</argument>
+                            </arguments>
+                            <classpathScope>test</classpathScope>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>debug-development-server</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-ea</argument>
+                                <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argument>
+                                <argument>-classpath</argument>
+                                <classpath />
+                                <argument>com.vaadin.launcher.DevelopmentServerLauncher</argument>
+                            </arguments>
+                            <classpathScope>test</classpathScope>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -399,36 +451,6 @@
                 </pluginManagement>
             </build>
 
-        </profile>
-        <profile>
-            <id>validation</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <artifactId>maven-failsafe-plugin</artifactId>
-                            <configuration>
-                                <systemPropertyVariables>
-                                    <useLocalWebDriver>true</useLocalWebDriver>
-                                    <browsers.include>phantomjs1</browsers.include>
-                                    <categories.exclude>push,needs-ssh</categories.exclude>
-                                </systemPropertyVariables>
-                            </configuration>
-                            <executions>
-                                <execution>
-                                    <goals>
-                                        <goal>integration-test</goal>
-                                        <goal>verify</goal>
-                                    </goals>
-                                </execution>
-                            </executions>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
         </profile>
     </profiles>
 

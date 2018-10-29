@@ -5,16 +5,16 @@ import static org.hamcrest.collection.IsEmptyCollection.empty;
 
 import java.util.List;
 
+import com.vaadin.tests.tb3.SingleBrowserTest;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
 import com.vaadin.tests.tb3.newelements.ComboBoxElement;
 
 public class ComboBoxEmptyItemsKeyboardNavigationTest
-        extends SingleBrowserTestPhantomJS2 {
+        extends SingleBrowserTest {
 
     @Test
     public void navigatingUpOnAnEmptyMenuDoesntThrowErrors() {

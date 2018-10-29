@@ -1,6 +1,10 @@
 package com.vaadin.tests.components.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+import java.util.Locale;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -16,7 +20,22 @@ public class DynamicViewportTest extends SingleBrowserTest {
         WebElement viewportElement = findElement(
                 By.cssSelector("meta[name=viewport]"));
 
-        Assert.assertTrue(
-                viewportElement.getAttribute("content").contains("PhantomJS"));
+        String viewportContent = viewportElement.getAttribute("content")
+                .toLowerCase(Locale.ROOT);
+        String browserName = getDesiredCapabilities().getBrowserName()
+                .toLowerCase(Locale.ROOT);
+
+        assertTrue(viewportContent.contains(browserName));
+    }
+
+    @Test
+    public void testGeneratedEmptyViewport() {
+        openTestURL(DynamicViewport.VIEWPORT_DISABLE_PARAMETER);
+
+        List<WebElement> viewportElements = findElements(
+                By.cssSelector("meta[name=viewport]"));
+
+        assertTrue("There should be no viewport tags",
+                viewportElements.isEmpty());
     }
 }

@@ -56,11 +56,11 @@ public class ComboboxPopupScrollingTest extends MultiBrowserTest {
 
         Point newComboLocation = cb.getLocation();
         Point newPopupLocation = popup.getLocation();
-        assertNotEquals("ComboBox didn't move on the page", 0,
-                newComboLocation.y - comboLocation.y);
+        assertNotEquals("ComboBox didn't move on the page", comboLocation.y,
+                newComboLocation.y);
         assertEquals("Popup didn't move with the combo box",
                 newComboLocation.y - comboLocation.y,
-                newPopupLocation.y - popupLocation.y);
+                newPopupLocation.y - popupLocation.y, 1);
     }
     
     private void testNoScrollbars(String theme) {

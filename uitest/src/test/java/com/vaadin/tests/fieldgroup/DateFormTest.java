@@ -1,33 +1,40 @@
 package com.vaadin.tests.fieldgroup;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.InlineDateFieldElement;
-import com.vaadin.testbench.elements.PopupDateFieldElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateFormTest extends MultiBrowserTest {
 
+    private final SimpleDateFormat FORMAT = new SimpleDateFormat(
+            "MMM dd, yyyy h:mm:ss a");
+
     @Test
     public void testCorrectDateFormat() throws Exception {
         openTestURL();
-        Assert.assertEquals("Unexpected DateField value,", "1/20/84",
+        assertEquals("Unexpected DateField value,", "1/20/84",
                 getDateFieldValue());
-        Assert.assertEquals("Unexpected PopupDateField value,", "1/20/84",
+        assertEquals("Unexpected PopupDateField value,", "1/21/84",
                 getPopupDateFieldValue());
         WebElement day20 = getInlineDateFieldCalendarPanel()
                 .findElement(By.vaadin("#day20"));
-        Assert.assertTrue(
-                "Unexpected InlineDateField state, 20th not selected.",
+        assertTrue("Unexpected InlineDateField state, 20th not selected.",
                 hasCssClass(day20,
                         "v-inline-datefield-calendarpanel-day-selected"));
-        Assert.assertEquals("Unexpected TextField contents,",
-                "Jan 20, 1984 4:34:49 PM",
+        // Depends on the TZ offset on the server
+        assertEquals("Unexpected TextField contents,",
+                FORMAT.format(DateForm.DATE),
                 $(TextFieldElement.class).first().getValue());
     }
 
@@ -36,7 +43,7 @@ public class DateFormTest extends MultiBrowserTest {
     }
 
     protected String getPopupDateFieldValue() {
-        return $(PopupDateFieldElement.class).first().getValue();
+        return $(DateFieldElement.class).get(1).getValue();
     }
 
     protected WebElement getInlineDateFieldCalendarPanel() {
