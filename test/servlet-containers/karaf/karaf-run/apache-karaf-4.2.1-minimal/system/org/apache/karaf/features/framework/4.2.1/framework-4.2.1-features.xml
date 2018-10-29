@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+
+      Licensed to the Apache Software Foundation (ASF) under one or more
+      contributor license agreements.  See the NOTICE file distributed with
+      this work for additional information regarding copyright ownership.
+      The ASF licenses this file to You under the Apache License, Version 2.0
+      (the "License"); you may not use this file except in compliance with
+      the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing, software
+      distributed under the License is distributed on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+      See the License for the specific language governing permissions and
+      limitations under the License.
+-->
+<features name="framework-4.2.1" xmlns="http://karaf.apache.org/xmlns/features/v1.3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
+
+    <!-- This file is not used in the assembly., This file is used by the karaf-maven-plugin to generate a "final" feature.xml
+              including the correct start-level for the generation of the startup.propertie file -->
+
+    <feature version="4.2.1" description="Karaf core feature" name="framework" hidden="true">
+        <!-- persistent wiring extension -->
+        <bundle start-level="1">mvn:org.apache.karaf.features/org.apache.karaf.features.extension/4.2.1</bundle>
+        <!-- mvn: and wrap: url handlers -->
+        <bundle start-level="5">mvn:org.ops4j.pax.url/pax-url-aether/2.5.4</bundle>
+        <!-- logging -->
+        <bundle start-level="8">mvn:org.ops4j.pax.logging/pax-logging-api/1.10.1</bundle>
+        <bundle start-level="8">mvn:org.ops4j.pax.logging/pax-logging-log4j2/1.10.1</bundle>
+        <bundle start-level="8">mvn:org.fusesource.jansi/jansi/1.17.1</bundle>
+        <!-- config admin -->
+        <bundle start-level="9">mvn:org.apache.felix/org.apache.felix.coordinator/1.0.2</bundle>
+        <bundle start-level="10">mvn:org.apache.felix/org.apache.felix.configadmin/1.9.4</bundle>
+        <!-- file install -->
+        <bundle start-level="11">mvn:org.apache.felix/org.apache.felix.fileinstall/3.6.4</bundle>
+        <!-- features service -->
+        <bundle start-level="15">mvn:org.apache.karaf.features/org.apache.karaf.features.core/4.2.1</bundle>
+        <bundle dependency="true" start-level="30">mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.jaxb-api-2.2/2.5.0</bundle>
+        <bundle start-level="20">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.jaxb-impl/2.2.11_1</bundle>
+        <bundle dependency="true" start-level="30">mvn:org.apache.servicemix.specs/org.apache.servicemix.specs.activation-api-1.1/2.5.0</bundle>
+    </feature>
+
+    <feature version="4.2.1" description="Karaf core feature" name="framework-logback" hidden="true">
+        <!-- persistent wiring extension -->
+        <bundle start-level="1">mvn:org.apache.karaf.features/org.apache.karaf.features.extension/4.2.1</bundle>
+        <!-- mvn: and wrap: url handlers -->
+        <bundle start-level="5">mvn:org.ops4j.pax.url/pax-url-aether/2.5.4</bundle>
+        <!-- logging -->
+        <bundle start-level="8">mvn:org.ops4j.pax.logging/pax-logging-api/1.10.1</bundle>
+        <bundle start-level="8">mvn:org.ops4j.pax.logging/pax-logging-logback/1.10.1</bundle>
+        <!-- config admin -->
+        <bundle start-level="9">mvn:org.apache.felix/org.apache.felix.coordinator/1.0.2</bundle>
+        <bundle start-level="10">mvn:org.apache.felix/org.apache.felix.configadmin/1.9.4</bundle>
+        <!-- file install -->
+        <bundle start-level="11">mvn:org.apache.felix/org.apache.felix.fileinstall/3.6.4</bundle>
+        <!-- features service -->
+        <bundle start-level="15">mvn:org.apache.karaf.features/org.apache.karaf.features.core/4.2.1</bundle>
+    </feature>
+
+</features>

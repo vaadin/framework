@@ -1,0 +1,50 @@
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<service>
+  
+  <!--
+    This script is provided as a template you can quckly customize by replacing 
+    the following variables:
+
+      KARAF_SERVICE_NAME
+      KARAF_SERVICE_PATH
+      KARAF_SERVICE_EXECUTABLE
+
+    For a detailed overview of the confguration options, please visit winsw home
+    page (https://github.com/kohsuke/winsw)
+  -->
+
+  <id>%KARAF_SERVICE_NAME%</id>
+  <name>%KARAF_SERVICE_NAME%</name>
+  <description>Apache Karaf %KARAF_SERVICE_NAME%</description>
+
+  <!-- start -->
+  <executable>%KARAF_SERVICE_PATH%\bin\%KARAF_SERVICE_EXECUTABLE%</executable>
+  <startargument>daemon</startargument>
+  
+  <!-- stop -->
+  <stopexecutable>%KARAF_SERVICE_PATH%\bin\%KARAF_SERVICE_EXECUTABLE%</stopexecutable>
+  <stopargument>stop</stopargument>
+  <stoptimeout>10sec</stoptimeout>
+
+  <!-- logging -->  
+  <logpath>%KARAF_SERVICE_PATH%\data\log</logpath>  
+  <log mode="roll-by-time">
+    <pattern>yyyyMMdd</pattern>
+  </log>
+
+</service>

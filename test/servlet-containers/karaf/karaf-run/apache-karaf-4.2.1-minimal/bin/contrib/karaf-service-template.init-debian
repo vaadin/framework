@@ -1,0 +1,246 @@
+#!/bin/sh
+#    Licensed to the Apache Software Foundation (ASF) under one or more
+#    contributor license agreements.  See the NOTICE file distributed with
+#    this work for additional information regarding copyright ownership.
+#    The ASF licenses this file to You under the Apache License, Version 2.0
+#    (the "License"); you may not use this file except in compliance with
+#    the License.  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+#
+# /etc/init.d/${KARAF_SERVICE_NAME} -- startup script for Karaf
+#
+#
+### BEGIN INIT INFO
+# Provides:             ${KARAF_SERVICE_NAME}
+# Required-Start:       $remote_fs $network
+# Required-Stop:        $remote_fs $network
+# Should-Start:         $named
+# Should-Stop:          $named
+# Default-Start:        2 3 4 5
+# Default-Stop:         0 1 6
+# Short-Description:    Karaf
+# Description:          Provide Karaf startup/shutdown script
+### END INIT INFO
+
+NAME=${KARAF_SERVICE_NAME}
+DESC=${KARAF_SERVICE_NAME}
+DEFAULT="/etc/default/$NAME"
+
+# Check privileges
+if [ `id -u` -ne 0 ]; then
+    echo "You need root privileges to run this script"
+    exit 1
+fi
+
+# Make sure karaf is started with system locale
+if [ -r /etc/default/locale ]; then
+    . /etc/default/locale
+    export LANG
+fi
+
+. /lib/lsb/init-functions
+
+if [ -r /etc/default/rcS ]; then
+    . /etc/default/rcS
+fi
+
+# Overwrite settings from default file
+if [ -f "$DEFAULT" ]; then
+    . "$DEFAULT"
+fi
+
+if [ -r "${KARAF_SERVICE_CONF}" ]; then
+    . "${KARAF_SERVICE_CONF}"
+else
+    echo "Error KARAF_SERVICE_CONF not defined"
+    exit -1
+fi
+
+# Location of JDK
+if [ -n "$JAVA_HOME" ]; then
+    export JAVA_HOME
+fi
+
+# Setup the JVM
+if [ -z "$JAVA" ]; then
+    if [ -n "$JAVA_HOME" ]; then
+        JAVA="$JAVA_HOME/bin/java"
+    else
+        JAVA="java"
+    fi
+fi
+
+# Check karaf user
+id $KARAF_SERVICE_USER > /dev/null 2>&1
+if [ $? -ne 0 -o -z "$KARAF_SERVICE_USER" ]; then
+    echo "User \"$KARAF_SERVICE_USER\" does not exist..." >&2
+    exit 1
+fi
+
+# Check owner of KARAF_SERVICE_PATH
+if [ ! $(stat -L -c "%U" "$KARAF_SERVICE_PATH") = $KARAF_SERVICE_USER ]; then
+    echo "The user \"$KARAF_SERVICE_USER\" is not owner of \"$KARAF_SERVICE_PATH\"" >&2
+    exit 1
+fi
+
+# The amount of time to wait for startup
+if [ -z "$STARTUP_WAIT" ]; then
+    STARTUP_WAIT=30
+fi
+
+# The amount of time to wait for shutdown
+if [ -z "$SHUTDOWN_WAIT" ]; then
+    SHUTDOWN_WAIT=30
+fi
+
+
+# Helper function to check status of karaf service
+check_status() {
+    pidofproc -p "$KARAF_SERVICE_PIDFILE" "$JAVA" >/dev/null 2>&1
+}
+
+case "$1" in
+ start)
+    echo "Starting $DESC" "$NAME"
+
+    # PID file
+    PID_PATH=$(dirname "$KARAF_SERVICE_PIDFILE")
+    if [ ! -d "$PID_PATH" ]; then
+        mkdir -p "$PID_PATH"
+    fi
+
+    chown $KARAF_SERVICE_USER:$KARAF_SERVICE_GROUP "$PID_PATH" || true
+
+    # Console log
+    LOG_PATH=$(dirname "$KARAF_SERVICE_LOG")
+
+    if [ ! -d "$LOG_PATH" ]; then
+        mkdir -p "$LOG_PATH"
+    fi
+
+    cat /dev/null > "$KARAF_SERVICE_LOG"
+    chown $KARAF_SERVICE_USER:$KARAF_SERVICE_GROUP "$LOG_PATH"
+    chown $KARAF_SERVICE_USER:$KARAF_SERVICE_GROUP "$KARAF_SERVICE_LOG"
+
+    start-stop-daemon \
+        --start \
+        --user "$KARAF_SERVICE_USER" \
+        --chuid "$KARAF_SERVICE_USER" \
+        --chdir "$KARAF_SERVICE_PATH" \
+        --pidfile "$KARAF_SERVICE_PIDFILE" \
+        --make-pidfile \
+        --exec "$KARAF_SERVICE_PATH/bin/$KARAF_SERVICE_EXECUTABLE" -- "daemon" \
+    >> "$KARAF_SERVICE_LOG" 2>&1 &
+
+    count=0
+    launched=0
+    until [ $count -gt $STARTUP_WAIT ]
+    do
+        sleep 1
+        count=$((count + 1));
+        if check_status; then
+            launched=1
+            break
+        fi
+    done
+
+    if check_status; then
+        log_end_msg 0
+    else
+        log_end_msg 1
+    fi
+
+    if [ $launched -eq 0 ]; then
+        log_warning_msg "$DESC hasn't started within the timeout allowed"
+        log_warning_msg "please review file \"$KARAF_SERVICE_LOG\" to see the status of the service"
+    fi
+ ;;
+ stop)
+    check_status
+    status_stop=$?
+    if [ $status_stop -eq 0 ]; then
+        kwait=$SHUTDOWN_WAIT
+        read kpid < "$KARAF_SERVICE_PIDFILE"
+        log_daemon_msg "Stopping $DESC" "$NAME"
+
+        children_pids=$(pgrep -P $kpid)
+
+        su - $KARAF_SERVICE_USER \
+            -c "export JAVA_HOME=$JAVA_HOME; \"$KARAF_SERVICE_PATH/bin/$KARAF_SERVICE_EXECUTABLE\" stop"
+
+        count=0
+        until [ `ps --pid $kpid 2> /dev/null | grep -c $kpid 2> /dev/null` -eq '0' ] || [ $count -gt $kwait ]
+        do
+            sleep 1
+            count=$((count + 1));
+        done
+
+        if check_status; then
+            start-stop-daemon \
+                --stop \
+                --quiet \
+                --pidfile "$KARAF_SERVICE_PIDFILE" \
+                --user "$KARAF_SERVICE_USER" \
+                --retry=TERM/$SHUTDOWN_WAIT/KILL/5 \
+            > /dev/null 2>&1
+
+            if [ $? -eq 2 ]; then
+                log_failure_msg "$DESC can't be stopped"
+                exit 1
+            fi
+        fi
+
+        for child in $children_pids; do
+            /bin/kill -9 $child >/dev/null 2>&1
+        done
+
+        log_end_msg 0
+
+        rm -rf "$KARAF_SERVICE_PIDFILE"
+    elif [ $status_stop -eq 1 ]; then
+        log_action_msg "$DESC is not running but the pid file exists, cleaning up"
+        rm -f "$KARAF_SERVICE_PIDFILE"
+    elif [ $status_stop -eq 3 ]; then
+        log_action_msg "$DESC is not running"
+    fi
+ ;;
+ restart)
+    check_status
+    status_restart=$?
+    if [ $status_restart -eq 0 ]; then
+        $0 stop
+    fi
+    $0 start
+ ;;
+ status)
+    check_status
+    status=$?
+    if [ $status -eq 0 ]; then
+        read pid < $KARAF_SERVICE_PIDFILE
+        log_action_msg "$DESC is running with pid $pid"
+        exit 0
+    elif [ $status -eq 1 ]; then
+        log_action_msg "$DESC is not running and the pid file exists"
+        exit 1
+    elif [ $status -eq 3 ]; then
+        log_action_msg "$DESC is not running"
+        exit 3
+    else
+        log_action_msg "Unable to determine $DESC status"
+        exit 4
+    fi
+ ;;
+ *)
+ log_action_msg "Usage: $0 {start|stop|restart|status}"
+ exit 2
+ ;;
+esac
+
+exit 0
