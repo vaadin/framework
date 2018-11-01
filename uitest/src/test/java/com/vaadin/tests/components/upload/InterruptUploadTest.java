@@ -1,9 +1,15 @@
 package com.vaadin.tests.components.upload;
 
+import com.vaadin.annotations.Widgetset;
+import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.WindowElement;
+import com.vaadin.testbench.parallel.Browser;
+import com.vaadin.tests.components.notification.ChromeBottomNotification;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.util.LoremIpsum;
+import com.vaadin.tests.widgetset.TestingWidgetSet;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -75,7 +81,7 @@ public class InterruptUploadTest extends MultiBrowserTest {
 
     private String getTempFileContents() {
         StringBuilder sb = new StringBuilder("This is a big test file!");
-        for (int i = 0; i < 70; ++i) {
+        for (int i = 0; i < 20; ++i) {
             sb.append("\n");
             sb.append(LoremIpsum.get());
         }
