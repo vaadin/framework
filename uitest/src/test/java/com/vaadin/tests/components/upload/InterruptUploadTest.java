@@ -1,14 +1,9 @@
 package com.vaadin.tests.components.upload;
 
-import com.vaadin.annotations.Widgetset;
-import com.vaadin.testbench.annotations.RunLocally;
-import com.vaadin.testbench.elements.LabelElement;
-import com.vaadin.testbench.elements.WindowElement;
-import com.vaadin.testbench.parallel.Browser;
-import com.vaadin.tests.components.notification.ChromeBottomNotification;
-import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.util.LoremIpsum;
-import com.vaadin.tests.widgetset.TestingWidgetSet;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -18,14 +13,13 @@ import org.openqa.selenium.internal.WrapsElement;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebElement;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.testbench.elements.WindowElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.util.LoremIpsum;
 
 import static org.junit.Assert.assertTrue;
 
-@RunLocally(Browser.CHROME)
 public class InterruptUploadTest extends MultiBrowserTest {
 
     private static final String EXPECTED_COUNTER_TEXT = " (counting interrupted at ";
