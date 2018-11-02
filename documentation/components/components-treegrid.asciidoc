@@ -56,7 +56,7 @@ an [classname]#TreeDataProvider# with [classname]#TreeData# is used. If at any t
 ----
 TreeDataProvider<Project> dataProvider = (TreeDataProvider<Project>) treeGrid.getDataProvider();
 
-TreeData<Project> data = dataProvider.getData();
+TreeData<Project> data = dataProvider.getTreeData();
 // add new items
 data.addItem(null, newProject);
 data.addItems(newProject, newProject.getChildren());
