@@ -25,6 +25,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertTrue;
 
+@RunLocally(Browser.CHROME)
 public class InterruptUploadTest extends MultiBrowserTest {
 
     private static final String EXPECTED_COUNTER_TEXT = " (counting interrupted at ";
@@ -81,7 +82,7 @@ public class InterruptUploadTest extends MultiBrowserTest {
 
     private String getTempFileContents() {
         StringBuilder sb = new StringBuilder("This is a big test file!");
-        for (int i = 0; i < 20; ++i) {
+        for (int i = 0; i < 70; ++i) {
             sb.append("\n");
             sb.append(LoremIpsum.get());
         }
