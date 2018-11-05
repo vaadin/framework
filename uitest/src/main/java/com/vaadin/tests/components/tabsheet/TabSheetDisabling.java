@@ -2,8 +2,6 @@ package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.TabSheet;
 
 public class TabSheetDisabling extends TestBase {
@@ -17,37 +15,21 @@ public class TabSheetDisabling extends TestBase {
         tabSheet = new TabSheet();
         for (int i = 0; i < NR_BUTTONS; i++) {
             if (i % 2 == 0) {
-                buttons[i] = new Button("Disable this tab",
-                        new ClickListener() {
-
-                            @Override
-                            public void buttonClick(ClickEvent event) {
-                                Button b = event.getButton();
-                                tabSheet.getTab(b).setEnabled(false);
-
-                            }
-
-                        });
+                buttons[i] = new Button("Disable this tab", event -> {
+                    Button b = event.getButton();
+                    tabSheet.getTab(b).setEnabled(false);
+                });
             } else {
-                buttons[i] = new Button("Hide this tab", new ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        Button b = event.getButton();
-                        tabSheet.getTab(b).setVisible(false);
-                    }
-
+                buttons[i] = new Button("Hide this tab", event -> {
+                    Button b = event.getButton();
+                    tabSheet.getTab(b).setVisible(false);
                 });
             }
             tabSheet.addTab(buttons[i]);
         }
 
-        Button button = new Button("Enable/disable", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                tabSheet.setEnabled(!tabSheet.isEnabled());
-            }
-        });
+        Button button = new Button("Enable/disable",
+                event -> tabSheet.setEnabled(!tabSheet.isEnabled()));
         addComponent(tabSheet);
         addComponent(button);
     }

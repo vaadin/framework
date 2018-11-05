@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,7 @@ import com.google.gwt.dom.client.Element;
 import com.vaadin.v7.client.ui.VUpload;
 
 /**
- * IE does not have onload, detect onload via readystatechange
+ * IE does not have onload, detect onload via readystatechange.
  *
  */
 public class UploadIFrameOnloadStrategyIE extends UploadIFrameOnloadStrategy {
@@ -28,7 +28,7 @@ public class UploadIFrameOnloadStrategyIE extends UploadIFrameOnloadStrategy {
     /*-{
       iframe.onreadystatechange = $entry(function() {
         if (iframe.readyState == 'complete') {
-          upload.@com.vaadin.client.ui.VUpload::onSubmitComplete()();
+          upload.@com.vaadin.v7.client.ui.VUpload::onSubmitComplete()();
         }
       });
     }-*/;

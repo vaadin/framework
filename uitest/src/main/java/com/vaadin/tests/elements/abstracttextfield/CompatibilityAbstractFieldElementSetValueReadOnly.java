@@ -31,9 +31,9 @@ public class CompatibilityAbstractFieldElementSetValueReadOnly
 
     @Override
     protected void setup(VaadinRequest request) {
-        for (int i = 0; i < elems.length; i++) {
-            elems[i].setReadOnly(true);
-            addComponent(elems[i]);
+        for (AbstractField<?> c : elems) {
+            c.setReadOnly(true);
+            addComponent(c);
         }
     }
 

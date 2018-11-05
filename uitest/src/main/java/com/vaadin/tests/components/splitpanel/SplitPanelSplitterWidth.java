@@ -2,7 +2,6 @@ package com.vaadin.tests.components.splitpanel;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
@@ -45,20 +44,14 @@ public class SplitPanelSplitterWidth extends TestBase {
         p.setSizeFull();
         split2.addComponent(p);
 
-        getLayout()
-                .addComponent(new Button("Unlock", new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        split.setLocked(false);
-                        split2.setLocked(false);
-                        getMainWindow().showNotification(
-                                "Try moving split. Then reload page.",
-                                Notification.TYPE_WARNING_MESSAGE);
-                        getLayout().removeComponent(event.getButton());
-                    }
-
-                }));
+        getLayout().addComponent(new Button("Unlock", event -> {
+            split.setLocked(false);
+            split2.setLocked(false);
+            getMainWindow().showNotification(
+                    "Try moving split. Then reload page.",
+                    Notification.TYPE_WARNING_MESSAGE);
+            getLayout().removeComponent(event.getButton());
+        }));
         getLayout().addComponent(split);
         getLayout().addComponent(split2);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,7 +21,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.vaadin.v7.shared.ui.calendar.DateConstants;
 
 /**
- * Utility class for {@link Date} operations
+ * Utility class for {@link Date} operations.
  *
  * @since 7.1
  * @author Vaadin Ltd.
@@ -52,9 +52,9 @@ public class DateUtil {
      * @return given Date as String, for communicating to server-side
      */
     public static String formatClientSideDate(Date date) {
-        DateTimeFormat dateformat_date = DateTimeFormat
+        DateTimeFormat dateformatDate = DateTimeFormat
                 .getFormat(DateConstants.CLIENT_DATE_FORMAT);
-        return dateformat_date.format(date);
+        return dateformatDate.format(date);
     }
 
     /**
@@ -63,8 +63,8 @@ public class DateUtil {
      * @return given Date as String, for communicating to server-side
      */
     public static String formatClientSideTime(Date date) {
-        DateTimeFormat dateformat_date = DateTimeFormat
+        DateTimeFormat dateformatDate = DateTimeFormat
                 .getFormat(DateConstants.CLIENT_TIME_FORMAT);
-        return dateformat_date.format(date);
+        return dateformatDate.format(date);
     }
 }

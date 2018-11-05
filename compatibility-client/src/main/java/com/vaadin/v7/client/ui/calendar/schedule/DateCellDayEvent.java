@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -45,7 +45,7 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.v7.shared.ui.calendar.DateConstants;
 
 /**
- * Internally used by the calendar
+ * Internally used by the calendar.
  *
  * @since 7.1
  */
@@ -61,7 +61,7 @@ public class DateCellDayEvent extends FocusableHTML
     private int startY = -1;
     private int startX = -1;
     private String moveWidth;
-    public static final int halfHourInMilliSeconds = 1800 * 1000;
+    public static final int HALF_HOUR_IN_MILLI_SECONDS = 1800 * 1000;
     private Date startDatetimeFrom;
     private Date startDatetimeTo;
     private boolean mouseMoveStarted;
@@ -91,7 +91,7 @@ public class DateCellDayEvent extends FocusableHTML
         weekGrid = parent;
 
         Style s = getElement().getStyle();
-        if (event.getStyleName().length() > 0) {
+        if (!event.getStyleName().isEmpty()) {
             addStyleDependentName(event.getStyleName());
         }
         s.setPosition(Position.ABSOLUTE);
@@ -396,7 +396,7 @@ public class DateCellDayEvent extends FocusableHTML
             long daysMs = dayDiff * DateConstants.DAYINMILLIS;
             from.setTime(startDatetimeFrom.getTime() + daysMs);
             from.setTime(from.getTime()
-                    + ((long) halfHourInMilliSeconds * halfHourDiff));
+                    + ((long) HALF_HOUR_IN_MILLI_SECONDS * halfHourDiff));
             to.setTime((from.getTime() + duration));
 
             calendarEvent.setStartTime(from);
@@ -425,7 +425,7 @@ public class DateCellDayEvent extends FocusableHTML
         } else if (clickTarget == topResizeBar) {
             long oldStartTime = startDatetimeFrom.getTime();
             long newStartTime = oldStartTime
-                    + ((long) halfHourInMilliSeconds * halfHourDiff);
+                    + ((long) HALF_HOUR_IN_MILLI_SECONDS * halfHourDiff);
 
             if (!isTimeRangeTooSmall(newStartTime, startDatetimeTo.getTime())) {
                 newStartTime = startDatetimeTo.getTime() - getMinTimeRange();
@@ -445,7 +445,7 @@ public class DateCellDayEvent extends FocusableHTML
         } else if (clickTarget == bottomResizeBar) {
             long oldEndTime = startDatetimeTo.getTime();
             long newEndTime = oldEndTime
-                    + ((long) halfHourInMilliSeconds * halfHourDiff);
+                    + ((long) HALF_HOUR_IN_MILLI_SECONDS * halfHourDiff);
 
             if (!isTimeRangeTooSmall(startDatetimeFrom.getTime(), newEndTime)) {
                 newEndTime = startDatetimeFrom.getTime() + getMinTimeRange();
@@ -563,27 +563,6 @@ public class DateCellDayEvent extends FocusableHTML
      */
     private long getMinTimeRange() {
         return DateConstants.MINUTEINMILLIS * 30;
-    }
-
-    /**
-     * Build the string for sending resize events to server
-     *
-     * @param event
-     * @return
-     */
-    private String buildResizeString(CalendarEvent event) {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append(event.getIndex());
-        buffer.append(",");
-        buffer.append(DateUtil.formatClientSideDate(event.getStart()));
-        buffer.append("-");
-        buffer.append(DateUtil.formatClientSideTime(event.getStartTime()));
-        buffer.append(",");
-        buffer.append(DateUtil.formatClientSideDate(event.getEnd()));
-        buffer.append("-");
-        buffer.append(DateUtil.formatClientSideTime(event.getEndTime()));
-
-        return buffer.toString();
     }
 
     private Date getTargetDateByCurrentPosition(int left) {

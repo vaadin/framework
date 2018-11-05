@@ -1,12 +1,13 @@
 package com.vaadin.tests.components.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class UIAccessExceptionHandlingTest extends MultiBrowserTest {
+public class UIAccessExceptionHandlingTest extends SingleBrowserTest {
 
     @Test
     public void testExceptionHandlingOnUIAccess() throws Exception {
@@ -14,17 +15,21 @@ public class UIAccessExceptionHandlingTest extends MultiBrowserTest {
         $(ButtonElement.class).first().click();
         assertLogTexts(
                 "1. Exception caught on get: java.util.concurrent.ExecutionException",
-                "0. Exception caught on execution with ConnectorErrorEvent : java.util.concurrent.ExecutionException");
+                "0. Exception caught on execution with ConnectorErrorEvent : java.lang.RuntimeException");
 
         $(ButtonElement.class).get(1).click();
         assertLogTexts(
                 "1. Exception caught on get: java.util.concurrent.ExecutionException",
-                "0. Exception caught on execution with ErrorEvent : java.util.concurrent.ExecutionException");
+                "0. Exception caught on execution with ErrorEvent : java.lang.RuntimeException");
 
         $(ButtonElement.class).get(2).click();
         assertLogTexts(
                 "1. Exception caught on get: java.util.concurrent.ExecutionException",
-                "0. Exception caught on execution with ConnectorErrorEvent : java.util.concurrent.ExecutionException");
+                "0. Exception caught on execution with ConnectorErrorEvent : java.lang.RuntimeException");
+
+        $(ButtonElement.class).get(3).click();
+        assertLogText(0,
+                "0. Exception caught on execution with ConnectorErrorEvent : java.lang.NullPointerException");
     }
 
     private void assertLogTexts(String first, String second) {
@@ -33,7 +38,6 @@ public class UIAccessExceptionHandlingTest extends MultiBrowserTest {
     }
 
     private void assertLogText(int index, String expected) {
-        Assert.assertEquals("Unexpected log contents,", expected,
-                getLogRow(index));
+        assertEquals("Unexpected log contents,", expected, getLogRow(index));
     }
 }

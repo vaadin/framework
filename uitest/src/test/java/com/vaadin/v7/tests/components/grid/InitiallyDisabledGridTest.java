@@ -1,6 +1,8 @@
 package com.vaadin.v7.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -17,8 +19,8 @@ public class InitiallyDisabledGridTest extends SingleBrowserTest {
         GridElement grid = $(GridElement.class).first();
         GridCellElement col0 = grid.getCell(0, 0);
         GridCellElement col1 = grid.getCell(0, 1);
-        Assert.assertTrue(col0.getSize().getWidth() > 250);
-        Assert.assertTrue(col1.getSize().getWidth() > 250);
+        assertTrue(col0.getSize().getWidth() > 250);
+        assertTrue(col1.getSize().getWidth() > 250);
     }
 
     @Test
@@ -29,6 +31,6 @@ public class InitiallyDisabledGridTest extends SingleBrowserTest {
         GridElement grid = $(GridElement.class).first();
         grid.scrollToRow(80);
         GridCellElement col0 = grid.getCell(80, 0);
-        Assert.assertEquals("First 80", col0.getText());
+        assertEquals("First 80", col0.getText());
     }
 }

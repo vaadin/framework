@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,15 +22,20 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasFilterableDataProvider;
 import com.vaadin.data.HasValue;
+import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataCommunicator;
+import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataKeyMapper;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
@@ -40,6 +45,7 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.server.ConnectorResource;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
@@ -49,6 +55,7 @@ import com.vaadin.server.SerializableFunction;
 import com.vaadin.server.SerializableToIntFunction;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
+import com.vaadin.shared.ui.combobox.ComboBoxClientRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxState;
@@ -56,7 +63,6 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
 
-import elemental.json.Json;
 import elemental.json.JsonObject;
 
 /**
@@ -69,8 +75,8 @@ import elemental.json.JsonObject;
  */
 @SuppressWarnings("serial")
 public class ComboBox<T> extends AbstractSingleSelect<T>
-        implements HasValue<T>, FieldEvents.BlurNotifier,
-        FieldEvents.FocusNotifier, HasFilterableDataProvider<T, String> {
+        implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier,
+        HasFilterableDataProvider<T, String> {
 
     /**
      * A callback method for fetching items. The callback is provided with a
@@ -105,11 +111,37 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     /**
      * Handler that adds a new item based on user input when the new items
      * allowed mode is active.
+     * <p>
+     * NOTE 1: If the new item is rejected the client must be notified of the
+     * fact via ComboBoxClientRpc or selection handling won't complete.
+     * </p>
+     * <p>
+     * NOTE 2: Selection handling must be completed separately if filtering the
+     * data source with the same value won't include the new item in the initial
+     * list of suggestions. Failing to do so will lead to selection handling
+     * never completing and previous selection remaining on the server.
+     * </p>
      *
      * @since 8.0
+     * @deprecated Since 8.4 replaced by {@link NewItemProvider}.
      */
+    @Deprecated
     @FunctionalInterface
     public interface NewItemHandler extends SerializableConsumer<String> {
+    }
+
+    /**
+     * Provider function that adds a new item based on user input when the new
+     * items allowed mode is active. After the new item handling is complete,
+     * this function should return {@code Optional.of(text)} for the completion
+     * of automatic selection handling. If automatic selection is not wished
+     * for, always return {@code Optional.isEmpty()}.
+     *
+     * @since 8.4
+     */
+    @FunctionalInterface
+    public interface NewItemProvider<T>
+            extends SerializableFunction<String, Optional<T>> {
     }
 
     /**
@@ -154,15 +186,30 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         @Override
         public void createNewItem(String itemValue) {
             // New option entered
-            if (getNewItemHandler() != null && itemValue != null
-                    && itemValue.length() > 0) {
-                getNewItemHandler().accept(itemValue);
+            boolean clientSideHandling = false;
+            if (itemValue != null && !itemValue.isEmpty()) {
+                if (getNewItemProvider() != null) {
+                    getNewItemProvider().apply(itemValue).ifPresent(value -> {
+                        // Update state for the newly selected value
+                        setSelectedItem(value, true);
+                        getDataCommunicator().reset();
+                    });
+                } else if (getNewItemHandler() != null) {
+                    getNewItemHandler().accept(itemValue);
+                    // Up to the user to tell if no item was added.
+                    clientSideHandling = true;
+                }
+            }
+
+            if (!clientSideHandling) {
+                // New item was maybe added with NewItemHandler
+                getRpcProxy(ComboBoxClientRpc.class).newItemNotAdded(itemValue);
             }
         }
 
         @Override
         public void setFilter(String filterText) {
-            currentFilterText = filterText;
+            getState().currentFilterText = filterText;
             filterSlot.accept(filterText);
         }
     };
@@ -170,11 +217,15 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     /**
      * Handler for new items entered by the user.
      */
+    @Deprecated
     private NewItemHandler newItemHandler;
 
-    private StyleGenerator<T> itemStyleGenerator = item -> null;
+    /**
+     * Provider function for new items entered by the user.
+     */
+    private NewItemProvider<T> newItemProvider;
 
-    private String currentFilterText;
+    private StyleGenerator<T> itemStyleGenerator = item -> null;
 
     private SerializableConsumer<String> filterSlot = filter -> {
         // Just ignore when neither setDataProvider nor setItems has been called
@@ -186,10 +237,11 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * {@link #setItems(Collection)}
      */
     public ComboBox() {
-        super(new DataCommunicator<T>() {
+        this(new DataCommunicator<T>() {
             @Override
-            protected DataKeyMapper<T> createKeyMapper() {
-                return new KeyMapper<T>() {
+            protected DataKeyMapper<T> createKeyMapper(
+                    ValueProvider<T, Object> identifierGetter) {
+                return new KeyMapper<T>(identifierGetter) {
                     @Override
                     public void remove(T removeobj) {
                         // never remove keys from ComboBox to support selection
@@ -198,8 +250,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                 };
             }
         });
-
-        init();
     }
 
     /**
@@ -232,6 +282,18 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     /**
+     * Constructs and initializes an empty combo box.
+     *
+     * @param dataCommunicator
+     *            the data comnunicator to use with this ComboBox
+     * @since 8.5
+     */
+    protected ComboBox(DataCommunicator<T> dataCommunicator) {
+        super(dataCommunicator);
+        init();
+    }
+
+    /**
      * Initialize the ComboBox with default settings and register client to
      * server RPC implementation.
      */
@@ -239,21 +301,56 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         registerRpc(rpc);
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
 
-        addDataGenerator((T data, JsonObject jsonObject) -> {
-            String caption = getItemCaptionGenerator().apply(data);
-            if (caption == null) {
-                caption = "";
+        addDataGenerator(new DataGenerator<T>() {
+
+            /**
+             * Map for storing names for icons.
+             */
+            private Map<Object, String> resourceKeyMap = new HashMap<>();
+            private int counter = 0;
+
+            @Override
+            public void generateData(T item, JsonObject jsonObject) {
+                String caption = getItemCaptionGenerator().apply(item);
+                if (caption == null) {
+                    caption = "";
+                }
+                jsonObject.put(DataCommunicatorConstants.NAME, caption);
+                String style = itemStyleGenerator.apply(item);
+                if (style != null) {
+                    jsonObject.put(ComboBoxConstants.STYLE, style);
+                }
+                Resource icon = getItemIcon(item);
+                if (icon != null) {
+                    String iconKey = resourceKeyMap
+                            .get(getDataProvider().getId(item));
+                    String iconUrl = ResourceReference
+                            .create(icon, ComboBox.this, iconKey).getURL();
+                    jsonObject.put(ComboBoxConstants.ICON, iconUrl);
+                }
             }
-            jsonObject.put(DataCommunicatorConstants.NAME, caption);
-            String style = itemStyleGenerator.apply(data);
-            if (style != null) {
-                jsonObject.put(ComboBoxConstants.STYLE, style);
+
+            @Override
+            public void destroyData(T item) {
+                Object itemId = getDataProvider().getId(item);
+                if (resourceKeyMap.containsKey(itemId)) {
+                    setResource(resourceKeyMap.get(itemId), null);
+                    resourceKeyMap.remove(itemId);
+                }
             }
-            Resource icon = getItemIconGenerator().apply(data);
-            if (icon != null) {
-                String iconUrl = ResourceReference
-                        .create(icon, ComboBox.this, null).getURL();
-                jsonObject.put(ComboBoxConstants.ICON, iconUrl);
+
+            private Resource getItemIcon(T item) {
+                Resource icon = getItemIconGenerator().apply(item);
+                if (icon == null || !(icon instanceof ConnectorResource)) {
+                    return icon;
+                }
+
+                Object itemId = getDataProvider().getId(item);
+                if (!resourceKeyMap.containsKey(itemId)) {
+                    resourceKeyMap.put(itemId, "icon" + (counter++));
+                }
+                setResource(resourceKeyMap.get(itemId), icon);
+                return icon;
             }
         });
     }
@@ -423,9 +520,11 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     /**
      * Returns true if the user can enter text into the field to either filter
-     * the selections or enter a new value if new item handler is set (see
-     * {@link #setNewItemHandler(NewItemHandler)}. If text input is disabled,
-     * the comboBox will work in the same way as a {@link NativeSelect}
+     * the selections or enter a new value if new item provider or handler is
+     * set (see {@link #setNewItemProvider(NewItemProvider)} (recommended) and
+     * {@link #setNewItemHandler(NewItemHandler)} (deprecated)). If text input
+     * is disabled, the comboBox will work in the same way as a
+     * {@link NativeSelect}
      *
      * @return true if text input is allowed
      */
@@ -592,9 +691,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     public void setItemCaptionGenerator(
             ItemCaptionGenerator<T> itemCaptionGenerator) {
         super.setItemCaptionGenerator(itemCaptionGenerator);
-        if (getSelectedItem().isPresent()) {
-            updateSelectedItemCaption();
-        }
     }
 
     /**
@@ -636,10 +732,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     @Override
     public void setItemIconGenerator(IconGenerator<T> itemIconGenerator) {
         super.setItemIconGenerator(itemIconGenerator);
-
-        if (getSelectedItem().isPresent()) {
-            updateSelectedItemIcon();
-        }
     }
 
     @Override
@@ -649,17 +741,42 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     /**
      * Sets the handler that is called when user types a new item. The creation
-     * of new items is allowed when a new item handler has been set.
+     * of new items is allowed when a new item handler has been set. If new item
+     * provider is also set, the new item handler is ignored.
      *
      * @param newItemHandler
      *            handler called for new items, null to only permit the
-     *            selection of existing items
+     *            selection of existing items, all options ignored if new item
+     *            provider is set
      * @since 8.0
+     * @deprecated Since 8.4 use {@link #setNewItemProvider(NewItemProvider)}
+     *             instead.
      */
+    @Deprecated
     public void setNewItemHandler(NewItemHandler newItemHandler) {
+        getLogger().log(Level.WARNING,
+                "NewItemHandler is deprecated. Please use NewItemProvider instead.");
         this.newItemHandler = newItemHandler;
-        getState().allowNewItems = newItemHandler != null;
-        markAsDirty();
+        getState(true).allowNewItems = newItemProvider != null
+                || newItemHandler != null;
+    }
+
+    /**
+     * Sets the provider function that is called when user types a new item. The
+     * creation of new items is allowed when a new item provider has been set.
+     * If a deprecated new item handler is also set it is ignored in favor of
+     * new item provider.
+     *
+     * @param newItemProvider
+     *            provider function that is called for new items, null to only
+     *            permit the selection of existing items or to use a deprecated
+     *            new item handler if set
+     * @since 8.4
+     */
+    public void setNewItemProvider(NewItemProvider<T> newItemProvider) {
+        this.newItemProvider = newItemProvider;
+        getState(true).allowNewItems = newItemProvider != null
+                || newItemHandler != null;
     }
 
     /**
@@ -667,9 +784,22 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * in the data provider).
      *
      * @return new item handler or null if none specified
+     * @deprecated Since 8.4 use {@link #getNewItemProvider()} instead.
      */
+    @Deprecated
     public NewItemHandler getNewItemHandler() {
         return newItemHandler;
+    }
+
+    /**
+     * Returns the provider function that is called when the user enters a new
+     * item (not present in the data provider).
+     *
+     * @since 8.4
+     * @return new item provider or null if none specified
+     */
+    public NewItemProvider<T> getNewItemProvider() {
+        return newItemProvider;
     }
 
     // HasValue methods delegated to the selection model
@@ -677,10 +807,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     @Override
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<T> listener) {
-        return addSelectionListener(event -> {
-            listener.valueChange(new ValueChangeEvent<>(event.getComponent(),
-                    this, event.getOldValue(), event.isUserOriginated()));
-        });
+        return addSelectionListener(event -> listener
+                .valueChange(new ValueChangeEvent<>(event.getComponent(), this,
+                        event.getOldValue(), event.isUserOriginated())));
     }
 
     @Override
@@ -694,33 +823,46 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     @Override
-    protected void doSetSelectedKey(String key) {
-        super.doSetSelectedKey(key);
+    protected void updateSelectedItemState(T value) {
+        super.updateSelectedItemState(value);
 
-        updateSelectedItemCaption();
-        updateSelectedItemIcon();
+        updateSelectedItemCaption(value);
+        updateSelectedItemIcon(value);
     }
 
-    private void updateSelectedItemCaption() {
+    private void updateSelectedItemCaption(T value) {
         String selectedCaption = null;
-        T value = getDataCommunicator().getKeyMapper().get(getSelectedKey());
         if (value != null) {
             selectedCaption = getItemCaptionGenerator().apply(value);
         }
         getState().selectedItemCaption = selectedCaption;
     }
 
-    private void updateSelectedItemIcon() {
+    private void updateSelectedItemIcon(T value) {
         String selectedItemIcon = null;
-        T value = getDataCommunicator().getKeyMapper().get(getSelectedKey());
         if (value != null) {
             Resource icon = getItemIconGenerator().apply(value);
             if (icon != null) {
+                if (icon instanceof ConnectorResource) {
+                    if (!isAttached()) {
+                        // Deferred resource generation.
+                        return;
+                    }
+                    setResource("selected", icon);
+                }
                 selectedItemIcon = ResourceReference
-                        .create(icon, ComboBox.this, null).getURL();
+                        .create(icon, ComboBox.this, "selected").getURL();
             }
         }
         getState().selectedItemIcon = selectedItemIcon;
+    }
+
+    @Override
+    public void attach() {
+        super.attach();
+
+        // Update icon for ConnectorResource
+        updateSelectedItemIcon(getValue());
     }
 
     @Override
@@ -747,7 +889,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         }
 
         if (isSelected(item)) {
-            element.attr("selected", "");
+            element.attr("selected", true);
         }
 
         return element;
@@ -771,9 +913,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                 ((DeclarativeStyleGenerator) styleGenerator).setStyle(item,
                         child.attr("style"));
             } else {
-                throw new IllegalStateException(String.format(
-                        "Don't know how "
-                                + "to set style using current style generator '%s'",
+                throw new IllegalStateException(String.format("Don't know how "
+                        + "to set style using current style generator '%s'",
                         styleGenerator.getClass().getName()));
             }
         }
@@ -801,7 +942,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         };
 
         SerializableConsumer<C> providerFilterSlot = internalSetDataProvider(
-                dataProvider, convertOrNull.apply(currentFilterText));
+                dataProvider,
+                convertOrNull.apply(getState(false).currentFilterText));
 
         filterSlot = filter -> providerFilterSlot
                 .accept(convertOrNull.apply(filter));
@@ -812,7 +954,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * size callback.
      * <p>
      * This method is a shorthand for making a {@link CallbackDataProvider} that
-     * handles a partial {@link Query} object.
+     * handles a partial {@link com.vaadin.data.provider.Query Query} object.
      *
      * @param fetchItems
      *            a callback for fetching items
@@ -830,29 +972,12 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                 q -> sizeCallback.applyAsInt(q.getFilter().orElse(""))));
     }
 
-    @Override
-    protected void setSelectedFromClient(String key) {
-        super.setSelectedFromClient(key);
-
-        /*
-         * The client side for combo box always expects a state change for
-         * selectedItemKey after it has sent a selection change. This means that
-         * we must store a value in the diffstate that guarantees that a new
-         * value will be sent, regardless of what the value actually is at the
-         * time when changes are sent.
-         *
-         * Keys are always strings (or null), so using a non-string type will
-         * always trigger a diff mismatch and a resend.
-         */
-        updateDiffstate("selectedItemKey", Json.create(0));
-    }
-
     /**
      * Predicate to check {@link ComboBox} item captions against user typed
      * strings.
      *
-     * @see #setItems(CaptionFilter, Collection)
-     * @see #setItems(CaptionFilter, Object[])
+     * @see ComboBox#setItems(CaptionFilter, Collection)
+     * @see ComboBox#setItems(CaptionFilter, Object[])
      * @since 8.0
      */
     @FunctionalInterface
@@ -871,5 +996,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
          */
         @Override
         public boolean test(String itemCaption, String filterText);
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(ComboBox.class.getName());
     }
 }

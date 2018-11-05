@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -60,28 +60,25 @@ public class WidgetsetCompiler {
             // thread and cannot be changed in JRE 1.5 (see
             // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6316197)
 
-            Runnable runCompiler = new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        // GWTCompiler.main(args);
-                        // avoid warnings
+            Runnable runCompiler = () -> {
+                try {
+                    // GWTCompiler.main(args);
+                    // avoid warnings
 
-                        String wsname = args[args.length - 1];
+                    String wsname = args[args.length - 1];
 
-                        // TODO expecting this is launched via eclipse WTP
-                        // project
-                        System.out.println(
-                                "Updating GWT module description file...");
-                        WidgetSetBuilder.updateWidgetSet(wsname);
-                        System.out.println("Done.");
+                    // TODO expecting this is launched via eclipse WTP
+                    // project
+                    System.out
+                            .println("Updating GWT module description file...");
+                    WidgetSetBuilder.updateWidgetSet(wsname);
+                    System.out.println("Done.");
 
-                        System.out.println("Starting GWT compiler");
-                        com.google.gwt.dev.Compiler.main(args);
-                    } catch (Throwable thr) {
-                        getLogger().log(Level.SEVERE,
-                                "Widgetset compilation failed", thr);
-                    }
+                    System.out.println("Starting GWT compiler");
+                    com.google.gwt.dev.Compiler.main(args);
+                } catch (Throwable thr) {
+                    getLogger().log(Level.SEVERE,
+                            "Widgetset compilation failed", thr);
                 }
             };
             Thread runThread = new Thread(runCompiler);

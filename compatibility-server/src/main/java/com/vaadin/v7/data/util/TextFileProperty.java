@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,6 +36,7 @@ import java.nio.charset.Charset;
  * setValue(Object) is explicitly called. {@link ReadOnlyStatusChangeListener}s
  * are supported but only fire when setReadOnly(boolean) is explicitly called.
  *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 @SuppressWarnings("serial")
@@ -98,7 +99,7 @@ public class TextFileProperty extends AbstractProperty<String> {
                     : new InputStreamReader(fis, charset);
             BufferedReader r = new BufferedReader(isr);
             StringBuilder b = new StringBuilder();
-            char buf[] = new char[8 * 1024];
+            char[] buf = new char[8 * 1024];
             int len;
             while ((len = r.read(buf)) != -1) {
                 b.append(buf, 0, len);
@@ -144,7 +145,7 @@ public class TextFileProperty extends AbstractProperty<String> {
                     ? new OutputStreamWriter(fos)
                     : new OutputStreamWriter(fos, charset);
             BufferedWriter w = new BufferedWriter(osw);
-            w.append(newValue.toString());
+            w.append(newValue);
             w.flush();
             w.close();
             osw.close();

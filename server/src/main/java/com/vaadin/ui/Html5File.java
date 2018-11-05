@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,7 +32,17 @@ public class Html5File implements Serializable {
     private StreamVariable streamVariable;
     private final String type;
 
-    Html5File(String name, long size, String mimeType) {
+    /**
+     * Constructs a new Html5 file wrapper.
+     *
+     * @param name
+     *            the file name
+     * @param size
+     *            the size of the file
+     * @param mimeType
+     *            the type of the file
+     */
+    public Html5File(String name, long size, String mimeType) {
         this.name = name;
         this.size = size;
         type = mimeType;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,8 @@
  */
 
 package com.vaadin.server;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -38,6 +40,7 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -114,6 +117,10 @@ public abstract class VaadinService implements Serializable {
 
     private static final String REQUEST_START_TIME_ATTRIBUTE = "requestStartTime";
 
+    /**
+     * Should never be used directly, always use
+     * {@link #getDeploymentConfiguration()}
+     */
     private final DeploymentConfiguration deploymentConfiguration;
 
     /*
@@ -135,6 +142,8 @@ public abstract class VaadinService implements Serializable {
     private ClassLoader classLoader;
 
     private Iterable<RequestHandler> requestHandlers;
+    private Iterable<DependencyFilter> dependencyFilters;
+    private ConnectorIdGenerator connectorIdGenerator;
 
     private boolean atmosphereAvailable = checkAtmosphereSupport();
 
@@ -151,7 +160,7 @@ public abstract class VaadinService implements Serializable {
     private boolean initialized = false;
 
     /**
-     * Creates a new vaadin service based on a deployment configuration
+     * Creates a new vaadin service based on a deployment configuration.
      *
      * @param deploymentConfiguration
      *            the deployment configuration for the service
@@ -183,6 +192,20 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
+     * Creates a service. This method is for use by dependency injection
+     * frameworks etc. and must be followed by a call to
+     * {@link #setClassLoader(ClassLoader)} or {@link #setDefaultClassLoader()}
+     * before use. Furthermore {@link #getDeploymentConfiguration()} should be
+     * overridden (or otherwise intercepted) so it does not return
+     * <code>null</code>.
+     *
+     * @since 8.2
+     */
+    protected VaadinService() {
+        this.deploymentConfiguration = null;
+    }
+
+    /**
      * Initializes this service. The service should be initialized before it is
      * used.
      *
@@ -205,6 +228,13 @@ public abstract class VaadinService implements Serializable {
         Collections.reverse(handlers);
 
         requestHandlers = Collections.unmodifiableCollection(handlers);
+
+        dependencyFilters = Collections.unmodifiableCollection(
+                initDependencyFilters(event.getAddedDependencyFilters()));
+
+        connectorIdGenerator = initConnectorIdGenerator(
+                event.getAddedConnectorIdGenerators());
+        assert connectorIdGenerator != null;
 
         initialized = true;
     }
@@ -239,7 +269,7 @@ public abstract class VaadinService implements Serializable {
      */
     protected List<RequestHandler> createRequestHandlers()
             throws ServiceException {
-        ArrayList<RequestHandler> handlers = new ArrayList<>();
+        List<RequestHandler> handlers = new ArrayList<>();
         handlers.add(new SessionRequestHandler());
         handlers.add(new PublishedFileHandler());
         handlers.add(new HeartbeatHandler());
@@ -348,7 +378,8 @@ public abstract class VaadinService implements Serializable {
     public abstract String getMimeType(String resourceName);
 
     /**
-     * Gets the deployment configuration.
+     * Gets the deployment configuration. Should be overridden (or otherwise
+     * intercepted) if the no-arg constructor is used in order to prevent NPEs.
      *
      * @return the deployment configuration
      */
@@ -502,7 +533,7 @@ public abstract class VaadinService implements Serializable {
             if (session.getState() == State.OPEN) {
                 closeSession(session);
             }
-            ArrayList<UI> uis = new ArrayList<>(session.getUIs());
+            List<UI> uis = new ArrayList<>(session.getUIs());
             for (final UI ui : uis) {
                 ui.accessSynchronously(() -> {
                     /*
@@ -843,7 +874,7 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Creates a new Vaadin session for this service and request
+     * Creates a new Vaadin session for this service and request.
      *
      * @param request
      *            The request for which to create a VaadinSession
@@ -1001,7 +1032,7 @@ public abstract class VaadinService implements Serializable {
      * @see #setCurrentInstances(VaadinRequest, VaadinResponse)
      */
     public static VaadinRequest getCurrentRequest() {
-        return CurrentInstance.get(VaadinRequest.class);
+        return VaadinRequest.getCurrent();
     }
 
     /**
@@ -1016,7 +1047,7 @@ public abstract class VaadinService implements Serializable {
      * @see #setCurrentInstances(VaadinRequest, VaadinResponse)
      */
     public static VaadinResponse getCurrentResponse() {
-        return CurrentInstance.get(VaadinResponse.class);
+        return VaadinResponse.getCurrent();
     }
 
     /**
@@ -1098,8 +1129,7 @@ public abstract class VaadinService implements Serializable {
         // Stores all attributes (security key, reference to this context
         // instance) so they can be added to the new session
         Set<String> attributeNames = oldSession.getAttributeNames();
-        HashMap<String, Object> attrs = new HashMap<>(
-                attributeNames.size() * 2);
+        Map<String, Object> attrs = new HashMap<>(attributeNames.size() * 2);
         for (String name : attributeNames) {
             Object value = oldSession.getAttribute(name);
             if (value instanceof VaadinSession) {
@@ -1142,7 +1172,7 @@ public abstract class VaadinService implements Serializable {
     /**
      *
      * Finds the given theme resource from the web content folder or using the
-     * class loader and returns a stream for it
+     * class loader and returns a stream for it.
      *
      * @param ui
      *            The ui for which to find the resource
@@ -1238,7 +1268,7 @@ public abstract class VaadinService implements Serializable {
      * @param session
      */
     private void removeClosedUIs(final VaadinSession session) {
-        ArrayList<UI> uis = new ArrayList<>(session.getUIs());
+        List<UI> uis = new ArrayList<>(session.getUIs());
         for (final UI ui : uis) {
             if (ui.isClosing()) {
                 ui.accessSynchronously(() -> {
@@ -1311,7 +1341,8 @@ public abstract class VaadinService implements Serializable {
      */
     private int getUidlRequestTimeout(VaadinSession session) {
         return getDeploymentConfiguration().isCloseIdleSessions()
-                ? session.getSession().getMaxInactiveInterval() : -1;
+                ? session.getSession().getMaxInactiveInterval()
+                : -1;
     }
 
     /**
@@ -1323,30 +1354,44 @@ public abstract class VaadinService implements Serializable {
      * returns false and {@link #getHeartbeatTimeout() getHeartbeatTimeout} is
      * negative or has not yet expired.
      *
-     * @since 7.0.0
+     * @since 8.1
      *
      * @param ui
      *            The UI whose status to check
      *
      * @return true if the UI is active, false if it could be removed.
      */
-    private boolean isUIActive(UI ui) {
+    public boolean isUIActive(UI ui) {
         if (ui.isClosing()) {
             return false;
-        } else {
-            long now = System.currentTimeMillis();
-            int timeout = 1000 * getHeartbeatTimeout();
-            return timeout < 0
-                    || now - ui.getLastHeartbeatTimestamp() < timeout;
         }
+
+        // Check for long running tasks
+        Lock lockInstance = ui.getSession().getLockInstance();
+        if (lockInstance instanceof ReentrantLock) {
+            if (((ReentrantLock) lockInstance).hasQueuedThreads()) {
+                /*
+                 * Someone is trying to access the session. Leaving all UIs
+                 * alive for now. A possible kill decision will be made at a
+                 * later time when the session access has ended.
+                 */
+                return true;
+            }
+        }
+
+        // Check timeout
+        long now = System.currentTimeMillis();
+        int timeout = 1000 * getHeartbeatTimeout();
+        return timeout < 0 || now - ui.getLastHeartbeatTimestamp() < timeout;
     }
 
     /**
      * Returns whether the given session is active or whether it can be closed.
      * <p>
-     * A session is active if and only if its {@link #isClosing} returns false
-     * and {@link #getUidlRequestTimeout(VaadinSession) getUidlRequestTimeout}
-     * is negative or has not yet expired.
+     * A session is active if and only if its {@link VaadinSession#getState()}
+     * returns {@link State#OPEN} and
+     * {@link #getUidlRequestTimeout(VaadinSession) getUidlRequestTimeout} is
+     * negative or has not yet expired.
      *
      * @param session
      *            The session whose status to check
@@ -1369,7 +1414,7 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Called before the framework starts handling a request
+     * Called before the framework starts handling a request.
      *
      * @param request
      *            The request
@@ -1427,6 +1472,99 @@ public abstract class VaadinService implements Serializable {
      */
     public Iterable<RequestHandler> getRequestHandlers() {
         return requestHandlers;
+    }
+
+    /**
+     * Updates the list of resource dependency filters to use for the
+     * application.
+     * <p>
+     * The filters can freely update the dependencies in any way they see fit
+     * (bundle, rewrite, merge).
+     * <p>
+     * The framework collects filters from the {@link SessionInitEvent} where
+     * session init listeners can add them. This method is called with the
+     * combined list to optionally modify it, and the result is then stored by
+     * the caller as the final list to use.
+     * <p>
+     * The filters are called in the order the session init listeners are
+     * called, which is undefined. If you need a specific order, you can
+     * override this method and alter the order.
+     *
+     * @since 8.1
+     * @param sessionInitFilters
+     *            a list of dependency filters collected from the session init
+     *            event
+     * @return the list of dependency filters to use for filtering resources,
+     *         not null
+     * @throws ServiceException
+     *             if something went wrong while determining the filters
+     *
+     */
+    protected List<DependencyFilter> initDependencyFilters(
+            List<DependencyFilter> sessionInitFilters) throws ServiceException {
+        assert sessionInitFilters != null;
+
+        return sessionInitFilters;
+    }
+
+    /**
+     * Determines the connector id generator to use for the application.
+     * <p>
+     * The connector id generator creates a unique id for each connector
+     * attached to a UI.
+     * <p>
+     * The framework collects generators from the {@link SessionInitEvent} where
+     * session init listeners can add them. This method is called with the
+     * combined list to determine one generator to use.
+     * <p>
+     * If the list is empty, a default implementation based on
+     * {@link VaadinSession#getNextConnectorId()} is used. If the list contains
+     * one item, it is used. If there are multiple generators in the list, an
+     * exception is thrown.
+     *
+     * @since 8.1
+     * @param addedConnectorIdGenerators
+     *            a list of connector id generators collected from the session
+     *            init event, not <code>null</code>
+     * @return the connector id generator to use, not <code>null</code>
+     *
+     * @throws ServiceException
+     *             if something went wrong while determining the filters, e.g.
+     *             if there are multiple implementations to choose from
+     *
+     */
+    protected ConnectorIdGenerator initConnectorIdGenerator(
+            List<ConnectorIdGenerator> addedConnectorIdGenerators)
+            throws ServiceException {
+        assert addedConnectorIdGenerators != null;
+
+        switch (addedConnectorIdGenerators.size()) {
+        case 0:
+            return ConnectorIdGenerator::generateDefaultConnectorId;
+        case 1:
+            return addedConnectorIdGenerators.get(0);
+        default:
+            throw new ServiceException(
+                    "Cannot start application since there are multiple connector id generators. Remove redundant implementations from the classpath or override VaadinService.initConenctorIdGenerator to explicitly select one to use. The found generators are: "
+                            + addedConnectorIdGenerators);
+        }
+    }
+
+    /**
+     * Gets the filters which all resource dependencies are passed through
+     * before being sent to the client for loading.
+     *
+     * @see #initDependencyFilters(List)
+     *
+     * @since 8.1
+     * @return the dependency filters to pass resources dependencies through
+     *         before loading
+     */
+    public Iterable<DependencyFilter> getDependencyFilters() {
+        if (dependencyFilters == null) {
+            return Collections.emptyList();
+        }
+        return dependencyFilters;
     }
 
     /**
@@ -1498,14 +1636,14 @@ public abstract class VaadinService implements Serializable {
                 SystemMessages ci = getSystemMessages(ServletPortletHelper
                         .findLocale(null, vaadinSession, request), request);
                 try {
-                    writeStringResponse(response,
+                    writeUncachedStringResponse(response,
                             JsonConstants.JSON_CONTENT_TYPE,
                             createCriticalNotificationJSON(
                                     ci.getInternalErrorCaption(),
                                     ci.getInternalErrorMessage(), null,
                                     ci.getInternalErrorURL()));
                 } catch (IOException e) {
-                    // An exception occured while writing the response. Log
+                    // An exception occurred while writing the response. Log
                     // it and continue handling only the original error.
                     getLogger().log(Level.WARNING,
                             "Failed to write critical notification response to the client",
@@ -1530,21 +1668,44 @@ public abstract class VaadinService implements Serializable {
      *            The response reference
      * @param contentType
      *            The content type of the response
-     * @param reponseString
+     * @param responseString
      *            The actual response
      * @throws IOException
-     *             If an error occured while writing the response
+     *             If an error occurred while writing the response
      */
     public void writeStringResponse(VaadinResponse response, String contentType,
-            String reponseString) throws IOException {
+            String responseString) throws IOException {
 
         response.setContentType(contentType);
 
         final OutputStream out = response.getOutputStream();
         try (PrintWriter outWriter = new PrintWriter(
-                new BufferedWriter(new OutputStreamWriter(out, "UTF-8")))) {
-            outWriter.print(reponseString);
+                new BufferedWriter(new OutputStreamWriter(out, UTF_8)))) {
+            outWriter.print(responseString);
         }
+    }
+
+    /**
+     * Writes the given string as a response with headers to prevent caching and
+     * using the given content type.
+     *
+     * @param response
+     *            The response reference
+     * @param contentType
+     *            The content type of the response
+     * @param responseString
+     *            The actual response
+     * @throws IOException
+     *             If an error occurred while writing the response
+     * @since 8.3.2
+     */
+    public void writeUncachedStringResponse(VaadinResponse response,
+            String contentType, String responseString) throws IOException {
+        // Response might contain sensitive information, so prevent all forms of
+        // caching
+        response.setNoCacheHeaders();
+
+        writeStringResponse(response, contentType, responseString);
     }
 
     /**
@@ -1665,7 +1826,7 @@ public abstract class VaadinService implements Serializable {
     public void criticalNotification(VaadinRequest request,
             VaadinResponse response, String caption, String message,
             String details, String url) throws IOException {
-        writeStringResponse(response, JsonConstants.JSON_CONTENT_TYPE,
+        writeUncachedStringResponse(response, JsonConstants.JSON_CONTENT_TYPE,
                 createCriticalNotificationJSON(caption, message, details, url));
     }
 
@@ -1709,7 +1870,7 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Checks whether Atmosphere is avilable for use
+     * Checks whether Atmosphere is available for use.
      *
      * @since 7.6
      * @return true if Atmosphere is available, false otherwise
@@ -1887,8 +2048,13 @@ public abstract class VaadinService implements Serializable {
 
                     try {
                         pendingAccess.get();
-
                     } catch (Exception exception) {
+                        if (exception instanceof ExecutionException) {
+                            Throwable cause = exception.getCause();
+                            if (cause instanceof Exception) {
+                                exception = (Exception) cause;
+                            }
+                        }
                         pendingAccess.handleError(exception);
                     }
                 }
@@ -1935,7 +2101,7 @@ public abstract class VaadinService implements Serializable {
      */
     @Deprecated
     public void removeServiceDestroyListener(ServiceDestroyListener listener) {
-        serviceDestroyListeners.remove(serviceDestroyListeners);
+        serviceDestroyListeners.remove(listener);
     }
 
     /**
@@ -2014,7 +2180,7 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Called when the VaadinSession should be loaded from the underlying HTTP
-     * session
+     * session.
      *
      * @since 7.6
      * @param wrappedSession
@@ -2050,7 +2216,7 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Called when the VaadinSession should be removed from the underlying HTTP
-     * session
+     * session.
      *
      * @since 7.6
      * @param wrappedSession
@@ -2063,7 +2229,7 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Performs the actual removal of the VaadinSession from the underlying HTTP
-     * session after sanity checks have been performed
+     * session after sanity checks have been performed.
      *
      * @since 7.6
      * @param wrappedSession
@@ -2076,13 +2242,41 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Returns the name used for storing the VaadinSession in the underlying
-     * HTTP session
+     * HTTP session.
      *
      * @since 7.6
      * @return the attribute name used for storing the VaadinSession
      */
     protected String getSessionAttributeName() {
         return VaadinSession.class.getName() + "." + getServiceName();
+    }
+
+    /**
+     * Generates a unique id to use for a newly attached connector.
+     *
+     * @see ConnectorIdGenerator
+     * @see #initConnectorIdGenerator(List)
+     *
+     * @since 8.1
+     *
+     * @param session
+     *            the session to which the connector has been attached, not
+     *            <code>null</code>
+     * @param connector
+     *            the attached connector for which to generate an id, not
+     *            <code>null</code>
+     * @return a string id that is unique within the session, not
+     *         <code>null</code>
+     */
+    public String generateConnectorId(VaadinSession session,
+            ClientConnector connector) {
+        assert session.getService() == this;
+        String connectorId = connectorIdGenerator.generateConnectorId(
+                new ConnectorIdGenerationEvent(session, connector));
+
+        assert connectorId != null;
+
+        return connectorId;
     }
 
 }

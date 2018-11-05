@@ -1,24 +1,7 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.vaadin.server.ExternalResource;
@@ -71,8 +54,7 @@ public class Parameters extends com.vaadin.server.LegacyApplication
             layout.addComponent(
                     new Link(u2.toString(), new ExternalResource(u2)));
         } catch (final Exception e) {
-            System.out.println(
-                    "Couldn't get hostname for this machine: " + e.toString());
+            System.out.println("Couldn't get hostname for this machine: " + e);
             e.printStackTrace();
         }
 
@@ -114,13 +96,12 @@ public class Parameters extends com.vaadin.server.LegacyApplication
 
         params.removeAllItems();
         Map<String, String[]> parameters = request.getParameterMap();
-        for (final Iterator<String> i = parameters.keySet().iterator(); i
-                .hasNext();) {
-            final String name = i.next();
-            final String[] values = parameters.get(name);
+        for (final Map.Entry<String, String[]> entry : parameters.entrySet()) {
+            final String name = entry.getKey();
+            final String[] values = entry.getValue();
             String v = "";
             for (int j = 0; j < values.length; j++) {
-                if (v.length() > 0) {
+                if (!v.isEmpty()) {
                     v += ", ";
                 }
                 v += "'" + values[j] + "'";

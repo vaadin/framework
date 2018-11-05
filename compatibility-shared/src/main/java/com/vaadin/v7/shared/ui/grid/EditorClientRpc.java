@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -48,7 +48,7 @@ public interface EditorClientRpc extends ClientRpc {
      * the client.
      *
      * @param bindSucceeded
-     *            <code>true</code> iff the bind action was successful
+     *            <code>true</code> if the bind action was successful
      */
     void confirmBind(boolean bindSucceeded);
 
@@ -57,7 +57,7 @@ public interface EditorClientRpc extends ClientRpc {
      * the client.
      *
      * @param saveSucceeded
-     *            <code>true</code> iff the save action was successful
+     *            <code>true</code> if the save action was successful
      * @param errorMessage
      *            the error message to show the user
      * @param errorColumnsIds

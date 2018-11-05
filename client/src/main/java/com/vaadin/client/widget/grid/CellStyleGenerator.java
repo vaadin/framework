@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +18,7 @@ package com.vaadin.client.widget.grid;
 import com.vaadin.client.widgets.Grid;
 
 /**
- * Callback interface for generating custom style names for cells
+ * Callback interface for generating custom style names for cells.
  *
  * @author Vaadin Ltd
  * @param <T>

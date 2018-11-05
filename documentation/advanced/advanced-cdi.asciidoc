@@ -54,7 +54,7 @@ Reference Implementation]
 
 * link:http://cdi-spec.org/[CDI Specification]
 
-* link:https://vaadin.com/wiki?p_p_id=36&amp;p_p_lifecycle=0&amp;p_p_state=normal&amp;p_p_mode=view&amp;p_p_col_id=row-1&amp;p_p_col_pos=1&amp;p_p_col_count=3&amp;p_r_p_185834411_title=Vaadin+CDI&amp;p_r_p_185834411_nodeName=vaadin.com+wiki&amp;_36_struts_action=%2Fwiki%2Fview[Vaadin
+* link:https://vaadin.com/docs/v8/framework/articles/VaadinCDI.html[Vaadin
 CDI Tutorial]
 
 endif::web[]
@@ -563,20 +563,8 @@ possible "View" suffix, making it lower case, and using a dash ("-") to separate
 words originally denoted by capital letters. Thereby, a view class such as
 [classname]#MyFunnyView# would have name " [literal]#++my-funny++#".
 
-supportsParameters:: Specifies whether view parameters can be passed to the view as a suffix to the
-name in the navigation state, that is, in the form of
-[literal]#++viewname+viewparameters++#. The view name is merely a prefix and
-there is no separator nor format for the parameters, but those are left for the
-view to handle. The parameter support mode is disabled by default.
-
-
 +
-[source, java]
-----
-@CDIView(value="myview", supportsParameters=true)
-----
-+
-You could then navigate to the state with a URI fragment such as
+You can navigate to a state with a URI fragment such as
 [literal]#++#!myview/someparameter++# or programmatically with:
 
 

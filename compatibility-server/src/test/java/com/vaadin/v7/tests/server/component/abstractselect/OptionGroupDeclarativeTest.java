@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.server.component.abstractselect;
 
 import org.junit.Before;
@@ -46,7 +31,7 @@ public class OptionGroupDeclarativeTest
         og.addItems("foo", "bar", "baz", "bang");
 
         //@formatter:off
-        String expected = 
+        String expected =
                 "<vaadin7-option-group>"
                 + "<option>foo</option>"
                 + "<option>bar</option>"
@@ -66,11 +51,11 @@ public class OptionGroupDeclarativeTest
         og.setItemEnabled("baz", false);
 
         //@formatter:off
-        String expected = 
+        String expected =
                 "<vaadin7-option-group>"
                 + "<option>foo</option>"
                 + "<option>bar</option>"
-                + "<option disabled>baz</option>"
+                + "<option disabled=''>baz</option>"
                 + "<option>bang</option>"
                 + "</vaadin7-option-group>";
         //@formatter:on
@@ -86,7 +71,7 @@ public class OptionGroupDeclarativeTest
         og.setItemIcon("bar", new ThemeResource("foobar.png"));
 
         //@formatter:off
-        String expected = 
+        String expected =
                 "<vaadin7-option-group>"
                 + "<option>foo</option>"
                 + "<option icon='theme://foobar.png'>bar</option>"
@@ -110,7 +95,7 @@ public class OptionGroupDeclarativeTest
         og.setItemCaption("bar", "<font color='red'>False</font>");
 
         //@formatter:off
-        String expected = 
+        String expected =
                 "<vaadin7-option-group html-content-allowed>"
                 + "<option item-id=\"foo\"><b>True</b></option>"
                 + "<option item-id=\"bar\"><font color='red'>False</font></option>"

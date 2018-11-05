@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -124,6 +124,20 @@ public class Button extends AbstractFocusable
     }
 
     /**
+     * Creates a new push button with a click listener.
+     *
+     * @param icon
+     *            the Button icon.
+     * @param listener
+     *            the Button click listener.
+     * @since 8.2
+     */
+    public Button(Resource icon, ClickListener listener) {
+        this(icon);
+        addClickListener(listener);
+    }
+
+    /**
      * Click event. This event is thrown, when the button is clicked.
      *
      * @author Vaadin Ltd.
@@ -145,7 +159,7 @@ public class Button extends AbstractFocusable
         }
 
         /**
-         * Constructor with mouse details
+         * Constructor with mouse details.
          *
          * @param source
          *            The source where the click took place
@@ -227,7 +241,7 @@ public class Button extends AbstractFocusable
         /**
          * Checks if the Alt key was down when the mouse event took place.
          *
-         * @return true if Alt was down when the event occured, false otherwise
+         * @return true if Alt was down when the event occurred, false otherwise
          *         or if unknown
          */
         public boolean isAltKey() {
@@ -241,7 +255,7 @@ public class Button extends AbstractFocusable
         /**
          * Checks if the Ctrl key was down when the mouse event took place.
          *
-         * @return true if Ctrl was pressed when the event occured, false
+         * @return true if Ctrl was pressed when the event occurred, false
          *         otherwise or if unknown
          */
         public boolean isCtrlKey() {
@@ -255,7 +269,7 @@ public class Button extends AbstractFocusable
         /**
          * Checks if the Meta key was down when the mouse event took place.
          *
-         * @return true if Meta was pressed when the event occured, false
+         * @return true if Meta was pressed when the event occurred, false
          *         otherwise or if unknown
          */
         public boolean isMetaKey() {
@@ -269,7 +283,7 @@ public class Button extends AbstractFocusable
         /**
          * Checks if the Shift key was down when the mouse event took place.
          *
-         * @return true if Shift was pressed when the event occured, false
+         * @return true if Shift was pressed when the event occurred, false
          *         otherwise or if unknown
          */
         public boolean isShiftKey() {
@@ -338,8 +352,8 @@ public class Button extends AbstractFocusable
 
     /**
      * Simulates a button click, notifying all server-side listeners.
-     *
-     * No action is taken is the button is disabled.
+     * <p>
+     * No action is taken if the button is disabled.
      */
     public void click() {
         if (isEnabled()) {
@@ -349,7 +363,7 @@ public class Button extends AbstractFocusable
 
     /**
      * Fires a click event to all listeners without any event details.
-     *
+     * <p>
      * In subclasses, override {@link #fireClick(MouseEventDetails)} instead of
      * this method.
      */
@@ -411,7 +425,6 @@ public class Button extends AbstractFocusable
     /**
      * A {@link ShortcutListener} specifically made to define a keyboard
      * shortcut that invokes a click on the given button.
-     *
      */
     public static class ClickShortcut extends ShortcutListener {
         protected Button button;
@@ -504,9 +517,9 @@ public class Button extends AbstractFocusable
 
     /**
      * Sets the component's icon and alt text.
-     *
+     * <p>
      * An alt text is shown when an image could not be loaded, and read by
-     * assisitve devices.
+     * assistive devices.
      *
      * @param icon
      *            the icon to be shown with the component's caption.
@@ -551,7 +564,7 @@ public class Button extends AbstractFocusable
     }
 
     /**
-     * Return HTML rendering setting
+     * Return HTML rendering setting.
      *
      * @return <code>true</code> if the caption text is to be rendered as HTML,
      *         <code>false</code> otherwise

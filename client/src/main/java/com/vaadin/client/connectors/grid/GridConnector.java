@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,7 @@
 package com.vaadin.client.connectors.grid;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,10 +40,12 @@ import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.annotations.OnStateChange;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.connectors.grid.ColumnConnector.CustomColumn;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
@@ -55,6 +58,8 @@ import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
 import com.vaadin.client.widgets.Grid.FooterRow;
 import com.vaadin.client.widgets.Grid.HeaderRow;
+import com.vaadin.client.widgets.Grid.SelectionColumn;
+import com.vaadin.client.widgets.Grid.StaticSection.StaticCell;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
@@ -103,9 +108,10 @@ public class GridConnector extends AbstractListingConnector
                 NativeEvent mouseEvent) {
             String rowKey = getRowKey((JsonObject) cell.getRow());
             String columnId = columnToIdMap.get(cell.getColumn());
+            int rowIndex = cell.getRowIndex();
             getRpcProxy(GridServerRpc.class).itemClick(rowKey, columnId,
-                    MouseEventDetailsBuilder
-                            .buildMouseEventDetails(mouseEvent));
+                    MouseEventDetailsBuilder.buildMouseEventDetails(mouseEvent),
+                    rowIndex);
         }
     }
 
@@ -116,6 +122,7 @@ public class GridConnector extends AbstractListingConnector
     /* Child component list for HasComponentsConnector */
     private List<ComponentConnector> childComponents;
     private ItemClickHandler itemClickHandler = new ItemClickHandler();
+    private boolean rowHeightScheduled = false;
 
     /**
      * Gets the string identifier of the given column in this grid.
@@ -148,7 +155,7 @@ public class GridConnector extends AbstractListingConnector
     /**
      * Method called for a row details refresh. Runs all callbacks if any
      * details were shown and clears the callbacks.
-     * 
+     *
      * @param detailsShown
      *            True if any details were set visible
      */
@@ -177,7 +184,7 @@ public class GridConnector extends AbstractListingConnector
     /**
      * Add a single use details runnable callback for when we get a call to
      * {@link #detailsRefreshed(boolean)}.
-     * 
+     *
      * @param refreshCallback
      *            Details refreshed callback
      */
@@ -187,7 +194,7 @@ public class GridConnector extends AbstractListingConnector
 
     /**
      * Check if we have details for given row.
-     * 
+     *
      * @param rowIndex
      * @return
      */
@@ -202,44 +209,58 @@ public class GridConnector extends AbstractListingConnector
     protected void init() {
         super.init();
 
+        updateWidgetStyleNames();
+
+        Grid<JsonObject> grid = getWidget();
+
+        // Trigger early redraw of both grid static sections.
+        grid.setHeaderVisible(!grid.isHeaderVisible());
+        grid.setFooterVisible(!grid.isFooterVisible());
+
         registerRpc(GridClientRpc.class, new GridClientRpc() {
 
             @Override
             public void scrollToRow(int row, ScrollDestination destination) {
                 Scheduler.get().scheduleFinally(
-                        () -> getWidget().scrollToRow(row, destination));
+                        () -> grid.scrollToRow(row, destination));
                 // Add details refresh listener and handle possible detail for
                 // scrolled row.
                 addDetailsRefreshCallback(() -> {
-                    if (rowHasDetails(row))
-                        getWidget().scrollToRow(row, destination);
+                    if (rowHasDetails(row)) {
+                        grid.scrollToRow(row, destination);
+                    }
                 });
             }
 
             @Override
             public void scrollToStart() {
-                Scheduler.get()
-                        .scheduleFinally(() -> getWidget().scrollToStart());
+                Scheduler.get().scheduleFinally(() -> grid.scrollToStart());
             }
 
             @Override
             public void scrollToEnd() {
-                Scheduler.get()
-                        .scheduleFinally(() -> getWidget().scrollToEnd());
+                Scheduler.get().scheduleFinally(() -> grid.scrollToEnd());
                 addDetailsRefreshCallback(() -> {
-                    if (rowHasDetails(getWidget().getDataSource().size() - 1))
-                        getWidget().scrollToEnd();
+                    if (rowHasDetails(grid.getDataSource().size() - 1)) {
+                        grid.scrollToEnd();
+                    }
                 });
+            }
+
+            @Override
+            public void recalculateColumnWidths() {
+                grid.recalculateColumnWidths();
             }
         });
 
-        getWidget().addSortHandler(this::handleSortEvent);
-        getWidget().setRowStyleGenerator(rowRef -> {
+        grid.addSortHandler(this::handleSortEvent);
+        grid.setRowStyleGenerator(rowRef -> {
             JsonObject json = rowRef.getRow();
             return json.hasKey(GridState.JSONKEY_ROWSTYLE)
-                    ? json.getString(GridState.JSONKEY_ROWSTYLE) : null;
+                    ? json.getString(GridState.JSONKEY_ROWSTYLE)
+                    : null;
         });
-        getWidget().setCellStyleGenerator(cellRef -> {
+        grid.setCellStyleGenerator(cellRef -> {
             JsonObject row = cellRef.getRow();
             if (!row.hasKey(GridState.JSONKEY_CELLSTYLES)) {
                 return null;
@@ -258,13 +279,13 @@ public class GridConnector extends AbstractListingConnector
             return null;
         });
 
-        getWidget().addColumnVisibilityChangeHandler(event -> {
+        grid.addColumnVisibilityChangeHandler(event -> {
             if (event.isUserOriginated()) {
                 getRpcProxy(GridServerRpc.class).columnVisibilityChanged(
                         getColumnId(event.getColumn()), event.isHidden());
             }
         });
-        getWidget().addColumnReorderHandler(event -> {
+        grid.addColumnReorderHandler(event -> {
             if (event.isUserOriginated()) {
                 List<String> newColumnOrder = mapColumnsToIds(
                         event.getNewColumnOrder());
@@ -274,26 +295,46 @@ public class GridConnector extends AbstractListingConnector
                         .columnsReordered(newColumnOrder, oldColumnOrder);
             }
         });
-        getWidget().addColumnResizeHandler(event -> {
+        grid.addColumnResizeHandler(event -> {
             Column<?, JsonObject> column = event.getColumn();
             getRpcProxy(GridServerRpc.class).columnResized(getColumnId(column),
                     column.getWidthActual());
         });
 
+        // Handling row height changes
+        grid.addRowHeightChangedHandler(event -> {
+            getLayoutManager().setNeedsMeasureRecursively(GridConnector.this);
+            getLayoutManager().layoutNow();
+        });
+
         /* Item click events */
-        getWidget().addBodyClickHandler(itemClickHandler);
-        getWidget().addBodyDoubleClickHandler(itemClickHandler);
+        grid.addBodyClickHandler(itemClickHandler);
+        grid.addBodyDoubleClickHandler(itemClickHandler);
 
         layout();
     }
 
-    @SuppressWarnings("unchecked")
-    @OnStateChange("columnOrder")
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+        if (!getState().columnOrder.containsAll(idToColumn.keySet())) {
+            updateColumns();
+        } else if (stateChangeEvent.hasPropertyChanged("columnOrder")) {
+            updateColumnOrder();
+        }
+
+        if (stateChangeEvent.hasPropertyChanged("header")) {
+            updateHeader();
+        }
+        if (stateChangeEvent.hasPropertyChanged("footer")) {
+            updateFooter();
+        }
+    }
+
     void updateColumnOrder() {
-        Scheduler.get()
-                .scheduleFinally(() -> getWidget().setColumnOrder(
-                        getState().columnOrder.stream().map(this::getColumn)
-                                .toArray(size -> new Column[size])));
+        getWidget().setColumnOrder(getState().columnOrder.stream()
+                .map(this::getColumn).toArray(size -> new CustomColumn[size]));
     }
 
     @OnStateChange("columnResizeMode")
@@ -304,7 +345,6 @@ public class GridConnector extends AbstractListingConnector
     /**
      * Updates the grid header section on state change.
      */
-    @OnStateChange("header")
     void updateHeader() {
         final Grid<JsonObject> grid = getWidget();
         final SectionState state = getState().header;
@@ -322,14 +362,66 @@ public class GridConnector extends AbstractListingConnector
 
             updateStaticRow(rowState, row);
         }
+
+        grid.setHeaderVisible(state.visible);
+    }
+
+    @OnStateChange({ "bodyRowHeight", "headerRowHeight", "footerRowHeight" })
+    void updateRowHeight() {
+        if (rowHeightScheduled) {
+            return;
+        }
+
+        Scheduler.get().scheduleFinally(() -> {
+            GridState state = getState();
+            Grid<JsonObject> grid = getWidget();
+            if (grid.isAttached() && rowHeightNeedsReset()) {
+                grid.resetSizesFromDom();
+            }
+            updateContainerRowHeigth(grid.getEscalator().getBody(),
+                    state.bodyRowHeight);
+            updateContainerRowHeigth(grid.getEscalator().getHeader(),
+                    state.headerRowHeight);
+            updateContainerRowHeigth(grid.getEscalator().getFooter(),
+                    state.footerRowHeight);
+            rowHeightScheduled = false;
+        });
+
+        rowHeightScheduled = true;
+    }
+
+    private boolean rowHeightNeedsReset() {
+        GridState state = getState();
+        // Body
+        boolean bodyAutoCalc = state.bodyRowHeight < 0;
+
+        // Header
+        boolean headerAutoCalc = state.headerRowHeight < 0;
+        boolean headerReset = headerAutoCalc && hasVisibleContent(state.header);
+
+        // Footer
+        boolean footerAutoCalc = state.footerRowHeight < 0;
+        boolean footerReset = footerAutoCalc && hasVisibleContent(state.footer);
+
+        return bodyAutoCalc || headerReset || footerReset;
+    }
+
+    private boolean hasVisibleContent(SectionState state) {
+        return state.visible && !state.rows.isEmpty();
+    }
+
+    private void updateContainerRowHeigth(RowContainer container,
+            double height) {
+        if (height >= 0) {
+            container.setDefaultRowHeight(height);
+        }
     }
 
     private void updateStaticRow(RowState rowState,
             Grid.StaticSection.StaticRow row) {
-        rowState.cells.forEach((columnId, cellState) -> {
-            updateStaticCellFromState(row.getCell(getColumn(columnId)),
-                    cellState);
-        });
+        rowState.cells
+                .forEach((columnId, cellState) -> updateStaticCellFromState(
+                        row.getCell(getColumn(columnId)), cellState));
         for (Map.Entry<CellState, Set<String>> cellGroupEntry : rowState.cellGroups
                 .entrySet()) {
             Set<String> group = cellGroupEntry.getValue();
@@ -367,12 +459,13 @@ public class GridConnector extends AbstractListingConnector
                     "unexpected cell type: " + cellState.type);
         }
         cell.setStyleName(cellState.styleName);
+        cell.setDescription(cellState.description);
+        cell.setDescriptionContentMode(cellState.descriptionContentMode);
     }
 
     /**
      * Updates the grid footer section on state change.
      */
-    @OnStateChange("footer")
     void updateFooter() {
         final Grid<JsonObject> grid = getWidget();
         final SectionState state = getState().footer;
@@ -386,6 +479,23 @@ public class GridConnector extends AbstractListingConnector
 
             updateStaticRow(rowState, row);
         }
+
+        grid.setFooterVisible(state.visible);
+    }
+
+    @OnStateChange({ "sortColumns", "sortDirs" })
+    void updateSortOrder() {
+        List<SortOrder> sortOrder = new ArrayList<SortOrder>();
+
+        String[] sortColumns = getState().sortColumns;
+        SortDirection[] sortDirs = getState().sortDirs;
+
+        for (int i = 0; i < sortColumns.length; i++) {
+            sortOrder
+                    .add(new SortOrder(getColumn(sortColumns[i]), sortDirs[i]));
+        }
+
+        getWidget().setSortOrder(sortOrder);
     }
 
     @Override
@@ -406,31 +516,89 @@ public class GridConnector extends AbstractListingConnector
     public void addColumn(CustomColumn column, String id) {
         assert !columnToIdMap.containsKey(column) && !columnToIdMap
                 .containsValue(id) : "Column with given id already exists.";
-        getWidget().addColumn(column);
         columnToIdMap.put(column, id);
         idToColumn.put(id, column);
+
+        if (idToColumn.keySet().containsAll(getState().columnOrder)) {
+            // All columns are available.
+            updateColumns();
+        }
     }
 
     /**
-     * Removes a column from Grid widget. This method also removes communication
-     * id mapping for the column.
+     * Updates the widgets columns to match the map in this connector.
+     */
+    protected void updateColumns() {
+        List<Column<?, JsonObject>> currentColumns = getWidget().getColumns();
+
+        List<CustomColumn> columnOrder = getState().columnOrder.stream()
+                .map(this::getColumn).collect(Collectors.toList());
+
+        if (isColumnOrderCorrect(currentColumns, columnOrder)) {
+            // All up to date
+            return;
+        }
+
+        Grid<JsonObject> grid = getWidget();
+
+        // Remove old column
+        currentColumns.stream()
+                .filter(col -> !(columnOrder.contains(col)
+                        || col instanceof SelectionColumn))
+                .forEach(grid::removeColumn);
+
+        // Add new columns
+        grid.addColumns(columnOrder.stream()
+                .filter(col -> !currentColumns.contains(col))
+                .toArray(CustomColumn[]::new));
+
+        // Make sure order is correct.
+        grid.setColumnOrder(
+                columnOrder.toArray(new CustomColumn[columnOrder.size()]));
+    }
+
+    private boolean isColumnOrderCorrect(List<Column<?, JsonObject>> current,
+            List<CustomColumn> order) {
+        List<Column<?, JsonObject>> columnsToCompare = current;
+        if (current.size() > 0 && current.get(0) instanceof SelectionColumn) {
+            // Remove selection column.
+            columnsToCompare = current.subList(1, current.size());
+        }
+        return columnsToCompare.equals(order);
+    }
+
+    /**
+     * Removes the given column from mappings in this Connector.
      *
      * @param column
-     *            column to remove
+     *            column to remove from the mapping
      */
-    public void removeColumn(CustomColumn column) {
+    public void removeColumnMapping(CustomColumn column) {
         assert columnToIdMap
                 .containsKey(column) : "Given Column does not exist.";
-        getWidget().removeColumn(column);
+
+        // Remove mapping. Columns are removed from Grid when state changes.
         String id = columnToIdMap.remove(column);
         idToColumn.remove(id);
+    }
+
+    /**
+     * Method called by {@code CustomColumn} when its renderer changes. This
+     * method is used to maintain hierarchical renderer wrap in
+     * {@code TreeGrid}.
+     *
+     * @param column
+     *            the column which now has a new renderer
+     *
+     * @since 8.1
+     */
+    public void onColumnRendererChanged(CustomColumn column) {
+        // NO-OP
     }
 
     @Override
     public void onUnregister() {
         super.onUnregister();
-
-        columnToIdMap.clear();
     }
 
     @Override
@@ -458,9 +626,15 @@ public class GridConnector extends AbstractListingConnector
                 sortDirections.add(so.getDirection());
             }
         }
-        getRpcProxy(GridServerRpc.class).sort(columnIds.toArray(new String[0]),
-                sortDirections.toArray(new SortDirection[0]),
-                event.isUserOriginated());
+        String[] colArray = columnIds.toArray(new String[0]);
+        SortDirection[] dirArray = sortDirections.toArray(new SortDirection[0]);
+
+        if (!Arrays.equals(colArray, getState().sortColumns)
+                || !Arrays.equals(dirArray, getState().sortDirs)) {
+            // State has actually changed, send to server
+            getRpcProxy(GridServerRpc.class).sort(colArray, dirArray,
+                    event.isUserOriginated());
+        }
     }
     /* HasComponentsConnector */
 
@@ -481,7 +655,6 @@ public class GridConnector extends AbstractListingConnector
     @Override
     public void setChildComponents(List<ComponentConnector> children) {
         childComponents = children;
-
     }
 
     @Override
@@ -508,7 +681,10 @@ public class GridConnector extends AbstractListingConnector
 
         if (cell != null) {
             JsonObject row = cell.getRow();
-
+            TooltipInfo tooltip = getHeaderFooterTooltip(cell);
+            if (tooltip != null) {
+                return tooltip;
+            }
             if (row != null && (row.hasKey(GridState.JSONKEY_ROWDESCRIPTION)
                     || row.hasKey(GridState.JSONKEY_CELLDESCRIPTION))) {
 
@@ -518,12 +694,16 @@ public class GridConnector extends AbstractListingConnector
                             .getObject(GridState.JSONKEY_CELLDESCRIPTION);
 
                     String id = ((CustomColumn) column).getConnectorId();
+
                     if (cellDescriptions != null
                             && cellDescriptions.hasKey(id)) {
-                        return new TooltipInfo(cellDescriptions.getString(id));
+                        return new TooltipInfo(cellDescriptions.getString(id),
+                                ((CustomColumn) column)
+                                        .getTooltipContentMode());
                     } else if (row.hasKey(GridState.JSONKEY_ROWDESCRIPTION)) {
-                        return new TooltipInfo(row
-                                .getString(GridState.JSONKEY_ROWDESCRIPTION));
+                        return new TooltipInfo(
+                                row.getString(GridState.JSONKEY_ROWDESCRIPTION),
+                                getState().rowDescriptionContentMode);
                     }
                 }
             }
@@ -531,9 +711,30 @@ public class GridConnector extends AbstractListingConnector
 
         if (super.hasTooltip()) {
             return super.getTooltipInfo(element);
-        } else {
-            return null;
         }
+        return null;
+    }
+
+    private TooltipInfo getHeaderFooterTooltip(CellReference cell) {
+        Section section = Section.BODY;
+        if (cell instanceof EventCellReference) {
+            // Header or footer
+            section = ((EventCellReference) cell).getSection();
+        }
+        StaticCell staticCell = null;
+        if (section == Section.HEADER) {
+            staticCell = getWidget().getHeaderRow(cell.getRowIndex())
+                    .getCell(cell.getColumn());
+        } else if (section == Section.FOOTER) {
+            staticCell = getWidget().getFooterRow(cell.getRowIndex())
+                    .getCell(cell.getColumn());
+        }
+        if (staticCell != null && staticCell.getDescription() != null) {
+            return new TooltipInfo(staticCell.getDescription(),
+                    staticCell.getDescriptionContentMode());
+        }
+
+        return null;
     }
 
     @Override

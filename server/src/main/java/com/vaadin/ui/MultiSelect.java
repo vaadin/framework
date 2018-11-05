@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package com.vaadin.ui;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -38,7 +37,7 @@ import com.vaadin.shared.Registration;
  * @since 8.0
  *
  */
-public interface MultiSelect<T> extends HasValue<Set<T>>, Serializable {
+public interface MultiSelect<T> extends HasValue<Set<T>> {
 
     /**
      * Adds the given items to the set of currently selected items.
@@ -143,6 +142,7 @@ public interface MultiSelect<T> extends HasValue<Set<T>>, Serializable {
      *
      * @return An empty set, not {@code null}
      */
+    @Override
     public default Set<T> getEmptyValue() {
         return Collections.emptySet();
     }

@@ -1,0 +1,188 @@
+---
+title: Remember To The Set The Locale
+order: 23
+layout: page
+---
+
+[[remember-to-the-set-the-locale]]
+= Remember to the set the locale
+The Locale of an application or an individual component dictates the
+language and format used for displaying and parsing numbers and dates.
+This includes things like names of months, 12 or 24 hour time formats,
+the order of days and months in dates, and decimal separators in
+numbers.
+
+_Displaying_ values in a locale foreign to the user is bad enough.
+Forcing your users to _enter_ values in a foreign locale (such as
+decimal separator periods instead of commas, or vice versa) can be
+considered a cruel (although sadly not particularly unusual) punishment.
+
+A Vaadin application’s locale, if not explicitly set, defaults to the
+locale defined in the request headers sent by the browser , or, if
+that’s missing, the locale returned by `java.util.Locale.getDefault()`,
+which in turn is the default locale of the Java Virtual Machine, which
+depends on the configuration of the environment in which it happens to
+be running. Either way, chances are that the end result does not match
+what your users expect.
+
+[[per-component]]
+Per Component
+~~~~~~~~~~~~~
+
+Vaadin components have a *`setLocale()`* method that allows specifying
+the locale separately for each component.
+
+[source,java]
+....
+InlineDateField datePicker = new InlineDateField();
+datePicker.setLocale( java.util.Locale.CANADA_FRENCH );
+....
+
+[[inheritance]]
+Inheritance
+^^^^^^^^^^^
+
+A component _inherits its locale_ from its parent. So setting the locale
+on a component affects its nested children components by default.
+Remember that layouts and even the
+https://vaadin.com/api/7.2.5/com/vaadin/ui/UI.html[UI] (Vaadin 7) object
+are components too, so setting their locale affects their content.
+
+[[session-default]]
+Session Default
+~~~~~~~~~~~~~~~
+
+Instead of setting a locale for each individual component, you may set a
+Session-wide default. The components inherit that property. You may
+continue to override this session-default locale for individual
+components, where needed, with a call to `setLocale`.
+
+Setting the default locale changed between Vaadin 6 and 7.
+
+[[in-vaadin-6]]
+In Vaadin 6
+^^^^^^^^^^^
+
+In Vaadin 6, you set the locale by calling
+https://vaadin.com/api/6.8.9/com/vaadin/Application.html#setLocale(java.util.Locale)[`setLocale`]method
+on the
+https://vaadin.com/api/6.8.9/com/vaadin/Application.html[`Application`]
+object. See
+https://vaadin.com/book/vaadin6/-/page/advanced.global.html[chapter
+12.14 Accessing Session-Global Data] of the Book of Vaadin, Vaadin 6
+edition, for important information about accessing the Application
+object.
+
+[[in-vaadin-7]]
+In Vaadin 7
+^^^^^^^^^^^
+
+In Vaadin session, you must go through the current `VaadinSession`
+object to call `setLocale`. You may access that object in either of two
+ways:
+
+* Through that class’ static method `getCurrent` +
+* Jumping from a component object to a UI object to the current
+VaadinSession object.
+
+[[bug-workaround]]
+Bug & Workaround\\
+++++++++++++++++++
+
+Unfortunately, there is a bug (or design issue) in Vaadin 7. See
+http://dev.vaadin.com/ticket/12350[ticket 12350]. The problem is that
+setting the locale of the VaadinSession does not affect already existing
+UI objects. So, while the `init` method of your app's UI is the natural
+place to set the session's locale, doing so does not take effect in that
+current UI until after a page refresh.
+
+The *workaround* is to explicitly set the current UI object's locale, in
+addition to setting the VaadinSession object's locale. The first affects
+the current UI, while the second affects any future UI objects that may
+be instantiated in your app.
+
+This ( if in a UI object's "init" method)…
+
+[source,java]
+....
+Locale locale = Locale.CANADA_FRENCH;
+this.setLocale( locale ); // Call to affect this current UI. Workaround for bug: http://dev.vaadin.com/ticket/12350
+this.getSession().setLocale( locale ); // Affects only future UI instances, not current one because of bug. See workaround in line above.
+// VaadinSession.getCurrent().setLocale( locale ); // Alternative to "this.getSession".
+....
+
+…or this ( if not in a UI object, add "getUI()" )…
+
+[source,java]
+....
+Locale locale = Locale.CANADA_FRENCH;
+this.getUI().setLocale( locale ); // Call to affect this current UI. Workaround for bug: http://dev.vaadin.com/ticket/12350
+this.getUI().getSession().setLocale( locale ); // Affects only future UI instances, not current one because of bug. See workaround in line above.
+// VaadinSession.getCurrent().setLocale( locale ); // Alternative to "this.getSession".
+....
+
+[[example-app]]
+Example App
+^^^^^^^^^^^
+
+Here is source code for a complete Vaadin 7 example app.
+
+[source,java]
+....
+package com.example.vaadinexperiment;
+
+import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.VaadinSession;
+import com.vaadin.ui.InlineDateField;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+import java.util.Locale;
+import javax.servlet.annotation.WebServlet;
+
+@Theme ( "mytheme" )
+@SuppressWarnings ( "serial" )
+public class MyVaadinUI extends UI
+{
+
+    @WebServlet ( value = "/*" , asyncSupported = true )
+    @VaadinServletConfiguration ( productionMode = false , ui = MyVaadinUI.class , widgetset = "com.example.vaadinexperiment.AppWidgetSet" )
+    public static class Servlet extends VaadinServlet
+    {
+    }
+
+    @Override
+    protected void init ( VaadinRequest request )
+    {
+        final VerticalLayout layout = new VerticalLayout();
+        layout.setMargin( true );
+        layout.setSpacing( true );
+        setContent( layout );
+
+        Locale locale = Locale.CANADA_FRENCH;
+        this.setLocale( locale ); // Call to affect this current UI. Workaround for bug: http://dev.vaadin.com/ticket/12350
+        this.getSession().setLocale( locale ); // Affects only future UI instances, not current one because of bug. See workaround in line above.
+        // VaadinSession.getCurrent().setLocale( locale ); // Alternative to "this.getSession".
+
+        InlineDateField datePicker = new InlineDateField();
+        datePicker.setCaption( "This component’s locale → defaults to parent’s, → which defaults to VaadinSession’s, → which defaults to JVM" );
+        layout.addComponent( datePicker );
+
+        InlineDateField datePickerFinnish = new InlineDateField();
+        datePickerFinnish.setCaption( "This component’s default locale is overridden for Finnish" );
+        datePickerFinnish.setLocale( new Locale( "fi" , "FI" ) );
+        layout.addComponent( datePickerFinnish );
+    }
+
+}
+....
+
+image:http://i.imgur.com/w9CViCR.png[Calendar]
+
+'''''
+
+Information here drawn from
+http://stackoverflow.com/q/16331112/642706[this StackOverflow.com
+question].

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,6 @@
  */
 
 package com.vaadin.server;
-
-import java.io.Serializable;
 
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.UI;
@@ -34,7 +32,7 @@ import com.vaadin.util.FileTypeResolver;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class ClassResource implements ConnectorResource, Serializable {
+public class ClassResource implements ConnectorResource {
 
     /**
      * Default buffer size for this stream resource.

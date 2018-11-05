@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,8 @@
  * the License.
  */
 package com.vaadin.server.communication;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -61,7 +63,7 @@ public class PortletDummyRequestHandler implements RequestHandler {
         final OutputStream out = ((ResourceResponse) response)
                 .getPortletOutputStream();
         try (PrintWriter outWriter = new PrintWriter(
-                new BufferedWriter(new OutputStreamWriter(out, "UTF-8")))) {
+                new BufferedWriter(new OutputStreamWriter(out, UTF_8)))) {
             outWriter.print("<html><body>dummy page</body></html>");
         }
 

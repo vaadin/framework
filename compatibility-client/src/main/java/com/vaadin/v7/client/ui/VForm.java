@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
- * 
+ * Copyright 2000-2018 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -82,9 +82,10 @@ public class VForm extends ComplexPanel implements KeyDownHandler {
         fieldSet.appendChild(legend);
         legend.appendChild(caption);
 
-        fieldSet.appendChild(desc); // Adding description for initial padding
-                                    // measurements, removed later if no
-                                    // description is set
+        // Adding description for initial padding
+        // measurements, removed later if no
+        // description is set
+        fieldSet.appendChild(desc);
 
         fieldSet.appendChild(fieldContainer);
         errorMessage.setVisible(false);

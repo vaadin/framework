@@ -1,0 +1,66 @@
+---
+title: Generating Dynamic Resources Based On URI Or Parameters
+order: 28
+layout: page
+---
+
+[[generating-dynamic-resources-based-on-uri-or-parameters]]
+= Generating dynamic resources based on URI or parameters
+
+You can dynamically generate responses based on e.g. query parameters by
+creating your own `RequestHandler` and registering it with the session.
+
+In this way, you can for instance create an image that draws a text,
+given as a parameter to the image. This has been done in the example
+below:
+
+[source,java]
+....
+public class DynamicImageUI extends UI {
+  public static final String IMAGE_URL = "myimage.png";
+
+  private final RequestHandler requestHandler = new RequestHandler() {
+    @Override
+    public boolean handleRequest(VaadinSession session,
+          VaadinRequest request, VaadinResponse response)
+          throws IOException {
+      if (("/" + IMAGE_URL).equals(request.getPathInfo())) {
+        // Create an image, draw the "text" parameter to it and output
+        // it to the browser.
+        String text = request.getParameter("text");
+        BufferedImage bi = new BufferedImage(100, 30,
+                BufferedImage.TYPE_3BYTE_BGR);
+        bi.getGraphics().drawChars(text.toCharArray(), 0,
+                text.length(), 10, 20);
+        response.setContentType("image/png");
+        ImageIO.write(bi, "png", response.getOutputStream());
+
+        return true;
+      }
+      // If the URL did not match our image URL, let the other request
+      // handlers handle it
+      return false;
+    }
+  };
+
+  @Override
+  public void init(VaadinRequest request) {
+    Resource resource = new ExternalResource(IMAGE_URL + "?text=Hello!");
+
+    getSession().addRequestHandler(requestHandler);
+
+    // Add an image using the resource
+    Image image = new Image("A dynamically generated image", resource);
+
+    setContent(image);
+  }
+
+  @Override
+  public void detach() {
+    super.detach();
+
+    // Clean up
+    getSession().removeRequestHandler(requestHandler);
+  }
+}
+....

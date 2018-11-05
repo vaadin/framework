@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,11 +20,15 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EventObject;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.vaadin.annotations.HtmlImport;
+import com.vaadin.annotations.StyleSheet;
 import com.vaadin.event.EventRouter;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.BorderStyle;
@@ -33,6 +37,7 @@ import com.vaadin.shared.ui.ui.PageState;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.Dependency;
 import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
@@ -68,7 +73,7 @@ public class Page implements Serializable {
         private final int height;
 
         /**
-         * Creates a new event
+         * Creates a new event.
          *
          * @param source
          *            the uI for which the browser window has been resized
@@ -89,7 +94,7 @@ public class Page implements Serializable {
         }
 
         /**
-         * Gets the new browser window height
+         * Gets the new browser window height.
          *
          * @return an integer with the new pixel height of the browser window
          */
@@ -98,7 +103,7 @@ public class Page implements Serializable {
         }
 
         /**
-         * Gets the new browser window width
+         * Gets the new browser window width.
          *
          * @return an integer with the new pixel width of the browser window
          */
@@ -198,7 +203,7 @@ public class Page implements Serializable {
         private void paintContent(PaintTarget target) throws PaintException {
             target.startTag("open");
             target.addAttribute("src", resource);
-            if (name != null && name.length() > 0) {
+            if (name != null && !name.isEmpty()) {
                 target.addAttribute("name", name);
             }
             if (!tryToOpenAsPopup) {
@@ -306,12 +311,6 @@ public class Page implements Serializable {
     private final LinkedList<OpenResource> openList = new LinkedList<>();
 
     /**
-     * A list of notifications that are waiting to be sent to the client.
-     * Cleared (set to null) when the notifications have been sent.
-     */
-    private List<Notification> notifications;
-
-    /**
      * Event fired when the URI fragment of a <code>Page</code> changes.
      *
      * @see Page#addUriFragmentChangedListener(UriFragmentChangedListener)
@@ -346,7 +345,7 @@ public class Page implements Serializable {
         }
 
         /**
-         * Get the new URI fragment
+         * Get the new URI fragment.
          *
          * @return the new fragment
          */
@@ -393,7 +392,7 @@ public class Page implements Serializable {
         }
 
         /**
-         * Get the new URI
+         * Get the new URI.
          *
          * @return the new uri
          */
@@ -493,7 +492,7 @@ public class Page implements Serializable {
         }
 
         /**
-         * Injects a CSS resource into the page
+         * Injects a CSS resource into the page.
          *
          * @param resource
          *            The resource to inject.
@@ -559,6 +558,8 @@ public class Page implements Serializable {
 
     private String newPushState;
     private String newReplaceState;
+
+    private List<Dependency> pendingDependencies;
 
     public Page(UI uI, PageState state) {
         this.uI = uI;
@@ -930,45 +931,6 @@ public class Page implements Serializable {
             openList.clear();
         }
 
-        // Paint notifications
-        if (notifications != null) {
-            target.startTag("notifications");
-            for (final Notification n : notifications) {
-                target.startTag("notification");
-                if (n.getCaption() != null) {
-                    target.addAttribute(
-                            UIConstants.ATTRIBUTE_NOTIFICATION_CAPTION,
-                            n.getCaption());
-                }
-                if (n.getDescription() != null) {
-                    target.addAttribute(
-                            UIConstants.ATTRIBUTE_NOTIFICATION_MESSAGE,
-                            n.getDescription());
-                }
-                if (n.getIcon() != null) {
-                    target.addAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON,
-                            n.getIcon());
-                }
-                if (!n.isHtmlContentAllowed()) {
-                    target.addAttribute(
-                            UIConstants.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED,
-                            true);
-                }
-                target.addAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_POSITION,
-                        n.getPosition().ordinal());
-                target.addAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_DELAY,
-                        n.getDelayMsec());
-                if (n.getStyleName() != null) {
-                    target.addAttribute(
-                            UIConstants.ATTRIBUTE_NOTIFICATION_STYLE,
-                            n.getStyleName());
-                }
-                target.endTag("notification");
-            }
-            target.endTag("notifications");
-            notifications = null;
-        }
-
         if (newPushState != null) {
             target.addAttribute(UIConstants.ATTRIBUTE_PUSH_STATE, newPushState);
             newPushState = null;
@@ -1028,8 +990,12 @@ public class Page implements Serializable {
      * deployed in due to potential proxies, redirections and similar.
      *
      * @return The browser location URI.
+     * @throws IllegalStateException
+     *             if the
+     *             {@link DeploymentConfiguration#isSendUrlsAsParameters()} is
+     *             set to {@code false}
      */
-    public URI getLocation() {
+    public URI getLocation() throws IllegalStateException {
         if (location == null && !uI.getSession().getConfiguration()
                 .isSendUrlsAsParameters()) {
             throw new IllegalStateException("Location is not available as the "
@@ -1331,20 +1297,6 @@ public class Page implements Serializable {
     }
 
     /**
-     * Internal helper method to actually add a notification.
-     *
-     * @param notification
-     *            the notification to add
-     */
-    private void addNotification(Notification notification) {
-        if (notifications == null) {
-            notifications = new LinkedList<>();
-        }
-        notifications.add(notification);
-        uI.markAsDirty();
-    }
-
-    /**
      * Shows a notification message.
      *
      * @see Notification
@@ -1356,7 +1308,7 @@ public class Page implements Serializable {
      */
     @Deprecated
     public void showNotification(Notification notification) {
-        addNotification(notification);
+        notification.show(this);
     }
 
     /**
@@ -1425,5 +1377,55 @@ public class Page implements Serializable {
 
     private boolean hasEventRouter() {
         return eventRouter != null;
+    }
+
+    /**
+     * Add a dependency that should be added to the current page.
+     * <p>
+     * These dependencies are always added before the dependencies included by
+     * using the annotations {@link HtmlImport}, {@link JavaScript} and
+     * {@link StyleSheet} during the same request.
+     * <p>
+     * Please note that these dependencies are always sent to the client side
+     * and not filtered out by any {@link DependencyFilter}.
+     *
+     * @param dependency
+     *            the dependency to add
+     * @since 8.1
+     */
+    public void addDependency(Dependency dependency) {
+        if (pendingDependencies == null) {
+            pendingDependencies = new ArrayList<>();
+        }
+        pendingDependencies.add(dependency);
+    }
+
+    /**
+     * Returns all pending dependencies.
+     * <p>
+     * For internal use only, calling this method will clear the pending
+     * dependencies.
+     *
+     * @return the pending dependencies to the current page
+     * @since 8.1
+     */
+    public Collection<Dependency> getPendingDependencies() {
+        List<Dependency> copy = new ArrayList<>();
+        if (pendingDependencies != null) {
+            copy.addAll(pendingDependencies);
+        }
+        pendingDependencies = null;
+        return copy;
+    }
+
+    /**
+     * Returns the {@link UI} of this {@link Page}.
+     *
+     * @return the {@link UI} of this {@link Page}.
+     *
+     * @since 8.2
+     */
+    public UI getUI() {
+        return uI;
     }
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-servlet-containers-test</artifactId>
+        <version>8.7-SNAPSHOT</version>
+    </parent>
+    <artifactId>vaadin-test-wildfly9-server</artifactId>
+    <name>Vaadin Wildfly 9 Test</name>
+    <packaging>war</packaging>
+    <properties>
+        <jetty.skip>true</jetty.skip>
+        <wildfly.version>9.0.2.Final</wildfly.version>
+        <server.name>wildfly9</server.name>
+    </properties>
+
+    <dependencies>
+        <!-- UI classes and tests from dependencies -->
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-test-server-ui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-test-server-tests</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Server configuration -->
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

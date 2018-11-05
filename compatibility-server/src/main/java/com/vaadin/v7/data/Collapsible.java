@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,6 +36,8 @@ import com.vaadin.v7.data.Container.Ordered;
  * collapsed subtrees don't exist.
  * <p>
  *
+ * @deprecated Use {@code TreeGrid.addExpandListener()} and
+ *             {@code TreeGrid.addCollapseListener()}.
  */
 @Deprecated
 public interface Collapsible extends Hierarchical, Ordered {
@@ -72,7 +74,7 @@ public interface Collapsible extends Hierarchical, Ordered {
      *
      * @param itemId
      *            The {@link Item}'s identifier that is to be checked.
-     * @return <code>true</code> iff the {@link Item} identified by
+     * @return <code>true</code> if the {@link Item} identified by
      *         <code>itemId</code> is currently collapsed, otherwise
      *         <code>false</code>.
      */

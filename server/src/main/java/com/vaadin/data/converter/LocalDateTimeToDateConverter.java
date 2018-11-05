@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,7 @@ package com.vaadin.data.converter;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Objects;
 
@@ -38,17 +38,17 @@ import com.vaadin.ui.InlineDateTimeField;
 public class LocalDateTimeToDateConverter
         implements Converter<LocalDateTime, Date> {
 
-    private ZoneOffset zoneOffset;
+    private ZoneId zoneId;
 
     /**
      * Creates a new converter using the given time zone.
      *
-     * @param zoneOffset
-     *            the time zone offset to use, not <code>null</code>
+     * @param zoneId
+     *            the time zone to use, not <code>null</code>
      */
-    public LocalDateTimeToDateConverter(ZoneOffset zoneOffset) {
-        this.zoneOffset = Objects.requireNonNull(zoneOffset,
-                "Zone offset cannot be null");
+    public LocalDateTimeToDateConverter(ZoneId zoneId) {
+        this.zoneId = Objects.requireNonNull(zoneId,
+                "Zone identifier cannot be null");
     }
 
     @Override
@@ -58,7 +58,7 @@ public class LocalDateTimeToDateConverter
             return Result.ok(null);
         }
 
-        return Result.ok(Date.from(localDate.toInstant(zoneOffset)));
+        return Result.ok(Date.from(localDate.atZone(zoneId).toInstant()));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class LocalDateTimeToDateConverter
             return null;
         }
 
-        return Instant.ofEpochMilli(date.getTime()).atZone(zoneOffset)
+        return Instant.ofEpochMilli(date.getTime()).atZone(zoneId)
                 .toLocalDateTime();
     }
 

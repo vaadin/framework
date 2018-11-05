@@ -1,33 +1,14 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.tabsheet;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.HasInputDevices;
-import org.openqa.selenium.interactions.Mouse;
-import org.openqa.selenium.interactions.internal.Coordinates;
-import org.openqa.selenium.internal.Locatable;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -49,13 +30,13 @@ public class TabSheetErrorTooltipTest extends MultiBrowserTest {
 
     private void assertTabHasTooltipAndError(int index, String tooltip,
             String errorMessage) {
-        showTooltip(index);
+        testBenchElement(getTab(index)).showTooltip();
         assertTooltip(tooltip);
         assertErrorMessage(errorMessage);
     }
 
     private void assertTabHasNoTooltipNorError(int index) {
-        showTooltip(index);
+        testBenchElement(getTab(index)).showTooltip();
         WebElement tooltip = getCurrentTooltip();
 
         assertThat(tooltip.getText(), is(""));
@@ -63,13 +44,6 @@ public class TabSheetErrorTooltipTest extends MultiBrowserTest {
         WebElement errorMessage = getCurrentErrorMessage();
         assertThat(errorMessage.isDisplayed(), is(false));
 
-    }
-
-    private void showTooltip(int index) {
-        Coordinates elementCoordinates = ((Locatable) getTab(index))
-                .getCoordinates();
-        Mouse mouse = ((HasInputDevices) getDriver()).getMouse();
-        mouse.mouseMove(elementCoordinates);
     }
 
     private WebElement getTab(int index) {
@@ -84,15 +58,15 @@ public class TabSheetErrorTooltipTest extends MultiBrowserTest {
     }
 
     private WebElement getCurrentErrorMessage() {
-        return getDriver()
-                .findElement(By.xpath("//div[@class='v-errormessage']"));
+        return getDriver().findElement(
+                By.xpath("//div[contains(@class, 'v-errormessage')]"));
     }
 
     private void assertTooltip(String tooltip) {
-        Assert.assertEquals(tooltip, getCurrentTooltip().getText());
+        assertEquals(tooltip, getCurrentTooltip().getText());
     }
 
     private void assertErrorMessage(String message) {
-        Assert.assertEquals(message, getCurrentErrorMessage().getText());
+        assertEquals(message, getCurrentErrorMessage().getText());
     }
 }

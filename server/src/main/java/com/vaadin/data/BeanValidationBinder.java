@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,7 @@ import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.ConstraintDescriptor;
 import javax.validation.metadata.PropertyDescriptor;
 
+import com.vaadin.data.BeanPropertySet.NestedBeanPropertyDefinition;
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.data.validator.BeanValidator;
 
@@ -50,11 +51,11 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
     public BeanValidationBinder(Class<BEAN> beanType) {
         super(beanType);
         if (!BeanUtil.checkBeanValidationAvailable()) {
-            throw new IllegalStateException(
-                    BeanValidationBinder.class.getSimpleName()
-                            + " cannot be used because a JSR-303 Bean Validation "
-                            + "implementation not found on the classpath. Use "
-                            + Binder.class.getSimpleName() + " instead");
+            throw new IllegalStateException(BeanValidationBinder.class
+                    .getSimpleName()
+                    + " cannot be used because a JSR-303 Bean Validation "
+                    + "implementation not found on the classpath or could not be initialized. Use "
+                    + Binder.class.getSimpleName() + " instead");
         }
         this.beanType = beanType;
     }
@@ -69,7 +70,7 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
      * <p>
      * By default the {@link RequiredFieldConfigurator#DEFAULT} configurator is
      * used.
-     * 
+     *
      * @param configurator
      *            required indicator configurator, may be {@code null}
      */
@@ -80,9 +81,9 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
 
     /**
      * Gets field required indicator configuration logic.
-     * 
+     *
      * @see #setRequiredConfigurator(RequiredFieldConfigurator)
-     * 
+     *
      * @return required indicator configurator, may be {@code null}
      */
     public RequiredFieldConfigurator getRequiredConfigurator() {
@@ -93,21 +94,45 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
     protected BindingBuilder<BEAN, ?> configureBinding(
             BindingBuilder<BEAN, ?> binding,
             PropertyDefinition<BEAN, ?> definition) {
-        BeanValidator validator = new BeanValidator(beanType,
-                definition.getName());
+        Class<?> actualBeanType = findBeanType(beanType, definition);
+        BeanValidator validator = new BeanValidator(actualBeanType,
+                definition.getTopLevelName());
         if (requiredConfigurator != null) {
             configureRequired(binding, definition, validator);
         }
         return binding.withValidator(validator);
     }
 
+    /**
+     * Finds the bean type containing the property the given definition refers
+     * to.
+     *
+     * @param beanType
+     *            the root beanType
+     * @param definition
+     *            the definition for the property
+     * @return the bean type containing the given property
+     */
+    @SuppressWarnings({ "rawtypes" })
+    private Class<?> findBeanType(Class<BEAN> beanType,
+            PropertyDefinition<BEAN, ?> definition) {
+        if (definition instanceof NestedBeanPropertyDefinition) {
+            return ((NestedBeanPropertyDefinition) definition).getParent()
+                    .getType();
+        } else {
+            // Non nested properties must be defined in the main type
+            return beanType;
+        }
+    }
+
     private void configureRequired(BindingBuilder<BEAN, ?> binding,
             PropertyDefinition<BEAN, ?> definition, BeanValidator validator) {
         assert requiredConfigurator != null;
+        Class<?> propertyHolderType = definition.getPropertyHolderType();
         BeanDescriptor descriptor = validator.getJavaxBeanValidator()
-                .getConstraintsForClass(beanType);
+                .getConstraintsForClass(propertyHolderType);
         PropertyDescriptor propertyDescriptor = descriptor
-                .getConstraintsForProperty(definition.getName());
+                .getConstraintsForProperty(definition.getTopLevelName());
         if (propertyDescriptor == null) {
             return;
         }

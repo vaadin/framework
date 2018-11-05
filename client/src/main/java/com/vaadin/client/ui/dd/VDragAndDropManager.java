@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,9 +15,11 @@
  */
 package com.vaadin.client.ui.dd;
 
+import java.util.Locale;
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
@@ -36,9 +38,10 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.extensions.DragSourceExtensionConnector;
+import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.MouseEventDetails;
@@ -54,7 +57,12 @@ import com.vaadin.shared.ui.dd.DragEventType;
  * {@link #get()} to get instance.
  *
  * TODO cancel drag and drop if more than one touches !?
+ *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with {@link DropTargetExtensionConnector} and
+ *             {@link DragSourceExtensionConnector}
  */
+@Deprecated
 public class VDragAndDropManager {
 
     public static final String ACTIVE_DRAG_SOURCE_STYLENAME = "v-active-drag-source";
@@ -313,7 +321,7 @@ public class VDragAndDropManager {
                                 NativePreviewEvent event) {
                             int typeInt = event.getTypeInt();
                             if (typeInt == -1 && event.getNativeEvent()
-                                    .getType().toLowerCase()
+                                    .getType().toLowerCase(Locale.ROOT)
                                     .contains("pointer")) {
                                 /*
                                  * Ignore PointerEvents since IE10 and IE11 send
@@ -365,8 +373,8 @@ public class VDragAndDropManager {
                                 int currentY = WidgetUtil
                                         .getTouchOrMouseClientY(
                                                 event.getNativeEvent());
-                                if (Math.abs(
-                                        startX - currentX) > MINIMUM_DISTANCE_TO_START_DRAG
+                                if (Math.abs(startX
+                                        - currentX) > MINIMUM_DISTANCE_TO_START_DRAG
                                         || Math.abs(startY
                                                 - currentY) > MINIMUM_DISTANCE_TO_START_DRAG) {
                                     ensureDeferredRegistrationCleanup();
@@ -412,7 +420,7 @@ public class VDragAndDropManager {
      */
     protected VDropHandler findDragTarget(Element element) {
         try {
-            Widget w = WidgetUtil.findWidget(element, null);
+            Widget w = WidgetUtil.findWidget(element);
             if (w == null) {
                 return null;
             }
@@ -486,18 +494,13 @@ public class VDragAndDropManager {
                             .getTransferable().getDragSource();
                     final ApplicationConnection client = currentDropHandler
                             .getApplicationConnection();
-                    Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
-                        @Override
-                        public boolean execute() {
-                            if (!client.getMessageSender().hasActiveRequest()) {
-                                removeActiveDragSourceStyleName(dragSource);
-                                return false;
-                            }
-                            return true;
+                    Scheduler.get().scheduleFixedDelay(() -> {
+                        if (!client.getMessageSender().hasActiveRequest()) {
+                            removeActiveDragSourceStyleName(dragSource);
+                            return false;
                         }
-
+                        return true;
                     }, 30);
-
                 }
             } else {
                 currentDropHandler.dragLeave(currentDrag);
@@ -509,9 +512,9 @@ public class VDragAndDropManager {
         }
 
         /*
-         * Remove class name indicating drag source when server visit is done
-         * iff server visit was not initiated. Otherwise it will be removed once
-         * the server visit is done.
+         * Remove class name indicating drag source when server visit is done if
+         * server visit was not initiated. Otherwise it will be removed once the
+         * server visit is done.
          */
         if (!sendTransferableToServer && currentDrag != null) {
             removeActiveDragSourceStyleName(
@@ -701,7 +704,7 @@ public class VDragAndDropManager {
             ApplicationConnection connection = getCurrentDragApplicationConnection();
             Element dragImageParent;
             if (connection == null) {
-                VConsole.error(
+                getLogger().severe(
                         "Could not determine ApplicationConnection for current drag operation. The drag image will likely look broken");
                 dragImageParent = RootPanel.getBodyElement();
             } else {
@@ -760,4 +763,7 @@ public class VDragAndDropManager {
         }
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(VDragAndDropManager.class.getName());
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,7 +35,8 @@ import com.vaadin.ui.Component;
  * @since 8.0
  * @author Vaadin Ltd
  */
-public class SortEvent<T extends SortOrder<?>> extends Component.Event {
+public class SortEvent<T extends SortOrder<?>> extends Component.Event
+        implements HasUserOriginated {
 
     private final List<T> sortOrder;
     private final boolean userOriginated;
@@ -67,11 +68,7 @@ public class SortEvent<T extends SortOrder<?>> extends Component.Event {
         return sortOrder;
     }
 
-    /**
-     * Returns whether this event originated from actions done by the user.
-     *
-     * @return true if sort event originated from user interaction
-     */
+    @Override
     public boolean isUserOriginated() {
         return userOriginated;
     }

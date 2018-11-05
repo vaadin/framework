@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,14 +37,14 @@ public final class FastStringSet extends JavaScriptObject {
 
     public native void addAll(JsArrayString array)
     /*-{
-        for(var i = 0; i < array.length; i++) {
+        for (var i = 0; i < array.length; i++) {
             this[array[i]] = true;
         }
     }-*/;
 
     public native void addAll(FastStringSet set)
     /*-{
-        for(var string in set) {
+        for (var string in set) {
             if (Object.hasOwnProperty.call(set, string)) {
                 this[string] = true;
             }
@@ -54,7 +54,7 @@ public final class FastStringSet extends JavaScriptObject {
     public native JsArrayString dump()
     /*-{
         var array = [];
-        for(var string in this) {
+        for (var string in this) {
             if (this.hasOwnProperty(string)) {
                 array.push(string);
             }
@@ -69,7 +69,7 @@ public final class FastStringSet extends JavaScriptObject {
 
     public native boolean isEmpty()
     /*-{
-        for(var string in this) {
+        for (var string in this) {
             if (this.hasOwnProperty(string)) {
                 return false;
             }
@@ -83,7 +83,7 @@ public final class FastStringSet extends JavaScriptObject {
 
     public native void addAllTo(Collection<String> target)
     /*-{
-        for(var string in this) {
+        for (var string in this) {
             if (Object.hasOwnProperty.call(this, string)) {
                 target.@java.util.Collection::add(Ljava/lang/Object;)(string);
             }
@@ -92,7 +92,7 @@ public final class FastStringSet extends JavaScriptObject {
 
     public native void removeAll(FastStringSet valuesToRemove)
     /*-{
-        for(var string in valuesToRemove) {
+        for (var string in valuesToRemove) {
             if (Object.hasOwnProperty.call(valuesToRemove, string)) {
                 delete this[string];
             }

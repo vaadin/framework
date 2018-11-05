@@ -1,0 +1,205 @@
+---
+title: Access Control For Views
+order: 2
+layout: page
+---
+
+[[access-control-for-views]]
+= Access control for views
+
+The Navigator API provides a simple mechanism to allow or disallow
+navigating to a View. Before a View is shown, each ViewChangeListener
+that is registered with the Navigator is given the opportunity to veto
+the View change.
+
+One can also make the View itself trigger a navigation to another View
+in navigateTo(), but let's take a look at the more flexible
+beforeViewChange() and afterViewChange(), that exists specifically for
+this purpose.
+
+First, let's continue from previous examples and create a MessageView
+for secret messages:
+
+[source,java]
+....
+import com.vaadin.navigator.View;
+import com.vaadin.ui.Label;
+
+public class SecretView extends MessageView implements View {
+  public static final String NAME = "secret";
+
+  public SecretView() {
+    setCaption("Private messages");
+    ((Layout) getContent()).addComponent(new Label("Some private stuff."));
+  }
+}
+....
+
+As you can see, there is absolutely nothing special going on here, we
+just customize the View enough to be able to distinguish from the
+regular MessageView.
+
+Next, we'll register this new View with the Navigator, exactly as
+before. At this point our SecretView is not secret at all, but let's fix
+that by adding a ViewChangeListener to the Navigator:
+
+[source,java]
+....
+navigator.addViewChangeListener(new ViewChangeListener() {
+
+  @Override
+  public boolean beforeViewChange(ViewChangeEvent event) {
+    if (event.getNewView() instanceof SecretView &&
+    ((NavigationtestUI)UI.getCurrent()).getLoggedInUser() == null) {
+      Notification.show("Permission denied", Type.ERROR_MESSAGE);
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  @Override
+  public void afterViewChange(ViewChangeEvent event) {
+  }
+
+});
+....
+
+So if we're on our way to the SecretView, but not logged in
+(getLoggedInUser() == null), the View change is cancelled. Quite simple
+rules in our case, but you could check anything - most probably you'll
+want to call a helper method that checks the user for permission.
+
+Let's go ahead and add some links to the MainView again, so that we
+don't have to muck with the address-bar to try it out:
+
+[source,java]
+....
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Link;
+import com.vaadin.ui.Panel;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+
+public class MainView extends Panel implements View {
+
+    public static final String NAME = "";
+
+    public MainView() {
+
+        VerticalLayout layout = new VerticalLayout();
+
+        Link lnk = new Link("Count", new ExternalResource("#!" + CountView.NAME));
+        layout.addComponent(lnk);
+
+        lnk = new Link("Message: Hello", new ExternalResource("#!"
+                + MessageView.NAME + "/Hello"));
+        layout.addComponent(lnk);
+
+        lnk = new Link("Message: Bye", new ExternalResource("#!"
+                + MessageView.NAME + "/Bye/Goodbye"));
+        layout.addComponent(lnk);
+
+        lnk = new Link("Private message: Secret", new ExternalResource("#!"
+                + SecretView.NAME + "/Secret"));
+        layout.addComponent(lnk);
+
+        lnk = new Link("Private message: Topsecret", new ExternalResource("#!"
+                + SecretView.NAME + "/Topsecret"));
+        layout.addComponent(lnk);
+
+        // login/logout toggle so we can test this
+        Button logInOut = new Button("Toggle login",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        Object user = ((NavigationtestUI)UI.getCurrent()).getLoggedInUser();
+                        ((NavigationtestUI)UI.getCurrent()).setLoggedInUser(
+                                user == null ? "Smee" : null);
+                    }
+                });
+        layout.addComponent(logInOut);
+        setContent(layout);
+    }
+
+    @Override
+    public void enter(ViewChangeEvent event) {
+    }
+}
+....
+
+Instead of just showing a notification and leaving the user wondering,
+we should obviously allow the user to log in and continue. We'll do just
+that in the separate tutorial about Handling login, but for now we just
+add a button that toggles our logged in/out state.
+
+Meanwhile, here is the the full source for the UI so far:
+
+[source,java]
+....
+import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.UI;
+
+public class NavigationtestUI extends UI {
+
+    Navigator navigator;
+
+    String loggedInUser;
+
+    @Override
+    public void init(VaadinRequest request) {
+        // Create Navigator, make it control the ViewDisplay
+        navigator = new Navigator(this, this);
+
+        // Add some Views
+        navigator.addView(MainView.NAME, new MainView()); // no fragment
+
+        // #count will be a new instance each time we navigate to it, counts:
+        navigator.addView(CountView.NAME, CountView.class);
+
+        // #message adds a label with whatever it receives as a parameter
+        navigator.addView(MessageView.NAME, new MessageView());
+
+        // #secret works as #message, but you need to be logged in
+        navigator.addView(SecretView.NAME, new SecretView());
+
+        // we'll handle permissions with a listener here, you could also do
+        // that in the View itself.
+
+        navigator.addViewChangeListener(new ViewChangeListener() {
+
+            @Override
+            public boolean beforeViewChange(ViewChangeEvent event) {
+                if (event.getNewView() instanceof SecretView
+                        && ((NavigationtestUI)UI.getCurrent()).getLoggedInUser() == null) {
+                    Notification.show("Permission denied", Type.ERROR_MESSAGE);
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            @Override
+            public void afterViewChange(ViewChangeEvent event) {
+                System.out.println("After view change");
+            }
+
+        });
+    }
+
+    public String getLoggedInUser(){
+         return loggedInUser;
+    }
+
+    public void setLoggedInUser(String user){
+         loggedInUser = user;
+   }
+}
+....

@@ -8,54 +8,26 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 public class ResourceDownload extends TestBase {
 
     @Override
     public void setup() {
 
-        Button b = new Button("Download (_new)", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                download("_new");
-            }
-        });
+        Button b = new Button("Download (_new)", event -> download("_new"));
         addComponent(b);
 
-        b = new Button("Download (_blank)", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                download("_blank");
-            }
-        });
+        b = new Button("Download (_blank)", event -> download("_blank"));
         addComponent(b);
 
-        b = new Button("Download ()", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                download("");
-            }
-        });
+        b = new Button("Download ()", event -> download(""));
         addComponent(b);
 
-        b = new Button("Download (_top)", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                download("_top");
-            }
-        });
+        b = new Button("Download (_top)", event -> download("_top"));
         addComponent(b);
 
-        b = new Button("Test", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                ResourceDownload.this.getMainWindow()
-                        .showNotification("Still working");
-            }
-
-        });
+        b = new Button("Test", event -> ResourceDownload.this.getMainWindow()
+                .showNotification("Still working"));
         addComponent(b);
 
     }
@@ -69,7 +41,6 @@ public class ResourceDownload extends TestBase {
                 try {
                     return new FileInputStream("FIXME C:/temp/file.xls");
                 } catch (FileNotFoundException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                     return null;
                 }
@@ -85,7 +56,7 @@ public class ResourceDownload extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "Downloading with target _new should work, aswell as with target _blank and _top.";
+        return "Downloading with target _new should work, as well as with target _blank and _top.";
     }
 
     @Override

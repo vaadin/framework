@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,8 +19,7 @@ import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.util.converter.StringToIntegerConverter;
 
 /**
- * String validator for integers. See
- * {@link com.vaadin.v7.data.validator.AbstractStringValidator} for more
+ * String validator for integers. See {@link AbstractStringValidator} for more
  * information.
  *
  * @author Vaadin Ltd.
@@ -61,7 +60,7 @@ public class IntegerValidator extends AbstractStringValidator {
 
     @Override
     public void validate(Object value) throws InvalidValueException {
-        if (value != null && value instanceof Integer) {
+        if (value instanceof Integer) {
             // Allow Integers to pass through the validator for easier
             // migration. Otherwise a TextField connected to an integer property
             // with an IntegerValidator will fail.

@@ -214,6 +214,8 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     &.frozen {
       @include box-shadow(1px 0 2px rgba(0,0,0,.1));
       border-right: $v-grid-cell-vertical-border;
+      position:relative;
+      z-index: 11;
 
       @if $v-grid-cell-vertical-border and $v-grid-cell-vertical-border != none {
         + th,
@@ -222,6 +224,11 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
         }
       }
     }
+
+    // Style for ComponentRenderer wrap
+    div.component-wrap {
+        width: 100%;
+      }
   }
 
   // Rows
@@ -306,7 +313,7 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     -ms-user-select: none;
     user-select: none;
   }
-  
+
   .#{$primaryStyleName}-column-resize-simple-indicator {
     position: absolute;
     width: 3px;
@@ -597,6 +604,8 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
   }
 }
 
+$v-grid-drag-indicator-color: $v-focus-color;
+
 /**
  *
  *
@@ -815,8 +824,84 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     min-width: 30px;
   }
 
-}
+  // Drag and drop badge
+  .#{$primary-stylename}-row-drag-badge {
+    background-color: red;
+    color: white;
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    line-height: 30px;
+    text-align: center;
+    float: left;
+  }
 
+  // Drag and drop
+  .#{$primary-stylename}-row-drag-top, .#{$primary-stylename}-row-drag-bottom, .#{$primary-stylename}-row-drag-bottom {
+    z-index: 100; // based on what else z-indexes are in grid/escalator
+  }
+
+  .#{$primary-stylename}-row-drag-top:before,
+  .#{$primary-stylename}-row-drag-bottom:after {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 2px;
+    width: 100%;
+    background: $v-grid-drag-indicator-color;
+    pointer-events: none;
+    border: none;
+  }
+
+  .#{$primary-stylename}-row-drag-bottom:after {
+    bottom: -1px;
+  }
+
+  .#{$primary-stylename}-row-drag-top:before {
+    top: -1px;
+  }
+
+  .#{$primary-stylename}-row-drag-top:first-child:before {
+    top: 0;
+  }
+
+  .#{$primary-stylename}-row-drag-center:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 2px;
+    border: 2px solid $v-grid-drag-indicator-color;
+    pointer-events: none;
+  }
+
+  .#{$primary-stylename}-row-selected {
+    &.#{$primary-stylename}-row-drag-center:after {
+      border-color: darken($v-grid-drag-indicator-color, 10%);
+    }
+
+    &.#{$primary-stylename}-row-drag-top:before,
+    &.#{$primary-stylename}-row-drag-bottom:after {
+      background: darken($v-grid-drag-indicator-color, 10%);
+    }
+  }
+
+  // Show drop hint when the grid is empty or,
+  // if the DropMode.ON_TOP is used and dragging below last row
+  .#{$primary-stylename}-body-drag-top:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+    border: 2px solid $v-grid-drag-indicator-color;
+    z-index: 100; // based on what else z-indexes are in grid/escalator
+  }
+}
 
 @include keyframes(valo-grid-editor-footer-animate-in) {
   0% {

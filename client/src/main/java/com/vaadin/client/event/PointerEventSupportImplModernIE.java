@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,7 +20,7 @@ import com.google.gwt.user.client.impl.DOMImplStandard;
 import com.vaadin.client.event.PointerEvent.EventType;
 
 /**
- * Pointer event support class for IE 11+ (unprefixed pointer events)
+ * Pointer event support class for IE 11+ (unprefixed pointer events).
  *
  * @since 7.2
  * @author Vaadin Ltd

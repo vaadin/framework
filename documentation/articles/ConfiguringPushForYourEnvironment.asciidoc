@@ -1,0 +1,283 @@
+---
+title: Configuring Push For Your Environment
+order: 15
+layout: page
+---
+
+[[configuring-push-for-your-environment]]
+= Configuring push for your environment
+
+Server push and especially websockets are emerging technologies and not
+all servers and browsers handle them correctly (or even close to
+correctly). Here are gathered a few known issues and ways to work around
+them:
+
+*Rule of thumb: Use the latest version of your server and the latest
+Vaadin version. Vaadin 7.6 has a completely rewritten logic for dealing
+with buffering proxies and unreliabilities in the connection to the
+server.*
+
+[[portals]]
+Portals
+~~~~~~~
+
+Push is not supported in portals.
+See https://dev.vaadin.com/ticket/11493 for more information.
+
+[[streaming]]
+Streaming
+~~~~~~~~~
+
+*Avoid streaming and use long-polling instead*. Streaming and
+long-polling works similarly on top of normal HTTP requests but
+streaming uses the same HTTP response for multiple messages whereas
+long-polling only writes on message per HTTP response. Especially
+proxies can cause problems with streaming as they might deliver only
+part of the message and buffer the rest.
+
+[[tomcat-6-streaming]]
+Tomcat 6 + Streaming
+~~~~~~~~~~~~~~~~~~~~
+
+For Tomcat 6, falling back to streaming always results in an error message such as
+[source]
+....
+Failed using comet support: org.atmosphere.container.TomcatCometSupport, error: Tomcat failed to detect this is a Comet application because context.xml is missing or the Http11NioProtocol Connector is not enabled.If that's not the case, you can also remove META-INF/context.xml and WEB-INF/lib/atmosphere-compat-tomcat.jar Is the Nio or Apr Connector enabled?WARNING: Using org.atmosphere.container.BlockingIOCometSupport
+....
+
+Atmosphere is expecting the Servlet to implement Tomcat's proprietary interface https://tomcat.apache.org/tomcat-6.0-doc/api/org/apache/catalina/CometProcessor.html[CometProcessor]. (See https://github.com/Atmosphere/atmosphere/blob/atmosphere-project-1.0.14/modules/cpr/src/main/java/org/atmosphere/cpr/AtmosphereServlet.java[AtmosphereServlet])
+
+Vaadin's default servlet does not implement this interface.
+
+When fallback to native Comet fails, Atmosphere uses
+`BlockingIOCometSupport`, which seems to work with some applications and
+not with others. If it does not work for your application, you may want
+to try Tomcat 7 with a Servlet 3.0 application.
+
+[[tomcat-7-streaming]]
+Tomcat 7 + Streaming
+~~~~~~~~~~~~~~~~~~~~
+
+For Tomcat 7, if your application is a Servlet 3.0 application, set the
+property `org.atmosphere.useWebSocketAndServlet3=true` and make sure
+your Servlet and your filters in Web.xml have
+`<async-supported>true</async-supported>` or the equivalent annotation.
+
+For Servlet < 3.0, see "Tomcat6 + Streaming" above.
+
+[[tomcat-7-websockets]]
+Tomcat 7 + Websockets
+~~~~~~~~~~~~~~~~~~~~~
+
+Tomcat 7 is unable to share the HTTP session between HTTP request and
+websockets request. Because of this a FakeHttpSession (a copy of the
+real session) is used for websockets. This has certain implications such
+as that it is impossible to invalidate the session from a websockets
+enabled application. Tomcat 8 does not have this problem.
+
+The Websockets implementation in the 7.0.2x series is rather immature,
+so all kinds of issues may occur. 
+
+If you use Tomcat 7, upgrade to the latest version!
+
+*It is recommended to upgrade to the latest Tomcat 8 (requires Vaadin
+7.2+) if you want to use websockets.*
+
+[[tomcat-8-websockets]]
+Tomcat 8 + Websockets
+~~~~~~~~~~~~~~~~~~~~~
+
+....
+java.lang.ClassNotFoundException: org.eclipse.jetty.websocket.WebSocketFactory$Acceptor
+....
+
+This implies you have Jetty deployed on the classpath somewhere.
+Atmosphere gets confused and tries to use its Websocket implementation
+instead of Tomcat's. One common reason for this is that you have
+accidentally deployed vaadin-client-compiler, which has Jetty as a
+dependency (needed by SuperDevMode for instance.)
+
+[[glassfish-234-streaming]]
+Glassfish 2/3/4 + Streaming
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Glassfish 2/3/4 requires the "comet" option to be enabled for streaming
+to work.
+
+For Glassfish 2, set
+`(Configurations -> HTTP service -> HTTP listeners -> http-listener-1 -> Add Property -> "cometSupport"="true")`
+or use
+`asadmin set server.http-service.http-listener.http-listener-1.property.cometSupport=true`
+
+For Glassfish 3/4, set
+`(Configurations -> server-config -> Network Config -> Protocols -> http-listener-1 -> HTTP -> Comet Support)`
+or use
+`asadmin set server-config.network-config.protocols.protocol.http-listener-1.http.comet-support-enabled="true"`
+
+[[glassfish-3-websockets]]
+Glassfish 3 + Websockets
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+As a rule of thumb, don't do this.
+
+The Grizzly version shipped with Glassfish 3.1.2.2 contains a
+https://github.com/javaee/grizzly/issues/1289[fatal bug] which prevents
+Vaadin from working. Replace *glassfish/modules/grizzly-websockets.jar*
+with
+http://central.maven.org/maven2/com/sun/grizzly/grizzly-websockets/1.9.56/grizzly-websockets-1.9.56.jar
+to get websockets working (with Vaadin 7.3). *This version is actually
+also broken in many ways, so you may or may not get it to work. If you
+want websockets, you should upgrade to Glassfish 4.*
+
+Glassfish 3 requires the websockets option to be enabled for websockets
+to work
+`(Configurations -> server-config -> Network Config -> Protocols -> http-listener-1 -> HTTP -> Websockets Support)`
+or
+`asadmin set server-config.network-config.protocols.protocol.http-listener-1.http.websockets-support-enabled="true"`.
+
+[[glassfish-4-websockets]]
+Glassfish 4 + Websockets
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Glassfish 4 + websockets require Vaadin 7.2+. *If you are using
+Glassfish 4.0, upgrade to Glassfish 4.1 to avoid problems*
+
+[[wildfly-8-websockets]]
+Wildfly 8 + Websockets
+~~~~~~~~~~~~~~~~~~~~~~
+
+Wildfly requires all websocket endpoints to be deployed during web
+application initialization and refuses to deploy them later. If you are
+using multiple push enabled Vaadin servlets you should mark them as
+load-on-startup=true to avoid issues. (Vaadin 7.2-7.4). Vaadin 7.5 fixes
+this by initializing websockets during context deployment so
+load-on-startup is not needed.
+
+[[weblogic-12-websockets]]
+Weblogic 12 + Websockets
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use WebLogic 12.1.3 or newer with Java 8 and Vaadin 7.5+.
+
+If you see "java.lang.IllegalStateException:
+javax.websocket.server.ServerContainer is null. Make sure you are using
+1.8+ and your server has websocket support enabled" you are probably
+running with Java 7 or older.
+
+WebLogic 12 specifies a timeout of 30s by default for websocket
+connections
+(https://docs.oracle.com/middleware/1212/wls/WLPRG/websockets.htm#WLPRG811).
+To avoid constant reconnects, you can set the init
+parameter `weblogic.websocket.tyrus.session-max-idle-timeout` to either
+-1 (no timeout in use) or a higher value than 30000 (value is in ms).
+
+[[jboss-eap-6.4-and-websockets]]
+JBoss EAP 6.4  and Websockets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+JBoss EAP 6.4 includes support for websockets but they are not enabled
+by default. To make websockets work you need to
+
+1. Change JBoss to use the NIO connector
++
+This can be done by running
++
+`$ bin/jboss-cli.sh --connect`
++
+and the following commands
++
+....
+batch
+/subsystem=web/connector=http/:write-attribute(name=protocol,value=org.apache.coyote.http11.Http11NioProtocol)
+run-batch
+:reload
+....
+
+2. Add a *WEB-INF/jboss-web.xml* to you war file with the following
+contents to enable websockets
+
+[source,xml]
+....
+<jboss-web version="7.2" xmlns="http://www.jboss.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.jboss.com/xml/ns/javaee schema/jboss-web_7_2.xsd">
+    <enable-websockets>true</enable-websockets>
+</jboss-web>
+....
+
+[[liberty-profileand-websockets]]
+Liberty profile and Websockets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use Liberty beta 2015.9.0.0 or later and Vaadin 7.6+.
+
+[[buffering-proxies-and-long-polling]]
+Buffering proxies and long polling
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use Vaadin 7.6+ to deal with buffering proxies. Also see "Duplicate
+resource xyz-abc-def-ghi-jkl" below
+
+[[kaspersky-anti-virus-long-polling]]
+Kaspersky anti virus + long polling
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use Vaadin 7.6+ to avoid problems with long polling.
+
+[[chrome-sayserr_incomplete_chunked_encoding]]
+Chrome says ERR_INCOMPLETE_CHUNKED_ENCODING
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is completely normal and means that the (long-polling) push
+connection was aborted by a third party. This typically happens when
+there is a proxy between the browser and the server and the proxy has a
+configured timeout and cuts the connection when the timeout is reached.
+The browser should reconnect to the server normally after this happens.
+
+Server logs contain
+
+....
+Duplicate resource xyz-abc-def-ghi-jkl. Could be
+caused by a dead connection not detected by your server. Replacing the
+old one with the fresh one"
+....
+
+This indicates that first, the browser connected to the server and used
+the given identifier for the push connection. Everything went as
+expected. Later on, a browser (probably the same one) connected again using the
+same identifier but according to the server, the old browser connection
+should still be active. The server closes the old connection and logs
+the warning.
+
+[[why-does-this-happen]]
+Why does this happen?
+^^^^^^^^^^^^^^^^^^^^^
+
+Typically there was a proxy between the browser and the server, and the
+proxy was configured to kill open connections after a certain inactivity
+timeout on the connection (no data is sent before the server issues a
+push command). Because of how TCP/IP works, the server has no idea that
+the connection has been killed and continues to think that the old
+client is connected and all is well.
+
+[[what-can-you-do-to-avoid-this]]
+What can you do to avoid this?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You have a couple of options:
+
+1.  If you are in control of the proxy, configure it not to timeout/kill
+push connections (connections to the /PUSH url)
+2.  If you know what the proxy timeout is, configure a slightly shorter
+timeout for push in the Vaadin application so that the server terminates
+the idle connection and is aware of the termination before the proxy can
+kill the connection. Use the `pushLongPollingSuspendTimeout` servlet
+parameter for this (defined in milliseconds) (Vaadin 7.6+)
+
+If you do not configure the proxy so that the server knows when the
+connection is killed, you also have a small chance of losing pushed
+data. If it so happens that the server does a push right after the
+connection was killed, it will not realize that it pushed data into a
+closed connection (because of how sockets work and especially how they
+work in Java). Disabling the timeout or setting the timeout on the
+server also resolves this potential issue.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,7 @@ package com.vaadin.v7.ui;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Locale;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -49,21 +50,21 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
         try {
             COLOR_CHANGE_METHOD = ColorChangeListener.class.getDeclaredMethod(
                     "colorChanged", new Class[] { ColorChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in ColorPicker");
         }
     }
 
     /**
-     * Interface for converting 2d-coordinates to a Color
+     * Interface for converting 2d-coordinates to a Color.
      */
     @Deprecated
     public interface Coordinates2Color extends Serializable {
 
         /**
-         * Calculate color from coordinates
+         * Calculate color from coordinates.
          *
          * @param x
          *            the x-coordinate
@@ -75,7 +76,7 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
         public Color calculate(int x, int y);
 
         /**
-         * Calculate coordinates from color
+         * Calculate coordinates from color.
          *
          * @param c
          *            the c
@@ -203,7 +204,7 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
     }
 
     /**
-     * Sets the position of the popup window
+     * Sets the position of the popup window.
      *
      * @param x
      *            the x-coordinate
@@ -238,7 +239,7 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
     }
 
     /**
-     * Fired when a color change event occurs
+     * Fired when a color change event occurs.
      *
      * @param event
      *            The color change event
@@ -249,14 +250,14 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
     }
 
     /**
-     * Notifies the listeners that the selected color has changed
+     * Notifies the listeners that the selected color has changed.
      */
     public void fireColorChanged() {
         fireEvent(new ColorChangeEvent(this, color));
     }
 
     /**
-     * The style for the popup window
+     * The style for the popup window.
      *
      * @param style
      *            The style
@@ -286,7 +287,7 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
     }
 
     /**
-     * Gets the style for the popup window
+     * Gets the style for the popup window.
      *
      * @since 7.5.0
      * @return popup window style
@@ -296,7 +297,7 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
     }
 
     /**
-     * Set the visibility of the RGB Tab
+     * Set the visibility of the RGB Tab.
      *
      * @param visible
      *            The visibility
@@ -314,7 +315,7 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
     }
 
     /**
-     * Gets the visibility of the RGB Tab
+     * Gets the visibility of the RGB Tab.
      *
      * @since 7.5.0
      * @return visibility of the RGB tab
@@ -324,7 +325,7 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
     }
 
     /**
-     * Set the visibility of the HSV Tab
+     * Set the visibility of the HSV Tab.
      *
      * @param visible
      *            The visibility
@@ -341,7 +342,7 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
     }
 
     /**
-     * Gets the visibility of the HSV Tab
+     * Gets the visibility of the HSV Tab.
      *
      * @since 7.5.0
      * @return visibility of the HSV tab
@@ -351,7 +352,7 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
     }
 
     /**
-     * Set the visibility of the Swatches Tab
+     * Set the visibility of the Swatches Tab.
      *
      * @param visible
      *            The visibility
@@ -368,7 +369,7 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
     }
 
     /**
-     * Gets the visibility of the Swatches Tab
+     * Gets the visibility of the Swatches Tab.
      *
      * @since 7.5.0
      * @return visibility of the swatches tab
@@ -378,7 +379,7 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
     }
 
     /**
-     * Sets the visibility of the Color History
+     * Sets the visibility of the Color History.
      *
      * @param visible
      *            The visibility
@@ -391,7 +392,7 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
     }
 
     /**
-     * Gets the visibility of the Color History
+     * Gets the visibility of the Color History.
      *
      * @since 7.5.0
      * @return visibility of color history
@@ -401,7 +402,7 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
     }
 
     /**
-     * Sets the visibility of the CSS color code text field
+     * Sets the visibility of the CSS color code text field.
      *
      * @param visible
      *            The visibility
@@ -414,7 +415,7 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
     }
 
     /**
-     * Gets the visibility of CSS color code text field
+     * Gets the visibility of CSS color code text field.
      *
      * @since 7.5.0
      * @return visibility of css color code text field
@@ -434,10 +435,10 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
     }
 
     /**
-     * Sets the default styles of the component
+     * Sets the default styles of the component.
      *
      */
-    abstract protected void setDefaultStyles();
+    protected abstract void setDefaultStyles();
 
     /**
      * Shows a popup-window for color selection.
@@ -532,7 +533,7 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
     }
 
     /**
-     * Return HTML rendering setting
+     * Return HTML rendering setting.
      *
      * @return <code>true</code> if the caption text is to be rendered as HTML,
      *         <code>false</code> otherwise
@@ -556,8 +557,8 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
             setColor(new Color(Integer.parseInt(hexColor, 16)));
         }
         if (design.hasAttr("popup-style")) {
-            setPopupStyle(PopupStyle.valueOf(
-                    "POPUP_" + attributes.get("popup-style").toUpperCase()));
+            setPopupStyle(PopupStyle.valueOf("POPUP_"
+                    + attributes.get("popup-style").toUpperCase(Locale.ROOT)));
         }
         if (design.hasAttr("position")) {
             String[] position = attributes.get("position").split(",");

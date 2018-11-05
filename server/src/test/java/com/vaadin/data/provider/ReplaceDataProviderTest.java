@@ -79,7 +79,7 @@ public class ReplaceDataProviderTest {
                 beans1);
 
         dataCommunicator.setDataProvider(dataProvider, null);
-        dataCommunicator.pushData(1, beans1.stream());
+        dataCommunicator.pushData(1, beans1);
 
         SOME_BEAN bean1_17 = beans1.get(17);
         String key1_17 = dataCommunicator.getKeyMapper().key(bean1_17);
@@ -90,7 +90,7 @@ public class ReplaceDataProviderTest {
 
         dataProvider = new ListDataProvider<>(beans2);
         dataCommunicator.setDataProvider(dataProvider, null);
-        dataCommunicator.pushData(1, beans2.stream());
+        dataCommunicator.pushData(1, beans2);
 
         SOME_BEAN bean2_17 = beans2.get(17);
         String key2_17 = dataCommunicator.getKeyMapper().key(bean2_17);

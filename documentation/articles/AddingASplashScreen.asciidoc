@@ -1,0 +1,58 @@
+---
+title: Adding A Splash Screen
+order: 85
+layout: page
+---
+
+[[adding-a-splash-sreen]]
+= Adding a splash screen
+
+When a Vaadin application is loading a loading indicator is
+automatically shown so the user knows something is happening. But what
+if we want to show something else, like a custom splash screen for our
+product? Or just customize the loading indicator? Let's have a look.
+
+During the Vaadin bootstrap there are a couple of div elements added to
+the page which we can use for our custom splash screen. The DOM for a
+servlet application looks the like the following when starting up:
+
+[source,html]
+....
+<body scroll="auto" class="v-generated-body">
+  <div id="splash-895866265" class="v-app splash">
+    <div class="v-app-loading"></div>
+    <noscript>
+    You have to enable javascript in your browser to use an application built with Vaadin.
+    </noscript>
+  </div>
+....
+
+In this example _splash_ is the name of our theme. The _v-app-loading_
+div is meant for styling the loading screen. It will only exist in the
+DOM until the widget set has been loaded and the application starts. At
+that point the _v-app-loading_ div is removed and replaced by the actual
+components for the application.
+
+Styling the loading screen is then as simple as adding some rules for
+_v-app-loading_, for example:
+
+[source,scss]
+....
+.v-generated-body &.v-app .v-app-loading {
+  height: 100%;
+  width: 100%;
+  background-image: url(http://archive.eclipse.org/eclipse/downloads/drops/R-3.3-200706251500/whatsnew/images/splash.png);
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+....
+
+This will use an Eclipse logo as your splash screen - change the
+background image to your own splash screen or redesign the css
+completely to your liking.
+
+*Note that Vaadin 7.0 incorrectly does not add the theme name during
+bootstrap. You must therefore use a rule without the theme name, e.g.
+`.v-generated-body .v-app .v-app-loading` and move it out of the
+@mixin. You also need to ensure the v-app div has a height using
+`.v-app {height:100%;}`*

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.textfield;
 
+import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.annotations.OnStateChange;
@@ -28,7 +29,7 @@ import com.vaadin.ui.AbstractTextField;
 
 /**
  * Connector class for AbstractTextField.
- * 
+ *
  * @since 8.0
  */
 public abstract class AbstractTextFieldConnector extends AbstractFieldConnector
@@ -39,7 +40,9 @@ public abstract class AbstractTextFieldConnector extends AbstractFieldConnector
         @Override
         public void selectRange(int start, int length) {
             int textLength = getAbstractTextField().getValue().length();
-            start = restrictTo(start, 0, textLength - 1);
+            // Enable setting cursor position after the last character
+            start = restrictTo(start, 0,
+                    length == 0 ? textLength : (textLength - 1));
             length = restrictTo(length, 0, textLength - start);
             getAbstractTextField().setSelectionRange(start, length);
         }
@@ -70,6 +73,13 @@ public abstract class AbstractTextFieldConnector extends AbstractFieldConnector
                 new AbstractTextFieldClientRpcImpl());
         ConnectorFocusAndBlurHandler.addHandlers(this);
         valueChangeHandler = new ValueChangeHandler(this);
+
+        // Ensures that the cursor position is sent when leaving the field
+        // (if it has changed)
+        if (getWidget() instanceof HasBlurHandlers) {
+            ((HasBlurHandlers) getWidget())
+                    .addBlurHandler(event -> sendValueChange());
+        }
     }
 
     protected ValueChangeHandler getValueChangeHandler() {

@@ -1,0 +1,109 @@
+---
+title: Cleaning Up Resources In A UI
+order: 11
+layout: page
+---
+
+[[cleaning-up-resources-in-a-ui]]
+= Cleaning up resources in a UI
+
+Vaadin UIs that are open on the client side send a regular heartbeat
+to the server to indicate they are still alive, even though there is no
+ongoing user interaction. When the server does not receive a valid
+heartbeat for a given UI, it will eventually remove that UI from the
+session.
+
+By default, heartbeats are sent every five minutes, and the server
+closes an UI after three missed heartbeats. The heartbeat interval can
+be customized by providing an init parameter named `heartbeatInterval`
+in your web.xml, setting its value to the desired interval in seconds:
+
+[source,xml]
+....
+<web-app>
+    <context-param>
+        <param-name>heartbeatInterval</param-name>
+        <param-value>120</param-value>
+    </context-param>
+
+    <!-- Or per-servlet: -->
+    <servlet>
+        <!-- ... -->
+        <init-param>
+            <param-name>heartbeatInterval</param-name>
+            <param-value>120</param-value>
+        </init-param>
+    </servlet>
+</web-app>
+....
+
+To do custom cleanup in your UIs, `DetachListener`s can be registered:
+
+[source,java]
+....
+public class MyUI extends UI {
+    @Override
+    protected void init(VaadinRequest request) {
+        addDetachListener(new DetachListener() {
+
+            @Override
+            public void detach(DetachEvent event) {
+                releaseSomeResources();
+            }
+        });
+    }
+
+    private void releaseSomeResources() {
+        // ...
+    }
+....
+
+Of course, your UI could also implement `DetachListener` itself:
+
+[source,java]
+....
+public class MyUI extends UI implements DetachListener {
+    protected void init(VaadinRequest request) {
+        addDetachListener(this);
+    }
+
+    @Override
+    public void detach(DetachEvent event) {
+        // do cleanup
+    }
+}
+....
+
+If you'd like to share a listener instance between multiple UIs, the
+current UI can be queried:
+
+[source,java]
+....
+public void detach(DetachEvent event) {
+    // do cleanup
+    event.getConnector().getUI();
+
+    // or equivalent:
+    UI.getCurrent();
+}
+....
+
+Because heartbeat requests are just like any other request from the
+servlet container's viewpoint, each heartbeat extends the lifetime of
+the underlying HttpSession. This means that as long as there is an open
+UI, the session never expires even though there is no user interaction.
+This is desirable in some situations, but in others it may be not.
+
+You can control this behavior by setting an init parameter named
+`closeIdleSessions` to `true`. When it is set to true (the default is
+`false`), the session will be closed if no UI is active. Before the
+session is closed, the detach methods will be called, and cleanup is
+performed.
+
+[source,xml]
+....
+<context-param> <!-- or init-param -->
+    <param-name>closeIdleSessions</param-name>
+    <param-value>true</param-value>
+</context-param>
+....

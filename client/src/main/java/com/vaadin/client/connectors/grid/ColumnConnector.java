@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,8 +20,10 @@ import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.connectors.AbstractRendererConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widgets.Grid.Column;
+import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.ColumnState;
 
 import elemental.json.JsonObject;
@@ -36,9 +38,11 @@ import elemental.json.JsonValue;
 @Connect(com.vaadin.ui.Grid.Column.class)
 public class ColumnConnector extends AbstractExtensionConnector {
 
-    static abstract class CustomColumn extends Column<Object, JsonObject> {
+    public abstract static class CustomColumn
+            extends Column<Object, JsonObject> {
 
         private final String connectorId;
+        private ContentMode tooltipContentMode;
 
         CustomColumn(String connectorId) {
             this.connectorId = connectorId;
@@ -46,6 +50,34 @@ public class ColumnConnector extends AbstractExtensionConnector {
 
         public String getConnectorId() {
             return connectorId;
+        }
+
+        @Override
+        protected void setDefaultHeaderContent(HeaderCell cell) {
+            // NO-OP, Server takes care of header contents.
+        }
+
+        /**
+         * Gets the content mode for tooltips in this column.
+         *
+         * @return the content mode.
+         *
+         * @since 8.2
+         */
+        public ContentMode getTooltipContentMode() {
+            return tooltipContentMode;
+        }
+
+        /**
+         * Sets the content mode for tooltips in this column.
+         *
+         * @param tooltipContentMode
+         *            the content mode for tooltips
+         *
+         * @since 8.2
+         */
+        public void setTooltipContentMode(ContentMode tooltipContentMode) {
+            this.tooltipContentMode = tooltipContentMode;
         }
     }
 
@@ -73,8 +105,13 @@ public class ColumnConnector extends AbstractExtensionConnector {
                 return null;
             }
         };
-        column.setRenderer(getRendererConnector().getRenderer());
+
+        // Initially set a renderer
+        updateRenderer();
+        updateHidden();
+
         getParent().addColumn(column, getState().internalId);
+
     }
 
     @SuppressWarnings("unchecked")
@@ -87,9 +124,20 @@ public class ColumnConnector extends AbstractExtensionConnector {
         column.setHeaderCaption(getState().caption);
     }
 
+    @OnStateChange("assistiveCaption")
+    void updateAssistiveCaption() {
+        column.setAssistiveCaption(getState().assistiveCaption);
+    }
+
     @OnStateChange("sortable")
     void updateSortable() {
         column.setSortable(getState().sortable);
+    }
+
+    @OnStateChange("renderer")
+    void updateRenderer() {
+        column.setRenderer(getRendererConnector().getRenderer());
+        getParent().onColumnRendererChanged(column);
     }
 
     @OnStateChange("hidingToggleCaption")
@@ -122,6 +170,11 @@ public class ColumnConnector extends AbstractExtensionConnector {
         column.setMinimumWidth(getState().minWidth);
     }
 
+    @OnStateChange("minimumWidthFromContent")
+    void updateMinimumWidthFromContent() {
+        column.setMinimumWidthFromContent(getState().minimumWidthFromContent);
+    }
+
     @OnStateChange("maxWidth")
     void updateMaxWidth() {
         column.setMaximumWidth(getState().maxWidth);
@@ -137,11 +190,26 @@ public class ColumnConnector extends AbstractExtensionConnector {
         column.setEditable(getState().editable);
     }
 
+    @OnStateChange("tooltipContentMode")
+    void updateTooltipContentMode() {
+        column.setTooltipContentMode(getState().tooltipContentMode);
+    }
+
+    @OnStateChange("handleWidgetEvents")
+    void updateHandleWidgetEvents() {
+        column.setHandleWidgetEvents(getState().handleWidgetEvents);
+    }
+
     @Override
     public void onUnregister() {
         super.onUnregister();
-
-        parent.removeColumn(column);
+        if (parent.getParent() != null) {
+            // If the grid itself was unregistered there is no point in spending
+            // time to remove columns (and have problems with frozen columns)
+            // before throwing everything away
+            parent.removeColumnMapping(column);
+            parent = null;
+        }
         column = null;
     }
 
@@ -154,5 +222,4 @@ public class ColumnConnector extends AbstractExtensionConnector {
     public ColumnState getState() {
         return (ColumnState) super.getState();
     }
-
 }

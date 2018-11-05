@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,9 +14,6 @@
  * the License.
  */
 
-/**
- *
- */
 package com.vaadin.server;
 
 import java.io.Serializable;
@@ -46,7 +43,7 @@ public class LocaleService implements Serializable {
     private final LocaleServiceState state;
 
     /**
-     * Creates a LocaleService bound to the given UI
+     * Creates a LocaleService bound to the given UI.
      *
      * @since 7.1
      * @param ui
@@ -58,7 +55,7 @@ public class LocaleService implements Serializable {
     }
 
     /**
-     * Retrieves the UI this service is bound to
+     * Retrieves the UI this service is bound to.
      *
      * @since 7.1
      * @return the UI for this service
@@ -110,7 +107,7 @@ public class LocaleService implements Serializable {
     }
 
     /**
-     * Creates a LocaleData instance for transportation to the client
+     * Creates a LocaleData instance for transportation to the client.
      *
      * @since 7.1
      * @param locale
@@ -152,65 +149,40 @@ public class LocaleService implements Serializable {
         /*
          * First day of week (0 = sunday, 1 = monday)
          */
-        final java.util.Calendar cal = new GregorianCalendar(locale);
+        final Calendar cal = new GregorianCalendar(locale);
         localeData.firstDayOfWeek = cal.getFirstDayOfWeek() - 1;
 
         /*
          * Date formatting (MM/DD/YYYY etc.)
          */
-
-        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT,
-                DateFormat.SHORT, locale);
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT,
+                locale);
+        DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT,
+                locale);
         if (!(dateFormat instanceof SimpleDateFormat)) {
             getLogger().warning("Unable to get default date pattern for locale "
                     + locale.toString());
             dateFormat = new SimpleDateFormat();
         }
-        final String df = ((SimpleDateFormat) dateFormat).toPattern();
-
-        int timeStart = df.indexOf('H');
-        if (timeStart < 0) {
-            timeStart = df.indexOf('h');
+        if (!(timeFormat instanceof SimpleDateFormat)) {
+            getLogger().warning("Unable to get default time pattern for locale "
+                    + locale.toString());
+            timeFormat = new SimpleDateFormat();
         }
-        final int ampm_first = df.indexOf('a');
-        // E.g. in Korean locale AM/PM is before h:mm
-        // TODO should take that into consideration on client-side as well,
-        // now always h:mm a
-        if (ampm_first > 0 && ampm_first < timeStart) {
-            timeStart = ampm_first;
-        }
-        // Hebrew locale has time before the date
-        final boolean timeFirst = timeStart == 0;
-        String dateformat;
-        if (timeFirst) {
-            int dateStart = df.indexOf(' ');
-            if (ampm_first > dateStart) {
-                dateStart = df.indexOf(' ', ampm_first);
-            }
-            dateformat = df.substring(dateStart + 1);
-        } else {
-            dateformat = df.substring(0, timeStart - 1);
-        }
+        final String datePattern = ((SimpleDateFormat) dateFormat).toPattern();
+        final String timePattern = ((SimpleDateFormat) timeFormat).toPattern();
 
-        localeData.dateFormat = dateformat.trim();
+        localeData.dateFormat = datePattern.trim();
 
-        /*
-         * Time formatting (24 or 12 hour clock and AM/PM suffixes)
-         */
-        final String timeformat = df.substring(timeStart, df.length());
-        /*
-         * Doesn't return second or milliseconds.
-         *
-         * We use timeformat to determine 12/24-hour clock
-         */
-        final boolean twelve_hour_clock = timeformat.contains("a");
+        final boolean twelveHourClock = timePattern.indexOf("a") > -1;
         // TODO there are other possibilities as well, like 'h' in french
         // (ignore them, too complicated)
-        final String hour_min_delimiter = timeformat.contains(".") ? "." : ":";
-        // outWriter.print("\"tf\":\"" + timeformat + "\",");
-        localeData.twelveHourClock = twelve_hour_clock;
-        localeData.hourMinuteDelimiter = hour_min_delimiter;
-        if (twelve_hour_clock) {
+        final String hourMinDelimiter = timePattern.indexOf(".") > -1 ? "."
+                : ":";
+
+        localeData.twelveHourClock = twelveHourClock;
+        localeData.hourMinuteDelimiter = hourMinDelimiter;
+        if (twelveHourClock) {
             final String[] ampm = dfs.getAmPmStrings();
             localeData.am = ampm[0];
             localeData.pm = ampm[1];

@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.application;
 
 import com.vaadin.server.VaadinRequest;
@@ -20,23 +5,14 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.TextField;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
 
     private static class Response {
@@ -77,19 +53,9 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         addComponent(createConfigPanel());
         addComponent(createServerConfigPanel());
 
-        addComponent(new Button("Say hello", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                log("Hello");
-            }
-        }));
+        addComponent(new Button("Say hello", event -> log("Hello")));
     }
 
-    /**
-     * @since
-     * @return
-     */
     private Component createServerConfigPanel() {
         Panel p = new Panel("Server config (NOTE: affects all users)");
         VerticalLayout vl = new VerticalLayout();
@@ -100,25 +66,20 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
                 createTemporaryResponseCodeSetters("UIDL", uidlResponse));
         vl.addComponent(createTemporaryResponseCodeSetters("Heartbeat",
                 heartbeatResponse));
-        vl.addComponent(new Button("Activate", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (uidlResponse.code != null && uidlResponse.code != 200) {
-                    getServlet().setUIDLResponseCode(CommErrorEmulatorUI.this,
-                            uidlResponse.code, uidlResponse.time);
-                    log("Responding with " + uidlResponse.code
-                            + " to UIDL requests for " + uidlResponse.time
-                            + "s");
-                }
-                if (heartbeatResponse.code != null
-                        && heartbeatResponse.code != 200) {
-                    getServlet().setHeartbeatResponseCode(
-                            CommErrorEmulatorUI.this, heartbeatResponse.code,
-                            heartbeatResponse.time);
-                    log("Responding with " + heartbeatResponse.code
-                            + " to heartbeat requests for "
-                            + heartbeatResponse.time + "s");
-                }
+        vl.addComponent(new Button("Activate", event -> {
+            if (uidlResponse.code != null && uidlResponse.code != 200) {
+                getServlet().setUIDLResponseCode(CommErrorEmulatorUI.this,
+                        uidlResponse.code, uidlResponse.time);
+                log("Responding with " + uidlResponse.code
+                        + " to UIDL requests for " + uidlResponse.time + "s");
+            }
+            if (heartbeatResponse.code != null
+                    && heartbeatResponse.code != 200) {
+                getServlet().setHeartbeatResponseCode(CommErrorEmulatorUI.this,
+                        heartbeatResponse.code, heartbeatResponse.time);
+                log("Responding with " + heartbeatResponse.code
+                        + " to heartbeat requests for " + heartbeatResponse.time
+                        + "s");
             }
         }));
 
@@ -133,14 +94,9 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         reconnectDialogMessage.setWidth("50em");
         reconnectDialogMessage
                 .setValue(getReconnectDialogConfiguration().getDialogText());
-        reconnectDialogMessage
-                .addValueChangeListener(new ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        getReconnectDialogConfiguration().setDialogText(
-                                reconnectDialogMessage.getValue());
-                    }
-                });
+        reconnectDialogMessage.addValueChangeListener(
+                event -> getReconnectDialogConfiguration()
+                        .setDialogText(reconnectDialogMessage.getValue()));
 
         final TextField reconnectDialogGaveUpMessage = new TextField(
                 "Reconnect gave up message");
@@ -148,57 +104,37 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
 
         reconnectDialogGaveUpMessage.setValue(
                 getReconnectDialogConfiguration().getDialogTextGaveUp());
-        reconnectDialogGaveUpMessage
-                .addValueChangeListener(new ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        getReconnectDialogConfiguration().setDialogTextGaveUp(
-                                reconnectDialogGaveUpMessage.getValue());
-                    }
-                });
+        reconnectDialogGaveUpMessage.addValueChangeListener(
+                event -> getReconnectDialogConfiguration().setDialogTextGaveUp(
+                        reconnectDialogGaveUpMessage.getValue()));
         final TextField reconnectDialogReconnectAttempts = new TextField(
                 "Reconnect attempts");
         reconnectDialogReconnectAttempts.setConverter(Integer.class);
         reconnectDialogReconnectAttempts.setConvertedValue(
                 getReconnectDialogConfiguration().getReconnectAttempts());
-        reconnectDialogReconnectAttempts
-                .addValueChangeListener(new ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        getReconnectDialogConfiguration().setReconnectAttempts(
-                                (Integer) reconnectDialogReconnectAttempts
-                                        .getConvertedValue());
-                    }
-                });
+        reconnectDialogReconnectAttempts.addValueChangeListener(
+                event -> getReconnectDialogConfiguration().setReconnectAttempts(
+                        (Integer) reconnectDialogReconnectAttempts
+                                .getConvertedValue()));
         final TextField reconnectDialogReconnectInterval = new TextField(
                 "Reconnect interval (ms)");
         reconnectDialogReconnectInterval.setConverter(Integer.class);
         reconnectDialogReconnectInterval.setConvertedValue(
                 getReconnectDialogConfiguration().getReconnectInterval());
-        reconnectDialogReconnectInterval
-                .addValueChangeListener(new ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        getReconnectDialogConfiguration().setReconnectInterval(
-                                (Integer) reconnectDialogReconnectInterval
-                                        .getConvertedValue());
-                    }
-                });
+        reconnectDialogReconnectInterval.addValueChangeListener(
+                event -> getReconnectDialogConfiguration().setReconnectInterval(
+                        (Integer) reconnectDialogReconnectInterval
+                                .getConvertedValue()));
 
         final TextField reconnectDialogGracePeriod = new TextField(
                 "Reconnect dialog grace period (ms)");
         reconnectDialogGracePeriod.setConverter(Integer.class);
         reconnectDialogGracePeriod.setConvertedValue(
                 getReconnectDialogConfiguration().getDialogGracePeriod());
-        reconnectDialogGracePeriod
-                .addValueChangeListener(new ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        getReconnectDialogConfiguration().setDialogGracePeriod(
-                                (Integer) reconnectDialogGracePeriod
-                                        .getConvertedValue());
-                    }
-                });
+        reconnectDialogGracePeriod.addValueChangeListener(
+                event -> getReconnectDialogConfiguration().setDialogGracePeriod(
+                        (Integer) reconnectDialogGracePeriod
+                                .getConvertedValue()));
 
         final CheckBox reconnectDialogModal = new CheckBox(
                 "Reconnect dialog modality");
@@ -235,20 +171,14 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         timeField.setWidth("5em");
         Label l3 = new Label("seconds");
 
-        responseCode.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Integer code = (Integer) responseCode.getConvertedValue();
-                response.code = code;
-            }
+        responseCode.addValueChangeListener(event -> {
+            Integer code = (Integer) responseCode.getConvertedValue();
+            response.code = code;
         });
 
-        timeField.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Integer time = (Integer) timeField.getConvertedValue();
-                response.time = time;
-            }
+        timeField.addValueChangeListener(event -> {
+            Integer time = (Integer) timeField.getConvertedValue();
+            response.time = time;
         });
 
         hl.addComponents(l1, responseCode, l2, timeField, l3);

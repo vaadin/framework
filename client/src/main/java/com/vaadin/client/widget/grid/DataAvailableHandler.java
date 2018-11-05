@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -28,10 +28,8 @@ public interface DataAvailableHandler extends EventHandler {
     /**
      * Called when DataSource has data available. Supplied with row range.
      *
-     * @param availableRows
-     *            Range of rows available in the DataSource
-     * @return true if the command was successfully completed, false to call
-     *         again the next time new data is available
+     * @param event
+     *            The triggered event
      */
     public void onDataAvailable(DataAvailableEvent event);
 }

@@ -16,8 +16,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 
 public class GridLayoutTest {
-    Component[] children = new Component[] { new Label("A"), new Label("B"),
-            new Label("C"), new Label("D") };
+    Component[] children = { new Label("A"), new Label("B"), new Label("C"),
+            new Label("D") };
 
     @Test
     public void testConstructorWithComponents() {

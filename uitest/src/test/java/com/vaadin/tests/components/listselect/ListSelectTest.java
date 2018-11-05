@@ -1,7 +1,9 @@
 package com.vaadin.tests.components.listselect;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,7 +11,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -19,9 +20,9 @@ import org.openqa.selenium.support.ui.Select;
 
 import com.vaadin.testbench.elements.AbstractComponentElement.ReadOnlyException;
 import com.vaadin.testbench.elements.ListSelectElement;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
+public class ListSelectTest extends SingleBrowserTest {
     @Before
     public void setUp() throws Exception {
         openTestURL();
@@ -49,24 +50,23 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
         selectMenuPath("Component", "Listeners", "Selection listener");
 
         selectItem("Item 4");
-        Assert.assertEquals("1. Selected: [Item 4]", getLogRow(0));
+        assertEquals("1. Selected: [Item 4]", getLogRow(0));
 
         selectItem("Item 2");
-        Assert.assertEquals("3. Selected: [Item 2]", getLogRow(0));
+        assertEquals("3. Selected: [Item 2]", getLogRow(0));
 
         addItemsToSelection("Item 4");
-        Assert.assertEquals("4. Selected: [Item 2, Item 4]", getLogRow(0));
+        assertEquals("4. Selected: [Item 2, Item 4]", getLogRow(0));
 
-        addItemsToSelection("Item 10", "Item 0", "Item 9"); // will cause 3
-                                                            // events
+        // will cause 3 events
+        addItemsToSelection("Item 10", "Item 0", "Item 9");
 
-        Assert.assertEquals(
-                "7. Selected: [Item 2, Item 4, Item 10, Item 0, Item 9]",
+        assertEquals("7. Selected: [Item 2, Item 4, Item 10, Item 0, Item 9]",
                 getLogRow(0));
 
-        removeItemsFromSelection("Item 0", "Item 2", "Item 9"); // will cause 3
-                                                                // events
-        Assert.assertEquals("10. Selected: [Item 4, Item 10]", getLogRow(0));
+        // will cause 3 events
+        removeItemsFromSelection("Item 0", "Item 2", "Item 9");
+        assertEquals("10. Selected: [Item 4, Item 10]", getLogRow(0));
     }
 
     @Test
@@ -74,15 +74,17 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
         selectMenuPath("Component", "Listeners", "Selection listener");
 
         selectItem("Item 4");
-        Assert.assertEquals("1. Selected: [Item 4]", getLogRow(0));
+        assertEquals("1. Selected: [Item 4]", getLogRow(0));
 
-        getListSelect().findElement(By.tagName("select")).sendKeys(Keys.ARROW_UP);
+        getListSelect().findElement(By.tagName("select"))
+                .sendKeys(Keys.ARROW_UP);
 
-        Assert.assertEquals("2. Selected: [Item 3]", getLogRow(0));
+        assertEquals("2. Selected: [Item 3]", getLogRow(0));
 
-        getListSelect().findElement(By.tagName("select")).sendKeys(Keys.ARROW_DOWN, Keys.ARROW_DOWN);
+        getListSelect().findElement(By.tagName("select"))
+                .sendKeys(Keys.ARROW_DOWN, Keys.ARROW_DOWN);
 
-        Assert.assertEquals("4. Selected: [Item 5]", getLogRow(0));
+        assertEquals("4. Selected: [Item 5]", getLogRow(0));
 
     }
 
@@ -92,23 +94,23 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
 
         List<WebElement> select = getListSelect()
                 .findElements(By.tagName("select"));
-        Assert.assertEquals(1, select.size());
-        Assert.assertNotNull(select.get(0).getAttribute("disabled"));
+        assertEquals(1, select.size());
+        assertNotNull(select.get(0).getAttribute("disabled"));
 
         selectMenuPath("Component", "Listeners", "Selection listener");
 
         String lastLogRow = getLogRow(0);
 
         selectItem("Item 4");
-        Assert.assertEquals(lastLogRow, getLogRow(0));
+        assertEquals(lastLogRow, getLogRow(0));
         assertNothingSelected();
 
         addItemsToSelection("Item 2");
-        Assert.assertEquals(lastLogRow, getLogRow(0));
+        assertEquals(lastLogRow, getLogRow(0));
         assertNothingSelected();
 
         removeItemsFromSelection("Item 4");
-        Assert.assertEquals(lastLogRow, getLogRow(0));
+        assertEquals(lastLogRow, getLogRow(0));
         assertNothingSelected();
     }
 
@@ -119,13 +121,13 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
 
         List<WebElement> select = getListSelect()
                 .findElements(By.tagName("select"));
-        Assert.assertEquals(1, select.size());
-        Assert.assertNotNull(select.get(0).getAttribute("disabled"));
+        assertEquals(1, select.size());
+        assertNotNull(select.get(0).getAttribute("disabled"));
 
         String lastLogRow = getLogRow(0);
 
         selectItem("Item 4");
-        Assert.assertEquals(lastLogRow, getLogRow(0));
+        assertEquals(lastLogRow, getLogRow(0));
         assertNothingSelected();
     }
 
@@ -136,8 +138,8 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
 
         List<WebElement> select = getListSelect()
                 .findElements(By.tagName("select"));
-        Assert.assertEquals(1, select.size());
-        Assert.assertNotNull(select.get(0).getAttribute("disabled"));
+        assertEquals(1, select.size());
+        assertNotNull(select.get(0).getAttribute("disabled"));
 
         addItemsToSelection("Item 2");
     }
@@ -152,8 +154,8 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
 
         List<WebElement> select = getListSelect()
                 .findElements(By.tagName("select"));
-        Assert.assertEquals(1, select.size());
-        Assert.assertNotNull(select.get(0).getAttribute("disabled"));
+        assertEquals(1, select.size());
+        assertNotNull(select.get(0).getAttribute("disabled"));
 
         removeItemsFromSelection("Item 4");
     }
@@ -169,16 +171,16 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
         selectMenuPath("Component", "State", "Enabled");
 
         selectItem("Item 5");
-        Assert.assertEquals("3. Selected: [Item 5]", getLogRow(0));
+        assertEquals("3. Selected: [Item 5]", getLogRow(0));
 
         selectItem("Item 1");
-        Assert.assertEquals("5. Selected: [Item 1]", getLogRow(0));
+        assertEquals("5. Selected: [Item 1]", getLogRow(0));
 
         addItemsToSelection("Item 2");
-        Assert.assertEquals("6. Selected: [Item 1, Item 2]", getLogRow(0));
+        assertEquals("6. Selected: [Item 1, Item 2]", getLogRow(0));
 
         removeItemsFromSelection("Item 1");
-        Assert.assertEquals("7. Selected: [Item 2]", getLogRow(0));
+        assertEquals("7. Selected: [Item 2]", getLogRow(0));
     }
 
     @Test
@@ -192,16 +194,16 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
         selectMenuPath("Component", "State", "Readonly");
 
         selectItem("Item 5");
-        Assert.assertEquals("3. Selected: [Item 5]", getLogRow(0));
+        assertEquals("3. Selected: [Item 5]", getLogRow(0));
 
         selectItem("Item 1");
-        Assert.assertEquals("5. Selected: [Item 1]", getLogRow(0));
+        assertEquals("5. Selected: [Item 1]", getLogRow(0));
 
         addItemsToSelection("Item 2");
-        Assert.assertEquals("6. Selected: [Item 1, Item 2]", getLogRow(0));
+        assertEquals("6. Selected: [Item 1, Item 2]", getLogRow(0));
 
         removeItemsFromSelection("Item 1");
-        Assert.assertEquals("7. Selected: [Item 2]", getLogRow(0));
+        assertEquals("7. Selected: [Item 2]", getLogRow(0));
     }
 
     @Test
@@ -216,30 +218,29 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
         selectMenuPath("Component", "Listeners", "Selection listener");
 
         selectMenuPath("Component", "Selection", "Toggle Item 5");
-        Assert.assertEquals("2. Selected: [Item 5]", getLogRow(0));
+        assertEquals("2. Selected: [Item 5]", getLogRow(0));
         assertSelected("Item 5");
 
         selectMenuPath("Component", "Selection", "Toggle Item 1");
         // Selection order (most recently selected is last)
-        Assert.assertEquals("4. Selected: [Item 5, Item 1]", getLogRow(0));
+        assertEquals("4. Selected: [Item 5, Item 1]", getLogRow(0));
         // DOM order
         assertSelected("Item 1", "Item 5");
 
         selectMenuPath("Component", "Selection", "Toggle Item 5");
-        Assert.assertEquals("6. Selected: [Item 1]", getLogRow(0));
+        assertEquals("6. Selected: [Item 1]", getLogRow(0));
         assertSelected("Item 1");
     }
 
     private List<String> getSelectedValues() {
         Select select = new Select(
                 getListSelect().findElement(By.tagName("select")));
-        return select.getAllSelectedOptions().stream().map(e -> e.getText())
-                .collect(Collectors.toList());
+        return select.getAllSelectedOptions().stream()
+                .map(element -> element.getText()).collect(Collectors.toList());
     }
 
     private void assertSelected(String... expectedSelection) {
-        Assert.assertEquals(Arrays.asList(expectedSelection),
-                getSelectedValues());
+        assertEquals(Arrays.asList(expectedSelection), getSelectedValues());
     }
 
     @Override
@@ -264,7 +265,7 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
         if (first.isPresent()) {
             first.get().click();
         } else {
-            Assert.fail("No element present with text " + text);
+            fail("No element present with text " + text);
         }
     }
 
@@ -282,7 +283,7 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
     }
 
     private void assertNothingSelected() {
-        Assert.assertEquals(0, getSelectedValues().size());
+        assertEquals(0, getSelectedValues().size());
     }
 
     protected void assertItems(int count, String suffix) {

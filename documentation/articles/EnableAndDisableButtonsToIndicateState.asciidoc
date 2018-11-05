@@ -1,0 +1,188 @@
+---
+title: Enable And Disable Buttons To Indicate State
+order: 59
+layout: page
+---
+
+[[enable-and-disable-buttons-to-indicate-state]]
+= Enable and disable buttons to indicate state
+
+Most user interfaces have actions that can only be performed if certain
+conditions are met. In other cases, the actions can be performed at any
+time in principle, but don’t really make any sense to in certain
+situations. And quite often, there are actions that really need to be
+performed, e.g. to prevent data loss.
+
+A good example of this is a typical CRUD form for entering items into a
+database, with buttons for saving, reverting (i.e. discarding changes)
+and deleting items:
+
+image:img/potus1.png[POTUS Database CRUD example]
+
+The above image illustrates a typical UI for adding, modifying and
+deleting data: A table listing the available items above, and a form for
+editing the selected item below. The same form is also used to enter new
+items. The _Add new_ button prepares the form for entering a new item.
+Clicking a table row selects the corresponding item for editing.
+
+[[disabling-actions-to-prevent-errors]]
+Disabling actions to prevent errors
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Naturally, the Save action in the UI depicted above can only be
+performed if an existing item has been selected, or if the _“Add new”_
+button has been clicked to create a new item. Assuming there are
+required fields (which there nearly always are), the _Save_ action can
+only be successfully performed when all these have been properly filled
+in. Let’s call these two requirements the *_technical criteria_* for
+performing the _Save_ action.
+
+Similarly, the _Delete_ action can only be performed if an existing,
+previously saved item is selected. Attempting to delete a nonexistent
+(yet to be saved) item would result in an error. Thus, selection of an
+existing item is a technical criterion for the _Delete_ action.
+
+So how do we handle these criteria in our code? An unfortunately common
+solution is to display a pop-up error message explaining the situation.
+The problem with this approach is that the user’s time is wasted
+invoking an unperformable action and in being forced to dismiss an
+annoying pop-up window (usually by clicking “OK” or something to that
+effect). Also, users tend to ignore popups and just click them away
+without reading the message, so they might not even be aware that the
+action wasn’t performed.
+
+A clearly superior approach is to simply *disable actions until their
+criteria are fulfilled*. By disabling actions that cannot be currently
+performed, the user gets a clear visual indication of this situation, is
+spared the trouble of attempting in vain to perform the action, and the
+nuisance of an error message.
+
+image:img/potus2.png[Save and Revert actions disabled when they cannot be
+successfully
+performed.]
+
+[[disablingenabling-actions-to-indicate-state]]
+Disabling/enabling actions to indicate state
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The action criteria discussed so far are only the purely _technical_
+criteria for performing the _Save_ and _Delete_ actions. They are simply
+there to prevent an exception from being thrown or a database constraint
+being violated. Looking beyond the _technical_ requirements, neither the
+_Save_ action or the _Revert_ action actually _do_ anything unless there
+are *unsaved changes* in the form, so it doesn’t really make sense do
+perform them at that time, even though they wouldn't result in an error.
+We could call the existence of unsaved changes the *_logical criteria_*
+for the _Save_ and _Revert_ actions.
+
+On the other hand, if there _are_ unsaved changes, then either _Save_ or
+_Revert_ should be performed to either save the changes or revert the
+fields to their original values, and you definitely want your users to
+be aware of this state.
+
+It might seem unlikely that a user would be unaware of the state of the
+form he or she is currently filling in, but out in The Real World, your
+users will be constantly distracted by co-workers, incoming emails,
+internet porn, coffee breaks and shiny things. They probably have “a
+hunch” about whether they already clicked _Save_ or not, but even then
+they might have some doubts about whether that action was _successfully
+performed_. In the end, any uncertainty about whether their precious
+data is safely stored is a tiny source of unnecessary stress for your
+users.
+
+The following graphic illustrates a UI that does not, in any way,
+indicate the current state of the form:
+
+image:img/disabled-before.png[UI without form state indication]
+
+Thus, both of these states (unsaved changes or not) should be indicated
+to the user somehow. The solution, again, is *disabling and enabling*
+the corresponding actions: The _Save/Cancel_ buttons are *disabled*
+until any change is made in the form. As soon as changes are detected,
+and the new values have been validated, the _Save/Cancel_ buttons are
+*enabled*. When either one is clicked, both are *disabled* again to
+indicate that the action was successfully performed.
+
+With this approach we add even more information about the current state
+of the application to the buttons themselves. Not only are we indicating
+when actions *_technically can_* be performed, but we also indicate when
+they *_logically make sense_* to perform, and, in cases like the
+_Save/Cancel_ actions in the example above, we also notify the user
+about actions that *_probably should_* be performed to prevent data
+loss. This is a great deal of information being *_subtly_* and
+*_non-intrusively_* conveyed to the user, without resorting to annoying
+popups, simply by enabling and disabling buttons.
+
+image:img/disabled-after.png[UI with form state indication]
+
+[[how-to-do-this-in-a-vaadin-application]]
+How to do this in a Vaadin application
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To implement the above functionality, we need to be able to trigger the
+button-toggling code for changes in the following states:
+
+* Item selection
+* Field validation
+* Unsaved changes
+
+The first one, whether or not an item has been selected and loaded into
+the form is quite trivial of course. You can check for that in the same
+code that handles item selection.
+
+The second one is really easy if you’ve bound the fields with a
+*FieldGroup*, since in that case you can use the *isValid()* method on
+the *FieldGroup* to check if all fields are valid or not. Empty required
+fields cause this to return false, as do any validators you’ve
+explicitly added.
+
+The third one is a bit trickier, since a change listener has to be added
+to each field separately, and the type of listener you need to add
+depends on the type of field. For most field components, a
+*ValueChangeListener* is fine, since it triggers a notification when the
+field’s value changes, such as when a different item is selected in a
+*ComboBox*. However, for the various text field components (*TextField,
+TextArea and PasswordField*) you’ll be better off with a
+*TextChangeListener*, since you’ll want to trigger the button-toggling
+code as soon as any change is made to the field’s text content, and a
+*ValueChangeListener* won’t do that.
+
+Luckily, adding the change listeners can be done in a fairly simple loop
+over the components in a layout, or the fields bound through a
+*FieldGroup*. The appropriate type of listener can be chosen based on
+whether the component implements the *FieldEvents.TextChangeNotifier*
+interface:
+
+[source,java]
+....
+TextChangeListener textListener = new TextChangeListener() {
+  @Override
+  public void textChange(TextChangeEvent event) {
+    formHasChanged();
+  }
+};
+
+ValueChangeListener valueListener = new ValueChangeListener() {
+  @Override
+  public void valueChange(ValueChangeEvent event) {
+    formHasChanged();
+  }
+};
+
+for (Field f : fieldGroup.getFields()) {
+  if (f instanceof TextChangeNotifier) {
+    ((TextChangeNotifier) f).addTextChangeListener(textListener);
+  } else {
+    f.addValueChangeListener(valueListener);
+  }
+}
+....
+
+[source,java]
+....
+public void formHasChanged() {
+  btnRevert.setEnabled(true);
+  boolean allFieldsValid = fieldGroup.isValid();
+  btnSave.setEnabled(allFieldsValid);
+}
+....

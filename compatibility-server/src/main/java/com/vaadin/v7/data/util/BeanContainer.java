@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,9 @@
 package com.vaadin.v7.data.util;
 
 import java.util.Collection;
+
+import com.vaadin.data.provider.ListDataProvider;
+import com.vaadin.v7.data.Container;
 
 /**
  * An in-memory container for JavaBeans.
@@ -40,8 +43,8 @@ import java.util.Collection;
  *
  * <p>
  * If a bean id resolver is set using
- * {@link #setBeanIdResolver(com.vaadin.v7.data.util.AbstractBeanContainer.BeanIdResolver)}
- * or {@link #setBeanIdProperty(Object)}, the methods {@link #addBean(Object)},
+ * {@link #setBeanIdResolver(AbstractBeanContainer.BeanIdResolver)} or
+ * {@link #setBeanIdProperty(Object)}, the methods {@link #addBean(Object)},
  * {@link #addBeanAfter(Object, Object)}, {@link #addBeanAt(int, Object)} and
  * {@link #addAll(java.util.Collection)} can be used to add items to the
  * container. If one of these methods is called, the resolver is used to
@@ -67,6 +70,8 @@ import java.util.Collection;
  * @see BeanItemContainer
  *
  * @since 6.5
+ *
+ * @deprecated As of 8.0, replaced by {@link ListDataProvider}
  */
 @Deprecated
 public class BeanContainer<IDTYPE, BEANTYPE>
@@ -79,7 +84,7 @@ public class BeanContainer<IDTYPE, BEANTYPE>
     /**
      * Adds the bean to the Container.
      *
-     * @see com.com.vaadin.v7.data.Container#addItem(Object)
+     * @see Container#addItem(Object)
      */
     @Override
     public BeanItem<BEANTYPE> addItem(IDTYPE itemId, BEANTYPE bean) {
@@ -93,8 +98,7 @@ public class BeanContainer<IDTYPE, BEANTYPE>
     /**
      * Adds the bean after the given item id.
      *
-     * @see com.com.vaadin.v7.data.Container.Ordered#addItemAfter(Object,
-     *      Object)
+     * @see Container.Ordered#addItemAfter(Object, Object)
      */
     @Override
     public BeanItem<BEANTYPE> addItemAfter(IDTYPE previousItemId,

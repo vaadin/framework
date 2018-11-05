@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -53,10 +53,8 @@ public class NativeSelectConnector
     @Override
     protected void init() {
         super.init();
-        getWidget().getListBox()
-                .setStyleName(NativeSelectState.STYLE_NAME + "-select");
         selectionChangeRegistration = getWidget().getListBox()
-                .addChangeHandler(e -> selectionRpc
+                .addChangeHandler(event -> selectionRpc
                         .select(getWidget().getListBox().getSelectedValue()));
     }
 
@@ -97,10 +95,14 @@ public class NativeSelectConnector
         ListBox listBox = getWidget().getListBox();
         boolean hasEmptyItem = listBox.getItemCount() > 0
                 && listBox.getValue(0).isEmpty();
+        getWidget().setEmptySelectionAllowed(getState().emptySelectionAllowed);
         if (hasEmptyItem && getState().emptySelectionAllowed) {
             listBox.setItemText(0, getState().emptySelectionCaption);
         } else if (hasEmptyItem && !getState().emptySelectionAllowed) {
             listBox.removeItem(0);
+            if (getWidget().getListBox().getSelectedIndex() == 0) {
+                getWidget().setSelectedItem(null);
+            }
         } else if (!hasEmptyItem && getState().emptySelectionAllowed) {
             listBox.insertItem(getState().emptySelectionCaption, 0);
             listBox.setValue(0, "");
@@ -151,5 +153,17 @@ public class NativeSelectConnector
             select.getListBox().removeItem(i);
         }
         updateSelectedItem();
+    }
+
+    @Override
+    public void setWidgetEnabled(boolean widgetEnabled) {
+        // add or remove v-disabled style name from the widget
+        super.setWidgetEnabled(widgetEnabled);
+        if (widgetEnabled) {
+            getWidget().getListBox().getElement().removeAttribute("disabled");
+        } else {
+            getWidget().getListBox().getElement().setAttribute("disabled",
+                    "disabled");
+        }
     }
 }

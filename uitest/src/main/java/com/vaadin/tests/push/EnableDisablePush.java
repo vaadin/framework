@@ -29,17 +29,14 @@ public class EnableDisablePush extends AbstractReindeerTestUI {
                 while (true) {
                     TimeUnit.MILLISECONDS.sleep(500);
 
-                    access(new Runnable() {
-                        @Override
-                        public void run() {
-                            log.log("Counter = " + c++);
-                            if (c == 3) {
-                                log.log("Disabling polling, enabling push");
-                                getPushConfiguration()
-                                        .setPushMode(PushMode.AUTOMATIC);
-                                setPollInterval(-1);
-                                log.log("Polling disabled, push enabled");
-                            }
+                    access(() -> {
+                        log.log("Counter = " + c++);
+                        if (c == 3) {
+                            log.log("Disabling polling, enabling push");
+                            getPushConfiguration()
+                                    .setPushMode(PushMode.AUTOMATIC);
+                            setPollInterval(-1);
+                            log.log("Polling disabled, push enabled");
                         }
                     });
                     if (c == 3) {
@@ -58,55 +55,38 @@ public class EnableDisablePush extends AbstractReindeerTestUI {
         getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
         log.log("Push enabled");
 
-        addComponent(new Button("Disable push", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                log.log("Disabling push");
-                getPushConfiguration().setPushMode(PushMode.DISABLED);
-                log.log("Push disabled");
-            }
+        addComponent(new Button("Disable push", event -> {
+            log.log("Disabling push");
+            getPushConfiguration().setPushMode(PushMode.DISABLED);
+            log.log("Push disabled");
         }));
 
-        addComponent(new Button("Enable push", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                log.log("Enabling push");
-                getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
-                log.log("Push enabled");
-            }
+        addComponent(new Button("Enable push", event -> {
+            log.log("Enabling push");
+            getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
+            log.log("Push enabled");
         }));
 
-        addComponent(new Button("Disable polling", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                log.log("Disabling poll");
-                setPollInterval(-1);
-                log.log("Poll disabled");
-            }
+        addComponent(new Button("Disable polling", even -> {
+            log.log("Disabling poll");
+            setPollInterval(-1);
+            log.log("Poll disabled");
         }));
 
-        addComponent(new Button("Enable polling", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                log.log("Enabling poll");
-                setPollInterval(1000);
-                log.log("Poll enabled");
-            }
+        addComponent(new Button("Enable polling", event -> {
+            log.log("Enabling poll");
+            setPollInterval(1000);
+            log.log("Poll enabled");
         }));
 
-        addComponent(
-                new Button("Disable push, re-enable from background thread",
-                        new Button.ClickListener() {
-                            @Override
-                            public void buttonClick(Button.ClickEvent event) {
-                                log.log("Disabling push, enabling polling");
-                                getPushConfiguration()
-                                        .setPushMode(PushMode.DISABLED);
-                                setPollInterval(1000);
-                                timer.schedule(new CounterTask(), new Date());
-                                log.log("Push disabled, polling enabled");
-                            }
-                        }));
+        addComponent(new Button(
+                "Disable push, re-enable from background thread", event -> {
+                    log.log("Disabling push, enabling polling");
+                    getPushConfiguration().setPushMode(PushMode.DISABLED);
+                    setPollInterval(1000);
+                    timer.schedule(new CounterTask(), new Date());
+                    log.log("Push disabled, polling enabled");
+                }));
 
         addComponent(log);
     }

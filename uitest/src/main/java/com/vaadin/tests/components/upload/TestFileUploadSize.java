@@ -9,9 +9,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.Receiver;
-import com.vaadin.ui.Upload.StartedEvent;
 
 public class TestFileUploadSize extends TestBase implements Receiver {
 
@@ -35,21 +33,12 @@ public class TestFileUploadSize extends TestBase implements Receiver {
             }
         });
         u.setId("UPL");
-        u.addStartedListener(new Upload.StartedListener() {
-
-            @Override
-            public void uploadStarted(StartedEvent event) {
-                expectedSize.setValue(String.valueOf(event.getContentLength()));
-            }
-        });
-        u.addFinishedListener(new Upload.FinishedListener() {
-
-            @Override
-            public void uploadFinished(FinishedEvent event) {
-                label.setValue("Upload finished. Name: " + event.getFilename());
-                receivedSize.setValue(String.valueOf(baos.size()));
-                baos.reset();
-            }
+        u.addStartedListener(event -> expectedSize
+                .setValue(String.valueOf(event.getContentLength())));
+        u.addFinishedListener(event -> {
+            label.setValue("Upload finished. Name: " + event.getFilename());
+            receivedSize.setValue(String.valueOf(baos.size()));
+            baos.reset();
         });
 
         expectedSize.setId("expected");

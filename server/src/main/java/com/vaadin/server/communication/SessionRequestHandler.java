@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@ package com.vaadin.server.communication;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinRequest;
@@ -52,7 +53,7 @@ public class SessionRequestHandler implements RequestHandler {
             VaadinResponse response) throws IOException {
         // Use a copy to avoid ConcurrentModificationException
         session.lock();
-        ArrayList<RequestHandler> requestHandlers;
+        List<RequestHandler> requestHandlers;
         try {
             requestHandlers = new ArrayList<>(session.getRequestHandlers());
         } finally {

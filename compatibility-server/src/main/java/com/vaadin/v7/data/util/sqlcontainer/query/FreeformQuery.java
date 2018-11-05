@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.util.sqlcontainer.RowItem;
@@ -33,6 +34,9 @@ import com.vaadin.v7.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.StatementHelper;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.filter.QueryBuilder;
 
+/**
+ * @deprecated As of 8.0, no replacement available.
+ */
 @SuppressWarnings("serial")
 @Deprecated
 public class FreeformQuery extends AbstractTransactionalQuery
@@ -69,7 +73,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
             JDBCConnectionPool connectionPool) {
         super(connectionPool);
         if (primaryKeyColumns == null) {
-            primaryKeyColumns = new ArrayList<>();
+            primaryKeyColumns = new ArrayList<String>();
         }
         if (primaryKeyColumns.contains("")) {
             throw new IllegalArgumentException(
@@ -264,7 +268,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
                 StatementHelper sh = ((FreeformStatementDelegate) delegate)
                         .getCountStatement();
                 if (sh != null && sh.getQueryString() != null
-                        && sh.getQueryString().length() > 0) {
+                        && !sh.getQueryString().isEmpty()) {
                     return true;
                 }
             } catch (UnsupportedOperationException e) {
@@ -273,7 +277,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
         }
         try {
             String queryString = delegate.getQueryString(0, 50);
-            return queryString != null && queryString.length() > 0;
+            return queryString != null && !queryString.isEmpty();
         } catch (UnsupportedOperationException e) {
             return false;
         }
@@ -462,20 +466,20 @@ public class FreeformQuery extends AbstractTransactionalQuery
 
     private String modifyWhereClause(Object... keys) {
         // Build the where rules for the provided keys
-        StringBuffer where = new StringBuffer();
+        StringBuilder where = new StringBuilder();
         for (int ix = 0; ix < primaryKeyColumns.size(); ix++) {
             where.append(QueryBuilder.quote(primaryKeyColumns.get(ix)));
             if (keys[ix] == null) {
                 where.append(" IS NULL");
             } else {
-                where.append(" = '").append(keys[ix]).append("'");
+                where.append(" = '").append(keys[ix]).append('\'');
             }
             if (ix < primaryKeyColumns.size() - 1) {
                 where.append(" AND ");
             }
         }
         // Is there already a WHERE clause in the query string?
-        int index = queryString.toLowerCase().indexOf("where ");
+        int index = queryString.toLowerCase(Locale.ROOT).indexOf("where ");
         if (index > -1) {
             // Rewrite the where clause
             return queryString.substring(0, index) + "WHERE " + where + " AND "

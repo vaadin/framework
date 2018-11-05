@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,6 +20,7 @@ import com.google.gwt.dom.client.Element;
 
 public class ComputedStyle {
 
+    private static final String CONTENT_BOX = "content-box";
     protected final JavaScriptObject computedStyle;
     private final Element elem;
 
@@ -32,7 +33,6 @@ public class ComputedStyle {
      *
      * @param elem
      *            the element
-     * @return the computed style
      */
     public ComputedStyle(Element elem) {
         computedStyle = getComputedStyle(elem);
@@ -41,20 +41,21 @@ public class ComputedStyle {
 
     private static native JavaScriptObject getComputedStyle(Element elem)
     /*-{
-      if(elem.nodeType != 1) {
+      if (elem.nodeType != 1) {
           return {};
       }
-    
-      if($wnd.document.defaultView && $wnd.document.defaultView.getComputedStyle) {
+
+      if ($wnd.document.defaultView && $wnd.document.defaultView.getComputedStyle) {
           return $wnd.document.defaultView.getComputedStyle(elem, null);
       }
-    
-      if(elem.currentStyle) {
+
+      if (elem.currentStyle) {
           return elem.currentStyle;
       }
     }-*/;
 
     /**
+     * Gets the value of the given property.
      *
      * @param name
      *            name of the CSS property in camelCase
@@ -65,58 +66,58 @@ public class ComputedStyle {
     /*-{
         var cs = this.@com.vaadin.client.ComputedStyle::computedStyle;
         var elem = this.@com.vaadin.client.ComputedStyle::elem;
-    
+
         // Border values need to be checked separately. The width might have a
         // meaningful value even if the border style is "none". In that case the
         // value should be 0.
-        if(name.indexOf("border") > -1 && name.indexOf("Width") > -1) {
+        if (name.indexOf("border") > -1 && name.indexOf("Width") > -1) {
             var borderStyleProp = name.substring(0,name.length-5) + "Style";
-            if(cs.getPropertyValue)
+            if (cs.getPropertyValue)
                 var borderStyle = cs.getPropertyValue(borderStyleProp);
             else // IE
                 var borderStyle = cs[borderStyleProp];
-            if(borderStyle == "none")
+            if (borderStyle == "none")
                 return "0px";
         }
-    
-        if(cs.getPropertyValue) {
-    
+
+        if (cs.getPropertyValue) {
+
             // Convert name to dashed format
-            name = name.replace(/([A-Z])/g, "-$1").toLowerCase();
+            name = name.replace(/([A-Z])/g, "-$1").toLowerCase('en');
             var ret = cs.getPropertyValue(name);
-    
+
         } else {
-    
+
             var ret = cs[name];
             var style = elem.style;
-    
+
             // From the awesome hack by Dean Edwards
             // http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
-    
+
             // If we're not dealing with a regular pixel number
             // but a number that has a weird ending, we need to convert it to pixels
                 if ( !/^\d+(px)?$/i.test( ret ) && /^\d/.test( ret ) ) {
                     // Remember the original values
                     var left = style.left, rsLeft = elem.runtimeStyle.left;
-    
+
                     // Put in the new values to get a computed value out
                     elem.runtimeStyle.left = cs.left;
                     style.left = ret || 0;
                     ret = style.pixelLeft + "px";
-    
+
                     // Revert the changed values
                     style.left = left;
                     elem.runtimeStyle.left = rsLeft;
                 }
-    
+
         }
-    
+
         // Normalize margin values. This is not totally valid, but in most cases
         // it is what the user wants to know.
-        if(name.indexOf("margin") > -1 && ret == "auto") {
+        if (name.indexOf("margin") > -1 && ret == "auto") {
             return "0px";
         }
-    
+
         // Some browsers return undefined width and height values as "auto", so
         // we need to retrieve those ourselves.
         if (name == "width" && ret == "auto") {
@@ -124,13 +125,13 @@ public class ComputedStyle {
         } else if (name == "height" && ret == "auto") {
             ret = elem.clientHeight + "px";
         }
-    
+
         return ret;
-    
+
     }-*/;
 
     /**
-     * Retrieves the given computed property as an integer
+     * Retrieves the given computed property as an integer.
      *
      * Returns 0 if the property cannot be converted to an integer
      *
@@ -147,7 +148,7 @@ public class ComputedStyle {
     }
 
     /**
-     * Retrieves the given computed property as a double
+     * Retrieves the given computed property as a double.
      *
      * Returns NaN if the property cannot be converted to a double
      *
@@ -165,8 +166,10 @@ public class ComputedStyle {
     }
 
     /**
-     * Get current margin values from the DOM. The array order is the default
-     * CSS order: top, right, bottom, left.
+     * Get current margin values from the DOM.
+     *
+     * @return an array containing four values for the four edges, in the
+     *         default CSS order: top, right, bottom, left.
      */
     public final int[] getMargin() {
         int[] margin = { 0, 0, 0, 0 };
@@ -178,8 +181,10 @@ public class ComputedStyle {
     }
 
     /**
-     * Get current padding values from the DOM. The array order is the default
-     * CSS order: top, right, bottom, left.
+     * Get current padding values from the DOM.
+     *
+     * @return an array containing four values for the four edges, in the
+     *         default CSS order: top, right, bottom, left.
      */
     public final int[] getPadding() {
         int[] padding = { 0, 0, 0, 0 };
@@ -191,8 +196,10 @@ public class ComputedStyle {
     }
 
     /**
-     * Get current border values from the DOM. The array order is the default
-     * CSS order: top, right, bottom, left.
+     * Get current border values from the DOM.
+     *
+     * @return an array containing four values for the four edges, in the
+     *         default CSS order: top, right, bottom, left.
      */
     public final int[] getBorder() {
         int[] border = { 0, 0, 0, 0 };
@@ -226,7 +233,7 @@ public class ComputedStyle {
     /**
      * Takes a String value e.g. "12px" and parses that to Integer 12.
      *
-     * @param String
+     * @param value
      *            a value starting with a number
      * @return Integer the value from the string before any non-numeric
      *         characters. If the value cannot be parsed to a number, returns
@@ -256,8 +263,8 @@ public class ComputedStyle {
      *
      * @param String
      *            a value starting with a number
-     * @return int the value from the string before any non-numeric characters.
-     *         If the value cannot be parsed to a number, returns 0.
+     * @return the value from the string before any non-numeric characters. If
+     *         the value cannot be parsed to a number, returns 0.
      */
     private static native int parseIntNative(final String value)
     /*-{
@@ -282,7 +289,7 @@ public class ComputedStyle {
     }-*/;
 
     /**
-     * Returns the sum of the top and bottom border width
+     * Returns the sum of the top and bottom border width.
      *
      * @since 7.5.3
      * @return the sum of the top and bottom border
@@ -295,7 +302,7 @@ public class ComputedStyle {
     }
 
     /**
-     * Returns the sum of the left and right border width
+     * Returns the sum of the left and right border width.
      *
      * @since 7.5.3
      * @return the sum of the left and right border
@@ -308,7 +315,7 @@ public class ComputedStyle {
     }
 
     /**
-     * Returns the sum of the top and bottom padding
+     * Returns the sum of the top and bottom padding.
      *
      * @since 7.5.3
      * @return the sum of the top and bottom padding
@@ -321,7 +328,7 @@ public class ComputedStyle {
     }
 
     /**
-     * Returns the sum of the top and bottom padding
+     * Returns the sum of the top and bottom padding.
      *
      * @since 7.5.3
      * @return the sum of the left and right padding
@@ -334,7 +341,7 @@ public class ComputedStyle {
     }
 
     /**
-     * Returns the sum of the top and bottom margin
+     * Returns the sum of the top and bottom margin.
      *
      * @since 7.5.6
      * @return the sum of the top and bottom margin
@@ -347,7 +354,7 @@ public class ComputedStyle {
     }
 
     /**
-     * Returns the sum of the top and bottom margin
+     * Returns the sum of the left and right margin.
      *
      * @since 7.5.6
      * @return the sum of the left and right margin
@@ -357,6 +364,48 @@ public class ComputedStyle {
         marginWidth += getDoubleProperty("marginRight");
 
         return marginWidth;
+    }
+
+    /**
+     * Returns the current height, padding and border from the DOM.
+     *
+     * @return the computed height including padding and borders
+     */
+    public double getHeightIncludingBorderPadding() {
+        double h = getHeight();
+        if (BrowserInfo.get().isIE() || isContentBox()) {
+            // IE11 always returns only the height without padding/border
+            h += getBorderHeight() + getPaddingHeight();
+        }
+
+        return h;
+    }
+
+    /**
+     * Returns the current width, padding and border from the DOM.
+     *
+     * @return the computed width including padding and borders
+     */
+    public double getWidthIncludingBorderPadding() {
+        double w = getWidth();
+        if (BrowserInfo.get().isIE() || isContentBox()) {
+            // IE11 always returns only the width without padding/border
+            w += getBorderWidth() + getPaddingWidth();
+        }
+        return w;
+    }
+
+    private boolean isContentBox() {
+        return getBoxSizing().equals(CONTENT_BOX);
+    }
+
+    /**
+     * Returns the value of the boxSizing property.
+     *
+     * @return the value of the boxSizing property
+     */
+    private String getBoxSizing() {
+        return getProperty("boxSizing");
     }
 
 }

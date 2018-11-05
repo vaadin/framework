@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,8 +16,10 @@
 package com.vaadin.ui.components.grid;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 
@@ -130,4 +132,15 @@ public interface HeaderRow extends Serializable {
      *            the style name to set or null to not use any style name
      */
     public void setStyleName(String styleName);
+
+    /**
+     * Gets a collection of all components inside this row.
+     * <p>
+     * The order of the components in the returned collection is not specified.
+     *
+     * @return a collection of components in the row
+     *
+     * @since 8.0.3
+     */
+    public Collection<? extends Component> getComponents();
 }

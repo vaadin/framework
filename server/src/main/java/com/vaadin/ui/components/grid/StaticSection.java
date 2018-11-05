@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@ package com.vaadin.ui.components.grid;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -34,6 +35,7 @@ import java.util.stream.Stream;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.ui.grid.SectionState.CellState;
@@ -157,6 +159,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
                         iterator.remove();
                     }
                 }
+                cell.detach();
             }
         }
 
@@ -387,6 +390,13 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
             for (CELL cell : cells.values()) {
                 cell.detach();
             }
+            for (CellState cellState : rowState.cellGroups.keySet()) {
+                if (cellState.type == GridStaticCellType.WIDGET
+                        && cellState.connector != null) {
+                    ((Component) cellState.connector).setParent(null);
+                    cellState.connector = null;
+                }
+            }
         }
 
         void checkIfAlreadyMerged(String columnId) {
@@ -404,6 +414,21 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
 
         void addMergedCell(CELL newCell, Set<String> columnGroup) {
             rowState.cellGroups.put(newCell.getCellState(), columnGroup);
+        }
+
+        public Collection<? extends Component> getComponents() {
+            List<Component> components = new ArrayList<>();
+            cells.forEach((id, cell) -> {
+                if (cell.getCellType() == GridStaticCellType.WIDGET) {
+                    components.add(cell.getComponent());
+                }
+            });
+            rowState.cellGroups.forEach((cellState, columnIds) -> {
+                if (cellState.connector != null) {
+                    components.add((Component) cellState.connector);
+                }
+            });
+            return components;
         }
     }
 
@@ -534,7 +559,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         public GridStaticCellType getCellType() {
             return cellState.type;
         }
-        
+
         /**
          * Returns the custom style name for this cell.
          *
@@ -548,8 +573,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          * Sets a custom style name for this cell.
          *
          * @param styleName
-         *            the style name to set or null to not use any style
-         *            name
+         *            the style name to set or null to not use any style name
          */
         public void setStyleName(String styleName) {
             cellState.styleName = styleName;
@@ -568,7 +592,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         protected void readDesign(Element cellElement,
                 DesignContext designContext) {
             if (!cellElement.hasAttr("plain-text")) {
-                if (cellElement.children().size() > 0
+                if (!cellElement.children().isEmpty()
                         && cellElement.child(0).tagName().contains("-")) {
                     setComponent(
                             designContext.readDesign(cellElement.child(0)));
@@ -591,6 +615,75 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
 
         void detach() {
             removeComponentIfPresent();
+        }
+
+        /**
+         * Gets the tooltip for the cell.
+         * <p>
+         * The tooltip is shown in the mode returned by
+         * {@link #getDescriptionContentMode()}.
+         *
+         * @since 8.4
+         */
+        public String getDescription() {
+            return cellState.description;
+        }
+
+        /**
+         * Sets the tooltip for the cell.
+         * <p>
+         * By default, tooltips are shown as plain text. For HTML tooltips, see
+         * {@link #setDescription(String, ContentMode)} or
+         * {@link #setDescriptionContentMode(ContentMode)}.
+         *
+         * @param description
+         *            the tooltip to show when hovering the cell
+         * @since 8.4
+         */
+        public void setDescription(String description) {
+            cellState.description = description;
+        }
+
+        /**
+         * Sets the tooltip for the cell to be shown with the given content
+         * mode.
+         *
+         * @see ContentMode
+         * @param description
+         *            the tooltip to show when hovering the cell
+         * @param descriptionContentMode
+         *            the content mode to use for the tooltip (HTML or plain
+         *            text)
+         * @since 8.4
+         */
+        public void setDescription(String description,
+                ContentMode descriptionContentMode) {
+            setDescription(description);
+            setDescriptionContentMode(descriptionContentMode);
+        }
+
+        /**
+         * Gets the content mode for the tooltip.
+         *
+         * @see ContentMode
+         * @return the content mode for the tooltip
+         * @since 8.4
+         */
+        public ContentMode getDescriptionContentMode() {
+            return cellState.descriptionContentMode;
+        }
+
+        /**
+         * Sets the content mode for the tooltip.
+         *
+         * @see ContentMode
+         * @param descriptionContentMode
+         *            the content mode for the tooltip
+         * @since 8.4
+         */
+        public void setDescriptionContentMode(
+                ContentMode descriptionContentMode) {
+            cellState.descriptionContentMode = descriptionContentMode;
         }
     }
 
@@ -775,4 +868,28 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         return Collections.unmodifiableList(rows);
     }
 
+    /**
+     * Sets the visibility of this section.
+     *
+     * @param visible
+     *            {@code true} if visible; {@code false} if not
+     *
+     * @since 8.1.1
+     */
+    public void setVisible(boolean visible) {
+        if (getState(false).visible != visible) {
+            getState(true).visible = visible;
+        }
+    }
+
+    /**
+     * Gets the visibility of this section.
+     *
+     * @return {@code true} if visible; {@code false} if not
+     *
+     * @since 8.1.1
+     */
+    public boolean isVisible() {
+        return getState(false).visible;
+    }
 }

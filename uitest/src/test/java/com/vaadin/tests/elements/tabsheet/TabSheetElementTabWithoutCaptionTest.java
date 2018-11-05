@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2014 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.elements.tabsheet;
 
 import static org.junit.Assert.assertEquals;
@@ -104,7 +89,7 @@ public class TabSheetElementTabWithoutCaptionTest extends MultiBrowserTest {
         List<WebElement> openTabCaptionElements = tab
                 .findElement(By.className("v-caption"))
                 .findElements(By.className("v-captiontext"));
-        if (openTabCaptionElements.size() > 0) {
+        if (!openTabCaptionElements.isEmpty()) {
             String openTabCaption = openTabCaptionElements.get(0).getText();
             assertEquals("Wrong tab is open.", caption, openTabCaption);
         } else {
@@ -127,9 +112,9 @@ public class TabSheetElementTabWithoutCaptionTest extends MultiBrowserTest {
         boolean tabsOpen = false;
         for (int i = 0; i < tabs.size(); i++) {
             WebElement tab = tabs.get(i);
-            boolean isOpened = tab
+            boolean isOpened = !tab
                     .findElements(By.className("v-tabsheet-tabitem-selected"))
-                    .size() > 0;
+                    .isEmpty();
             if (isOpened) {
                 tabsOpen = true;
                 assertEquals("The wrong tab is open.", index, i);

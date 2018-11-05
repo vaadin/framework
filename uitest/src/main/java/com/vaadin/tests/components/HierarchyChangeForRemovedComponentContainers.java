@@ -1,7 +1,6 @@
 package com.vaadin.tests.components;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
@@ -26,13 +25,8 @@ public class HierarchyChangeForRemovedComponentContainers extends TestBase {
 
         compose();
 
-        addComponent(new Button("Replace layout with button",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        compose2();
-                    }
-                }));
+        addComponent(
+                new Button("Replace layout with button", event -> compose2()));
     }
 
     private void compose() {

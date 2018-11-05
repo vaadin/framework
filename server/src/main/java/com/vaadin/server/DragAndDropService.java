@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,9 +39,18 @@ import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.dd.DragEventType;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.dnd.DragSourceExtension;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 import elemental.json.JsonObject;
 
+/**
+ *
+ * @author Vaadin Ltd
+ * @deprecated Since 8.1, no direct replacement, see {@link DragSourceExtension}
+ *             and {@link DropTargetExtension}.
+ */
+@Deprecated
 public class DragAndDropService implements VariableOwner, ClientConnector {
 
     private int lastVisitId;
@@ -206,7 +215,7 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         variables = (Map<String, Object>) variables.get("tra");
 
         Transferable transferable = null;
-        if (sourceComponent != null && sourceComponent instanceof DragSource) {
+        if (sourceComponent instanceof DragSource) {
             transferable = ((DragSource) sourceComponent)
                     .getTransferable(variables);
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -74,7 +74,7 @@ public class VaadinPortletSession extends VaadinSession {
     private final Map<String, String> sharedParameterActionValueMap = new HashMap<>();
 
     /**
-     * Create a portlet service session for the given portlet service
+     * Create a portlet service session for the given portlet service.
      *
      * @param service
      *            the portlet service to which the new session belongs

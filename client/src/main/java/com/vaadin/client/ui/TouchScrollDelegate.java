@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,8 @@ package com.vaadin.client.ui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.logging.Logger;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.Duration;
@@ -37,7 +39,6 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.VConsole;
 
 /**
  * Provides one finger touch scrolling for elements with once scrollable
@@ -94,14 +95,14 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     private int deltaScrollPos;
     private boolean transitionOn = false;
     private int finalScrollTop;
-    private ArrayList<Element> layers;
+    private List<Element> layers;
     private boolean moved;
     private ScrollHandler scrollHandler;
 
     private static TouchScrollDelegate activeScrollDelegate;
 
-    private static final boolean androidWithBrokenScrollTop = BrowserInfo.get()
-            .isAndroidWithBrokenScrollTop();
+    private static final boolean ANDROID_WITH_BROKEN_SCROLL_TOP = BrowserInfo
+            .get().isAndroidWithBrokenScrollTop();
 
     /**
      * A helper class for making a widget scrollable. Uses native scrolling if
@@ -172,7 +173,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         }
 
         public void debug(Element e) {
-            VConsole.log("Classes: " + e.getClassName() + " overflow: "
+            getLogger().info("Classes: " + e.getClassName() + " overflow: "
                     + e.getStyle().getProperty("overflow") + " w-o-s: "
                     + e.getStyle().getProperty("WebkitOverflowScrolling"));
         }
@@ -310,7 +311,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         }
         Touch touch = nativeEvent.getTouches().get(0);
         if (detectScrolledElement(touch)) {
-            VConsole.log("TouchDelegate takes over");
+            getLogger().info("TouchDelegate takes over");
             nativeEvent.stopPropagation();
             handlerRegistration = Event.addNativePreviewHandler(this);
             activeScrollDelegate = this;
@@ -320,7 +321,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
             nextEvent = 1;
 
             origScrollTop = getScrollTop();
-            VConsole.log("ST" + origScrollTop);
+            getLogger().info("ST" + origScrollTop);
 
             moved = false;
             // event.preventDefault();
@@ -329,7 +330,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     private int getScrollTop() {
-        if (androidWithBrokenScrollTop) {
+        if (ANDROID_WITH_BROKEN_SCROLL_TOP) {
             if (scrolledElement.getPropertyJSO("_vScrollTop") != null) {
                 return scrolledElement.getPropertyInt("_vScrollTop");
             }
@@ -356,10 +357,10 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         if (time <= 0) {
             time = 1; // get animation and transition end event
         }
-        VConsole.log("Animate " + time + " " + from + " " + to);
+        getLogger().info("Animate " + time + " " + from + " " + to);
         int translateTo = -to + origScrollTop;
         int fromY = -from + origScrollTop;
-        if (androidWithBrokenScrollTop) {
+        if (ANDROID_WITH_BROKEN_SCROLL_TOP) {
             fromY -= origScrollTop;
             translateTo -= origScrollTop;
         }
@@ -379,7 +380,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
      * scrolltop, causing onscroll event.
      */
     private void moveTransformationToScrolloffset() {
-        if (androidWithBrokenScrollTop) {
+        if (ANDROID_WITH_BROKEN_SCROLL_TOP) {
             scrolledElement.setPropertyInt("_vScrollTop", finalScrollTop);
             if (scrollHandler != null) {
                 scrollHandler.onScroll(null);
@@ -432,7 +433,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     private void onTouchMove(NativeEvent event) {
         if (!moved) {
             double l = (getTimeStamp() - eventTimeStamps[0]);
-            VConsole.log(l + " ms from start to move");
+            getLogger().info(l + " ms from start to move");
         }
         boolean handleMove = readPositionAndSpeed(event);
         if (handleMove) {
@@ -464,7 +465,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
     private void quickSetScrollPosition(int deltaX, int deltaY) {
         deltaScrollPos = deltaY;
-        if (androidWithBrokenScrollTop) {
+        if (ANDROID_WITH_BROKEN_SCROLL_TOP) {
             deltaY += origScrollTop;
             translateTo(-deltaY);
         } else {
@@ -526,22 +527,22 @@ public class TouchScrollDelegate implements NativePreviewHandler {
             double pixelsPerMs = calculateSpeed();
             // we are currently within scrollable area, calculate pixels that
             // we'll move due to momentum
-            VConsole.log("pxPerMs" + pixelsPerMs);
+            getLogger().info("pxPerMs" + pixelsPerMs);
             pixelsToMove = (int) (0.5 * pixelsPerMs * pixelsPerMs / FRICTION);
             if (pixelsPerMs < 0) {
                 pixelsToMove = -pixelsToMove;
             }
-            // VConsole.log("pixels to move" + pixelsToMove);
+            // getLogger().info("pixels to move" + pixelsToMove);
 
             finalY = currentY + pixelsToMove;
 
             if (finalY > maxFinalY + getMaxOverScroll()) {
-                // VConsole.log("To max overscroll");
+                // getLogger().info("To max overscroll");
                 finalY = getMaxFinalY() + getMaxOverScroll();
                 int fixedPixelsToMove = finalY - currentY;
                 pixelsToMove = fixedPixelsToMove;
             } else if (finalY < 0 - getMaxOverScroll()) {
-                // VConsole.log("to min overscroll");
+                // getLogger().info("to min overscroll");
                 finalY = -getMaxOverScroll();
                 int fixedPixelsToMove = finalY - currentY;
                 pixelsToMove = fixedPixelsToMove;
@@ -555,21 +556,21 @@ public class TouchScrollDelegate implements NativePreviewHandler {
             duration = getAnimationTimeForDistance(pixelsToMove);
         }
         if (duration > MAX_DURATION) {
-            VConsole.log("Max animation time. " + duration);
+            getLogger().info("Max animation time. " + duration);
             duration = MAX_DURATION;
         }
         finalScrollTop = finalY;
 
         if (Math.abs(pixelsToMove) < 3 || duration < 20) {
-            VConsole.log("Small 'momentum' " + pixelsToMove + " |  " + duration
-                    + " Skipping animation,");
+            getLogger().info("Small 'momentum' " + pixelsToMove + " |  "
+                    + duration + " Skipping animation,");
             moveTransformationToScrolloffset();
             return;
         }
 
         int translateTo = -finalY + origScrollTop;
         int fromY = -currentY + origScrollTop;
-        if (androidWithBrokenScrollTop) {
+        if (ANDROID_WITH_BROKEN_SCROLL_TOP) {
             fromY -= origScrollTop;
             translateTo -= origScrollTop;
         }
@@ -578,7 +579,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
     private double calculateSpeed() {
         if (nextEvent < EVENTS_FOR_SPEED_CALC) {
-            VConsole.log("Not enough data for speed calculation");
+            getLogger().info("Not enough data for speed calculation");
             // not enough data for decent speed calculation, no momentum :-(
             return 0;
         }
@@ -651,7 +652,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     private int getMaxOverScroll() {
-        return androidWithBrokenScrollTop ? 0
+        return ANDROID_WITH_BROKEN_SCROLL_TOP ? 0
                 : scrolledElement.getClientHeight() / 3;
     }
 
@@ -700,7 +701,8 @@ public class TouchScrollDelegate implements NativePreviewHandler {
             }
             break;
         default:
-            VConsole.log("Non touch event:" + event.getNativeEvent().getType());
+            getLogger().info(
+                    "Non touch event:" + event.getNativeEvent().getType());
             event.cancel();
             break;
         }
@@ -711,7 +713,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     /**
-     * long calcucation are not very efficient in GWT, so this helper method
+     * Long calculation are not very efficient in GWT, so this helper method
      * returns timestamp in double.
      *
      * @return
@@ -720,4 +722,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         return Duration.currentTimeMillis();
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(TouchScrollDelegate.class.getName());
+    }
 }

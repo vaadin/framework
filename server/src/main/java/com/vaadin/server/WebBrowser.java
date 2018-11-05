@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,6 +42,7 @@ public class WebBrowser implements Serializable {
     private int rawTimezoneOffset = 0;
     private int dstSavings;
     private boolean dstInEffect;
+    private String timeZoneId;
     private boolean touchDevice;
 
     private VBrowserDetails browserDetails;
@@ -141,7 +142,9 @@ public class WebBrowser implements Serializable {
     }
 
     /**
-     * Tests whether the user is using Safari.
+     * Tests whether the user is using Safari. Note that Chrome on iOS is not
+     * detected as Safari but as Chrome although the underlying browser engine
+     * is the same.
      *
      * @return true if the user is using Safari, false if the user is not using
      *         Safari or if no information on the browser is present
@@ -244,6 +247,20 @@ public class WebBrowser implements Serializable {
     }
 
     /**
+     * Gets the complete browser version as string. The version is given by the
+     * browser through the user agent string and usually consists of
+     * dot-separated numbers. Note that the string may contain characters other
+     * than dots and digits.
+     *
+     * @return the complete browser version or {@code null} if unknown
+     * @since 8.4
+     */
+    public String getBrowserVersion() {
+        return browserDetails != null ? browserDetails.getBrowserVersion()
+                : null;
+    }
+
+    /**
      * Tests whether the user is using Linux.
      *
      * @return true if the user is using Linux, false if the user is not using
@@ -328,6 +345,17 @@ public class WebBrowser implements Serializable {
     }
 
     /**
+     * Tests if the browser is run on ChromeOS (e.g. a Chromebook).
+     *
+     * @return true if run on ChromeOS false if the user is not using ChromeOS
+     *         or if no information on the browser is present
+     * @since 8.1.1
+     */
+    public boolean isChromeOS() {
+        return browserDetails.isChromeOS();
+    }
+
+    /**
      * Returns the browser-reported TimeZone offset in milliseconds from GMT.
      * This includes possible daylight saving adjustments, to figure out which
      * TimeZone the user actually might be in, see
@@ -338,6 +366,19 @@ public class WebBrowser implements Serializable {
      */
     public int getTimezoneOffset() {
         return timezoneOffset;
+    }
+
+    /**
+     * Returns the TimeZone Id (like "Europe/Helsinki") provided by the browser
+     * (if the browser supports this feature).
+     *
+     * @return the TimeZone Id if provided by the browser, null otherwise.
+     * @see <a href=
+     *      "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat/resolvedOptions">Intl.DateTimeFormat.prototype.resolvedOptions()</a>
+     * @since 8.2
+     */
+    public String getTimeZoneId() {
+        return timeZoneId;
     }
 
     /**
@@ -437,7 +478,7 @@ public class WebBrowser implements Serializable {
      * @param touchDevice
      */
     void updateClientSideDetails(String sw, String sh, String tzo, String rtzo,
-            String dstSavings, String dstInEffect, String curDate,
+            String dstSavings, String dstInEffect, String tzId, String curDate,
             boolean touchDevice) {
         if (sw != null) {
             try {
@@ -474,6 +515,11 @@ public class WebBrowser implements Serializable {
         if (dstInEffect != null) {
             this.dstInEffect = Boolean.parseBoolean(dstInEffect);
         }
+        if (tzId == null || "undefined".equals(tzId)) {
+            timeZoneId = null;
+        } else {
+            timeZoneId = tzId;
+        }
         if (curDate != null) {
             try {
                 long curTime = Long.parseLong(curDate);
@@ -497,7 +543,7 @@ public class WebBrowser implements Serializable {
         locale = request.getLocale();
         address = request.getRemoteAddr();
         secureConnection = request.isSecure();
-        // Headers are case insensitive according to the specifiation but are
+        // Headers are case insensitive according to the specification but are
         // case sensitive in Weblogic portal...
         String agent = request.getHeader("User-Agent");
 
@@ -512,6 +558,7 @@ public class WebBrowser implements Serializable {
                     request.getParameter("v-rtzo"),
                     request.getParameter("v-dstd"),
                     request.getParameter("v-dston"),
+                    request.getParameter("v-tzid"),
                     request.getParameter("v-curdate"),
                     request.getParameter("v-td") != null);
         }
@@ -538,4 +585,19 @@ public class WebBrowser implements Serializable {
         return browserDetails.isTooOldToFunctionProperly();
     }
 
+    /**
+     * Checks if the browser supports ECMAScript 6, based on the user agent.
+     *
+     * @return <code>true</code> if the browser supports ES6, <code>false</code>
+     *         otherwise.
+     * @since 8.1
+     */
+    public boolean isEs6Supported() {
+        if (browserDetails == null) {
+            // Don't know, so assume no
+            return false;
+        }
+        return browserDetails.isEs6Supported();
+
+    }
 }

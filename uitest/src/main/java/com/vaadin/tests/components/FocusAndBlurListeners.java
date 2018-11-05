@@ -2,9 +2,7 @@ package com.vaadin.tests.components;
 
 import java.util.Date;
 
-import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
-import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
@@ -21,25 +19,19 @@ import com.vaadin.v7.ui.OptionGroup;
 
 public class FocusAndBlurListeners extends TestBase {
 
-    private FocusListener focusListener = new FocusListener() {
-
-        @Override
-        public void focus(FocusEvent event) {
-            Label msg = new Label(new Date() + " Focused "
-                    + event.getComponent().getCaption());
-            messages.addComponentAsFirst(msg);
-        }
-    };
-    private BlurListener blurListener = new BlurListener() {
-
-        @Override
-        public void blur(BlurEvent event) {
-            Label msg = new Label(new Date() + " Blurred "
-                    + event.getComponent().getCaption());
-            messages.addComponentAsFirst(msg);
-        }
-    };
     private VerticalLayout messages = new VerticalLayout();
+
+    private FocusListener focusListener = event -> {
+        Label msg = new Label(
+                new Date() + " Focused " + event.getComponent().getCaption());
+        messages.addComponentAsFirst(msg);
+    };
+
+    private BlurListener blurListener = event -> {
+        Label msg = new Label(
+                new Date() + " Blurred " + event.getComponent().getCaption());
+        messages.addComponentAsFirst(msg);
+    };
 
     @Override
     protected void setup() {
@@ -48,10 +40,10 @@ public class FocusAndBlurListeners extends TestBase {
         TextField tf = new TextField("TextField");
         l.addComponent(tf);
 
-        AbstractDateField df = new TestDateField("DateField");
+        AbstractDateField<?, ?> df = new TestDateField("DateField");
         l.addComponent(df);
 
-        ComboBox cb = new ComboBox("ComboBox");
+        ComboBox<String> cb = new ComboBox<>("ComboBox");
         l.addComponent(cb);
 
         Button btn = new Button("Button");
@@ -78,7 +70,6 @@ public class FocusAndBlurListeners extends TestBase {
             @Override
             public void buttonClick(ClickEvent event) {
                 ogm.addItem("newItem" + i++);
-
             }
         });
 
@@ -100,7 +91,6 @@ public class FocusAndBlurListeners extends TestBase {
         ogm.addBlurListener(blurListener);
 
         l.addComponent(messages);
-
     }
 
     private OptionGroup createOptionGroup(String caption) {

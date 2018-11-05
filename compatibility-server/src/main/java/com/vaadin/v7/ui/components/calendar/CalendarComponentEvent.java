@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,13 +24,14 @@ import com.vaadin.v7.ui.Calendar;
  * @since 7.1
  * @author Vaadin Ltd.
  *
+ * @deprecated As of 8.0, no replacement available.
  */
 @SuppressWarnings("serial")
 @Deprecated
 public class CalendarComponentEvent extends Component.Event {
 
     /**
-     * Set the source of the event
+     * Set the source of the event.
      *
      * @param source
      *            The source calendar

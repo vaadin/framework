@@ -1,0 +1,193 @@
+---
+title: Using Font Icons
+order: 53
+layout: page
+---
+
+[[using-font-icons-in-vaadin-7.2]]
+= Using font icons in Vaadin 7.2
+
+A “font icon” is an icon that is a glyph (essentially a character) from
+a font. A font that is made for this purpose (containing only icons) is
+called an “icon font”. Font icons scale well (being vectors), so you do
+not have to make icons for a specific pixel size. Icon fonts are also
+typically very light-weight (in bytes), and easy to use once set up.
+
+Vaadin 7.2 comes with generic support for font icons, and has the
+popular http://fortawesome.github.io/Font-Awesome/[FontAwesome] icon font
+built-in. The support is ‘generic’, in the sense that it does not
+include some of the advanced styling options specifically available in
+FontAwesome (such as spinning icons). 
+
+FontAwesome is included in the theme by default, but the fonts are only
+loaded by the browser when used. If needed, you can also remove the CSS,
+minimize the font, or make a custom font.
+
+A demo application showing the result is
+https://github.com/Porotype/FontIconDemo[available onGitHub] 
+(https://github.com/Porotype/FontIconDemo/tree/master/src/com/example/fonticondemo[java],
+https://github.com/Porotype/FontIconDemo/blob/master/WebContent/VAADIN/themes/fonticondemo/fonticondemo.scss[scss])
+
+[[using-fontawesome]]
+Using FontAwesome
+~~~~~~~~~~~~~~~~~
+
+You can use font icons with the familiar `setIcon()` method. It looks like
+this, when using the built-in FontAwesome:
+
+[source,java]
+....
+button.setIcon(FontAwesome.BOOKMARK);
+....
+
+You can also easily embed an icon in any place that allows HTML: 
+
+[source,java]
+....
+label.setContentMode(ContentMode.HTML);
+label.setValue("Press " + FontAwesome.BOOKMARK.getHtml() + " to bookmark");
+....
+
+[[making-a-custom-set-of-icons]]
+Making a custom set of icons
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are many tools for making icons, and icon fonts. One of our
+favorite tools is http://icomoon.io/app[IcoMoon], which is an excellent
+online application where you can pick icons from a vast library of
+ready-made icon fonts, to compose your own set of icons. When you’re
+done, you can download a zip that contains your font files - just copy
+the ‘fonts’ folder to your theme.
+
+1.  Browse to http://icomoon.io/app
+2.  _Add icons from library_ (the first time, some icons sets are added
+automatically)
+3.  _Add_ the icon set(s) you fancy (notice the licenses)
+4.  Mark the icons you want in your font
+5.  _Download_ the font
+
+In IcoMoon you can also produce a customized version of FontAwesome, if
+you for instance want to remove unused icons, or swap individual icons.
+You can also re-upload your custom icon font, if you want to make
+changes or additions to it later. 
+
+1.  _Import icons_
+2.  Add/delete/swap icons
+3.  _Download_ the new font
+
+When using ready-made icons, please pay attention to the licenses the
+different icon sets have.
+
+[[using-a-custom-icon-font]]
+Using a custom icon font
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+To use your own icon set, you need to do four things: 
+
+1.  Make an icon font
+2.  Make it easily usable from Java and
+3.  Load the font in your theme
+4.  Use the icons in your application.
+
+(You can skip #1 if you already have an icon font you want to use.)
+
+*1. Compose an icon font* in e.g IcoMoon, download, and copy the “fonts”
+folder from the zip to your theme.
+
+*2. Add the following to your styles.scss* OUTSIDE of the `.mytheme{}` block:
+
+[source,scss]
+....
+@include font(IcoMoon, '../../fonticondemo/fonts/icomoon');
+....
+
+The first parameter, “IcoMoon”, is the font-family - i.e the name you
+want to use for your font. You can choose anything, as long as you use
+the same name in Java later. +
+The second parameter is the filename base; in this case the files are
+called icomoon.ttf, icomoon.svg, etc...
+
+*3. Make use of the icons in Java;* you can make an anonymous FontIcon
+instance, but in practice you will probably want to make an enum or some
+sort of icon factory. The FontAwesome implementation uses an enum, in
+this manner:
+
+[source,java]
+....
+  private final int codepoint;
+
+  IcoMoon(int codepoint) {
+    this.codepoint = codepoint;
+  }
+
+  @Override
+  public String getFontFamily() {
+    // This must match the name you use in your (S)CSS
+    return "IcoMoon";
+  }
+
+  @Override
+  public int getCodepoint() {
+    return codepoint;
+  }
+
+  @Override
+  public String getHtml() {
+    return "<span class=\"v-icon IcoMoon\">&#x"
+        + Integer.toHexString(codepoint) + ";</span>";
+  }
+
+  @Override
+  public String getMIMEType() {
+    throw new UnsupportedOperationException("Not supported for FontIcon");
+  }
+....
+
+(Note that you can easily generate the enum from the list of icons in
+the zip downloaded from IcoMoon.)
+
+*4. Now you can use your icon:*
+
+[source,java]
+....
+  button.setIcon(IcoMoon.RIBBON);
+....
+
+[[styling-font-icons]]
+Styling font icons
+~~~~~~~~~~~~~~~~~~
+
+You can not generally set style names on the icon itself, instead you
+apply styles to the _component_ where the icon is used, much in the same
+way you would style anything else in a component.
+
+Given a button with a font icon and a style name:
+
+[source,java]
+....
+  button.addStyleName("redicon");
+  button.setIcon(FontAwesome.SAVE);
+....
+
+…you can then style the icon by applying styles to the .v-icon element:
+
+[source,css]
+....
+  .redicon .v-icon {
+    color: red;
+    font-size: 20px;
+  }
+....
+
+Note that the icon is actually text, so you style it in much the same
+way you style text. 
+
+A font icon also gets an additional `.<font-family>` stylename, so you can
+apply styles to only font icons (not ‘regular’ image icons):
+
+[source,css]
+....
+.v-button .FontAwesome {
+  color: blue;
+}
+....

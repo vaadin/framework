@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -107,7 +107,7 @@ public class SerializerHelper {
      * List of primitive classes. Google App Engine has problems
      * serializing/deserializing these (#3064).
      */
-    private static final Class<?>[] primitiveClasses = new Class<?>[] {
+    private static final Class<?>[] PRIMITIVE_CLASSES = {
             byte.class, short.class, int.class, long.class, float.class,
             double.class, boolean.class, char.class };
 
@@ -122,7 +122,7 @@ public class SerializerHelper {
      */
     public static Class<?> resolveClass(String className)
             throws ClassNotFoundException {
-        for (Class<?> c : primitiveClasses) {
+        for (Class<?> c : PRIMITIVE_CLASSES) {
             if (className.equals(c.getName())) {
                 return c;
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,4 +32,9 @@ public class ListingJsonConstants implements Serializable {
     public static final String JSONKEY_ITEM_VALUE = "v";
 
     public static final String JSONKEY_ITEM_SELECTED = "s";
+
+    /**
+     * @since 8.2
+     */
+    public static final String JSONKEY_ITEM_DESCRIPTION = "dsc";
 }

@@ -17,9 +17,9 @@ import com.vaadin.v7.ui.Field;
 @SuppressWarnings("deprecation")
 public class VaadinClasses {
 
-    private static final Set<String> WHITE_LIST_FQNS = new HashSet<>();
+    private static final Set<String> WHITE_LIST_FQNS = new HashSet<String>();
 
-    public static List<Class<? extends Field>> getFields() {
+    public static List<Class<? extends Field<?>>> getFields() {
         return getServerClasses(Field.class::isAssignableFrom)
                 .map(VaadinClasses::castFieldClass)
                 .collect(Collectors.toList());
@@ -50,8 +50,8 @@ public class VaadinClasses {
                 .collect(Collectors.toList());
     }
 
-    private static Class<? extends Field> castFieldClass(Class<?> clazz) {
-        return (Class<? extends Field>) clazz;
+    private static Class<? extends Field<?>> castFieldClass(Class<?> clazz) {
+        return (Class<? extends Field<?>>) clazz;
     }
 
     private static Class<? extends Component> castComponentClass(

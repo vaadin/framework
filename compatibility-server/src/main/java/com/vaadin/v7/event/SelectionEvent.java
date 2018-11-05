@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,8 +38,8 @@ public class SelectionEvent extends EventObject {
     public SelectionEvent(Object source, Collection<Object> oldSelection,
             Collection<Object> newSelection) {
         super(source);
-        this.oldSelection = new LinkedHashSet<>(oldSelection);
-        this.newSelection = new LinkedHashSet<>(newSelection);
+        this.oldSelection = new LinkedHashSet<Object>(oldSelection);
+        this.newSelection = new LinkedHashSet<Object>(newSelection);
     }
 
     /**
@@ -80,7 +80,7 @@ public class SelectionEvent extends EventObject {
         if (set2.isEmpty()) {
             return set1;
         } else {
-            LinkedHashSet<T> set = new LinkedHashSet<>(set1);
+            LinkedHashSet<T> set = new LinkedHashSet<T>(set1);
             set.removeAll(set2);
             return set;
         }
@@ -117,7 +117,7 @@ public class SelectionEvent extends EventObject {
     @Deprecated
     public interface SelectionNotifier extends Serializable {
         /**
-         * Registers a new selection listener
+         * Registers a new selection listener.
          *
          * @param listener
          *            the listener to register
@@ -125,7 +125,7 @@ public class SelectionEvent extends EventObject {
         void addSelectionListener(SelectionListener listener);
 
         /**
-         * Removes a previously registered selection change listener
+         * Removes a previously registered selection change listener.
          *
          * @param listener
          *            the listener to remove

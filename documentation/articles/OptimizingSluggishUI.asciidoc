@@ -1,0 +1,196 @@
+---
+title: Optimizing Sluggish UI
+order: 13
+layout: page
+---
+
+[[optimizing-sluggish-ui]]
+= Optimizing sluggish UI
+
+Is your Vaadin application becoming sluggish? Yes, this can happen - it
+is no secret. This can happen for every application, with every
+programming language, with every UI library and with all hardware
+platforms. Make it a web application and it is not even hard. For end
+users this is not acceptable, especially when building applications for
+frequent use.
+
+All developers have heard the phrase _premature optimization is the root
+of all evil_, coined by software guru
+http://www.google.com/search?&rls=en&q=premature+optimization+is+the+root+of+all+evil&ie=UTF-8&oe=UTF-8[Donald
+Knuth]. There is a wisdom in that clause. Still I want to motivate you
+(Vaadin developer) to read this article, even if you currently have no
+performance issues. I'd say it is not that bad to know what will
+inevitably make your application slow. You might subconsciously avoid
+the worst pitfalls (but still not be subjected to premature
+optimization) and avoid optimization task totally.
+
+Resolving performance issues in Vaadin-based applications may be a bit
+tricky in some situations. Performance issues are one of the most common
+issues why project managers in IT Mill come and disturb our "peace" in
+the RnD team. Usually we'll end up modifying the application, not
+Vaadin. Vaadin abstracts away the browser environment, and the
+abstraction may make it hard to figure out what is the actual cause for
+a slow UI.
+
+The first step is to detect whether to optimize the server side or the
+client side. You can use all standard profiling tools with Vaadin apps
+like Firebug for the client side and JProfiler for the server side. For
+a quick look for what is taking so long it is easy to use "?debug" query
+parameter in application. It will show you a small floating console in
+the browser. Inspecting messages there, one can see server visit time
+(includes both network latency and server processing time) and the
+actual time spent handling the response in client.
+
+If the problem is on server side, it is most commonly in the back-end
+system or how it is connected to Vaadin components. The server side code
+of Vaadin is pretty well optimized by the JVM. If the server side is
+your problem, I'd bet you will end up optimizing SQL queries. Optimizing
+tricks for server side are very similar to any other Java application.
+
+If it is the client side processing that takes a long time, optimizing
+methods are more Vaadin specific. There are several tricks one can
+perform to optimize the client side processing time. Some of them are
+more or less generic to ajax applications in common, others are purely
+Vaadin specific tricks. If you belong to the large group of Java
+developers who hate browser programming, you don't need to get worried
+at this point. Although the processing time is long on client, you will
+be mostly modifying the pure server side Java code when optimizing your
+application.
+
+[[best-tricks-to-makekeep-your-vaadin-apps-ui-responsive]]
+Best tricks to make/keep your Vaadin apps UI responsive
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[render-less-components]]
+#1 Render less components
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The most common cause for slow rendering time is that you are rendering
+a lot of components.It's easy to forget that the browser is always the
+browser, and too much complicated stuff will cause slowness. The
+JavaScript engines have been optimized a lot lately, but the actual
+rendering is still a bottleneck.
+
+* consider if you can use one component instead of many (eg. instead of
+using one label per line, use a label with multiple lines using html :
+label.setContentMode(Label.CONTENT_XHTML) )
+* hide rarely used features (this also improves usability) when possible
+
+[[try-to-keep-component-tree-simple-flat]]
+#2 Try to keep component tree simple (flat)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When component tree (the hierarchy of components, not the 'Tree'
+component) gets deeper (more components inside others) the rendering
+task gets heavier for browsers. As the growth is more than linear, I
+have split this from previous hint. To really show you the importance of
+this tip, I made a small example application. Try it at:
+http://uilder.virtuallypreinstalled.com/run/deepcomponenttrees/?restartApplication&debug
+
+ Tips for keeping the component tree simple:
+
+* Avoid for example using vertical layouts inside another vertical
+layouts when possible
+* Do you need to extend CustomComponent in your server side composition
+or could you just extend some layout? This will result having one
+component less in the component tree. You might sometimes be arguing
+against this because of architectural reasons (CustomComponent has a
+fewer methods than VerticalLayout), but on the other hand Java has
+interfaces to deal the issue in a cleaner manner.
+* Maybe you have an  extra layout inside your Panel or Window (see
+setContent method)? This is a common pitfall for Vaadin newcomers.
+
+[[use-the-right-component]]
+#3 Use the right component
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Some components in Vaadin are just faster to render than others. For
+example our standard VerticalLayout and HorizontaLayout have a huge
+feature set supporting for example spacing, margin, alignments and
+expand ratios. Supporting all these comes with a price of performance
+hit. Rendering a lot of simple components into CssLayout (which does not
+support all those features), is often several times faster than into the
+default layouts.
+
+So favor simpler components in your application if you don't need all
+those features. This will be essential in your frequently recycled
+server side compositions. So consider if you could use:
+
+* Vertical/HorizontalLayout instead of GridLayout.
+* single GridLayout instead of multiple nested
+Vertical/HorizontalLayouts.
+* CssLayout (available in standard distribution since 6.1) instead of
+full featured HorizontalLayout.
+* GridLayout (or even FastGrid from FastLayouts incubator project)
+instead of Table. Table is meant for displaying tabular data, GridLayout
+is meant for laying out components.
+
+In some extreme cases it may be a viable option to build optimized
+client side component instead of using pure server side composition. It
+is not the easiest path to take as you need to work in browser
+environment too, but you then have a full control of what is happening.
+With custom client side component one can also more easily optimize also
+the data transferred between client and server. Refer to manual for more
+information.
+
+[[use-table-efficiently]]
+#4 Use Table efficiently
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Table is one of the most optimized component in Vaadin, both server and
+client side. Still it is very easy to put both client and server on its
+knees with it. Common things to check if you have performance issues
+with Table:
+
+* make sure the container used in table loads data lazily from back-end
+if you have huge amounts of data
+* using the editable mode or ColumnGenerator can make a huge amount of
+components to be rendered on client. Especially if table size is
+maximized. Consider using lighter components in Table (like putting
+complex property editor into PopupView instead of straight to table
+cell)
+* Don't overuse layouts in table, use CssLayout instead of others when
+possible
+* Use lazy-loading of rows, don't render all rows at once
+* Minimize caching with setCacheRate function, if you have heavy table
+body (like large editable table with several columns).
+
+[[avoid-complex-custom-layouts]]
+#5 Avoid complex custom layouts
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+With CustomLayouts it is common to use html tables to build complex
+layout. Using html tables as a layout has several drawbacks like heavy
+rendering and browser differences. Rendering Vaadin components into a
+complex table based dom structure may be much slower than into a simple
+div based layout. The core reason for this optimization is the same as
+in trick #2 : the rendering is more more expensive in complex dom
+structures.
+
+[[use-a-light-theme]]
+#6 Use a light theme
+^^^^^^^^^^^^^^^^^^^^
+
+The effect of theme may be radical in some cases. Believe it or not, but
+I have seen cases where rendering time triples just by using a different
+themes. Heavy theme combined with a deep component tree is something
+that will really test the speed of browsers rendering engine. For
+optimizing theme you can google some generic instructions.  Minify,
+gzip, use simple (and fewer) selectors, optimize images, use
+transparency moderately.
+
+ Sizing components can be done in both server side Java code and in
+themes css. Both approaches have some good and bad features. Don't use
+both methods at the same time for the same component, it may render
+improperly and add an extra performance hit.
+
+[[use-generic-component-features-moderately]]
+#7 Use generic component features moderately
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+All Vaadin components have captions, icons and error indicators. All of
+them adds extra burden to client side rendering engine, just like extra
+components. As captions, icons and errors are also packed with
+surprisingly wide set of features (see ticket
+http://dev.vaadin.com/ticket/1710[#1710] in trac), in some cases it may
+even be faster to use extra Label or Embedded instead of them.

@@ -1,0 +1,193 @@
+---
+title: Customizing Component Theme With SASS
+order: 64
+layout: page
+---
+
+[[customizing-component-theme-with-sass]]
+= Customizing component theme with SASS
+
+In addition to the general benefits Sass brings to the world of CSS in
+Vaadin 7, the way themes are set up allows us to quite easily accomplish
+some things that were previously hard.
+
+Let’s start from the top, without Sass, and continue from there. We'll
+use the new _setPrimaryStyleName()_ to do some things previously not
+possible.
+
+We’ll work on a small example with buttons that we want to customize:
+
+[source,java]
+....
+@Theme("sassy")
+public class SassyUI extends UI {
+  @Override
+  public void init(VaadinRequest request) {
+    Button b = new Button("Reindeer");
+    Layout layout = new VerticalLayout();
+    layout.addComponent(b);
+    setContent(layout);
+  }
+}
+....
+
+And our basic (mostly empty at this point) “sassy” theme, based on
+Reindeer, looks like this (assuming you're using the recommended
+styles.scss+themename.scss structure as introduced in the previous
+tutorial):
+
+[source,scss]
+....
+@import "../reindeer/reindeer.scss";
+@mixin sassy {
+  @include reindeer;
+  // your styles go here
+}
+....
+
+And the result is a basic Reindeer-looking button. We can change the
+color of the caption like this:
+
+[source,scss]
+....
+.v-button-caption {
+  color:  red;
+}
+....
+
+…but this changes ALL buttons. We just want some of the buttons to stand
+out:
+
+[source,java]
+....
+b = new Button("important");
+b.addStyleName("important");
+layout.addComponent(b);
+....
+
+css:
+
+[source,scss]
+....
+.important .v-button-caption {
+  color: red;
+}
+....
+
+Ok, this is all fine - but we realize our important button should
+actually not look at all like a Reindeer button.
+
+Since Reindeer adds quite a few styles, this requires quite a lot of
+customization with this approach. Enter _setPrimaryStyleName()_:
+
+[source,java]
+....
+b = new Button("More important");
+b.setPrimaryStyleName("my-button");
+addComponent(b);
+....
+
+Now everything that was previously _.v-button_ in the browser DOM is all
+of a sudden _.my-button_, and we have a completely unstyled button, but
+with the DOM-structure and functionality of a regular button. We can
+easily style this without interference from theme styles:
+
+[source,scss]
+....
+.my-button {
+  color: red;
+}
+....
+
+However, in our case we realize we still want it to look like a button,
+just not with so much decorations as a Reindeer button. Let’s apply Base
+styles:
+
+[source,scss]
+....
+@include base-button($primaryStyleName: my-button);
+.my-button {
+  color: red;
+}
+....
+
+What? We now have a basic button with red text, but how?
+
+We have @included base-button and renamed it’s selectors to “my-button”
+(instead of the default “v-button”). This makes the rules match our
+button perfectly (we used setPrimaryStyleName() to rename it) - in
+effect we apply base-button to our “my-button”.
+
+Now we have a good starting-point. Note that this might not be such a
+big deal for small things, like buttons, but imagine something like
+Table witout _any_ styles. Yikes.
+
+*_NOTE_* _in beta10, the $primaryStyleName functionality is still only
+available for Base and Reindeer. This will change in the near future._
+
+Here are the full sources (using distinct colors for each button for
+clarity):
+
+[source,java]
+....
+package com.example.sassy;
+
+import com.vaadin.annotations.Theme;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+
+@Theme("sassy")
+public class SassyUI extends UI {
+  @Override
+  public void init(VaadinRequest request) {
+    Button b = new Button("Reindeer");
+    Layout layout = new VerticalLayout();
+    layout.addComponent(b);
+
+    b = new Button("important");
+    b.addStyleName("important");
+    layout.addComponent(b);
+
+    b = new Button("More important");
+    b.setPrimaryStyleName("my-button");
+    layout.addComponent(b);
+
+    setContent(layout);
+  }
+}
+....
+
+[source,scss]
+....
+// sassy/styles.scss
+@import "sassy.scss";
+.sassy {
+  @include sassy;
+}
+....
+
+[source,scss]
+....
+// sassy/sassy.scss
+@import "../reindeer/reindeer.scss";
+
+@mixin sassy {
+  @include reindeer;
+
+  .v-button-caption {
+    color: red;
+  }
+
+  .important .v-button-caption {
+    color:  green;
+  }
+
+  @include base-button($name: my-button);
+  .my-button {
+    color: blue;
+  }
+}
+....

@@ -2,7 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
@@ -32,29 +31,18 @@ public class RowAdditionTest extends TestBase {
         }
 
         HorizontalLayout hl = new HorizontalLayout();
-        hl.addComponent(new Button("Add first", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Item item = container.addItemAt(0, new Object());
-                item.getItemProperty("column1").setValue("0");
-            }
+        hl.addComponent(new Button("Add first", event -> {
+            Item item = container.addItemAt(0, new Object());
+            item.getItemProperty("column1").setValue("0");
         }));
-        hl.addComponent(
-                new Button("Add at position 50", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        Item item = container.addItemAt(50, new Object());
-                        item.getItemProperty("column1").setValue("50");
-                    }
-                }));
-        hl.addComponent(
-                new Button("Add at position 100", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        Item item = container.addItemAt(100, new Object());
-                        item.getItemProperty("column1").setValue("100");
-                    }
-                }));
+        hl.addComponent(new Button("Add at position 50", event -> {
+            Item item = container.addItemAt(50, new Object());
+            item.getItemProperty("column1").setValue("50");
+        }));
+        hl.addComponent(new Button("Add at position 100", event -> {
+            Item item = container.addItemAt(100, new Object());
+            item.getItemProperty("column1").setValue("100");
+        }));
 
         getLayout().addComponent(table);
         getLayout().addComponent(hl);

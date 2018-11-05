@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,20 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-/**
- *
- */
 package com.vaadin.client.ui.dd;
 
 import com.vaadin.client.UIDL;
 import com.vaadin.event.dd.acceptcriteria.Or;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 /**
  *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with
+ *             {@link DropTargetExtension#setDropCriteria(String)}
  */
+@Deprecated
 @AcceptCriterion(Or.class)
-final public class VOr extends VAcceptCriterion implements VAcceptCallback {
+public final class VOr extends VAcceptCriterion implements VAcceptCallback {
     private boolean accepted;
 
     @Override
@@ -37,7 +39,7 @@ final public class VOr extends VAcceptCriterion implements VAcceptCallback {
         for (int i = 0; i < childCount; i++) {
             VAcceptCriterion crit = VAnd.getCriteria(drag, configuration, i);
             crit.accept(drag, configuration.getChildUIDL(i), this);
-            if (accepted == true) {
+            if (accepted) {
                 callback.accepted(drag);
                 return;
             }

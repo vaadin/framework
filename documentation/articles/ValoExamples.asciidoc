@@ -1,0 +1,242 @@
+---
+title: Valo Examples
+order: 55
+layout: page
+---
+
+[[valo-examples]]
+= Valo examples
+
+These are some sample looks for the Valo theme. You can use these as-is,
+as a starting point, or while learning Valo.
+
+[[blueprint]]
+Blueprint
+---------
+
+[source,scss]
+....
+$v-app-loading-text: "Blueprint Valo";
+$v-background-color: #1a61b7;
+$v-focus-color: #fff;
+$v-panel-background-color: $v-background-color;
+$v-overlay-background-color: $v-background-color;
+$valo-menu-background-color: $v-background-color;
+$v-overlay-shadow: 0 0 0 1px rgba(#fff, .5);
+$v-window-shadow: $v-overlay-shadow;
+$v-window-modality-curtain-background-color: $v-background-color;
+$v-bevel: false;
+$v-gradient: false;
+$v-shadow: false;
+$v-textfield-bevel: false;
+$v-textfield-shadow: false;
+$v-border: 1px solid (v-tint 1.5);
+$v-textfield-background-color: $v-background-color;
+$v-font-family: sans-serif;
+$v-font-size: 18px;
+
+@import "../valo/valo";
+....
+
+[[dark]]
+Dark
+----
+
+[source,scss]
+....
+$v-app-loading-text: "Dark Valo";
+$v-background-color: #444d50;
+$v-focus-color: #07a9ca;
+$v-focus-style: 0 0 3px 2px $v-focus-color;
+$v-bevel-depth: 40%;
+$v-gradient: v-linear 12%;
+$v-border-radius: 10px;
+$v-font-family: Roboto, sans-serif;
+$v-font-weight: 400;
+$v-font-weight--header: 400;
+$v-bevel: inset 0 1px 2px v-tint, inset 0 0 1px (v-tint 0.1);
+$v-shadow: 0 0 0 3px rgba(0,0,0,0.32), 0 1px 0 3px rgba(255,255,255,0.14);
+$v-textfield-bevel: inset 0 2px 2px v-shade;
+$v-textfield-shadow: $v-shadow;
+$v-unit-size: 40px;
+$v-overlay-shadow: 0 0 0 3px (v-shade 8), 0 5px 10px (v-shade 4);
+$v-component-group-spacing: 6px;
+
+@import "../valo/valo";
+....
+
+[[facebook]]
+Facebook
+--------
+
+[source,scss]
+....
+$v-app-loading-text: "Facebook Valo";
+$v-background-color: #fafafa;
+$v-app-background-color: #e7ebf2;
+$v-panel-background-color: #fff;
+$v-focus-color: #3b5998;
+$v-focus-style: 0 0 1px 1px rgba($v-focus-color, .5);
+$v-border-radius: 3px;
+$v-textfield-border-radius: 0;
+$v-font-family: Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif;
+$v-font-size: 14px;
+$v-font-color: #37404E;
+$v-font-weight: 400;
+$v-link-text-decoration: none;
+$v-shadow: 0 1px 0 (v-shade 0.2);
+$v-bevel: inset 0 1px 0 v-tint;
+$v-unit-size: 30px;
+$v-gradient: v-linear 12%;
+$v-overlay-shadow: 0 3px 8px v-shade, 0 0 0 1px (v-shade 0.7);
+$v-shadow-opacity: 20%;
+$v-selection-overlay-padding-horizontal: 0;
+$v-selection-overlay-padding-vertical: 6px;
+$v-selection-item-border-radius: 0;
+
+@import "../valo/valo";
+....
+
+[[flat]]
+Flat
+----
+
+[source,scss]
+....
+$v-app-loading-text: "Flat Valo";
+
+$v-font-family: "Roboto", sans-serif;
+$v-font-weight: 400;
+$v-font-weight--header: 400;
+$v-background-color: #fff;
+$v-focus-color: rgb(150,190,90);
+$v-luminance-threshold: 180;
+$v-border: 2px solid v-shade;
+$v-border-radius: 6px;
+$v-bevel: false;
+$v-gradient: false;
+$v-shadow: false;
+$v-textfield-bevel: false;
+$v-textfield-shadow: false;
+$v-link-text-decoration: false;
+$v-selection-overlay-padding-horizontal: 0;
+$v-selection-overlay-padding-vertical: 6px;
+$v-selection-item-height: 30px;
+$v-selection-item-border-radius: 0;
+$valo-menu-background-color: #eee;
+
+@import "../valo/valo";
+
+.valo-test {
+  .v-button-primary.v-button-primary {
+    background: #fff;
+    border-color: $v-focus-color;
+    color: $v-focus-color;
+  }
+
+  .v-button-danger.v-button-danger {
+    background: #fff;
+    border-color: $v-error-indicator-color;
+    color: $v-error-indicator-color;
+  }
+
+  .v-slider-base:before,
+  .v-slider-base:after {
+    border: none !important;
+  }
+}
+....
+
+[[flat-dark]]
+Flat Dark
+---------
+
+[source,scss]
+....
+$v-app-loading-text: "Dark & Flat Valo";
+
+$v-background-color: #000;
+$v-focus-color: #ffa500;
+$v-font-size: 15px;
+$v-font-weight: 600;
+$v-unit-size: 42px;
+$v-bevel: false;
+$v-shadow: false;
+$v-gradient: false;
+$v-textfield-bevel: false;
+$v-textfield-shadow: false;
+$v-border-radius: 0;
+$v-border: 2px solid v-tone;
+$v-overlay-shadow: 0 0 0 2px (v-tint 10);
+$v-focus-style: $v-focus-color;
+$v-font-family: "Lato", sans-serif;
+$v-font-weight--header: 600;
+
+@import "../valo/valo";
+....
+
+[[light]]
+Light
+-----
+
+[source,scss]
+....
+$v-app-loading-text: "Light Valo";
+
+$v-background-color: hsl(0, 0, 99.5%);
+$v-app-background-color: #fff;
+$v-focus-color: hsl(218, 80%, 60%);
+$v-border: 1px solid (v-shade 0.6);
+$v-border-radius: 3px;
+$v-bevel: inset 0 1px 0 v-tint;
+$v-textfield-bevel: false;
+$v-gradient: v-linear 3%;
+$v-shadow: false;
+$valo-menu-background-color: hsl(218, 20%, 98%);
+$v-friendly-color: hsl(163, 61%, 41%);
+$v-error-indicator-color: hsl(349, 66%, 56%);
+
+
+@import "../valo/valo";
+
+.tests-valo-light .valo-menu .valo-menu-title {
+  background: $v-app-background-color;
+  color: $v-selection-color;
+  text-shadow: none;
+  border-color: first-color(valo-border($color: $v-app-background-color, $strength: 0.5));
+}
+....
+
+[[metro]]
+Metro
+-----
+
+[source,scss]
+....
+$v-app-loading-text: "Metro Valo";
+
+$v-font-family: "Source Sans Pro", sans-serif;
+$v-app-background-color: #fff;
+$v-background-color: #eee;
+$v-focus-color: #0072C6;
+$v-focus-style: 0 0 0 1px $v-focus-color;
+$valo-menu-background-color: darken($v-focus-color, 10%);
+$v-border: 0 solid v-shade;
+$v-border-radius: 0px;
+$v-bevel: false;
+$v-gradient: false;
+$v-shadow: false;
+$v-textfield-bevel: false;
+$v-textfield-shadow: false;
+$v-textfield-border: 1px solid v-shade;
+$v-link-text-decoration: none;
+$v-overlay-shadow: 0 0 0 2px #000;
+$v-overlay-border-width: 2px; // For IE8
+$v-window-shadow: $v-overlay-shadow;
+$v-selection-overlay-background-color: #fff;
+$v-selection-overlay-padding-horizontal: 0;
+$v-selection-overlay-padding-vertical: 6px;
+$v-panel-border: 2px solid v-shade;
+
+@import "../valo/valo";
+....

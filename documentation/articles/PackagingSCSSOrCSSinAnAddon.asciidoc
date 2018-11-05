@@ -1,0 +1,164 @@
+---
+title: Packaging SCSS Or CSS in An Addon
+order: 62
+layout: page
+---
+
+[[packaging-scss-or-css-in-an-add-on]]
+= Packaging SCSS or CSS in an add-on
+
+The add-on architecture of Vaadin enables you to easily create reusable
+components and share them with the world. The add-on can be of various
+types: widgets, themes, server side components etc. Most of them contain
+Java code and classes, themes provide CSS and SCSS which can be used as
+the application theme but how should package add-ons which are not
+themes but still include CSS or SCSS? Let’s explore the options by
+creating a fancy `DangerButton` component (a native button which should
+have a red background).
+
+If we have an application (as opposed to an add-on) and want to create a
+red native button we have many options:
+
+*1. Use NativeButton with a style name and define the style in the
+application theme*
+
+[source,java]
+....
+NativeButton dangerButton = new NativeButton("Don’t click me");
+dangerButton.addStyleName("danger");
+....
+
+In the application theme:
+
+[source,css]
+....
+.danger {
+   background-color: red;
+}
+....
+
+In our application we would of course encapsulate this in a
+`DangerButton` (`extends NativeButton`) which always adds the “danger”
+style name.
+
+*2. Use NativeButton with a style name and @Stylesheet to include the
+style*
+
+Do as above but create a custom css file which we place in the same
+folder as DangerButton.java and annotate DangerButton with
+@Stylesheet(“dangerbutton.css”). The @Stylesheet annotation will take
+care of publishing the css file and make the browser load it.
+
+*3. Create a custom connector and define the style inline*
+
+Create a custom component + connector by creating `DangerButton extends
+NativeButton` and `DangerButtonConnector
+extends NativeButtonConnector`. We can then manage to do this in the
+connector e.g. by setting an inline style when creating the widget. The
+upside of this is that it will work without a custom theme, the downside
+is that tuning the exact red color becomes cumbersome as you need to
+recompile the widget set (or use dev mode) for each update.
+
+*4. Include the style sheet in a widget set*
+
+Include the style sheet in a widget set by adding
+`<stylesheet src="dangerbutton-widgetset.css"/>` to the widget set
+gwt.xml file and adding the css file to the “public” folder inside the
+widget set folder (containing the gwt.xml file) so it will be included
+in the compiled widget set.
+
+*5. Dynamically inject the styles*
+
+Use NativeButton with a style name and dynamically inject the CSS
+needed, e.g.
+
+[source,java]
+....
+NativeButton dangerButton = new NativeButton("Don’t click me");
+dangerButton.addStyleName("injectedDanger");
+getPage().getStyles().add(".injectedDanger {background-color: red;}");
+....
+
+This approach does not require widget set compilation or a custom theme
+but does not support scss and injecting a lot of css this way can
+quickly add up to a lot of style tags in the page.
+
+[[what-about-the-add-on]]
+What about the add-on
+^^^^^^^^^^^^^^^^^^^^^
+
+Returning to add-on discussion, which of the options above are viable
+for an add-on? What should we really use for our DangerButton add-on to
+keep it simple and avoid possible future problems?
+
+The first option which includes the application theme is not viable for
+an add-on as such except if we are fine with documenting that you should
+copy paste the css into your application theme.
+
+Option 2 seems like a good option but the day we add images or other
+resources to the style sheet we will run into problems as @Stylesheet
+only publishes the css file and nothing else. Including other style
+sheets (even when they are published with @Stylesheet also) does not
+work as we do not know the actual URL they will be available from at
+runtime and including images will also cause issues as we have no easy
+way of making them available. Also we cannot use SCSS with this
+approach.
+
+Option 3 and 4 with the custom widget set usually work out fine, you can
+even use SCSS for these (although it won’t be included in the
+application theme, e.g. prefixed correctly). However, if we want to keep
+things simple we do not want to make the add-on user compile widget set.
+
+We also do not want to go with option 5 as it does not support SCSS and
+have potential issues when overused, especially in older Internet
+Explorers.
+
+[[so-what-about-the-add-on..]]
+So, what about the add-on..?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A sometimes overlooked feature of Vaadin is the VAADIN folder used to
+serve themes and widget sets to the browser. As a matter of fact all
+files inside the VAADIN folder are published directly as-is to the web,
+also when the VAADIN folder is in an add-on jar. So by placing our style
+sheet inside a “/VAADIN/addons/dangerbutton/” folder it will be
+available for the browser and any images or related style sheets will
+also be available (and relative paths will work). The only question
+remaining is how we can include the style sheet automatically for any
+user of our add-on and this can be done using `@StyleSheet` with the
+special `vaadin://` protocol, e.g.
+`@StyleSheet(“vaadin://addons/dangerbutton/styles.css”)`.
+
+[[that-does-not-work-with-scss]]
+That does not work with SCSS
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+One of the nice features of SCSS is that the theme creator can define
+variables which you can use in your own scss file. If we are doing
+standalone compilation of the scss file to css we are not able to take
+advantage of these features. Also our styles will not be restricted to
+the application theme (using theme name prefixing) if it is not compiled
+at the same time as the application theme. Finally by including the
+styles in the application theme, all possible minifiers and similar can
+operate on the add-on styles also.
+
+To take full advantage of SCSS we can, instead of using the
+`@Stylesheet` annotation to include a css file directly, define in the
+add-on metadata that the addon jar contains a scss (or css) file which
+should be included when compiling the application theme. This is done
+with the `Vaadin-Stylesheets` attribute, for instance for our
+`DangerButton` as:
+
+....
+Vaadin-Stylesheets: VAADIN/addons/dangerbutton/dangerbutton.scss
+....
+
+A small gotcha here is that the `Vaadin-Stylesheet` attribute refers to
+the full path inside the add-on jar (i.e. starts with /VAADIN) whereas
+the /VAADIN part is included in the `vaadin://` protocol when using
+`@Stylesheet`.
+
+Now when you add the dangerbutton add-on jar to a project you will see
+that the addons.scss file gets automatically updated to include the
+dangerbutton css and it is compiled together with the rest of the
+application theme.

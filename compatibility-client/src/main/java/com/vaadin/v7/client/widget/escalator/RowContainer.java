@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,26 +23,25 @@ import com.vaadin.v7.client.widgets.Escalator;
 
 /**
  * A representation of the rows in each of the sections (header, body and
- * footer) in an {@link com.vaadin.v7.client.widgets.Escalator}.
+ * footer) in an {@link Escalator}.
  *
  * @since 7.4
  * @author Vaadin Ltd
- * @see com.vaadin.v7.client.widgets.Escalator#getHeader()
- * @see com.vaadin.v7.client.widgets.Escalator#getBody()
- * @see com.vaadin.v7.client.widgets.Escalator#getFooter()
+ * @see Escalator#getHeader()
+ * @see Escalator#getBody()
+ * @see Escalator#getFooter()
  * @see SpacerContainer
  */
 public interface RowContainer {
 
     /**
-     * The row container for the body section in an
-     * {@link com.vaadin.v7.client.widgets.Escalator}.
+     * The row container for the body section in an {@link Escalator}.
      * <p>
      * The body section can contain both rows and spacers.
      *
      * @since 7.5.0
      * @author Vaadin Ltd
-     * @see com.vaadin.v7.client.widgets.Escalator#getBody()
+     * @see Escalator#getBody()
      */
     public interface BodyRowContainer extends RowContainer {
 
@@ -222,6 +221,22 @@ public interface RowContainer {
     public int getRowCount();
 
     /**
+     * This method calculates the current row count directly from the DOM.
+     * <p>
+     * While the container is stable, this value should equal to
+     * {@link #getRowCount()}, but while row counts are being updated, these two
+     * values might differ for a short while.
+     * <p>
+     * Any extra content, such as spacers for the body, should not be included
+     * in this count.
+     *
+     * @since
+     *
+     * @return the actual DOM count of rows
+     */
+    public int getDomRowCount();
+
+    /**
      * The default height of the rows in this RowContainer.
      *
      * @param px
@@ -274,7 +289,7 @@ public interface RowContainer {
             throws IndexOutOfBoundsException, IllegalStateException;
 
     /**
-     * Returns the root element of RowContainer
+     * Returns the root element of RowContainer.
      *
      * @return RowContainer root element
      */

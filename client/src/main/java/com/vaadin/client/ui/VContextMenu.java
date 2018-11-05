@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,8 +16,9 @@
 
 package com.vaadin.client.ui;
 
+import java.util.Locale;
+
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.TableRowElement;
@@ -42,7 +43,6 @@ import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -66,19 +66,11 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     private Element focusedElement;
 
     private VLazyExecutor delayedImageLoadExecutioner = new VLazyExecutor(100,
-            new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    imagesLoaded();
-                }
-            });
+            () -> imagesLoaded());
 
     /**
      * This method should be used only by Client object as only one per client
      * should exists. Request an instance via client.getContextMenu();
-     *
-     * @param cli
-     *            to be set as an owner of menu
      */
     public VContextMenu() {
         super(true, false);
@@ -107,7 +99,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     }
 
     /**
-     * Sets the element from which to build menu
+     * Sets the element from which to build menu.
      *
      * @param ao
      */
@@ -130,8 +122,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
         this.left = left;
         this.top = top;
         menu.clearItems();
-        for (int i = 0; i < actions.length; i++) {
-            final Action a = actions[i];
+        for (final Action a : actions) {
             menu.addItem(new MenuItem(a.getHTML(), true, a));
         }
 
@@ -145,45 +136,38 @@ public class VContextMenu extends VOverlay implements SubPartAware {
         // reset height (if it has been previously set explicitly)
         setHeight("");
 
-        setPopupPositionAndShow(new PositionCallback() {
-            @Override
-            public void setPosition(int offsetWidth, int offsetHeight) {
-                // mac FF gets bad width due GWT popups overflow hacks,
-                // re-determine width
-                offsetWidth = menu.getOffsetWidth();
-                int left = VContextMenu.this.left;
-                int top = VContextMenu.this.top;
-                if (offsetWidth + left > Window.getClientWidth()) {
-                    left = left - offsetWidth;
-                    if (left < 0) {
-                        left = 0;
-                    }
+        setPopupPositionAndShow((offsetWidth, offsetHeight) -> {
+            // mac FF gets bad width due GWT popups overflow hacks,
+            // re-determine width
+            offsetWidth = menu.getOffsetWidth();
+            int menuLeft = VContextMenu.this.left;
+            int menuTop = VContextMenu.this.top;
+            if (offsetWidth + menuLeft > Window.getClientWidth()) {
+                menuLeft = menuLeft - offsetWidth;
+                if (menuLeft < 0) {
+                    menuLeft = 0;
                 }
-                if (offsetHeight + top > Window.getClientHeight()) {
-                    top = Math.max(0, Window.getClientHeight() - offsetHeight);
-                }
-                if (top == 0) {
-                    setHeight(Window.getClientHeight() + "px");
-                }
-                setPopupPosition(left, top);
-
-                /*
-                 * Move keyboard focus to menu, deferring the focus setting so
-                 * the focus is certainly moved to the menu in all browser after
-                 * the positioning has been done.
-                 */
-                Scheduler.get().scheduleDeferred(new Command() {
-                    @Override
-                    public void execute() {
-                        // Focus the menu.
-                        menu.setFocus(true);
-
-                        // Unselect previously selected items
-                        menu.selectItem(null);
-                    }
-                });
-
             }
+            if (offsetHeight + menuTop > Window.getClientHeight()) {
+                menuTop = Math.max(0, Window.getClientHeight() - offsetHeight);
+            }
+            if (menuTop == 0) {
+                setHeight(Window.getClientHeight() + "px");
+            }
+            setPopupPosition(menuLeft, menuTop);
+
+            /*
+             * Move keyboard focus to menu, deferring the focus setting so the
+             * focus is certainly moved to the menu in all browser after the
+             * positioning has been done.
+             */
+            Scheduler.get().scheduleDeferred(() -> {
+                // Focus the menu.
+                menu.setFocus(true);
+
+                // Unselect previously selected items
+                menu.selectItem(null);
+            });
         });
     }
 
@@ -297,12 +281,10 @@ public class VContextMenu extends VOverlay implements SubPartAware {
             com.google.gwt.user.client.Element subElement) {
         if (getElement().isOrHasChild(subElement)) {
             com.google.gwt.dom.client.Element e = subElement;
-            {
-                while (e != null
-                        && !e.getTagName().toLowerCase().equals("tr")) {
-                    e = e.getParentElement();
-                    // ApplicationConnection.getConsole().log("Found row");
-                }
+            while (e != null
+                    && !e.getTagName().toLowerCase(Locale.ROOT).equals("tr")) {
+                e = e.getParentElement();
+                // ApplicationConnection.getConsole().log("Found row");
             }
             com.google.gwt.dom.client.TableSectionElement parentElement = (TableSectionElement) e
                     .getParentElement();

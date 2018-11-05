@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,7 +26,6 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
-import com.vaadin.client.ApplicationConnection.ApplicationStoppedHandler;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.AtmospherePushConnection.AtmosphereResponse;
 import com.vaadin.shared.ui.ui.UIState.ReconnectDialogConfigurationState;
@@ -77,7 +76,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
         }
 
         /**
-         * Checks if this type is of higher priority than the given type
+         * Checks if this type is of higher priority than the given type.
          *
          * @param type
          *            the type to compare to
@@ -93,21 +92,14 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
     public void setConnection(ApplicationConnection connection) {
         this.connection = connection;
 
-        connection.addHandler(ApplicationStoppedEvent.TYPE,
-                new ApplicationStoppedHandler() {
-                    @Override
-                    public void onApplicationStopped(
-                            ApplicationStoppedEvent event) {
-                        if (isReconnecting()) {
-                            giveUp();
-                        }
-                        if (scheduledReconnect != null
-                                && scheduledReconnect.isRunning()) {
-                            scheduledReconnect.cancel();
-                        }
-                    }
-
-                });
+        connection.addHandler(ApplicationStoppedEvent.TYPE, event -> {
+            if (isReconnecting()) {
+                giveUp();
+            }
+            if (scheduledReconnect != null && scheduledReconnect.isRunning()) {
+                scheduledReconnect.cancel();
+            }
+        });
 
         // Allow dialog to cache needed resources to make them available when we
         // are offline
@@ -129,7 +121,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
     }
 
     /**
-     * Returns the connection this handler is connected to
+     * Returns the connection this handler is connected to.
      *
      * @return the connection for this handler
      */
@@ -184,7 +176,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
     /**
      * Called whenever an error occurs in communication which should be handled
      * by showing the reconnect dialog and retrying communication until
-     * successful again
+     * successful again.
      *
      * @param type
      *            The type of failure detected
@@ -273,7 +265,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
     /**
      * Re-sends the payload to the server (if not null) or re-sends a heartbeat
-     * request immediately
+     * request immediately.
      *
      * @param payload
      *            the payload that did not reach the server, null if the problem
@@ -299,7 +291,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
     /**
      * Called whenever a reconnect attempt fails to allow updating of dialog
-     * contents
+     * contents.
      */
     protected void updateDialog() {
         reconnectDialog.setText(getDialogText(reconnectAttempt));
@@ -307,7 +299,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
     /**
      * Called when we should give up trying to reconnect and let the user decide
-     * how to continue
+     * how to continue.
      *
      */
     protected void giveUp() {
@@ -338,7 +330,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
     }
 
     /**
-     * Checks if the reconnect dialog is visible to the user
+     * Checks if the reconnect dialog is visible to the user.
      *
      * @return true if the user can see the dialog, false otherwise
      */
@@ -370,7 +362,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
     /**
      * Gets the text to show in the reconnect dialog after giving up (reconnect
-     * limit reached)
+     * limit reached).
      *
      * @param reconnectAttempt
      *            The number of the current reconnection attempt
@@ -382,7 +374,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
     }
 
     /**
-     * Gets the text to show in the reconnect dialog
+     * Gets the text to show in the reconnect dialog.
      *
      * @param reconnectAttempt
      *            The number of the current reconnection attempt

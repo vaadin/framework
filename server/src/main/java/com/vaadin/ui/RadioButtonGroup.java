@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -56,6 +56,7 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
         implements FocusNotifier, BlurNotifier, HasDataProvider<T> {
 
     private SerializablePredicate<T> itemEnabledProvider = item -> true;
+    private DescriptionGenerator<T> descriptionGenerator = item -> null;
 
     /**
      * Constructs a new RadioButtonGroup with caption.
@@ -111,6 +112,12 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
                             caption);
                 } else {
                     jsonObject.put(ListingJsonConstants.JSONKEY_ITEM_VALUE, "");
+                }
+                String description = getItemDescriptionGenerator().apply(data);
+                if (description != null) {
+                    jsonObject.put(
+                            ListingJsonConstants.JSONKEY_ITEM_DESCRIPTION,
+                            description);
                 }
                 Resource icon = getItemIconGenerator().apply(data);
                 if (icon != null) {
@@ -219,6 +226,37 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
         this.itemEnabledProvider = itemEnabledProvider;
     }
 
+    /**
+     * Sets the description generator that is used for generating descriptions
+     * for items. Description is shown as a tooltip when hovering on
+     * corresponding element. If the generator returns {@code null}, no tooltip
+     * is shown.
+     *
+     * @param descriptionGenerator
+     *            the item description generator to set, not {@code null}
+     *
+     * @since 8.2
+     */
+    public void setItemDescriptionGenerator(
+            DescriptionGenerator<T> descriptionGenerator) {
+        Objects.requireNonNull(descriptionGenerator);
+        if (this.descriptionGenerator != descriptionGenerator) {
+            this.descriptionGenerator = descriptionGenerator;
+            getDataProvider().refreshAll();
+        }
+    }
+
+    /**
+     * Gets the item description generator.
+     *
+     * @return the item description generator
+     *
+     * @since 8.2
+     */
+    public DescriptionGenerator<T> getItemDescriptionGenerator() {
+        return descriptionGenerator;
+    }
+
     @Override
     public Registration addFocusListener(FocusListener listener) {
         return addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
@@ -249,9 +287,8 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
                 ((DeclarativeItemEnabledProvider) provider).addDisabled(item);
             }
         } else {
-            throw new IllegalStateException(String.format(
-                    "Don't know how "
-                            + "to disable item using current item enabled provider '%s'",
+            throw new IllegalStateException(String.format("Don't know how "
+                    + "to disable item using current item enabled provider '%s'",
                     provider.getClass().getName()));
         }
         return item;
@@ -262,7 +299,7 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
         Element elem = super.writeItem(design, item, context);
 
         if (!getItemEnabledProvider().test(item)) {
-            elem.attr("disabled", "");
+            elem.attr("disabled", true);
         }
 
         if (isHtmlContentAllowed()) {

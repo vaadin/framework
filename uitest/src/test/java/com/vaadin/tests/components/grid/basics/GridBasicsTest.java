@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import org.junit.Before;
@@ -34,7 +35,7 @@ public abstract class GridBasicsTest extends MultiBrowserTest {
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
         // Most tests are run with only one browser.
-        return getBrowserCapabilities(Browser.PHANTOMJS);
+        return getBrowserCapabilities(Browser.CHROME);
     }
 
     @Override
@@ -150,8 +151,8 @@ public abstract class GridBasicsTest extends MultiBrowserTest {
 
     protected void assertColumnHeader(String expectedHeaderCaption,
             TestBenchElement testBenchElement) {
-        assertEquals(expectedHeaderCaption.toLowerCase(),
-                testBenchElement.getText().toLowerCase());
+        assertEquals(expectedHeaderCaption.toLowerCase(Locale.ROOT),
+                testBenchElement.getText().toLowerCase(Locale.ROOT));
     }
 
     protected void assertColumnIsSorted(int index) {
@@ -199,7 +200,8 @@ public abstract class GridBasicsTest extends MultiBrowserTest {
         List<WebElement> elements = sidebar
                 .findElements(By.className("column-hiding-toggle"));
         for (WebElement e : elements) {
-            if (e.getText().toLowerCase().startsWith("column " + columnIndex)) {
+            if (e.getText().toLowerCase(Locale.ROOT)
+                    .startsWith("column " + columnIndex)) {
                 return e;
             }
         }

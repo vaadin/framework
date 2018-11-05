@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,15 +16,19 @@
 
 package com.vaadin.v7.data.util;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.ValueProvider;
+import com.vaadin.server.Setter;
 import com.vaadin.v7.data.Property;
 
 /**
  * A simple data object containing one typed value. This class is a
- * straightforward implementation of the the {@link com.vaadin.v7.data.Property}
- * interface.
+ * straightforward implementation of the the {@link Property} interface.
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, replaced by {@link ValueProvider}, {@link Setter}, see {@link Binder}
  */
 @Deprecated
 @SuppressWarnings("serial")

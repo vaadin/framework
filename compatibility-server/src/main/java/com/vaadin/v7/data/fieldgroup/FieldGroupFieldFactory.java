@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,19 +17,24 @@ package com.vaadin.v7.data.fieldgroup;
 
 import java.io.Serializable;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.HasValue;
 import com.vaadin.v7.ui.Field;
 
 /**
- * Factory interface for creating new LegacyField-instances based on the data
- * type that should be edited.
+ * Factory interface for creating new Field-instances based on the data type
+ * that should be edited.
  *
  * @author Vaadin Ltd.
  * @since 7.0
+ * @deprecated As of 8.0, no direct replacement available.
+ *             {@link Binder#forMemberField(HasValue)} and
+ *             {@link Binder#bindInstanceFields(Object)} should be used instead.
  */
 @Deprecated
 public interface FieldGroupFieldFactory extends Serializable {
     /**
-     * Creates a field based on the data type that we want to edit
+     * Creates a field based on the data type that we want to edit.
      *
      * @param dataType
      *            The type that we want to edit using the field

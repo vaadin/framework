@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -78,7 +78,7 @@ public abstract class LegacyApplicationUIProvider extends UIProvider {
         VaadinRequest request = event.getRequest();
         String pathInfo = request.getPathInfo();
         String name = null;
-        if (pathInfo != null && pathInfo.length() > 0) {
+        if (pathInfo != null && !pathInfo.isEmpty()) {
             Matcher matcher = WINDOW_NAME_PATTERN.matcher(pathInfo);
             if (matcher.matches()) {
                 // Skip the initial slash

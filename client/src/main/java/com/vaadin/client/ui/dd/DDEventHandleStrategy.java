@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,6 +23,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.client.ui.dd.VDragAndDropManager.DDManagerMediator;
 
 /**
@@ -32,7 +33,9 @@ import com.vaadin.client.ui.dd.VDragAndDropManager.DDManagerMediator;
  *
  * @author Vaadin Ltd
  * @since 7.4.4
+ * @deprecated Replaced in 8.1 with {@link DropTargetExtensionConnector}
  */
+@Deprecated
 public class DDEventHandleStrategy {
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package com.vaadin.v7.data.util;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EventObject;
@@ -25,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Container.ItemSetChangeNotifier;
 import com.vaadin.v7.data.Item;
@@ -67,19 +67,18 @@ import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
  * <code>sort(Object[], boolean[])</code>.
  *
  * To implement {@link Filterable}, subclasses need to implement the methods
- * {@link Filterable#addContainerFilter(com.com.vaadin.v7.data.Container.Filter)}
- * (calling {@link #addFilter(Filter)}),
- * {@link Filterable#removeAllContainerFilters()} (calling
- * {@link #removeAllFilters()}) and
- * {@link Filterable#removeContainerFilter(com.com.vaadin.v7.data.Container.Filter)}
- * (calling {@link #removeFilter(com.com.vaadin.v7.data.Container.Filter)}).
+ * {@link Filterable#addContainerFilter(Container.Filter)} (calling
+ * {@link #addFilter(Filter)}), {@link Filterable#removeAllContainerFilters()}
+ * (calling {@link #removeAllFilters()}) and
+ * {@link Filterable#removeContainerFilter(Container.Filter)} (calling
+ * {@link #removeFilter(Container.Filter)}).
  *
  * To implement {@link SimpleFilterable}, subclasses also need to implement the
  * methods
  * {@link SimpleFilterable#addContainerFilter(Object, String, boolean, boolean)}
  * and {@link SimpleFilterable#removeContainerFilters(Object)} calling
- * {@link #addFilter(com.com.vaadin.v7.data.Container.Filter)} and
- * {@link #removeFilters(Object)} respectively.
+ * {@link #addFilter(Container.Filter)} and {@link #removeFilters(Object)}
+ * respectively.
  *
  * @param <ITEMIDTYPE>
  *            the class of item identifiers in the container, use Object if can
@@ -92,6 +91,8 @@ import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
  *            {@link Item} if unknown
  *
  * @since 6.6
+ *
+ * @deprecated As of 8.0, replaced by {@link DataProvider}
  */
 @Deprecated
 public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITEMCLASS extends Item>
@@ -121,7 +122,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * Filters that are applied to the container to limit the items visible in
      * it
      */
-    private Set<Filter> filters = new HashSet<>();
+    private Set<Filter> filters = new HashSet<Filter>();
 
     /**
      * The item sorter which is used for sorting the container.
@@ -149,8 +150,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         }
     }
 
-    private static abstract class BaseItemAddOrRemoveEvent extends EventObject
-            implements Serializable {
+    private abstract static class BaseItemAddOrRemoveEvent extends EventObject {
         protected Object itemId;
         protected int index;
         protected int count;
@@ -441,14 +441,14 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
-                "Removing container properties not supported. Override the addContainerProperty() method if required.");
+                "Removing container properties not supported. Override the removeContainerProperty() method if required.");
     }
 
     // ItemSetChangeNotifier
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addItemSetChangeListener(com.com.vaadin.v7.data.Container.ItemSetChangeListener)}
-     **/
+     *             {@link #addItemSetChangeListener(Container.ItemSetChangeListener)}
+     */
     @Deprecated
     @Override
     public void addListener(Container.ItemSetChangeListener listener) {
@@ -469,8 +469,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removeItemSetChangeListener(com.com.vaadin.v7.data.Container.ItemSetChangeListener)}
-     **/
+     *             {@link #removeItemSetChangeListener(Container.ItemSetChangeListener)}
+     */
     @Deprecated
     @Override
     public void removeListener(Container.ItemSetChangeListener listener) {
@@ -523,9 +523,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         // Filter
         boolean equal = true;
         Iterator<ITEMIDTYPE> origIt = originalFilteredItemIds.iterator();
-        for (final Iterator<ITEMIDTYPE> i = getAllItemIds().iterator(); i
-                .hasNext();) {
-            final ITEMIDTYPE id = i.next();
+        for (final ITEMIDTYPE id : getAllItemIds()) {
             if (passesFilters(id)) {
                 // filtered list comes from the full list, can use ==
                 equal = equal && origIt.hasNext() && origIt.next() == id;
@@ -552,9 +550,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (getFilters().isEmpty()) {
             return true;
         }
-        final Iterator<Filter> i = getFilters().iterator();
-        while (i.hasNext()) {
-            final Filter f = i.next();
+        for (final Filter f : getFilters()) {
             if (!f.passesFilter(itemId, item)) {
                 return false;
             }
@@ -569,8 +565,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * be in-memory filterable.
      *
      * This can be used to implement
-     * {@link Filterable#addContainerFilter(com.com.vaadin.v7.data.Container.Filter)}
-     * and optionally also
+     * {@link Filterable#addContainerFilter(Container.Filter)} and optionally
+     * also
      * {@link SimpleFilterable#addContainerFilter(Object, String, boolean, boolean)}
      * (with {@link SimpleStringFilter}).
      *
@@ -596,11 +592,6 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         return !getContainerFilters().isEmpty();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container.Filterable#getContainerFilters()
-     */
     protected Collection<Filter> getContainerFilters() {
         return Collections.unmodifiableCollection(filters);
     }
@@ -609,8 +600,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * Remove a specific container filter and re-filter the view (if necessary).
      *
      * This can be used to implement
-     * {@link Filterable#removeContainerFilter(com.com.vaadin.v7.data.Container.Filter)}
-     * .
+     * {@link Filterable#removeContainerFilter(Container.Filter)} .
      */
     protected void removeFilter(Filter filter) {
         for (Iterator<Filter> iterator = getFilters().iterator(); iterator
@@ -648,9 +638,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (getFilters().isEmpty() || propertyId == null) {
             return false;
         }
-        final Iterator<Filter> i = getFilters().iterator();
-        while (i.hasNext()) {
-            final Filter f = i.next();
+        for (final Filter f : getFilters()) {
             if (f.appliesToProperty(propertyId)) {
                 return true;
             }
@@ -673,7 +661,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (getFilters().isEmpty() || propertyId == null) {
             return Collections.emptyList();
         }
-        List<Filter> removedFilters = new LinkedList<>();
+        List<Filter> removedFilters = new LinkedList<Filter>();
         for (Iterator<Filter> iterator = getFilters().iterator(); iterator
                 .hasNext();) {
             Filter f = iterator.next();
@@ -721,8 +709,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * Subclasses should call this from a public
      * {@link #sort(Object[], boolean[])} method when implementing Sortable.
      *
-     * @see com.com.vaadin.v7.data.Container.Sortable#sort(java.lang.Object[],
-     *      boolean[])
+     * @see Container.Sortable#sort(java.lang.Object[], boolean[])
      */
     protected void sortContainer(Object[] propertyId, boolean[] ascending) {
         if (!(this instanceof Sortable)) {
@@ -763,7 +750,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * to implement {@link Sortable#getSortableContainerPropertyIds()}.
      */
     protected Collection<?> getSortablePropertyIds() {
-        LinkedList<Object> sortables = new LinkedList<>();
+        LinkedList<Object> sortables = new LinkedList<Object>();
         for (Object propertyId : getContainerPropertyIds()) {
             Class<?> propertyType = getType(propertyId);
             if (Comparable.class.isAssignableFrom(propertyType)
@@ -1145,9 +1132,8 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
      * Set the internal collection of filters without performing filtering.
      *
      * This method is mostly for internal use, use
-     * {@link #addFilter(com.com.vaadin.v7.data.Container.Filter)} and
-     * <code>remove*Filter*</code> (which also re-filter the container) instead
-     * when possible.
+     * {@link #addFilter(Container.Filter)} and <code>remove*Filter*</code>
+     * (which also re-filter the container) instead when possible.
      *
      * @param filters
      */

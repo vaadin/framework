@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,16 +15,15 @@
  */
 package com.vaadin.util;
 
-import java.nio.charset.Charset;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Utilities related to various encoding schemes.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 7.7.7
  */
 public final class EncodeUtil {
-    private static final Charset UTF8 = Charset.forName("UTF-8");
 
     private EncodeUtil() {
         // Static utils only
@@ -49,7 +48,7 @@ public final class EncodeUtil {
                 // Create string from a single code point
                 String cpAsString = new String(new int[] { cp }, 0, 1);
 
-                appendHexBytes(builder, cpAsString.getBytes(UTF8));
+                appendHexBytes(builder, cpAsString.getBytes(UTF_8));
             }
 
             // Advance to the next code point

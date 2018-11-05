@@ -1,0 +1,419 @@
+---
+title: Integration Experiences
+order: 34
+layout: page
+---
+
+[[integrating-vaadin-applications-with-other-technologies]]
+= Integrating Vaadin Applications with other technologies
+
+[[preface]]
+Preface
+~~~~~~~
+
+The intention of this article is not to show how to integrate
+http://vaadin.com/[Vaadin] with some other technology, but to tell
+user-stories from both easy and hard customer cases where Vaadin has
+been combined with something else. It should also give you a pointer to
+what is possible and what is not.
+
+Please see the http://vaadin.com/wiki[wiki] for more extensive technical
+articles on various subjects. If you are interested in learning more
+from our developers, please contact us through
+http://vaadin.com/forum[our forums]. The forum messages are usually
+answered very rapidly (read: within a few hours during business hours).
+
+[[user-stories]]
+User stories
+~~~~~~~~~~~~
+
+[[cloud-computing-and-vaadin]]
+Cloud computing and Vaadin
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+Amazon's EC2 really takes creating and serving Vaadin applications to
+a new level. You can literally have a new server running with server,
+portal and application in couple of minutes and it all just works. Of
+course this not only applies to Vaadin applications, but together they
+are a perfect fit! -*Joonas Lehtinen*
+===============================
+
+link:https://aws.amazon.com/ec2/[Amazon EC2]
+
+[[cms-ala-liferay-and-vaadin]]
+CMS (ala Liferay) and Vaadin
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+We wanted to be able to show some pop-up application windows that were
+part of our Vaadin application and that the customer themselves could
+write the links in their CMS without hassle. What we did was that we
+created an invisible Vaadin application that listened to the URL and
+whenever it changed due to a click on a link, it launched a new pop-up
+window. The solution was also highly scalable as 30.000+ users are using
+it daily already. -*Johannes Tuikkala*
+===============================
+
+[[custom-ui-components-to-browser-with-java]]
+Custom UI components to browser with Java
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+Creating your own widget for Vaadin is very easy thanks to the new
+eclipse plugin. All you need to do is select "Create new Widget" in
+eclipse and all the server and client side code is automatically
+generated for you. Then you'll just create the widget using Java and
+GWT. Using the eclipse plugin it is also much faster to set up a new
+Vaadin project. -*Matti Tahvonen*
+===============================
+
+[[drools-and-vaadin]]
+Drools and Vaadin
+^^^^^^^^^^^^^^^^^
+
+===============================
+We required a flexible way to validate internal dependencies in highly
+dynamic data structures. We solved our need by integrating the Drools
+rule engine in our application, and with it we got a powerful
+content-triggered autocompletion mechanism as a freebie. We wrapped the
+rule engine behind a general API in a EJB, so the rule mechanism can be
+used by all components of the application architecture. -*Henri
+Muurimaa*
+===============================
+
+http://jboss.org/drools[Drools]
+
+[[extending-existing-components]]
+Extending existing components
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+We had a real business need for few important widgets that just were
+not available in Vaadin. So we extended the current table and came up
+with hierarchical table aka treetable. Another simple but important
+widget was multilingual text field. It acts just like normal textfield
+but when opened, you get the java field opened with multiple locale
+instances, it has nice UI too including user friendly flags. Great for
+handling i18n based data in your UI. We got multiple customer cases that
+enjoy these new widgets. -*Jani Laakso*
+===============================
+
+
+[[flex-and-vaadin]]
+Flex and Vaadin
+^^^^^^^^^^^^^^^
+
+===============================
+Flex is really excellent for animations and flashy things and in this
+way is an ideal candidate for creating something really good looking
+together with Vaadin. I created a proof-of-concept flex-Vaadin
+application that communicates through GWT by wrapping the flex component
+and implementing Vaadin's paintable interface. If you know flex from
+before or have teams that know flex and others that know Java then this
+is an ideal combination. -*Kim Leppänen*
+===============================
+
+http://demo.vaadin.com/coverflow/[Coverflow example with Flex+Vaadin]
+
+[[google-analytics-integration]]
+Google Analytics Integration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+For the Sampler application, we wanted to be able to see which
+'samples' are interesting to the users. GWT makes it easy to integrate
+with JavaScript APIs, and thus making a Google Analytics component was a
+breeze, even without using existing GWT/Java efforts. -*Marc Englund*
+===============================
+
+http://demo.vaadin.com/sampler/[Sampler]
+
+[[graphics-with-jfreechart]]
+Graphics with JFreeChart
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+It turned out surprisingly easy to add various charts to reports
+generated by a web application. All we needed to do is create the
+JFreeChart chart object and an Vaadin component automatically displays
+it as SVG or PNG graphics depending on the browser used. -*Henri Sara*
+===============================
+
+http://dev.vaadin.com/browser/incubator/JFreeChartComponent[Vaadin:JFreeChart
+Component] +
+http://www.jfree.org/jfreechart/[JFreeChart]
+
+[[gwt-components-to-vaadin]]
+GWT Components to Vaadin
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+I wanted to create a Vaadin component out of Google's !GoogleMaps GWT
+Widget. In order to do this you needed to create a widgetset that
+includes the component and implement two methods that are required for
+communication between the client and the server. Quite straight forward.
+See the code in the incubator (link below). -*Henri Muurimaa*
+===============================
+
+https://vaadin.com/directory/component/googlemaps-add-on[GoogleMaps
+add-on]
+
+[[javascript-libraries-and-vaadin]]
+Javascript libraries and Vaadin
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+For the Sampler application, I made a code formatting and colorizing
+component, which makes use of the "google-code-prettify" JavaScript
+library. I've found existing JavaScript libraries are easy to use with
+GWT on the client-side. -*Marc Englund*
+===============================
+
+http://demo.vaadin.com/sampler/[Sampler] +
+http://code.google.com/p/google-code-prettify/[Prettify]
+
+[[jquery-dojo-and-prototype-with-vaadin]]
+JQuery, Dojo and Prototype with Vaadin
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+Combining Vaadin applications and client-side javascript libraries is
+a very interesting use-case and a very easy one to implement as well.
+The easiest way to accomplish this is to use a !CustomLayout with the
+Javascript you want. See a short demo I made below. -*Joonas Lehtinen*
+===============================
+
+http://vaadin.com/forum/-/message_boards/message/18611[Discussions on
+the forum] +
+http://jole.virtuallypreinstalled.com/JQTest/[Live example of
+JQuery and Vaadin collaboration]
+
+[[latex-and-vaadin]]
+LaTeX and Vaadin
+^^^^^^^^^^^^^^^^
+
+===============================
+This was no doubt a very exotic combination. Our customer wanted to be
+able to create books that could be sent to printing based on huge
+amounts of data. We wrote an advanced parser (using DOM and SAX parsers)
+that created a file that LaTeX could interpret. LaTeX then created a PDF
+that was saved in a database and a link showed up in the webshop.
+Whenever you clicked on the link, you got finalized PDF that could be
+sent to printing and as a result you got a full several hundred pages
+long book. -*Jani Laakso*
+===============================
+
+http://www.latex-project.org/[LaTeX]
+
+[[leveraging-existing-java-libraries-in-the-browser]]
+Leveraging existing Java libraries in the browser
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+Recently, while making a gesture recognition component, I was able to
+use the Levensthein Distance algorithm implementation from the Jakarta
+Commons project, without any modification.The use of GWT makes it
+possible to leverage existing Java code on the client side - within own
+projects, or by making use of the vast amount of libraries available for
+Java. -*Marc Englund*
+===============================
+
+[[moss-and-vaadin-through-iframe]]
+MOSS and Vaadin through IFrame
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+The goal was to get a Vaadin application running inside the Microsoft
+Office Sharepoint Server (MOSS) as a portlet. What we did was that we
+wrote our Vaadin application and deployed it on a JBoss portal. We then
+took the application's URL and used MOSS' !PageViewer Webpart to have it
+include the application inside an IFrame. It was actually much easier
+that I thought. -*Johannes Tuikkala*
+===============================
+
+http://blogs.technet.com/josebda/archive/2007/04/05/integrating-sharepoint-with-other-portals-and-web-applications.aspx[Integrating
+Sharepoint with other portals and web applications]
+
+[[moss-and-vaadin-with-sharepoint-sso]]
+MOSS and Vaadin with Sharepoint SSO
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+The goal was to integrate a Vaadin application to MOSS as portal.
+Priority was to use SSO by Sharepoint. This was accomplished doing
+custom integration Webpart with C# that transfered authentication
+information to Vaadin before it was opened with-in IFRAME. -*Mauno
+Haukila*
+===============================
+
+[[n-tier-jee-architecture-with-vaadin]]
+N-tier JEE architecture with Vaadin
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+We have found in several larger customer cases that the best possible
+architecture is to separate the UI-layer from the rest. Never mix your
+business logic inside UI logic, there's no need to. This way the UI can
+be replaced in the future and also when updating old systems to use
+Vaadin (e.g. SWING applications that are written this way) it has been a
+breeze when the only thing that needs to be rewritten is the UI. Another
+very important factor is security, trust your data layer, do not trust
+your clients, using enterprise beans with JNDI helps you. Scalability
+and high-availability are also easier to cope with. Scale up with
+multiple cheap Tomcat machines acting as Vaadin clients, few powerful
+data servers as JBoss cluster and a good SQL server. -*Jani
+Laakso*
+===============================
+
+image:img/n-tier.png[N-tier]
+
+[[offline-standalone-applications]]
+Offline / standalone applications
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+I've made offline / standalone Vaadin applications by integrating an
+embedded servlet container (Jetty and Winstone so far) with Xulrunner.
+This is actually a quite straightforward process, requiring only a few
+lines of code for the basic functionality. It's really the distribution
+(making installers and such), and the actual application that's the hard
+part. -*Marc Englund*
+===============================
+
+[[opensource-stack-for-customer-projects]]
+Opensource stack for customer projects
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+One of our customers asked us to help them with selecting an open
+source stack for their open source product portfolio. What we came up
+with was based on our own experiences and is by no means the only
+possibility. What it shows though, is how Vaadin is only part of the UI
+layer and everything beneath it can be almost anything. -*Ville
+Ingman*
+===============================
+
+image:img/OSStack.png[OS Stack] +
+link:img/OSStack.pdf[OS Stack PDF]
+
+[[pentaho-bi-suite-and-vaadin]]
+Pentaho BI Suite and Vaadin
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+Yet another way to create PDF files, but this time really tightly
+integrated with Vaadin. We had some data in a Vaadin table that we
+wanted to print as a PDF file. As each component in Vaadin has a
+container, the most natural way was to take the data from the container,
+send it through a wrapper and give it to Pentaho. Pentaho then created
+the PDF files without any problems. So whenever somebody wanted to print
+the data they were viewing in a scrollable table, they just clicked a
+button and everything was taken care of in the background. -*Jani
+Laakso*
+===============================
+
+http://www.pentaho.com/[Pentaho BI Suite]
+
+[[portlets-with-vaadin]]
+Portlets with Vaadin
+^^^^^^^^^^^^^^^^^^^^
+
+===============================
+The only thing you have to do in practice when you want to write a
+portlet is add the portlet.xml file, where you define Vaadin's
+!ApplicationPortlet as the entry point. After this your application will
+work inside the portal. The only situation where you need to edit the
+Java code as well is when you want to use some portal/portlet specific
+features. This gives you the possibility to first develop a standard
+Vaadin application and then later, by just adding the portlet.xml file
+you have it working inside a portal. -*Jonas Granvik*
+===============================
+
+http://dev.vaadin.com/wiki/Articles/PortalTools[Portal Tools]
+
+[[pdfs-fopitext-and-vaadin]]
+PDFs (FOP+iText) and Vaadin
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+When creating my printing service I used Apache FOP and iText to
+create PDF files from multiple XML/XSLT/PDF files just as you would
+normally in any Java application. The thing I found the most powerful
+however was the combination with these two products together with
+Vaadin's Embedded component. I just created the object, setSource() to
+my byte array and the PDF showed up in my browser together with all the
+buttons and widgets I also wanted on the screen. The user experience was
+significantly enhanced compared to having to download the PDF and click
+on some button in an external window. -*Fredrik Rönnlund*
+===============================
+
+http://vaadin.com/book/-/page/components.embedded.html[Vaadin:Embedded] +
+http://xmlgraphics.apache.org/fop/[Apache FOP] +
+http://www.lowagie.com/iText/[iText]
+
+[[saas-with-vaadin]]
+SAAS with Vaadin
+^^^^^^^^^^^^^^^^
+
+===============================
+When writing our application as a service we had to do some serious
+planning beforehand as the application was going to be used by so many
+people. What we did was that we had one database for all users and then
+inserted the instance ID in all HQL/SQL clauses to be sure we were
+always accessing the correct instance. The instance was select at login.
+This didn't require any specific things from the UI part, which was
+created using Vaadin. -*Jani Laakso*
+===============================
+
+[[single-sign-on-sso-to-liferay]]
+Single Sign On (SSO) to Liferay
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+Writing a Single Sign On portlet was really easy. A Vaadin application
+by default only requires to be packaged as a portlet in order to work
+inside a portal and then by using the provided API to the portal you can
+easily retrieve all login information. This way the user doesn't need to
+login several times and context handling is also done easily. -*Jani
+Laakso*
+===============================
+
+[[unit-testing-vaadin-applications]]
+Unit testing Vaadin applications
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+Unit testing Vaadin applications is no different from unit testing any
+java application. What we have done however is separate the GUI from the
+!BusinessLogic (even so far that they are running on physically
+different servers). This way our most extensive testing is done on the
+business logic, but also on our Controller in the GUI. Having Unit tests
+in general has helped us build more solid applications, on all
+layers. -*Kim Leppänen*
+===============================
+
+[[web-2.0-apis-and-vaadin]]
+Web 2.0 APIs and Vaadin
+^^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+Many "Web 2.0" APIs already have GWT bindings, making it trivial to
+use these. Even without existing bindings, it's easy to use JavaScript
+APIs from GWT, or REST/JSON/XML/etc APIs from the server-side.Google
+Maps, Google Analytics, Flickr, Youtube - these are some "Web 2.0" APIs
+that have been used. -*Marc Englund*
+===============================
+
+[[webservices-and-vaadin]]
+Webservices and Vaadin
+^^^^^^^^^^^^^^^^^^^^^^
+
+===============================
+Integrating a webservice with Vaadin was really a no brainer. What we
+had was a UI that had to check something through a service-provider's
+Webservice. So when ever the UI launched the check, we called the
+webservice (with Pojos created by the WSDL file that we got from the
+service provider) and got some other Pojos as a reply. The reply then
+dictated what the UI would look like. -*Johannes Tuikkala*
+===============================

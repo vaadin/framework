@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.function.BiFunction;
 
 import com.vaadin.server.SerializablePredicate;
+import com.vaadin.shared.ui.ErrorLevel;
 
 /**
  * A functional interface for validating user input or other potentially invalid
@@ -31,8 +32,8 @@ import com.vaadin.server.SerializablePredicate;
  * For instance, the following validator checks if a number is positive:
  *
  * <pre>
- * Validator&lt;Integer&gt; v = num -> {
- *     if (num >= 0)
+ * Validator&lt;Integer&gt; v = num -&gt; {
+ *     if (num &gt;= 0)
  *         return ValidationResult.ok();
  *     else
  *         return ValidationResult.error("number must be positive");
@@ -80,14 +81,14 @@ public interface Validator<T>
      * Builds a validator out of a conditional function and an error message. If
      * the function returns true, the validator returns {@code Result.ok()}; if
      * it returns false or throws an exception,
-     * {@link ValidationResult#error(String)} is returned with the given
-     * message.
+     * {@link ValidationResult#error(String)} is returned with the given message
+     * and error level {@link ErrorLevel#ERROR}.
      * <p>
      * For instance, the following validator checks if a number is between 0 and
      * 10, inclusive:
      *
      * <pre>
-     * Validator&lt;Integer&gt; v = Validator.from(num -> num >= 0 && num <= 10,
+     * Validator&lt;Integer&gt; v = Validator.from(num -&gt; num &gt;= 0 && num &lt;= 10,
      *         "number must be between 0 and 10");
      * </pre>
      *
@@ -101,9 +102,41 @@ public interface Validator<T>
      */
     public static <T> Validator<T> from(SerializablePredicate<T> guard,
             String errorMessage) {
-        Objects.requireNonNull(guard, "guard cannot be null");
         Objects.requireNonNull(errorMessage, "errorMessage cannot be null");
         return from(guard, ctx -> errorMessage);
+    }
+
+    /**
+     * Builds a validator out of a conditional function and an error message. If
+     * the function returns true, the validator returns {@code Result.ok()}; if
+     * it returns false or throws an exception,
+     * {@link ValidationResult#error(String)} is returned with the given message
+     * and error level.
+     * <p>
+     * For instance, the following validator checks if a number is between 0 and
+     * 10, inclusive:
+     *
+     * <pre>
+     * Validator&lt;Integer&gt; v = Validator.from(num -&gt; num &gt;= 0 && num &lt;= 10,
+     *         "number must be between 0 and 10", ErrorLevel.ERROR);
+     * </pre>
+     *
+     * @param <T>
+     *            the value type
+     * @param guard
+     *            the function used to validate, not null
+     * @param errorMessage
+     *            the message returned if validation fails, not null
+     * @param errorLevel
+     *            the error level for failures from this validator, not null
+     * @return the new validator using the function
+     *
+     * @since 8.2
+     */
+    public static <T> Validator<T> from(SerializablePredicate<T> guard,
+            String errorMessage, ErrorLevel errorLevel) {
+        Objects.requireNonNull(errorMessage, "errorMessage cannot be null");
+        return from(guard, ctx -> errorMessage, errorLevel);
     }
 
     /**
@@ -122,20 +155,43 @@ public interface Validator<T>
      */
     public static <T> Validator<T> from(SerializablePredicate<T> guard,
             ErrorMessageProvider errorMessageProvider) {
+        return from(guard, errorMessageProvider, ErrorLevel.ERROR);
+    }
+
+    /**
+     * Builds a validator out of a conditional function and an error message
+     * provider. If the function returns true, the validator returns
+     * {@code Result.ok()}; if it returns false or throws an exception,
+     * {@code Result.error()} is returned with the message from the provider.
+     *
+     * @param <T>
+     *            the value type
+     * @param guard
+     *            the function used to validate, not null
+     * @param errorMessageProvider
+     *            the provider to generate error messages, not null
+     * @param errorLevel
+     *            the error level for failures from this validator, not null
+     * @return the new validator using the function
+     *
+     * @since 8.2
+     */
+    public static <T> Validator<T> from(SerializablePredicate<T> guard,
+            ErrorMessageProvider errorMessageProvider, ErrorLevel errorLevel) {
         Objects.requireNonNull(guard, "guard cannot be null");
         Objects.requireNonNull(errorMessageProvider,
                 "errorMessageProvider cannot be null");
+        Objects.requireNonNull(errorLevel, "errorLevel cannot be null");
         return (value, context) -> {
             try {
                 if (guard.test(value)) {
                     return ValidationResult.ok();
-                } else {
-                    return ValidationResult
-                            .error(errorMessageProvider.apply(context));
                 }
+                return ValidationResult.create(
+                        errorMessageProvider.apply(context), errorLevel);
             } catch (Exception e) {
-                return ValidationResult
-                        .error(errorMessageProvider.apply(context));
+                return ValidationResult.create(
+                        errorMessageProvider.apply(context), errorLevel);
             }
         };
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 
 import org.jsoup.nodes.Element;
@@ -32,6 +33,7 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.ListingJsonConstants;
 import com.vaadin.shared.ui.optiongroup.CheckBoxGroupState;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
@@ -47,6 +49,8 @@ import com.vaadin.ui.declarative.DesignFormatter;
  */
 public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
         implements FocusNotifier, BlurNotifier, HasDataProvider<T> {
+
+    private DescriptionGenerator<T> descriptionGenerator = item -> null;
 
     /**
      * Constructs a new CheckBoxGroup with caption.
@@ -92,6 +96,13 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
      */
     public CheckBoxGroup() {
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
+        addDataGenerator((item, jsonObject) -> {
+            String description = getItemDescriptionGenerator().apply(item);
+            if (description != null) {
+                jsonObject.put(ListingJsonConstants.JSONKEY_ITEM_DESCRIPTION,
+                        description);
+            }
+        });
     }
 
     /**
@@ -162,6 +173,38 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
                 BlurListener.blurMethod);
     }
 
+    /**
+     * Sets the description generator that is used for generating descriptions
+     * for items. Description is shown as a tooltip when hovering on
+     * corresponding element. If the generator returns {@code null}, no tooltip
+     * is shown.
+     *
+     *
+     * @param descriptionGenerator
+     *            the item description generator to set, not {@code null}
+     *
+     * @since 8.2
+     */
+    public void setItemDescriptionGenerator(
+            DescriptionGenerator<T> descriptionGenerator) {
+        Objects.requireNonNull(descriptionGenerator);
+        if (this.descriptionGenerator != descriptionGenerator) {
+            this.descriptionGenerator = descriptionGenerator;
+            getDataProvider().refreshAll();
+        }
+    }
+
+    /**
+     * Gets the item description generator.
+     *
+     * @return the item description generator
+     *
+     * @since 8.2
+     */
+    public DescriptionGenerator<T> getItemDescriptionGenerator() {
+        return descriptionGenerator;
+    }
+
     @Override
     protected void readItems(Element design, DesignContext context) {
         setItemEnabledProvider(new DeclarativeItemEnabledProvider<>());
@@ -180,9 +223,8 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
                 ((DeclarativeItemEnabledProvider) provider).addDisabled(item);
             }
         } else {
-            throw new IllegalStateException(String.format(
-                    "Don't know how "
-                            + "to disable item using current item enabled provider '%s'",
+            throw new IllegalStateException(String.format("Don't know how "
+                    + "to disable item using current item enabled provider '%s'",
                     provider.getClass().getName()));
         }
         return item;
@@ -193,7 +235,7 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
         Element elem = super.writeItem(design, item, context);
 
         if (!getItemEnabledProvider().test(item)) {
-            elem.attr("disabled", "");
+            elem.attr("disabled", true);
         }
 
         if (isHtmlContentAllowed()) {

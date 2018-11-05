@@ -1,0 +1,258 @@
+---
+title: Injection And Scopes
+order: 48
+layout: page
+---
+
+[[ii-injection-and-scopes]]
+= II - Injection and scopes
+
+In this tutorial we'll take a closer look at the @CDIUI annotation and
+use CDI to inject some beans to our application.
+
+[[cdiui]]
+@CDIUI
+~~~~~~
+
+The @CDIUI annotation is the way in which you let the Vaadin CDI plugin
+know which UI's should be accessible to the user and how they should be
+mapped. It accepts one optional String parameter indicating the UI path.
+If an explicit path is not provided the class name of the UI will be
+used to construct a pathname by the following convention: any trailing
+"UI" will be truncated and camelcase will be converted to hyphenated
+lowercase. Some examples of the convention:
+
+....
+HelloWorldUI → hello-world
+ExampleUI → example
+VisualEditor → visual-editor
+....
+
+Passing an empty String as the path will cause the UI to be mapped to
+the root of the deployment. Most single UI applications will probably
+want to do this.
+
+[[injecting-beans]]
+Injecting beans
+~~~~~~~~~~~~~~~
+
+Now that the UI itself has been injected, we can use the @Inject
+annotation to further inject beans to it. Let's create something for us
+to actually inject.
+
+We'll define the following interface, and an implementation for it.
+
+[source,java]
+....
+package com.vaadin.cdi.tutorial;
+
+public interface Greeting {
+  public String getText();
+}
+....
+
+[source,java]
+....
+package com.vaadin.cdi.tutorial;
+
+import java.io.Serializable;
+
+public class SimpleGreetingImpl implements Greeting, Serializable {
+
+  @Override
+  public String getText() {
+    return "Hello, World!";
+  }
+}
+....
+
+So far so good, now we'll inject it into our UI. You'll need to add the
+CDI API as a dependency in your pom.xml. (Group id: javax.enterprise,
+artefact id: cdi-api, version: 1.2)
+
+[source,java]
+....
+package com.vaadin.cdi.tutorial;
+
+import javax.inject.Inject;
+
+import com.vaadin.annotations.Theme;
+import com.vaadin.cdi.CDIUI;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+
+@SuppressWarnings("serial")
+@CDIUI("")
+@Theme("valo")
+public class HelloWorldUI extends UI {
+
+  @Inject
+  private Greeting greeting;
+
+  @Override
+  protected void init(VaadinRequest request) {
+    final VerticalLayout layout = new VerticalLayout();
+    layout.setMargin(true);
+    setContent(layout);
+
+    Button button = new Button("Click Me");
+    button.addClickListener(new Button.ClickListener() {
+      public void buttonClick(ClickEvent event) {
+        layout.addComponent(new Label(greeting.getText()));
+      }
+    });
+    layout.addComponent(button);
+  }
+}
+....
+
+Let's run that and see.
+
+image:img/hello-world.png[Injection seems to be working]
+
+So far so good. Suppose we want to say hello to the user by name. We'll
+create a class to store our user data in. For now it's a simple POJO
+just for storing the name in a single string.
+
+[source,java]
+....
+package com.vaadin.cdi.tutorial;
+
+import java.io.Serializable;
+
+public class UserInfo implements Serializable {
+  private String name;
+
+  public UserInfo() {
+    this.name = "stranger";
+  }
+
+  public UserInfo(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+}
+....
+
+We'll inject that to the UI and assign the user some name during
+initialization (for now)
+
+[source,java]
+....
+@Inject
+private UserInfo user;
+
+@Override
+protected void init(VaadinRequest request) {
+  ...
+  user.setName("Ernest");
+}
+....
+
+Then we'll create a new implementation of the Greeting and inject the
+user there as well.
+
+[source,java]
+....
+package com.vaadin.cdi.tutorial;
+
+import javax.inject.Inject;
+
+public class UserGreetingImpl implements Greeting {
+
+  @Inject
+  private UserInfo user;
+
+  @Override
+  public String getText() {
+    return "Hello, " + user.getName() + "!";
+  }
+}
+....
+
+Now, it would be easy to think that that's all you need but we're not
+quite there. There are two issues with this that need to be addressed.
+The first one will become immediately obvious when you try to deploy the
+application. The deployment will fail as the injection in HelloWorldUI
+is ambiguous, that is CDI doesn't know which implementation of Greeting
+we want. +
+There are three annotations that are useful in situations like this:
+@Default, @Alternative and @Specializes. Giving a bean any of these
+annotations will affect it's preference order when the CDI container is
+looking for which implementation to inject. Unless otherwise specified,
+beans will be considered to have the @Default annotation. Beans with the
+@Alternative annotation will only be injected if that particular bean is
+named in the beans.xml file (TODO: add link). Beans with the
+@Specializes annotation will be considered a drop-in replacement for
+it's superclass, and will be used over any implementations it extends. +
+In our case, we'll want to give SimpleGreetingImpl the @Default
+annotation and UserGreetingImpl the @Alternative annotation.
+
+[source,java]
+....
+@Default
+public class SimpleGreetingImpl implements Greeting {
+....
+
+[source,java]
+....
+@Alternative
+public class UserGreetingImpl implements Greeting {
+....
+
+After that the application could actually be deployed. To tell CDI we'll
+want to use our alternative implementation we need to create the
+beans.xml in our WEB-INF folder, and add the following declaration to
+it:
+
+[source,xml]
+....
+<beans>
+  <alternatives>
+    <class>com.vaadin.cdi.tutorial.UserGreetingImpl</class>
+  </alternatives>
+</beans>
+....
+
+Let's try that out:
+
+image:img/hello-stranger.png[Something's not right]
+
+Better, but not quite there yet. We're getting the wrong username,
+despite the fact that we set the username to "Earnest" in the UI. The
+problem here is the scope of the bean. If you don't specify a scope for
+your bean either in the bean class itself or at the injection point,
+it'll default to using the dependent scope. Every time you inject a
+dependent bean you'll get a new instance, which is clearly not what we
+want here. Let's go back to our UserInfo class and assign it an explicit
+scope.
+
+[source,java]
+....
+import com.vaadin.cdi.UIScoped;
+
+@UIScoped
+public class UserInfo {
+...
+....
+
+The @UIScoped annotation is specific to Vaadin CDI. Anything injected
+with that annotation will get the same instance while within the same
+UI. Load a different UI and you'll get a different instance. If the
+session expires or the UI is closed the instances will be cleaned up. +
+Let's see if it worked.
+
+image:img/hello-earnest.png[Something IS right]
+
+Looks like we're making progress.

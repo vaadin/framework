@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,8 +15,6 @@
  */
 package com.vaadin.client.ui.richtextarea;
 
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
@@ -48,15 +46,10 @@ public class RichTextAreaConnector extends AbstractFieldConnector
 
     @Override
     protected void init() {
-        getWidget().addBlurHandler(new BlurHandler() {
-            @Override
-            public void onBlur(BlurEvent event) {
-                flush();
-            }
-        });
-        getWidget().addInputHandler(() -> {
-            valueChangeHandler.scheduleValueChange();
-        });
+        getWidget().client = getConnection();
+        getWidget().addBlurHandler(event -> flush());
+        getWidget().addInputHandler(
+                () -> valueChangeHandler.scheduleValueChange());
 
         registerRpc(RichTextAreaClientRpc.class,
                 new RichTextAreaClientRpcImpl());

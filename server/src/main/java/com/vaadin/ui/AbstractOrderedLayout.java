@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Logger;
@@ -184,7 +185,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
      */
     @Override
     public Iterator<Component> iterator() {
-        return components.iterator();
+        return Collections.unmodifiableCollection(components).iterator();
     }
 
     /**
@@ -475,7 +476,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
             // handle expand ratio
             if (attr.hasKey(":expand")) {
                 String value = attr.get(":expand");
-                if (value.length() > 0) {
+                if (!value.isEmpty()) {
                     try {
                         float ratio = Float.valueOf(value);
                         setExpandRatio(newChild, ratio);

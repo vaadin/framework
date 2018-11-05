@@ -1,0 +1,57 @@
+---
+title: Using Bean Validation To Validate Input
+order: 45
+layout: page
+---
+
+[[using-bean-validation-to-validate-input]]
+= Using Bean Validation to validate input
+
+Before you get started with Bean Validation you need to download a Bean
+Validation implementation and add it to your project. You can find one
+for instance at http://bval.apache.org/downloads.html. Just add the jars
+from the lib folder to your project.
+
+Bean Validation works as a normal validator. If you have a bean with
+Bean Validation annotations, such as:
+
+[source,java]
+....
+public class Person {
+
+  @Size(min = 5, max = 50)
+  private String name;
+
+  @Min(0)
+  @Max(100)
+  private int age;
+  // + constructor + setters + getters
+}
+....
+
+You can create a field for the name field as you always would:
+
+[source,java]
+....
+Person person = new Person("John", 26);
+TextField firstName = new TextField("First name");
+
+setContent(firstName);
+....
+
+and bind the field with a bean validation binder:
+
+[source,java]
+....
+BeanValidationBinder<Person> binder = new BeanValidationBinder<>(Person.class);
+binder.forField(firstName).bind("name");
+binder.setBean(person);
+....
+
+Your `firstName` field is now automatically validated based on the
+annotations in your bean class. You can do the same thing for the `age`
+field and you won't be able to set a value outside the valid 0-100
+range.
+
+A Bean Validation tutorial is available here:
+http://docs.oracle.com/javaee/6/tutorial/doc/gircz.html

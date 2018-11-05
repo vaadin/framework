@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -66,8 +66,26 @@ public class FileDownloader extends AbstractExtension {
         setResource("dl", resource);
     }
 
+    /**
+     * Add this extension to the target component.
+     *
+     * @param target
+     *            the component to attach this extension to
+     */
     public void extend(AbstractComponent target) {
         super.extend(target);
+    }
+
+    /**
+     * Add this extension to the {@code EventTrigger}.
+     *
+     * @param eventTrigger
+     *            the trigger to attach this extension to
+     * @since 8.4
+     */
+    public void extend(EventTrigger eventTrigger) {
+        super.extend(eventTrigger.getConnector());
+        getState().partInformation = eventTrigger.getPartInformation();
     }
 
     /**
@@ -92,7 +110,7 @@ public class FileDownloader extends AbstractExtension {
     }
 
     /**
-     * Sets whether the content type of served resources should be overriden to
+     * Sets whether the content type of served resources should be overridden to
      * <code>application/octet-stream</code> to reduce the risk of a browser
      * plugin choosing to display the resource instead of downloading it. This
      * is by default set to <code>true</code>.
@@ -113,16 +131,22 @@ public class FileDownloader extends AbstractExtension {
     /**
      * Checks whether the content type should be overridden.
      *
-     * @see #setOverrideContentType(boolean)
-     *
      * @return <code>true</code> if the content type will be overridden when
      *         possible; <code>false</code> if the original content type will be
      *         used.
+     * @see #setOverrideContentType(boolean)
      */
     public boolean isOverrideContentType() {
         return overrideContentType;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IOException
+     *             if something goes wrong with the download or the user
+     *             cancelled the file download process.
+     */
     @Override
     public boolean handleConnectorRequest(VaadinRequest request,
             VaadinResponse response, String path) throws IOException {

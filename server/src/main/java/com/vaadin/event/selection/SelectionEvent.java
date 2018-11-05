@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,9 +15,10 @@
  */
 package com.vaadin.event.selection;
 
-import java.io.Serializable;
 import java.util.Optional;
 import java.util.Set;
+
+import com.vaadin.event.HasUserOriginated;
 
 /**
  * A selection event that unifies the way to access to selection event for multi
@@ -29,7 +30,7 @@ import java.util.Set;
  * @param <T>
  *            the data type of the selection model
  */
-public interface SelectionEvent<T> extends Serializable {
+public interface SelectionEvent<T> extends HasUserOriginated {
 
     /**
      * Get first selected data item.
@@ -51,13 +52,4 @@ public interface SelectionEvent<T> extends Serializable {
      * @return return all the selected items, if any, never {@code null}
      */
     Set<T> getAllSelectedItems();
-
-    /**
-     * Returns whether this selection event was triggered by user interaction,
-     * on the client side, or programmatically, on the server side.
-     *
-     * @return {@code true} if this event originates from the client,
-     *         {@code false} otherwise.
-     */
-    boolean isUserOriginated();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -45,6 +45,9 @@ public abstract class VaadinUriResolver implements Serializable {
      * RequestHandler} instances.</li>
      * <li><code>vaadin://</code> - resolves to the location of static resouces
      * in the VAADIN directory</li>
+     * <li><code>frontend://</code> - resolves to the location of frontend
+     * (Bower and similar) resources, which might vary depending on the used
+     * browser</li>
      * </ul>
      * Any other URI protocols, such as <code>http://</code> or
      * <code>https://</code> are passed through this method unmodified.
@@ -58,6 +61,13 @@ public abstract class VaadinUriResolver implements Serializable {
         if (vaadinUri == null) {
             return null;
         }
+        if (vaadinUri
+                .startsWith(ApplicationConstants.FRONTEND_PROTOCOL_PREFIX)) {
+            final String frontendUrl = getFrontendUrl();
+            vaadinUri = frontendUrl + vaadinUri.substring(
+                    ApplicationConstants.FRONTEND_PROTOCOL_PREFIX.length());
+        }
+
         if (vaadinUri.startsWith(ApplicationConstants.THEME_PROTOCOL_PREFIX)) {
             final String themeUri = getThemeUri();
             vaadinUri = themeUri + vaadinUri.substring(7);
@@ -151,6 +161,8 @@ public abstract class VaadinUriResolver implements Serializable {
      * Gets the URL pointing to the context root.
      *
      * @return the context root URL
+     *
+     * @since 8.0.3
      */
     protected abstract String getContextRootUrl();
 
@@ -170,4 +182,14 @@ public abstract class VaadinUriResolver implements Serializable {
      */
     protected abstract String encodeQueryStringParameterValue(
             String parameterValue);
+
+    /**
+     * Returns the URL pointing to the folder containing frontend files, either
+     * for ES5 (if browser does not support ES6) or ES6 (most browsers).
+     *
+     * @return the absolute or relative URL to the frontend files, ending with a
+     *         slash '/'
+     * @since 8.1
+     */
+    protected abstract String getFrontendUrl();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -143,18 +143,18 @@ public class ReportUsage {
         appendUserAgentProperty(extra, "os.name");
         appendUserAgentProperty(extra, "os.version");
 
-        if (extra.length() > 0) {
-            userAgent += " (" + extra.toString() + ")";
+        if (extra.length() != 0) {
+            userAgent += " (" + extra + ")";
         }
 
-        return userAgent.toString();
+        return userAgent;
     }
 
     private static void appendUserAgentProperty(StringBuilder sb,
             String propName) {
         String propValue = System.getProperty(propName);
         if (propValue != null) {
-            if (sb.length() > 0) {
+            if (sb.length() != 0) {
                 sb.append(';').append(' ');
             }
             sb.append(propName);

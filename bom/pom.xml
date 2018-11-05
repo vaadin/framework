@@ -7,19 +7,20 @@
         <version>1.1.0</version>
         <relativePath />
     </parent>
+    <!-- Needed by a plugin in release build -->
     <groupId>com.vaadin</groupId>
     <artifactId>vaadin-bom</artifactId>
     <packaging>pom</packaging>
-    <version>8.0-SNAPSHOT</version>
+    <version>8.7-SNAPSHOT</version>
     <name>Vaadin Framework (Bill of Materials)</name>
     <description>Vaadin Framework (Bill of Materials)</description>
     <url>http://vaadin.com</url>
 
     <properties>
-        <vaadin.spring.version>2.0.0</vaadin.spring.version>
-        <vaadin.testbench.version>5.0.0</vaadin.testbench.version>
-        <vaadin.cdi.version>2.0.0</vaadin.cdi.version>
-        <vaadin.context-menu.version>2.0.0</vaadin.context-menu.version>
+        <vaadin.spring.version>3.1.1</vaadin.spring.version>
+        <vaadin.testbench.version>5.2.0</vaadin.testbench.version>
+        <vaadin.cdi.version>3.0.1</vaadin.cdi.version>
+        <vaadin.context-menu.version>3.0.0.beta1</vaadin.context-menu.version>
     </properties>
 
     <repositories>

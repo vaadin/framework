@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,7 @@
 package com.vaadin.client.ui.orderedlayout;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -36,7 +37,7 @@ import com.vaadin.client.Util;
 import com.vaadin.shared.ui.MarginInfo;
 
 /**
- * Base class for ordered layouts
+ * Base class for ordered layouts.
  */
 public class VAbstractOrderedLayout extends FlowPanel {
 
@@ -206,7 +207,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
     }
 
     /**
-     * Remove a slot from the layout
+     * Remove a slot from the layout.
      *
      * @param widget
      * @return
@@ -226,7 +227,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * method must be called.
      *
      * @since 7.6
-     * @param Slot
+     * @param slot
      *            to remove
      */
     protected void removeSlot(Slot slot) {
@@ -304,7 +305,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
     }
 
     /**
-     * Set the layout manager for the layout
+     * Set the layout manager for the layout.
      *
      * @param manager
      *            The layout manager to use
@@ -314,7 +315,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
     }
 
     /**
-     * Get the layout manager used by this layout
+     * Get the layout manager used by this layout.
      *
      */
     public LayoutManager getLayoutManager() {
@@ -345,8 +346,8 @@ public class VAbstractOrderedLayout extends FlowPanel {
             return CaptionPosition.TOP;
         }
         String captionClass = matcher.getGroup(1);
-        CaptionPosition captionPosition = CaptionPosition
-                .valueOf(CaptionPosition.class, captionClass.toUpperCase());
+        CaptionPosition captionPosition = CaptionPosition.valueOf(
+                CaptionPosition.class, captionClass.toUpperCase(Locale.ROOT));
         return captionPosition;
     }
 
@@ -451,7 +452,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
     }
 
     /**
-     * Set the margin of the layout
+     * Set the margin of the layout.
      *
      * @param marginInfo
      *            The margin information
@@ -466,7 +467,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
     }
 
     /**
-     * Turn on or off spacing in the layout
+     * Turn on or off spacing in the layout.
      *
      * @param spacing
      *            True if spacing should be used, false if not
@@ -715,7 +716,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
     @Override
     public void setHeight(String height) {
         super.setHeight(height);
-        definedHeight = (height != null && !"".equals(height));
+        definedHeight = height != null && !height.isEmpty();
     }
 
     /**

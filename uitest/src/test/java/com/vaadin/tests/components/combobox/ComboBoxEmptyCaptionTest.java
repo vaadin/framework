@@ -1,26 +1,14 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.combobox;
+
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.ComboBoxElement;
@@ -74,11 +62,26 @@ public class ComboBoxEmptyCaptionTest extends MultiBrowserTest {
                 "item6", "item7", "item8", "item9", "item10");
     }
 
+    @Test
+    public void emptyItemCaptionInTextBox() {
+        ComboBoxElement combo = $(ComboBoxElement.class).first();
+
+        assertEquals("", combo.getInputField().getAttribute("value"));
+
+        // set some caption for the empty selection element
+        $(ButtonElement.class).first().click();
+
+        assertEquals("empty", combo.getInputField().getAttribute("value"));
+
+    }
+
     private void ensureSuggestions(ComboBoxElement element,
             String... suggestions) {
         element.openPopup();
-        System.out.println(element.getPopupSuggestions());
-        Assert.assertEquals(Arrays.asList(suggestions),
+        assertEquals(Arrays.asList(suggestions),
                 new ArrayList<>(element.getPopupSuggestions()));
+        // Close popup
+        new Actions(getDriver()).sendKeys(Keys.ESCAPE).perform();
     }
+
 }

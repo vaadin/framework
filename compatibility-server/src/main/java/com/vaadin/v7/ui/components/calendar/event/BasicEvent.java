@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,19 +38,19 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
     private Date end;
     private Date start;
     private String styleName;
-    private transient List<EventChangeListener> listeners = new ArrayList<>();
+    private transient List<EventChangeListener> listeners = new ArrayList<EventChangeListener>();
 
     private boolean isAllDay;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public BasicEvent() {
 
     }
 
     /**
-     * Constructor for creating an event with the same start and end date
+     * Constructor for creating an event with the same start and end date.
      *
      * @param caption
      *            The caption for the event

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,6 +26,15 @@ import com.vaadin.shared.communication.ClientRpc;
  * @author Vaadin Ltd
  */
 public interface EditorClientRpc extends ClientRpc {
+
+    /**
+     * Tells the client to open the editor and bind data to it.
+     *
+     * @param rowIndex
+     *            the index of the edited row
+     *
+     */
+    void bind(int rowIndex);
 
     /**
      * Tells the client to cancel editing and hide the editor.

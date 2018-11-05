@@ -1,0 +1,126 @@
+---
+title: Hierarchical Data
+order: 6
+layout: page
+---
+
+[[datamodel.hierarchical]]
+= Hierarchical Data
+
+The [classname]#Tree# and the [classname]#TreeGrid# components allow you to show data with hierarchical relationships between items.
+That data can be populated by on-demand from a back end by implementing the [interfacename]#HierarchicalDataProvider# interface. If you have the data available in-memory on the server,
+you use the collection style API of [classname]#TreeData# and then pass it to a [classname]#TreeDataProvider#. This chapter introduces the hierarchical data providers and how they work.
+For using them with the components you should see <<dummy/../../../framework/components/components-tree.asciidoc#components.tree,"Tree">>
+and <<dummy/../../../framework/components/components-treegrid.asciidoc#components.treegrid,"TreeGrid">> documentation.
+
+== In-memory Hierarchical Data
+
+When the hierarchical data is available in the server side memory, you can use it to populate the [classname]#TreeData# that is the source of data for an [classname]#TreeDataProvider#. It contains collection style API to construct the hierarchical structure of your data, and also verifies that the hierarchy structure is valid.
+
+The following example populates a [classname]#TreeData# with two levels of data:
+
+[source, java]
+----
+Collection<Project> projects = service.getProjects();
+
+TreeData<Project> data = new TreeData<>();
+// add root level items
+data.addItems(null, projects);
+
+// add children for the root level items
+projects.forEach(project -> data.addItems(project, project.getChildren()));
+
+// construct the data provider for the hierarchical data we've built
+TreeDataProvider<Project> dataProvider = new TreeDataProvider<>(data);
+----
+
+=== Updating data
+
+When adding or removing items from the [classname]#TreeData#, you need to always notify the data provider that it should refresh its data. This can be done with the [methodname]#refreshAll# method in the data provider.
+
+[source, java]
+----
+TreeData<Project> data = dataProvider.getTreeData();
+data.addItem(null, newProject);
+data.addItems(newProject, newProject.getChildren());
+
+// removes the item and all of its children
+data.removeItem(oldProject);
+
+// refresh data provider and the components it is bound to
+dataProvider.refreshAll();
+----
+
+=== Sorting and Filtering
+
+For [classname]#TreeDataProvider#, both the sorting and filtering API is the same as in [classname]#ListDataProvider#. Sorting and filtering are applied separately for each hierarchy level, meaning e.g. that for a node that has not passed the filter there are no children shown.
+
+[source, java]
+----
+// setting sorting or filtering automatically refreshes the data
+dataProvider.setSortComparator((projectA, projectB) ->
+      projectA.getHours().compareTo(projectB.getHours()));
+
+dataProvider.setFilter(project -> project.getHours() > 100);
+----
+
+== Lazy Loading Hierarchical Data from a Back End
+
+The lazy loading hierarchical data, same concepts apply as with the non-hierarchical data, so you should take a look at <<dummy/../../../framework/datamodel/datamodel-providers.asciidoc#datamodel.dataproviders.lazy,"Lazy Loading Data to a Listing">> if you have not already.
+
+To load hierarchical data on-demand from your back end, you should extend the [classname]#AbstractHierarchicalDataProvider# class. Then you just have to implement the following three methods:
+
+* `boolean hasChildren(T item)`
+** This tells the data provider whether the given item has children and should be expandable. Note that this method is called frequently and should not do any costly operations.
+
+* `int getChildCount(HierarchicalQuery<T, F> query)`
+** This method returns the number of children for a certain tree level, but only for that level, excluding all subtrees
+** The parent node is available in the [classname]#HierarchicalQuery# via the [methodname]#getParent# method, which returns `null` for the root level.
+** This method is only called when a node has been expanded
+
+* `Stream<T> fetchChildren(HierarchicalQuery<T, F> query)`
+** This method returns a subset of the children for a certain tree level
+** The subset starts from the index retuned by the [methodname]#getOffset# method, thus for fetching the first item for a subtree it is always 0
+** The amount of nodes to fetch is returned by the [methodname]#getLimit# method, thus the amount of nodes returned should always (!) be the same as the _limit_.
+** The parent node is available in the [classname]#HierarchicalQuery# via the [methodname]#getParent# method, which returns `null` for the root level.
+** This method is called whenever the data should be displayed in the UI
+
+Note that the [classname]#HierarchicalQuery# query object contains the relevant information regarding the sorting and filtering.
+
+The following code snippet shows a simple example on how to building a lazy hierarchical data provider based on file system structure:
+
+[source, java]
+----
+class FileSystemDataProvider extends
+      AbstractBackEndHierarchicalDataProvider<File, FilenameFilter> {
+
+  private final File root;
+
+  public FileSystemDataProvider(File root) {
+    this.root = root;
+  }
+
+  @Override
+  public int getChildCount(
+      HierarchicalQuery<File, FilenameFilter> query) {
+    return (int) fetchChildren(query).count();
+  }
+
+  @Override
+  public Stream<File> fetchChildrenFromBackEnd(
+      HierarchicalQuery<File, FilenameFilter> query) {
+    final File parent = query.getParentOptional().orElse(root);
+    return query.getFilter()
+          .map(filter -> Stream.of(parent.listFiles(filter)))
+          .orElse(Stream.of(parent.listFiles()))
+          .skip(query.getOffset()).limit(query.getLimit());
+  }
+
+  @Override
+  public boolean hasChildren(File item) {
+    return item.list() != null && item.list().length > 0;
+  }
+}
+----
+
+If there are any updates on the hierarchical data, such as adding or removing rows, you should call the [methodname]#refreshAll# method that is inherited by extending [classname]#AbstractHierarchicalDataProvider#. This will reset the data. If only the data for a specific item has been updated, you can call the [methodname]#refreshItem# method to only update that item.

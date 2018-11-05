@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -85,24 +85,22 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        VPanel panel = getWidget();
         if (isRealUpdate(uidl)) {
 
             // Handle caption displaying and style names, prior generics.
             // Affects size calculations
 
             // Restore default stylenames
-            getWidget().contentNode.setClassName(VPanel.CLASSNAME + "-content");
-            getWidget().bottomDecoration
-                    .setClassName(VPanel.CLASSNAME + "-deco");
-            getWidget().captionNode.setClassName(VPanel.CLASSNAME + "-caption");
-            boolean hasCaption = false;
-            if (getState().caption != null && !"".equals(getState().caption)) {
-                getWidget().setCaption(getState().caption);
-                hasCaption = true;
+            panel.contentNode.setClassName(VPanel.CLASSNAME + "-content");
+            panel.bottomDecoration.setClassName(VPanel.CLASSNAME + "-deco");
+            panel.captionNode.setClassName(VPanel.CLASSNAME + "-caption");
+            boolean hasCaption = hasCaption();
+            if (hasCaption) {
+                panel.setCaption(getState().caption);
             } else {
-                getWidget().setCaption("");
-                getWidget().captionNode
-                        .setClassName(VPanel.CLASSNAME + "-nocaption");
+                panel.setCaption("");
+                panel.captionNode.setClassName(VPanel.CLASSNAME + "-nocaption");
             }
 
             // Add proper stylenames for all elements. This way we can prevent
@@ -121,11 +119,11 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
                     decoClass += " " + decoBaseClass + "-" + style;
                 }
             }
-            getWidget().captionNode.setClassName(captionClass);
-            getWidget().contentNode.setClassName(contentClass);
-            getWidget().bottomDecoration.setClassName(decoClass);
+            panel.captionNode.setClassName(captionClass);
+            panel.contentNode.setClassName(contentClass);
+            panel.bottomDecoration.setClassName(decoClass);
 
-            getWidget().makeScrollable();
+            panel.makeScrollable();
         }
 
         if (!isRealUpdate(uidl)) {
@@ -134,16 +132,14 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
 
         clickEventHandler.handleEventHandlerRegistration();
 
-        getWidget().client = client;
-        getWidget().id = uidl.getId();
+        panel.client = client;
+        panel.id = uidl.getId();
 
         if (getIconUri() != null) {
-            getWidget().setIconUri(getIconUri(), client);
+            panel.setIconUri(getIconUri(), client);
         } else {
-            getWidget().setIconUri(null, client);
+            panel.setIconUri(null, client);
         }
-
-        getWidget().setErrorIndicatorVisible(isErrorIndicatorVisible());
 
         // We may have actions attached to this panel
         if (uidl.getChildCount() > 0) {
@@ -151,29 +147,38 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
             for (int i = 0; i < cnt; i++) {
                 UIDL childUidl = uidl.getChildUIDL(i);
                 if (childUidl.getTag().equals("actions")) {
-                    if (getWidget().shortcutHandler == null) {
-                        getWidget().shortcutHandler = new ShortcutActionHandler(
+                    if (panel.shortcutHandler == null) {
+                        panel.shortcutHandler = new ShortcutActionHandler(
                                 getConnectorId(), client);
                     }
-                    getWidget().shortcutHandler.updateActionMap(childUidl);
+                    panel.shortcutHandler.updateActionMap(childUidl);
                 }
             }
         }
 
-        if (getState().scrollTop != getWidget().scrollTop) {
+        if (getState().scrollTop != panel.scrollTop) {
             // Sizes are not yet up to date, so changing the scroll position
             // is deferred to after the layout phase
             uidlScrollTop = getState().scrollTop;
         }
 
-        if (getState().scrollLeft != getWidget().scrollLeft) {
+        if (getState().scrollLeft != panel.scrollLeft) {
             // Sizes are not yet up to date, so changing the scroll position
             // is deferred to after the layout phase
             uidlScrollLeft = getState().scrollLeft;
         }
 
         // And apply tab index
-        getWidget().contentNode.setTabIndex(getState().tabIndex);
+        panel.contentNode.setTabIndex(getState().tabIndex);
+    }
+
+    /**
+     * Detects if caption div should be visible.
+     *
+     * @return {@code true} if caption div should be shown
+     */
+    protected boolean hasCaption() {
+        return getState().caption != null && !getState().caption.isEmpty();
     }
 
     @Override
@@ -226,7 +231,14 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
     public void postLayout() {
         VPanel panel = getWidget();
         if (uidlScrollTop != null) {
+            // IE / Safari fix for when scroll top is set to greater than panel
+            // height
+            int maxScroll = panel.getWidget().getOffsetHeight();
+            if (uidlScrollTop > maxScroll) {
+                uidlScrollTop = maxScroll;
+            }
             panel.contentNode.setScrollTop(uidlScrollTop.intValue());
+
             // Read actual value back to ensure update logic is correct
             // TODO Does this trigger reflows?
             panel.scrollTop = panel.contentNode.getScrollTop();

@@ -1,0 +1,90 @@
+---
+title: Dynamically Updating State Before Sending Changes To Client
+order: 75
+layout: page
+---
+
+[[dynamically-updating-state-before-sending-changes-to-client]]
+= Dynamically updating state before sending changes to client
+
+There are some cases where a server-side implementation must delay some
+work until right before data is about to be sent to the client. Some
+examples of this:
+
+* An expensive operation that should be done only once and not every
+time some input for the calculation changes.
+* Anything that depends on the component (or extension) being attached
+to the component hierarchy.
+
+Vaadin provides the `ClientConnector.beforeClientResponse(boolean
+initial)` method, which a server-side component or extension can override
+if it wants to make some final adjustments to its shared state or send
+some RPC right before data is being sent to the client. Because the
+method is called just before the data will be sent, there are some
+special considerations:
+
+* You should remember to call `super.beforeClientResponse(initial)`
+because e.g. `AbstractComponent` relies on the method for performing its
+own last minute changes to the state.
+* The component hierarchy may not be modified in the
+`beforeClientResponse` method, doing so might cause undesirable side
+effects.
+* `markAsDirty()` has no effect - changes will only be sent for connectors
+that were marked as dirty before `beforeClientResponse` was called.
+
+Please note that `beforeClientResponse` will only be called for components
+that the framework thinks might have changes, e.g. because they have
+recently been attached, their `getState()` method has been called or they
+have been marked as dirty using `markAsDirty()`.
+
+This shows a simple example where two terms are summed together only
+once even if the terms are changed multiple times before a response is
+sent to the client.
+
+[source,java]
+....
+public class Addition extends AbstractComponent {
+  private int term1;
+  private int term2;
+  private boolean needsRecalculation = false;
+
+  public void setTerm1(int value1) {
+    this.term1 = value1;
+    needsRecalculation = true;
+
+    //Mark the component as dirty to ensure beforeClientResponse will be invoked
+    markAsDirty();
+  }
+
+  public void setTerm2(int value2) {
+    this.term2 = value2;
+    needsRecalculation = true;
+
+    //Mark the component as dirty to ensure beforeClientResponse will be invoked
+    markAsDirty();
+  }
+
+  private int calculateSum() {
+    return term1 + term2;
+  }
+
+  @Override
+  public void beforeClientResponse(boolean initial) {
+    super.beforeClientResponse(initial);
+    if (needsRecalculation) {
+      needsRecalculation = false;
+      // This could be an expensive operation that we don't want to do every time setTerm1 or setTerm2 is invoked.
+      getState().sum = calculateSum();
+    }
+  }
+
+  @Override
+  protected AddResultState getState() {
+    return (AddResultState) super.getState();
+  }
+}
+
+class AddResultState extends ComponentState {
+  public int sum;
+}
+....

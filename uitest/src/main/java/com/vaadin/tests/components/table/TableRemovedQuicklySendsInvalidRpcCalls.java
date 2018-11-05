@@ -1,19 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests.components.table;
 
 import java.util.ArrayList;
@@ -25,7 +9,6 @@ import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.v7.ui.Table;
 
@@ -88,6 +71,11 @@ public class TableRemovedQuicklySendsInvalidRpcCalls
         @Override
         public ClientConnector getConnector(String connectorId) {
             return tracker.getConnector(connectorId);
+        }
+
+        @Override
+        public void cleanConnectorMap(boolean force) {
+            tracker.cleanConnectorMap(force);
         }
 
         @Override
@@ -175,22 +163,8 @@ public class TableRemovedQuicklySendsInvalidRpcCalls
         }
 
         @Override
-        public boolean connectorWasPresentAsRequestWasSent(String connectorId,
-                long lastSyncIdSeenByClient) {
-            return tracker.connectorWasPresentAsRequestWasSent(connectorId,
-                    lastSyncIdSeenByClient);
-        }
-
-        @Override
         public int getCurrentSyncId() {
             return tracker.getCurrentSyncId();
-        }
-
-        @Override
-        public void cleanConcurrentlyRemovedConnectorIds(
-                int lastSyncIdSeenByClient) {
-            tracker.cleanConcurrentlyRemovedConnectorIds(
-                    lastSyncIdSeenByClient);
         }
 
         @Override
@@ -214,12 +188,7 @@ public class TableRemovedQuicklySendsInvalidRpcCalls
 
     @Override
     protected void setup(VaadinRequest request) {
-        button = new Button("Blink a table", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                blinkTable();
-            }
-        });
+        button = new Button("Blink a table", event -> blinkTable());
         button.setId(BUTTON_ID);
         addComponent(button);
     }
@@ -251,13 +220,10 @@ public class TableRemovedQuicklySendsInvalidRpcCalls
                 getSession().lock();
                 try {
                     Thread.sleep(500);
-                    access(new Runnable() {
-                        @Override
-                        public void run() {
-                            System.out.println("removing component");
-                            removeComponent(table);
-                            button.setCaption(SUCCESS_CAPTION);
-                        }
+                    access(() -> {
+                        System.out.println("removing component");
+                        removeComponent(table);
+                        button.setCaption(SUCCESS_CAPTION);
                     });
                 } catch (InterruptedException e) {
                     e.printStackTrace();

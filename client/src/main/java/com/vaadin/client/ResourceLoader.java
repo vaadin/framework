@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,7 @@
 
 package com.vaadin.client;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -140,7 +141,7 @@ public class ResourceLoader {
         for (int i = 0; i < scripts.getLength(); i++) {
             ScriptElement element = ScriptElement.as(scripts.getItem(i));
             String src = element.getSrc();
-            if (src != null && src.length() != 0) {
+            if (src != null && !src.isEmpty()) {
                 loadedResources.add(src);
             }
         }
@@ -151,18 +152,18 @@ public class ResourceLoader {
             String rel = linkElement.getRel();
             String href = linkElement.getHref();
             if ("stylesheet".equalsIgnoreCase(rel) && href != null
-                    && href.length() != 0) {
+                    && !href.isEmpty()) {
                 loadedResources.add(href);
             }
             if ("import".equalsIgnoreCase(rel) && href != null
-                    && href.length() != 0) {
+                    && !href.isEmpty()) {
                 loadedResources.add(href);
             }
         }
     }
 
     /**
-     * Returns the default ResourceLoader
+     * Returns the default ResourceLoader.
      *
      * @return the default ResourceLoader
      */
@@ -248,7 +249,10 @@ public class ResourceLoader {
             addOnloadHandler(linkTag, new ResourceLoadListener() {
                 @Override
                 public void onLoad(ResourceLoadEvent event) {
-                    fireLoad(event);
+                    // Must wait for all HTML imports to finish
+                    // processing to ensure that e.g. the template is
+                    // parsed when calling the element constructor.
+                    runWhenHtmlImportsReady(() -> fireLoad(event));
                 }
 
                 @Override
@@ -325,7 +329,7 @@ public class ResourceLoader {
             linkElement.setType("text/css");
             linkElement.setHref(url);
 
-            if (BrowserInfo.get().isSafari()) {
+            if (BrowserInfo.get().isSafariOrIOS()) {
                 // Safari doesn't fire any events for link elements
                 // See http://www.phpied.com/when-is-a-stylesheet-really-loaded/
                 Scheduler.get().scheduleFixedPeriod(new RepeatingCommand() {
@@ -393,7 +397,7 @@ public class ResourceLoader {
 
     private static native int getStyleSheetLength(String url)
     /*-{
-        for(var i = 0; i < $doc.styleSheets.length; i++) {
+        for (var i = 0; i < $doc.styleSheets.length; i++) {
             if ($doc.styleSheets[i].href === url) {
                 var sheet = $doc.styleSheets[i];
                 try {
@@ -401,12 +405,12 @@ public class ResourceLoader {
                     if (rules === undefined) {
                         rules = sheet.rules;
                     }
-    
+
                     if (rules === null) {
                         // Style sheet loaded, but can't access length because of XSS -> assume there's something there
                         return 1;
                     }
-    
+
                     // Return length so we can distinguish 0 (probably 404 error) from normal case.
                     return rules.length;
                 } catch (err) {
@@ -423,7 +427,7 @@ public class ResourceLoader {
             Map<String, Collection<ResourceLoadListener>> listenerMap) {
         Collection<ResourceLoadListener> listeners = listenerMap.get(url);
         if (listeners == null) {
-            listeners = new HashSet<>();
+            listeners = new ArrayList<>();
             listeners.add(listener);
             listenerMap.put(url, listeners);
             return true;
@@ -464,4 +468,35 @@ public class ResourceLoader {
     private static Logger getLogger() {
         return Logger.getLogger(ResourceLoader.class.getName());
     }
+
+    private static native boolean supportsHtmlWhenReady()
+    /*-{
+        return !!($wnd.HTMLImports && $wnd.HTMLImports.whenReady);
+    }-*/;
+
+    private static native void addHtmlImportsReadyHandler(Runnable handler)
+    /*-{
+        $wnd.HTMLImports.whenReady($entry(function() {
+            handler.@Runnable::run()();
+        }));
+    }-*/;
+
+    /**
+     * Executes a Runnable when all HTML imports are ready. If the browser does
+     * not support triggering an event when HTML imports are ready, the Runnable
+     * is executed immediately.
+     *
+     * @param runnable
+     *            the code to execute
+     * @since 8.1
+     */
+    protected void runWhenHtmlImportsReady(Runnable runnable) {
+        if (GWT.isClient() && supportsHtmlWhenReady()) {
+            addHtmlImportsReadyHandler(() -> runnable.run());
+        } else {
+            runnable.run();
+        }
+
+    }
+
 }

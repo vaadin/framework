@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -145,9 +145,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
             editRow(event, cell.getRowIndex(), cell.getColumnIndexDOM());
 
             return true;
-        }
-
-        else if (e.getTypeInt() == Event.ONKEYDOWN) {
+        } else if (e.getTypeInt() == Event.ONKEYDOWN) {
 
             int rowDelta = 0;
             int colDelta = 0;
@@ -230,6 +228,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
 
             // Save and close.
             event.getGrid().getEditor().save();
+            FocusUtil.setFocus(event.getGrid(), true);
             return true;
         }
 

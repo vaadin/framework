@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -102,7 +102,7 @@ public class ListSelectElement extends AbstractSelectElement {
     }
 
     /**
-     * Return value of the list select element
+     * Return value of the list select element.
      *
      * @return value of the list select element
      */
@@ -121,6 +121,16 @@ public class ListSelectElement extends AbstractSelectElement {
                         + "arguments[0].dispatchEvent(ev);", //
                 target);
 
+    }
+
+    /**
+     * Gets the {@code <select>} element inside the component.
+     *
+     * @return the select element inside the component
+     * @since 8.1.1
+     */
+    public WebElement getSelectElement() {
+        return selectElement;
     }
 
 }

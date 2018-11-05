@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -72,12 +72,17 @@ public class JavaScriptCallbackHelper implements Serializable {
 
     private void ensureRpc() {
         if (javascriptCallbackRpc == null) {
-            javascriptCallbackRpc = (String name, JsonArray arguments) -> {
-                JavaScriptFunction callback = callbacks.get(name);
-                try {
-                    callback.call(arguments);
-                } catch (JsonException e) {
-                    throw new IllegalArgumentException(e);
+            // Note that javascriptCallbackRpc is not a lambda to make sure it
+            // can be serialized properly
+            javascriptCallbackRpc = new JavaScriptCallbackRpc() {
+                @Override
+                public void call(String name, JsonArray arguments) {
+                    JavaScriptFunction callback = callbacks.get(name);
+                    try {
+                        callback.call(arguments);
+                    } catch (JsonException e) {
+                        throw new IllegalArgumentException(e);
+                    }
                 }
             };
             connector.registerRpc(javascriptCallbackRpc);

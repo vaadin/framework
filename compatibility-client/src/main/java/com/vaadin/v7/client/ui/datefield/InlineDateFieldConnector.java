@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,7 @@ import com.vaadin.client.DateTimeService;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.v7.client.ui.VCalendarPanel;
 import com.vaadin.v7.client.ui.VCalendarPanel.FocusChangeListener;
 import com.vaadin.v7.client.ui.VCalendarPanel.TimeChangeListener;
 import com.vaadin.v7.client.ui.VDateFieldCalendar;
@@ -40,32 +41,31 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
             return;
         }
 
-        getWidget().calendarPanel
-                .setShowISOWeekNumbers(getWidget().isShowISOWeekNumbers());
-        getWidget().calendarPanel
-                .setDateTimeService(getWidget().getDateTimeService());
-        getWidget().calendarPanel
-                .setResolution(getWidget().getCurrentResolution());
-        Date currentDate = getWidget().getCurrentDate();
+        VDateFieldCalendar calendar = getWidget();
+        VCalendarPanel panel = calendar.calendarPanel;
+        panel.setShowISOWeekNumbers(calendar.isShowISOWeekNumbers());
+        panel.setDateTimeService(calendar.getDateTimeService());
+        panel.setResolution(calendar.getCurrentResolution());
+        Date currentDate = calendar.getCurrentDate();
         if (currentDate != null) {
-            getWidget().calendarPanel.setDate(new Date(currentDate.getTime()));
+            panel.setDate(new Date(currentDate.getTime()));
         } else {
-            getWidget().calendarPanel.setDate(null);
+            panel.setDate(null);
         }
 
-        if (getWidget().getCurrentResolution()
+        if (calendar.getCurrentResolution()
                 .getCalendarField() > Resolution.DAY.getCalendarField()) {
-            getWidget().calendarPanel
+            panel
                     .setTimeChangeListener(new TimeChangeListener() {
                         @Override
                         public void changed(int hour, int min, int sec,
                                 int msec) {
-                            Date d = getWidget().getDate();
+                            Date d = calendar.getDate();
                             if (d == null) {
                                 // date currently null, use the value from
                                 // calendarPanel
                                 // (~ client time at the init of the widget)
-                                d = (Date) getWidget().calendarPanel.getDate()
+                                d = (Date) panel.getDate()
                                         .clone();
                             }
                             d.setHours(hour);
@@ -74,21 +74,21 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
                             DateTimeService.setMilliseconds(d, msec);
 
                             // Always update time changes to the server
-                            getWidget().calendarPanel.setDate(d);
-                            getWidget().updateValueFromPanel();
+                            panel.setDate(d);
+                            calendar.updateValueFromPanel();
                         }
                     });
         }
 
-        if (getWidget().getCurrentResolution()
+        if (calendar.getCurrentResolution()
                 .getCalendarField() <= Resolution.MONTH.getCalendarField()) {
-            getWidget().calendarPanel
+            panel
                     .setFocusChangeListener(new FocusChangeListener() {
                         @Override
                         public void focusChanged(Date date) {
                             Date date2 = new Date();
-                            if (getWidget().calendarPanel.getDate() != null) {
-                                date2.setTime(getWidget().calendarPanel
+                            if (panel.getDate() != null) {
+                                date2.setTime(panel
                                         .getDate().getTime());
                             }
                             /*
@@ -96,19 +96,19 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
                              */
                             date2.setYear(date.getYear());
                             date2.setMonth(date.getMonth());
-                            getWidget().calendarPanel.setDate(date2);
+                            panel.setDate(date2);
                             /*
                              * Then update the value from panel to server
                              */
-                            getWidget().updateValueFromPanel();
+                            calendar.updateValueFromPanel();
                         }
                     });
         } else {
-            getWidget().calendarPanel.setFocusChangeListener(null);
+            panel.setFocusChangeListener(null);
         }
 
         // Update possible changes
-        getWidget().calendarPanel.renderCalendar();
+        panel.renderCalendar();
     }
 
     @Override

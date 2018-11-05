@@ -6,7 +6,6 @@ import java.util.Collection;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.ui.Table;
 
@@ -47,39 +46,28 @@ public class MultiSelectWithRemovedRow extends TestBase {
         addComponent(table);
 
         Button showButton = new Button("Show selection");
-        showButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                Collection<?> selection = (Collection<?>) table.getValue();
-                log.log("Selection: " + selection);
-            }
+        showButton.addClickListener(event -> {
+            Collection<?> selection = (Collection<?>) table.getValue();
+            log.log("Selection: " + selection);
         });
         addComponent(showButton);
 
         Button removeButton = new Button("Remove selection");
-        removeButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                Collection<?> selection = (Collection<?>) table.getValue();
-                for (Object selected : selection) {
-                    container.removeItem(selected);
-                }
+        removeButton.addClickListener(event -> {
+            Collection<?> selection = (Collection<?>) table.getValue();
+            for (Object selected : selection) {
+                container.removeItem(selected);
             }
         });
         addComponent(removeButton);
 
-        addComponent(new Button("Remove first selected row",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        Collection<?> selection = (Collection<?>) table
-                                .getValue();
-                        if (!selection.isEmpty()) {
-                            Object firstSelected = selection.iterator().next();
-                            container.removeItem(firstSelected);
-                        }
-                    }
-                }));
+        addComponent(new Button("Remove first selected row", event -> {
+            Collection<?> selection = (Collection<?>) table.getValue();
+            if (!selection.isEmpty()) {
+                Object firstSelected = selection.iterator().next();
+                container.removeItem(firstSelected);
+            }
+        }));
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -104,6 +104,26 @@ public interface Editor<T> extends Serializable {
     public void cancel();
 
     /**
+     * Opens the editor interface for the provided row. Scrolls the Grid to
+     * bring the row to view if it is not already visible.
+     *
+     * Note that any cell content rendered by a WidgetRenderer will not be
+     * visible in the editor row.
+     *
+     * @see #setEnabled(boolean)
+     * @since 8.2
+     *
+     * @param rowNumber
+     *            the row number of the edited item
+     * @throws IllegalStateException
+     *             if the editor is not enabled or already editing a different
+     *             item in buffered mode
+     * @throws IllegalArgumentException
+     *             if the {@code rowNumber} is not in the backing data provider
+     */
+    public void editRow(int rowNumber);
+
+    /**
      * Sets the caption of the save button in buffered mode.
      *
      * @param saveCaption
@@ -160,7 +180,7 @@ public interface Editor<T> extends Serializable {
 
     /**
      * Adds an editor save {@code listener}.
-     * 
+     *
      * @param listener
      *            save listener
      * @return a registration object for removing the listener
@@ -169,7 +189,7 @@ public interface Editor<T> extends Serializable {
 
     /**
      * Adds an editor cancel {@code listener}.
-     * 
+     *
      * @param listener
      *            cancel listener
      * @return a registration object for removing the listener
@@ -177,8 +197,19 @@ public interface Editor<T> extends Serializable {
     public Registration addCancelListener(EditorCancelListener<T> listener);
 
     /**
+     * Adds an editor open {@code listener}.
+     *
+     * @param listener
+     *            open listener
+     * @return a registration object for removing the listener
+     *
+     * @since 8.1
+     */
+    public Registration addOpenListener(EditorOpenListener<T> listener);
+
+    /**
      * Gets the Grid instance which this editor belongs to.
-     * 
+     *
      * @return the grid which owns the editor
      */
     public Grid<T> getGrid();

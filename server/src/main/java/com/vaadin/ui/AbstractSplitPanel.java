@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,6 +24,7 @@ import java.util.Iterator;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.event.ConnectorEventListener;
+import com.vaadin.event.HasUserOriginated;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.server.SizeWithUnit;
 import com.vaadin.server.Sizeable;
@@ -64,9 +65,13 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
         @Override
         public void setSplitterPosition(float position) {
+            float oldPosition = getSplitPosition();
+
             getSplitterState().position = position;
+
             fireEvent(new SplitPositionChangeEvent(AbstractSplitPanel.this,
-                    position, getSplitPositionUnit()));
+                    true, oldPosition, getSplitPositionUnit(), position,
+                    getSplitPositionUnit()));
         }
     };
 
@@ -226,12 +231,13 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Gets an iterator to the collection of contained components. Using this
+     * iterator it is possible to step through all components contained in this
+     * container and remove components from it.
      *
-     * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
+     * @return the component iterator.
      */
-
     @Override
     public Iterator<Component> iterator() {
         return new ComponentIterator();
@@ -330,13 +336,16 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         if (unit != Unit.PERCENTAGE) {
             pos = Math.round(pos);
         }
+        float oldPosition = getSplitPosition();
+        Unit oldUnit = getSplitPositionUnit();
+
         SplitterState splitterState = getSplitterState();
         splitterState.position = pos;
         splitterState.positionUnit = unit.getSymbol();
         splitterState.positionReversed = reverse;
         posUnit = unit;
-        fireEvent(new SplitPositionChangeEvent(AbstractSplitPanel.this, pos,
-                posUnit));
+        fireEvent(new SplitPositionChangeEvent(AbstractSplitPanel.this, false,
+                oldPosition, oldUnit, pos, posUnit));
     }
 
     /**
@@ -350,7 +359,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     }
 
     /**
-     * Returns the unit of position of the splitter
+     * Returns the unit of position of the splitter.
      *
      * @return unit of position of the splitter
      * @see #setSplitPosition(float, Unit)
@@ -432,7 +441,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     }
 
     /**
-     * Returns the unit of the maximum position of the splitter
+     * Returns the unit of the maximum position of the splitter.
      *
      * @return the unit of the maximum position of the splitter
      */
@@ -511,7 +520,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
                 SplitterClickEvent.class);
 
         /**
-         * SplitPanel splitter has been clicked
+         * SplitPanel splitter has been clicked.
          *
          * @param event
          *            SplitterClickEvent event.
@@ -556,26 +565,96 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      *
      * @since 7.5.0
      */
-    public static class SplitPositionChangeEvent extends Component.Event {
+    public static class SplitPositionChangeEvent extends Component.Event
+            implements HasUserOriginated {
+
+        private final float oldPosition;
+        private final Unit oldUnit;
 
         private final float position;
         private final Unit unit;
 
+        private final boolean userOriginated;
+
+        /**
+         * Creates a split position change event.
+         *
+         * @param source
+         *            split panel from which the event originates
+         * @param userOriginated
+         *            true if the event is directly based on user actions
+         * @param oldPosition
+         *            old split position
+         * @param oldUnit
+         *            old unit of split position
+         * @param position
+         *            new split position
+         * @param unit
+         *            new split position unit
+         * @since 8.1
+         */
         public SplitPositionChangeEvent(final Component source,
-                final float position, final Unit unit) {
+                final boolean userOriginated, final float oldPosition,
+                final Unit oldUnit, final float position, final Unit unit) {
             super(source);
+            this.userOriginated = userOriginated;
+            this.oldUnit = oldUnit;
+            this.oldPosition = oldPosition;
             this.position = position;
             this.unit = unit;
         }
 
+        /**
+         * Returns the new split position that triggered this change event.
+         *
+         * @return the new value of split position
+         */
         public float getSplitPosition() {
             return position;
         }
 
+        /**
+         * Returns the new split position unit that triggered this change event.
+         *
+         * @return the new value of split position
+         */
         public Unit getSplitPositionUnit() {
             return unit;
         }
 
+        /**
+         * Returns the position of the split before this change event occurred.
+         *
+         * @since 8.1
+         *
+         * @return the split position previously set to the source of this event
+         */
+        public float getOldSplitPosition() {
+            return oldPosition;
+        }
+
+        /**
+         * Returns the position unit of the split before this change event
+         * occurred.
+         *
+         * @since 8.1
+         *
+         * @return the split position unit previously set to the source of this
+         *         event
+         */
+        public Unit getOldSplitPositionUnit() {
+            return oldUnit;
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @since 8.1
+         */
+        @Override
+        public boolean isUserOriginated() {
+            return userOriginated;
+        }
     }
 
     public Registration addSplitterClickListener(

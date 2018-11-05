@@ -5,7 +5,7 @@
     <groupId>com.vaadin</groupId>
     <artifactId>vaadin-test</artifactId>
     <name>vaadin-test</name>
-    <version>8.0-SNAPSHOT</version>
+    <version>8.7-SNAPSHOT</version>
 
     <packaging>pom</packaging>
     <properties>
@@ -13,14 +13,19 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <jetty.version>9.3.7.v20160115</jetty.version>
         <phantomjs.version>2.1.1</phantomjs.version>
-        <vaadin.version>8.0-SNAPSHOT</vaadin.version>
+        <vaadin.version>${project.version}</vaadin.version>
         <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
         <failOnMissingWebXml>false</failOnMissingWebXml>
-        <contextmenu.version>2.0-SNAPSHOT</contextmenu.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <spring.boot.version>1.5.9.RELEASE</spring.boot.version>
+        <selenium.version>3.14.0</selenium.version>
+
         <!-- Don't care about coding style for tests -->
         <sonar.skip>true</sonar.skip>
+
+        <!-- Allow installing for local testing purposes -->
+        <install.skip>true</install.skip>
     </properties>
 
     <repositories>
@@ -38,7 +43,24 @@
             <id>vaadin-addons</id>
             <url>http://maven.vaadin.com/vaadin-addons</url>
         </repository>
+        <repository>
+            <id>vaadin-prereleases</id>
+            <url>http://maven.vaadin.com/vaadin-prereleases</url>
+        </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>vaadin-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
     <dependencyManagement>
         <dependencies>
@@ -53,6 +75,44 @@
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-test-widget-set-testutil</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+            </dependency>
+
+            <!-- Override Selenium version from Spring Boot -->
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-api</artifactId>
+                <version>${selenium.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-chrome-driver</artifactId>
+                <version>${selenium.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-server</artifactId>
+                <version>${selenium.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-java</artifactId>
+                <version>${selenium.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-remote-driver</artifactId>
+                <version>${selenium.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>commons-logging</artifactId>
+                        <groupId>commons-logging</groupId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -81,7 +141,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -102,11 +161,16 @@
         <module>space in directory</module>
         <module>vaadinservletconfiguration-widget-set</module>
         <module>spring-boot</module>
-        <module>servlet-containers/generic</module>
+        <module>spring-boot-subcontext</module>
         <module>cdi</module>
-        <module>servlet-containers/jsp-integration</module>
+
+        <!-- Servlet container tests -->
+        <module>servlet-containers</module>
+
         <module>bean-api-validation</module>
         <module>bean-impl-validation</module>
+        <module>dependency-rewrite-addon</module>
+        <module>dependency-rewrite</module>
     </modules>
 
     <build>
@@ -148,7 +212,7 @@
                     <artifactId>maven-install-plugin</artifactId>
                     <version>2.5.1</version>
                     <configuration>
-                        <skip>true</skip>
+                        <skip>${install.skip}</skip>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -231,7 +295,12 @@
                 <configuration>
                     <systemPropertyVariables>
                         <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
+                        <server-name>${server.name}</server-name>
+                        <com.vaadin.testbench.Parameters.screenshotReferenceDirectory>${reference.directory}</com.vaadin.testbench.Parameters.screenshotReferenceDirectory>
+                        <com.vaadin.testbench.Parameters.screenshotErrorDirectory>target/error-screenshots</com.vaadin.testbench.Parameters.screenshotErrorDirectory>
                     </systemPropertyVariables>
+                    <!-- Run all the tests, don't stop on first failure -->
+                    <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
         </plugins>

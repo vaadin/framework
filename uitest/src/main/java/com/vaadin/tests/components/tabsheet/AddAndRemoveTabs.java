@@ -2,7 +2,6 @@ package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TabSheet;
 
@@ -17,15 +16,7 @@ public class AddAndRemoveTabs extends TestBase {
         addTab();
         addComponent(tabSheet);
 
-        Button addTabBtn = new Button("Add new tab",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        addTab();
-                    }
-
-                });
+        Button addTabBtn = new Button("Add new tab", event -> addTab());
         addComponent(addTabBtn);
     }
 
@@ -33,15 +24,8 @@ public class AddAndRemoveTabs extends TestBase {
         final HorizontalLayout layout = new HorizontalLayout();
         layout.setCaption("Test " + counter);
 
-        Button closeTab = new Button("Close tab", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                tabSheet.removeComponent(layout);
-
-            }
-
-        });
+        Button closeTab = new Button("Close tab",
+                event -> tabSheet.removeComponent(layout));
 
         layout.addComponent(closeTab);
 

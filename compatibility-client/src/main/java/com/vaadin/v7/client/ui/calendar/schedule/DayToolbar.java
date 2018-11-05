@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,8 +14,6 @@
  * the License.
  */
 package com.vaadin.v7.client.ui.calendar.schedule;
-
-import java.util.Iterator;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -91,8 +89,8 @@ public class DayToolbar extends HorizontalPanel implements ClickHandler {
     }
 
     public void add(String dayName, final String date,
-            String localized_date_format, String extraClass) {
-        Label l = new Label(dayName + " " + localized_date_format);
+            String localizedDateFormat, String extraClass) {
+        Label l = new Label(dayName + " " + localizedDateFormat);
         l.setStylePrimaryName("v-calendar-header-day");
 
         if (extraClass != null) {
@@ -158,9 +156,8 @@ public class DayToolbar extends HorizontalPanel implements ClickHandler {
     }
 
     private void updateDayLabelSizedStyleNames() {
-        Iterator<Widget> it = iterator();
-        while (it.hasNext()) {
-            updateWidgetSizedStyleName(it.next());
+        for (Widget w : this) {
+            updateWidgetSizedStyleName(w);
         }
     }
 

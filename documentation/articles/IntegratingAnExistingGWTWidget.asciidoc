@@ -1,0 +1,184 @@
+---
+title: Integrating An Existing GWT Widget
+order: 33
+layout: page
+---
+
+[[integrating-an-existing-gwt-widget]]
+= Integrating an existing GWT widget
+
+Integrating an existing, third party GWT widget usually just involves
+creating a regular Vaadin component with a client-side connector that
+uses the third-party widget, probably using a shared state, and possibly
+also with RPC - just as described in separate articles on these topics.
+Usually, the only addition is the need to modify your widgetset
+declaration to inherit the third-party widget's GWT module.
+
+In the following, we'll integrate the SimplePlot widget from the
+http://code.google.com/p/gflot/[GFlot library] (which in turn is a GWT
+adaptation of the pure JavaScript plotting library Flot) to create a
+simple line plot component. We'll start with modifying our widgetset's
+`gwt.xml` to inherit the GFlot GWT module, so if you're familiar with the
+rest of the process, you can basically stop once that is done.
+
+But first a note on package structure: this particular example uses the
+`com.example` package domain, and is set up to be a add-on project, with
+the actual component in the `addon` package, and the demo that uses the
+component in the `vaadingflot` package. The `addon` package contains the
+`widgetset gwt.xml` definition, the server-side component (LinePlot), as
+well as all the code related to the client-side in the `client.ui`
+subpackage.
+
+Once you have a working project, go ahead and
+http://code.google.com/p/gflot/downloads/list[download the GFlot jar],
+and add it to `WEB-INF/lib`, then update the widgetset `gwt.xml` as follows:
+
+[source,xml]
+....
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 1.7.0//EN"
+         "http://google-web-toolkit.googlecode.com/svn/tags/1.7.0/distro-source/core/src/gwt-module.dtd">
+<module>
+  <inherits name="com.vaadin.DefaultWidgetSet" />
+  <inherits name="ca.nanometrics.gflot.GFlot" />
+</module>
+....
+
+It inherits the default Vaadin widgetset as well as the GFlot GWT
+module.
+
+Now we're ready to integrate the SimplePlot widget from the GFlot
+package. Since we're familiar with the GFlot API, we know we want to add
+'series' to the plot - we'll create a shared state for this purpose, and
+a `DataSeries` class to represent the actual series within the state:
+
+[source,java]
+....
+package com.example.addon.client.ui;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.vaadin.client.ComponentState;
+
+public class LinePlotState extends AbstractComponentState {
+
+  public List<DataSeries> series = new ArrayList<DataSeries>();
+
+  public static class DataSeries {
+    public String label;
+    public String color;
+    public List<Float> data;
+  }
+}
+....
+
+Lets make the server-side component next:
+
+[source,java]
+....
+package com.example.addon;
+
+import java.util.Arrays;
+
+import com.example.addon.client.ui.LinePlotState;
+import com.example.addon.client.ui.LinePlotState.DataSeries;
+import com.vaadin.ui.AbstractComponent;
+
+public class LinePlot extends AbstractComponent {
+
+  public LinePlot() {
+  }
+
+  @Override
+  public LinePlotState getState() {
+    return (LinePlotState) super.getState();
+  }
+
+  public void addSeries(String label, String color, Float[] fs) {
+    DataSeries ds = new DataSeries();
+    ds.label = label;
+    ds.color = color;
+    ds.data = Arrays.asList(fs);
+    getState().series.add(ds);
+  }
+}
+....
+
+We override `getState()` in order to narrow the return type to our own
+`LinePlotState`, and then implement a simple `addSeries()` that creates a
+`DataSeries` instance and adds it to the state. The state will be
+automatically transmitted to the client when needed, so the plots will
+remain intact over browser reloads for instance.The API for our
+component could obviously be expanded, but lets leave it like this for
+this example.
+
+Since the GWT widget we're going to use is already made for us (in the
+GFlot library), the only thing left for us to do is implement the
+client-side connector:
+
+[source,java]
+....
+package com.example.addon.client.ui;
+
+import ca.nanometrics.gflot.client.DataPoint;
+import ca.nanometrics.gflot.client.SeriesHandler;
+import ca.nanometrics.gflot.client.SimplePlot;
+
+import com.example.addon.LinePlot;
+import com.example.addon.client.ui.LinePlotState.DataSeries;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.Connect;
+
+@Connect(LinePlot.class)
+public class LinePlotConnector extends AbstractComponentConnector {
+
+  @Override
+  public LinePlotState getState() {
+    return (LinePlotState) super.getState();
+  }
+
+  @Override
+  public SimplePlot getWidget() {
+    return (SimplePlot) super.getWidget();
+  }
+
+  @Override
+  protected Widget createWidget() {
+    return GWT.create(SimplePlot.class);
+  }
+
+  @Override
+  public void onStateChanged(StateChangeEvent stateChangeEvent) {
+    super.onStateChanged(stateChangeEvent);
+
+    getWidget().getModel().clear();
+    for (DataSeries ds : getState().series) {
+
+      SeriesHandler s = getWidget().getModel().addSeries(ds.label,
+              ds.color);
+      for (int i = 0; i < ds.data.size(); i++) {
+        s.add(new DataPoint(i, ds.data.get(i)));
+      }
+    }
+    getWidget().redraw();
+  }
+}
+....
+
+We override both `getState()` and `getWidget()` to narrow the return type to
+our liking, then make `createWidget()` return an instance of the GFlot
+widget we're going to use, `SimplePlot`.
+
+Last, we override `onStateChange()` which is called whenever the shared
+state has been changed. Here we make use of the `SimplePlot` API to add
+the series contained in the shared state (for simplicity, we clear the
+`SimplePlot` first, then add all the series in our state).
+
+That's it! The full source is available as an attachment to this
+article.
+
+link:img/vaadingflot.zip[Attachment vaadingflot.zip]

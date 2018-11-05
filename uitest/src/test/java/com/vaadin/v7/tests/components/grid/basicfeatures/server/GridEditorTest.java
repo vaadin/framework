@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.components.grid.basicfeatures.server;
 
 import static org.junit.Assert.assertEquals;
@@ -42,12 +27,12 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
             .className("v-grid-editor-cancel");
     protected static final By BY_EDITOR_SAVE = By
             .className("v-grid-editor-save");
-    protected static final String[] EDIT_ITEM_5 = new String[] { "Component",
-            "Editor", "Edit item 5" };
-    protected static final String[] EDIT_ITEM_100 = new String[] { "Component",
-            "Editor", "Edit item 100" };
-    protected static final String[] TOGGLE_EDIT_ENABLED = new String[] {
-            "Component", "Editor", "Enabled" };
+    protected static final String[] EDIT_ITEM_5 = { "Component", "Editor",
+            "Edit item 5" };
+    protected static final String[] EDIT_ITEM_100 = { "Component", "Editor",
+            "Edit item 100" };
+    protected static final String[] TOGGLE_EDIT_ENABLED = { "Component",
+            "Editor", "Enabled" };
 
     @Before
     public void setUp() {
@@ -71,7 +56,7 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
         selectMenuPath(EDIT_ITEM_5);
         assertEditorClosed();
         boolean thrown = logContainsText(
-                "Exception occured, java.lang.IllegalStateException");
+                "Exception occurred, java.lang.IllegalStateException");
         assertTrue("IllegalStateException thrown", thrown);
     }
 
@@ -81,7 +66,7 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
         selectMenuPath(TOGGLE_EDIT_ENABLED);
         assertEditorOpen();
         boolean thrown = logContainsText(
-                "Exception occured, java.lang.IllegalStateException");
+                "Exception occurred, java.lang.IllegalStateException");
         assertTrue("IllegalStateException thrown", thrown);
     }
 

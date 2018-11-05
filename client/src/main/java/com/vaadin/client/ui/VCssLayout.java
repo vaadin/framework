@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,15 +22,15 @@ import com.vaadin.client.Profiler;
 import com.vaadin.client.StyleConstants;
 
 /**
- * VCCSlayout is a layout which supports configuring it's children with CSS
- * selectors
+ * VCssLayout is a layout which supports configuring it's children with CSS
+ * selectors.
  */
 public class VCssLayout extends FlowPanel {
 
     public static final String CLASSNAME = "v-csslayout";
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public VCssLayout() {
         super();

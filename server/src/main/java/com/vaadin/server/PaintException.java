@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,6 @@
 package com.vaadin.server;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * <code>PaintExcepection</code> is thrown if painting of a component fails.
@@ -26,7 +25,7 @@ import java.io.Serializable;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class PaintException extends IOException implements Serializable {
+public class PaintException extends IOException {
 
     /**
      * Constructs an instance of <code>PaintExeception</code> with the specified

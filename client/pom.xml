@@ -5,8 +5,9 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-root</artifactId>
-        <version>8.0-SNAPSHOT</version>
+        <version>8.7-SNAPSHOT</version>
     </parent>
+    <!-- Needed by a plugin in release build -->
     <groupId>com.vaadin</groupId>
     <artifactId>vaadin-client</artifactId>
     <name>vaadin-client</name>
@@ -41,15 +42,19 @@
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-elemental</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>net.revelc.code.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.github.dantwining.whitespace-maven-plugin</groupId>
+                <artifactId>whitespace-maven-plugin</artifactId>
+            </plugin>
+
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>

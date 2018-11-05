@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,33 +26,33 @@ public class TextualDateConnector extends AbstractDateFieldConnector {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        Resolution origRes = getWidget().getCurrentResolution();
-        String oldLocale = getWidget().getCurrentLocale();
+        VTextualDate date = getWidget();
+        Resolution origRes = date.getCurrentResolution();
+        String oldLocale = date.getCurrentLocale();
         super.updateFromUIDL(uidl, client);
-        if (origRes != getWidget().getCurrentResolution()
-                || oldLocale != getWidget().getCurrentLocale()) {
+        if (origRes != date.getCurrentResolution()
+                || oldLocale != date.getCurrentLocale()) {
             // force recreating format string
-            getWidget().formatStr = null;
+            date.formatStr = null;
         }
         if (uidl.hasAttribute("format")) {
-            getWidget().formatStr = uidl.getStringAttribute("format");
+            date.formatStr = uidl.getStringAttribute("format");
         }
 
-        getWidget().inputPrompt = uidl
+        date.inputPrompt = uidl
                 .getStringAttribute(VTextualDate.ATTR_INPUTPROMPT);
 
-        getWidget().lenient = !uidl.getBooleanAttribute("strict");
+        date.lenient = !uidl.getBooleanAttribute("strict");
 
-        getWidget().buildDate();
+        date.buildDate();
         // not a FocusWidget -> needs own tabindex handling
-        getWidget().text.setTabIndex(getState().tabIndex);
+        date.text.setTabIndex(getState().tabIndex);
 
-        if (getWidget().isReadonly()) {
-            getWidget().text.addStyleDependentName("readonly");
+        if (date.isReadonly()) {
+            date.text.addStyleDependentName("readonly");
         } else {
-            getWidget().text.removeStyleDependentName("readonly");
+            date.text.removeStyleDependentName("readonly");
         }
-
     }
 
     @Override

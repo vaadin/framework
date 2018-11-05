@@ -2,7 +2,6 @@ package com.vaadin.tests.components.button;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class TooltipForDisabledButton extends TestBase {
 
@@ -25,23 +24,11 @@ public class TooltipForDisabledButton extends TestBase {
         buttonEnabled.setDescription("Tooltip for enabled");
         buttonDisabled.setDescription("Tooltip for disabled");
 
-        buttonDisabled.addClickListener(new Button.ClickListener() {
+        buttonDisabled.addClickListener(
+                event -> getMainWindow().showNotification("Clicked Disabled"));
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                getMainWindow().showNotification("Clicked Disabled");
-            }
-
-        });
-
-        buttonEnabled.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                getMainWindow().showNotification("Clicked Enabled");
-            }
-
-        });
+        buttonEnabled.addClickListener(
+                event -> getMainWindow().showNotification("Clicked Enabled"));
 
         addComponent(buttonEnabled);
         addComponent(buttonDisabled);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,7 +39,7 @@ public abstract class AbstractRowHandleSelectionModel<T>
      *
      * @param handle
      *            the handle to select by
-     * @return <code>true</code> iff the selection state was changed by this
+     * @return <code>true</code> if the selection state was changed by this
      *         call
      * @throws UnsupportedOperationException
      *             if the selection model does not support either handles or
@@ -55,7 +55,7 @@ public abstract class AbstractRowHandleSelectionModel<T>
      *
      * @param handle
      *            the handle to deselect by
-     * @return <code>true</code> iff the selection state was changed by this
+     * @return <code>true</code> if the selection state was changed by this
      *         call
      * @throws UnsupportedOperationException
      *             if the selection model does not support either handles or

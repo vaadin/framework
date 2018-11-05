@@ -1,19 +1,8 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.design;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -21,7 +10,6 @@ import java.io.IOException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.annotations.DesignRoot;
@@ -46,8 +34,8 @@ public class FieldNameWhichConflictsWithGettersTest {
     @Test
     public void readWithConflictingFields() {
         MyVerticalLayout v = new MyVerticalLayout();
-        Assert.assertNotNull(v.caption);
-        Assert.assertNotNull(v.description);
+        assertNotNull(v.caption);
+        assertNotNull(v.description);
     }
 
     @Test
@@ -65,18 +53,18 @@ public class FieldNameWhichConflictsWithGettersTest {
         context.setRootComponent(v);
 
         Design.write(context, baos);
-        String str = baos.toString("UTF-8");
+        String str = baos.toString(UTF_8.name());
 
         Document doc = Jsoup.parse(str);
         Element body = doc.body();
         Element captionElement = body.getElementById("caption");
-        Assert.assertNotNull(captionElement);
-        Assert.assertEquals("vaadin-label", captionElement.tagName());
+        assertNotNull(captionElement);
+        assertEquals("vaadin-label", captionElement.tagName());
 
         Element descriptionElement = captionElement.nextElementSibling();
-        Assert.assertNotNull(descriptionElement);
-        Assert.assertEquals("vaadin-text-field", descriptionElement.tagName());
-        Assert.assertEquals("description", descriptionElement.attr("_id"));
+        assertNotNull(descriptionElement);
+        assertEquals("vaadin-text-field", descriptionElement.tagName());
+        assertEquals("description", descriptionElement.attr("_id"));
 
     }
 }

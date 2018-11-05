@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -44,7 +44,7 @@ public class DebugButton extends Button {
     public DebugButton(String caption) {
         this(null, null, caption);
     }
-    
+
     public DebugButton(String caption, String title) {
         this(null, title, caption);
     }
@@ -98,7 +98,7 @@ public class DebugButton extends Button {
     }
 
     /**
-     * Indicates wheter the Button is currently in its active state or not
+     * Indicates wheter the Button is currently in its active state or not.
      *
      * @return true if the Button is active, false otherwise
      */

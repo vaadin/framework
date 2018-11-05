@@ -1,0 +1,227 @@
+---
+title: Using Polling
+order: 17
+layout: page
+---
+
+[[using-polling]]
+= Using Polling
+To set up polling for your UI, you only need to set a poll interval
+using `UI.setPollInterval(timeout)`. By doing this the browser will poll
+the server each "timeout" ms and retrieve any possibly pending changes.
+You can test this in practice by creating a small application which
+initially creates a small "please wait" UI and then loads the actual UI
+in a background thread.
+
+[source,java]
+....
+public class PollingUI extends UI {
+
+    @WebServlet(value = "/*")
+    @VaadinServletConfiguration(productionMode = false, ui = Polling7UI.class)
+    public static class Servlet extends VaadinServlet {
+    }
+
+    @Override
+    protected void init(VaadinRequest request) {
+        setContent(new Label("Loading data, please wait..."));
+        setPollInterval(1000);
+        new Thread(new Loader()).start();
+    }
+
+    class Loader implements Runnable {
+
+        @Override
+        public void run() {
+            // Simulate a heavy database operation
+            try {
+                Thread.sleep(4500);
+            } catch (InterruptedException e) {
+            }
+
+            // Wrap UI updates in access to properly deal with locking
+            access(new Runnable() {
+                @Override
+                public void run() {
+                    setContent(new Label("This is the real content"));
+
+                    // Stop polling once the update is done
+                    setPollInterval(-1);
+                }
+            });
+        }
+    }
+}
+....
+
+For more information regarding locking the session, see [Using server
+initiated events]
+
+[[polling-for-multiple-components]]
+Polling for multiple components
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you have the situation that several components need polling at some
+point you should use some kind of Manager to handle the polling, for it
+can only be set UI-wise (which makes perfectly sense)
+
+A simple `UIPollingManager` which always uses the lowest registered
+`intervalTime` could look like this:
+
+[source,java]
+....
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.WeakHashMap;
+
+import com.vaadin.ui.UI;
+
+public class UIPollingManager
+{
+
+    private Map<UI, Map<Object, Integer>> pollRequests;
+
+    public UIPollingManager()
+    {
+        pollRequests = new WeakHashMap<>(); // Let's use weak references in case someone forgets to unregister properly
+    }
+
+    /**
+     * Registers a poll request for the given UI. Sets the pollInterval of this UI to the lowest registered interval.
+     * @param ui
+     * @param requestor
+     * @param pollIntervalInMillis poll interval in milliseconds
+     */
+    public void registerPollRequest(UI ui, Object requestor, int pollIntervalInMillis)
+    {
+        Map<Object, Integer> uiRequests = pollRequests.get(ui);
+        if (uiRequests == null)
+        {
+            uiRequests = new HashMap<>();
+            pollRequests.put(ui, uiRequests);
+        }
+
+        uiRequests.put(requestor, pollIntervalInMillis);
+
+        setPollInterval(ui);
+    }
+
+    /**
+     * Removes a poll request for the given UI (if existent). Sets the pollInterval of this UI to the lowest registered interval
+     * remaining or -1 if no more requests exist for the UI
+     * @param ui
+     * @param requestor
+     */
+    public void unregisterPollRequest(UI ui, Object requestor)
+    {
+        Map<Object, Integer> uiRequests = pollRequests.get(ui);
+        if (uiRequests != null)
+        {
+            uiRequests.remove(requestor);
+
+            // Remove the UI from our map if no requests exist anymore
+            if (uiRequests.size() <= 0) pollRequests.remove(ui);
+        }
+
+        setPollInterval(ui);
+    }
+
+    /**
+     * Removes all poll requests of the given UI and sets the pollInterval to -1
+     * @param ui
+     */
+    public void unregisterAllPollRequests(UI ui)
+    {
+        pollRequests.remove(ui);
+
+        ui.setPollInterval(-1);
+    }
+
+    /**
+     * Sets the pollInterval of the given UI to the lowest registered interval time of this UI
+     * @param ui
+     */
+    private void setPollInterval(UI ui)
+    {
+        Map<Object, Integer> uiRequests = pollRequests.get(ui);
+        if (uiRequests != null)
+        {
+            ui.setPollInterval(getLowestNumber(uiRequests.values()));
+        }
+    }
+
+    /**
+     * Returns the lowest number of a given Integer-Collection. Returns -1 if no valid Integer is included in the collection.
+     * @param intervalArray
+     * @return
+     */
+    private Integer getLowestNumber(Collection<Integer> intervalArray)
+    {
+        Integer lowestNum = null;
+
+        for (Integer i : intervalArray)
+        {
+            if (i != null && ( lowestNum == null || i < lowestNum )) lowestNum = i;
+        }
+
+        if (lowestNum == null) return -1;
+        else
+            return lowestNum;
+    }
+}
+....
+
+The changed example could then look like this:
+
+[source,java]
+....
+public class Polling7UI extends UI {
+
+    private UIPollingManager pollingManager; // Instantiate this via Spring or get it via Singleton or whatever
+
+    @WebServlet(value = "/*")
+    @VaadinServletConfiguration(productionMode = false, ui = Polling7UI.class)
+    public static class Servlet extends VaadinServlet {
+    }
+
+    @Override
+    protected void init(VaadinRequest request) {
+        setContent(new Label("Loading data, please wait..."));
+        Loader loader = new Loader();
+        pollingManager.registerPollRequest(this, loader, 1000);
+        new Thread(loader).start();
+    }
+
+    class Loader implements Runnable {
+        private UI ui;
+        private UIPollingManager pollingManager;
+        public Loader( UI ui, UIPollingManager pollingManager )
+        {
+            this.ui = ui;
+            this.pollingManager = pollingManager;
+        }
+
+        @Override
+        public void run() {
+            // Simulate a heavy database operation
+            try {
+                Thread.sleep(4500);
+            } catch (InterruptedException e) {
+            }
+
+            final Loader loader = this;
+            // Wrap UI updates in access to properly deal with locking
+            access(new Runnable() {
+                @Override
+                public void run() {
+                    setContent(new Label("This is the real content"));
+
+                    // Stop polling once the update is done
+                    pollingManager.unregisterPollRequest(ui, loader);
+                }
+            });
+        }
+    }
+}
+....

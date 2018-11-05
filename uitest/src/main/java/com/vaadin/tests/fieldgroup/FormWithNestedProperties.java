@@ -11,7 +11,8 @@ import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.TextField;
 
-public class FormWithNestedProperties extends AbstractBeanFieldGroupTest {
+public class FormWithNestedProperties
+        extends AbstractBeanFieldGroupTest<Person> {
 
     private Log log = new Log(5);
 

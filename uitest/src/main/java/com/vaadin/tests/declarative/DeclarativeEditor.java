@@ -1,19 +1,6 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.declarative;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,8 +19,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.v7.data.Property.ReadOnlyException;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.Property.ValueChangeNotifier;
 
 public class DeclarativeEditor extends UI {
@@ -95,23 +80,17 @@ public class DeclarativeEditor extends UI {
         try {
             Design.write(treeHolder.getComponent(0), o);
             disableEvents = true;
-            editor.setValue(o.toString("UTF-8"));
+            editor.setValue(o.toString(UTF_8.name()));
             disableEvents = false;
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-
     }
 
     private void addValueChangeListeners(Component component) {
         if (component instanceof ValueChangeNotifier) {
             ((ValueChangeNotifier) component)
-                    .addValueChangeListener(new ValueChangeListener() {
-                        @Override
-                        public void valueChange(ValueChangeEvent event) {
-                            updateCode();
-                        }
-                    });
+                    .addValueChangeListener(event -> updateCode());
         }
 
         if (component instanceof HasComponents) {
@@ -119,7 +98,6 @@ public class DeclarativeEditor extends UI {
                 addValueChangeListeners(c);
             }
         }
-
     }
 
 }

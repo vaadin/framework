@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -59,6 +59,9 @@ public abstract class VOptionGroupBase extends Composite implements Field,
     private boolean enabled;
 
     private boolean readonly;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public int cols = 0;
 
     /** For internal use only. May be removed or replaced in the future. */
     public int rows = 0;
@@ -132,6 +135,15 @@ public abstract class VOptionGroupBase extends Composite implements Field,
 
     protected boolean isNullSelectionItemAvailable() {
         return nullSelectionItemAvailable;
+    }
+
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @return "cols" specified in uidl, 0 if not specified
+     */
+    public int getColumns() {
+        return cols;
     }
 
     /**

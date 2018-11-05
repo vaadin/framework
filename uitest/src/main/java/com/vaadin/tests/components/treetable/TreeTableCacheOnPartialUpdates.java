@@ -8,23 +8,15 @@ import java.util.Map;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Container.Ordered;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.ColumnGenerator;
-import com.vaadin.v7.ui.Tree.CollapseEvent;
-import com.vaadin.v7.ui.Tree.CollapseListener;
-import com.vaadin.v7.ui.Tree.ExpandEvent;
-import com.vaadin.v7.ui.Tree.ExpandListener;
 import com.vaadin.v7.ui.TreeTable;
 
 public class TreeTableCacheOnPartialUpdates extends TestBase {
@@ -62,7 +54,8 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
 
         @Override
         public String toString() {
-            return "TestBean [col1=" + col1 + ", col2=" + col2 + "]";
+            return "HierarchicalTestBean [col1=" + col1 + ", col2=" + col2
+                    + "]";
         }
 
     }
@@ -76,14 +69,9 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
             Button btnCol3 = new NativeButton(identifier);
             btnCol3.setId(
                     "cacheTestButton-" + tb.getCol1() + "-" + tb.getCol2());
-            btnCol3.addClickListener(new Button.ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    log.log("Button " + event.getButton().getCaption()
-                            + " clicked. Row index: "
-                            + indexOfId(source, itemId));
-                }
-            });
+            btnCol3.addClickListener(event -> log.log("Button "
+                    + event.getButton().getCaption() + " clicked. Row index: "
+                    + indexOfId(source, itemId)));
             return btnCol3;
         }
 
@@ -98,16 +86,10 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
             Button btnCol4 = new NativeButton(identifier);
             btnCol4.setId("cacheTestButtonToggle-" + tb.getCol1() + "-"
                     + tb.getCol2());
-            btnCol4.addClickListener(new Button.ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    treeTable.setCollapsed(itemId,
-                            !treeTable.isCollapsed(itemId));
-                }
-            });
+            btnCol4.addClickListener(event -> treeTable.setCollapsed(itemId,
+                    !treeTable.isCollapsed(itemId)));
             return btnCol4;
         }
-
     }
 
     protected int indexOfId(Table source, Object itemId) {
@@ -123,10 +105,8 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
 
     private TreeTable treeTable;
     private BeanItemContainer<TestBean> testBeanContainer;
-    private static String[] columnHeaders = new String[] { "Col1", "Col2",
-            "Col3", "Col4" };
-    private static Object[] visibleColumns = new Object[] { "col1", "col2",
-            "col3", "col4" };
+    private static String[] columnHeaders = { "Col1", "Col2", "Col3", "Col4" };
+    private static Object[] visibleColumns = { "col1", "col2", "col3", "col4" };
 
     @Override
     public void setup() {
@@ -134,14 +114,8 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
         // pixels works as expected
         Button b = new Button("Show first");
         addComponent(b);
-        b.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                log.log("First visible item id is: "
-                        + treeTable.getCurrentPageFirstItemId());
-            }
-        });
+        b.addClickListener(event -> log.log("First visible item id is: "
+                + treeTable.getCurrentPageFirstItemId()));
         NativeSelect cacheRateSelect = new NativeSelect("Cache rate");
         cacheRateSelect.setImmediate(true);
         cacheRateSelect.setNullSelectionAllowed(false);
@@ -149,14 +123,8 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
         cacheRateSelect.addItem(new Integer(1));
         cacheRateSelect.addItem(new Integer(2));
         cacheRateSelect.setValue(2);
-        cacheRateSelect.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                treeTable
-                        .setCacheRate((Integer) event.getProperty().getValue());
-            }
-        });
+        cacheRateSelect.addValueChangeListener(event -> treeTable
+                .setCacheRate((Integer) event.getProperty().getValue()));
         addComponent(cacheRateSelect);
         treeTable = new TreeTable();
         treeTable.addStyleName("table-equal-rowheight");
@@ -173,22 +141,10 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
         treeTable.setContainerDataSource(createContainer(100, hasChildren));
         treeTable.addGeneratedColumn("col3", new Col3ColumnGenerator());
         treeTable.addGeneratedColumn("col4", new Col4ColumnGenerator());
-        treeTable.addExpandListener(new ExpandListener() {
-
-            @Override
-            public void nodeExpand(ExpandEvent event) {
-                logExpandCollapse(event.getItemId(), "expanded");
-
-            }
-        });
-        treeTable.addCollapseListener(new CollapseListener() {
-
-            @Override
-            public void nodeCollapse(CollapseEvent event) {
-                logExpandCollapse(event.getItemId(), "collapsed");
-
-            }
-        });
+        treeTable.addExpandListener(
+                event -> logExpandCollapse(event.getItemId(), "expanded"));
+        treeTable.addCollapseListener(
+                event -> logExpandCollapse(event.getItemId(), "collapsed"));
         treeTable.setVisibleColumns(visibleColumns);
         treeTable.setColumnHeaders(columnHeaders);
         treeTable.setColumnWidth("col1", 150);
@@ -202,7 +158,6 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
         String identifier = "Item " + itemId;
         log.log("Row " + identifier + " " + operation + ". Row index: "
                 + indexOfId(treeTable, itemId));
-
     }
 
     private Container createContainer(int items,

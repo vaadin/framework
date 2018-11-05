@@ -10,9 +10,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.Receiver;
-import com.vaadin.ui.Upload.StartedEvent;
 
 public class TestUploadAndDisableOnSuccess extends ComponentTestCase<Upload>
         implements Receiver {
@@ -50,28 +48,19 @@ public class TestUploadAndDisableOnSuccess extends ComponentTestCase<Upload>
         l = new Label(getUploadcount());
         addComponent(l);
 
-        u.addStartedListener(new Upload.StartedListener() {
-
-            @Override
-            public void uploadStarted(StartedEvent event) {
-                /*
-                 * Remove component before upload from the same vertical layout.
-                 * Causes upload to be detached/attached -> upload loses it
-                 * target iframes onload listener -> puts VUpload inappropriate
-                 * state.
-                 */
-                getLayout().removeComponent(labe);
-            }
+        u.addStartedListener(event -> {
+            /*
+             * Remove component before upload from the same vertical layout.
+             * Causes upload to be detached/attached -> upload loses it target
+             * iframes onload listener -> puts VUpload inappropriate state.
+             */
+            getLayout().removeComponent(labe);
         });
 
-        u.addFinishedListener(new Upload.FinishedListener() {
-            @Override
-            public void uploadFinished(FinishedEvent event) {
-                Notification.show("Done");
-                l.setValue(getUploadcount());
-            }
+        u.addFinishedListener(event -> {
+            Notification.show("Done");
+            l.setValue(getUploadcount());
         });
-
     }
 
     private String getUploadcount() {
@@ -81,14 +70,8 @@ public class TestUploadAndDisableOnSuccess extends ComponentTestCase<Upload>
     @Override
     protected List<Component> createActions() {
         List<Component> actions = new ArrayList<>();
-        actions.add(createButtonAction("Toggle Enabled",
-                new Command<Upload, Boolean>() {
-
-                    @Override
-                    public void execute(Upload c, Boolean value, Object data) {
-                        c.setEnabled(!c.isEnabled());
-                    }
-                }));
+        actions.add(createButtonAction("Toggle Enabled", (upload, value,
+                data) -> upload.setEnabled(!upload.isEnabled())));
 
         return actions;
     }

@@ -1,0 +1,67 @@
+---
+title: Creating A Servlet 3.0 Application
+order: 3
+layout: page
+---
+
+[[creating-a-servlet-3.0-application]]
+= Creating a servlet 3.0 application
+
+Servlet 3.0 introduces a `@WebServlet` annotation which can be used to
+replace the traditional web.xml. The straightforward approach to create
+a Vaadin application using servlet 3.0 annotations is to simply move
+whatever is in web.xml to a custom servlet class (extends `VaadinServlet`)
+and annotate it using `@WebServlet` and add `@WebInitParams` as needed. You
+will end up with something like
+
+[source,java]
+....
+@WebServlet(value = "/*", asyncSupported = true, initParams = {
+  @WebInitParam(name = "ui", value = "com.example.MyUI"),
+  @WebInitParam(name = "productionMode", value = "false")
+})
+public class MyServlet extends VaadinServlet {
+}
+....
+
+The problem you will face sooner or later with both this approach as
+well as using web.xml is that you will misspell some parameter name or
+class name. Maybe you change the UI class name and the init parameter is
+not automatically updated - and the head scratching and debugging
+starts.
+
+Vaadin 7.1 introduces two features which makes this a lot easier,
+`@VaadinServletConfiguration` and automatic UI finding.
+
+`@VaadinServletConfiguration` is a type safe, Vaadin version of
+`@WebInitParam` which provides you with the option to select UI by
+referring the UI class directly, toggle `productionMode` using a boolean
+and more. The above example rewritten using `@VaadinServletConfiguration`
+looks like:
+
+[source,java]
+....
+@WebServlet(value = "/*", asyncSupported = true)
+@VaadinServletConfiguration(productionMode = false, ui = MYUI.class)
+public class MyServlet extends VaadinServlet {
+}
+....
+
+Automatic UI finding takes this even one step further and allows you to
+leave out `@VaadinServletConfiguration` completely if you define your
+servlet class as a static inner class to your UI class. The above
+example could therefore also be written as
+
+[source,java]
+....
+public class MYUI extends UI {
+    @WebServlet(value = "/*", asyncSupported = true)
+    public static class Servlet extends VaadinServlet {
+    }
+....
+
+For clarity the variant with `@VaadinServletConfiguration` is likely the
+better option. Please do note that `@VaadinServletConfiguration` comes
+with defaults for some parameters, most importantly
+`legacyPropertyToStringMode`, which might be important if you are
+migrating an older application.

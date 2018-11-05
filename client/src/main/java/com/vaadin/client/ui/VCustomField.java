@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -47,13 +47,7 @@ public class VCustomField extends VCustomComponent implements Focusable {
      */
     public void setFocusDelegate(
             final com.google.gwt.user.client.ui.Focusable focusDelegate) {
-        this.focusDelegate = new Focusable() {
-            @Override
-            public void focus() {
-                focusDelegate.setFocus(true);
-            }
-        };
-
+        this.focusDelegate = () -> focusDelegate.setFocus(true);
     }
 
 }

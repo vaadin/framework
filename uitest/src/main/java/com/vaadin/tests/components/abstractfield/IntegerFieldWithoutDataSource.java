@@ -2,8 +2,6 @@ package com.vaadin.tests.components.abstractfield;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.TextField;
 
 public class IntegerFieldWithoutDataSource extends TestBase {
@@ -27,18 +25,14 @@ public class IntegerFieldWithoutDataSource extends TestBase {
         final TextField tf = new TextField("Enter an integer");
         tf.setConverter(Integer.class);
         tf.setImmediate(true);
-        tf.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                try {
-                    log.log("Value for " + tf.getCaption() + " changed to "
-                            + tf.getValue());
-                    log.log("Converted value is " + tf.getConvertedValue());
-                } catch (Exception e) {
-                    // TODO: handle exception
-                    e.printStackTrace();
-                }
+        tf.addValueChangeListener(event -> {
+            try {
+                log.log("Value for " + tf.getCaption() + " changed to "
+                        + tf.getValue());
+                log.log("Converted value is " + tf.getConvertedValue());
+            } catch (Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
             }
         });
 

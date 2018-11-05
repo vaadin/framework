@@ -1,0 +1,246 @@
+---
+title: Creating A Simple Component Container
+order: 70
+layout: page
+---
+
+[[creating-a-simple-component-container]]
+= Creating a simple component container
+
+Components in Vaadin can be roughly split into two groups, `Component`{empty}s
+and `ComponentContainer`{empty}s. ComponentContainers are Components in
+themselves which can also contain other components. If you are about to
+implement a component that contains other components, then you'll get a
+headstart by extending Vaadin's `ComponentContainer`. The biggest feature
+is in transferring the list of server side components from your component
+to the client. Here's how you do it.
+
+[[server-side]]
+Server Side
+^^^^^^^^^^^
+
+To start of we implement our server side component. For this we extend
+the ready made abstract implementation `AbstractComponentContainer`. This
+requires us to implement `addComponent(Component)`,
+`removeComponent(Component)`, `replaceComponent(Component, Component)`,
+`getComponentCount` and `getComponentIterator()`.
+
+[source,java]
+....
+package com.example.widgetcontainer;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import com.vaadin.ui.AbstractComponentContainer;
+import com.vaadin.ui.Component;
+
+public class WidgetContainer extends AbstractComponentContainer {
+
+  List<Component> children = new ArrayList<Component>();
+
+  @Override
+  public void addComponent(Component c) {
+    children.add(c);
+    super.addComponent(c);
+    markAsDirty();
+  }
+
+  @Override
+  public void removeComponent(Component c) {
+    children.remove(c);
+    super.removeComponent(c);
+    markAsDirty();
+  }
+
+  public void replaceComponent(Component oldComponent, Component newComponent) {
+    int index = children.indexOf(oldComponent);
+    if (index != -1) {
+      children.remove(index);
+      children.add(index, newComponent);
+      fireComponentDetachEvent(oldComponent);
+      fireComponentAttachEvent(newComponent);
+      markAsDirty();
+    }
+  }
+
+  public int getComponentCount() {
+    return children.size();
+  }
+
+  public Iterator<Component> iterator() {
+    return children.iterator();
+  }
+}
+....
+
+Add, remove and replace are quite straight forward. In the class we
+upkeep a list of children internally, and these three methods modify
+them. Add and remove have ready made methods in the super class for
+notifying all event handlers that the children have changed and because
+of that we should make calls to the super methods after we have updated
+the list. In `replaceComponent` we have to call
+`fireComponentDetachEvent(Component)` and
+`fireComponentAttachEvent(Component)` to manually trigger these events. In
+all three methods we should also call `markAsDirty` as a last step to
+notify the client side that the children have changed.
+
+The methods `getComponentCount()` and `iterator()` takes care of providing
+the required information that we need to the client side. Here they are
+simple delegate methods to the List's `size()` and `iterator()`.
+
+[[client-side]]
+Client Side
+^^^^^^^^^^^
+
+Next up, we want to set up a standard GWT widget which will be our
+component container's client side widget. GWT in itself has a bunch of
+component containers in it. In GWT, these are called Panels. For this
+case I will start with a `VerticalPanel`. It is roughly the same as
+`VerticalLayout` in Vaadin. Down the road you want to edit this file to
+add features or even extend Widget to create a complete custom widget.
+For now extending `VerticalPanel` is enough and we'll use that as-is.
+
+[source,java]
+....
+package com.example.widgetcontainer.client.ui;
+
+import com.google.gwt.user.client.ui.VerticalPanel;
+
+public class VWidgetContainer extends VerticalPanel {
+  public static final String CLASSNAME = "v-widgetcontainer";
+
+  public VWidgetContainer() {
+    setStyleName(CLASSNAME);
+  }
+}
+....
+
+[[connector]]
+Connector
+^^^^^^^^^
+
+Your widget's Connector will transfer the components from the server
+side as child widgets to our widget. The connector will feed the
+children to the panel trough it's standard API, namely `add(Widget)`,
+`remove(Widget)` and `clear();`
+
+Instead of going the standard route of extending
+`AbstractComponentConnector` as your connector, here we can take use of
+Vaadin's internal features and extend
+`AbstractComponentContainerConnector`. Additionally to implementing the
+`getWidget()` -method from `AbstractComponentConnector`, we also have to
+supply the class with an implementation to a method called
+`updateCaption(ComponentConnector)`. This method is there if we want the
+container to take care of the captions for all the components. We don't
+need to take care of these captions in this example so we can leave the
+implementation empty.
+
+The real benefit of extending `AbstractComponentContainerConnector` is
+that we can now extend a method called
+`onConnectorHierarchyChange(ConnectorHierarchyChangeEvent)`. This method
+will be called every time that the server side calls `markAsDirty()` if
+the component hierarchy has been changed. From within it, we can call on
+`getChildComponents` to get a list of all the child components, and
+populate our widget with those.
+
+[source,java]
+....
+package com.example.widgetcontainer.client.ui;
+
+import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Widget;
+import com.example.widgetcontainer.WidgetContainer;
+import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.client.ui.AbstractComponentContainerConnector;
+import com.vaadin.client.ui.Connect;
+
+@Connect(WidgetContainer.class)
+public class WidgetContainerConnector extends
+        AbstractComponentContainerConnector {
+
+  @Override
+  public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+    List<ComponentConnector> children = getChildComponents();
+    VWidgetContainer widget = getWidget();
+    widget.clear();
+    for (ComponentConnector connector : children) {
+      widget.add(connector.getWidget());
+    }
+  }
+
+  @Override
+  public VWidgetContainer getWidget() {
+    return (VWidgetContainer) super.getWidget();
+  }
+
+  public void updateCaption(ComponentConnector connector) {
+  }
+}
+....
+
+This implementation removes all the component's in the widget and adds
+all that are returned from `getChildComponents`. An obvious optimization
+to these is to compare what is already in the widget and only
+add/remove/move those widgets that have changed.
+
+[[example-usage]]
+Example Usage
+^^^^^^^^^^^^^
+
+Nothing left but to use the component! Compile the widgetset and check
+that the widgetset is in use in your web.xml. Here is a little
+stand-alone application that uses this component:
+
+[source,java]
+....
+package com.example.widgetcontainer;
+
+import java.util.Random;
+
+import com.vaadin.terminal.WrappedRequest;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
+
+public class WidgetcontainerUI extends UI {
+  @Override
+  public void init(VaadinRequest request) {
+    VerticalLayout layout = new VerticalLayout();
+    layout.setMargin(true);
+    setContent(layout);
+
+    Label label = new Label("Hello Vaadin user");
+    layout.addComponent(label);
+    final WidgetContainer widgetContainer = new WidgetContainer();
+    layout.addComponent(widgetContainer);
+    widgetContainer.addComponent(new Label(
+        "Click the button to add components to the WidgetContainer."));
+    Button button = new Button("Add more components", new ClickListener() {
+      @Override
+      public void buttonClick(ClickEvent event) {
+        Random randomGenerator = new Random();
+        int random = randomGenerator.nextInt(3);
+        Component component;
+        if (random % 3 == 0) {
+          component = new Label("A new label");
+        } else if (random % 3 == 1) {
+          component = new Button("A button!");
+        } else {
+          component = new CheckBox("A textfield");
+        }
+        widgetContainer.addComponent(component);
+      }
+    });
+    layout.addComponent(button);
+  }
+}
+....

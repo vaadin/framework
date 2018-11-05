@@ -4,7 +4,7 @@ order: 1
 layout: page
 ---
 [[migration]]
-== Migration from Framework 7 to Framework 8
+= Migration from Framework 7 to Framework 8
 
 Most Vaadin Framework 7 applications will need some changes when migrating to Vaadin Framework 8.
 To make migration from version 7 to 8 as straightforward as possible, Vaadin Framework 8 ships with compatibility packages that include all the old features and APIs that have changed between versions.
@@ -63,6 +63,16 @@ The full list of compatibility packages available for Framework 8 are the follow
 IMPORTANT: The themes Reindeer, Runo, Chameleon and Base have been deprecated in Vaadin Framework 8 and they now reside in the compatibility-themes package.
 Applications still using any of these themes must include this package.
 
+==== Pro Tools
+
+For migration of projects using Vaadin Pro Tools check the following sections:
+
+* <<dummy/../../../charts/java-api/charts-migration-vaadin8.asciidoc#charts4.migration, "Charts 3 to Charts 4 Migration Guide">> 
+
+* <<dummy/../../../testbench/testbench-migration.asciidoc#testbench.migration, "TestBench 4 to TestBench 5 Migration Guide">> 
+
+* <<dummy/../../../spreadsheet/spreadsheet-migration-vaaadin8.asciidoc#spreadsheet.migration, "Spreadsheet 1 to Spreadsheet 2 Migration Guide">> 
+
 ==== Add-ons
 
 As with projects themselves, some addons built for Framework 7 will not be directly compatible with Framework 8, thus any add-on dependencies must also be updated to versions that are compatible with Framework 8.
@@ -77,7 +87,7 @@ Optionally, if you are using Vaadin Designer or declarative files otherwise, the
 
 ==== The Migration Tool
 
-To ease the migration process, the vaadin maven plugin has a target `vaadin:upgrade8` which updates all
+To ease the migration process, the Vaadin maven plugin has a target `vaadin:upgrade8` which updates all
 imports in java files and prefixes in design files to point to the versions in the compatibility packages.
 This migration tool is available separately at link:https://github.com/vaadin/framework8-migration-tool[].
 
@@ -88,11 +98,11 @@ For example the compatibility `TextField` is available through the import `impor
 
 ==== Widgetset Changes
 
-When using compatibility packages in your project you need to changes references from the default vaadin client side widgetset `com.vaadin.DefaultWidgetSet` to the one containing the compatibility packages `com.vaadin.v7.Vaadin7WidgetSet`, which is available in the vaadin-compatibility-client-compiled maven dependency.
+When using compatibility packages in your project you need to changes references from the default Vaadin client side widgetset `com.vaadin.DefaultWidgetSet` to the one containing the compatibility packages `com.vaadin.v7.Vaadin7WidgetSet`, which is available in the vaadin-compatibility-client-compiled maven dependency.
 Typically, widgetset recompilation will handle this automatically for you, except for the following two cases which should be handled manually:
 
 * Your project defines a custom widgetset, in which case you need to make sure `Vaadin7WidgetSet` is inherited
-* An UI in your project defines its widgetset with the annotation `@WidgetSet("com.vaadin.DefaultWidgetSet")`, which should be changed to `@WidgetSet("com.vaadin.v7.Vaadin7WidgetSet")`
+* An UI in your project defines its widgetset with the annotation `@Widgetset("com.vaadin.DefaultWidgetSet")`, which should be changed to `@Widgetset("com.vaadin.v7.Vaadin7WidgetSet")`
 
 IMPORTANT: The widgetset compilation for `Vaadin7WidgetSet` requires at least 1G of memory. To ensure this, add
 `<extraJvmArgs>-Xmx1G</extraJvmArgs>` to the vaadin-maven-plugin configuration in your `pom.xml` file.
@@ -125,13 +135,13 @@ Framework 8 no longer uses `Item`, `Property` nor `Container`.
 These building blocks for the old data binding have been deprecated in favor of more Java 8 friendly APIs.
 
 The new data model can be roughly split into three main topics, namely binding data to field components, providing data to listing components and handling selections.
-The revised <<dummy/../../../framework/datamodel/datamodel-fields.asciidoc, "Binding Components to Data">> chapter is the recommended resource to get started with learning these new concepts.
+The revised <<dummy/../../../framework/datamodel/datamodel-fields.asciidoc#datamodel.fields, "Binding Components to Data">> chapter is the recommended resource to get started with learning these new concepts.
 For migration from Framework 7 the key references are the following sections:
 
-* <<dummy/../../../framework/datamodel/datamodel-fields.asciidoc, "Editing Values in Fields">> and <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc, "Binding Data to Forms">>, which cover the new data binding concepts that replace `Property` and `FieldGroup`.
+* <<dummy/../../../framework/datamodel/datamodel-fields.asciidoc#datamodel.fields, "Editing Values in Fields">> and <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms, "Binding Data to Forms">>, which cover the new data binding concepts that replace `Property` and `FieldGroup`.
 
-* <<dummy/../../../framework/datamodel/datamodel-providers.asciidoc, "Showing Many Items in a Listing">>, which covers the new `Container` and `Item` replacement, the `DataProvider`, as well as the associated sorting and filtering APIs.
+* <<dummy/../../../framework/datamodel/datamodel-providers.asciidoc#datamodel.providers, "Showing Many Items in a Listing">>, which covers the new `Container` and `Item` replacement, the `DataProvider`, as well as the associated sorting and filtering APIs.
 
-* And for the new selection APIs,  <<dummy/../../../framework/datamodel/datamodel-selection.asciidoc, "Selecting Items">>.
+* And for the new selection APIs,  <<dummy/../../../framework/datamodel/datamodel-selection.asciidoc#datamodel.selection, "Selecting Items">>.
 
 For a full list of incompatible changes between Framework 7 and 8, please refer to the _Incompatible or Behavior-altering Changes_ section of the release notes, available at link:https://vaadin.com/download/prerelease/8.0/8.0.0/8.0.0.beta1/release-notes.html#incompatible[].

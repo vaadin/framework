@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -65,7 +65,7 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
     }
 
     /**
-     * Checks if the minimum value is part of the accepted range
+     * Checks if the minimum value is part of the accepted range.
      *
      * @return true if the minimum value is part of the range, false otherwise
      */
@@ -74,7 +74,7 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
     }
 
     /**
-     * Sets if the minimum value is part of the accepted range
+     * Sets if the minimum value is part of the accepted range.
      *
      * @param minValueIncluded
      *            true if the minimum value should be part of the range, false
@@ -85,7 +85,7 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
     }
 
     /**
-     * Checks if the maximum value is part of the accepted range
+     * Checks if the maximum value is part of the accepted range.
      *
      * @return true if the maximum value is part of the range, false otherwise
      */
@@ -94,7 +94,7 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
     }
 
     /**
-     * Sets if the maximum value is part of the accepted range
+     * Sets if the maximum value is part of the accepted range.
      *
      * @param maxValueIncluded
      *            true if the maximum value should be part of the range, false
@@ -105,7 +105,7 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
     }
 
     /**
-     * Gets the minimum value of the range
+     * Gets the minimum value of the range.
      *
      * @return the minimum value
      */
@@ -126,7 +126,7 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
     }
 
     /**
-     * Gets the maximum value of the range
+     * Gets the maximum value of the range.
      *
      * @return the maximum value
      */

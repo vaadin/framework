@@ -1,17 +1,12 @@
-/**
- *
- */
 package com.vaadin.tests;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Container;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.v7.data.util.ContainerOrderedWrapper;
 import com.vaadin.v7.data.util.IndexedContainer;
@@ -69,14 +64,8 @@ public class TestContainerChanges extends CustomComponent {
         tbl2.setSelectable(true);
         tbl2.setMultiSelect(false);
         tbl2.setImmediate(true);
-        tbl2.addListener(new Table.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                System.err
-                        .println("Value now " + event.getProperty().getValue());
-
-            }
-        });
+        tbl2.addValueChangeListener(event -> System.err
+                .println("Value now " + event.getProperty().getValue()));
         tbl2.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
         // non-ordered container will get wrapped
         tbl2.setContainerDataSource(hierarchical);
@@ -84,97 +73,34 @@ public class TestContainerChanges extends CustomComponent {
         VerticalLayout buttons = new VerticalLayout();
         v.addComponent(buttons);
 
-        Button b = new Button("table.commit()", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                tbl.commit();
-            }
-
-        });
+        Button b = new Button("table.commit()", event -> tbl.commit());
         buttons.addComponent(b);
 
         b = new Button("indexedcontainer.addItem()",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        cont.addItem(new Integer(cnt++));
-                    }
-
-                });
+                event -> cont.addItem(new Integer(cnt++)));
         buttons.addComponent(b);
         b = new Button("indexedcontainer.addItem(null)",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        cont.addItem(null);
-                    }
-
-                });
+                event -> cont.addItem(null));
         buttons.addComponent(b);
         b = new Button("indexedcontainer.removeItem(table.lastItemId()",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        cont.removeItem(tbl.lastItemId());
-                    }
-
-                });
+                event -> cont.removeItem(tbl.lastItemId()));
         buttons.addComponent(b);
 
-        b = new Button("indexedcontainer.addContainerProperty()",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        cont.addContainerProperty("prop" + cnt, String.class,
-                                "#" + cnt++);
-                    }
-
-                });
+        b = new Button("indexedcontainer.addContainerProperty()", event -> cont
+                .addContainerProperty("prop" + cnt, String.class, "#" + cnt++));
         buttons.addComponent(b);
 
-        b = new Button("indexedcontainer.clear()", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                cont.removeAllItems();
-            }
-
-        });
+        b = new Button("indexedcontainer.clear()",
+                event -> cont.removeAllItems());
         buttons.addComponent(b);
         b = new Button("table.setContainerDataSource(indexedcontainer)",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        tbl.setContainerDataSource(cont);
-                    }
-
-                });
+                event -> tbl.setContainerDataSource(cont));
         buttons.addComponent(b);
         b = new Button("table.setContainerDataSource(orderedwrapper)",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        tbl.setContainerDataSource(ordered);
-                    }
-
-                });
+                event -> tbl.setContainerDataSource(ordered));
         buttons.addComponent(b);
         b = new Button("table.setContainerDataSource(hierarchicalwrapper)",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        tbl.setContainerDataSource(hierarchical);
-                    }
-
-                });
+                event -> tbl.setContainerDataSource(hierarchical));
         buttons.addComponent(b);
 
         VerticalLayout pl = createPanelLayout();

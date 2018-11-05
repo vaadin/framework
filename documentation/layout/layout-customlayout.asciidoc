@@ -26,9 +26,9 @@ folder under the [filename]#/VAADIN/themes/# folder, for example,
 (Notice that the root path [filename]#/VAADIN/themes/# for themes is
 fixed.) A template can also be provided dynamically from an
 [classname]#InputStream#, as explained below. A template includes
-[literal]#++<div>++# elements with a [parameter]#location# attribute that
-defines the location identifier. All custom layout HTML-files must be saved
-using UTF-8 character encoding.
+[literal]#++<div>++# elements with a [parameter]#data-location# or
+[parameter]#location# attribute that defines the location identifier. All
+custom layout HTML-files must be saved using UTF-8 character encoding.
 
 [subs="normal"]
 ----
@@ -38,18 +38,18 @@ using UTF-8 character encoding.
       &lt;table align="center"&gt;
         &lt;tr&gt;
           &lt;td align="right"&gt;User&amp;nbsp;name:&lt;/td&gt;
-          &lt;td&gt;**&lt;div location="username"&gt;&lt;/div&gt;**&lt;/td&gt;
+          &lt;td&gt;**&lt;div data-location="username"&gt;&lt;/div&gt;**&lt;/td&gt;
         &lt;/tr&gt;
         &lt;tr&gt;
           &lt;td align="right"&gt;Password:&lt;/td&gt;
-          &lt;td&gt;**&lt;div location="password"&gt;&lt;/div&gt;**&lt;/td&gt;
+          &lt;td&gt;**&lt;div data-location="password"&gt;&lt;/div&gt;**&lt;/td&gt;
         &lt;/tr&gt;
       &lt;/table&gt;
     &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
     &lt;td align="right" colspan="2"&gt;
-      **&lt;div location="okbutton"&gt;**&lt;/div&gt;
+      **&lt;div data-location="okbutton"&gt;**&lt;/div&gt;
     &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/table&gt;

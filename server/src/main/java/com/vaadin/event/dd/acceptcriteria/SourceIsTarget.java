@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,9 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-/**
- *
- */
 package com.vaadin.event.dd.acceptcriteria;
 
 import com.vaadin.event.Transferable;
@@ -26,7 +23,7 @@ import com.vaadin.ui.Component;
 
 /**
  *
- * A criterion that ensures the drag source is the same as drop target. Eg.
+ * A criterion that ensures the drag source is the same as drop target. E.g.
  * {code Tree} or {@code Table} could support only re-ordering of items, but no
  * {@link Transferable}s coming outside.
  * <p>
@@ -38,7 +35,7 @@ import com.vaadin.ui.Component;
 public class SourceIsTarget extends ClientSideCriterion {
 
     private static final long serialVersionUID = -451399314705532584L;
-    private static final SourceIsTarget instance = new SourceIsTarget();
+    private static final SourceIsTarget INSTANCE = new SourceIsTarget();
 
     private SourceIsTarget() {
     }
@@ -55,7 +52,7 @@ public class SourceIsTarget extends ClientSideCriterion {
     }
 
     public static synchronized SourceIsTarget get() {
-        return instance;
+        return INSTANCE;
     }
 
 }

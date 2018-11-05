@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,8 @@
  */
 
 package com.vaadin.server;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -44,6 +46,7 @@ import org.jsoup.parser.Tag;
 
 import com.vaadin.annotations.Viewport;
 import com.vaadin.annotations.ViewportGeneratorClass;
+import com.vaadin.server.DependencyFilter.FilterContext;
 import com.vaadin.server.communication.AtmospherePushConnection;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.VaadinUriResolver;
@@ -52,6 +55,7 @@ import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.Dependency;
 import com.vaadin.ui.Dependency.Type;
 import com.vaadin.ui.UI;
+import com.vaadin.util.ReflectTools;
 
 import elemental.json.Json;
 import elemental.json.JsonException;
@@ -59,6 +63,7 @@ import elemental.json.JsonObject;
 import elemental.json.impl.JsonUtil;
 
 /**
+ * Handles the initial request to start the application.
  *
  * @author Vaadin Ltd
  * @since 7.0.0
@@ -75,6 +80,9 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
      */
     public static final String IGNORE_RESTART_PARAM = "ignoreRestart";
 
+    /**
+     * Provides context information for the bootstrap process.
+     */
     protected class BootstrapContext implements Serializable {
 
         private final VaadinResponse response;
@@ -84,31 +92,65 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         private String appId;
         private PushMode pushMode;
         private JsonObject applicationParameters;
-        private VaadinUriResolver uriResolver;
+        private BootstrapUriResolver uriResolver;
         private WidgetsetInfo widgetsetInfo;
 
+        /**
+         * Creates a new context instance using the given Vaadin/HTTP response
+         * and bootstrap response.
+         *
+         * @param response
+         *            the response object
+         * @param bootstrapResponse
+         *            the bootstrap response object
+         */
         public BootstrapContext(VaadinResponse response,
                 BootstrapFragmentResponse bootstrapResponse) {
             this.response = response;
             this.bootstrapResponse = bootstrapResponse;
         }
 
+        /**
+         * Gets the Vaadin/HTTP response.
+         *
+         * @return the Vaadin/HTTP response
+         */
         public VaadinResponse getResponse() {
             return response;
         }
 
+        /**
+         * Gets the Vaadin/HTTP request.
+         *
+         * @return the Vaadin/HTTP request
+         */
         public VaadinRequest getRequest() {
             return bootstrapResponse.getRequest();
         }
 
+        /**
+         * Gets the Vaadin session.
+         *
+         * @return the Vaadin session
+         */
         public VaadinSession getSession() {
             return bootstrapResponse.getSession();
         }
 
+        /**
+         * Gets the UI class which will be used.
+         *
+         * @return the UI class
+         */
         public Class<? extends UI> getUIClass() {
             return bootstrapResponse.getUiClass();
         }
 
+        /**
+         * Gets information about the widgetset to use.
+         *
+         * @return the widgetset which will be loaded
+         */
         public WidgetsetInfo getWidgetsetInfo() {
             if (widgetsetInfo == null) {
                 widgetsetInfo = getWidgetsetForUI(this);
@@ -125,6 +167,12 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             return getWidgetsetInfo().getWidgetsetName();
         }
 
+        /**
+         * Gets the name of the theme to use.
+         *
+         * @return the name of the theme, with special characters escaped or
+         *         removed
+         */
         public String getThemeName() {
             if (themeName == null) {
                 themeName = findAndEscapeThemeName(this);
@@ -132,6 +180,11 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             return themeName;
         }
 
+        /**
+         * Gets the push mode to use.
+         *
+         * @return the desired push mode
+         */
         public PushMode getPushMode() {
             if (pushMode == null) {
                 UICreateEvent event = new UICreateEvent(getRequest(),
@@ -156,6 +209,14 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             return pushMode;
         }
 
+        /**
+         * Gets the application id.
+         *
+         * The application id is defined by
+         * {@link VaadinService#getMainDivId(VaadinSession, VaadinRequest, Class)}
+         *
+         * @return the application id
+         */
         public String getAppId() {
             if (appId == null) {
                 appId = getRequest().getService().getMainDivId(getSession(),
@@ -164,10 +225,20 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             return appId;
         }
 
+        /**
+         * Gets the bootstrap response object.
+         *
+         * @return the bootstrap response object
+         */
         public BootstrapFragmentResponse getBootstrapResponse() {
             return bootstrapResponse;
         }
 
+        /**
+         * Gets the application parameters specified by the BootstrapHandler.
+         *
+         * @return the application parameters which will be written on the page
+         */
         public JsonObject getApplicationParameters() {
             if (applicationParameters == null) {
                 applicationParameters = BootstrapHandler.this
@@ -177,7 +248,13 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             return applicationParameters;
         }
 
-        public VaadinUriResolver getUriResolver() {
+        /**
+         * Gets the URI resolver to use for bootstrap resources.
+         *
+         * @return the URI resolver
+         * @since 8.1
+         */
+        public BootstrapUriResolver getUriResolver() {
             if (uriResolver == null) {
                 uriResolver = new BootstrapUriResolver(this);
             }
@@ -186,9 +263,22 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         }
     }
 
-    private class BootstrapUriResolver extends VaadinUriResolver {
+    /**
+     * The URI resolver used in the bootstrap process.
+     *
+     * @since 8.1
+     */
+    protected static class BootstrapUriResolver extends VaadinUriResolver {
         private final BootstrapContext context;
+        private String frontendUrl;
 
+        /**
+         * Creates a new bootstrap resolver based on the given bootstrap
+         * context.
+         *
+         * @param bootstrapContext
+         *            the bootstrap context
+         */
         public BootstrapUriResolver(BootstrapContext bootstrapContext) {
             context = bootstrapContext;
         }
@@ -235,7 +325,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         protected String encodeQueryStringParameterValue(String queryString) {
             String encodedString = null;
             try {
-                encodedString = URLEncoder.encode(queryString, "UTF-8");
+                encodedString = URLEncoder.encode(queryString, UTF_8.name());
             } catch (UnsupportedEncodingException e) {
                 // should never happen
                 throw new RuntimeException("Could not find UTF-8", e);
@@ -250,6 +340,43 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             assert root.endsWith("/");
             return root;
         }
+
+        @Override
+        protected String getFrontendUrl() {
+            if (frontendUrl == null) {
+                frontendUrl = resolveFrontendUrl(context.getSession());
+            }
+
+            return frontendUrl;
+        }
+    }
+
+    /**
+     * Resolves the URL to use for the {@literal frontend://} protocol.
+     *
+     * @param session
+     *            the session of the user to resolve the protocol for
+     * @return the URL that frontend:// resolves to, possibly using another
+     *         internal protocol
+     * @since 8.1
+     */
+    public static String resolveFrontendUrl(VaadinSession session) {
+        DeploymentConfiguration configuration = session.getConfiguration();
+        String frontendUrl;
+        if (session.getBrowser().isEs6Supported()) {
+            frontendUrl = configuration.getApplicationOrSystemProperty(
+                    ApplicationConstants.FRONTEND_URL_ES6,
+                    ApplicationConstants.FRONTEND_URL_ES6_DEFAULT_VALUE);
+        } else {
+            frontendUrl = configuration.getApplicationOrSystemProperty(
+                    ApplicationConstants.FRONTEND_URL_ES5,
+                    ApplicationConstants.FRONTEND_URL_ES5_DEFAULT_VALUE);
+        }
+        if (!frontendUrl.endsWith("/")) {
+            frontendUrl += "/";
+        }
+
+        return frontendUrl;
     }
 
     @Override
@@ -285,9 +412,12 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                 return false;
             }
 
+            BootstrapFragmentResponse bootstrapResponse = new BootstrapFragmentResponse(
+                    this, request, session, uiClass, new ArrayList<>(),
+                    provider);
             BootstrapContext context = new BootstrapContext(response,
-                    new BootstrapFragmentResponse(this, request, session,
-                            uiClass, new ArrayList<>(), provider));
+                    bootstrapResponse);
+            bootstrapResponse.setUriResolver(context.getUriResolver());
 
             setupMainDiv(context);
 
@@ -319,6 +449,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             BootstrapPageResponse pageResponse = new BootstrapPageResponse(this,
                     request, context.getSession(), context.getUIClass(),
                     document, headers, fragmentResponse.getUIProvider());
+            pageResponse.setUriResolver(context.getUriResolver());
             List<Node> fragmentNodes = fragmentResponse.getFragmentNodes();
             Element body = document.body();
             for (Node node : fragmentNodes) {
@@ -363,9 +494,10 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     private void writeBootstrapPage(VaadinResponse response, String html)
             throws IOException {
-        response.setContentType("text/html");
+        response.setContentType(
+                ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8);
         try (BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(response.getOutputStream(), "UTF-8"))) {
+                new OutputStreamWriter(response.getOutputStream(), UTF_8))) {
             writer.append(html);
         }
     }
@@ -383,14 +515,12 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         document.child(0).before(doctype);
 
         Element head = document.head();
-        head.appendElement("meta").attr("http-equiv", "Content-Type")
-                .attr("content", "text/html; charset=utf-8");
+        head.appendElement("meta").attr("http-equiv", "Content-Type").attr(
+                "content", ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8);
 
-        /*
-         * Enable Chrome Frame in all versions of IE if installed.
-         */
+        // Force IE 11 to use IE 11 mode.
         head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
-                .attr("content", "IE=11;chrome=1");
+                .attr("content", "IE=11");
 
         Class<? extends UI> uiClass = context.getUIClass();
 
@@ -412,7 +542,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             Class<? extends ViewportGenerator> viewportGeneratorClass = viewportGeneratorClassAnnotation
                     .value();
             try {
-                viewportContent = viewportGeneratorClass.newInstance()
+                viewportContent = ReflectTools
+                        .createInstance(viewportGeneratorClass)
                         .getViewport(context.getRequest());
             } catch (Exception e) {
                 throw new RuntimeException(
@@ -450,7 +581,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
         Collection<? extends Dependency> deps = Dependency.findDependencies(
                 Collections.singletonList(uiClass),
-                context.getSession().getCommunicationManager());
+                context.getSession().getCommunicationManager(),
+                new FilterContext(context.getSession()));
         for (Dependency dependency : deps) {
             Type type = dependency.getType();
             String url = context.getUriResolver()
@@ -528,9 +660,9 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         mainDiv.attr("id", context.getAppId());
         mainDiv.addClass("v-app");
         mainDiv.addClass(context.getThemeName());
-        mainDiv.addClass(context.getUIClass().getSimpleName()
-                .toLowerCase(Locale.ENGLISH));
-        if (style != null && style.length() != 0) {
+        mainDiv.addClass(
+                context.getUIClass().getSimpleName().toLowerCase(Locale.ROOT));
+        if (style != null && !style.isEmpty()) {
             mainDiv.attr("style", style);
         }
         mainDiv.appendElement("div").addClass("v-app-loading");
@@ -707,6 +839,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         String vaadinDir = vaadinService.getStaticFileLocation(request)
                 + "/VAADIN/";
         appConfig.put(ApplicationConstants.VAADIN_DIR_URL, vaadinDir);
+        appConfig.put(ApplicationConstants.FRONTEND_URL,
+                context.getUriResolver().getFrontendUrl());
 
         if (!session.getConfiguration().isProductionMode()) {
             appConfig.put("debug", true);
@@ -733,6 +867,9 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         return appConfig;
     }
 
+    /**
+     * @since 8.0.3
+     */
     protected abstract String getContextRootPath(BootstrapContext context);
 
     protected abstract String getServiceUrl(BootstrapContext context);
@@ -757,7 +894,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
     }
 
     /**
-     * Override if required
+     * Override if required.
      *
      * @param context
      * @return

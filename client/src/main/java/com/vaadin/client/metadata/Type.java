@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -89,7 +89,7 @@ public class Type {
                 if (i != 0) {
                     string += ',';
                 }
-                string += parameterTypes[i].toString();
+                string += parameterTypes[i];
             }
             string += '>';
         }
@@ -133,7 +133,7 @@ public class Type {
 
     public Object createProxy(InvokationHandler invokationHandler)
             throws NoDataException {
-        return TypeDataStore.get().getProxyHandler(this)
+        return TypeDataStore.getProxyHandler(this)
                 .createProxy(invokationHandler);
     }
 

@@ -1,0 +1,143 @@
+---
+title: Read Only Vs Disabled Fields
+order: 56
+layout: page
+---
+
+[NOTE]
+*Partially outdated*:
+This article was written before Vaadin 7.3, and is referring to the previous default theme, Reindeer. The visual appearance of read-only fields is different in the newer default theme, Valo. In Valo, read-only fields retain the border around the input field.
+
+[[read-only-vs-disabled-fields]]
+= Read-only vs Disabled fields
+
+Vaadin input field components have both a _disabled_ and a _read-only_
+state (which can be set through the *setEnabled(false)* and
+*setReadOnly(true)* methods respectively). While at first glance these
+seem to be interchangeable, there is a distinct difference in their
+effects and proper usage.
+
+image:img/disabledvsreadonly.png[Disabled vs read-only]
+
+As you can see in the image above, the visual effects of the two states
+are clearly different. The _disabled_ ComboBox is “grayed out” but looks
+otherwise identical to its normal state. The _read-only_ ComboBox,
+meanwhile, doesn’t look like a ComboBox at all, but more like a *Label*.
+This visual difference is the key to understanding when to use which
+state.
+
+[[disabled-fields]]
+Disabled fields
+^^^^^^^^^^^^^^^
+
+An input field is disabled to indicate that it cannot _currently_ be
+used. This might be because it is _not applicable_, e.g. due to the
+value of some other field. Let’s look at the following piece of a
+questionnaire form as an example:
+
+image:img/disabled1.png[Disabled example]
+
+The “years” dropdown above is _disabled_ unless the _Yes_ radio button
+is selected, since it naturally _is not applicable_ otherwise. Another
+reason for disabling a field might be that the user lacks the required
+permissions to set it, such as in the following example:
+
+image:img/disabled3.png[Disabled example 2]
+
+In both cases, there is no need to _read_ the value of the field, since
+it cannot have a value or simply isn’t applicable or relevant in the
+current context. This is why disabled fields are grayed out with a
+reduced opacity effect in Vaadin built-in themes.
+
+[[read-only-fields]]
+Read-only fields
+^^^^^^^^^^^^^^^^
+
+_Read-only_, on the other hand, is used when a field is currently only
+used to _display_ a value, without providing any means of changing it.
+In this case, it is important that the field is presented in a
+_readable_ way, which is why Vaadin generally renders them like labels,
+without the unnecessary component chrome. A very common example is a
+form that can be toggled between viewing and editing modes:
+
+image:img/viewmode-readonly.png[Viewing vs editing]
+
+Using read-only fields in viewing mode means that you don’t have to swap
+between labels and input fields in your UI code when view/edit mode is
+toggled. Instead, you just iterate through your fields set read-only
+mode on or off:
+
+[source,java]
+....
+Iterator<Component> i = someLayout.getComponentIterator();
+while (i.hasNext()) {
+  Component c = i.next();
+  if (c instanceof com.vaadin.ui.AbstractField) {
+    AbstractField field = (AbstractField)c;
+    field.setReadOnly(true);
+  }
+}
+....
+
+Even better, if your fields are databound through a *FieldGroup*, their
+read-only states can be collectively toggled through the *FieldGroup*:
+
+[source,java]
+....
+FieldGroup fieldGrp = new FieldGroup(dataItem);
+TextField tfName = new TextField(“Name”);
+fieldGrp.bind(tfName, “name”);
+TextField tfAge = new TextField(“Age”);
+fieldGrp.bind(tfAge, “age”);
+fieldGrp.setReadOnly(true);
+....
+
+(Unfortunately, setting a Vaadin component container, like a layout,
+_read-only_ does not set all its components read-only recursively, as
+one might expect. Doing the same with _disabled does_, though.)
+
+One caveat regarding read-only fields is that if the text is longer than
+the field, it will be clipped, as opposed to a Label, which instead will
+wrap the text to a new line. Thus, in certain situations, switching to
+Labels may be preferable.
+
+It’s probably best to mention here that *setReadOnly(true)* also has a
+certain side-effect in Vaadin that *setEnabled(false)* does not: You
+cannot set the value of a _read-only_ field even in server-side code.
+The following code would throw a *ReadOnlyException*:
+
+[source,java]
+....
+TextField tfFoo = new TextField();
+tfFoo.setReadOnly(true);
+tfFoo.setValue(“foo”);
+....
+
+[[why-this-is-important]]
+Why this is important
+^^^^^^^^^^^^^^^^^^^^^
+
+Understanding the difference between _disabled_ and _read-only_ is
+important because using them wrong tends to harm usability. First, let’s
+see what happens if you use _disabled_ instead _read-only_ in the
+view/edit example form above:
+
+image:img/viewmode-disabled.png[Viewing with disabled]
+
+Not very readable, is it? Looks kind of awful, doesn’t it? The reduced
+opacity and unnecessary component chrome really make _reading_ the form
+rather painful, which kind of defeats the entire "view" mode.
+
+Okay, so the other way around, what if we use _read-only_ instead of
+_disabled_ in the wrong situation? The field will look like a *Label*,
+and that’s not so bad, right? Well, if the field is _empty_, as is often
+the case with disabled fields, then in read-only mode it would simply be
+_invisible_, save for the caption (if it has one):
+
+image:img/readonly-wrong.png[Readonly wrong use]
+
+Admittedly, not as bad as using disabled for read-only forms, but bad
+enough. Also, even if the field does have a value, setting it
+_read-only_ gives the user the impression that it cannot be changed at
+all, whereas a grayed out _disabled_ field indicates that it could be
+changed, if only the circumstances were different...

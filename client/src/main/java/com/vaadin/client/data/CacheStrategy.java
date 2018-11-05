@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -33,7 +33,7 @@ public interface CacheStrategy {
      * This simple approach rules out more advanced heuristics that would take
      * the current scrolling direction or past scrolling behavior into account.
      */
-    public static abstract class AbstractBasicSymmetricalCacheStrategy
+    public abstract static class AbstractBasicSymmetricalCacheStrategy
             implements CacheStrategy {
 
         @Override

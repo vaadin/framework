@@ -1,0 +1,225 @@
+---
+title: View Change Confirmations
+order: 80
+layout: page
+---
+
+[[view-change-confirmations]]
+= View change confirmations
+
+The `Navigator` API provides ways to prevent the user from navigating away
+from a view in some cases, usually when the view has some unsaved
+changes. We'll make a simple example that does just that (and only
+that).
+
+We'll create our simple `SettingsView` later, because it has the actual
+meat of this example. Let's set up the basic stuff first, our UI and our
+`MainView`.
+
+UI:
+
+[source,java]
+....
+import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.UI;
+
+public class NavigationtestUI extends UI {
+  @Override
+  public void init(VaadinRequest request) {
+    // Create Navigator, make it control the ViewDisplay
+     Navigator navigator = new Navigator(this, this);
+
+    // no fragment for main view
+    navigator.addView(MainView.NAME, new MainView(navigator));
+
+    // #settings
+    navigator.addView(SettingsView.NAME, new SettingsView(navigator));
+  }
+}
+....
+
+Minimalistic. The only thing to notice is that we pass the `Navigator` to
+the `SettingsView`, so that it can attach a listener and trigger
+navigation. More on that when we actually create the `SettingsView`.
+
+Let's do the `MainView`:
+
+[source,java]
+....
+import com.vaadin.navigator.View;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.ui.Link;
+import com.vaadin.ui.Panel;
+
+public class MainView extends Panel implements View {
+
+  public static final String NAME = "";
+
+  public MainView(final Navigator navigator) {
+    Link lnk = new Link("Settings", new ExternalResource("#!"
+        + SettingsView.NAME));
+    setContent(lnk);
+  }
+
+  @Override
+  public void enter(ViewChangeEvent event) {
+  }
+}
+....
+
+Yeah, really nothing to see here - we just create this so we can
+navigate back and forth when trying it out.
+
+Now let's do the SettingsView, which has some more things going on in
+order to make it fairly complete:
+
+[source,java]
+....
+import java.util.Date;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.InlineDateField;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.Reindeer;
+
+public class SettingsView extends Panel implements View {
+
+  public static String NAME = "settings";
+
+  Navigator navigator;
+  DateField date;
+  Button apply;
+  Button cancel;
+
+  String pendingViewAndParameters = null;
+
+  public SettingsView(final Navigator navigator) {
+    this.navigator = navigator;
+    Layout layout = new VerticalLayout();
+
+    date = new InlineDateField("Birth date");
+    date.setImmediate(true);
+    layout.addComponent(date);
+    // pretend we have a datasource:
+    date.setPropertyDataSource(new ObjectProperty<Date>(new Date()));
+    date.setBuffered(true);
+    // show buttons when date is changed
+    date.addValueChangeListener(new ValueChangeListener() {
+      public void valueChange(ValueChangeEvent event) {
+        hideOrShowButtons();
+        pendingViewAndParameters = null;
+      }
+    });
+
+    // commit the TextField changes when "Save" is clicked
+    apply = new Button("Apply", new Button.ClickListener() {
+      public void buttonClick(ClickEvent event) {
+        date.commit();
+        hideOrShowButtons();
+        processPendingView();
+      }
+    });
+    layout.addComponent(apply);
+
+    // Discard the TextField changes when "Cancel" is clicked
+    cancel = new Button("Cancel", new Button.ClickListener() {
+      public void buttonClick(ClickEvent event) {
+        date.discard();
+        hideOrShowButtons();
+        processPendingView();
+      }
+    });
+    cancel.setStyleName(Reindeer.BUTTON_LINK);
+    layout.addComponent(cancel);
+
+    // attach a listener so that we'll get asked isViewChangeAllowed?
+    navigator.addViewChangeListener(new ViewChangeListener() {
+      public boolean beforeViewChange(ViewChangeEvent event) {
+        if (event.getOldView() == SettingsView.this
+            && date.isModified()) {
+
+          // save the View where the user intended to go
+          pendingViewAndParameters = event.getViewName();
+          if (event.getParameters() != null) {
+            pendingViewAndParameters += "/";
+            pendingViewAndParameters += event
+                .getParameters();
+          }
+
+          // Prompt the user to save or cancel if the name is changed
+          Notification.show("Please apply or cancel your changes",
+              Type.WARNING_MESSAGE);
+
+          return false;
+        } else {
+          return true;
+        }
+      }
+
+      public void afterViewChange(ViewChangeEvent event) {
+        pendingViewAndParameters = null;
+      }
+    });
+
+    setContent(layout);
+  }
+
+  // Hide or show buttons depending on whether date is modified or not
+  private void hideOrShowButtons() {
+    apply.setVisible(date.isModified());
+    cancel.setVisible(date.isModified());
+  }
+
+  // if there is a pending view change, do it now
+  private void processPendingView() {
+    if (pendingViewAndParameters != null) {
+      navigator.navigateTo(pendingViewAndParameters);
+      pendingViewAndParameters = null;
+    }
+  }
+
+  @Override
+  public void enter(ViewChangeEvent event) {
+    hideOrShowButtons();
+  }
+}
+....
+
+First we set up a `DateField` with buffering and a (dummy) datasource to
+make this work more as a real application would. With buffering on, the
+value (date in this case) can be changed, but it will not be written to
+the datasource before we `commit()`, which is what the Save -button does.
+The Cancel -button does `discard()` on the DateField, which returns the
+field to its unmodified state.
+
+The buttons do not need to be shown if nothing has changed, so we add a
+`ValueChangeListener` to the `DateField` for that purpose.
+
+But the main thing that we're trying to demonstrate here happens in the
+`ViewChangeListener` that we attach to the `Navigator`. There, if we're
+about to change _away_ from our settings _and_ the date is changed but
+_not_ saved, we'll make note of where the user wanted to go, but cancel
+that navigation and prompt the user to save or cancel the changes.
+
+When the user saves or cancels changes, we also check if the user
+previously tried to navigate away form the page, and sends him on his
+way if that is the case.
+
+That is basically all there is to this. You'll notice we try to
+carefully clear or set the 'pending view' and hide/show the buttons at
+the right places to make the user happy, other than that this is pretty
+straightforward.

@@ -19,41 +19,38 @@ import com.vaadin.ui.VerticalLayout;
 @Push
 public class GridFastAsyncUpdate extends AbstractTestUI {
 
-    private final Runnable addRowsTask = new Runnable() {
-        @Override
-        public void run() {
-            System.out.println("Logging...");
-            try {
-                Random random = new Random();
-                while (!Thread.currentThread().isInterrupted()) {
-                    Thread.sleep(random.nextInt(100));
-
-                    GridFastAsyncUpdate.this.access(() -> {
-                        ++counter;
-                        Item item = new Item(counter,
-                                (Calendar.getInstance().getTimeInMillis()
-                                        - loggingStart),
-                                Level.INFO.toString(), "Message");
-                        items.add(item);
-                        grid.setItems(items);
-
-                        if (grid != null && !scrollLock) {
-                            grid.scrollToEnd();
-                        }
-                    });
-                }
-            } catch (InterruptedException e) {
-                System.out.println("logging thread interrupted");
-            }
-        }
-    };
-
     private int counter;
     private List<Item> items = new LinkedList<>();
 
     private Grid<Item> grid;
     private long loggingStart;
     private volatile boolean scrollLock = false;
+
+    private final Runnable addRowsTask = () -> {
+        System.out.println("Logging...");
+        try {
+            Random random = new Random();
+            while (!Thread.currentThread().isInterrupted()) {
+                Thread.sleep(random.nextInt(100));
+
+                GridFastAsyncUpdate.this.access(() -> {
+                    ++counter;
+                    Item item = new Item(counter,
+                            (Calendar.getInstance().getTimeInMillis()
+                                    - loggingStart),
+                            Level.INFO.toString(), "Message");
+                    items.add(item);
+                    grid.setItems(items);
+
+                    if (grid != null && !scrollLock) {
+                        grid.scrollToEnd();
+                    }
+                });
+            }
+        } catch (InterruptedException e) {
+            System.out.println("logging thread interrupted");
+        }
+    };
 
     @Override
     protected void setup(VaadinRequest request) {

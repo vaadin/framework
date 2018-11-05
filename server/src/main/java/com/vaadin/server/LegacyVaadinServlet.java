@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,9 +20,11 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import com.vaadin.util.ReflectTools;
+
 public class LegacyVaadinServlet extends VaadinServlet {
 
-    private static final UIProvider provider = new LegacyApplicationUIProvider() {
+    private static final UIProvider PROVIDER = new LegacyApplicationUIProvider() {
         @Override
         protected LegacyApplication createApplication() {
 
@@ -69,7 +71,7 @@ public class LegacyVaadinServlet extends VaadinServlet {
             throws ServletException {
         try {
             Class<? extends LegacyApplication> applicationClass = getApplicationClass();
-            return applicationClass.newInstance();
+            return ReflectTools.createInstance(applicationClass);
         } catch (Exception e) {
             throw new ServletException(e);
         }
@@ -82,7 +84,7 @@ public class LegacyVaadinServlet extends VaadinServlet {
 
     private void onVaadinSessionStarted(VaadinRequest request,
             VaadinSession session) throws ServletException {
-        session.addUIProvider(provider);
+        session.addUIProvider(PROVIDER);
     }
 
 }

@@ -1,11 +1,12 @@
 package com.vaadin.v7.ui;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,9 +30,9 @@ public class ComboBoxTest {
         }
 
         List<?> options = comboBox.getFilteredOptions();
-        Assert.assertEquals(10, options.size());
+        assertEquals(10, options.size());
         for (int i = 0; i < 10; i++) {
-            Assert.assertEquals("" + i, options.get(i));
+            assertEquals("" + i, options.get(i));
         }
 
     }
@@ -45,7 +46,7 @@ public class ComboBoxTest {
         setFilterAndCurrentPage(comboBox, "1", 0);
 
         List<?> options = comboBox.getFilteredOptions();
-        Assert.assertEquals(11, options.size());
+        assertEquals(11, options.size());
 
     }
 
@@ -58,13 +59,13 @@ public class ComboBoxTest {
 
         setFilterAndCurrentPage(comboBox, "2", 0);
         List<?> options = comboBox.getFilteredOptions();
-        Assert.assertEquals(3, options.size());
+        assertEquals(3, options.size());
 
     }
 
     private static void setFilterAndCurrentPage(ComboBox comboBox,
             String filterString, int currentPage) {
-        Map<String, Object> variables = new HashMap<>();
+        Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("filter", filterString);
         variables.put("page", currentPage);
         comboBox.changeVariables(null, variables);
@@ -81,7 +82,7 @@ public class ComboBoxTest {
 
         List<?> goingToClient = comboBox
                 .sanitizeList(comboBox.getFilteredOptions(), false);
-        Assert.assertEquals(comboBox.getPageLength(), goingToClient.size());
+        assertEquals(comboBox.getPageLength(), goingToClient.size());
 
     }
 
@@ -96,13 +97,13 @@ public class ComboBoxTest {
         List<?> goingToClient = comboBox
                 .sanitizeList(comboBox.getFilteredOptions(), true);
         // Null item is shown on first page
-        Assert.assertEquals(comboBox.getPageLength() - 1, goingToClient.size());
+        assertEquals(comboBox.getPageLength() - 1, goingToClient.size());
 
         setFilterAndCurrentPage(comboBox, "", 1);
         goingToClient = comboBox.sanitizeList(comboBox.getFilteredOptions(),
                 true);
         // Null item is not shown on the second page
-        Assert.assertEquals(comboBox.getPageLength(), goingToClient.size());
+        assertEquals(comboBox.getPageLength(), goingToClient.size());
 
     }
 
@@ -116,7 +117,7 @@ public class ComboBoxTest {
 
         List<?> goingToClient = comboBox
                 .sanitizeList(comboBox.getFilteredOptions(), false);
-        Assert.assertEquals(nrOptions, goingToClient.size());
+        assertEquals(nrOptions, goingToClient.size());
 
     }
 
@@ -131,7 +132,7 @@ public class ComboBoxTest {
         List<?> goingToClient = comboBox
                 .sanitizeList(comboBox.getFilteredOptions(), true);
         // All items + null still fit on one page
-        Assert.assertEquals(nrOptions, goingToClient.size());
+        assertEquals(nrOptions, goingToClient.size());
 
     }
 
@@ -146,13 +147,13 @@ public class ComboBoxTest {
         List<?> goingToClient = comboBox
                 .sanitizeList(comboBox.getFilteredOptions(), true);
         // Null item on first page
-        Assert.assertEquals(nrOptions - 1, goingToClient.size());
+        assertEquals(nrOptions - 1, goingToClient.size());
 
         setFilterAndCurrentPage(comboBox, "", 1);
         goingToClient = comboBox.sanitizeList(comboBox.getFilteredOptions(),
                 true);
         // All but one was on the first page
-        Assert.assertEquals(1, goingToClient.size());
+        assertEquals(1, goingToClient.size());
 
     }
 }

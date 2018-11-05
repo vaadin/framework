@@ -1,11 +1,12 @@
 package com.vaadin.v7.tests.server.component.abstractfield;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.VaadinSession;
@@ -19,6 +20,7 @@ import com.vaadin.v7.data.util.ObjectProperty;
 import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.util.converter.Converter.ConversionException;
 import com.vaadin.v7.data.util.converter.StringToIntegerConverter;
+import com.vaadin.v7.ui.CheckBox;
 import com.vaadin.v7.ui.TextField;
 
 public class AbsFieldValueConversionsTest {
@@ -153,6 +155,65 @@ public class AbsFieldValueConversionsTest {
                 tf.getValue());
     }
 
+    @Test
+    public void testBooleanNullConversion() {
+        CheckBox cb = new CheckBox();
+        cb.setConverter(new Converter<Boolean, Boolean>() {
+
+            @Override
+            public Boolean convertToModel(Boolean value,
+                    Class<? extends Boolean> targetType, Locale locale) {
+                // value from a CheckBox should never be null as long as it is
+                // not set to null (handled by conversion below).
+                assertNotNull(value);
+                return value;
+            }
+
+            @Override
+            public Boolean convertToPresentation(Boolean value,
+                    Class<? extends Boolean> targetType, Locale locale) {
+                // Datamodel -> field
+                if (value == null) {
+                    return false;
+                }
+
+                return value;
+            }
+
+            @Override
+            public Class<Boolean> getModelType() {
+                return Boolean.class;
+            }
+
+            @Override
+            public Class<Boolean> getPresentationType() {
+                return Boolean.class;
+            }
+
+        });
+        MethodProperty<Boolean> property = new MethodProperty<Boolean>(
+                paulaBean, "deceased");
+        cb.setPropertyDataSource(property);
+        assertEquals(Boolean.FALSE, property.getValue());
+        assertEquals(Boolean.FALSE, cb.getValue());
+        Boolean newDmValue = cb.getConverter().convertToPresentation(
+                cb.getValue(), Boolean.class, new Locale("fi", "FI"));
+        assertEquals(Boolean.FALSE, newDmValue);
+
+        // FIXME: Should be able to set to false here to cause datamodel to be
+        // set to false but the change will not be propagated to the Property
+        // (field value is already false)
+
+        cb.setValue(true);
+        assertEquals(Boolean.TRUE, cb.getValue());
+        assertEquals(Boolean.TRUE, property.getValue());
+
+        cb.setValue(false);
+        assertEquals(Boolean.FALSE, cb.getValue());
+        assertEquals(Boolean.FALSE, property.getValue());
+
+    }
+
     // Now specific to Integer because StringToNumberConverter has been removed
     public static class NumberBean {
         private Integer number;
@@ -205,8 +266,7 @@ public class AbsFieldValueConversionsTest {
         try {
             Object v = tf.getConvertedValue();
             System.out.println(v);
-            Assert.fail(
-                    "Trying to convert String -> Integer should fail when there is no converter");
+            fail("Trying to convert String -> Integer should fail when there is no converter");
         } catch (ConversionException e) {
             // ok, should happen when there is no converter but conversion is
             // needed

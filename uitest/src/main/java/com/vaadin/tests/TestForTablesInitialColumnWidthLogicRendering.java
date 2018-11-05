@@ -1,19 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests;
 
 import java.util.Iterator;
@@ -21,7 +5,6 @@ import java.util.Vector;
 
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -117,14 +100,8 @@ public class TestForTablesInitialColumnWidthLogicRendering
         t.setWidth("200px");
         main.addComponent(t);
 
-        final Button b = new Button("refresh view", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                createNewView();
-            }
-        });
+        final Button b = new Button("refresh view", event -> createNewView());
         main.addComponent(b);
-
     }
 
     public static Table getTestTable(int cols, int rows) {
@@ -139,14 +116,8 @@ public class TestForTablesInitialColumnWidthLogicRendering
             for (int j = 0; j < cols; j++) {
                 content.add(rndString());
             }
-            Button button = new Button("b", new Button.ClickListener() {
-
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    System.out.println("b click");
-
-                }
-            });
+            Button button = new Button("b",
+                    event -> System.out.println("b click"));
             button.setDescription("Yep yep");
             button.setComponentError(new UserError("Error"));
             content.add(button);
@@ -155,19 +126,19 @@ public class TestForTablesInitialColumnWidthLogicRendering
         return t;
     }
 
-    static String[] testString = new String[] { "Jacob", "Michael", "Joshua",
-            "Matthew", "Ethan", "Andrew", "Daniel", "Anthony", "Christopher",
-            "Joseph", "William", "Alexander", "Ryan", "David", "Nicholas",
-            "Tyler", "James", "John", "Jonathan", "Nathan", "Samuel",
-            "Christian", "Noah", "Dylan", "Benjamin", "Logan", "Brandon",
-            "Gabriel", "Zachary", "Jose", "Elijah", "Angel", "Kevin", "Jack",
-            "Caleb", "Justin", "Austin", "Evan", "Robert", "Thomas", "Luke",
-            "Mason", "Aidan", "Jackson", "Isaiah", "Jordan", "Gavin", "Connor",
-            "Aiden", "Isaac", "Jason", "Cameron", "Hunter", "Jayden", "Juan",
-            "Charles", "Aaron", "Lucas", "Luis", "Owen", "Landon", "Diego",
-            "Brian", "Adam", "Adrian", "Kyle", "Eric", "Ian", "Nathaniel",
-            "Carlos", "Alex", "Bryan", "Jesus", "Julian", "Sean", "Carter",
-            "Hayden", "Jeremiah", "Cole", "Brayden", "Wyatt", "Chase", "Steven",
+    static String[] testString = { "Jacob", "Michael", "Joshua", "Matthew",
+            "Ethan", "Andrew", "Daniel", "Anthony", "Christopher", "Joseph",
+            "William", "Alexander", "Ryan", "David", "Nicholas", "Tyler",
+            "James", "John", "Jonathan", "Nathan", "Samuel", "Christian",
+            "Noah", "Dylan", "Benjamin", "Logan", "Brandon", "Gabriel",
+            "Zachary", "Jose", "Elijah", "Angel", "Kevin", "Jack", "Caleb",
+            "Justin", "Austin", "Evan", "Robert", "Thomas", "Luke", "Mason",
+            "Aidan", "Jackson", "Isaiah", "Jordan", "Gavin", "Connor", "Aiden",
+            "Isaac", "Jason", "Cameron", "Hunter", "Jayden", "Juan", "Charles",
+            "Aaron", "Lucas", "Luis", "Owen", "Landon", "Diego", "Brian",
+            "Adam", "Adrian", "Kyle", "Eric", "Ian", "Nathaniel", "Carlos",
+            "Alex", "Bryan", "Jesus", "Julian", "Sean", "Carter", "Hayden",
+            "Jeremiah", "Cole", "Brayden", "Wyatt", "Chase", "Steven",
             "Timothy", "Dominic", "Sebastian", "Xavier", "Jaden", "Jesse",
             "Devin", "Seth", "Antonio", "Richard", "Miguel", "Colin", "Cody",
             "Alejandro", "Caden", "Blake", "Carson" };

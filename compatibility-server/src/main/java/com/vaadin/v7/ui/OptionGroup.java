@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -50,7 +50,8 @@ import com.vaadin.v7.shared.ui.optiongroup.OptionGroupState;
 public class OptionGroup extends AbstractSelect
         implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
-    private Set<Object> disabledItemIds = new HashSet<>();
+    private Set<Object> disabledItemIds = new HashSet<Object>();
+    private boolean htmlContentAllowed = false;
 
     public OptionGroup() {
         super();
@@ -66,6 +67,16 @@ public class OptionGroup extends AbstractSelect
 
     public OptionGroup(String caption) {
         super(caption);
+    }
+
+    @Override
+    public void paintContent(PaintTarget target) throws PaintException {
+        target.addAttribute("type", "optiongroup");
+        if (isHtmlContentAllowed()) {
+            target.addAttribute(OptionGroupConstants.HTML_CONTENT_ALLOWED,
+                    true);
+        }
+        super.paintContent(target);
     }
 
     @Override
@@ -202,7 +213,8 @@ public class OptionGroup extends AbstractSelect
      *            text
      */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
-        getState().htmlContentAllowed = htmlContentAllowed;
+        this.htmlContentAllowed = htmlContentAllowed;
+        markAsDirty();
     }
 
     /**
@@ -213,7 +225,7 @@ public class OptionGroup extends AbstractSelect
      * @see #setHtmlContentAllowed(boolean)
      */
     public boolean isHtmlContentAllowed() {
-        return getState(false).htmlContentAllowed;
+        return htmlContentAllowed;
     }
 
     @Override

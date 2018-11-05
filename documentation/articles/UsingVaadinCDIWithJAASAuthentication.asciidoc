@@ -1,0 +1,380 @@
+---
+title: Using Vaadin CDI With JAAS Authentication
+order: 50
+layout: page
+---
+
+[[using-vaadin-cdi-with-jaas-authentication]]
+= Using Vaadin CDI with JAAS authentication
+
+Servlet 3.0 is awesome, so is CDI. They work well and are a joy to set
+up. Even adding the Vaadin Navigator to the mix isn't an issue, since
+you can use the CDIViewProvider to maintain the injection chains.
+Everything works nicely with annotations, and you don't need to mess
+around with nasty XML. But what if you want to use JAAS? Recently I
+stumbled upon a small dilemma in a customer project where the customer
+wanted to use JAAS in combination with CDI. How in the world was I going
+to combine the two?
+
+For this example I am using JBoss 7.1 for out-of-the-box support for CDI
+and JAAS. I also tried this on Wildfly (the newest JBoss), but ran into
+a bug that Matti has made
+https://github.com/mstahv/vaadin-cdi-jaas-jbossas-example/tree/workaround[a
+bit hacky workaround here]. I use a Postgres database, because a
+database-based mechanism is more in the real world then the simplest
+cases. But you can use any authentication mechanism you want, like LDAP,
+AD and so on; you’ll find tutorials for integrating these into the JAAS
+modules of almost any application server.
+
+There is a little bit of configuration involved because of the DB
+connection, but don't be scared. It really is quite easy stuff. OK,
+everyone ready? Lets dive in.
+
+The problem is that you need to define a secure mapping for a servlet in
+web.xml, but maintaining the automatic scanning of Servlet annotations.
+Luckily, we can use both. The servlet mapping (or UI mapping, in our
+case) will take care of combining the two. I am not actually defining a
+Servlet anywhere, but using the Vaadin-CDI addon for this. I simply
+annotate my UIs with the @CDIUI annotation, and they will be picked up
+automatically. The idea is to have an unsecured root UI mapped to /, a
+secured area mapped to /secure, and a login page mapped to /login. For
+the root UI, it looks like this:
+
+[source,java]
+....
+@CDIUI
+public class UnsecureUI extends UI {
+
+  @Override
+  protected void init(VaadinRequest request) {
+    final VerticalLayout layout = new VerticalLayout();
+    layout.setMargin(true);
+    setContent(layout);
+
+    layout.addComponent(new Label("unsecure UI"));
+
+    Button b = new Button("Go to secure part");
+    b.addClickListener(new ClickListener() {
+      @Override
+      public void buttonClick(ClickEvent event) {
+          String currentURI = getPage().getLocation().toString();
+          getPage().setLocation(currentURI + "secure");
+      }
+    });
+    layout.addComponent(b);
+  }
+}
+....
+
+The CDI addon (more exactly, the CDIUIProvider) will find the UI, and
+will automatically deploy it. You can then start injecting things into
+the UI class, such as a CDIViewProvider for the Navigator:
+
+[source,java]
+....
+@Inject
+private CDIViewProvider provider;
+
+@Override
+protected void init(VaadinRequest request) {
+  Navigator n = new Navigator(this, this);
+  n.addProvider(provider);
+....
+
+Please note that you can configure the Servlet in a multitude of ways;
+you can map the Servlet in your web.xml file as well. Leave out any UI
+definitions, and put this in instead:
+
+[source,xml]
+....
+<init-param>
+  <param-name>UIProvider</param-name>
+  <param-value>com.vaadin.cdi.CDIUIProvider</param-value>
+</init-param>
+....
+
+This snippet tells Vaadin to use the same classpath scanning as it would
+with Servlet annotations.
+
+So, thats it for the CDI part. What about JAAS? Well, we need to put
+this in web.xml, so lets create the file and add some security
+configuration:
+
+[source,xml]
+....
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+   http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+
+  <security-constraint>
+    <display-name>SecureApplicationConstraint</display-name>
+    <web-resource-collection>
+      <web-resource-name>SecureUI</web-resource-name>
+      <description>Only this UI is protected</description>
+      <url-pattern>/secure/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <description>Only valid users are allowed</description>
+      <role-name>viewer</role-name>
+    </auth-constraint>
+  </security-constraint>
+  <login-config>
+    <auth-method>FORM</auth-method>
+    <realm-name>ApplicationRealm</realm-name>
+    <form-login-config>
+      <form-login-page>/login</form-login-page>
+      <form-error-page>/login</form-error-page>
+    </form-login-config>
+  </login-config>
+  <security-role>
+    <role-name>viewer</role-name>
+  </security-role>
+
+</web-app>
+....
+
+What happens is that the root of our application is not secured; here we
+have an unsecured part of our application. When the user tries to access
+the secure area under /secure, they get redirected to our login UI under
+/login. Any attempt to go to /secure/ without logging in will be blocked
+by the server. We also restrict that any user who tries to access the
+application needs to have the 'viewer' role, or they won't get in.
+
+The secure UI and the login UI are added below:
+
+SecureUI:
+
+[source,java]
+....
+@CDIUI("secure")
+public class SecureUI extends UI {
+
+  @Override
+  protected void init(VaadinRequest request) {
+    final VerticalLayout layout = new VerticalLayout();
+    layout.setMargin(true);
+    setContent(layout);
+
+    layout.addComponent(new Label("This is a secure UI! Username is "
+          + request.getUserPrincipal().getName()));
+  }
+}
+....
+
+The secure page isn’t anything special, but you can see how we access
+the user name from the JAAS security context.
+
+LoginUI:
+
+[source,java]
+....
+@CDIUI("login")
+public class LoginUI extends UI {
+
+  @Override
+  protected void init(VaadinRequest request) {
+    final VerticalLayout layout = new VerticalLayout();
+    layout.setMargin(true);
+    setContent(layout);
+
+    Button login = new Button("login");
+    login.addClickListener(new ClickListener() {
+      @Override
+      public void buttonClick(ClickEvent event) {
+        try {
+          JaasAccessControl.login("demo", "demo");
+          Page page = Page.getCurrent();
+          page.setLocation(page.getLocation());
+        } catch (ServletException e) {
+          // TODO handle exception
+          e.printStackTrace();
+        }
+      }
+    });
+    layout.addComponent(login);
+  }
+}
+....
+
+The interesting parts are these:
+
+[source,java]
+....
+JaasAccessControl.login("demo", "demo");
+Page page = Page.getCurrent();
+page.setLocation(page.getLocation());
+....
+
+JaasAccessControl is a utility class from the Vaadin-CDI addon; we use
+it to perform programmatic login. If the login succeeds, we refresh the
+page the user is on. Why do we need to do this? Well, let’s consider why
+the login page is visible. The user has tried to access /secure, but
+isn’t logged in. Under the hood, the server realizes this, and serves
+our login page instead without doing a proper redirect. This means the
+users URL doesn’t change; it still says /secure. We refresh the page,
+and since we are logged in, we get the real content of the secure UI.
+
+Now, we could do login with other technologies as well. If you have a
+single-sign-on of some sort, you might want to use the JaasAccessControl
+class to integrate that into your app. You can also do form-based JSP
+login, as you would do in the olden days. The possibilities are truly
+many here. If you do decide on using JSP, here are a couple of helpers
+for you:
+
+Add the following into your login.jsp:
+
+[source,html]
+....
+<!-- Vaadin-Refresh -->
+....
+
+Why is this line needed? To answer this I need to tell you what happens
+when an application session times out. When Vaadin requests something
+from the server, the server replies with something else. Typically
+(without JAAS), it is a simple error message saying the session is
+invalid. If we are using JAAS, however, what we get in the response from
+the server is the login page HTML. Vaadin doesn't handle this too well;
+it adds the HTML response to the red notification popup. To fix this, we
+have added a feature to Vaadin that checks the HTML for a specific
+keyword (you guessed it, 'Vaadin-Refresh'), and if it finds it, simply
+reloads the complete page. You can also define a redirect url if you
+want to, but we won't need it here since JAAS will redirect for us. So,
+we add the comment to the JSP so that when a session timeouts, we want
+to be redirected to the login page.
+
+The second thing (still in login.jsp) is this:
+
+[source,html]
+....
+<meta http-equiv="refresh" content="${pageContext.session.maxInactiveInterval}">
+....
+
+We add this line so that the login page itself doesn't timeout. Session
+timeouts are active from the first access to the servlet; in our case
+loading the login page. If the user doesn't fill in anything, and the
+timer runs out, the user will get an ugly error message from the server.
+To fix that we simply reload the page, extending the session (or
+creating a new one).
+
+OK, with us so far? We still need a couple of things for JBoss to
+understand what we want to do:
+
+I have a jboss-web.xml inside WEB-INF that tells JBoss which settings to
+use:
+
+[source,xml]
+....
+<jboss-web>
+  <security-domain>DBAuth</security-domain>
+</jboss-web>
+....
+
+Then in the JBoss standalone.xml configuration file, I add the security
+domain params:
+
+[source,xml]
+....
+<security-domain name="DBAuth">
+  <authentication>
+    <login-module code="org.jboss.security.auth.spi.DatabaseServerLoginModule" flag="required">
+      <module-option name="dsJndiName" value="java:jboss/datasources/myappdb"/>
+      <module-option name="principalsQuery" value="select password from PRINCIPLES where principal_id=?"/>
+      <module-option name="rolesQuery" value="select user_role, 'Roles' from ROLES where principal_id=?"/>
+    </login-module>
+  </authentication>
+</security-domain>
+....
+
+The domain that we specify tells the server where to find users and
+passwords. In our case, they can be found in the PRINCIPLES table, with
+roles added to the ROLES table. As you can see, you specify the SQL for
+the query, so you have a lot of freedom in how you do this. Note that we
+are not using any encryption or hashing for the passwords; please don't
+use this configuration for real applications. Instead, you should use a
+custom Login Module class that can compare hashes instead of pure
+strings, and store salted hashes in your database. Implement your class
+by extending the DatabaseServerLoginModule class and change the code
+attribute in the login-module tag to point to your class instead.
+
+Then we need the data source (still in standalone.xml):
+
+[source,xml]
+....
+<datasources>
+  <datasource jta="true" jndi-name="java:jboss/datasources/myappdb" pool-name="java:jboss/datasources/myappdb_pool"
+  enabled="true" use-java-context="true" use-ccm="true">
+    <connection-url>jdbc:postgresql://localhost:5432/myappdb</connection-url>
+    <driver-class>org.postgresql.Driver</driver-class>
+    <driver>postgresql-jdbc4</driver>
+    <pool>
+      <min-pool-size>2</min-pool-size>
+      <max-pool-size>20</max-pool-size>
+      <prefill>true</prefill>
+    </pool>
+    <security>
+      <user-name>demo</user-name>
+      <password>demo</password>
+    </security>
+    <validation>
+      <check-valid-connection-sql>SELECT 1</check-valid-connection-sql>
+      <validate-on-match>false</validate-on-match>
+      <background-validation>false</background-validation>
+      <use-fast-fail>false</use-fast-fail>
+    </validation>
+  </datasource>
+  <drivers>
+    <driver name="postgresql-jdbc4" module="org.postgresql"/>
+  </drivers>
+</datasources>
+....
+
+As you can see, I'm using a Postgres database. You will need the
+postgres JDBC driver installed under the Wildfly modules directory for
+this to work. And, of course an actual Postgres server with the
+specified database created. In our application we use Hibernate with
+container managed transactions to handle persistence; as this isn't a
+JPA tutorial, so I'll leave that for another day.
+
+But, for completeness sake, here is a short SQL script for the DB.
+Create a database named ‘myappdb’, and run this:
+
+[source,sql]
+....
+CREATE USER demo WITH PASSWORD 'demo';
+
+CREATE TABLE PRINCIPLES ( principal_id VARCHAR(64) primary key,password VARCHAR(64));
+CREATE TABLE ROLES ( role_item_id integer, principal_id VARCHAR(64),user_role VARCHAR(64));
+
+Grant all privileges on table roles to demo;
+Grant all privileges on table principles to demo;
+
+--Initial data
+Insert into principles values ('demo', 'demo');
+insert into roles values (1, 'demo', 'viewer');
+....
+
+The only thing left is to get the username and roles from inside your
+Vaadin app:
+
+[source,java]
+....
+@Override
+protected void init(VaadinRequest request) {
+  String username = request.getUserPrincipal().toString();
+  if (request.isUserInRole("viewer")) {
+      // Add admin view to menu
+  }
+....
+
+If you are using the CDI-based navigator, you can also use the
+@RolesAllowed annotation on your views to automatically constrain
+visibility of your views.
+
+That's it, your app will now use database authentication with JAAS and
+CDI. The provided configuration isn't complete, and there are small
+pieces I didn't really cover, but it will work for basic cases. Feel
+free to add comments below.
+
+You might also check out
+https://github.com/mstahv/vaadin-cdi-jaas-jbossas-example/[a related
+full app example], that uses built in "FileRealm" in JBoss.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,12 +30,14 @@ import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
  *
  * @since 7.1.0
  * @author Vaadin Ltd.
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public interface CalendarComponentEvents extends Serializable {
 
     /**
-     * Notifier interface for notifying listener of calendar events
+     * Notifier interface for notifying listener of calendar events.
      */
     @Deprecated
     public interface CalendarEventNotifier extends Serializable {
@@ -117,7 +119,7 @@ public interface CalendarComponentEvents extends Serializable {
     }
 
     /**
-     * Handler interface for when events are being dragged on the calendar
+     * Handler interface for when events are being dragged on the calendar.
      *
      */
     @Deprecated
@@ -143,7 +145,7 @@ public interface CalendarComponentEvents extends Serializable {
      */
     @Deprecated
     public interface RangeSelectNotifier
-            extends Serializable, CalendarEventNotifier {
+            extends CalendarEventNotifier {
 
         /**
          * Set the RangeSelectHandler that listens for drag-marking.
@@ -524,7 +526,7 @@ public interface CalendarComponentEvents extends Serializable {
     }
 
     /**
-     * EventResize is sent when an event is resized
+     * EventResize is sent when an event is resized.
      */
     @SuppressWarnings("serial")
     @Deprecated
@@ -566,7 +568,7 @@ public interface CalendarComponentEvents extends Serializable {
         }
 
         /**
-         * Returns the updated start date/time of the event
+         * Returns the updated start date/time of the event.
          *
          * @return The new date for the event
          */
@@ -585,7 +587,7 @@ public interface CalendarComponentEvents extends Serializable {
         }
 
         /**
-         * Returns the updates end date/time of the event
+         * Returns the updates end date/time of the event.
          *
          * @return The new date for the event
          */

@@ -14,7 +14,6 @@ metadataChecks = {
 	'https://vaadin.com/download/VERSIONS_7': '^7\..*',
 	'https://vaadin.com/download/release/7.7/LATEST': '^7\..*',
 	'https://vaadin.com/download/LATEST': '^6\..*',
-	'https://vaadin.com/download/PRERELEASES': '^{ver}'
 }
 
 parser = argparse.ArgumentParser(description="Post-publish report generator")
@@ -36,10 +35,15 @@ elif not isdir(resultPath):
 	print("Result path is not a directory.")
 	sys.exit(1)
 
+# Latest 8 checks based on current version number.
 (major, minor, maintenance) = args.version.split(".", 2)
 prerelease = "." in maintenance
 if prerelease:
 	maintenance = maintenance.split('.')[0]
+	metadataChecks['https://vaadin.com/download/PRERELEASES'] = '^{ver}'
+	metadataChecks['https://vaadin.com/download/LATEST8'] = '^%d\.%d\..*' % (int(major), int(minor) - 1)
+else:
+	metadataChecks['https://vaadin.com/download/LATEST8'] = '^{ver}'
 
 def checkUrlContents(url, regexp):
 	r = requests.get(url)
@@ -51,7 +55,9 @@ def checkUrlStatus(url):
 
 metadataOk = True
 for url in metadataChecks:
-	metadataOk = metadataOk and checkUrlContents(url, metadataChecks[url].format(ver=args.version))
+	pattern = metadataChecks[url].format(ver=args.version)
+	print("Checking: %s with pattern %s" % (url, pattern))
+	metadataOk = metadataOk and checkUrlContents(url, pattern)
 
 tagOk = checkUrlStatus("https://github.com/vaadin/framework/releases/tag/{ver}".format(ver=args.version))
 
@@ -70,20 +76,28 @@ content = """<html>
 
 mavenUrl = ""
 if not prerelease:
-	mavenUrl = "http://repo1.maven.org/maven2/com/vaadin/vaadin-server/{ver}".format(ver=args.version)
+	mavenUrl = "http://repo1.maven.org/maven2/com/vaadin/vaadin-server/"
 	content += "<tr><td></td><td><a href='{mvnUrl}'>Check {ver} is published to maven.org (might take a while)</td></tr>".format(ver=args.version, mvnUrl=mavenUrl)
 else:
-	mavenUrl = "http://maven.vaadin.com/vaadin-prereleases/com/vaadin/vaadin-server/{ver}".format(ver=args.version)
+	mavenUrl = "http://maven.vaadin.com/vaadin-prereleases/com/vaadin/vaadin-server/"
 	content += "<tr><td></td><td><a href='{mvnUrl}'>Check {ver} is published as prerelease to maven.vaadin.com</td></tr>".format(ver=args.version, mvnUrl=mavenUrl)
 
 content += "<tr><td></td><td><a href=\"https://github.com/vaadin/framework/milestones\">Create milestone for next version in GitHub</a></td></tr>"
 
-content += """
-<tr><td></td><td><a href="http://test.vaadin.com/{version}/run/LabelModes?restartApplication">Verify uploaded to test.vaadin.com</a></td></tr>
-""".format(version=args.version)
+#content += """
+#<tr><td></td><td><a href="http://test.vaadin.com/{version}/run/LabelModes?restartApplication">Verify uploaded to test.vaadin.com</a></td></tr>
+#""".format(version=args.version)
 
 if not prerelease:
 	content += '<tr><td></td><td><a href="http://vaadin.com/api">Verify API version list updated</a></td></tr>'
+
+content += "<tr><td></td><td>Run the generated tag_repositories.sh script</td></tr>"
+
+# close GitHub milestone
+content += "<tr><td></td><td><a href=\"https://github.com/vaadin/framework/milestones\">Close GitHub Milestone and create one for next version</a></td></tr>"
+
+# release notes
+content += "<tr><td></td><td><a href=\"https://github.com/vaadin/framework/releases/new\">Prepare release notes in GH</a></td></tr>"
 
 content += """
 <tr><td></td><td><a href="http://{teamcityUrl}/viewLog.html?buildId={buildId}&buildTypeId={buildTypeId}&tab=dependencies"><h2>Start Post-Publish Release from dependencies tab</a></td></tr>

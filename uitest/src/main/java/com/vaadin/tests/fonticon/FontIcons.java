@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.fonticon;
 
 import com.vaadin.event.Action;
@@ -28,7 +13,6 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
@@ -76,16 +60,10 @@ public class FontIcons extends AbstractReindeerTestUI {
 
         layout.setIcon(icon);
 
-        layout.addComponent(
-                new Button("Switch icon type", new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        buildUI(icon instanceof FontIcon
-                                ? new ThemeResource("../runo/icons/16/user.png")
-                                : FontAwesome.ANDROID);
-                    }
-                }));
+        layout.addComponent(new Button("Switch icon type",
+                event -> buildUI(icon instanceof FontIcon
+                        ? new ThemeResource("../runo/icons/16/user.png")
+                        : FontAwesome.ANDROID)));
 
         Handler actionHandler = new Handler() {
             Action[] actions = { new Action("Do it!", icon) };

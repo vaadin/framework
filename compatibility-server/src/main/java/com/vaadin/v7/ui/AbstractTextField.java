@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -73,7 +73,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
 
     private TextChangeEventMode textChangeEventMode = TextChangeEventMode.LAZY;
 
-    private final int DEFAULT_TEXTCHANGE_TIMEOUT = 400;
+    private static final int DEFAULT_TEXTCHANGE_TIMEOUT = 400;
 
     private int textChangeEventTimeout = DEFAULT_TEXTCHANGE_TIMEOUT;
 
@@ -327,7 +327,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
 
     @Override
     public boolean isEmpty() {
-        return super.isEmpty() || getValue().length() == 0;
+        return super.isEmpty() || getValue().isEmpty();
     }
 
     /**
@@ -430,7 +430,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
              * Fire a "simulated" text change event before value change event if
              * change is coming from the client side.
              *
-             * Iff there is both value change and textChangeEvent in same
+             * If there are both value change and textChangeEvent in same
              * variable burst, it is a text field in non immediate mode and the
              * text change event "flushed" queued value change event. In this
              * case textChangeEventPending flag is already on and text change
@@ -442,9 +442,9 @@ public abstract class AbstractTextField extends AbstractField<String> implements
                 lastKnownTextContent = getNullRepresentation();
                 textChangeEventPending = true;
             } else if (newValue != null
-                    && !newValue.toString().equals(lastKnownTextContent)) {
+                    && !newValue.equals(lastKnownTextContent)) {
                 // Value was changed to something else than null representation
-                lastKnownTextContent = newValue.toString();
+                lastKnownTextContent = newValue;
                 textChangeEventPending = true;
             }
             firePendingTextChangeEvent();
@@ -460,8 +460,8 @@ public abstract class AbstractTextField extends AbstractField<String> implements
          * Make sure w reset lastKnownTextContent field on value change. The
          * clearing must happen here as well because TextChangeListener can
          * revert the original value. Client must respect the value in this
-         * case. LegacyAbstractField optimizes value change if the existing
-         * value is reset. Also we need to force repaint if the flag is on.
+         * case. AbstractField optimizes value change if the existing value is
+         * reset. Also we need to force repaint if the flag is on.
          */
         if (lastKnownTextContent != null) {
             lastKnownTextContent = null;
@@ -546,7 +546,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addTextChangeListener(TextChangeListener)}
-     **/
+     */
     @Deprecated
     public void addListener(TextChangeListener listener) {
         addTextChangeListener(listener);
@@ -561,7 +561,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeTextChangeListener(TextChangeListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(TextChangeListener listener) {
         removeTextChangeListener(listener);
@@ -652,7 +652,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @since 6.4
      */
     public void selectAll() {
-        String text = getValue() == null ? "" : getValue().toString();
+        String text = getValue() == null ? "" : getValue();
         setSelectionRange(0, text.length());
     }
 
@@ -714,7 +714,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addFocusListener(FocusListener)}
-     **/
+     */
     @Deprecated
     public void addListener(FocusListener listener) {
         addFocusListener(listener);
@@ -728,7 +728,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeFocusListener(FocusListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(FocusListener listener) {
         removeFocusListener(listener);
@@ -742,7 +742,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
 
     /**
      * @deprecated As of 7.0, replaced by {@link #addBlurListener(BlurListener)}
-     **/
+     */
     @Deprecated
     public void addListener(BlurListener listener) {
         addBlurListener(listener);
@@ -756,7 +756,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeBlurListener(BlurListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(BlurListener listener) {
         removeBlurListener(listener);
@@ -787,8 +787,9 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     protected Collection<String> getCustomAttributes() {
         Collection<String> customAttributes = super.getCustomAttributes();
         customAttributes.add("maxlength");
-        customAttributes.add("max-length"); // to prevent this appearing in
-                                            // output
+
+        // prevent this from appearing in output
+        customAttributes.add("max-length");
         customAttributes.add("cursor-position");
         return customAttributes;
     }

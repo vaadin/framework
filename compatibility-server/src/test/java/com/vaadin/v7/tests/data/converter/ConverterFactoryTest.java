@@ -1,23 +1,9 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.data.converter;
+
+import static org.junit.Assert.assertEquals;
 
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.VaadinSession;
@@ -33,14 +19,14 @@ public class ConverterFactoryTest {
         @Override
         public Integer convertToModel(String value,
                 Class<? extends Integer> targetType, Locale locale)
-                throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                throws ConversionException {
             return 42;
         }
 
         @Override
         public String convertToPresentation(Integer value,
                 Class<? extends String> targetType, Locale locale)
-                throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                throws ConversionException {
             return "42";
         }
 
@@ -85,7 +71,7 @@ public class ConverterFactoryTest {
         tf.setConverter(Integer.class);
         // The application converter always returns 42. Current application is
         // null
-        Assert.assertEquals(42, tf.getConvertedValue());
+        assertEquals(42, tf.getConvertedValue());
     }
 
     @Test
@@ -100,7 +86,7 @@ public class ConverterFactoryTest {
         tf.setConverter(Integer.class);
         // The application converter always returns 42. Current application is
         // null
-        Assert.assertEquals(42, tf.getConvertedValue());
+        assertEquals(42, tf.getConvertedValue());
     }
 
     @Test
@@ -121,6 +107,6 @@ public class ConverterFactoryTest {
 
         // The application converter always returns 42. Application.getCurrent()
         // should not be used
-        Assert.assertEquals(42, tf.getConvertedValue());
+        assertEquals(42, tf.getConvertedValue());
     }
 }

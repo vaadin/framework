@@ -3,12 +3,14 @@ package com.vaadin.tests.components.combobox;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class ComboBoxSelecting extends AbstractReindeerTestUI {
     protected ComboBox<String> comboBox;
     protected List<String> items = new ArrayList<>();

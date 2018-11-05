@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
@@ -23,20 +22,20 @@ public class GridBasicDetailsTest extends GridBasicsTest {
      * awkward with two scroll commands back to back.
      */
     private static final int ALMOST_LAST_INDEX = 995;
-    private static final String[] OPEN_ALMOST_LAST_ITEM_DETAILS = new String[] {
-            "Component", "Details", "Open " + ALMOST_LAST_INDEX };
-    private static final String[] OPEN_FIRST_ITEM_DETAILS = new String[] {
-            "Component", "Details", "Open First" };
-    private static final String[] TOGGLE_FIRST_ITEM_DETAILS = new String[] {
-            "Component", "Details", "Toggle First" };
-    private static final String[] DETAILS_GENERATOR_NULL = new String[] {
-            "Component", "Details", "Generators", "NULL" };
-    private static final String[] DETAILS_GENERATOR_WATCHING = new String[] {
-            "Component", "Details", "Generators", "\"Watching\"" };
-    private static final String[] DETAILS_GENERATOR_PERSISTING = new String[] {
-            "Component", "Details", "Generators", "Persisting" };
-    private static final String[] CHANGE_HIERARCHY = new String[] { "Component",
-            "Details", "Generators", "- Change Component" };
+    private static final String[] OPEN_ALMOST_LAST_ITEM_DETAILS = { "Component",
+            "Details", "Open " + ALMOST_LAST_INDEX };
+    private static final String[] OPEN_FIRST_ITEM_DETAILS = { "Component",
+            "Details", "Open First" };
+    private static final String[] TOGGLE_FIRST_ITEM_DETAILS = { "Component",
+            "Details", "Toggle First" };
+    private static final String[] DETAILS_GENERATOR_NULL = { "Component",
+            "Details", "Generators", "NULL" };
+    private static final String[] DETAILS_GENERATOR_WATCHING = { "Component",
+            "Details", "Generators", "\"Watching\"" };
+    private static final String[] DETAILS_GENERATOR_PERSISTING = { "Component",
+            "Details", "Generators", "Persisting" };
+    private static final String[] CHANGE_HIERARCHY = { "Component", "Details",
+            "Generators", "- Change Component" };
 
     @Override
     @Before
@@ -56,7 +55,7 @@ public class GridBasicDetailsTest extends GridBasicsTest {
         try {
             selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
         } catch (NoSuchElementException e) {
-            Assert.fail("Unable to set up details.");
+            fail("Unable to set up details.");
         }
 
         getGridElement().getDetails(0);
@@ -77,7 +76,7 @@ public class GridBasicDetailsTest extends GridBasicsTest {
             selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
             selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
         } catch (NoSuchElementException e) {
-            Assert.fail("Unable to set up details.");
+            fail("Unable to set up details.");
         }
         getGridElement().getDetails(0);
     }
@@ -100,7 +99,7 @@ public class GridBasicDetailsTest extends GridBasicsTest {
             selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
             getGridElement().scroll(0);
         } catch (NoSuchElementException e) {
-            Assert.fail("Unable to set up details.");
+            fail("Unable to set up details.");
         }
         getGridElement().getDetails(0);
     }
@@ -135,7 +134,7 @@ public class GridBasicDetailsTest extends GridBasicsTest {
             // scroll somewhere to hit uncached rows
             getGridElement().scrollToRow(101);
         } catch (NoSuchElementException e) {
-            Assert.fail("Unable to set up details.");
+            fail("Unable to set up details.");
         }
 
         // this should throw
@@ -320,4 +319,21 @@ public class GridBasicDetailsTest extends GridBasicsTest {
                 getGridElement().getDetails(0).getText().contains("One"));
     }
 
+    @Test
+    public void detailsSizeCorrectAfterScrolling() {
+        selectMenuPath(DETAILS_GENERATOR_PERSISTING);
+        selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
+
+        // Scroll to request next range
+        getGridElement().scrollToRow(21);
+        getGridElement().scrollToRow(0);
+        assertGreater("Details row should have correct height",
+                getGridElement().getDetails(0).getSize().getHeight(), 30);
+
+        // Scroll outside of cached rows
+        getGridElement().scrollToRow(101);
+        getGridElement().scrollToRow(0);
+        assertGreater("Details row should have correct height",
+                getGridElement().getDetails(0).getSize().getHeight(), 30);
+    }
 }

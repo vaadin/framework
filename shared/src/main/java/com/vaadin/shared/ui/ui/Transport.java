@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,31 +17,31 @@
 package com.vaadin.shared.ui.ui;
 
 /**
- * Transport modes for Push
+ * Transport modes for Push.
  *
  * @since 7.1
  * @author Vaadin Ltd
  */
 public enum Transport {
     /**
-     * Websockets
+     * Websockets.
      */
     WEBSOCKET("websocket"),
     /**
-     * Websockets for server to client, XHR for client to server
+     * Websockets for server to client, XHR for client to server.
      *
      * @since 7.6
      */
     WEBSOCKET_XHR("websocket-xhr"),
     /**
-     * HTTP streaming
+     * HTTP streaming.
      *
      * @deprecated Use the more reliable {@link Transport#LONG_POLLING} instead.
      */
     @Deprecated
     STREAMING("streaming"),
     /**
-     * HTTP long polling
+     * HTTP long polling.
      */
     LONG_POLLING("long-polling");
 

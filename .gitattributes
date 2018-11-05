@@ -1,0 +1,27 @@
+# The default behavior
+* text=auto
+
+*.java text
+*.xml text
+*.htm text
+*.html text
+*.js text
+*.bnd text
+*.svg text
+*.md text
+*.txt text
+*.css text
+*.scss text
+*.md text
+*.properties text
+
+# To be verified
+*.graffle binary
+
+.gitattributes text
+.gitignore text
+.gitmodules text
+
+.classpath text
+.project text
+*.prefs text

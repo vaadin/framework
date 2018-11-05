@@ -1,9 +1,11 @@
 package com.vaadin.tests.data.selection;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 import java.util.concurrent.Future;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -56,13 +58,12 @@ public abstract class AbstractStaleSelectionTest<S extends AbstractListing<StrBe
     }
 
     protected final void assertIsStale(StrBean bean) {
-        Assert.assertTrue("Bean with id " + bean.getId() + " should be stale.",
+        assertTrue("Bean with id " + bean.getId() + " should be stale.",
                 dataProvider.isStale(bean));
     }
 
     protected final void assertNotStale(StrBean bean) {
-        Assert.assertFalse(
-                "Bean with id " + bean.getId() + " should not be stale.",
+        assertFalse("Bean with id " + bean.getId() + " should not be stale.",
                 dataProvider.isStale(bean));
     }
 }

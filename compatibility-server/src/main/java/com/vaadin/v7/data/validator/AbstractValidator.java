@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,9 +18,8 @@ package com.vaadin.v7.data.validator;
 import com.vaadin.v7.data.Validator;
 
 /**
- * Abstract {@link com.vaadin.v7.data.Validator Validator} implementation that
- * provides a basic Validator implementation except the
- * {@link #isValidValue(Object)} method.
+ * Abstract {@link Validator} implementation that provides a basic Validator
+ * implementation except the {@link #isValidValue(Object)} method.
  * <p>
  * To include the value that failed validation in the exception message you can
  * use "{0}" in the error message. This will be replaced with the failed value
@@ -43,6 +42,8 @@ import com.vaadin.v7.data.Validator;
  *            The type
  * @author Vaadin Ltd.
  * @since 5.4
+ *
+ * @deprecated As of 8.0, replaced by {@link com.vaadin.data.validator.AbstractValidator}
  */
 @Deprecated
 public abstract class AbstractValidator<T> implements Validator {

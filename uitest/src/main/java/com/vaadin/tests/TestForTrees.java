@@ -1,27 +1,9 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
@@ -37,16 +19,15 @@ import com.vaadin.v7.ui.Tree;
  */
 public class TestForTrees extends CustomComponent implements Handler {
 
-    private static final String[] firstnames = new String[] { "John", "Mary",
-            "Joe", "Sarah", "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
+    private static final String[] firstnames = { "John", "Mary", "Joe", "Sarah",
+            "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
 
-    private static final String[] lastnames = new String[] { "Torvalds",
-            "Smith", "Jones", "Beck", "Sheridan", "Picard", "Hill", "Fielding",
-            "Einstein" };
+    private static final String[] lastnames = { "Torvalds", "Smith", "Jones",
+            "Beck", "Sheridan", "Picard", "Hill", "Fielding", "Einstein" };
 
     private final VerticalLayout main = new VerticalLayout();
 
-    private final Action[] actions = new Action[] { new Action("edit"),
+    private final Action[] actions = { new Action("edit"),
             new Action("delete") };
 
     private VerticalLayout al;
@@ -100,14 +81,8 @@ public class TestForTrees extends CustomComponent implements Handler {
         main.addComponent(ol);
         contextTree = t;
 
-        final Button b = new Button("refresh view", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                createNewView();
-            }
-        });
+        final Button b = new Button("refresh view", event -> createNewView());
         main.addComponent(b);
-
     }
 
     public Tree createTestTree() {
@@ -148,12 +123,9 @@ public class TestForTrees extends CustomComponent implements Handler {
         statusLayout.setMargin(true);
         final Panel status = new Panel("Events", statusLayout);
         final Button clear = new Button("c");
-        clear.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                statusLayout.removeAllComponents();
-                statusLayout.addComponent(clear);
-            }
+        clear.addClickListener(event -> {
+            statusLayout.removeAllComponents();
+            statusLayout.addComponent(clear);
         });
         statusLayout.addComponent(clear);
 
@@ -162,15 +134,11 @@ public class TestForTrees extends CustomComponent implements Handler {
 
         ol.addComponent(status);
 
-        t.addListener(new Listener() {
-            @Override
-            public void componentEvent(Event event) {
-                statusLayout
-                        .addComponent(new Label(event.getClass().getName()));
-                // TODO should not use LegacyField.toString()
-                statusLayout.addComponent(
-                        new Label("selected: " + event.getSource().toString()));
-            }
+        t.addListener((Listener) event -> {
+            statusLayout.addComponent(new Label(event.getClass().getName()));
+            // TODO should not use LegacyField.toString()
+            statusLayout.addComponent(
+                    new Label("selected: " + event.getSource().toString()));
         });
 
         return ol;

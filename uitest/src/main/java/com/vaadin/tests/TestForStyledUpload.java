@@ -1,19 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests;
 
 import java.io.File;
@@ -30,7 +14,6 @@ import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.LegacyWindow;
@@ -80,35 +63,18 @@ public class TestForStyledUpload extends LegacyApplication
         up.addSucceededListener(this);
         up.addStartedListener(this);
 
-        up.addProgressListener(new Upload.ProgressListener() {
+        up.addProgressListener((readBytes, contentLenght) -> {
+            pi.setValue(new Float(readBytes / (float) contentLenght));
 
-            @Override
-            public void updateProgress(long readBytes, long contentLenght) {
-                pi.setValue(new Float(readBytes / (float) contentLenght));
+            refreshMemUsage();
 
-                refreshMemUsage();
-
-                transferred.setValue(
-                        "Transferred " + readBytes + " of " + contentLenght);
-            }
-
+            transferred.setValue(
+                    "Transferred " + readBytes + " of " + contentLenght);
         });
 
-        final Button b = new Button("Update status",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        readState();
-                    }
-                });
+        final Button b = new Button("Update status", event -> readState());
 
-        final Button c = new Button("Update status with gc",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        gc();
-                    }
-                });
+        final Button c = new Button("Update status with gc", evenet -> gc());
 
         main.addComponent(up);
         l = new Label("Idle");
@@ -127,27 +93,15 @@ public class TestForStyledUpload extends LegacyApplication
         main.addComponent(status);
 
         Button cancel = new Button("Cancel current upload");
-        cancel.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                buffer.cancel();
-            }
-        });
+        cancel.addClickListener(event -> buffer.cancel());
 
         main.addComponent(cancel);
 
         final Button restart = new Button("Restart demo application");
-        restart.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                TestForStyledUpload.this.close();
-            }
-        });
+        restart.addClickListener(event -> TestForStyledUpload.this.close());
         main.addComponent(restart);
         main.addComponent(b);
         main.addComponent(c);
-
     }
 
     public void gc() {
@@ -156,17 +110,17 @@ public class TestForStyledUpload extends LegacyApplication
     }
 
     public void readState() {
-        final StringBuffer sb = new StringBuffer();
+        final StringBuilder sb = new StringBuilder();
 
         if (up.isUploading()) {
             sb.append("Uploading...");
             sb.append(up.getBytesRead());
-            sb.append("/");
+            sb.append('/');
             sb.append(up.getUploadSize());
-            sb.append(" ");
+            sb.append(' ');
             sb.append(Math.round(
                     100 * up.getBytesRead() / (double) up.getUploadSize()));
-            sb.append("%");
+            sb.append('%');
         } else {
             sb.append("Idle");
         }
@@ -220,10 +174,8 @@ public class TestForStyledUpload extends LegacyApplication
             try {
                 file = File.createTempFile(tempFileName, null);
             } catch (final IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
         }
 
         public void cancel() {
@@ -239,7 +191,6 @@ public class TestForStyledUpload extends LegacyApplication
                 stream = new FileInputStream(file);
                 return stream;
             } catch (final FileNotFoundException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             return null;
@@ -255,7 +206,6 @@ public class TestForStyledUpload extends LegacyApplication
             try {
                 return new FileOutputStream(file);
             } catch (final FileNotFoundException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             return null;
@@ -297,14 +247,13 @@ public class TestForStyledUpload extends LegacyApplication
 
     private void refreshMemUsage() {
         // memoryStatus.setValue("Not available in Java 1.4");
-        StringBuffer mem = new StringBuffer();
+        StringBuilder mem = new StringBuilder();
         MemoryMXBean mmBean = ManagementFactory.getMemoryMXBean();
         mem.append("Heap (M):");
         mem.append(mmBean.getHeapMemoryUsage().getUsed() / 1048576);
         mem.append(" | Non-Heap (M):");
         mem.append(mmBean.getNonHeapMemoryUsage().getUsed() / 1048576);
         memoryStatus.setValue(mem.toString());
-
     }
 
     @Override
@@ -319,7 +268,6 @@ public class TestForStyledUpload extends LegacyApplication
         setTheme("runo");
         w.addComponent(main);
         setMainWindow(w);
-
     }
 
 }

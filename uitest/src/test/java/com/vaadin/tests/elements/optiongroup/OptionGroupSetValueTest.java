@@ -1,6 +1,7 @@
 package com.vaadin.tests.elements.optiongroup;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,13 +23,13 @@ public class OptionGroupSetValueTest extends MultiBrowserTest {
     @Test
     public void testSetValue() {
         group.setValue(NEW_VALUE);
-        Assert.assertEquals(NEW_VALUE, group.getValue());
+        assertEquals(NEW_VALUE, group.getValue());
     }
 
     @Test
     public void testSelectByText() {
         group.selectByText(NEW_VALUE);
-        Assert.assertEquals(NEW_VALUE, group.getValue());
+        assertEquals(NEW_VALUE, group.getValue());
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,8 +16,10 @@
 
 package com.vaadin.client.ui;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.LiveValue;
@@ -73,7 +75,6 @@ import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.ComponentStateUtil;
-import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.tabsheet.TabState;
 import com.vaadin.shared.ui.tabsheet.TabsheetServerRpc;
 import com.vaadin.shared.ui.tabsheet.TabsheetState;
@@ -101,7 +102,7 @@ public class VTabsheet extends VTabsheetBase
     }
 
     /**
-     * Representation of a single "tab" shown in the TabBar
+     * Representation of a single "tab" shown in the TabBar.
      *
      */
     public static class Tab extends SimplePanel implements HasFocusHandlers,
@@ -186,7 +187,7 @@ public class VTabsheet extends VTabsheetBase
 
             setStyleName(td, TD_DISABLED_CLASSNAME, !enabled);
             if (!enabled) {
-                focusImpl.setTabIndex(td, -1);
+                FOCUS_IMPL.setTabIndex(td, -1);
             }
         }
 
@@ -199,7 +200,7 @@ public class VTabsheet extends VTabsheetBase
         }
 
         /**
-         * Toggles the style names for the Tab
+         * Toggles the style names for the Tab.
          *
          * @param selected
          *            true if the Tab is selected
@@ -273,6 +274,9 @@ public class VTabsheet extends VTabsheetBase
 
         public void recalculateCaptionWidth() {
             tabCaption.setWidth(tabCaption.getRequiredWidth() + "px");
+            if (isVisible()) {
+                tabBar.tabWidths.put(this, getOffsetWidth());
+            }
         }
 
         @Override
@@ -298,11 +302,11 @@ public class VTabsheet extends VTabsheetBase
 
         public void focus() {
             getTabsheet().scrollIntoView(this);
-            focusImpl.focus(td);
+            FOCUS_IMPL.focus(td);
         }
 
         public void blur() {
-            focusImpl.blur(td);
+            FOCUS_IMPL.blur(td);
         }
 
         public boolean hasTooltip() {
@@ -340,8 +344,9 @@ public class VTabsheet extends VTabsheetBase
             if (tabState.description != null
                     || tabState.componentError != null) {
                 setTooltipInfo(new TooltipInfo(tabState.description,
-                        ContentMode.PREFORMATTED, tabState.componentError,
-                        this));
+                        tabState.descriptionContentMode,
+                        tabState.componentError, this,
+                        tabState.componentErrorLevel));
             } else {
                 setTooltipInfo(null);
             }
@@ -353,6 +358,7 @@ public class VTabsheet extends VTabsheetBase
             boolean ret = updateCaptionWithoutOwner(captionString,
                     !tabState.enabled, hasAttribute(tabState.description),
                     hasAttribute(tabState.componentError),
+                    tabState.componentErrorLevel,
                     tab.getTabsheet().connector.getResourceUrl(
                             ComponentConstants.ICON_RESOURCE + tabState.key),
                     tabState.iconAltText);
@@ -442,6 +448,9 @@ public class VTabsheet extends VTabsheetBase
 
         private VTabsheet tabsheet;
 
+        /** For internal use only. May be removed or replaced in the future. */
+        private Map<Tab, Integer> tabWidths = new HashMap<Tab, Integer>();
+
         TabBar(VTabsheet tabsheet) {
             this.tabsheet = tabsheet;
 
@@ -501,6 +510,7 @@ public class VTabsheet extends VTabsheetBase
             getTabsheet().selectionHandler.registerTab(t);
 
             t.setCloseHandler(this);
+            tabWidths.put(t, t.getOffsetWidth());
 
             return t;
         }
@@ -519,6 +529,18 @@ public class VTabsheet extends VTabsheetBase
                 return null;
             }
             return (Tab) super.getWidget(index);
+        }
+
+        private int getTabIndex(Tab tab) {
+            if (tab == null) {
+                return -1;
+            }
+            for (int i = 0; i < getTabCount(); i++) {
+                if (tab.equals(getTab(i))) {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         private int getTabIndex(String tabId) {
@@ -562,13 +584,8 @@ public class VTabsheet extends VTabsheetBase
             getTab(tabsheet.activeTabIndex).recalculateCaptionWidth();
 
             // Scroll the tab into view if it is not already, after layout
-            Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
-                @Override
-                public void execute() {
-                    getTabsheet()
-                            .scrollIntoView(getTab(tabsheet.activeTabIndex));
-                }
-            });
+            Scheduler.get().scheduleFinally(() -> getTabsheet()
+                    .scrollIntoView(getTab(tabsheet.activeTabIndex)));
         }
 
         public Tab navigateTab(int fromIndex, int toIndex) {
@@ -597,6 +614,7 @@ public class VTabsheet extends VTabsheetBase
             }
 
             remove(tab);
+            tabWidths.remove(tab);
 
             /*
              * If this widget was selected we need to unmark it as the last
@@ -620,6 +638,13 @@ public class VTabsheet extends VTabsheetBase
             }
         }
 
+        private int getLastKnownTabWidth(Tab tab) {
+            if (tabWidths.containsKey(tab)) {
+                return tabWidths.get(tab);
+            }
+            return 0;
+        }
+
         private int selectNewShownTab(int oldPosition) {
             // After removing a tab, find a new scroll position. In most
             // cases the scroll position does not change, but if the tab
@@ -634,7 +659,7 @@ public class VTabsheet extends VTabsheetBase
 
             for (int i = oldPosition - 1; i >= 0; i--) {
                 Tab tab = getTab(i);
-                if (!tab.isHiddenOnServer()) {
+                if (tab != null && !tab.isHiddenOnServer()) {
                     return i;
                 }
             }
@@ -690,6 +715,13 @@ public class VTabsheet extends VTabsheetBase
         }
 
         /**
+         * Returns the index of the last visible tab on the server
+         */
+        private int getLastVisibleTab() {
+            return getPreviousVisibleTab(getTabCount());
+        }
+
+        /**
          * Find the previous visible tab. Returns -1 if none is found.
          *
          * @param i
@@ -706,7 +738,7 @@ public class VTabsheet extends VTabsheetBase
 
         public int scrollLeft(int currentFirstVisible) {
             int prevVisible = getPreviousVisibleTab(currentFirstVisible);
-            if (prevVisible == -1) {
+            if (prevVisible < 0) {
                 return -1;
             }
 
@@ -719,7 +751,7 @@ public class VTabsheet extends VTabsheetBase
 
         public int scrollRight(int currentFirstVisible) {
             int nextVisible = getNextVisibleTab(currentFirstVisible);
-            if (nextVisible == -1) {
+            if (nextVisible < 0) {
                 return -1;
             }
             Tab currentFirst = getTab(currentFirstVisible);
@@ -743,6 +775,9 @@ public class VTabsheet extends VTabsheetBase
     public static final String TABS_CLASSNAME = CLASSNAME + "-tabcontainer";
     public static final String SCROLLER_CLASSNAME = CLASSNAME + "-scroller";
 
+    private static final FocusImpl FOCUS_IMPL = FocusImpl
+            .getFocusImplForPanel();
+
     /** For internal use only. May be removed or replaced in the future. */
     // tabbar and 'scroller' container
     public final Element tabs;
@@ -752,8 +787,6 @@ public class VTabsheet extends VTabsheetBase
      * this to avoid confusion with activeTabIndex.
      */
     int tabulatorIndex = 0;
-
-    private static final FocusImpl focusImpl = FocusImpl.getFocusImplForPanel();
 
     // tab-scroller element
     private final Element scroller;
@@ -790,6 +823,21 @@ public class VTabsheet extends VTabsheetBase
     private String currentStyle;
 
     /**
+     * For internal use only. May be renamed or removed in a future release.
+     *
+     * @param tabIndex
+     *            tabulator index for the active tab of the tab sheet
+     * @since 8.1.7
+     */
+    public void setTabIndex(int tabIndex) {
+        tabulatorIndex = tabIndex;
+        Tab activeTab = getActiveTab();
+        if (activeTab != null) {
+            activeTab.setTabulatorIndex(tabIndex);
+        }
+    }
+
+    /**
      * @return Whether the tab could be selected or not.
      */
     private boolean canSelectTab(final int tabIndex) {
@@ -810,8 +858,8 @@ public class VTabsheet extends VTabsheetBase
     /**
      * Load the content of a tab of the provided index.
      *
-     * @param index
-     *            of the tab to load
+     * @param tabIndex
+     *            The index of the tab to load
      *
      * @return true if the specified sheet gets loaded, otherwise false.
      */
@@ -827,7 +875,7 @@ public class VTabsheet extends VTabsheetBase
             getCurrentlyDisplayedWidget().getElement().getParentElement()
                     .getStyle().setVisibility(Visibility.HIDDEN);
 
-            getRpcProxy().setSelected(tabKeys.get(tabIndex).toString());
+            getRpcProxy().setSelected(tabKeys.get(tabIndex));
 
             waitingForResponse = true;
 
@@ -1323,14 +1371,44 @@ public class VTabsheet extends VTabsheetBase
             scrollerIndex = tb.getNextVisibleTab(scrollerIndex);
         }
 
+        TableCellElement spacerCell = ((TableElement) tb.getElement().cast())
+                .getRows().getItem(0).getCells().getItem(tb.getTabCount());
+        if (scroller.getStyle().getDisplay() != "none") {
+            spacerCell.getStyle().setPropertyPx("minWidth",
+                    scroller.getOffsetWidth());
+            spacerCell.getStyle().setPropertyPx("minHeight", 1);
+        } else {
+            spacerCell.getStyle().setProperty("minWidth", "0");
+            spacerCell.getStyle().setProperty("minHeight", "0");
+        }
+
+        // check if hidden tabs need to be scrolled back into view
+        int firstVisibleIndex = tb.getFirstVisibleTabClient();
+        if (firstVisibleIndex != 0 && getTabCount() > 0
+                && getLeftGap() + getRightGap() > 0) {
+            int hiddenCount = tb.getTabCount();
+            if (firstVisibleIndex > 0) {
+                hiddenCount -= firstVisibleIndex;
+            }
+            int counter = 0;
+            while ((getLeftGap() + getRightGap() > getFirstOutOfViewWidth())
+                    && counter < hiddenCount) {
+                tb.scrollLeft(tb.getFirstVisibleTabClient());
+                scrollerIndex = tb.getFirstVisibleTabClient();
+                ++counter;
+            }
+        }
+
         boolean scrolled = isScrolledTabs();
         boolean clipped = isClippedTabs();
         if (tb.getTabCount() > 0 && tb.isVisible() && (scrolled || clipped)) {
             scroller.getStyle().clearDisplay();
-            DOM.setElementProperty(scrollerPrev, "className", SCROLLER_CLASSNAME
+            scrollerPrev.setPropertyString("className", SCROLLER_CLASSNAME
                     + (scrolled ? "Prev" : PREV_SCROLLER_DISABLED_CLASSNAME));
-            DOM.setElementProperty(scrollerNext, "className",
-                    SCROLLER_CLASSNAME + (clipped ? "Next" : "Next-disabled"));
+            scrollerNext.setPropertyString("className",
+                    SCROLLER_CLASSNAME + (clipped
+                            && scrollerIndex != tb.getLastVisibleTab() ? "Next"
+                                    : "Next-disabled"));
 
             // the active tab should be focusable if and only if it is visible
             boolean isActiveTabVisible = scrollerIndex <= activeTabIndex
@@ -1342,7 +1420,7 @@ public class VTabsheet extends VTabsheetBase
             scroller.getStyle().setDisplay(Display.NONE);
         }
 
-        if (BrowserInfo.get().isSafari()) {
+        if (BrowserInfo.get().isSafariOrIOS()) {
             /*
              * another hack for webkits. tabscroller sometimes drops without
              * "shaking it" reproducable in
@@ -1350,15 +1428,51 @@ public class VTabsheet extends VTabsheetBase
              */
             final Style style = scroller.getStyle();
             style.setProperty("whiteSpace", "normal");
-            Scheduler.get().scheduleDeferred(new Command() {
-
-                @Override
-                public void execute() {
-                    style.setProperty("whiteSpace", "");
-                }
-            });
+            Scheduler.get().scheduleDeferred(
+                    () -> style.setProperty("whiteSpace", ""));
         }
+    }
 
+    private int getLeftGap() {
+        int firstVisibleIndex = tb.getFirstVisibleTabClient();
+        int gap;
+        if (firstVisibleIndex < 0) {
+            // no tabs are visible, the entire empty space is returned
+            // through getRightGap()
+            gap = 0;
+        } else {
+            Element tabContainer = tb.getElement().getParentElement();
+            Tab firstVisibleTab = tb.getTab(firstVisibleIndex);
+            gap = firstVisibleTab.getAbsoluteLeft()
+                    - tabContainer.getAbsoluteLeft();
+        }
+        return gap > 0 ? gap : 0;
+    }
+
+    private int getRightGap() {
+        int lastVisibleIndex = tb.getLastVisibleTab();
+        Element tabContainer = tb.getElement().getParentElement();
+        int gap;
+        if (lastVisibleIndex < 0) {
+            // no tabs visible, return the whole available width
+            gap = getOffsetWidth() - scroller.getOffsetWidth();
+        } else {
+            Tab lastVisibleTab = tb.getTab(lastVisibleIndex);
+            gap = tabContainer.getAbsoluteRight()
+                    - lastVisibleTab.getAbsoluteLeft()
+                    - lastVisibleTab.getOffsetWidth()
+                    - scroller.getOffsetWidth() - 2;
+        }
+        return gap > 0 ? gap : 0;
+    }
+
+    private int getFirstOutOfViewWidth() {
+        Tab firstTabOutOfView = tb.getTab(
+                tb.getPreviousVisibleTab(tb.getFirstVisibleTabClient()));
+        if (firstTabOutOfView != null) {
+            return tb.getLastKnownTabWidth(firstTabOutOfView);
+        }
+        return 0;
     }
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -1379,15 +1493,19 @@ public class VTabsheet extends VTabsheetBase
     }
 
     private boolean isClippedTabs() {
-        return (tb.getOffsetWidth() - DOM.getElementPropertyInt(
-                (Element) tb.getContainerElement().getLastChild().cast(),
-                "offsetWidth")) > getOffsetWidth()
-                        - (isScrolledTabs() ? scroller.getOffsetWidth() : 0);
+        return (tb.getOffsetWidth() - getSpacerWidth()) > getOffsetWidth()
+                - (isScrolledTabs() ? scroller.getOffsetWidth() : 0);
     }
 
     private boolean isClipped(Tab tab) {
         return tab.getAbsoluteLeft() + tab.getOffsetWidth() > getAbsoluteLeft()
                 + getOffsetWidth() - scroller.getOffsetWidth();
+    }
+
+    private int getSpacerWidth() {
+        int spacerWidth = ((Element) tb.getContainerElement().getLastChild()
+                .cast()).getPropertyInt("offsetWidth");
+        return spacerWidth;
     }
 
     @Override
@@ -1578,8 +1696,6 @@ public class VTabsheet extends VTabsheetBase
              *
              * @param blurSource
              *            the source.
-             * @param focusedTabProvider
-             *            provides the current focused tab.
              */
             public BlurCommand(Tab blurSource) {
                 this.blurSource = blurSource;
@@ -1930,13 +2046,16 @@ public class VTabsheet extends VTabsheetBase
             // On IE8 a tab with false visibility would have the bounds of the
             // full TabBar.
             if (!tab.isVisible()) {
-                while (!tab.isVisible()) {
+                while (!tab.isVisible() && scrollerIndex > 0) {
                     scrollerIndex = tb.scrollLeft(scrollerIndex);
                 }
                 updateTabScroller();
 
-            } else if (isClipped(tab)) {
-                while (isClipped(tab) && scrollerIndex != -1) {
+            } else if (isClipped(tab)
+                    && scrollerIndex < tb.getLastVisibleTab()) {
+                int tabIndex = tb.getTabIndex(tab);
+                while (isClipped(tab) && scrollerIndex >= 0
+                        && scrollerIndex < tabIndex) {
                     scrollerIndex = tb.scrollRight(scrollerIndex);
                 }
                 updateTabScroller();

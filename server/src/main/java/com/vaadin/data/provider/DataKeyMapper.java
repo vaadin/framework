@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,6 +39,16 @@ public interface DataKeyMapper<T> extends Serializable {
     String key(T dataObject);
 
     /**
+     * Check whether this key mapper contains the given data object.
+     *
+     * @param dataObject
+     *            the data object to check
+     * @return {@code true} if the given data object is contained in this key
+     *         mapper, {@code false} otherwise
+     */
+    boolean has(T dataObject);
+
+    /**
      * Gets the data object identified by given key.
      *
      * @param key
@@ -69,8 +79,21 @@ public interface DataKeyMapper<T> extends Serializable {
      *
      * @param dataObject
      *            the data object to update
-     * @param identifierGetter
-     *            the function to get an identifier from a data object
+     *
+     * @since 8.1
+     *
      */
-    void refresh(T dataObject, ValueProvider<T, Object> identifierGetter);
+    void refresh(T dataObject);
+
+    /**
+     * Takes identifier getter into use and updates existing mappings.
+     *
+     * @param identifierGetter
+     *            has to return a unique key for every bean, and the returned
+     *            key has to follow general {@code hashCode()} and
+     *            {@code equals()} contract, see {@link Object#hashCode()} for
+     *            details.
+     * @since 8.1
+     */
+    void setIdentifierGetter(ValueProvider<T, Object> identifierGetter);
 }

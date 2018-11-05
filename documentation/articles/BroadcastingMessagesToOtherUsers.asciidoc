@@ -1,0 +1,134 @@
+---
+title: Broadcasting Messages To Other Users
+order: 82
+layout: page
+---
+
+[[broadcasting-messages-to-other-users]]
+= Broadcasting messages to other users
+
+In this tutorial we will create an application where any user can send a
+broadcast message to all other active users. We will start from a
+project where push has been enabled (see link:EnablingServerPush.asciidoc[Enabling
+server push] for details).
+
+For simplicity, we will use a static `Broadcaster` which is shared between
+all users and all sessions. Each UI will register itself to this
+broadcast when initialized and unregister when detached. The broadcaster
+will take care of sending events to the registered UI:s as needed. In a
+real world scenario you probably want to use something else than a
+shared static class (e.g. JMS or some other messaging system) but the
+same ideas apply.
+
+So, let’s start from a simple `Broadcaster` class and a listener
+interface. We need the possibility to register and unregister listeners
+and to broadcast a message to the listeners so we end up with the
+following class:
+
+[source,java]
+....
+public class Broadcaster {
+
+  private static final List<BroadcastListener> listeners = new CopyOnWriteArrayList<BroadcastListener>();
+
+  public static void register(BroadcastListener listener) {
+    listeners.add(listener);
+  }
+
+  public static void unregister(BroadcastListener listener) {
+    listeners.remove(listener);
+  }
+
+  public static void broadcast(final String message) {
+    for (BroadcastListener listener : listeners) {
+      listener.receiveBroadcast(message);
+    }
+  }
+
+  public interface BroadcastListener {
+    public void receiveBroadcast(String message);
+  }
+}
+....
+
+As Broadcast will be used by many threads simultaneously, we need to
+ensure that it is thread-safe. We will do it here by using the
+thread-safe `CopyOnWriteArrayList` class for keeping track of the
+listeners.
+
+Now that we have the `Broadcaster` implemented we can use it in our UI for
+instance as follows:
+
+[source,java]
+....
+@Push
+public class BroadcasterUI extends UI implements BroadcastListener {
+
+  @Override
+  protected void init(VaadinRequest request) {
+    [...]
+    // Register broadcast listener
+    Broadcaster.register(this);
+  }
+
+  @Override
+  public void detach() {
+    Broadcaster.unregister(this);
+    super.detach();
+  }
+
+  @Override
+  public void receiveBroadcast(final String message) {
+    access(new Runnable() {
+      @Override
+      public void run() {
+        Notification n = new Notification("Message received",
+            message, Type.TRAY_NOTIFICATION);
+        n.show(getPage());
+      }
+    });
+  }
+....
+
+We register the UI in the init method and unregister it in the detach
+method to avoid receiving messages for UIs no longer in use (and
+ensuring that the detached UI can be garbage collected).
+
+When we receive a broadcast message we need to use the access method as
+this call comes from a thread where the UI is not locked.
+`access(Runnable)` will take care of locking the UI for us so we can
+update it. In the wrapped run method we can do whatever we like with the
+received message, for instance show it as a tray notification as done
+here.
+
+To send a broadcast message we can create a simple user interface in our
+UI init method:
+
+[source,java]
+....
+protected void init(VaadinRequest request) {
+  final VerticalLayout layout = new VerticalLayout();
+  layout.setMargin(true);
+  setContent(layout);
+
+  final TextArea message = new TextArea("",
+      "The system is going down for maintenance in 10 minutes");
+  layout.addComponent(message);
+
+  final Button button = new Button("Broadcast");
+  layout.addComponent(button);
+  button.addClickListener(new Button.ClickListener() {
+    @Override
+    public void buttonClick(ClickEvent event) {
+      Broadcaster.broadcast(message.getValue());
+    }
+  });
+
+  // Register broadcast listener
+  Broadcaster.register(this);
+}
+....
+
+Now if you deploy the application and open it in a couple of browser
+tabs or separate browsers you are able to send messages between the
+instances.

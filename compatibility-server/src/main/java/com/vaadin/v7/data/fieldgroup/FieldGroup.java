@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,9 +23,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import com.vaadin.annotations.PropertyId;
+import com.vaadin.data.Binder;
 import com.vaadin.util.ReflectTools;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
@@ -39,8 +41,10 @@ import com.vaadin.v7.ui.Field;
  * FieldGroup provides an easy way of binding fields to data and handling
  * commits of these fields.
  * <p>
- * The typical use case is to create a layout outside the FieldGroup and then
- * use FieldGroup to bind the fields to a data source.
+ * The functionality of FieldGroup is similar to {@link com.vaadin.v7.ui.Form
+ * Form} but {@link FieldGroup} does not handle layouts in any way. The typical
+ * use case is to create a layout outside the FieldGroup and then use FieldGroup
+ * to bind the fields to a data source.
  * </p>
  * <p>
  * {@link FieldGroup} is not a UI component so it cannot be added to a layout.
@@ -51,6 +55,7 @@ import com.vaadin.v7.ui.Field;
  *
  * @author Vaadin Ltd
  * @since 7.0
+ * @deprecated As of 8.0, replaced by {@link Binder}
  */
 @Deprecated
 public class FieldGroup implements Serializable {
@@ -61,9 +66,9 @@ public class FieldGroup implements Serializable {
     private boolean enabled = true;
     private boolean readOnly = false;
 
-    private HashMap<Object, Field<?>> propertyIdToField = new HashMap<>();
-    private LinkedHashMap<Field<?>, Object> fieldToPropertyId = new LinkedHashMap<>();
-    private List<CommitHandler> commitHandlers = new ArrayList<>();
+    private Map<Object, Field<?>> propertyIdToField = new HashMap<Object, Field<?>>();
+    private LinkedHashMap<Field<?>, Object> fieldToPropertyId = new LinkedHashMap<Field<?>, Object>();
+    private List<CommitHandler> commitHandlers = new ArrayList<CommitHandler>();
 
     /**
      * The field factory used by builder methods.
@@ -104,7 +109,7 @@ public class FieldGroup implements Serializable {
 
     /**
      * Binds all fields to the properties in the item in use.
-     * 
+     *
      * @since 7.7.5
      */
     protected void bindFields() {
@@ -303,7 +308,7 @@ public class FieldGroup implements Serializable {
      */
     protected <T> Property.Transactional<T> wrapInTransactionalProperty(
             Property<T> itemProperty) {
-        return new TransactionalPropertyWrapper<>(itemProperty);
+        return new TransactionalPropertyWrapper<T>(itemProperty);
     }
 
     private void throwIfFieldIsNull(Field<?> field, Object propertyId) {
@@ -462,9 +467,9 @@ public class FieldGroup implements Serializable {
      */
     public Collection<Object> getUnboundPropertyIds() {
         if (getItemDataSource() == null) {
-            return new ArrayList<>();
+            return new ArrayList<Object>();
         }
-        List<Object> unboundPropertyIds = new ArrayList<>();
+        List<Object> unboundPropertyIds = new ArrayList<Object>();
         unboundPropertyIds.addAll(getItemDataSource().getItemPropertyIds());
         unboundPropertyIds.removeAll(propertyIdToField.keySet());
         return unboundPropertyIds;
@@ -517,7 +522,7 @@ public class FieldGroup implements Serializable {
      *         commits succeeded
      */
     private Map<Field<?>, InvalidValueException> commitFields() {
-        Map<Field<?>, InvalidValueException> invalidValueExceptions = new HashMap<>();
+        Map<Field<?>, InvalidValueException> invalidValueExceptions = new HashMap<Field<?>, InvalidValueException>();
 
         for (Field<?> f : fieldToPropertyId.keySet()) {
             try {
@@ -532,7 +537,7 @@ public class FieldGroup implements Serializable {
 
     /**
      * Exception which wraps InvalidValueExceptions from all invalid fields in a
-     * FieldGroup
+     * FieldGroup.
      *
      * @since 7.4
      */
@@ -644,7 +649,7 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * Returns the field that is bound to the given property id
+     * Returns the field that is bound to the given property id.
      *
      * @param propertyId
      *            The property id to use to lookup the field
@@ -656,7 +661,7 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * Returns the property id that is bound to the given field
+     * Returns the property id that is bound to the given field.
      *
      * @param field
      *            The field to use to lookup the property id
@@ -744,7 +749,7 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * FIXME javadoc
+     * The commit event.
      *
      */
     @Deprecated
@@ -756,7 +761,7 @@ public class FieldGroup implements Serializable {
         }
 
         /**
-         * Returns the field binder that this commit relates to
+         * Returns the field binder that this commit relates to.
          *
          * @return The FieldBinder that is being committed.
          */
@@ -991,7 +996,7 @@ public class FieldGroup implements Serializable {
                             .createCaptionByPropertyId(propertyId);
                 }
 
-                // Create the component (LegacyField)
+                // Create the component (Field)
                 field = build(caption, propertyType, fieldType);
 
                 // Store it in the field
@@ -1061,7 +1066,7 @@ public class FieldGroup implements Serializable {
     }
 
     protected static String minifyFieldName(String fieldName) {
-        return fieldName.toLowerCase().replace("_", "");
+        return fieldName.toLowerCase(Locale.ROOT).replace("_", "");
     }
 
     /**
@@ -1112,11 +1117,11 @@ public class FieldGroup implements Serializable {
                 return ((FieldGroupInvalidValueException) getCause())
                         .getInvalidFields();
             }
-            return new HashMap<>();
+            return new HashMap<Field<?>, InvalidValueException>();
         }
 
         /**
-         * Returns the field group where the exception occurred
+         * Returns the field group where the exception occurred.
          *
          * @since 7.4
          * @return the field group
@@ -1217,7 +1222,7 @@ public class FieldGroup implements Serializable {
      * <p>
      * The data type is the type that we want to edit using the field. The field
      * type is the type of field we want to create, can be {@link Field} if any
-     * LegacyField is good.
+     * Field is good.
      * </p>
      *
      * @param caption
@@ -1226,7 +1231,7 @@ public class FieldGroup implements Serializable {
      *            The data model type that we want to edit using the field
      * @param fieldType
      *            The type of field that we want to create
-     * @return A LegacyField capable of editing the given type
+     * @return A Field capable of editing the given type
      * @throws BindException
      *             If the field could not be created
      */
@@ -1244,9 +1249,9 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * Returns an array containing LegacyField objects reflecting all the fields
-     * of the class or interface represented by this Class object. The elements
-     * in the array returned are sorted in declare order from sub class to super
+     * Returns an array containing Field objects reflecting all the fields of
+     * the class or interface represented by this Class object. The elements in
+     * the array returned are sorted in declare order from sub class to super
      * class.
      *
      * @param searchClass
@@ -1254,7 +1259,7 @@ public class FieldGroup implements Serializable {
      */
     protected static List<java.lang.reflect.Field> getFieldsInDeclareOrder(
             Class searchClass) {
-        ArrayList<java.lang.reflect.Field> memberFieldInOrder = new ArrayList<>();
+        List<java.lang.reflect.Field> memberFieldInOrder = new ArrayList<java.lang.reflect.Field>();
 
         while (searchClass != null) {
             for (java.lang.reflect.Field memberField : searchClass

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,6 @@
 
 package com.vaadin.ui;
 
-import java.io.Serializable;
 import java.util.Locale;
 
 import org.jsoup.nodes.Element;
@@ -63,7 +62,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * @author Vaadin Ltd.
  * @since 3.0
  */
-public interface Component extends ClientConnector, Sizeable, Serializable {
+public interface Component extends ClientConnector, Sizeable {
 
     /**
      * Gets all user-defined CSS style names of a component. If the component
@@ -135,6 +134,34 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public void setStyleName(String style);
 
     /**
+     * Adds or removes a style name. Multiple styles can be specified as a
+     * space-separated list of style names.
+     *
+     * If the {@code add} parameter is true, the style name is added to the
+     * component. If the {@code add} parameter is false, the style name is
+     * removed from the component.
+     * <p>
+     * Functionally this is equivalent to using {@link #addStyleName(String)} or
+     * {@link #removeStyleName(String)}
+     *
+     * @since 8.5
+     * @param style
+     *            the style name to be added or removed
+     * @param add
+     *            <code>true</code> to add the given style, <code>false</code>
+     *            to remove it
+     * @see #addStyleName(String)
+     * @see #removeStyleName(String)
+     */
+    public default void setStyleName(String style, boolean add) {
+        if (add) {
+            addStyleName(style);
+        } else {
+            removeStyleName(style);
+        }
+    }
+
+    /**
      * Adds one or more style names to this component. Multiple styles can be
      * specified as a space-separated list of style names. The style name will
      * be rendered as a HTML class name, which can be used in a CSS definition.
@@ -173,6 +200,23 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public void addStyleName(String style);
 
     /**
+     * Adds one or more style names to this component by using one or multiple
+     * parameters.
+     *
+     * @param styles
+     *            the style name or style names to be added to the component
+     * @see #addStyleName(String)
+     * @see #setStyleName(String)
+     * @see #removeStyleName(String)
+     * @since 8.1
+     */
+    public default void addStyleNames(String... styles) {
+        for (String style : styles) {
+            addStyleName(style);
+        }
+    }
+
+    /**
      * Removes one or more style names from component. Multiple styles can be
      * specified as a space-separated list of style names.
      *
@@ -190,6 +234,23 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @see #addStyleName(String)
      */
     public void removeStyleName(String style);
+
+    /**
+     * Removes one or more style names from component. Multiple styles can be
+     * specified by using multiple parameters.
+     *
+     * @param styles
+     *            the style name or style names to be removed
+     * @see #removeStyleName(String)
+     * @see #setStyleName(String)
+     * @see #addStyleName(String)
+     * @since 8.1
+     */
+    public default void removeStyleNames(String... styles) {
+        for (String style : styles) {
+            removeStyleName(style);
+        }
+    }
 
     /**
      * Gets the primary style name of the component. See
@@ -594,7 +655,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public void setId(String id);
 
     /**
-     * Gets currently set debug identifier
+     * Gets currently set debug identifier.
      *
      * @return current id, null if not set
      */
@@ -616,17 +677,17 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * <td width=120><b>Example</b></td>
      * </tr>
      * <tr>
-     * <td>&lt;b></td>
+     * <td>&lt;b&gt;</td>
      * <td>bold</td>
      * <td><b>bold text</b></td>
      * </tr>
      * <tr>
-     * <td>&lt;i></td>
+     * <td>&lt;i&gt;</td>
      * <td>italic</td>
      * <td><i>italic text</i></td>
      * </tr>
      * <tr>
-     * <td>&lt;u></td>
+     * <td>&lt;u&gt;</td>
      * <td>underlined</td>
      * <td><u>underlined text</u></td>
      * </tr>
@@ -636,10 +697,10 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * <td>N/A</td>
      * </tr>
      * <tr>
-     * <td>&lt;ul><br>
-     * &lt;li>item1<br>
-     * &lt;li>item1<br>
-     * &lt;/ul></td>
+     * <td>&lt;ul&gt;<br>
+     * &lt;li&gt;item1<br>
+     * &lt;li&gt;item1<br>
+     * &lt;/ul&gt;</td>
      * <td>item list</td>
      * <td>
      * <ul>
@@ -979,22 +1040,22 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
          * Sets the focus to this component.
          *
          * <pre>
-         * Form loginBox = new Form();
+         * FormLayout loginBox = new FormLayout();
          * loginBox.setCaption(&quot;Login&quot;);
          * layout.addComponent(loginBox);
          *
          * // Create the first field which will be focused
          * TextField username = new TextField(&quot;User name&quot;);
-         * loginBox.addField(&quot;username&quot;, username);
+         * loginBox.addComponent(username);
          *
          * // Set focus to the user name
          * username.focus();
          *
          * TextField password = new TextField(&quot;Password&quot;);
-         * loginBox.addField(&quot;password&quot;, password);
+         * loginBox.addComponent(password);
          *
          * Button login = new Button(&quot;Login&quot;);
-         * loginBox.getFooter().addComponent(login);
+         * loginBox.addComponent(login);
          * </pre>
          *
          * <p>

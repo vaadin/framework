@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -65,15 +65,6 @@ public class VOverlay extends Overlay {
         super(autoHide, modal);
     }
 
-    /*
-     * A "thread local" of sorts, set temporarily so that VOverlayImpl knows
-     * which VOverlay is using it, so that it can be attached to the correct
-     * overlay container.
-     *
-     * TODO this is a strange pattern that we should get rid of when possible.
-     */
-    protected static VOverlay current;
-
     /**
      * Get the {@link ApplicationConnection} that this overlay belongs to. If
      * it's not set, {@link #getOwner()} is used to figure it out.
@@ -129,14 +120,14 @@ public class VOverlay extends Overlay {
     public static com.google.gwt.user.client.Element getOverlayContainer(
             ApplicationConnection ac) {
         String id = ac.getConfiguration().getRootPanelId();
-        id = id += "-overlays";
+        id += "-overlays";
         Element container = DOM.getElementById(id);
         if (container == null) {
             container = DOM.createDiv();
             container.setId(id);
             String styles = ac.getUIConnector().getWidget().getParent()
                     .getStyleName();
-            if (styles != null && !styles.equals("")) {
+            if (styles != null && !styles.isEmpty()) {
                 container.addClassName(styles);
             }
             container.addClassName(CLASSNAME_CONTAINER);
@@ -147,7 +138,7 @@ public class VOverlay extends Overlay {
 
     /**
      * Set the label of the container element, where tooltip, notification and
-     * dialgs are added to.
+     * dialogs are added to.
      *
      * @param applicationConnection
      *            the application connection for which to change the label
@@ -162,4 +153,15 @@ public class VOverlay extends Overlay {
                 overlayContainerLabel);
     }
 
+    /**
+     * Sets the {@link ApplicationConnection} that this overlay belongs to.
+     *
+     * @see #getApplicationConnection()
+     *
+     * @param ac
+     *            the connection
+     */
+    public void setApplicationConnection(ApplicationConnection ac) {
+        this.ac = ac;
+    }
 }

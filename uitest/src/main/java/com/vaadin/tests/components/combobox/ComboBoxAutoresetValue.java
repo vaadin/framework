@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.server.VaadinRequest;
@@ -29,15 +14,15 @@ public class ComboBoxAutoresetValue extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.setItems(RESET, CHANGE, SOMETHING);
-        comboBox.addValueChangeListener(e -> {
-            String value = e.getValue();
+        comboBox.addValueChangeListener(event -> {
+            String value = event.getValue();
             log("Value changed to " + value);
 
-            if (e.isUserOriginated()) {
+            if (event.isUserOriginated()) {
                 if (RESET.equals(value)) {
-                    e.getSource().setValue(null);
+                    event.getSource().setValue(null);
                 } else if (CHANGE.equals(value)) {
-                    e.getSource().setValue(SOMETHING);
+                    event.getSource().setValue(SOMETHING);
                 }
             }
         });

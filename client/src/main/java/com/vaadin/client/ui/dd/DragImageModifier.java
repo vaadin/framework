@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,7 @@
 package com.vaadin.client.ui.dd;
 
 import com.google.gwt.dom.client.Element;
+import com.vaadin.client.extensions.DragSourceExtensionConnector;
 
 /**
  * Interface implemented by widgets if the drag image used for drag'n'drop
@@ -25,7 +26,10 @@ import com.google.gwt.dom.client.Element;
  *
  * @since 7.2
  * @author Vaadin Ltd
+ * @deprecated Since 8.1, no direct replacement, see
+ *             {@link DragSourceExtensionConnector}
  */
+@Deprecated
 public interface DragImageModifier {
 
     /**

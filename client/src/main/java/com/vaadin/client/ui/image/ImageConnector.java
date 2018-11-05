@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,6 @@ package com.vaadin.client.ui.image;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.LoadEvent;
-import com.google.gwt.event.dom.client.LoadHandler;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.ClickEventHandler;
@@ -34,14 +33,10 @@ public class ImageConnector extends AbstractComponentConnector {
     @Override
     protected void init() {
         super.init();
-        getWidget().addHandler(new LoadHandler() {
-
-            @Override
-            public void onLoad(LoadEvent event) {
-                getLayoutManager().setNeedsMeasure(ImageConnector.this);
-            }
-
-        }, LoadEvent.getType());
+        getWidget().addHandler(
+                event -> getLayoutManager()
+                        .setNeedsMeasure(ImageConnector.this),
+                LoadEvent.getType());
     }
 
     @Override

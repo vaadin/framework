@@ -1,23 +1,8 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
-/**
- *
- */
 package com.vaadin.server;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Properties;
 
@@ -25,7 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -43,7 +27,7 @@ public class VaadinServletConfigurationTest {
                 .getUIClass(new UIClassSelectionEvent(new VaadinServletRequest(
                         EasyMock.createMock(HttpServletRequest.class),
                         servlet.getService())));
-        Assert.assertEquals(MockUIContainingServlet.class, uiClass);
+        assertEquals(MockUIContainingServlet.class, uiClass);
     }
 
     @Test
@@ -53,16 +37,16 @@ public class VaadinServletConfigurationTest {
         DeploymentConfiguration configuration = servlet.getService()
                 .getDeploymentConfiguration();
 
-        Assert.assertTrue(configuration.isProductionMode());
-        Assert.assertTrue(configuration.isCloseIdleSessions());
-        Assert.assertEquals(1234, configuration.getHeartbeatInterval());
-        Assert.assertEquals(4321, configuration.getResourceCacheTime());
+        assertTrue(configuration.isProductionMode());
+        assertTrue(configuration.isCloseIdleSessions());
+        assertEquals(1234, configuration.getHeartbeatInterval());
+        assertEquals(4321, configuration.getResourceCacheTime());
 
         Class<? extends UI> uiClass = new DefaultUIProvider()
                 .getUIClass(new UIClassSelectionEvent(new VaadinServletRequest(
                         EasyMock.createMock(HttpServletRequest.class),
                         servlet.getService())));
-        Assert.assertEquals(MockUIContainingServlet.class, uiClass);
+        assertEquals(MockUIContainingServlet.class, uiClass);
     }
 
     @Test
@@ -77,18 +61,18 @@ public class VaadinServletConfigurationTest {
                 .getDeploymentConfiguration();
 
         // Values from servlet init params take precedence
-        Assert.assertEquals(1111, configuration.getHeartbeatInterval());
-        Assert.assertFalse(configuration.isProductionMode());
+        assertEquals(1111, configuration.getHeartbeatInterval());
+        assertFalse(configuration.isProductionMode());
 
         // Other params are as defined in the annotation
-        Assert.assertTrue(configuration.isCloseIdleSessions());
-        Assert.assertEquals(4321, configuration.getResourceCacheTime());
+        assertTrue(configuration.isCloseIdleSessions());
+        assertEquals(4321, configuration.getResourceCacheTime());
 
         Class<? extends UI> uiClass = new DefaultUIProvider()
                 .getUIClass(new UIClassSelectionEvent(new VaadinServletRequest(
                         EasyMock.createMock(HttpServletRequest.class),
                         servlet.getService())));
-        Assert.assertEquals(MockUIContainingServlet.class, uiClass);
+        assertEquals(MockUIContainingServlet.class, uiClass);
     }
 }
 

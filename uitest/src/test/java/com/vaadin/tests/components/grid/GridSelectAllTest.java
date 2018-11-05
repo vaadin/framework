@@ -45,8 +45,8 @@ public class GridSelectAllTest extends GridBasicsTest {
         selectionBox.click();
         selectionBox.click();
 
-        assertFalse("Exception occured on row reselection.", logContainsText(
-                "Exception occured, java.lang.IllegalStateException: No item id for key 101 found."));
+        assertFalse("Exception occurred on row reselection.", logContainsText(
+                "Exception occurred, java.lang.IllegalStateException: No item id for key 101 found."));
     }
 
     @Test
@@ -135,8 +135,9 @@ public class GridSelectAllTest extends GridBasicsTest {
 
         getGridElement().getCell(5, 0).click();
 
-        verifyAllSelected(false); // EXPECTED since multiselection model can't
-                                  // verify that all have been selected
+        // EXPECTED since multiselection model can't
+        // verify that all have been selected
+        verifyAllSelected(false);
     }
 
     @Test
@@ -155,8 +156,9 @@ public class GridSelectAllTest extends GridBasicsTest {
 
         toggleFirstRowSelection();
 
-        verifyAllSelected(false); // EXPECTED since multiselection model can't
-                                  // verify that all have been selected
+        // EXPECTED since multiselection model can't
+        // verify that all have been selected
+        verifyAllSelected(false);
     }
 
     @Test
@@ -171,8 +173,9 @@ public class GridSelectAllTest extends GridBasicsTest {
 
         getGridElement().getCell(5, 0).click();
 
-        verifyAllSelected(false); // EXPECTED since multiselection model can't
-                                  // verify that all have been selected
+        // EXPECTED since multiselection model can't
+        // verify that all have been selected
+        verifyAllSelected(false);
     }
 
     @Test
@@ -187,8 +190,9 @@ public class GridSelectAllTest extends GridBasicsTest {
 
         toggleFirstRowSelection();
 
-        verifyAllSelected(false); // EXPECTED since multiselection model can't
-                                  // verify that all have been selected
+        // EXPECTED since multiselection model can't
+        // verify that all have been selected
+        verifyAllSelected(false);
     }
 
     @Test

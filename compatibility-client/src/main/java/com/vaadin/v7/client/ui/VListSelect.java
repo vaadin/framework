@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +18,7 @@ package com.vaadin.v7.client.ui;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -89,8 +89,8 @@ public class VListSelect extends VOptionGroupBase {
             // need to deselect when something else is selected since it's only
             // used in single select mode.
         }
-        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
-            final UIDL optionUidl = (UIDL) i.next();
+        for (final Object child : uidl) {
+            final UIDL optionUidl = (UIDL) child;
             updateOrCreateItem(optionUidl.getStringAttribute("caption"),
                     optionUidl.getStringAttribute("key"), nextIndex,
                     previousKeys);
@@ -137,7 +137,7 @@ public class VListSelect extends VOptionGroupBase {
 
     @Override
     protected String[] getSelectedItems() {
-        final ArrayList<String> selectedItemKeys = new ArrayList<String>();
+        final List<String> selectedItemKeys = new ArrayList<String>();
         for (int i = 0; i < select.getItemCount(); i++) {
             if (select.isItemSelected(i)) {
                 selectedItemKeys.add(select.getValue(i));

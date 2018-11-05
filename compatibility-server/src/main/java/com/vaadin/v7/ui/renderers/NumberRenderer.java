@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -115,8 +115,8 @@ public class NumberRenderer extends AbstractRenderer<Number> {
      */
     public NumberRenderer(String formatString, Locale locale)
             throws IllegalArgumentException {
-        this(formatString, locale, ""); // This will call #toString() during
-                                        // formatting
+        // This will call #toString() during formatting
+        this(formatString, locale, "");
     }
 
     /**
@@ -180,9 +180,9 @@ public class NumberRenderer extends AbstractRenderer<Number> {
         } else if (numberFormat != null) {
             stringValue = numberFormat.format(value);
         } else {
-            throw new IllegalStateException(String.format(
-                    "Internal bug: " + "%s is in an illegal state: "
-                            + "[locale: %s, numberFormat: %s, formatString: %s]",
+            throw new IllegalStateException(String.format("Internal bug: "
+                    + "%s is in an illegal state: "
+                    + "[locale: %s, numberFormat: %s, formatString: %s]",
                     getClass().getSimpleName(), locale, numberFormat,
                     formatString));
         }
@@ -193,7 +193,7 @@ public class NumberRenderer extends AbstractRenderer<Number> {
     public String toString() {
         final String fieldInfo;
         if (numberFormat != null) {
-            fieldInfo = "numberFormat: " + numberFormat.toString();
+            fieldInfo = "numberFormat: " + numberFormat;
         } else {
             fieldInfo = "locale: " + locale + ", formatString: " + formatString;
         }

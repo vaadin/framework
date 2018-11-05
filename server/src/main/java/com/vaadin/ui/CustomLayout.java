@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,10 +16,13 @@
 
 package com.vaadin.ui;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -52,6 +55,11 @@ import com.vaadin.ui.declarative.DesignContext;
  * </p>
  *
  * <p>
+ * A location is identified with the attribute "data-location" or "location"
+ * which has the location name as its value.
+ * </p>
+ *
+ * <p>
  * The default theme handles the styles that are not defined by drawing the
  * subcomponents just as in OrderedLayout.
  * </p>
@@ -67,7 +75,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
     /**
      * Custom layout slots containing the components.
      */
-    private final HashMap<String, Component> slots = new HashMap<>();
+    private final Map<String, Component> slots = new HashMap<>();
 
     /**
      * Default constructor only used by subclasses. Subclasses are responsible
@@ -97,7 +105,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
 
     /**
      * Constructor for custom layout with given template name. Template file is
-     * fetched from "&lt;theme&gt;/layout/&lt;templateName&gt;".
+     * fetched from "&lt;theme&gt;/layouts/&lt;templateName&gt;".
      */
     public CustomLayout(String template) {
         this();
@@ -107,7 +115,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
     protected void initTemplateContentsFromInputStream(
             InputStream templateStream) throws IOException {
         BufferedReader reader = new BufferedReader(
-                new InputStreamReader(templateStream, "UTF-8"));
+                new InputStreamReader(templateStream, UTF_8));
         StringBuilder builder = new StringBuilder(BUFFER_SIZE);
         try {
             char[] cbuf = new char[BUFFER_SIZE];
@@ -200,7 +208,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
      */
     @Override
     public Iterator<Component> iterator() {
-        return slots.values().iterator();
+        return Collections.unmodifiableCollection(slots.values()).iterator();
     }
 
     /**
@@ -257,12 +265,12 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
         }
     }
 
-    /** Get the name of the template */
+    /** Get the name of the template. */
     public String getTemplateName() {
         return getState(false).templateName;
     }
 
-    /** Get the contents of the template */
+    /** Get the contents of the template. */
     public String getTemplateContents() {
         return getState(false).templateContents;
     }
@@ -301,7 +309,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
         // Workaround to make the CommunicationManager read the template file
         // and send it to the client
         String templateName = getState(false).templateName;
-        if (templateName != null && templateName.length() != 0) {
+        if (templateName != null && !templateName.isEmpty()) {
             Set<Object> usedResources = ((JsonPaintTarget) target)
                     .getUsedResources();
             String resourceName = "layouts/" + templateName + ".html";

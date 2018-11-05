@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,24 +16,25 @@
 package com.vaadin.shared.ui;
 
 /**
- * Content modes defining how the client should interpret a Label's value.
+ * Defines how the client should interpret textual values.
  *
  * @since 8.0
  */
 public enum ContentMode {
     /**
-     * Content mode, where the label contains only plain text.
+     * Textual values are displayed as plain text.
      */
     TEXT,
 
     /**
-     * Content mode, where the label contains preformatted text. In this mode
-     * newlines are preserved when rendered on the screen.
+     * Textual values are displayed as preformatted text. In this mode newlines
+     * are preserved when rendered on the screen.
      */
     PREFORMATTED,
 
     /**
-     * Content mode, where the label contains HTML.
+     * Textual values are interpreted and displayed as HTML. Care should be
+     * taken when using this mode to avoid Cross-site Scripting (XSS) issues.
      */
     HTML
 

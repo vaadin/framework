@@ -1,0 +1,141 @@
+---
+title: Setting And Reading Cookies
+order: 16
+layout: page
+---
+
+[[setting-and-reading-cookies]]
+= Setting And Reading Cookies
+
+You can easily read and write
+http://en.wikipedia.org/wiki/HTTP_cookie[cookies] from both the server
+and the client side in Vaadin, with one caveat: Cookies are not possible
+if you enable Push using WebSocket (see tickets
+http://dev.vaadin.com/ticket/11808[11808] and
+http://dev.vaadin.com/ticket/12518[12518]). Beginning in Vaadin 7.6,
+cookies can be used with the WEBSOCKET_XHR transport type.
+
+The
+https://vaadin.com/api/7.0.3/com/vaadin/server/VaadinRequest.html[VaadinRequest]
+class gives easy access to the collection of cookies bundled with each
+http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol[HTTP] request.
+Each cookie is represented as instances of the
+http://docs.oracle.com/javaee/6/api/javax/servlet/http/Cookie.html[javax.servlet.http.Cookie]
+class defined by the Java
+http://en.wikipedia.org/wiki/Java_Servlet[Servlet]http://www.jcp.org/en/jsr/detail?id=315[spec].
+
+To read a cookie on the server side you can request the cookies from the
+current request like so:
+
+[source,java]
+....
+// Fetch all cookies
+Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
+....
+
+_That will fetch all currently defined cookies. You can then iterate
+over them to find the cookie you are looking for._
+
+To add a new cookie or update an already defined cookie you can do the
+following:
+
+[source,java]
+....
+// Create a new cookie
+Cookie myCookie = new Cookie("cookie-name", "cookie-value");
+
+// Make cookie expire in 2 minutes
+myCookie.setMaxAge(120);
+
+// Set the cookie path.
+myCookie.setPath(VaadinService.getCurrentRequest().getContextPath());
+
+// Save cookie
+VaadinService.getCurrentResponse().addCookie(myCookie);
+....
+
+Here is a full example of utilizing cookies on the server side by
+storing a a value from a `TextField` in a cookie for later use.
+
+[source,java]
+....
+public class CookieMonsterUI extends UI {
+
+private static final String NAME_COOKIE = "name";
+
+@Override
+protected void init(VaadinRequest request) {
+final VerticalLayout layout = new VerticalLayout(); layout.setMargin(true);
+setContent(layout);
+
+final TextField nameField = new TextField(); layout.addComponent(nameField);
+
+// Read previously stored cookie value
+Cookie nameCookie = getCookieByName(NAME_COOKIE);
+
+if (getCookieByName(NAME_COOKIE) != null) {
+  nameField.setValue(nameCookie.getValue());
+}
+
+Button button = new Button("Store name in cookie"); button.addClickListener(new Button.ClickListener() {
+  @Override
+  public void buttonClick(ClickEvent event) {
+    String name = nameField.getValue();
+
+    // See if name cookie is already set
+    Cookie nameCookie = getCookieByName(NAME_COOKIE);
+
+    if (nameCookie != null) {
+      String oldName = nameCookie.getValue();
+      nameCookie.setValue(name);
+      Notification.show("Updated name in cookie from " + oldName + " to " + name);
+
+    } else {
+      // Create a new cookie
+      nameCookie = new Cookie(NAME_COOKIE, name);
+      nameCookie .setComment("Cookie for storing the name of the user");
+      Notification.show("Stored name " + name + " in cookie");
+    }
+
+    // Make cookie expire in 2 minutes
+    nameCookie.setMaxAge(120);
+
+    // Set the cookie path.
+    nameCookie.setPath(VaadinService.getCurrentRequest() .getContextPath());
+
+    // Save cookie
+    VaadinService.getCurrentResponse().addCookie(nameCookie);
+    }
+  });
+
+layout.addComponent(button);
+
+}
+
+private Cookie getCookieByName(String name) {
+  // Fetch all cookies from the request
+  Cookie[] cookies = VaadinService.getCurrentRequest().getCookies();
+
+  // Iterate to find cookie by its name
+  for (Cookie cookie : cookies) {
+    if (name.equals(cookie.getName())) {
+      return cookie;
+    }
+  }
+
+  return null;
+  }
+}
+....
+
+Finally if you need to read a cookie from client-side code, you can use
+the `Cookies` class like so: 
+
+[source,java]
+....
+// Read name from cookie
+String name = Cookies.getCookie("name");
+
+// Write new value to cookie
+Cookies.setCookie("name", "Some other value");
+....

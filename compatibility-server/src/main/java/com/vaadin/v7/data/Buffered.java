@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,11 +18,12 @@ package com.vaadin.v7.data;
 
 import java.io.Serializable;
 
+import com.vaadin.data.Binder;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ErrorMessage;
-import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.server.ErrorMessageProducer;
 import com.vaadin.server.UserError;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.v7.data.Validator.InvalidValueException;
 
 /**
@@ -45,6 +46,9 @@ import com.vaadin.v7.data.Validator.InvalidValueException;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ * @deprecated As of 8.0, no replacement available, see
+ *             {@link Binder#writeBean(Object)}, {@link Binder#clearFields()}
+ *
  */
 @Deprecated
 public interface Buffered extends Serializable {
@@ -91,7 +95,7 @@ public interface Buffered extends Serializable {
     public void setBuffered(boolean buffered);
 
     /**
-     * Checks the buffered mode
+     * Checks the buffered mode.
      *
      * @return true if buffered mode is on, false otherwise
      * @since 7.0
@@ -118,7 +122,7 @@ public interface Buffered extends Serializable {
     @SuppressWarnings("serial")
     @Deprecated
     public class SourceException extends RuntimeException
-            implements Serializable, ErrorMessageProducer {
+            implements ErrorMessageProducer {
 
         /** Source class implementing the buffered interface */
         private final Buffered source;
@@ -180,6 +184,7 @@ public interface Buffered extends Serializable {
             return source;
         }
 
+        // Intentional change in compatibility package
         @Override
         public ErrorMessage getErrorMessage() {
             // no message, only the causes to be painted

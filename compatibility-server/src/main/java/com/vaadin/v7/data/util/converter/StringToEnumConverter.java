@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,8 @@ package com.vaadin.v7.data.util.converter;
 import java.util.EnumSet;
 import java.util.Locale;
 
+import com.vaadin.data.Binder;
+
 /**
  * A converter that converts from {@link String} to an {@link Enum} and back.
  * <p>
@@ -35,6 +37,9 @@ import java.util.Locale;
  *
  * @author Vaadin Ltd
  * @since 7.4
+ *
+ * @deprecated As of 8.0, a lightweight lambda-based converter can be build with
+ *             {@link Binder}{@code .forField(...).withConverter(...)} methods.
  */
 @Deprecated
 public class StringToEnumConverter implements Converter<String, Enum> {
@@ -50,7 +55,7 @@ public class StringToEnumConverter implements Converter<String, Enum> {
     }
 
     /**
-     * Converts the given string to the given enum type using the given locale
+     * Converts the given string to the given enum type using the given locale.
      * <p>
      * Compatible with {@link #enumToString(Enum, Locale)}
      *
@@ -105,7 +110,8 @@ public class StringToEnumConverter implements Converter<String, Enum> {
     }
 
     /**
-     * Converts the given enum to a human readable string using the given locale
+     * Converts the given enum to a human readable string using the given
+     * locale.
      * <p>
      * Compatible with {@link #stringToEnum(String, Class, Locale)}
      *

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -36,14 +36,16 @@ import java.util.Map;
  *
  * This class will also fill the values with correct setters into the
  * PreparedStatement on request.
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public class StatementHelper implements Serializable {
 
     private String queryString;
 
-    private List<Object> parameters = new ArrayList<>();
-    private Map<Integer, Class<?>> dataTypes = new HashMap<>();
+    private List<Object> parameters = new ArrayList<Object>();
+    private Map<Integer, Class<?>> dataTypes = new HashMap<Integer, Class<?>>();
 
     public StatementHelper() {
     }
@@ -62,7 +64,7 @@ public class StatementHelper implements Serializable {
             dataTypes.put(parameters.size() - 1, parameter.getClass());
         } else {
             throw new IllegalArgumentException(
-                    "You cannot add null parameters using addParamaters(Object). "
+                    "You cannot add null parameters using addParameters(Object). "
                             + "Use addParameters(Object,Class) instead");
         }
     }

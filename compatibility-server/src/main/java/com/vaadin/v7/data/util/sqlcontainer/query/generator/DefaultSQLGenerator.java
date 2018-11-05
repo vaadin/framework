@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,6 +32,8 @@ import com.vaadin.v7.data.util.sqlcontainer.query.generator.filter.StringDecorat
  * Generates generic SQL that is supported by HSQLDB, MySQL and PostgreSQL.
  *
  * @author Jonatan Kronqvist / Vaadin Ltd
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -45,7 +47,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
 
     /**
      * Create a new DefaultSqlGenerator instance that uses the given
-     * implementation of {@link StatementHelper}
+     * implementation of {@link StatementHelper}.
      *
      * @param statementHelper
      */
@@ -135,7 +137,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
             throw new IllegalArgumentException("Updated item must be given.");
         }
         StatementHelper sh = getStatementHelper();
-        StringBuffer query = new StringBuffer();
+        StringBuilder query = new StringBuilder();
         query.append("UPDATE ").append(tableName).append(" SET");
 
         /* Generate column<->value and rowidentifiers map */
@@ -189,7 +191,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
                     "Cannot generate an insert query for item already in database.");
         }
         StatementHelper sh = getStatementHelper();
-        StringBuffer query = new StringBuffer();
+        StringBuilder query = new StringBuilder();
         query.append("INSERT INTO ").append(tableName).append(" (");
 
         /* Generate column<->value map */
@@ -211,12 +213,12 @@ public class DefaultSQLGenerator implements SQLGenerator {
             if (!first) {
                 query.append(", ");
             }
-            query.append("?");
+            query.append('?');
             sh.addParameterValue(columnToValueMap.get(column),
                     item.getItemProperty(column).getType());
             first = false;
         }
-        query.append(")");
+        query.append(')');
         sh.setQueryString(query.toString());
         return sh;
     }
@@ -244,7 +246,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
                     "Valid keyColumnNames must be provided.");
         }
         StatementHelper sh = getStatementHelper();
-        StringBuffer query = new StringBuffer();
+        StringBuilder query = new StringBuilder();
         query.append("DELETE FROM ").append(tableName).append(" WHERE ");
         int count = 1;
         for (String keyColName : primaryKeyColumns) {
@@ -283,7 +285,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
     }
 
     /**
-     * Generates sorting rules as an ORDER BY -clause
+     * Generates sorting rules as an ORDER BY -clause.
      *
      * @param sb
      *            StringBuffer to which the clause is appended.
@@ -328,7 +330,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
     }
 
     protected Map<String, Object> generateColumnToValueMap(RowItem item) {
-        Map<String, Object> columnToValueMap = new HashMap<>();
+        Map<String, Object> columnToValueMap = new HashMap<String, Object>();
         for (Object id : item.getItemPropertyIds()) {
             ColumnProperty cp = (ColumnProperty) item.getItemProperty(id);
             /* Prevent "rownum" usage as a column name if MSSQL or ORACLE */
@@ -345,7 +347,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
     }
 
     protected Map<String, Object> generateRowIdentifiers(RowItem item) {
-        Map<String, Object> rowIdentifiers = new HashMap<>();
+        Map<String, Object> rowIdentifiers = new HashMap<String, Object>();
         for (Object id : item.getItemPropertyIds()) {
             ColumnProperty cp = (ColumnProperty) item.getItemProperty(id);
             /* Prevent "rownum" usage as a column name if MSSQL or ORACLE */

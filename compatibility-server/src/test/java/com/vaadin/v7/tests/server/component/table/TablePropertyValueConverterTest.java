@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2013 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.server.component.table;
 
 import static org.junit.Assert.assertFalse;
@@ -21,9 +6,9 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -44,8 +29,8 @@ public class TablePropertyValueConverterTest {
     @Test
     public void testRemovePropertyId() {
         Collection<Object> converters = table.getCurrentConverters();
-        assertTrue("Set of converters was empty at the start.",
-                converters.size() > 0);
+        assertFalse("Set of converters was empty at the start.",
+                converters.isEmpty());
 
         Object firstId = converters.iterator().next();
 
@@ -90,14 +75,14 @@ public class TablePropertyValueConverterTest {
             @Override
             public String convertToModel(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                    throws ConversionException {
                 return "model";
             }
 
             @Override
             public String convertToPresentation(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                    throws ConversionException {
                 return "presentation";
             }
 
@@ -118,7 +103,7 @@ public class TablePropertyValueConverterTest {
             @Override
             public BaseClass convertToModel(String value,
                     Class<? extends BaseClass> targetType, Locale locale)
-                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                    throws ConversionException {
                 return new BaseClass("model");
             }
 
@@ -135,7 +120,7 @@ public class TablePropertyValueConverterTest {
             @Override
             public String convertToPresentation(BaseClass value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                    throws ConversionException {
                 return null;
             }
         });
@@ -145,7 +130,7 @@ public class TablePropertyValueConverterTest {
             @Override
             public DerivedClass convertToModel(String value,
                     Class<? extends DerivedClass> targetType, Locale locale)
-                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                    throws ConversionException {
                 return new DerivedClass("derived" + 1001);
             }
 
@@ -162,7 +147,7 @@ public class TablePropertyValueConverterTest {
             @Override
             public String convertToPresentation(DerivedClass value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                    throws ConversionException {
                 return null;
             }
         });
@@ -193,14 +178,14 @@ public class TablePropertyValueConverterTest {
             @Override
             public Integer convertToModel(String value,
                     Class<? extends Integer> targetType, Locale locale)
-                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                    throws ConversionException {
                 return 11;
             }
 
             @Override
             public String convertToPresentation(Integer value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                    throws ConversionException {
                 return "presentation";
             }
 
@@ -215,7 +200,7 @@ public class TablePropertyValueConverterTest {
             }
         });
         Set<Object> converters = customTable.getCurrentConverters();
-        assertTrue("Converter was not set.", converters.size() > 0);
+        assertFalse("Converter was not set.", converters.isEmpty());
     }
 
     @Test
@@ -236,14 +221,14 @@ public class TablePropertyValueConverterTest {
             @Override
             public String convertToModel(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                    throws ConversionException {
                 return "model";
             }
 
             @Override
             public String convertToPresentation(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                    throws ConversionException {
                 return "presentation";
             }
 
@@ -265,14 +250,14 @@ public class TablePropertyValueConverterTest {
             @Override
             public String convertToModel(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                    throws ConversionException {
                 return "model2";
             }
 
             @Override
             public String convertToPresentation(String value,
                     Class<? extends String> targetType, Locale locale)
-                    throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+                    throws ConversionException {
                 return "presentation2";
             }
 
@@ -347,7 +332,7 @@ public class TablePropertyValueConverterTest {
                 Field f = Table.class
                         .getDeclaredField("propertyValueConverters");
                 f.setAccessible(true);
-                HashMap<Object, Converter<String, Object>> pvc = (HashMap<Object, Converter<String, Object>>) f
+                Map<Object, Converter<String, Object>> pvc = (Map<Object, Converter<String, Object>>) f
                         .get(this);
                 Set<Object> currentConverters = new HashSet<Object>();
                 for (Entry<Object, Converter<String, Object>> entry : pvc

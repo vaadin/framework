@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,6 +39,9 @@ public abstract class AbstractSelectionModel<T> extends AbstractGridExtension<T>
     @Override
     public void generateData(T item, JsonObject jsonObject) {
         if (isSelected(item)) {
+            // Pre-emptive update in case used a stale element in selection.
+            refreshData(item);
+
             jsonObject.put(DataCommunicatorConstants.SELECTED, true);
         }
     }

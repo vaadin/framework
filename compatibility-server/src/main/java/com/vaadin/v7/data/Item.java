@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,9 @@ package com.vaadin.v7.data;
 import java.io.Serializable;
 import java.util.Collection;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.provider.DataProvider;
+
 /**
  * <p>
  * Provides a mechanism for handling a set of Properties, each associated to a
@@ -28,6 +31,7 @@ import java.util.Collection;
  *
  * @author Vaadin Ltd
  * @since 3.0
+ * @deprecated As of 8.0, no direct replacement available, see {@link Binder}, {@link DataProvider}
  */
 @Deprecated
 public interface Item extends Serializable {
@@ -119,7 +123,7 @@ public interface Item extends Serializable {
      * </p>
      */
     @Deprecated
-    public interface Editor extends Item.Viewer, Serializable {
+    public interface Editor extends Item.Viewer {
 
     }
 
@@ -189,7 +193,7 @@ public interface Item extends Serializable {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #addPropertySetChangeListener(PropertySetChangeListener)}
-         **/
+         */
         @Deprecated
         public void addListener(Item.PropertySetChangeListener listener);
 
@@ -205,7 +209,7 @@ public interface Item extends Serializable {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #removePropertySetChangeListener(PropertySetChangeListener)}
-         **/
+         */
         @Deprecated
         public void removeListener(Item.PropertySetChangeListener listener);
     }

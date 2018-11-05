@@ -1,0 +1,45 @@
+---
+title: Mark Required Fields As Such
+order: 61
+layout: page
+---
+
+[[mark-required-fields-as-such]]
+= Mark required fields as such
+
+Don’t make your users guess which fields in your form are required. Mark
+them as such:
+
+[source,java]
+....
+TextField tfFirstName = new TextField("First name");
+tfFirstName.setRequired(true);
+tfFirstName.setRequiredError("First name must be filled in!");
+....
+
+Required fields get a small *asterisk* after the caption (or after the
+field itself, if it doesn’t have a caption), which is quite universally
+understood to mean “required”. Of course, it certainly doesn’t hurt to
+have “footnote” somewhere in your form that explains it anyway.
+
+image:img/reqfield.png[Required field with asterisk]
+
+Marking a field as required also implicitly adds a non-empty validator
+to the field, preventing the form from being submitted unless a value
+has been entered. The error message associated with that validator can
+be set with the *setRequiredError()* method:
+
+[source,java]
+....
+TextField tfFirstName = new TextField("First name");
+tfFirstName.setRequired(true);
+tfFirstName.setRequiredError("First name must be filled in!");
+....
+
+image:img/errortooltip.png[Required field with error]
+
+Think carefully about which fields really are required, though. For
+instance, asking unnecessary questions in a sign-up form has a tendency
+to make people either cancel signing up, or enter nonsense information
+in fields they deem nonessential. Only mark as required fields that you
+really need the user to fill in, right there and then.

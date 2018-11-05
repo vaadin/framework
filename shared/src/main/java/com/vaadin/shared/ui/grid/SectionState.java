@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.ui.ContentMode;
 
 /**
  * Shared state for Grid headers and footers.
@@ -75,8 +76,21 @@ public class SectionState implements Serializable {
 
         /** The id of the column that this cell belongs to. */
         public String columnId;
+
+        /** The tooltip for the cell */
+        public String description;
+
+        /** The content mode for the tooltip for the cell */
+        public ContentMode descriptionContentMode = ContentMode.TEXT;
     }
 
     /** The rows in this section. */
     public List<RowState> rows = new ArrayList<>();
+
+    /**
+     * Visibility of this section.
+     *
+     * @since 8.1.1
+     */
+    public boolean visible = true;
 }

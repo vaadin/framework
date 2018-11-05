@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,40 +42,41 @@ public class TextFieldConnector extends AbstractFieldConnector
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        VTextField textField = getWidget();
         // Save details
-        getWidget().client = client;
-        getWidget().paintableId = uidl.getId();
+        textField.client = client;
+        textField.paintableId = uidl.getId();
 
         if (!isRealUpdate(uidl)) {
             return;
         }
 
-        getWidget().setReadOnly(isReadOnly());
+        textField.setReadOnly(isReadOnly());
 
-        getWidget().setInputPrompt(getState().inputPrompt);
-        getWidget().setMaxLength(getState().maxLength);
-        getWidget().setImmediate(getState().immediate);
+        textField.setInputPrompt(getState().inputPrompt);
+        textField.setMaxLength(getState().maxLength);
+        textField.setImmediate(getState().immediate);
 
-        getWidget().listenTextChangeEvents = hasEventListener("ie");
-        if (getWidget().listenTextChangeEvents) {
-            getWidget().textChangeEventMode = uidl.getStringAttribute(
+        textField.listenTextChangeEvents = hasEventListener("ie");
+        if (textField.listenTextChangeEvents) {
+            textField.textChangeEventMode = uidl.getStringAttribute(
                     TextFieldConstants.ATTR_TEXTCHANGE_EVENTMODE);
-            if (getWidget().textChangeEventMode
+            if (textField.textChangeEventMode
                     .equals(TextFieldConstants.TEXTCHANGE_MODE_EAGER)) {
-                getWidget().textChangeEventTimeout = 1;
+                textField.textChangeEventTimeout = 1;
             } else {
-                getWidget().textChangeEventTimeout = uidl.getIntAttribute(
+                textField.textChangeEventTimeout = uidl.getIntAttribute(
                         TextFieldConstants.ATTR_TEXTCHANGE_TIMEOUT);
-                if (getWidget().textChangeEventTimeout < 1) {
+                if (textField.textChangeEventTimeout < 1) {
                     // Sanitize and allow lazy/timeout with timeout set to 0 to
                     // work as eager
-                    getWidget().textChangeEventTimeout = 1;
+                    textField.textChangeEventTimeout = 1;
                 }
             }
-            getWidget().sinkEvents(VTextField.TEXTCHANGE_EVENTS);
-            getWidget().attachCutEventListener(getWidget().getElement());
+            textField.sinkEvents(VTextField.TEXTCHANGE_EVENTS);
+            textField.attachCutEventListener(textField.getElement());
         }
-        getWidget().setColumns(getState().columns);
+        textField.setColumns(getState().columns);
 
         String text = getState().text;
         if (text == null) {
@@ -88,12 +89,12 @@ public class TextFieldConnector extends AbstractFieldConnector
          * side value). <input> is updated only when it looses focus, so we
          * force updating if not focused. Lost focus issue appeared in (#15144)
          */
-        if (!(Util.getFocusedElement() == getWidget().getElement())
+        if (Util.getFocusedElement() != textField.getElement()
                 || !uidl.getBooleanAttribute(
                         TextFieldConstants.ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS)
-                || getWidget().valueBeforeEdit == null
-                || !text.equals(getWidget().valueBeforeEdit)) {
-            getWidget().updateFieldContent(text);
+                || textField.valueBeforeEdit == null
+                || !text.equals(textField.valueBeforeEdit)) {
+            textField.updateFieldContent(text);
         }
 
         if (uidl.hasAttribute("selpos")) {
@@ -105,7 +106,7 @@ public class TextFieldConnector extends AbstractFieldConnector
             Scheduler.get().scheduleDeferred(new Command() {
                 @Override
                 public void execute() {
-                    getWidget().setSelectionRange(pos, length);
+                    textField.setSelectionRange(pos, length);
                 }
             });
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,9 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
-package com.vaadin.client.ui.menubar;
-
 /*
  * Copyright 2007 Google Inc.
  *
@@ -31,6 +28,7 @@ package com.vaadin.client.ui.menubar;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.client.ui.menubar;
 
 // COPIED HERE DUE package privates in GWT
 import java.util.ArrayList;
@@ -76,7 +74,7 @@ public class MenuBar extends Widget implements PopupListener {
     private final Element table;
     private final Element outer;
 
-    private final ArrayList<MenuItem> items = new ArrayList<>();
+    private final List<MenuItem> items = new ArrayList<>();
     private MenuBar parentMenu;
     private PopupPanel popup;
     private MenuItem selectedItem;
@@ -333,7 +331,7 @@ public class MenuBar extends Widget implements PopupListener {
      * @return the first item from the menu or null if no items.
      */
     public MenuItem getFirstItem() {
-        return items != null && items.size() > 0 ? items.get(0) : null;
+        return items != null && !items.isEmpty() ? items.get(0) : null;
     }
 
     /**
@@ -343,7 +341,7 @@ public class MenuBar extends Widget implements PopupListener {
      * @return the last item from the menu or null if no items.
      */
     public MenuItem getLastItem() {
-        return items != null && items.size() > 0 ? items.get(items.size() - 1)
+        return items != null && !items.isEmpty() ? items.get(items.size() - 1)
                 : null;
     }
 
@@ -629,7 +627,7 @@ public class MenuBar extends Widget implements PopupListener {
      */
     private void onShow() {
         // Select the first item when a menu is shown.
-        if (items.size() > 0) {
+        if (!items.isEmpty()) {
             selectItem(items.get(0));
         }
     }

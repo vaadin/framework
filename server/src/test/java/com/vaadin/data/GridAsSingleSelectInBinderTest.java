@@ -34,7 +34,8 @@ public class GridAsSingleSelectInBinderTest
             extends SingleSelectionModelImpl<Sex> {
 
         public void setSelectedFromClient(Sex item) {
-            setSelectedFromClient(itemToKey(item));
+            setSelectedFromClient(
+                    getGrid().getDataCommunicator().getKeyMapper().key(item));
         }
     }
 
@@ -142,12 +143,12 @@ public class GridAsSingleSelectInBinderTest
         });
 
         grid.getSelectionModel().select(Sex.UNKNOWN);
-        model.setSelectedFromClient(Sex.MALE); // simulates client side
-                                               // selection
+        // simulates client side selection
+        model.setSelectedFromClient(Sex.MALE);
         grid.getSelectionModel().select(Sex.MALE); // NOOP
         grid.getSelectionModel().deselect(Sex.UNKNOWN); // NOOP
-        model.setSelectedFromClient(null); // simulates deselect from client
-                                           // side
+        // simulates deselect from client side
+        model.setSelectedFromClient(null);
         grid.getSelectionModel().select(Sex.FEMALE);
 
         assertEquals(Arrays.asList(Sex.UNKNOWN, Sex.MALE, null, Sex.FEMALE),

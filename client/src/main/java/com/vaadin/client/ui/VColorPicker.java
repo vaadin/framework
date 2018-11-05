@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,6 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HTML;
 
 /**
@@ -24,7 +23,7 @@ import com.google.gwt.user.client.ui.HTML;
  *
  * @since 7.0.0
  */
-public class VColorPicker extends VButton implements ClickHandler {
+public class VColorPicker extends VButton {
 
     private String color = null;
 
@@ -46,6 +45,16 @@ public class VColorPicker extends VButton implements ClickHandler {
      */
     public void setColor(String color) {
         this.color = color;
+    }
+
+    /**
+     * Gets the color.
+     *
+     * @since 8.4
+     * @return the color
+     */
+    public String getColor() {
+        return color;
     }
 
     /**

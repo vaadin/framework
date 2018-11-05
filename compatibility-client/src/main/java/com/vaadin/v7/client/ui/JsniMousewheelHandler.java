@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.v7.client.widgets.Escalator;
 
 /**
  * A mousewheel handling class to get around the limits of
@@ -27,7 +26,7 @@ import com.vaadin.v7.client.widgets.Escalator;
  *
  * For internal use only. May be removed or replaced in the future.
  *
- * @see Escalator.JsniWorkaround
+ * @see com.vaadin.v7.client.widgets.JsniWorkaround JsniWorkaround
  */
 abstract class JsniMousewheelHandler {
 

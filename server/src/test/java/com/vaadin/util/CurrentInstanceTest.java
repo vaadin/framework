@@ -1,25 +1,15 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -27,12 +17,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
+import org.hamcrest.CoreMatchers;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.server.DefaultDeploymentConfiguration;
+import com.vaadin.server.ServiceException;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 
@@ -44,6 +39,17 @@ public class CurrentInstanceTest {
         CurrentInstance.clearAll();
     }
 
+    @Before
+    @After
+    public void clearExistingFallbackResolvers() throws Exception {
+        // Removes all static fallback resolvers
+        Field field = CurrentInstance.class
+                .getDeclaredField("fallbackResolvers");
+        field.setAccessible(true);
+        Map<?, ?> map = (Map<?, ?>) field.get(null);
+        map.clear();
+    }
+
     @Test
     public void testInitiallyCleared() throws Exception {
         assertCleared();
@@ -52,8 +58,7 @@ public class CurrentInstanceTest {
     @Test
     public void testClearedAfterRemove() throws Exception {
         CurrentInstance.set(CurrentInstanceTest.class, this);
-        Assert.assertEquals(this,
-                CurrentInstance.get(CurrentInstanceTest.class));
+        assertEquals(this, CurrentInstance.get(CurrentInstanceTest.class));
         CurrentInstance.set(CurrentInstanceTest.class, null);
 
         assertCleared();
@@ -62,8 +67,7 @@ public class CurrentInstanceTest {
     @Test
     public void testClearedWithClearAll() throws Exception {
         CurrentInstance.set(CurrentInstanceTest.class, this);
-        Assert.assertEquals(this,
-                CurrentInstance.get(CurrentInstanceTest.class));
+        assertEquals(this, CurrentInstance.get(CurrentInstanceTest.class));
         CurrentInstance.clearAll();
 
         assertCleared();
@@ -71,13 +75,13 @@ public class CurrentInstanceTest {
 
     private void assertCleared() throws SecurityException, NoSuchFieldException,
             IllegalAccessException {
-        Assert.assertNull(getInternalCurrentInstanceVariable().get());
+        assertNull(getInternalCurrentInstanceVariable().get());
     }
 
     private ThreadLocal<Map<Class<?>, CurrentInstance>> getInternalCurrentInstanceVariable()
             throws SecurityException, NoSuchFieldException,
             IllegalAccessException {
-        Field f = CurrentInstance.class.getDeclaredField("instances");
+        Field f = CurrentInstance.class.getDeclaredField("INSTANCES");
         f.setAccessible(true);
         return (ThreadLocal<Map<Class<?>, CurrentInstance>>) f.get(null);
     }
@@ -156,10 +160,66 @@ public class CurrentInstanceTest {
 
         CurrentInstance.restoreInstances(previous);
 
-        Assert.assertNull(VaadinSession.getCurrent());
+        assertNull(VaadinSession.getCurrent());
     }
 
-    private static void waitUntilGarbageCollected(WeakReference<?> ref)
+    @Test
+    public void testFallbackResolvers() throws Exception {
+        TestFallbackResolver<UI> uiResolver = new TestFallbackResolver<UI>(
+                new FakeUI());
+        CurrentInstance.defineFallbackResolver(UI.class, uiResolver);
+
+        TestFallbackResolver<VaadinSession> sessionResolver = new TestFallbackResolver<VaadinSession>(
+                new FakeSession());
+        CurrentInstance.defineFallbackResolver(VaadinSession.class,
+                sessionResolver);
+
+        TestFallbackResolver<VaadinService> serviceResolver = new TestFallbackResolver<VaadinService>(
+                new FakeService(new FakeServlet()));
+        CurrentInstance.defineFallbackResolver(VaadinService.class,
+                serviceResolver);
+
+        assertThat(UI.getCurrent(), CoreMatchers.instanceOf(FakeUI.class));
+        assertThat(VaadinSession.getCurrent(),
+                CoreMatchers.instanceOf(FakeSession.class));
+        assertThat(VaadinService.getCurrent(),
+                CoreMatchers.instanceOf(FakeService.class));
+
+        assertEquals(
+                "The UI fallback resolver should have been called exactly once",
+                1, uiResolver.getCalled());
+
+        assertEquals(
+                "The VaadinSession fallback resolver should have been called exactly once",
+                1, sessionResolver.getCalled());
+
+        assertEquals(
+                "The VaadinService fallback resolver should have been called exactly once",
+                1, serviceResolver.getCalled());
+
+        // the VaadinServlet.getCurrent() resolution uses the VaadinService type
+        assertThat(VaadinServlet.getCurrent(),
+                CoreMatchers.instanceOf(FakeServlet.class));
+        assertEquals(
+                "The VaadinService fallback resolver should have been called exactly twice",
+                2, serviceResolver.getCalled());
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testFallbackResolversWithAlreadyDefinedResolver() {
+        TestFallbackResolver<UI> uiResolver = new TestFallbackResolver<UI>(
+                new FakeUI());
+        CurrentInstance.defineFallbackResolver(UI.class, uiResolver);
+        CurrentInstance.defineFallbackResolver(UI.class, uiResolver);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testFallbackResolversWithNullResolver() {
+        CurrentInstance.defineFallbackResolver(UI.class, null);
+    }
+
+    public static void waitUntilGarbageCollected(WeakReference<?> ref)
             throws InterruptedException {
         for (int i = 0; i < 50; i++) {
             System.gc();
@@ -168,7 +228,7 @@ public class CurrentInstanceTest {
             }
             Thread.sleep(100);
         }
-        Assert.fail("Value was not garbage collected.");
+        fail("Value was not garbage collected.");
     }
 
     @Test
@@ -177,14 +237,59 @@ public class CurrentInstanceTest {
         CurrentInstance.clearAll();
         CurrentInstance.set(CurrentInstanceTest.class, this);
 
-        Assert.assertNotNull(CurrentInstance.get(CurrentInstanceTest.class));
+        assertNotNull(CurrentInstance.get(CurrentInstanceTest.class));
 
         Callable<Void> runnable = () -> {
-            Assert.assertNull(CurrentInstance.get(CurrentInstanceTest.class));
+            assertNull(CurrentInstance.get(CurrentInstanceTest.class));
             return null;
         };
         ExecutorService service = Executors.newSingleThreadExecutor();
         Future<Void> future = service.submit(runnable);
         future.get();
     }
+
+    private static class TestFallbackResolver<T>
+            implements CurrentInstanceFallbackResolver<T> {
+
+        private int called;
+        private final T instance;
+
+        public TestFallbackResolver(T instance) {
+            this.instance = instance;
+        }
+
+        @Override
+        public T resolve() {
+            called++;
+            return instance;
+        }
+
+        public int getCalled() {
+            return called;
+        }
+    }
+
+    private static class FakeUI extends UI {
+        @Override
+        protected void init(VaadinRequest request) {
+        }
+    }
+
+    private static class FakeServlet extends VaadinServlet {
+    }
+
+    private static class FakeService extends VaadinServletService {
+        public FakeService(VaadinServlet servlet) throws ServiceException {
+            super(servlet, new DefaultDeploymentConfiguration(FakeService.class,
+                    new Properties()));
+        }
+    }
+
+    private static class FakeSession extends VaadinSession {
+        public FakeSession() {
+            super(null);
+        }
+
+    }
+
 }

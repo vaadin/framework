@@ -1,0 +1,59 @@
+---
+title: Opening A UI In A Popup Window
+order: 79
+layout: page
+---
+
+[[opening-a-ui-in-a-popup-window]]
+= Opening a UI in a popup window
+
+To open a new popup window in the browser showing another part of your
+application, you can use the new `BrowserWindowOpener` extension. Any
+component or `MenuItem` that you extend with `BrowserWindowOpener` will make clicking
+the component open a new browser window with some options for the
+content. Opening a popup this way helps you bypass most popup blockers.
+
+One of the things that `BrowserWindowOpener` can be configured to open
+in the new window is a new instance of a Vaadin UI class.
+
+[source,java]
+....
+public class OpeningUIInPopup extends UI {
+  @Override
+  protected void init(VaadinRequest request) {
+    Button popupButton = new Button("Open popup with MyPopupUI");
+
+    BrowserWindowOpener popupOpener = new BrowserWindowOpener(MyPopupUI.class);
+    popupOpener.setFeatures("height=300,width=300");
+    popupOpener.extend(popupButton);
+
+    // Add a parameter
+    popupOpener.setParameter("foo", "bar");
+
+    // Set a fragment
+    popupOpener.setUriFragment("myfragment");
+
+    setContent(popupButton);
+  }
+}
+
+public class MyPopupUI extends UI {
+  @Override
+  protected void init(VaadinRequest request) {
+    setContent(new Label("This is MyPopupUI where parameter foo="
+        + request.getParameter("foo") + " and fragment is set to "
+        + getPage().getUriFragment()));
+  }
+}
+....
+
+In this example, a `Button` is created and extended with a
+`BrowserWindowOpener`. Furthermore, the size of the popup window is
+defined. See
+https://developer.mozilla.org/en-US/docs/DOM/window.open#Position_and_size_features
+for a description of the commonly supported features. If you don't
+define any features, the browser will use its default setting which
+usually makes it open a new tab instead of opening a popup window.
+
+The `BrowserWindowOpener` can also be used to open a `Resource` or any
+URL that you define using different constructors.

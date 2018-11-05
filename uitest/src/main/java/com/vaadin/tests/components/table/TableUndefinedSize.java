@@ -5,12 +5,9 @@ import java.util.Arrays;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.v7.data.Container;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.Table;
@@ -36,47 +33,32 @@ public class TableUndefinedSize extends TestBase {
 
         log = new Log(5);
 
-        controls.addComponent(
-                new Button("Fixed size (200x200)", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        tbl.setWidth("200px");
-                        tbl.setHeight("200px");
-                        log.log("Size 200x200 pixels");
-                    }
-                }));
+        controls.addComponent(new Button("Fixed size (200x200)", event -> {
+            tbl.setWidth("200px");
+            tbl.setHeight("200px");
+            log.log("Size 200x200 pixels");
+        }));
 
-        controls.addComponent(
-                new Button("Fixed size (600x200)", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        tbl.setWidth("600px");
-                        tbl.setHeight("200px");
-                        log.log("Size 600x200 pixels");
-                    }
-                }));
+        controls.addComponent(new Button("Fixed size (600x200)", event -> {
+            tbl.setWidth("600px");
+            tbl.setHeight("200px");
+            log.log("Size 600x200 pixels");
+        }));
 
-        controls.addComponent(
-                new Button("Undefined size", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        tbl.setSizeUndefined();
-                        log.log("Size undefined");
-                    }
-                }));
+        controls.addComponent(new Button("Undefined size", event -> {
+            tbl.setSizeUndefined();
+            log.log("Size undefined");
+        }));
 
         NativeSelect pageLength = new NativeSelect("PageLength",
                 Arrays.asList(0, 1, 2, 4, 8, 10));
         pageLength.setImmediate(true);
         pageLength.setNullSelectionAllowed(false);
-        pageLength.addListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                int pageLength = Integer
-                        .valueOf(event.getProperty().getValue().toString());
-                tbl.setPageLength(pageLength);
-                log.log("Page length: " + pageLength);
-            }
+        pageLength.addValueChangeListener(event -> {
+            int pageLengthValue = Integer
+                    .valueOf(event.getProperty().getValue().toString());
+            tbl.setPageLength(pageLengthValue);
+            log.log("Page length: " + pageLengthValue);
         });
         controls.addComponent(pageLength);
 

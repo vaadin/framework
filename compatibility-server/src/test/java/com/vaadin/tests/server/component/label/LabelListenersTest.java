@@ -31,8 +31,7 @@ public class LabelListenersTest extends AbstractListenerMethodsTestBase {
         ValueChangeListener mockListener = createStrictMock(
                 ValueChangeListener.class);
         // record
-        mockListener.valueChange(
-                anyObject(com.vaadin.v7.data.Property.ValueChangeEvent.class));
+        mockListener.valueChange(anyObject(ValueChangeEvent.class));
 
         // test
         underTest.addValueChangeListener(mockListener);
@@ -54,8 +53,7 @@ public class LabelListenersTest extends AbstractListenerMethodsTestBase {
         ValueChangeListener mockListener = createStrictMock(
                 ValueChangeListener.class);
         // record
-        mockListener.valueChange(
-                anyObject(com.vaadin.v7.data.Property.ValueChangeEvent.class));
+        mockListener.valueChange(anyObject(ValueChangeEvent.class));
 
         expect(mockProperty.getType()).andReturn(String.class).atLeastOnce();
         expect(mockProperty.getValue()).andReturn("Any").atLeastOnce();

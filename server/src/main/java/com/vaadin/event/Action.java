@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -178,7 +178,7 @@ public class Action implements Serializable {
     public interface Container extends Serializable {
 
         /**
-         * Registers a new action handler for this container
+         * Registers a new action handler for this container.
          *
          * @param actionHandler
          *            the new handler to be added.

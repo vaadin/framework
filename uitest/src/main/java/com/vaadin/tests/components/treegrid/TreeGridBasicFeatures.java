@@ -1,28 +1,39 @@
 package com.vaadin.tests.components.treegrid;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import com.vaadin.data.provider.DataProviderListener;
+import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Widgetset;
+import com.vaadin.data.TreeData;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.HierarchicalDataProvider;
-import com.vaadin.data.provider.Query;
-import com.vaadin.shared.Registration;
+import com.vaadin.data.provider.HierarchicalQuery;
+import com.vaadin.data.provider.TreeDataProvider;
+import com.vaadin.server.SerializablePredicate;
+import com.vaadin.shared.Range;
 import com.vaadin.tests.components.AbstractComponentTest;
-import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.tests.data.bean.HierarchicalTestBean;
+import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.ItemCollapseAllowedProvider;
 import com.vaadin.ui.TreeGrid;
+import com.vaadin.ui.renderers.HtmlRenderer;
+import com.vaadin.ui.renderers.TextRenderer;
 
+@Theme("valo")
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
 
-    private TreeGrid<TestBean> grid;
-    private TestDataProvider dataProvider = new TestDataProvider();
+    private TreeGrid<HierarchicalTestBean> grid;
+    private TreeDataProvider<HierarchicalTestBean> inMemoryDataProvider;
+    private LazyHierarchicalDataProvider lazyDataProvider;
+    private HierarchicalDataProvider<HierarchicalTestBean, ?> loggingDataProvider;
+    private Column<HierarchicalTestBean, String> hierarchyColumn;
 
     @Override
     public TreeGrid getComponent() {
@@ -36,12 +47,19 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
 
     @Override
     protected void initializeComponents() {
+        initializeDataProviders();
         grid = new TreeGrid<>();
         grid.setSizeFull();
-        grid.addColumn(TestBean::getStringValue).setId("First column");
-        grid.addColumn(TestBean::getStringValue).setId("Second column");
-        grid.setHierarchyColumn("First column");
-        grid.setDataProvider(dataProvider);
+        hierarchyColumn = grid.addColumn(HierarchicalTestBean::toString);
+        hierarchyColumn.setCaption("String").setId("string").setStyleGenerator(
+                t -> hierarchyColumn.getRenderer().getClass().getSimpleName());
+        grid.addColumn(HierarchicalTestBean::getDepth).setCaption("Depth")
+                .setId("depth").setDescriptionGenerator(
+                        t -> "Hierarchy depth: " + t.getDepth());
+        grid.addColumn(HierarchicalTestBean::getIndex)
+                .setCaption("Index on this depth").setId("index");
+        grid.setHierarchyColumn("string");
+        grid.setDataProvider(new LazyHierarchicalDataProvider(3, 2));
 
         grid.setId("testComponent");
         addTestComponent(grid);
@@ -51,8 +69,70 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
     protected void createActions() {
         super.createActions();
 
+        createDataProviderSelect();
         createHierarchyColumnSelect();
-        createToggleCollapseSelect();
+        createCollapseAllowedSelect();
+        createRendererSelect();
+        createExpandMenu();
+        createCollapseMenu();
+        createListenerMenu();
+        createSelectionModeMenu();
+    }
+
+    private void initializeDataProviders() {
+        TreeData<HierarchicalTestBean> data = new TreeData<>();
+
+        List<Integer> ints = Arrays.asList(0, 1, 2);
+
+        ints.stream().forEach(index -> {
+            HierarchicalTestBean bean = new HierarchicalTestBean(null, 0,
+                    index);
+            data.addItem(null, bean);
+            ints.stream().forEach(childIndex -> {
+                HierarchicalTestBean childBean = new HierarchicalTestBean(
+                        bean.getId(), 1, childIndex);
+                data.addItem(bean, childBean);
+                ints.stream()
+                        .forEach(grandChildIndex -> data.addItem(childBean,
+                                new HierarchicalTestBean(childBean.getId(), 2,
+                                        grandChildIndex)));
+            });
+        });
+
+        inMemoryDataProvider = new TreeDataProvider<>(data);
+        lazyDataProvider = new LazyHierarchicalDataProvider(3, 2);
+        loggingDataProvider = new TreeDataProvider<HierarchicalTestBean>(data) {
+
+            @Override
+            public Stream<HierarchicalTestBean> fetchChildren(
+                    HierarchicalQuery<HierarchicalTestBean, SerializablePredicate<HierarchicalTestBean>> query) {
+                Optional<HierarchicalTestBean> parentOptional = query
+                        .getParentOptional();
+                if (parentOptional.isPresent()) {
+                    log("Children request: " + parentOptional.get() + " ; "
+                            + Range.withLength(query.getOffset(),
+                                    query.getLimit()));
+                } else {
+                    log("Root node request: " + Range
+                            .withLength(query.getOffset(), query.getLimit()));
+                }
+                return super.fetchChildren(query);
+            }
+        };
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private void createDataProviderSelect() {
+        @SuppressWarnings("rawtypes")
+        LinkedHashMap<String, DataProvider> options = new LinkedHashMap<>();
+        options.put("LazyHierarchicalDataProvider", lazyDataProvider);
+        options.put("TreeDataProvider", inMemoryDataProvider);
+        options.put("LoggingDataProvider", loggingDataProvider);
+
+        createSelectAction("Set data provider", CATEGORY_FEATURES, options,
+                "LazyHierarchicalDataProvider",
+                (treeGrid, value, data) -> treeGrid.setDataProvider(value));
     }
 
     private void createHierarchyColumnSelect() {
@@ -65,205 +145,88 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
                 (treeGrid, value, data) -> treeGrid.setHierarchyColumn(value));
     }
 
-    private void createToggleCollapseSelect() {
-        MenuItem menu = createCategory("Toggle expand", CATEGORY_FEATURES);
-        dataProvider.getAllItems().forEach(testBean -> {
-            createClickAction(testBean.getStringValue(), "Toggle expand",
-                    (grid, bean, data) -> grid.toggleCollapse(bean), testBean);
-        });
+    @SuppressWarnings("unchecked")
+    private void createCollapseAllowedSelect() {
+        LinkedHashMap<String, ItemCollapseAllowedProvider<HierarchicalTestBean>> options = new LinkedHashMap<>();
+        options.put("all allowed", t -> true);
+        options.put("all disabled", t -> false);
+        options.put("depth 0 disabled", t -> t.getDepth() != 0);
+        options.put("depth 1 disabled", t -> t.getDepth() != 1);
+
+        createSelectAction("Collapse allowed", CATEGORY_FEATURES, options,
+                "all allowed", (treeGrid, value, data) -> treeGrid
+                        .setItemCollapseAllowedProvider(value));
     }
 
-    private static class TestBean {
+    private void createRendererSelect() {
+        LinkedHashMap<String, Consumer<Column<?, String>>> options = new LinkedHashMap<>();
+        options.put("text", c -> c.setRenderer(new TextRenderer()));
+        options.put("html", c -> c.setRenderer(new HtmlRenderer()));
 
-        private String stringValue;
-
-        public TestBean(String stringValue) {
-            this.stringValue = stringValue;
-        }
-
-        public String getStringValue() {
-            return stringValue;
-        }
-
-        public void setStringValue(String stringValue) {
-            this.stringValue = stringValue;
-        }
+        createSelectAction("Hierarchy column renderer", CATEGORY_FEATURES,
+                options, "text",
+                (treeGrid, consumer, data) -> consumer.accept(hierarchyColumn));
     }
 
-    private static class TestDataProvider
-            implements HierarchicalDataProvider<TestBean, Void> {
+    @SuppressWarnings("unchecked")
+    private void createExpandMenu() {
+        createCategory("Server-side expand", CATEGORY_FEATURES);
+        createClickAction("Expand 0 | 0", "Server-side expand",
+                (treeGrid, value, data) -> treeGrid.expand(value),
+                new HierarchicalTestBean(null, 0, 0));
+        createClickAction("Expand 1 | 1", "Server-side expand",
+                (treeGrid, value, data) -> treeGrid.expand(value),
+                new HierarchicalTestBean("/0/0", 1, 1));
+        createClickAction("Expand 2 | 1", "Server-side expand",
+                (treeGrid, value, data) -> treeGrid.expand(value),
+                new HierarchicalTestBean("/0/0/1/1", 2, 1));
 
-        private static class HierarchyWrapper<T> {
-            private T item;
-            private T parent;
-            private Set<T> children;
-            private boolean collapsed;
+        createClickAction("Expand 0 | 0 recursively", "Server-side expand",
+                (treeGrid, value, data) -> treeGrid
+                        .expandRecursively(Arrays.asList(value), 1),
+                new HierarchicalTestBean(null, 0, 0));
+    }
 
-            public HierarchyWrapper(T item, T parent, boolean collapsed) {
-                this.item = item;
-                this.parent = parent;
-                this.collapsed = collapsed;
-                children = new LinkedHashSet<>();
-            }
+    @SuppressWarnings("unchecked")
+    private void createCollapseMenu() {
+        createCategory("Server-side collapse", CATEGORY_FEATURES);
+        createClickAction("Collapse 0 | 0", "Server-side collapse",
+                (treeGrid, value, data) -> treeGrid.collapse(value),
+                new HierarchicalTestBean(null, 0, 0));
+        createClickAction("Collapse 1 | 1", "Server-side collapse",
+                (treeGrid, value, data) -> treeGrid.collapse(value),
+                new HierarchicalTestBean("/0/0", 1, 1));
+        createClickAction("Collapse 2 | 1", "Server-side collapse",
+                (treeGrid, value, data) -> treeGrid.collapse(value),
+                new HierarchicalTestBean("/0/0/1/1", 2, 1));
 
-            public T getItem() {
-                return item;
-            }
+        createClickAction("Collapse 0 | 0 recursively", "Server-side collapse",
+                (treeGrid, value, data) -> treeGrid
+                        .collapseRecursively(Arrays.asList(value), 2),
+                new HierarchicalTestBean(null, 0, 0));
+    }
 
-            public void setItem(T item) {
-                this.item = item;
-            }
+    @SuppressWarnings("unchecked")
+    private void createListenerMenu() {
+        createListenerAction("Collapse listener", "State",
+                treeGrid -> treeGrid.addCollapseListener(
+                        event -> log("Item collapsed (user originated: "
+                                + event.isUserOriginated() + "): "
+                                + event.getCollapsedItem())));
+        createListenerAction("Expand listener", "State",
+                treeGrid -> treeGrid.addExpandListener(
+                        event -> log("Item expanded (user originated: "
+                                + event.isUserOriginated() + "): "
+                                + event.getExpandedItem())));
+    }
 
-            public T getParent() {
-                return parent;
-            }
+    private void createSelectionModeMenu() {
+        LinkedHashMap<String, SelectionMode> options = new LinkedHashMap<>();
+        options.put("none", SelectionMode.NONE);
+        options.put("single", SelectionMode.SINGLE);
+        options.put("multi", SelectionMode.MULTI);
 
-            public void setParent(T parent) {
-                this.parent = parent;
-            }
-
-            public Set<T> getChildren() {
-                return children;
-            }
-
-            public void setChildren(Set<T> children) {
-                this.children = children;
-            }
-
-            public boolean isCollapsed() {
-                return collapsed;
-            }
-
-            public void setCollapsed(boolean collapsed) {
-                this.collapsed = collapsed;
-            }
-        }
-
-        private Map<TestBean, HierarchyWrapper<TestBean>> itemToWrapperMap;
-        private Map<HierarchyWrapper<TestBean>, TestBean> wrapperToItemMap;
-        private Map<TestBean, HierarchyWrapper<TestBean>> rootNodes;
-
-        public TestDataProvider() {
-            itemToWrapperMap = new LinkedHashMap<>();
-            wrapperToItemMap = new LinkedHashMap<>();
-            rootNodes = new LinkedHashMap<>();
-
-            List<String> strings = Arrays.asList("a", "b", "c");
-
-            strings.stream().forEach(string -> {
-                TestBean rootBean = new TestBean(string);
-
-                HierarchyWrapper<TestBean> wrappedParent = new HierarchyWrapper<>(
-                        rootBean, null, true);
-                itemToWrapperMap.put(rootBean, wrappedParent);
-                wrapperToItemMap.put(wrappedParent, rootBean);
-
-                List<TestBean> children = strings.stream().map(string2 -> {
-                    TestBean childBean = new TestBean(string + "/" + string2);
-                    HierarchyWrapper<TestBean> wrappedChild = new HierarchyWrapper<>(
-                            new TestBean(string + "/" + string2), rootBean,
-                            true);
-                    itemToWrapperMap.put(childBean, wrappedChild);
-                    wrapperToItemMap.put(wrappedChild, childBean);
-                    return childBean;
-                }).collect(Collectors.toList());
-
-                wrappedParent.setChildren(new LinkedHashSet<>(children));
-
-                rootNodes.put(rootBean, wrappedParent);
-            });
-        }
-
-        @Override
-        public int getDepth(TestBean item) {
-            int depth = 0;
-            while (getItem(item) != null) {
-                item = getItem(item).getParent();
-                depth++;
-            }
-            return depth;
-        }
-
-        @Override
-        public boolean isInMemory() {
-            return true;
-        }
-
-        @Override
-        public void refreshItem(TestBean item) {
-            // NO-OP
-        }
-
-        @Override
-        public void refreshAll() {
-            // NO-OP
-        }
-
-        @Override
-        public Registration addDataProviderListener(
-                DataProviderListener<TestBean> listener) {
-            return () -> {
-            };
-        }
-
-        private List<TestBean> getAllItems() {
-            return new ArrayList<>(itemToWrapperMap.keySet());
-        }
-
-        private List<TestBean> getVisibleItemsRecursive(
-                Collection<HierarchyWrapper<TestBean>> wrappedItems) {
-            List<TestBean> items = new ArrayList<>();
-
-            wrappedItems.forEach(wrappedItem -> {
-                items.add(wrapperToItemMap.get(wrappedItem));
-                if (!wrappedItem.isCollapsed()) {
-                    List<HierarchyWrapper<TestBean>> wrappedChildren = wrappedItem
-                            .getChildren().stream()
-                            .map(childItem -> getItem(childItem))
-                            .collect(Collectors.toList());
-                    items.addAll(getVisibleItemsRecursive(wrappedChildren));
-                }
-            });
-            return items;
-        }
-
-        @Override
-        public int size(Query<TestBean, Void> query) {
-            return getVisibleItemsRecursive(rootNodes.values()).size();
-        }
-
-        @Override
-        public Stream<TestBean> fetch(Query<TestBean, Void> query) {
-            return getVisibleItemsRecursive(rootNodes.values()).stream();
-        }
-
-        @Override
-        public boolean isRoot(TestBean item) {
-            return getItem(item).getParent() == null;
-        }
-
-        @Override
-        public TestBean getParent(TestBean item) {
-            return getItem(item).getParent();
-        }
-
-        @Override
-        public boolean isCollapsed(TestBean item) {
-            return getItem(item).isCollapsed();
-        }
-
-        @Override
-        public boolean hasChildren(TestBean item) {
-            return !getItem(item).getChildren().isEmpty();
-        }
-
-        @Override
-        public void setCollapsed(TestBean item, boolean b) {
-            getItem(item).setCollapsed(b);
-        }
-
-        private HierarchyWrapper<TestBean> getItem(TestBean item) {
-            return itemToWrapperMap.get(item);
-        }
+        createSelectAction("Selection mode", "State", options, "single",
+                (treeGrid, value, data) -> treeGrid.setSelectionMode(value));
     }
 }

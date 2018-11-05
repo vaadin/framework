@@ -42,11 +42,6 @@ public class RequiredIndicatorForFieldsWithoutCaption
         addComponent(createWrappedTextField(new CssLayout()));
     }
 
-    /**
-     * @since
-     * @param gridLayout
-     * @return
-     */
     private Component createWrappedTextField(ComponentContainer container) {
         TextField tf = new TextField();
         tf.setRequired(true);

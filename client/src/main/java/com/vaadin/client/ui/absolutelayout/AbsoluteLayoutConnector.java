@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,7 +37,7 @@ import com.vaadin.ui.AbsoluteLayout;
 
 /**
  * Connects the server side {@link AbsoluteLayout} with the client side
- * counterpart {@link VAbsoluteLayout}
+ * counterpart {@link VAbsoluteLayout}.
  */
 @Connect(AbsoluteLayout.class)
 public class AbsoluteLayoutConnector extends AbstractComponentContainerConnector
@@ -58,24 +58,20 @@ public class AbsoluteLayoutConnector extends AbstractComponentContainerConnector
         }
     };
 
-    private StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
-        @Override
-        public void onStateChanged(StateChangeEvent stateChangeEvent) {
-            ComponentConnector child = (ComponentConnector) stateChangeEvent
-                    .getConnector();
-            List<String> childStyles = child.getState().styles;
-            if (childStyles == null) {
-                getWidget().setWidgetWrapperStyleNames(child.getWidget(),
-                        (String[]) null);
-            } else {
-                getWidget().setWidgetWrapperStyleNames(child.getWidget(),
-                        childStyles.toArray(new String[childStyles.size()]));
-            }
+    private StateChangeHandler childStateChangeHandler = event -> {
+        ComponentConnector child = (ComponentConnector) event.getConnector();
+        List<String> childStyles = child.getState().styles;
+        if (childStyles == null) {
+            getWidget().setWidgetWrapperStyleNames(child.getWidget(),
+                    (String[]) null);
+        } else {
+            getWidget().setWidgetWrapperStyleNames(child.getWidget(),
+                    childStyles.toArray(new String[childStyles.size()]));
+        }
 
-            if (stateChangeEvent.hasPropertyChanged("height")
-                    || stateChangeEvent.hasPropertyChanged("width")) {
-                setChildWidgetPosition(child);
-            }
+        if (event.hasPropertyChanged("height")
+                || event.hasPropertyChanged("width")) {
+            setChildWidgetPosition(child);
         }
     };
 

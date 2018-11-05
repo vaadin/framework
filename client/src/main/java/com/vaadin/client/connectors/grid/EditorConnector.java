@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
@@ -28,6 +29,7 @@ import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
+import com.vaadin.shared.Range;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.editor.EditorClientRpc;
@@ -46,6 +48,9 @@ import elemental.json.JsonObject;
 @Connect(EditorImpl.class)
 public class EditorConnector extends AbstractExtensionConnector {
 
+    private Integer currentEditedRow = null;
+    private boolean waitingForAvailableData = false;
+
     /**
      * EditorHandler for communicating with the server-side implementation.
      */
@@ -56,10 +61,22 @@ public class EditorConnector extends AbstractExtensionConnector {
 
         public CustomEditorHandler() {
             registerRpc(EditorClientRpc.class, new EditorClientRpc() {
+
+                @Override
+                public void bind(final int rowIndex) {
+                    // call this deferred to avoid issues with editing on init
+                    Scheduler.get().scheduleDeferred(() -> {
+                        getParent().getWidget().editRow(rowIndex);
+                    });
+                }
+
                 @Override
                 public void cancel() {
-                    serverInitiated = true;
-                    getParent().getWidget().cancelEditor();
+                    // Canceling an editor that is not open is a no-op.
+                    if (getParent().getWidget().isEditorActive()) {
+                        serverInitiated = true;
+                        getParent().getWidget().cancelEditor();
+                    }
                 }
 
                 @Override
@@ -110,6 +127,7 @@ public class EditorConnector extends AbstractExtensionConnector {
                 // a confirmation from the server
                 rpc.cancel(afterBeingSaved);
             }
+            currentEditedRow = null;
         }
 
         @Override
@@ -179,7 +197,17 @@ public class EditorConnector extends AbstractExtensionConnector {
 
     @OnStateChange("enabled")
     void updateEnabled() {
-        getParent().getWidget().getEditor().setEnabled(getState().enabled);
+        boolean enabled = getState().enabled;
+
+        Scheduler.ScheduledCommand setEnabledCommand = () -> {
+            getParent().getWidget().getEditor().setEnabled(enabled);
+        };
+
+        if (!enabled) {
+            Scheduler.get().scheduleFinally(setEnabledCommand);
+        } else {
+            setEnabledCommand.execute();
+        }
     }
 
     @OnStateChange("saveCaption")

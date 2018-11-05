@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
@@ -23,22 +22,17 @@ public class TabGetAndReplaceComponent extends TestBase {
         tabs.addTab(new Label("Content 5"), "Content 5", null);
         addComponent(tabs);
 
-        Button replace2 = new Button("Replace Content 2",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        Iterator<Component> iter = tabs.getComponentIterator();
-                        iter.next();
+        Button replace2 = new Button("Replace Content 2", event -> {
+            Iterator<Component> iter = tabs.getComponentIterator();
+            iter.next();
 
-                        Component content2 = iter.next();
-                        Tab tab = tabs.getTab(content2);
+            Component content2 = iter.next();
+            Tab tab = tabs.getTab(content2);
 
-                        // Replace content
-                        tabs.replaceComponent(tab.getComponent(),
-                                new Label("Replacement 2"));
-
-                    }
-                });
+            // Replace content
+            tabs.replaceComponent(tab.getComponent(),
+                    new Label("Replacement 2"));
+        });
         addComponent(replace2);
     }
 

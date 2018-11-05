@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,14 +19,14 @@ import com.vaadin.client.StyleConstants;
 import com.vaadin.client.ui.orderedlayout.VAbstractOrderedLayout;
 
 /**
- * Represents a layout where the children is ordered vertically
+ * Represents a layout where the children is ordered vertically.
  */
 public class VHorizontalLayout extends VAbstractOrderedLayout {
 
     public static final String CLASSNAME = "v-horizontallayout";
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public VHorizontalLayout() {
         super(false);

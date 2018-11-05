@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.tb3;
 
 import java.io.File;
@@ -24,7 +9,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -47,7 +31,6 @@ public class TB3TestLocator {
             List<?> l = findClasses(baseClass, basePackage, ignorePackages);
             return l.toArray(new Class[] {});
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;
@@ -74,8 +57,7 @@ public class TB3TestLocator {
             try {
                 File f = new File(location.toURI());
                 if (!f.exists()) {
-                    throw new IOException(
-                            "Directory " + f.toString() + " does not exist");
+                    throw new IOException("Directory " + f + " does not exist");
                 }
                 findPackages(f, basePackage, baseClass, classes,
                         ignoredPackages);
@@ -87,14 +69,8 @@ public class TB3TestLocator {
             findClassesInJar(juc, basePackage, baseClass, classes);
         }
 
-        Collections.sort(classes, new Comparator<Class<? extends T>>() {
-
-            @Override
-            public int compare(Class<? extends T> o1, Class<? extends T> o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-
-        });
+        Collections.sort(classes,
+                (o1, o2) -> o1.getName().compareTo(o2.getName()));
 
         return classes;
     }
@@ -134,7 +110,6 @@ public class TB3TestLocator {
                 addClassIfMatches(result, fullyQualifiedClassName, baseClass);
             }
         }
-
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.vaadin.tests.applicationservlet;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -26,9 +27,9 @@ public class SystemMessagesTest extends MultiBrowserTest {
     private void verifyError(String locale) {
         $(ButtonElement.class).first().click();
         NotificationElement notification = $(NotificationElement.class).first();
-        Assert.assertEquals("Incorrect notification caption,",
+        assertEquals("Incorrect notification caption,",
                 notification.getCaption(), "Internal error");
-        Assert.assertEquals("Incorrect notification description,",
+        assertEquals("Incorrect notification description,",
                 notification.getDescription(),
                 "MessagesInfo locale: " + locale);
     }

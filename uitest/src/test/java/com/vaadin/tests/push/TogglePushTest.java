@@ -1,21 +1,9 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.push;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -33,21 +21,19 @@ public class TogglePushTest extends MultiBrowserTest {
         // Open with push disabled
         driver.get(addParameter(url, "push=disabled"));
 
-        Assert.assertFalse(getPushToggle().isSelected());
+        assertFalse(getPushToggle().isSelected());
 
         getDelayedCounterUpdateButton().click();
         sleep(2000);
-        Assert.assertEquals("Counter has been updated 0 times",
-                getCounterText());
+        assertEquals("Counter has been updated 0 times", getCounterText());
 
         // Open with push enabled
         driver.get(addParameter(url, "push=enabled"));
-        Assert.assertTrue(getPushToggle().isSelected());
+        assertTrue(getPushToggle().isSelected());
 
         getDelayedCounterUpdateButton().click();
         sleep(2000);
-        Assert.assertEquals("Counter has been updated 1 times",
-                getCounterText());
+        assertEquals("Counter has been updated 1 times", getCounterText());
 
     }
 
@@ -67,21 +53,18 @@ public class TogglePushTest extends MultiBrowserTest {
         sleep(2000);
 
         // Push is enabled, so text gets updated
-        Assert.assertEquals("Counter has been updated 1 times",
-                getCounterText());
+        assertEquals("Counter has been updated 1 times", getCounterText());
 
         // Disable push
         getPushToggle().click();
         getDelayedCounterUpdateButton().click();
         sleep(2000);
         // Push is disabled, so text is not updated
-        Assert.assertEquals("Counter has been updated 1 times",
-                getCounterText());
+        assertEquals("Counter has been updated 1 times", getCounterText());
 
         getDirectCounterUpdateButton().click();
         // Direct update is visible, and includes previous update
-        Assert.assertEquals("Counter has been updated 3 times",
-                getCounterText());
+        assertEquals("Counter has been updated 3 times", getCounterText());
 
         // Re-enable push
         getPushToggle().click();
@@ -89,8 +72,7 @@ public class TogglePushTest extends MultiBrowserTest {
         sleep(2000);
 
         // Push is enabled again, so text gets updated
-        Assert.assertEquals("Counter has been updated 4 times",
-                getCounterText());
+        assertEquals("Counter has been updated 4 times", getCounterText());
     }
 
     private WebElement getDirectCounterUpdateButton() {

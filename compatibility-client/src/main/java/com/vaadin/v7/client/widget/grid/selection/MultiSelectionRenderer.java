@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -369,14 +369,10 @@ public class MultiSelectionRenderer<T>
             if (pointerPageY < topBound) {
                 final double distance = pointerPageY - topBound;
                 ratio = Math.max(-1, distance / gradientArea);
-            }
-
-            else if (pointerPageY > bottomBound) {
+            } else if (pointerPageY > bottomBound) {
                 final double distance = pointerPageY - bottomBound;
                 ratio = Math.min(1, distance / gradientArea);
-            }
-
-            else {
+            } else {
                 ratio = 0;
             }
 
@@ -436,13 +432,11 @@ public class MultiSelectionRenderer<T>
             if (topBound == -1) {
                 topBound = Math.min(finalTopBound, pageY);
                 bottomBound = Math.max(finalBottomBound, pageY);
-            }
-
-            /*
-             * Subsequent runs make sure that the scroll area grows (but doesn't
-             * shrink) with the finger, but no further than the final bound.
-             */
-            else {
+            } else {
+                /*
+                 * Subsequent runs make sure that the scroll area grows (but doesn't
+                 * shrink) with the finger, but no further than the final bound.
+                 */
                 int oldTopBound = topBound;
                 if (topBound < finalTopBound) {
                     topBound = Math.max(topBound,
@@ -632,7 +626,8 @@ public class MultiSelectionRenderer<T>
     public void render(final RendererCellReference cell, final Boolean data,
             CheckBox checkBox) {
         checkBox.setValue(data, false);
-        checkBox.setEnabled(grid.isEnabled() && !grid.isEditorActive());
+        checkBox.setEnabled(grid.isEnabled() && !grid.isEditorActive()
+                && grid.isUserSelectionAllowed());
     }
 
     @Override
@@ -658,10 +653,8 @@ public class MultiSelectionRenderer<T>
                         && event.getButton() == NativeEvent.BUTTON_LEFT)) {
             startDragSelect(event, Element.as(event.getEventTarget()));
             return true;
-        } else {
-            throw new IllegalStateException(
-                    "received unexpected event: " + event.getType());
         }
+        return false;
     }
 
     private void startDragSelect(NativeEvent event, final Element target) {
@@ -770,6 +763,10 @@ public class MultiSelectionRenderer<T>
     }
 
     protected void setSelected(final int logicalRow, final boolean select) {
+        if (!grid.isUserSelectionAllowed()) {
+            return;
+        }
+
         T row = grid.getDataSource().getRow(logicalRow);
         if (select) {
             grid.select(row);

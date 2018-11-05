@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -286,7 +286,7 @@ public class VRichTextArea extends Composite
     }
 
     /**
-     * Set the value of the text area
+     * Set the value of the text area.
      *
      * @param value
      *            The text value. Can be html.
@@ -300,7 +300,7 @@ public class VRichTextArea extends Composite
     }
 
     /**
-     * Get the value the text area
+     * Get the value the text area.
      */
     public String getValue() {
         if (rta.isAttached()) {

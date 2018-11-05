@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,6 @@ import com.google.gwt.user.client.Window.Location;
 import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
-import com.vaadin.client.ApplicationConnection.ApplicationStoppedHandler;
 import com.vaadin.client.ResourceLoader;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
@@ -50,7 +49,7 @@ public class AtmospherePushConnection implements PushConnection {
 
     protected enum State {
         /**
-         * Opening request has been sent, but still waiting for confirmation
+         * Opening request has been sent, but still waiting for confirmation.
          */
         CONNECT_PENDING,
 
@@ -150,25 +149,15 @@ public class AtmospherePushConnection implements PushConnection {
             final PushConfigurationState pushConfiguration) {
         this.connection = connection;
 
-        connection.addHandler(ApplicationStoppedEvent.TYPE,
-                new ApplicationStoppedHandler() {
+        connection.addHandler(ApplicationStoppedEvent.TYPE, event -> {
+            if (state == State.DISCONNECT_PENDING
+                    || state == State.DISCONNECTED) {
+                return;
+            }
 
-                    @Override
-                    public void onApplicationStopped(
-                            ApplicationStoppedEvent event) {
-                        if (state == State.DISCONNECT_PENDING
-                                || state == State.DISCONNECTED) {
-                            return;
-                        }
-
-                        disconnect(new Command() {
-                            @Override
-                            public void execute() {
-                            }
-                        });
-
-                    }
-                });
+            disconnect(() -> {
+            });
+        });
         config = createConfig();
         String debugParameter = Location.getParameter("debug");
         if ("push".equals(debugParameter)) {
@@ -189,17 +178,8 @@ public class AtmospherePushConnection implements PushConnection {
             url = ApplicationConstants.APP_PROTOCOL_PREFIX
                     + ApplicationConstants.PUSH_PATH;
         }
-        runWhenAtmosphereLoaded(new Command() {
-            @Override
-            public void execute() {
-                Scheduler.get().scheduleDeferred(new Command() {
-                    @Override
-                    public void execute() {
-                        connect();
-                    }
-                });
-            }
-        });
+        runWhenAtmosphereLoaded(
+                () -> Scheduler.get().scheduleDeferred(() -> connect()));
     }
 
     private void connect() {
@@ -207,10 +187,10 @@ public class AtmospherePushConnection implements PushConnection {
         String extraParams = UIConstants.UI_ID_PARAMETER + "="
                 + connection.getConfiguration().getUIId();
 
-        String csrfToken = connection.getMessageHandler().getCsrfToken();
-        if (!csrfToken.equals(ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE)) {
-            extraParams += "&" + ApplicationConstants.CSRF_TOKEN_PARAMETER + "="
-                    + csrfToken;
+        String pushId = connection.getMessageHandler().getPushId();
+        if (pushId != null) {
+            extraParams += "&" + ApplicationConstants.PUSH_ID_PARAMETER + "="
+                    + pushId;
         }
 
         // uri is needed to identify the right connection when closing
@@ -381,7 +361,7 @@ public class AtmospherePushConnection implements PushConnection {
 
     /**
      * Called if the transport mechanism cannot be used and the fallback will be
-     * tried
+     * tried.
      */
     protected void onTransportFailure() {
         getLogger().warning("Push connection using primary method ("
@@ -417,9 +397,8 @@ public class AtmospherePushConnection implements PushConnection {
         getConnectionStateHandler().pushReconnectPending(this);
     }
 
-    public static abstract class AbstractJSO extends JavaScriptObject {
+    public abstract static class AbstractJSO extends JavaScriptObject {
         protected AbstractJSO() {
-
         }
 
         protected final native String getStringValue(String key)
@@ -526,7 +505,7 @@ public class AtmospherePushConnection implements PushConnection {
             JavaScriptObject config)
     /*-{
         var self = this;
-    
+
         config.url = uri;
         config.onOpen = $entry(function(response) {
             self.@com.vaadin.client.communication.AtmospherePushConnection::onOpen(*)(response);
@@ -552,7 +531,7 @@ public class AtmospherePushConnection implements PushConnection {
         config.onClientTimeout = $entry(function(request) {
             self.@com.vaadin.client.communication.AtmospherePushConnection::onClientTimeout(*)(request);
         });
-    
+
         return $wnd.vaadinPush.atmosphere.subscribe(config);
     }-*/;
 

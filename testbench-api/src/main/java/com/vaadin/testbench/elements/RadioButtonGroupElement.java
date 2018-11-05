@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,7 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.RadioButtonGroup")
-public class RadioButtonGroupElement extends AbstractSelectElement {
+public class RadioButtonGroupElement extends AbstractSingleSelectElement {
 
     private static org.openqa.selenium.By bySelectOption = By
             .className("v-select-option");
@@ -39,6 +39,16 @@ public class RadioButtonGroupElement extends AbstractSelectElement {
             optionTexts.add(option.findElement(byLabel).getText());
         }
         return optionTexts;
+    }
+
+    /**
+     * Gets the list of option elements for this check box group.
+     *
+     * @return list of option elements
+     * @since 8.3.3
+     */
+    public List<WebElement> getOptionElements() {
+        return findElements(bySelectOption);
     }
 
     public void selectByText(String text) throws ReadOnlyException {
@@ -55,7 +65,7 @@ public class RadioButtonGroupElement extends AbstractSelectElement {
     }
 
     /**
-     * Return value of the selected option in the option group
+     * Return value of the selected option in the option group.
      *
      * @return value of the selected option in the option group
      */
@@ -74,7 +84,7 @@ public class RadioButtonGroupElement extends AbstractSelectElement {
     }
 
     /**
-     * Select option in the option group with the specified value
+     * Select option in the option group with the specified value.
      *
      * @param chars
      *            value of the option in the option group which will be selected

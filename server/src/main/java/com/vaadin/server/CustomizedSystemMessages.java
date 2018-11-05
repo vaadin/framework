@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,8 +16,6 @@
 
 package com.vaadin.server;
 
-import java.io.Serializable;
-
 /**
  * Contains the system messages used to notify the user about various critical
  * situations that can occur.
@@ -31,7 +29,7 @@ import java.io.Serializable;
  * </p>
  * <p>
  * The default behavior is to show a notification, and restart the application
- * the the user clicks the message. <br/>
+ * if the user clicks the message. <br/>
  * Instead of restarting the application, you can set a specific URL that the
  * user is taken to.<br/>
  * Setting both caption and message to null will restart the application (or go
@@ -42,15 +40,17 @@ import java.io.Serializable;
  * The situations are:
  * <li>Session expired: the user session has expired, usually due to inactivity.
  * </li>
+ * <li>Authentication error: the client received a 401 (Unauthorized) response
+ * from the server.</li>
  * <li>Communication error: the client failed to contact the server, or the
- * server returned and invalid response.</li>
+ * server returned an invalid response.</li>
  * <li>Internal error: unhandled critical server error (e.g out of memory,
  * database crash)
+ * <li>Cookies disabled: the browser does not support cookies</li>
  * </p>
  */
 
-public class CustomizedSystemMessages extends SystemMessages
-        implements Serializable {
+public class CustomizedSystemMessages extends SystemMessages {
 
     /**
      * Sets the URL to go to when the session has expired.

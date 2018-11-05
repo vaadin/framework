@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.vaadin.client.data.DataSource.RowHandle;
@@ -33,7 +34,7 @@ import com.vaadin.v7.client.widgets.Grid;
  * @since 7.4
  */
 public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
-        implements SelectionModel.Multi.Batched<T> {
+        implements SelectionModel.Multi.Batched<T>, HasUserSelectionAllowed<T> {
 
     private final LinkedHashSet<RowHandle<T>> selectedRows;
     private Renderer<Boolean> renderer;
@@ -45,6 +46,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
 
     /* Event handling for selection with space key */
     private SpaceSelectHandler<T> spaceSelectHandler;
+    private boolean userSelectionAllowed = true;
 
     public SelectionModelMulti() {
         grid = null;
@@ -102,7 +104,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
 
     @Override
     public boolean deselectAll() {
-        if (selectedRows.size() > 0) {
+        if (!selectedRows.isEmpty()) {
 
             @SuppressWarnings("unchecked")
             final LinkedHashSet<RowHandle<T>> selectedRowsClone = (LinkedHashSet<RowHandle<T>>) selectedRows
@@ -138,7 +140,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
             }
         }
 
-        if (added.size() > 0) {
+        if (!added.isEmpty()) {
             grid.fireEvent(new SelectionEvent<T>(grid, added, null,
                     isBeingBatchSelected()));
 
@@ -162,7 +164,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
             }
         }
 
-        if (removed.size() > 0) {
+        if (!removed.isEmpty()) {
             grid.fireEvent(new SelectionEvent<T>(grid, null, removed,
                     isBeingBatchSelected()));
             return true;
@@ -263,11 +265,21 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
         return rowHandlesToRows(deselectionBatch);
     }
 
-    private ArrayList<T> rowHandlesToRows(Collection<RowHandle<T>> rowHandles) {
-        ArrayList<T> rows = new ArrayList<T>(rowHandles.size());
+    private List<T> rowHandlesToRows(Collection<RowHandle<T>> rowHandles) {
+        List<T> rows = new ArrayList<T>(rowHandles.size());
         for (RowHandle<T> handle : rowHandles) {
             rows.add(handle.getRow());
         }
         return rows;
+    }
+
+    @Override
+    public boolean isUserSelectionAllowed() {
+        return userSelectionAllowed;
+    }
+
+    @Override
+    public void setUserSelectionAllowed(boolean userSelectionAllowed) {
+        this.userSelectionAllowed = userSelectionAllowed;
     }
 }

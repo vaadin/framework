@@ -1,6 +1,6 @@
 ---
 title: Slider
-order: 28
+order: 30
 layout: page
 ---
 

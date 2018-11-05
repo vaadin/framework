@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,8 +35,6 @@ import org.atmosphere.cpr.AtmosphereResponseImpl;
 import org.atmosphere.interceptor.HeartbeatInterceptor;
 import org.atmosphere.util.VoidAnnotationProcessor;
 
-import com.vaadin.server.RequestHandler;
-import com.vaadin.server.ServiceDestroyEvent;
 import com.vaadin.server.ServiceException;
 import com.vaadin.server.ServletPortletHelper;
 import com.vaadin.server.SessionExpiredHandler;
@@ -57,8 +55,7 @@ import com.vaadin.shared.communication.PushConstants;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class PushRequestHandler
-        implements RequestHandler, SessionExpiredHandler {
+public class PushRequestHandler implements SessionExpiredHandler {
 
     private AtmosphereFramework atmosphere;
     private PushHandler pushHandler;
@@ -66,9 +63,7 @@ public class PushRequestHandler
     public PushRequestHandler(VaadinServletService service)
             throws ServiceException {
 
-        service.addServiceDestroyListener((ServiceDestroyEvent event) -> {
-            destroy();
-        });
+        service.addServiceDestroyListener(event -> destroy());
 
         final ServletConfig vaadinServletConfig = service.getServlet()
                 .getServletConfig();
@@ -141,7 +136,7 @@ public class PushRequestHandler
                 .getAttributeName(vaadinServletConfig.getServletName());
         Object framework = vaadinServletConfig.getServletContext()
                 .getAttribute(attributeName);
-        if (framework != null && framework instanceof AtmosphereFramework) {
+        if (framework instanceof AtmosphereFramework) {
             return (AtmosphereFramework) framework;
         }
 
@@ -186,11 +181,6 @@ public class PushRequestHandler
         atmosphere.addInitParameter(
                 ApplicationConfig.DROP_ACCESS_CONTROL_ALLOW_ORIGIN_HEADER,
                 "false");
-        // Disable heartbeat (it does not emit correct events client side)
-        // https://github.com/Atmosphere/atmosphere-javascript/issues/141
-        atmosphere.addInitParameter(
-                ApplicationConfig.DISABLE_ATMOSPHEREINTERCEPTORS,
-                HeartbeatInterceptor.class.getName());
 
         final String bufferSize = String
                 .valueOf(PushConstants.WEBSOCKET_BUFFER_SIZE);

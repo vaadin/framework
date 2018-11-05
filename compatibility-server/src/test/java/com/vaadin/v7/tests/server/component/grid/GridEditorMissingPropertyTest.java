@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.server.component.grid;
 
 import static org.junit.Assert.assertEquals;
@@ -59,8 +44,8 @@ public class GridEditorMissingPropertyTest {
 
     @Before
     public void setup() throws SecurityException, NoSuchMethodException {
-        final BeanItem<Entry> folderItem = new BeanItem<>(folder);
-        final BeanItem<Entry> childItem = new BeanItem<>(file);
+        final BeanItem<Entry> folderItem = new BeanItem<Entry>(folder);
+        final BeanItem<Entry> childItem = new BeanItem<Entry>(file);
 
         @SuppressWarnings("unchecked")
         TestContainer container = new TestContainer(
@@ -79,8 +64,10 @@ public class GridEditorMissingPropertyTest {
         // Item with incomplete property set
         fieldGroup.setItemDataSource(
                 grid.getContainerDataSource().getItem(folder));
-        grid.getColumn(PROPERTY_NAME).getEditorField(); // called in
-                                                        // grid.doEditItem
+
+        // called in grid.doEditItem
+        grid.getColumn(PROPERTY_NAME).getEditorField();
+
         assertTrue("Properties in item should be bound",
                 fieldGroup.getBoundPropertyIds().contains(PROPERTY_NAME));
         assertFalse("Properties not present in item should not be bound",
@@ -252,7 +239,7 @@ public class GridEditorMissingPropertyTest {
 
         @Override
         protected List<Object> getAllItemIds() {
-            List<Object> ids = new ArrayList<>();
+            List<Object> ids = new ArrayList<Object>();
             for (BeanItem<Entry> item : items) {
                 ids.add(item.getBean());
             }

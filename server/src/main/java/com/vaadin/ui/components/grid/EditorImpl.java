@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,6 +37,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.AbstractGridExtension;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.util.ReflectTools;
 
 import elemental.json.JsonObject;
 
@@ -147,8 +148,8 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
                     return;
                 }
                 doClose();
-                doEdit(getData(key));
                 rpc.confirmBind(true);
+                doEdit(getData(key));
             }
         });
 
@@ -238,6 +239,8 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
                     getState().columnFields.put(getInternalIdForColumn(c),
                             component.getConnectorId());
                 });
+
+        eventRouter.fireEvent(new EditorOpenEvent<T>(this, edited));
     }
 
     @Override
@@ -246,7 +249,7 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
             binder.validate();
             if (binder.writeBeanIfValid(edited)) {
                 refresh(edited);
-                eventRouter.fireEvent(new EditorSaveEvent<>(this));
+                eventRouter.fireEvent(new EditorSaveEvent<>(this, edited));
                 return true;
             }
         }
@@ -264,10 +267,34 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
         rpc.cancel();
     }
 
+    @Override
+    public void editRow(int rowNumber)
+            throws IllegalStateException, IllegalArgumentException {
+        if (!isEnabled()) {
+            throw new IllegalStateException("Item editor is not enabled");
+        }
+        T beanToEdit = getParent().getDataCommunicator()
+                .fetchItemsWithRange(rowNumber, 1).stream().findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Row number " + rowNumber
+                                + "did not yield any item from data provider"));
+        if (!beanToEdit.equals(edited)) {
+            if (isBuffered() && edited != null) {
+                throw new IllegalStateException("Editing item " + beanToEdit
+                        + " failed. Item editor is already editing item "
+                        + edited);
+            } else {
+                rpc.bind(rowNumber);
+            }
+        }
+
+    }
+
     private void doCancel(boolean afterBeingSaved) {
+        T editedBean = edited;
         doClose();
         if (!afterBeingSaved) {
-            eventRouter.fireEvent(new EditorCancelEvent<>(this));
+            eventRouter.fireEvent(new EditorCancelEvent<>(this, editedBean));
         }
     }
 
@@ -335,13 +362,19 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
     @Override
     public Registration addSaveListener(EditorSaveListener<T> listener) {
         return eventRouter.addListener(EditorSaveEvent.class, listener,
-                EditorSaveListener.class.getDeclaredMethods()[0]);
+                ReflectTools.getMethod(EditorSaveListener.class));
     }
 
     @Override
     public Registration addCancelListener(EditorCancelListener<T> listener) {
         return eventRouter.addListener(EditorCancelEvent.class, listener,
-                EditorCancelListener.class.getDeclaredMethods()[0]);
+                ReflectTools.getMethod(EditorCancelListener.class));
+    }
+
+    @Override
+    public Registration addOpenListener(EditorOpenListener<T> listener) {
+        return eventRouter.addListener(EditorOpenEvent.class, listener,
+                ReflectTools.getMethod(EditorOpenListener.class));
     }
 
     @Override

@@ -1,11 +1,13 @@
 package com.vaadin.tests.applicationcontext;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.testbench.elements.UIElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class CloseSessionTest extends MultiBrowserTest {
@@ -23,6 +25,7 @@ public class CloseSessionTest extends MultiBrowserTest {
     @Test
     public void testCloseAndReopen() {
         clickButton("Close VaadinServiceSession and reopen page");
+        waitUntil(driver -> isElementPresent(UIElement.class));
         assertLogText(2, "4. Same hash as current? false");
         assertLogText(0, "6. Same WrappedSession id? true");
     }
@@ -34,6 +37,7 @@ public class CloseSessionTest extends MultiBrowserTest {
     @Test
     public void testInvalidateHttpSessionAndReopen() {
         clickButton("Invalidate HttpSession and reopen page");
+        waitUntil(driver -> isElementPresent(UIElement.class));
         assertLogText(2, "4. Same hash as current? false");
         assertLogText(0, "6. Same WrappedSession id? false");
     }
@@ -44,8 +48,7 @@ public class CloseSessionTest extends MultiBrowserTest {
     @Test
     public void testCloseVaadinServiceAndRedirect() {
         clickButton("Close VaadinServiceSession and redirect elsewhere");
-        Assert.assertEquals("Unexpected page contents,",
-                "This is a static file",
+        assertEquals("Unexpected page contents,", "This is a static file",
                 findElement(By.xpath("//h1")).getText());
     }
 
@@ -88,13 +91,13 @@ public class CloseSessionTest extends MultiBrowserTest {
     }
 
     private void assertLogText(int index, String expected) {
-        Assert.assertEquals("Unexpected log text,", expected, getLogRow(index));
+        assertEquals("Unexpected log text,", expected, getLogRow(index));
     }
 
     private void assertSessionExpired() {
         String expected = "Session Expired";
         String actual = $(NotificationElement.class).first().getCaption();
-        Assert.assertEquals("Unexpected notification,", actual, expected);
+        assertEquals("Unexpected notification,", actual, expected);
     }
 
     public void clickButton(String caption) {

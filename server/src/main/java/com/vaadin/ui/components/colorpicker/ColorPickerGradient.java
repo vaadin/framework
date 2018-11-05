@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,19 +30,14 @@ import com.vaadin.ui.AbstractField;
  */
 public class ColorPickerGradient extends AbstractField<Color> {
 
-    private ColorPickerGradientServerRpc rpc = new ColorPickerGradientServerRpc() {
-
-        @Override
-        public void select(int cursorX, int cursorY) {
-            setValue(converter.calculate(cursorX, cursorY), true);
-        }
-    };
-
     /** The converter. */
     private Coordinates2Color converter;
 
     /** The foreground color. */
     private Color color;
+
+    private ColorPickerGradientServerRpc rpc = (cursorX,
+            cursorY) -> setValue(converter.calculate(cursorX, cursorY), true);
 
     private ColorPickerGradient() {
         registerRpc(rpc);

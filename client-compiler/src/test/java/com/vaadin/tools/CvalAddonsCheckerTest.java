@@ -1,19 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tools;
 
 import static com.vaadin.tools.CvalAddonsChecker.VAADIN_AGPL;
@@ -32,12 +16,15 @@ import static com.vaadin.tools.CvalCheckerTest.readSystemOut;
 import static com.vaadin.tools.CvalCheckerTest.saveCache;
 import static com.vaadin.tools.CvalCheckerTest.unreachableLicenseProvider;
 import static com.vaadin.tools.CvalCheckerTest.validLicenseProvider;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -81,10 +68,10 @@ public class CvalAddonsCheckerTest {
         addonChecker.setLicenseProvider(validLicenseProvider);
         try {
             addonChecker.run();
-            Assert.fail();
+            fail();
         } catch (InvalidCvalException expected) {
         }
-        Assert.assertFalse(cacheExists(productNameCval));
+        assertFalse(cacheExists(productNameCval));
 
         // We have a license that has never been validated from the server and
         // we are offline
@@ -94,8 +81,8 @@ public class CvalAddonsCheckerTest {
         addonChecker.setLicenseProvider(unreachableLicenseProvider);
         captureSystemOut();
         addonChecker.run();
-        Assert.assertTrue(readSystemOut().contains("has not been validated"));
-        Assert.assertFalse(cacheExists(productNameCval));
+        assertTrue(readSystemOut().contains("has not been validated"));
+        assertFalse(cacheExists(productNameCval));
 
         // Valid license has previously been validated from the server and we
         // are offline
@@ -104,7 +91,7 @@ public class CvalAddonsCheckerTest {
         addonChecker.setLicenseProvider(validLicenseProvider);
         captureSystemOut();
         addonChecker.run();
-        Assert.assertTrue(cacheExists(productNameCval));
+        assertTrue(cacheExists(productNameCval));
         addonChecker.setLicenseProvider(unreachableLicenseProvider);
         addonChecker.run();
 
@@ -124,7 +111,7 @@ public class CvalAddonsCheckerTest {
                 "normal");
         try {
             addonChecker.run();
-            Assert.fail();
+            fail();
         } catch (InvalidCvalException expected) {
         }
 
@@ -137,9 +124,9 @@ public class CvalAddonsCheckerTest {
                 "evaluation");
         try {
             addonChecker.run();
-            Assert.fail();
+            fail();
         } catch (InvalidCvalException expected) {
-            Assert.assertTrue(expected.getMessage().contains("expired"));
+            assertTrue(expected.getMessage().contains("expired"));
         }
 
         // Valid evaluation license
@@ -151,9 +138,9 @@ public class CvalAddonsCheckerTest {
         setCacheFileTs(System.currentTimeMillis() + GRACE_DAYS_MSECS,
                 "evaluation");
         List<CValUiInfo> uiInfo = addonChecker.run();
-        Assert.assertEquals(1, uiInfo.size());
-        Assert.assertEquals("Test " + productNameCval, uiInfo.get(0).product);
-        Assert.assertEquals("evaluation", uiInfo.get(0).type);
+        assertEquals(1, uiInfo.size());
+        assertEquals("Test " + productNameCval, uiInfo.get(0).product);
+        assertEquals("evaluation", uiInfo.get(0).type);
 
         // Valid real license
         // -> Work as expected
@@ -164,7 +151,7 @@ public class CvalAddonsCheckerTest {
         addonChecker.setLicenseProvider(validLicenseProvider);
         captureSystemOut();
         addonChecker.run();
-        Assert.assertTrue(readSystemOut().contains("valid"));
+        assertTrue(readSystemOut().contains("valid"));
     }
 
     @Test
@@ -178,9 +165,9 @@ public class CvalAddonsCheckerTest {
         captureSystemOut();
         addonChecker.run();
         String out = readSystemOut();
-        Assert.assertTrue(out.contains("valid"));
-        Assert.assertTrue(out.contains("AGPL"));
-        Assert.assertTrue(cacheExists(productNameCval));
+        assertTrue(out.contains("valid"));
+        assertTrue(out.contains("AGPL"));
+        assertTrue(cacheExists(productNameCval));
     }
 
     private void setCacheFileTs(long expireTs, String type) {

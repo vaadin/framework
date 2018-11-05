@@ -207,13 +207,53 @@ $v-disabled-opacity: 0.5 !default;
 $v-selection-color: $v-focus-color !default;
 
 /**
+ * Color of the component error indication for 'info' error level.
+
+ * @group color
+ * @type color
+ */
+$v-error-indicator-level-info-color: #00a7f5 !default;
+
+/**
+ * Color of the component error indication for 'warning' error level.
+
+ * @group color
+ * @type color
+ */
+$v-error-indicator-level-warning-color: #fc9c00 !default;
+
+/**
+ * Color of the component error indication for 'error' error level.
+
+ * @group color
+ * @type color
+ */
+$v-error-indicator-level-error-color: #ed473b !default;
+
+/**
+ * Color of the component error indication for 'critical' error level.
+
+ * @group color
+ * @type color
+ */
+$v-error-indicator-level-critical-color: #fa007d !default;
+
+/**
+ * Color of the component error indication for 'system' error level.
+
+ * @group color
+ * @type color
+ */
+$v-error-indicator-level-system-color: #bb00ff !default;
+
+/**
  * Color of the component error indicator and other error indications, such as the
  * error style notification.
  *
  * @group color
  * @type color
  */
-$v-error-indicator-color: #ed473b !default;
+$v-error-indicator-color: $v-error-indicator-level-error-color !default;
 
 /**
  * Color of the required indicator in field components.
@@ -490,6 +530,8 @@ $v-included-components:
     textarea,
     richtextarea,
     tree,
+    tree8,
+    treegrid,
     treetable,
     twincolselect,
     upload,

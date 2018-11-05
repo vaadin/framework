@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -23,14 +24,13 @@ import com.google.gwt.user.client.ui.Widget;
  * {@link Focusable}.
  *
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.3
  *
  */
 public class FocusUtil {
 
     /**
-     * Sets the access key property
+     * Sets the access key property.
      *
      * @param focusable
      *            The widget for which we want to set the access key.
@@ -49,7 +49,7 @@ public class FocusUtil {
      *
      * @param focusable
      *            the widget to focus/unfocus
-     * @param focused
+     * @param focus
      *            whether this widget should take focus or release it
      */
     public static void setFocus(Widget focusable, boolean focus) {
@@ -94,5 +94,57 @@ public class FocusUtil {
                 .getElement() != null) : "Can't getTabIndex for a widget without an element";
 
         return focusable.getElement().getTabIndex();
+    }
+
+    /**
+     * Finds all the focusable children of given parent element.
+     *
+     * @param parent
+     *            the parent element
+     * @return array of focusable children
+     * @since 8.1.7
+     */
+    public static native Element[] getFocusableChildren(Element parent)
+    /*-{
+        var focusableChildren = parent.querySelectorAll('[type][tabindex]:not([tabindex="-1"]), [role=button][tabindex]:not([tabindex="-1"])');
+        return focusableChildren;
+    }-*/;
+
+    /**
+     * Moves the focus to the first focusable child of given parent element.
+     *
+     * @param parent
+     *            the parent element
+     * @since 8.1.7
+     */
+    public static void focusOnFirstFocusableElement(Element parent) {
+        Element[] focusableChildren = getFocusableChildren(parent);
+        if (focusableChildren.length == 0) {
+            return;
+        }
+        // find the first element that doesn't have "disabled" in the class name
+        for (int i = 0; i < focusableChildren.length; i++) {
+            Element element = focusableChildren[i];
+            String classes = element.getAttribute("class");
+            if (classes == null
+                    || !classes.toLowerCase().contains("disabled")) {
+                element.focus();
+                return;
+            }
+        }
+    }
+
+    /**
+     * Moves the focus to the last focusable child of given parent element.
+     *
+     * @param parent
+     *            the parent element
+     * @since 8.1.7
+     */
+    public static void focusOnLastFocusableElement(Element parent) {
+        Element[] focusableChildren = getFocusableChildren(parent);
+        if (focusableChildren.length > 0) {
+            focusableChildren[focusableChildren.length - 1].focus();
+        }
     }
 }

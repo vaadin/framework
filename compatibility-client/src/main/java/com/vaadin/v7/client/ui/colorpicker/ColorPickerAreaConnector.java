@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,16 +24,17 @@ import com.vaadin.client.ui.VColorPickerArea;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.v7.shared.ui.colorpicker.ColorPickerServerRpc;
+import com.vaadin.v7.ui.ColorPickerArea;
 
 /**
  * A class that defines an implementation for a color picker connector. Connects
- * the server side {@link com.vaadin.ui.ColorPickerArea} with the client side
- * counterpart {@link VColorPickerArea}
+ * the server side {@link ColorPickerArea} with the client side counterpart
+ * {@link VColorPickerArea}
  *
  * @since 7.0.0
  */
 @Deprecated
-@Connect(value = com.vaadin.v7.ui.ColorPickerArea.class, loadStyle = LoadStyle.LAZY)
+@Connect(value = ColorPickerArea.class, loadStyle = LoadStyle.LAZY)
 public class ColorPickerAreaConnector extends AbstractColorPickerConnector {
 
     private ColorPickerServerRpc rpc = RpcProxy

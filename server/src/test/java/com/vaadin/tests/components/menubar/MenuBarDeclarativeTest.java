@@ -1,28 +1,16 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.menubar;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -64,6 +52,29 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
 
         testWrite(design, bar);
         testRead(design, bar);
+    }
+
+    @Test
+    public void testDescriptionContentMode() {
+        String design = "<vaadin-menu-bar plain-text>"
+                + "<menu description=\"This description is implicitly preformatted\">One</menu>"
+                + "<menu description=\"This description\nis explicitly\n\npreformatted\">preformatted</menu>"
+                + "<menu descriptioncontentmode=\"HTML\" description=\"<b>I</b> contain <br/> <e>html</e>\">HTML</menu>"
+                + "<menu descriptioncontentmode=\"TEXT\" description=\"Just plain text\">plain text</menu>"
+                + "</vaadin-menu-bar>";
+        MenuBar menuBar = new MenuBar();
+        menuBar.addItem("One", null)
+                .setDescription("This description is implicitly preformatted");
+        menuBar.addItem("preformatted", null).setDescription(
+                "This description\nis explicitly\n\npreformatted",
+                ContentMode.PREFORMATTED);
+        menuBar.addItem("HTML", null).setDescription(
+                "<b>I</b> contain <br/> <e>html</e>", ContentMode.HTML);
+        menuBar.addItem("plain text", null).setDescription("Just plain text",
+                ContentMode.TEXT);
+
+        testWrite(design, menuBar);
+        testRead(design, menuBar);
     }
 
     @Test
@@ -140,8 +151,8 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
 
         List<MenuItem> expectedMenuItems = expected.getItems();
         List<MenuItem> actualMenuItems = result.getItems();
-        Assert.assertEquals("Different amount of menu items",
-                expectedMenuItems.size(), actualMenuItems.size());
+        assertEquals("Different amount of menu items", expectedMenuItems.size(),
+                actualMenuItems.size());
 
         for (int i = 0; i < expectedMenuItems.size(); ++i) {
             compareMenus(expectedMenuItems.get(i), actualMenuItems.get(i));
@@ -153,38 +164,39 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
     private void compareMenus(MenuItem expected, MenuItem actual) {
         String baseError = "Error Comparing MenuItem " + expected.getText()
                 + ": ";
-        Assert.assertEquals(baseError + "Visibile", expected.isVisible(),
+        assertEquals(baseError + "Visibile", expected.isVisible(),
                 actual.isVisible());
-        Assert.assertEquals(baseError + "Checkable", expected.isCheckable(),
+        assertEquals(baseError + "Checkable", expected.isCheckable(),
                 actual.isCheckable());
-        Assert.assertEquals(baseError + "Checked", expected.isChecked(),
+        assertEquals(baseError + "Checked", expected.isChecked(),
                 actual.isChecked());
-        Assert.assertEquals(baseError + "Separator", expected.isSeparator(),
+        assertEquals(baseError + "Separator", expected.isSeparator(),
                 actual.isSeparator());
-        Assert.assertEquals(baseError + "Enabled", expected.isEnabled(),
+        assertEquals(baseError + "Enabled", expected.isEnabled(),
                 actual.isEnabled());
-
-        Assert.assertEquals(baseError + "Text", expected.getText(),
-                actual.getText());
-        Assert.assertEquals(baseError + "Description",
-                expected.getDescription(), actual.getDescription());
-        Assert.assertEquals(baseError + "Style Name", expected.getStyleName(),
+        assertEquals(baseError + "Text", expected.getText(), actual.getText());
+        assertEquals(baseError + "Description", expected.getDescription(),
+                actual.getDescription());
+        assertEquals(baseError + "Style Name", expected.getStyleName(),
                 actual.getStyleName());
+        assertEquals(baseError + "Content Mode",
+                expected.getDescriptionContentMode(),
+                actual.getDescriptionContentMode());
 
         if (expected.getIcon() != null) {
-            Assert.assertNotNull(baseError + "Icon was null", actual.getIcon());
+            assertNotNull(baseError + "Icon was null", actual.getIcon());
         } else {
             if (actual.getIcon() != null) {
-                Assert.fail(baseError + "Icon should've been null");
+                fail(baseError + "Icon should've been null");
             }
         }
 
-        Assert.assertEquals(baseError + "Has Children", expected.hasChildren(),
+        assertEquals(baseError + "Has Children", expected.hasChildren(),
                 actual.hasChildren());
         if (expected.hasChildren()) {
             List<MenuItem> children = expected.getChildren();
             List<MenuItem> actualChildren = actual.getChildren();
-            Assert.assertEquals(baseError + "Child count", children.size(),
+            assertEquals(baseError + "Child count", children.size(),
                     actualChildren.size());
             for (int i = 0; i < children.size(); ++i) {
                 compareMenus(children.get(i), actualChildren.get(i));

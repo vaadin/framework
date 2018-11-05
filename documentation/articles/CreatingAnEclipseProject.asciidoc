@@ -1,0 +1,103 @@
+---
+title: Creating An Eclipse Project
+order: 69
+layout: page
+---
+
+[[creating-an-eclipse-project]]
+= Creating an Eclipse project
+
+At the moment you have two options:
+
+* Creating a Maven project in Eclipse
+* Using the Vaadin plug-in to create an Ivy project in Eclipse
+
+[[create-a-maven-project-in-eclipse]]
+Create a Maven project in Eclipse
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To create a Maven project in Eclipse you will need to have to Maven
+plugin installed. To install the plugin in Eclipse select "Help->Eclipse
+Marketplace" and search for "Maven Integration for Eclipse". If you do
+not have it installed install it before continuing. You will need to
+restart Eclipse after installation is complete. When Eclipse has
+restarted it will start the Maven repository indexer which will take a
+while to finish so wait patiently for it to finish before trying to
+create a new project, else the new project archetype will not be found.
+
+To create a new Vaadin maven project in Eclipse, start by selecting "File
+-> New -> Project..." and select "Maven Project". When clicking "Next"
+two times you will see a list of available archetypes. Write "vaadin" in
+the filter field and select "vaadin-archetype-application". This will
+create a Vaadin 7 application for you.
+
+Now you still need to enter some project info for your Maven project
+such as group id, artifact id and version. Once you are done, click
+"Finish". The project structure should now be ready.
+
+Next you will need to create a launch configuration for compiling the
+widget set. This can be done by right clicking on the project in the
+Project Explorer and select Run As.. -> Run Configurations... Then right
+click on Maven Build and select New. You will be presented by the
+following dialog:
+
+image:img/maven-compile-widgetset-launch.png[Run configuration: Compile Widgetset]
+
+Click run and the widget set will compile. You should do this whenever
+you add new addons or client side classes to the project.
+
+To run the project we will need to create a similar launch script. So,
+start by creating another Maven Build launch configuration just like we
+did above but instead of using the `vaadin:compile` target we will use the
+`jetty:run` target. Here is my ready made configuration for that:
+
+image:img/maven-run-project.png[Maven run configuration]
+
+Now, click Run and your project should be running on
+http://localhost:8080
+
+[[using-the-vaadin-plug-in-to-create-an-ivy-project-in-eclipse]]
+Using the Vaadin plug-in to create an Ivy project in Eclipse
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Vaadin Plug-in is based on a Dynamic Web Project and therefore uses
+Ivy instead of Maven for handling the dependencies.
+
+So lets start by adding the update sites to our eclipse installation.
+This can be done by selecting "Help->Install New Software" in eclipse.
+In the dialog which opens we need to add the Vaadin update site.
+
+Click "Add..." and add the following and click OK.
+
+....
+Name:       Vaadin Eclipse Plugin
+Location:   http://vaadin.com/eclipse
+....
+
+Once that is done select the Vaadin plugin like have been done below.
+
+image:img/eclipse-plugin-install.png[Eclipse Vaadin plugin installation]
+
+Select "Next->Next->Finish" and the plugin will be installed. You will
+need to restart eclipse for the plugin to take effect.
+
+Once the plugin is installed you can create a new project by selecting
+File -> New -> Project... -> Vaadin 7 Project. In the dialog you will be
+presented you will need to provide a name for the project at least. You
+can also select which version of Vaadin should be used. By default the
+latest version is automatically selected. Click finish and the project
+is created.
+
+Once the project has been created you will still need to configure the
+project to use Ivy. To do this right click on the ivy.xml file in the
+newly created project and select "Add Ivy Library...". In the dialog
+that appears select Finish.
+
+One final thing needs to be done to ensure that the Ivy managed jars are
+deployed to your server and that is to add the project properties to the
+deployment assembly. This can be done by right clicking on the project
+and selecting Properties. In the properties dialog find the tab named
+"Deployment Assembly" and select "Add.." -> "Java Build Path Entries"
+and choose `ivy.xml[*]`. Click OK and your are done.
+
+Congratulations, you have just created a new Vaadin project!

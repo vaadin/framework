@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -249,7 +249,8 @@ public final class CvalChecker {
                 msg = info.getMessage().replace("\\n", "\n");
             } else if (info != null && info.isLicenseExpired()) {
                 String type = "evaluation".equals(info.getType())
-                        ? "Evaluation license" : "License";
+                        ? "Evaluation license"
+                        : "License";
                 msg = getErrorMessage("expired", title, majorVers, type);
             } else if (key == null) {
                 msg = getErrorMessage("none", title, majorVers);
@@ -261,7 +262,7 @@ public final class CvalChecker {
     }
 
     /**
-     * Exception thrown when the license server is unreachable
+     * Exception thrown when the license server is unreachable.
      */
     public static class UnreachableCvalServerException extends Exception {
         private static final long serialVersionUID = 1L;

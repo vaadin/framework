@@ -1,6 +1,7 @@
 package com.vaadin.tests.elements.treetable;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -48,11 +49,11 @@ public class TreeTableElementExpandRowTest extends MultiBrowserTest {
         TreeTableRowElement row = tree.getRow(rowIndex);
         WebElement cell = row.getCell(0);
         String errorMessage = "";
-        if (extraInfo != null && !extraInfo.equals("")) {
+        if (extraInfo != null && !extraInfo.isEmpty()) {
             errorMessage += extraInfo;
         }
         errorMessage += "Return value of row=" + rowIndex + " cell=0 should be "
                 + expectedValue + ".";
-        Assert.assertEquals(errorMessage, expectedValue, cell.getText());
+        assertEquals(errorMessage, expectedValue, cell.getText());
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package com.vaadin.data;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,10 +59,8 @@ public class ValidationException extends Exception {
      * @return a list of all validation errors
      */
     public List<ValidationResult> getValidationErrors() {
-        ArrayList<ValidationResult> errors = new ArrayList<>(
-                getFieldValidationErrors().stream()
-                        .map(s -> s.getResult().get())
-                        .collect(Collectors.toList()));
+        List<ValidationResult> errors = getFieldValidationErrors().stream()
+                .map(s -> s.getResult().get()).collect(Collectors.toList());
         errors.addAll(getBeanValidationErrors());
         return errors;
     }

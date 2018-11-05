@@ -1,0 +1,280 @@
+---
+title: Load Testing With Gatling
+order: 51
+layout: page
+---
+
+[[loading-testing-with-gatling]]
+= Load testing with Gatling
+
+http://gatling.io[Gatling] is a powerful tool for load testing. Compared
+to WebDriver/Selenium/TestBench, it doesn't render the actual content,
+but just simulates messages clients send to the server. The server
+doesn't know if the test tool actually does something with the
+responses, so it gives you perfectly valid numbers for your applications
+performance - on the server side. It scales very well, so you don' t
+need huge army of nodes to bombard your application under test. It can
+be used with Vaadin as such, but with these tips you hopefully get
+started easier.
+
+[[vaadin-tips-to-make-tests-more-stable-and-easier-to-create]]
+Vaadin tips to make tests more stable and easier to create
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Gatling works with Vaadin "out of the box", but there are some obstacles
+you might face if you don't understand a bit how Vaadin communication
+works. E.g. plain recordings from standard Vaadin apps will not work
+properly.
+
+The communication that Vaadin's "thin client" in browser does with the
+server side has couple of checks that it does to improve robustness and
+security. One can simulate these with Gatling as well, by e.g.
+https://github.com/mstahv/v-quiz/blob/master/src/test/scala/loadtest/WebSocketVaadinSimulation.scala#L84[reading the XSRF prevention key into a variable] and passing the value
+https://github.com/mstahv/v-quiz/blob/master/src/test/scala/loadtest/WebSocketVaadinSimulation.scala#L95[in
+each response]. However, these setting can be disabled during load
+testing to make it easier to write and maintain your application. The
+effect for the scalability, when disabling or configuring these, should
+be negligible. Feel free to do these, but also remember to remove these
+"hacks" when building your production war file. Consider e.g. using
+separate maven profile and inject different parameters with it.
+
+[[disabling-xsrf-presentation-key]]
+Disabling XSRF presentation key
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The XSRF prevention can be disabled with following servlet parameter
+(or similar servlet 3 style parameter). NOTE, do not leave this for
+public apps in production.
+
+[source,xml]
+....
+<context-param>
+  <param-name>disable-xsrf-protection</param-name>
+  <param-value>true</param-value>
+</context-param>
+....
+
+[[disabling-syncid-happens-with-similar-parameter]]
+Disabling syncId happens with similar parameter
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[source,xml]
+....
+<context-param>
+  <param-name>syncIdCheck</param-name>
+  <param-value>false</param-value>
+</context-param>
+....
+
+If you want to do the above with Java Servlet 3.0 annotations, use the
+following:
+
+[source,java]
+....
+initParams = {
+  @WebInitParam(name = "disable-xsrf-protection", value = "true"),
+  @WebInitParam(name = "syncIdCheck", value = "false")}
+....
+
+[[using-debug-ids-in-communication]]
+Using debug ids in communication
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you want to minimize the effort needed for maintaining your
+scalability tests, you probably want to do a small hack to the Vaadin
+communication mechanism. Normally Vaadin uses a incrementing session
+wide identifier to connect components to their "client side
+counterparts". Thus, if you add a one single component to your login
+screen, the whole load test simulation might be broken.
+
+You can set "id" for each component, but in recent Vaadin versions this
+id is no more used in the communication, but only assigned to
+client dom. This can still be enforced with a specially crafted
+extension to VaadinServlet. An implementation for the "competing tool" JMeter can be
+found at <<jmeter-vaadin-servlet-extension>>. This implementation works for Gatling users
+as well. Note that, it is suggested to do this only for load testing, and NOT
+for the production.
+
+An alternative way to handle these ids is to use a similar mechanism as in case of
+XSRF prevention keys. For instance, you can try to extract id of a button by finding
+it from some of the previous responses based on its caption or css id. And, then use
+hand crafter regular expression to extract it from the response. As you might have 
+guessed this is tedious if there are a lot of components interacted. But, benefit of 
+this approach is that you do not have to do code changes to your application just 
+for the testing purpose.
+
+[[ignoring-obsolete-static-file-requests]]
+Ignoring "obsolete" static file requests
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+One of the most simplest and cheapest method to improve your apps
+scalability is to serve static files form a separate server or from a
+CDN provider. Thus it might make sense to leave loading those files away
+from your test script. If you do the script manually, just don't add
+requests for static files (js/css/images/...). If you recorded your test
+case, just remove these form the script. Check out the example project
+that only uses the required files.
+
+[[testing-with-websockets]]
+Testing with WebSockets
+~~~~~~~~~~~~~~~~~~~~~~~
+
+If you want to load test your application with the most advanced
+communication channel, WebSockets, you can do that with Gatling as well.
+Using the recorder in this case doesn't work, but handcrafting the test
+case isn't that hard once you get started. The example app has a branch
+with WebSocket test case. With WebSocket communication it might also be
+handy to disable xsrf prevention and the so called "syncid".
+
+First two request are just normal http requests. The first gets the
+"host page" and also the initial state request is done with normal XHR.
+The difference to normal Vaadin communication is that it is to be sent
+to "/PUSH" address.
+
+After the initial state request you start to use the special WebSocket
+API in Gatling. There are lot of things to keep in mind with this
+fundamentally totally different kind of communication mechanism. Check
+out Gatling's generic websocket help for basic info.
+
+When you start handcrafting the WebSocket simulation, the easiest tool
+is probably Chrome's dev tools. With that you can open normal browser
+session and "sniff" the traffic that is sent to the server and also the
+messages that are received. An easy option is just to copy paste the
+payloads and possibly add some verification to ensure proper answers are
+received. The websocket example is built with special variable to work
+without disabling xsrf verification.
+
+If you are using random input in your load tests, something that is
+highly suggested for realistic numbers, you might end up in small
+problems. The message format, by Atmosphere, has a weird number and "|"
+in front of each message. That number tells the message length and it
+must really match the real message length. Create a simple helper
+function to calculate that if your input data length varies.
+
+[source,javascript]
+....
+import io.gatling.core.session._
+import io.gatling.core.session.el._
+
+def atmoMessage(message: Expression[String]) = message.map(m => m.length + '|' + m)
+
+.sendText(atmoMessage("SomeMessage"))
+....
+
+If (and when) you probably want to close the websocket connection
+cleanly, you need to notify the server with an extra xhr with a
+identifier given by the atmosphere framework. The key is the first
+message that the server sends when you connect to it. 
+
+Check out this script for
+https://github.com/mstahv/v-quiz/blob/master/src/test/scala/loadtest/WebSocketVaadinSimulation.scala[an
+example using WebSocket] communication. It also saves XSRF prevention
+key to variable, so it don't need it to be disabled from the server.
+
+[[configuring-gatling-to-the-web-app-build]]
+Configuring Gatling to the Web app build
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is a good habit to keep your tests in the same projects as your
+actual application. Then you can easily verify your application still
+scales, after you have for example written a cryptic SQL query.
+
+Even better if you can make a Gatling script to be executed during
+builds to make. Gatling has http://gatling.io/docs/current/extensions/maven_plugin/[a
+maven plugin] that can do exactly this thing.
+https://github.com/mstahv/gatling-vaadin-example[The example project
+setup] executes a test during basic "mvn install". With similar setup in
+a real project, your CI server most likely saves results stored under
+target directory. This way it is easy to check it out afterwards how the
+performance of your application has evolved during its development.
+
+[[jmeter-vaadin-servlet-extension]]
+JMeter Vaadin Servlet extension
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The implementation referred to in <<using-debug-ids-in-communication>>
+
+[source,java]
+....
+package com.example.vaadin7jmeterservlet;
+
+import com.vaadin.server.ClientConnector;
+import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.ServiceException;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.VaadinServletService;
+import com.vaadin.server.VaadinSession;
+import com.vaadin.ui.Component;
+
+/**
+ * @author Marcus Hellberg (marcus@vaadin.com)
+ *  Further modified by Johannes Tuikkala (johannes@vaadin.com)
+ */
+public class JMeterServlet extends VaadinServlet {
+  private static final long serialVersionUID = 898354532369443197L;
+
+  public JMeterServlet() {
+    System.setProperty(getPackageName() + "." + "disable-xsrf-protection",
+        "true");
+  }
+
+  @Override
+  protected VaadinServletService createServletService(
+          DeploymentConfiguration deploymentConfiguration)
+          throws ServiceException {
+      JMeterService service = new JMeterService(this, deploymentConfiguration);
+      service.init();
+
+      return service;
+  }
+
+  private String getPackageName() {
+      String pkgName;
+      final Package pkg = this.getClass().getPackage();
+      if (pkg != null) {
+        pkgName = pkg.getName();
+      } else {
+        final String className = this.getClass().getName();
+        pkgName = new String(className.toCharArray(), 0,
+            className.lastIndexOf('.'));
+      }
+      return pkgName;
+  }
+
+  public static class JMeterService extends VaadinServletService {
+      private static final long serialVersionUID = -5874716650679865909L;
+
+      public JMeterService(VaadinServlet servlet,
+              DeploymentConfiguration deploymentConfiguration)
+              throws ServiceException {
+        super(servlet, deploymentConfiguration);
+      }
+
+      @Override
+      protected VaadinSession createVaadinSession(VaadinRequest request)
+              throws ServiceException {
+        return new JMeterSession(this);
+      }
+  }
+
+  public static class JMeterSession extends VaadinSession {
+    private static final long serialVersionUID = 4596901275146146127L;
+
+    public JMeterSession(VaadinService service) {
+      super(service);
+    }
+
+    @Override
+    public String createConnectorId(ClientConnector connector) {
+      if (connector instanceof Component) {
+        Component component = (Component) connector;
+        return component.getId() == null ? super
+            .createConnectorId(connector) : component.getId();
+      }
+      return super.createConnectorId(connector);
+    }
+  }
+}
+....

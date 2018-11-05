@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.components.grid.basicfeatures.client;
 
 import static org.junit.Assert.assertEquals;
@@ -21,6 +6,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -204,7 +190,8 @@ public class GridHeaderTest extends GridStaticSectionTest {
          * Reindeer has a CSS text transformation that changes the casing so
          * that we can't rely on it being what we set
          */
-        assertEquals("header (0,0)", textCell.getText().toLowerCase());
+        assertEquals("header (0,0)",
+                textCell.getText().toLowerCase(Locale.ROOT));
 
         GridCellElement widgetCell = getGridElement().getHeaderCell(0, 1);
         assertTrue(widgetCell.isElementPresent(By.className("gwt-HTML")));
@@ -235,7 +222,8 @@ public class GridHeaderTest extends GridStaticSectionTest {
          * Reindeer has a CSS text transformation that changes the casing so
          * that we can't rely on it being what we set
          */
-        assertEquals("text header", textCell.getText().toLowerCase());
+        assertEquals("text header",
+                textCell.getText().toLowerCase(Locale.ROOT));
     }
 
     @Test
@@ -249,7 +237,7 @@ public class GridHeaderTest extends GridStaticSectionTest {
 
         new Actions(getDriver()).moveToElement(button, 5, 5).click().perform();
 
-        assertEquals("clicked", button.getText().toLowerCase());
+        assertEquals("clicked", button.getText().toLowerCase(Locale.ROOT));
     }
 
     @Test
@@ -264,11 +252,11 @@ public class GridHeaderTest extends GridStaticSectionTest {
         GridCellElement widgetCell = getGridElement().getHeaderCell(0, 0);
         WebElement button = widgetCell.findElement(By.className("gwt-Button"));
 
-        assertNotEquals("clicked", button.getText().toLowerCase());
+        assertNotEquals("clicked", button.getText().toLowerCase(Locale.ROOT));
 
         new Actions(getDriver()).moveToElement(button, 5, 5).click().perform();
 
-        assertEquals("clicked", button.getText().toLowerCase());
+        assertEquals("clicked", button.getText().toLowerCase(Locale.ROOT));
     }
 
     private void assertHeaderCount(int count) {

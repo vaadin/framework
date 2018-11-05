@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,7 +38,7 @@ public class Color implements Serializable {
     private int blue;
     private int alpha;
 
-    private String OUTOFRANGE = "Value must be within the range [0-255]. Was: ";
+    private static final String OUTOFRANGE = "Value must be within the range [0-255]. Was: ";
 
     /**
      * Creates a color that has the specified red, green, blue, and alpha values
@@ -347,7 +347,7 @@ public class Color implements Serializable {
             red = green = blue = (int) (value * 255.0f + 0.5f);
         } else {
             float h = (hue - (float) Math.floor(hue)) * 6.0f;
-            float f = h - (float) java.lang.Math.floor(h);
+            float f = h - (float) Math.floor(h);
             float p = value * (1.0f - saturation);
             float q = value * (1.0f - saturation * f);
             float t = value * (1.0f - (saturation * (1.0f - f)));

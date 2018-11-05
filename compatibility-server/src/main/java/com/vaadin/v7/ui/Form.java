@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -49,6 +49,7 @@ import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.Validatable;
 import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.data.Validator.InvalidValueException;
 import com.vaadin.v7.data.fieldgroup.FieldGroup;
 import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.shared.form.FormState;
@@ -67,16 +68,15 @@ import com.vaadin.v7.shared.form.FormState;
  *
  * <p>
  * <code>Form</code> provides customizable editor for classes implementing
- * {@link com.vaadin.data.Item} interface. Also the form itself implements this
- * interface for easier connectivity to other items. To use the form as editor
- * for an item, just connect the item to form with
- * {@link Form#setItemDataSource(Item)}. If only a part of the item needs to be
- * edited, {@link Form#setItemDataSource(Item,Collection)} can be used instead.
- * After the item has been connected to the form, the automatically created
- * fields can be customized and new fields can be added. If you need to connect
- * a class that does not implement {@link com.vaadin.data.Item} interface, most
- * properties of any class following bean pattern, can be accessed trough
- * {@link com.vaadin.data.util.BeanItem}.
+ * {@link Item} interface. Also the form itself implements this interface for
+ * easier connectivity to other items. To use the form as editor for an item,
+ * just connect the item to form with {@link Form#setItemDataSource(Item)}. If
+ * only a part of the item needs to be edited,
+ * {@link Form#setItemDataSource(Item,Collection)} can be used instead. After
+ * the item has been connected to the form, the automatically created fields can
+ * be customized and new fields can be added. If you need to connect a class
+ * that does not implement {@link Item} interface, most properties of any class
+ * following bean pattern, can be accessed trough {@link BeanItem}.
  * </p>
  *
  * @author Vaadin Ltd.
@@ -86,8 +86,8 @@ import com.vaadin.v7.shared.form.FormState;
  */
 @Deprecated
 public class Form extends AbstractField<Object>
-        implements Item.Editor, com.vaadin.v7.data.Buffered, Item, Validatable,
-        Action.Notifier, HasComponents, LegacyComponent {
+        implements Item.Editor, Item, Action.Notifier,
+        HasComponents, LegacyComponent {
 
     private Object propertyValue;
 
@@ -99,7 +99,7 @@ public class Form extends AbstractField<Object>
     /**
      * Ordered list of property ids in this editor.
      */
-    private final LinkedList<Object> propertyIds = new LinkedList<>();
+    private final LinkedList<Object> propertyIds = new LinkedList<Object>();
 
     /**
      * Current buffered source exception.
@@ -114,12 +114,12 @@ public class Form extends AbstractField<Object>
     /**
      * Mapping from propertyName to corresponding field.
      */
-    private final HashMap<Object, Field<?>> fields = new HashMap<>();
+    private final Map<Object, Field<?>> fields = new HashMap<Object, Field<?>>();
 
     /**
      * Form may act as an Item, its own properties are stored here.
      */
-    private final HashMap<Object, Property<?>> ownProperties = new HashMap<>();
+    private final Map<Object, Property<?>> ownProperties = new HashMap<Object, Property<?>>();
 
     /**
      * Field factory for this form.
@@ -191,7 +191,7 @@ public class Form extends AbstractField<Object>
      * @param formLayout
      *            the layout of the form.
      * @param fieldFactory
-     *            the TableFieldFactory of the form.
+     *            the FieldFactory of the form.
      */
     public Form(Layout formLayout, FormFieldFactory fieldFactory) {
         super();
@@ -245,9 +245,8 @@ public class Form extends AbstractField<Object>
         // getErrorMessage() recursively instead of validate().
         ErrorMessage validationError = null;
         if (isValidationVisible()) {
-            for (final Iterator<Object> i = propertyIds.iterator(); i
-                    .hasNext();) {
-                Object f = fields.get(i.next());
+            for (final Object id : propertyIds) {
+                Object f = fields.get(id);
                 if (f instanceof AbstractComponent) {
                     AbstractComponent field = (AbstractComponent) f;
 
@@ -286,7 +285,7 @@ public class Form extends AbstractField<Object>
      * Controls the making validation visible implicitly on commit.
      *
      * Having commit() call setValidationVisible(true) implicitly is the default
-     * behaviour. You can disable the implicit setting by setting this property
+     * behavior. You can disable the implicit setting by setting this property
      * as false.
      *
      * It is useful, because you usually want to start with the form free of
@@ -318,7 +317,7 @@ public class Form extends AbstractField<Object>
      */
     @Override
     public void commit()
-            throws Buffered.SourceException, Validator.InvalidValueException {
+            throws Buffered.SourceException, InvalidValueException {
 
         LinkedList<SourceException> problems = null;
 
@@ -337,16 +336,16 @@ public class Form extends AbstractField<Object>
         }
 
         // Try to commit all
-        for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
+        for (final Object id : propertyIds) {
             try {
-                final Field<?> f = fields.get(i.next());
+                final Field<?> f = fields.get(id);
                 // Commit only non-readonly fields.
                 if (!f.isReadOnly()) {
                     f.commit();
                 }
             } catch (final Buffered.SourceException e) {
                 if (problems == null) {
-                    problems = new LinkedList<>();
+                    problems = new LinkedList<SourceException>();
                 }
                 problems.add(e);
             }
@@ -362,12 +361,9 @@ public class Form extends AbstractField<Object>
         }
 
         // Commit problems
-        final Throwable[] causes = new Throwable[problems.size()];
-        int index = 0;
-        for (final Iterator<SourceException> i = problems.iterator(); i
-                .hasNext();) {
-            causes[index++] = i.next();
-        }
+        final Throwable[] causes = problems
+                .toArray(new Throwable[problems.size()]);
+
         final Buffered.SourceException e = new Buffered.SourceException(this,
                 causes);
         currentBufferedSourceException = e;
@@ -385,12 +381,12 @@ public class Form extends AbstractField<Object>
         LinkedList<SourceException> problems = null;
 
         // Try to discard all changes
-        for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
+        for (final Object id : propertyIds) {
             try {
-                fields.get(i.next()).discard();
+                fields.get(id).discard();
             } catch (final Buffered.SourceException e) {
                 if (problems == null) {
-                    problems = new LinkedList<>();
+                    problems = new LinkedList<SourceException>();
                 }
                 problems.add(e);
             }
@@ -406,12 +402,9 @@ public class Form extends AbstractField<Object>
         }
 
         // Discards problems occurred
-        final Throwable[] causes = new Throwable[problems.size()];
-        int index = 0;
-        for (final Iterator<SourceException> i = problems.iterator(); i
-                .hasNext();) {
-            causes[index++] = i.next();
-        }
+        final Throwable[] causes = problems
+                .toArray(new Throwable[problems.size()]);
+
         final Buffered.SourceException e = new Buffered.SourceException(this,
                 causes);
         currentBufferedSourceException = e;
@@ -425,8 +418,8 @@ public class Form extends AbstractField<Object>
      */
     @Override
     public boolean isModified() {
-        for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
-            final Field<?> f = fields.get(i.next());
+        for (final Object id : propertyIds) {
+            final Field<?> f = fields.get(id);
             if (f != null && f.isModified()) {
                 return true;
             }
@@ -443,9 +436,8 @@ public class Form extends AbstractField<Object>
     public void setBuffered(boolean buffered) {
         if (buffered != this.buffered) {
             this.buffered = buffered;
-            for (final Iterator<Object> i = propertyIds.iterator(); i
-                    .hasNext();) {
-                fields.get(i.next()).setBuffered(buffered);
+            for (final Object id : propertyIds) {
+                fields.get(id).setBuffered(buffered);
             }
         }
     }
@@ -453,7 +445,7 @@ public class Form extends AbstractField<Object>
     /**
      * Adds a new property to form and create corresponding field.
      *
-     * @see com.vaadin.data.Item#addItemProperty(Object, Property)
+     * @see Item#addItemProperty(Object, Property)
      */
     @Override
     public boolean addItemProperty(Object id, Property property) {
@@ -584,7 +576,7 @@ public class Form extends AbstractField<Object>
      * source, the field is returned instead of the data source.
      * </p>
      *
-     * @see com.vaadin.data.Item#getItemProperty(Object)
+     * @see Item#getItemProperty(Object)
      */
     @Override
     public Property getItemProperty(Object id) {
@@ -621,7 +613,7 @@ public class Form extends AbstractField<Object>
     /**
      * Removes the property and corresponding field from the form.
      *
-     * @see com.vaadin.data.Item#removeItemProperty(Object)
+     * @see Item#removeItemProperty(Object)
      */
     @Override
     public boolean removeItemProperty(Object id) {
@@ -665,11 +657,10 @@ public class Form extends AbstractField<Object>
      *         (and only if) the return value is <code>true</code>.
      */
     public boolean removeAllProperties() {
-        final Object[] properties = propertyIds.toArray();
         boolean success = true;
 
-        for (int i = 0; i < properties.length; i++) {
-            if (!removeItemProperty(properties[i])) {
+        for (Object property : propertyIds.toArray()) {
+            if (!removeItemProperty(property)) {
                 success = false;
             }
         }
@@ -691,12 +682,13 @@ public class Form extends AbstractField<Object>
      * adds all the properties as fields to the form.
      * </p>
      *
-     * @see com.vaadin.data.Item.Viewer#setItemDataSource(Item)
+     * @see Item.Viewer#setItemDataSource(Item)
      */
     @Override
     public void setItemDataSource(Item newDataSource) {
-        setItemDataSource(newDataSource, newDataSource != null
-                ? newDataSource.getItemPropertyIds() : null);
+        setItemDataSource(newDataSource,
+                newDataSource != null ? newDataSource.getItemPropertyIds()
+                        : null);
     }
 
     /**
@@ -709,7 +701,7 @@ public class Form extends AbstractField<Object>
      * order.
      * </p>
      *
-     * @see com.vaadin.data.Item.Viewer#setItemDataSource(Item)
+     * @see Item.Viewer#setItemDataSource(Item)
      */
     public void setItemDataSource(Item newDataSource,
             Collection<?> propertyIds) {
@@ -740,8 +732,7 @@ public class Form extends AbstractField<Object>
         }
 
         // Adds all the properties to this form
-        for (final Iterator<?> i = propertyIds.iterator(); i.hasNext();) {
-            final Object id = i.next();
+        for (final Object id : propertyIds) {
             final Property<?> property = itemDatasource.getItemProperty(id);
             if (id != null && property != null) {
                 final Field<?> f = fieldFactory.createField(itemDatasource, id,
@@ -817,13 +808,12 @@ public class Form extends AbstractField<Object>
 
         // Move fields from previous layout
         if (getLayout() != null) {
-            final Object[] properties = propertyIds.toArray();
-            for (int i = 0; i < properties.length; i++) {
-                Field<?> f = getField(properties[i]);
+            for (Object property : propertyIds) {
+                Field<?> f = getField(property);
                 detachField(f);
                 if (layout instanceof CustomLayout) {
                     ((CustomLayout) layout).addComponent(f,
-                            properties[i].toString());
+                            property.toString());
                 } else {
                     layout.addComponent(f);
                 }
@@ -871,7 +861,7 @@ public class Form extends AbstractField<Object>
         final Field<?> oldField = fields.get(propertyId);
         if (oldField == null) {
             throw new IllegalArgumentException("Field with given propertyid '"
-                    + propertyId.toString() + "' can not be found.");
+                    + propertyId + "' can not be found.");
         }
         final Object value = oldField.getPropertyDataSource() == null
                 ? oldField.getValue()
@@ -889,9 +879,7 @@ public class Form extends AbstractField<Object>
         }
         if (value != null && !found) {
             if (value instanceof Collection) {
-                for (final Iterator<?> it = ((Collection<?>) value)
-                        .iterator(); it.hasNext();) {
-                    final Object val = it.next();
+                for (final Object val : ((Collection<?>) value)) {
                     found = false;
                     for (int i = 0; i < values.length && !found; i++) {
                         if (values[i] == val
@@ -902,16 +890,14 @@ public class Form extends AbstractField<Object>
                     if (!found) {
                         throw new IllegalArgumentException(
                                 "Currently selected value '" + val
-                                        + "' of property '"
-                                        + propertyId.toString()
+                                        + "' of property '" + propertyId
                                         + "' was not found");
                     }
                 }
                 isMultiselect = true;
             } else {
-                throw new IllegalArgumentException(
-                        "Current value '" + value + "' of property '"
-                                + propertyId.toString() + "' was not found");
+                throw new IllegalArgumentException("Current value '" + value
+                        + "' of property '" + propertyId + "' was not found");
             }
         }
 
@@ -959,20 +945,20 @@ public class Form extends AbstractField<Object>
     /**
      * Checks the validity of the Form and all of its fields.
      *
-     * @see com.vaadin.legacy.data.Validatable#validate()
+     * @see Validatable#validate()
      */
     @Override
-    public void validate() throws Validator.InvalidValueException {
+    public void validate() throws InvalidValueException {
         super.validate();
-        for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
-            fields.get(i.next()).validate();
+        for (final Object id : propertyIds) {
+            fields.get(id).validate();
         }
     }
 
     /**
      * Checks the validabtable object accept invalid values.
      *
-     * @see com.vaadin.legacy.data.Validatable#isInvalidAllowed()
+     * @see Validatable#isInvalidAllowed()
      */
     @Override
     public boolean isInvalidAllowed() {
@@ -982,7 +968,7 @@ public class Form extends AbstractField<Object>
     /**
      * Should the validabtable object accept invalid values.
      *
-     * @see com.vaadin.legacy.data.Validatable#setInvalidAllowed(boolean)
+     * @see Validatable#setInvalidAllowed(boolean)
      */
     @Override
     public void setInvalidAllowed(boolean invalidValueAllowed)
@@ -993,13 +979,13 @@ public class Form extends AbstractField<Object>
     /**
      * Sets the component's to read-only mode to the specified state.
      *
-     * @see com.vaadin.ui.Component#setReadOnly(boolean)
+     * @see Component#setReadOnly(boolean)
      */
     @Override
     public void setReadOnly(boolean readOnly) {
         super.setReadOnly(readOnly);
-        for (final Iterator<?> i = propertyIds.iterator(); i.hasNext();) {
-            fields.get(i.next()).setReadOnly(readOnly);
+        for (final Object id : propertyIds) {
+            fields.get(id).setReadOnly(readOnly);
         }
     }
 
@@ -1031,7 +1017,7 @@ public class Form extends AbstractField<Object>
     /**
      * Gets the field type.
      *
-     * @see com.vaadin.legacy.ui.AbstractField#getType()
+     * @see AbstractField#getType()
      */
     @Override
     public Class<?> getType() {
@@ -1046,7 +1032,7 @@ public class Form extends AbstractField<Object>
      *
      * This is relevant when the Form is used as Field.
      *
-     * @see com.vaadin.legacy.ui.AbstractField#setInternalValue(java.lang.Object)
+     * @see AbstractField#setInternalValue(java.lang.Object)
      */
     @Override
     protected void setInternalValue(Object newValue) {
@@ -1072,7 +1058,7 @@ public class Form extends AbstractField<Object>
      */
     private Field<?> getFirstFocusableField() {
         Collection<?> itemPropertyIds = getItemPropertyIds();
-        if (itemPropertyIds != null && itemPropertyIds.size() > 0) {
+        if (itemPropertyIds != null && !itemPropertyIds.isEmpty()) {
             for (Object id : itemPropertyIds) {
                 if (id != null) {
                     Field<?> field = getField(id);
@@ -1106,7 +1092,7 @@ public class Form extends AbstractField<Object>
         if (data instanceof Item) {
             item = (Item) data;
         } else if (data != null) {
-            item = new BeanItem<>(data);
+            item = new BeanItem<Object>(data);
         }
 
         // Sets the datasource to form
@@ -1150,7 +1136,7 @@ public class Form extends AbstractField<Object>
      *            the visibleProperties to set.
      */
     public void setVisibleItemProperties(Object... visibleProperties) {
-        LinkedList<Object> v = new LinkedList<>();
+        LinkedList<Object> v = new LinkedList<Object>();
         for (int i = 0; i < visibleProperties.length; i++) {
             v.add(visibleProperties[i]);
         }
@@ -1160,7 +1146,7 @@ public class Form extends AbstractField<Object>
     /**
      * Focuses the first field in the form.
      *
-     * @see com.vaadin.ui.Component.Focusable#focus()
+     * @see Component.Focusable#focus()
      */
     @Override
     public void focus() {
@@ -1173,14 +1159,13 @@ public class Form extends AbstractField<Object>
     /**
      * Sets the Tabulator index of this Focusable component.
      *
-     * @see com.vaadin.ui.Component.Focusable#setTabIndex(int)
+     * @see Component.Focusable#setTabIndex(int)
      */
     @Override
     public void setTabIndex(int tabIndex) {
         super.setTabIndex(tabIndex);
-        for (final Iterator<?> i = getItemPropertyIds().iterator(); i
-                .hasNext();) {
-            getField(i.next()).setTabIndex(tabIndex);
+        for (final Object id : getItemPropertyIds()) {
+            getField(id).setTabIndex(tabIndex);
         }
     }
 
@@ -1191,8 +1176,7 @@ public class Form extends AbstractField<Object>
     @Override
     public void setImmediate(boolean immediate) {
         super.setImmediate(immediate);
-        for (Iterator<Field<?>> i = fields.values().iterator(); i.hasNext();) {
-            Field<?> f = i.next();
+        for (Field<?> f : fields.values()) {
             if (f instanceof AbstractLegacyComponent) {
                 ((AbstractLegacyComponent) f).setImmediate(immediate);
             }
@@ -1207,9 +1191,7 @@ public class Form extends AbstractField<Object>
      */
     @Override
     public boolean isEmpty() {
-
-        for (Iterator<Field<?>> i = fields.values().iterator(); i.hasNext();) {
-            Field<?> f = i.next();
+        for (Field<?> f : fields.values()) {
             if (f instanceof AbstractField) {
                 if (!((AbstractField<?>) f).isEmpty()) {
                     return false;
@@ -1220,15 +1202,9 @@ public class Form extends AbstractField<Object>
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.ui.AbstractField#clear()
-     */
     @Override
     public void clear() {
-        for (Iterator<Field<?>> i = fields.values().iterator(); i.hasNext();) {
-            Field<?> f = i.next();
+        for (Field<?> f : fields.values()) {
             if (f instanceof AbstractField) {
                 ((AbstractField<?>) f).clear();
             }
@@ -1318,7 +1294,7 @@ public class Form extends AbstractField<Object>
     }
 
     /**
-     * Removes all action handlers
+     * Removes all action handlers.
      */
     public void removeAllActionHandlers() {
         if (ownActionManager != null) {

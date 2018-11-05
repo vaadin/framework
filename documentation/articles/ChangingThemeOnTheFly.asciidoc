@@ -1,0 +1,40 @@
+---
+title: Changing Theme On The Fly
+order: 60
+layout: page
+---
+
+[[changing-theme-on-the-fly]]
+= Changing theme on the fly
+
+Starting from Vaadin 7.3, you can change themes in the application
+without reloading the page. To do this, simply use the
+`UI.setTheme(String)` method.
+
+[source,java]
+....
+public class ThemeChangeUI extends UI {
+
+  private String[] themes = { "valo", "reindeer", "runo", "chameleon" };
+
+  @Override
+  protected void init(VaadinRequest request) {
+    ComboBox themePicker = new ComboBox("Theme", Arrays.asList(themes));
+    themePicker.setValue(getTheme());
+
+    themePicker.addValueChangeListener(new ValueChangeListener() {
+      @Override
+      public void valueChange(ValueChangeEvent event) {
+        String theme = (String) event.getProperty().getValue();
+        setTheme(theme);
+      }
+    });
+
+    setContent(themePicker);
+  }
+}
+....
+
+In this way, you can let your users choose the look of your application.
+The functionality also makes it easier to create applications that are
+branded for different customers.

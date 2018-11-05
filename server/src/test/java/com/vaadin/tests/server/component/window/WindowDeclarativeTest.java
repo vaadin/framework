@@ -1,21 +1,7 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.server.component.window;
 
-import org.junit.Assert;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -31,7 +17,6 @@ import com.vaadin.ui.declarative.DesignException;
 /**
  * Tests declarative support for implementations of {@link Window}.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
@@ -134,7 +119,7 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
     protected void assertInvalidPosition(String position) {
         try {
             read("<vaadin-window position='" + position + "'>");
-            Assert.fail("Invalid position '" + position + "' should throw");
+            fail("Invalid position '" + position + "' should throw");
         } catch (Exception e) {
             // expected
         }

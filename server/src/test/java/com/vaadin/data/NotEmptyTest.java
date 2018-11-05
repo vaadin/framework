@@ -1,19 +1,7 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.data;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +11,6 @@ import java.net.URLClassLoader;
 
 import org.apache.commons.io.IOUtils;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.tests.data.bean.BeanToValidate;
@@ -82,7 +69,7 @@ public class NotEmptyTest {
             try {
                 Class.forName(NOT_EMPTY);
                 // The NotEmpty class must not be in the classpath
-                Assert.fail();
+                fail();
             } catch (ClassNotFoundException e) {
             }
             BeanValidationBinder<BeanToValidate> binder = new BeanValidationBinder<>(
@@ -96,7 +83,7 @@ public class NotEmptyTest {
             binder.bind(nameField, "firstname");
             binder.setBean(item);
 
-            Assert.assertTrue(nameField.isRequiredIndicatorVisible());
+            assertTrue(nameField.isRequiredIndicatorVisible());
         }
 
     }

@@ -1,19 +1,8 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.server.component.customlayout;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.FilterInputStream;
@@ -26,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.CustomLayout;
@@ -52,9 +40,9 @@ public class CustomLayoutTest {
         InputStreamImpl stream = new InputStreamImpl(inputStream, buffer / 2);
         new CustomLayout(stream);
 
-        Assert.assertTrue("Stream is not closed in CustomLayout CTOR ",
+        assertTrue("Stream is not closed in CustomLayout CTOR ",
                 stream.isClosed());
-        Assert.assertEquals("Number of read bytes is incorrect", bytes.length,
+        assertEquals("Number of read bytes is incorrect", bytes.length,
                 stream.getCount());
     }
 
@@ -71,14 +59,14 @@ public class CustomLayoutTest {
             field = list.get(0);
         } else {
             for (Field fld : list) {
-                if (fld.getName().toLowerCase(Locale.ENGLISH)
+                if (fld.getName().toLowerCase(Locale.ROOT)
                         .startsWith("buffer")) {
                     field = fld;
                     break;
                 }
             }
         }
-        Assert.assertNotNull(
+        assertNotNull(
                 "Unable to find default buffer size in CustomLayout class",
                 field);
         field.setAccessible(true);

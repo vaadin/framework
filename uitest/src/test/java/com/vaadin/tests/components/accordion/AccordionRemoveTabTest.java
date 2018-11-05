@@ -1,21 +1,8 @@
-/*
- * Copyright 2000-2013 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.accordion;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -53,7 +40,7 @@ public class AccordionRemoveTabTest extends MultiBrowserTest {
         WebElement caption = firstItem
                 .findElement(By.className("v-accordion-item-caption"));
         caption.click();
-        Assert.assertEquals("Errors present in console", 0,
+        assertEquals("Errors present in console", 0,
                 findElements(By.className("SEVERE")).size());
     }
 
@@ -61,11 +48,10 @@ public class AccordionRemoveTabTest extends MultiBrowserTest {
         WebElement firstItem = driver
                 .findElement(By.className("v-accordion-item-first"));
         WebElement label = firstItem.findElement(By.className("v-label"));
-        Assert.assertEquals("Unexpected text in first item", text,
-                label.getText());
+        assertEquals("Unexpected text in first item", text, label.getText());
         int height = firstItem.getSize().getHeight();
         WebElement accordion = driver.findElement(By.className("v-accordion"));
-        Assert.assertTrue("First item in accordion has unexpected height",
+        assertTrue("First item in accordion has unexpected height",
                 height > accordion.getSize().getHeight() / 2);
     }
 

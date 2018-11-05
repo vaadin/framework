@@ -1,26 +1,9 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.Table;
 
@@ -55,24 +38,16 @@ public class TableToggleColumnVisibility extends AbstractReindeerTestUI {
 
         final Button visibToggler = new Button("visibility");
         visibToggler.setId("visib-toggler");
-        visibToggler.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                currentSetNumber = (currentSetNumber == 0) ? 1 : 0;
-                table.setVisibleColumns(columnSets[currentSetNumber]);
-            }
+        visibToggler.addClickListener(event -> {
+            currentSetNumber = (currentSetNumber == 0) ? 1 : 0;
+            table.setVisibleColumns(columnSets[currentSetNumber]);
         });
 
         final Button orderToggler = new Button("change order");
         orderToggler.setId("order-toggler");
-        orderToggler.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                currentSetNumber = (currentSetNumber == 1) ? 2 : 1;
-                table.setVisibleColumns(columnSets[currentSetNumber]);
-            }
+        orderToggler.addClickListener(event -> {
+            currentSetNumber = (currentSetNumber == 1) ? 2 : 1;
+            table.setVisibleColumns(columnSets[currentSetNumber]);
         });
 
         layout.addComponent(table);

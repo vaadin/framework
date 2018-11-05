@@ -1,23 +1,8 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.grid.basics;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -37,8 +22,8 @@ public class GridBasicStyleGeneratorTest extends GridBasicsTest {
         GridRowElement row = getGridElement().getRow(2);
         GridCellElement cell = getGridElement().getCell(3, 2);
 
-        Assert.assertTrue(hasCssClass(row, "row2"));
-        Assert.assertTrue(hasCssClass(cell, "Column_2"));
+        assertTrue(hasCssClass(row, "row2"));
+        assertTrue(hasCssClass(cell, "Column_2"));
 
         // Scroll down and verify that the old elements don't have the
         // stylename any more
@@ -47,8 +32,8 @@ public class GridBasicStyleGeneratorTest extends GridBasicsTest {
         row = getGridElement().getRow(352);
         cell = getGridElement().getCell(353, 2);
 
-        Assert.assertFalse(hasCssClass(row, "row352"));
-        Assert.assertFalse(hasCssClass(cell, "Column_2"));
+        assertFalse(hasCssClass(row, "row352"));
+        assertFalse(hasCssClass(cell, "Column_2"));
     }
 
     @Test
@@ -63,8 +48,8 @@ public class GridBasicStyleGeneratorTest extends GridBasicsTest {
         GridRowElement row = getGridElement().getRow(2);
         GridCellElement cell = getGridElement().getCell(3, 2);
 
-        Assert.assertTrue(hasCssClass(row, "row2"));
-        Assert.assertTrue(hasCssClass(cell, "Column_2"));
+        assertTrue(hasCssClass(row, "row2"));
+        assertTrue(hasCssClass(cell, "Column_2"));
 
         // Disable the generator and check again
         selectRowStyleNameGenerator(GridBasics.ROW_STYLE_GENERATOR_NONE);
@@ -73,8 +58,8 @@ public class GridBasicStyleGeneratorTest extends GridBasicsTest {
         row = getGridElement().getRow(2);
         cell = getGridElement().getCell(3, 2);
 
-        Assert.assertFalse(hasCssClass(row, "row2"));
-        Assert.assertFalse(hasCssClass(cell, "Column_2"));
+        assertFalse(hasCssClass(row, "row2"));
+        assertFalse(hasCssClass(cell, "Column_2"));
     }
 
     @Test
@@ -89,8 +74,8 @@ public class GridBasicStyleGeneratorTest extends GridBasicsTest {
         GridRowElement row = getGridElement().getRow(2);
         GridCellElement cell = getGridElement().getCell(3, 2);
 
-        Assert.assertTrue(hasCssClass(row, "row2"));
-        Assert.assertTrue(hasCssClass(cell, "Column_2"));
+        assertTrue(hasCssClass(row, "row2"));
+        assertTrue(hasCssClass(cell, "Column_2"));
 
         // Change the generator and check again
         selectRowStyleNameGenerator(GridBasics.ROW_STYLE_GENERATOR_NONE);
@@ -101,11 +86,11 @@ public class GridBasicStyleGeneratorTest extends GridBasicsTest {
         cell = getGridElement().getCell(3, 2);
 
         // Old styles removed?
-        Assert.assertFalse(hasCssClass(row, "row2"));
-        Assert.assertFalse(hasCssClass(cell, "Column_2"));
+        assertFalse(hasCssClass(row, "row2"));
+        assertFalse(hasCssClass(cell, "Column_2"));
 
         // New style present?
-        Assert.assertTrue(hasCssClass(cell, "Column-2"));
+        assertTrue(hasCssClass(cell, "Column-2"));
     }
 
     @Test

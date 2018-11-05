@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -74,28 +74,28 @@ public final class GridConstants implements Serializable {
     public static final double DEFAULT_COLUMN_WIDTH_PX = -1;
 
     /**
-     * Event ID for item click events
+     * Event ID for item click events.
      */
     public static final String ITEM_CLICK_EVENT_ID = "itemClick";
 
-    /** The default save button caption in the editor */
+    /** The default save button caption in the editor. */
     public static final String DEFAULT_SAVE_CAPTION = "Save";
 
-    /** The default cancel button caption in the editor */
+    /** The default cancel button caption in the editor. */
     public static final String DEFAULT_CANCEL_CAPTION = "Cancel";
 
     /**
-     * Event ID constant for editor open event
+     * Event ID constant for editor open event.
      */
     public static final String EDITOR_OPEN_EVENT_ID = "editorOpen";
 
     /**
-     * Event ID constant for editor move event
+     * Event ID constant for editor move event.
      */
     public static final String EDITOR_MOVE_EVENT_ID = "editorMove";
 
     /**
-     * Event ID constant for editor close event
+     * Event ID constant for editor close event.
      */
     public static final String EDITOR_CLOSE_EVENT_ID = "editorClose";
 }

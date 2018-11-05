@@ -1,26 +1,14 @@
-/*
- * Copyright 2000-2013 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TableHeaderElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -44,18 +32,17 @@ public class TableToggleColumnVisibilityTest extends MultiBrowserTest {
         checkHeaderAttributes(1);
 
         toggleVisibilityButton.click(); // hide column #1
-        Assert.assertEquals("One column should be visible",
+        assertEquals("One column should be visible",
                 findElements(By.className("v-table-header-cell")).size(), 1);
 
         toggleVisibilityButton.click(); // restore column #1
-        Assert.assertEquals("Two columns should be visible",
+        assertEquals("Two columns should be visible",
                 findElements(By.className("v-table-header-cell")).size(), 2);
         checkHeaderAttributes(1);
 
-        changeOrderButton.click(); // change column order, column #1 now becomes
-                                   // column #0
+        // change column order, column #1 now becomes column #0
+        changeOrderButton.click();
         checkHeaderAttributes(0);
-
     }
 
     /*
@@ -65,16 +52,15 @@ public class TableToggleColumnVisibilityTest extends MultiBrowserTest {
         TableHeaderElement headerCell = $(TableElement.class).first()
                 .getHeaderCell(columnNumber);
 
-        Assert.assertTrue("Column header text should be custom",
+        assertTrue("Column header text should be custom",
                 headerCell.getText().equalsIgnoreCase("Hello World"));
 
-        Assert.assertTrue("Column should have an icon",
-                headerCell.findElements(By.className("v-icon")).size() > 0);
+        assertFalse("Column should have an icon",
+                headerCell.findElements(By.className("v-icon")).isEmpty());
 
-        Assert.assertTrue("Column should have alignment to the right",
-                headerCell
-                        .findElements(By.className(
-                                "v-table-caption-container-align-right"))
-                        .size() > 0);
+        assertFalse("Column should have alignment to the right", headerCell
+                .findElements(
+                        By.className("v-table-caption-container-align-right"))
+                .isEmpty());
     }
 }

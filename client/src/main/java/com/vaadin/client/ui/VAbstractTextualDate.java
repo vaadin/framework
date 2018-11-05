@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,20 +17,25 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.user.client.ui.TextBox;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.LocaleService;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.aria.HandlesAriaCaption;
 import com.vaadin.client.ui.aria.HandlesAriaInvalid;
@@ -49,11 +54,13 @@ import com.vaadin.shared.EventId;
  * @since 8.0
  */
 public abstract class VAbstractTextualDate<R extends Enum<R>>
-        extends VDateField<R> implements Field, ChangeHandler, Focusable,
-        SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
-        HandlesAriaRequired, KeyDownHandler {
+        extends VDateField<R>
+        implements ChangeHandler, Focusable, SubPartAware, HandlesAriaCaption,
+        HandlesAriaInvalid, HandlesAriaRequired, KeyDownHandler {
 
     private static final String PARSE_ERROR_CLASSNAME = "-parseerror";
+    private static final String ISO_DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final String ISO_DATE_PATTERN = "yyyy-MM-dd";
 
     /** For internal use only. May be removed or replaced in the future. */
     public final TextBox text;
@@ -61,23 +68,30 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     /** For internal use only. May be removed or replaced in the future. */
     public boolean lenient;
 
-    private final String TEXTFIELD_ID = "field";
+    private static final String TEXTFIELD_ID = "field";
 
     /** For internal use only. May be removed or replaced in the future. */
-    public String formatStr;
+    private String formatStr;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    private TimeZone timeZone;
+
+    /**
+     * Specifies whether the group of components has focus or not.
+     */
+    private boolean groupFocus;
 
     public VAbstractTextualDate(R resoluton) {
         super(resoluton);
         text = new TextBox();
         text.addChangeHandler(this);
-        text.addFocusHandler(
-                event -> fireBlurFocusEvent(event, true, EventId.FOCUS));
-        text.addBlurHandler(
-                event -> fireBlurFocusEvent(event, false, EventId.BLUR));
+        text.addFocusHandler(event -> fireBlurFocusEvent(event, true));
+        text.addBlurHandler(event -> fireBlurFocusEvent(event, false));
         if (BrowserInfo.get().isIE()) {
             addDomHandler(this, KeyDownEvent.getType());
         }
         add(text);
+        publishJSHelpers(getElement());
     }
 
     /**
@@ -95,26 +109,46 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      *
      * @return the format string
      */
-    protected String getFormatString() {
+    public String getFormatString() {
         if (formatStr == null) {
-            if (isYear(getCurrentResolution())) {
-                formatStr = "yyyy"; // force full year
-            } else {
-
-                try {
-                    String frmString = LocaleService
-                            .getDateFormat(currentLocale);
-                    frmString = cleanFormat(frmString);
-
-                    formatStr = frmString;
-                } catch (LocaleNotLoadedException e) {
-                    // TODO should die instead? Can the component survive
-                    // without format string?
-                    VConsole.error(e);
-                }
-            }
+            setFormatString(createFormatString());
         }
         return formatStr;
+    }
+
+    /**
+     * Create a format string suitable for the widget in its current state.
+     *
+     * @return a date format string to use when formatting and parsing the text
+     *         in the input field
+     * @since 8.1
+     */
+    protected String createFormatString() {
+        if (isYear(getCurrentResolution())) {
+            return "yyyy"; // force full year
+        }
+        try {
+            String frmString = LocaleService.getDateFormat(currentLocale);
+            return cleanFormat(frmString);
+        } catch (LocaleNotLoadedException e) {
+            // TODO should die instead? Can the component survive
+            // without format string?
+            getLogger().log(Level.SEVERE,
+                    e.getMessage() == null ? "" : e.getMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * Sets the date format string to use for the text field.
+     *
+     * @param formatString
+     *            the format string to use, or {@code null} to force re-creating
+     *            the format string from the locale the next time it is needed
+     * @since 8.1
+     */
+    public void setFormatString(String formatString) {
+        this.formatStr = formatString;
     }
 
     @Override
@@ -148,9 +182,11 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         // Create the initial text for the textfield
         String dateText;
         Date currentDate = getDate();
+        // Always call this to ensure the format ends up in the element
+        String formatString = getFormatString();
         if (currentDate != null) {
             dateText = getDateTimeService().formatDate(currentDate,
-                    getFormatString());
+                    formatString, timeZone);
         } else {
             dateText = "";
         }
@@ -168,7 +204,17 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             Roles.getTextboxRole()
                     .removeAriaReadonlyProperty(text.getElement());
         }
+    }
 
+    /**
+     * Sets the time zone for the field.
+     *
+     * @param timeZone
+     *            the new time zone to use
+     * @since 8.2
+     */
+    public void setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone;
     }
 
     @Override
@@ -178,9 +224,20 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void onChange(ChangeEvent event) {
-        if (!text.getText().equals("")) {
+        updateBufferedValues();
+        sendBufferedValues();
+    }
+
+    @Override
+    public void updateBufferedValues() {
+        updateDate();
+        bufferedDateString = text.getText();
+        updateBufferedResolutions();
+    }
+
+    private void updateDate() {
+        if (!text.getText().isEmpty()) {
             try {
                 String enteredDate = text.getText();
 
@@ -193,18 +250,16 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
                     // FIXME: Add a description/example here of when this is
                     // needed
                     text.setValue(getDateTimeService().formatDate(getDate(),
-                            getFormatString()), false);
+                            getFormatString(), timeZone), false);
                 }
 
                 // remove possibly added invalid value indication
                 removeStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
             } catch (final Exception e) {
-                VConsole.log(e);
+                getLogger().log(Level.INFO,
+                        e.getMessage() == null ? "" : e.getMessage(), e);
 
                 addStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
-                // this is a hack that may eventually be removed
-                getClient().updateVariable(getId(), "lastInvalidDateString",
-                        text.getText(), false);
                 setDate(null);
             }
         } else {
@@ -212,30 +267,43 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             // remove possibly added invalid value indication
             removeStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
         }
-        // always send the date string
-        getClient().updateVariable(getId(), "dateString", text.getText(),
-                false);
-
-        updateDateVariables();
     }
 
     /**
-     * Updates variables to send a response to the server.
+     * Updates the {@link VDateField#bufferedResolutions bufferedResolutions},
+     * then {@link #sendBufferedValues() sends} the values to the server.
+     *
+     * @since 8.2
+     * @deprecated Use {@link #updateBufferedResolutions()} and
+     *             {@link #sendBufferedValues()} instead.
+     */
+    @Deprecated
+    protected final void updateAndSendBufferedValues() {
+        updateBufferedResolutions();
+        sendBufferedValues();
+    }
+
+    /**
+     * Updates {@link VDateField#bufferedResolutions bufferedResolutions} before
+     * sending a response to the server.
      * <p>
      * The method can be overridden by subclasses to provide a custom logic for
      * date variables to avoid overriding the {@link #onChange(ChangeEvent)}
      * method.
+     *
+     * <p>
+     * Note that this method should not send the buffered values. For that, use
+     * {@link #sendBufferedValues()}.
+     *
+     * @since 8.2
      */
-    protected void updateDateVariables() {
-        // Update variables
-        // (only the smallest defining resolution needs to be
-        // immediate)
+    protected void updateBufferedResolutions() {
         Date currentDate = getDate();
-        getClient().updateVariable(getId(),
-                getResolutionVariable(getResolutions().filter(this::isYear)
-                        .findFirst().get()),
-                currentDate != null ? currentDate.getYear() + 1900 : -1,
-                isYear(getCurrentResolution()));
+        if (currentDate != null) {
+            bufferedResolutions.put(
+                    getResolutions().filter(this::isYear).findFirst().get(),
+                    currentDate.getYear() + 1900);
+        }
     }
 
     /**
@@ -338,21 +406,118 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         }
     }
 
-    private void fireBlurFocusEvent(DomEvent<?> event,
-            boolean addFocusStyleName, String eventId) {
+    private void fireBlurFocusEvent(DomEvent<?> event, boolean focus) {
         String styleName = VTextField.CLASSNAME + "-"
                 + VTextField.CLASSNAME_FOCUS;
-        if (addFocusStyleName) {
+        if (focus) {
             text.addStyleName(styleName);
         } else {
             text.removeStyleName(styleName);
         }
-        if (getClient() != null && getClient()
-                .hasEventListeners(VAbstractTextualDate.this, eventId)) {
-            getClient().updateVariable(getId(), eventId, "", true);
-        }
+
+        Scheduler.get().scheduleDeferred(() -> checkGroupFocus(focus));
 
         // Needed for tooltip event handling
         fireEvent(event);
     }
+
+    /**
+     * Checks if the group focus has changed, and sends to the server if needed.
+     *
+     * @param textFocus
+     *            the focus of the {@link #text}
+     * @since 8.3
+     */
+    protected void checkGroupFocus(boolean textFocus) {
+        boolean newGroupFocus = textFocus | hasChildFocus();
+        if (getClient() != null
+                && connector.hasEventListener(
+                        textFocus ? EventId.FOCUS : EventId.BLUR)
+                && groupFocus != newGroupFocus) {
+
+            if (newGroupFocus) {
+                rpc.focus();
+            } else {
+                rpc.blur();
+            }
+            sendBufferedValues();
+            groupFocus = newGroupFocus;
+        }
+    }
+
+    /**
+     * Returns whether any of the child components has focus.
+     *
+     * @return {@code true} if any of the child component has focus,
+     *         {@code false} otherwise
+     * @since 8.3
+     */
+    protected boolean hasChildFocus() {
+        return false;
+    }
+
+    /**
+     * Publish methods/properties on the element to be used from JavaScript.
+     *
+     * @since 8.1
+     */
+    private native void publishJSHelpers(Element root)
+    /*-{
+        var self = this;
+        root.setISOValue = $entry(function (value) {
+           self.@VAbstractTextualDate::setISODate(*)(value);
+        });
+        root.getISOValue = $entry(function () {
+           return self.@VAbstractTextualDate::getISODate()();
+        });
+    }-*/;
+
+    /**
+     * Sets the value of the date field as a locale independent ISO date
+     * (yyyy-MM-dd'T'HH:mm:ss or yyyy-MM-dd depending on whether this is a date
+     * field or a date and time field).
+     *
+     * @param isoDate
+     *            the date to set in ISO8601 format, or null to clear the date
+     *            value
+     * @since 8.1
+     */
+    public void setISODate(String isoDate) {
+        Date date = null;
+        if (isoDate != null) {
+            date = getIsoFormatter().parse(isoDate);
+        }
+        setDate(date);
+        updateBufferedResolutions();
+        sendBufferedValues();
+    }
+
+    /**
+     * Gets the value of the date field as a locale independent ISO date
+     * (yyyy-MM-dd'T'HH:mm:ss or yyyy-MM-dd depending on whether this is a date
+     * field or a date and time field).
+     *
+     * @return the current date in ISO8601 format, or null if no date is set
+     *
+     * @since 8.1
+     */
+    public String getISODate() {
+        Date date = getDate();
+        if (date == null) {
+            return null;
+        }
+        return getIsoFormatter().format(date);
+    }
+
+    private DateTimeFormat getIsoFormatter() {
+        if (supportsTime()) {
+            return DateTimeFormat.getFormat(ISO_DATE_TIME_PATTERN);
+        }
+        return DateTimeFormat.getFormat(ISO_DATE_PATTERN);
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(VAbstractTextualDate.class.getName());
+    }
+
 }

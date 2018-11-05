@@ -6,7 +6,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.v7.data.util.BeanContainer;
 import com.vaadin.v7.data.util.BeanItem;
@@ -56,13 +55,8 @@ public class TableWithContainerRequiringEqualsForItemId
             public Component generateCell(final Table source,
                     final Object itemId, final Object columnId) {
                 Button tripFolderLink = new Button("Button" + itemId);
-                tripFolderLink.addClickListener(new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(final ClickEvent event) {
-                        log.log("Button " + event.getButton().getCaption()
-                                + " clicked");
-                    }
-                });
+                tripFolderLink.addClickListener(event -> log.log("Button "
+                        + event.getButton().getCaption() + " clicked"));
                 tripFolderLink.setStyleName(Reindeer.BUTTON_SMALL);
                 return tripFolderLink;
             }
@@ -77,8 +71,7 @@ public class TableWithContainerRequiringEqualsForItemId
         }
 
         t.setContainerDataSource(container);
-        t.setVisibleColumns(
-                new Object[] { "id", "created", "name", "Actions" });
+        t.setVisibleColumns("id", "created", "name", "Actions");
 
         addComponent(t);
         addComponent(log);

@@ -1,0 +1,167 @@
+---
+title: Getting Started On NetBeans
+order: 76
+layout: page
+---
+
+[[getting-started-on-netbeans]]
+= Getting started on NetBeans
+
+*This page is for old NetBeans version. Take a look at
+http://wiki.netbeans.org/VaadinPlugin1.0.0[New plugin in NetBeans wiki]*
+
+[[your-first-project-with-vaadin-in-netbeans-ide-6.7]]
+Your First Project with Vaadin in NetBeans IDE 6.7
+--------------------------------------------------
+
+Eclipse users have access to the http://vaadin.com/eclipse[Vaadin Eclipse
+plugin] which
+is probably the easiest way to get started with the Vaadin framework. But
+if you preferNetBeans IDE, this is the article for you. And don't worry,
+it's almost as easy to get started with NetBeans also.
+
+This tutorial assumes you have downloaded and installed a bundle of
+http://www.netbeans.org[NetBeans 6.7] that
+includes the Apache Tomcat server (the "Java Web & EE" support) and you
+have the latest
+http://vaadin.com/download[Vaadin] JAR
+package at hand.
+
+[[creating-the-project]]
+Creating the Project
+~~~~~~~~~~~~~~~~~~~~
+
+image:img/netbeans_new_project.png[NetBeans new project]
+
+Launch your NetBeans IDE and perform the following steps to create a new
+web project.
+
+* Select `File -> New Project` to open the New Project dialog
+window.
+* Select `Java Web` from the categories and `Web Application`
+from the project selection and click `Next` to proceed.
+* Type in a name and location for your project (I use `HelloVaadin` as
+the name and my default project folder) and click `Next`.
+* Select the `Apache Tomcat 6.0.18` server and type in preferred
+context path or use the default (the project name). The context path
+will define the URL of your application (for example
+`http://localhost:8084/HelloVaadin`). Click `Finish` to create the
+project.
+* You can close and ignore the index.jsp, which is opened to the editor
+by default after the project has been created.
+
+[[importing-vaadin-libraries]]
+Importing Vaadin Libraries
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Next you need to import the Vaadin library JAR package to the project
+you just created.
+
+* Right-click the `Libraries` node on your project and select `Add
+JAR/Folder...`.
+* Locate your copy of the Vaadin JAR file in the opening file dialog and
+click `Open`.
+* Now you should see the JAR file under the Libraries node.
+
+[[writing-the-code]]
+Writing the Code
+~~~~~~~~~~~~~~~~
+
+Next we create the application class for our simple example application.
+
+* Select `New -> Java Class` on your project to open the New Java
+Class dialog.
+* Type in your a name and package for your class (I use a class name of
+`HelloVaadin` and a package `com.vaadin.netbeans.tutorial`).
+* Select `Finish` to create the Java class.
+
+This class will be the main application class of our Vaadin
+application.Therefore it must extend the abstract
+`com.vaadin.Application` class and implement the `init()` method.
+
+Type in or copy-paste the following code to the newly created file:
+
+[source,java]
+....
+package com.vaadin.netbeans.tutorial;
+
+import com.vaadin.Application;
+import com.vaadin.ui.*;
+
+public class HelloVaadin extends Application {
+  @Override
+  public void init() {
+    Window mainWindow = new Window("HelloVaadin");
+    Label label = new Label("Hello Vaadin user");
+    mainWindow.addComponent(label);
+    setMainWindow(mainWindow);
+  }
+}
+....
+
+[[defining-deployment-descriptor]]
+Defining Deployment Descriptor
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To run your application you must define a deployment descriptor for it.
+Open `Web Pages -> WEB-INF -> web.xml` file on your project. By
+default the file is opened in a graphical editor but you can select the
+XML tab to edit the XML file directly. Type in or copy-paste the
+following to the contents of the file.
+
+[source,xml]
+....
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5"
+   xmlns="http://java.sun.com/xml/ns/javaee"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+  <display-name>HelloVaadin</display-name>
+  <context-param>
+    <param-name>productionMode</param-name>
+    <param-value>false</param-value>
+    <description>Vaadin production mode</description>
+  </context-param>
+
+  <servlet>
+    <servlet-name>HelloVaadin</servlet-name>
+    <servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.vaadin.netbeans.tutorial.HelloVaadin</param-value>
+      <description>Vaadin application class to start</description>
+    </init-param>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>HelloVaadin</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+</web-app>
+....
+
+[[running-your-application]]
+Running Your Application
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now we can run (or debug) the application by simply selecting `Run ->
+Run Main Project` (or `Run -> Debug Main Project`).This starts the
+Apache Tomcat server and opens up your application in your default
+browser.
+
+image:img/netbeans_hello_vaadin.png[NetBeans "Hello Vaadin"]
+
+[[what-next]]
+What Next?
+~~~~~~~~~~
+
+Now that you have your environment setup, you probably want to explore
+more of the features of the Vaadin framework. I would suggest that
+you head to the http://vaadin.com/tutorial[Vaadin tutorial].
+Have fun with Vaadin!
+
+[[update]]
+Update
+~~~~~~
+
+* http://vaadin.com/netbeans[Vaadin Plugin for NetBeans 6.8]

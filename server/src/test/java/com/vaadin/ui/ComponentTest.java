@@ -1,26 +1,15 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.ui;
 
+import static org.junit.Assert.assertEquals;
+
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import org.junit.Assert;
-
 import com.vaadin.server.ClientConnector;
+import com.vaadin.server.LegacyCommunicationManager;
+import com.vaadin.server.ServerRpcManager;
+import com.vaadin.shared.communication.ServerRpc;
 
 import elemental.json.JsonObject;
 
@@ -62,9 +51,31 @@ public class ComponentTest {
      *            the component to update
      */
     public static void updateDiffState(AbstractComponent component) {
-        component.getUI().getSession().getCommunicationManager()
-                .encodeState(component, component.getState());
+        LegacyCommunicationManager.encodeState(component, component.getState());
 
+    }
+
+    /**
+     * Gets the server rpc handler registered for a component.
+     *
+     * @param connector
+     *            the connector which listens to the RPC
+     * @param serverRpcClass
+     *            the server RPC class
+     * @return the server RPC handler
+     */
+    public static <T extends ServerRpc> T getRpcProxy(ClientConnector connector,
+            Class<T> serverRpcClass) {
+        try {
+            ServerRpcManager<?> rpcManager = connector
+                    .getRpcManager(serverRpcClass.getName());
+            Method method = ServerRpcManager.class
+                    .getDeclaredMethod("getImplementation");
+            method.setAccessible(true);
+            return serverRpcClass.cast(method.invoke(rpcManager));
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -85,8 +96,7 @@ public class ComponentTest {
         JsonObject encodeState = connector.encodeState();
 
         // Collect to HashSet so that order doesn't matter
-        Assert.assertEquals(message,
-                new HashSet<>(Arrays.asList(expectedProperties)),
+        assertEquals(message, new HashSet<>(Arrays.asList(expectedProperties)),
                 new HashSet<>(Arrays.asList(encodeState.keys())));
     }
 

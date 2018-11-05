@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,13 +21,15 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import com.google.gwt.dom.client.Element;
+import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.AbstractFocusableListingConnector;
 import com.vaadin.client.data.DataSource;
-import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.client.ui.VCheckBoxGroup;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.ListingJsonConstants;
 import com.vaadin.shared.ui.optiongroup.CheckBoxGroupState;
 import com.vaadin.ui.CheckBoxGroup;
 
@@ -44,8 +46,7 @@ import elemental.json.JsonObject;
 // TODO refactor to extend AbstractMultiSelectConnector, maybe when
 // SelectionModel is removed from client side framwork8-issues#421
 public class CheckBoxGroupConnector
-        extends AbstractFocusableListingConnector<VCheckBoxGroup>
-        implements HasRequiredIndicator {
+        extends AbstractFocusableListingConnector<VCheckBoxGroup> {
 
     @Override
     protected void init() {
@@ -86,6 +87,7 @@ public class CheckBoxGroupConnector
             items.add(item);
         }
         getWidget().buildOptions(items);
+        getLayoutManager().setNeedsMeasure(this);
     }
 
     @Override
@@ -97,5 +99,21 @@ public class CheckBoxGroupConnector
     @Override
     public boolean isRequiredIndicatorVisible() {
         return getState().required && !isReadOnly();
+    }
+
+    @Override
+    public TooltipInfo getTooltipInfo(Element element) {
+        JsonObject item = getWidget().getItem(element);
+        if (item != null
+                && item.hasKey(ListingJsonConstants.JSONKEY_ITEM_DESCRIPTION)) {
+            return new TooltipInfo(item
+                    .getString(ListingJsonConstants.JSONKEY_ITEM_DESCRIPTION));
+        }
+        return super.getTooltipInfo(element);
+    }
+
+    @Override
+    public boolean hasTooltip() {
+        return true;
     }
 }

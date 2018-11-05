@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,6 @@
  */
 package com.vaadin.client.ui.checkbox;
 
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -66,27 +65,7 @@ public class CheckBoxConnector extends AbstractFieldConnector
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        if (null != getState().errorMessage) {
-            getWidget().setAriaInvalid(true);
-
-            if (getWidget().errorIndicatorElement == null) {
-                getWidget().errorIndicatorElement = DOM.createSpan();
-                getWidget().errorIndicatorElement.setInnerHTML("&nbsp;");
-                DOM.setElementProperty(getWidget().errorIndicatorElement,
-                        "className", "v-errorindicator");
-                DOM.appendChild(getWidget().getElement(),
-                        getWidget().errorIndicatorElement);
-                DOM.sinkEvents(getWidget().errorIndicatorElement,
-                        VTooltip.TOOLTIP_EVENTS | Event.ONCLICK);
-            } else {
-                getWidget().errorIndicatorElement.getStyle().clearDisplay();
-            }
-        } else if (getWidget().errorIndicatorElement != null) {
-            getWidget().errorIndicatorElement.getStyle()
-                    .setDisplay(Display.NONE);
-
-            getWidget().setAriaInvalid(false);
-        }
+        getWidget().setAriaInvalid(getState().errorMessage != null);
 
         getWidget().setAriaRequired(isRequiredIndicatorVisible());
         if (isReadOnly()) {

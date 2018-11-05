@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,7 @@ package com.vaadin.server;
 
 import java.util.EventObject;
 
+import com.vaadin.shared.VaadinUriResolver;
 import com.vaadin.ui.UI;
 
 /**
@@ -32,6 +33,7 @@ public abstract class BootstrapResponse extends EventObject {
     private final VaadinSession session;
     private final Class<? extends UI> uiClass;
     private final UIProvider uiProvider;
+    private VaadinUriResolver uriResolver;
 
     /**
      * Creates a new bootstrap event.
@@ -59,7 +61,7 @@ public abstract class BootstrapResponse extends EventObject {
     }
 
     /**
-     * Gets the bootstrap handler that fired this event
+     * Gets the bootstrap handler that fired this event.
      *
      * @return the bootstrap handler that fired this event
      */
@@ -69,11 +71,12 @@ public abstract class BootstrapResponse extends EventObject {
 
     /**
      * Gets the request for which the generated bootstrap HTML will be the
-     * response. This can be used to read request headers and other additional
-     * information. Please note that {@link VaadinSession#getBrowser()}
-     * will not be available because the bootstrap page is generated before the
-     * bootstrap javascript has had a chance to send any information back to the
-     * server.
+     * response.
+     *
+     * This can be used to read request headers and other additional
+     * information. Please note that {@link VaadinSession#getBrowser()} will not
+     * be available because the bootstrap page is generated before the bootstrap
+     * javascript has had a chance to send any information back to the server.
      *
      * @return the Vaadin request that is being handled
      */
@@ -102,12 +105,35 @@ public abstract class BootstrapResponse extends EventObject {
 
     /**
      * Gets the UI provider that is used to provide information about the
-     * bootstapped UI.
+     * bootstrapped UI.
      *
      * @return the UI provider
      */
     public UIProvider getUIProvider() {
         return uiProvider;
+    }
+
+    /**
+     * Sets the URI resolver used in the bootstrap process.
+     *
+     * @param uriResolver
+     *            the uri resolver which is used
+     * @since 8.1
+     */
+    public void setUriResolver(VaadinUriResolver uriResolver) {
+        assert this.uriResolver == null : "URI resolver should never be changed";
+        assert uriResolver != null : "URI resolver should never be null";
+        this.uriResolver = uriResolver;
+    }
+
+    /**
+     * Gets the URI resolver used in the bootstrap process.
+     *
+     * @return the URI resolver
+     * @since 8.1
+     */
+    public VaadinUriResolver getUriResolver() {
+        return uriResolver;
     }
 
 }

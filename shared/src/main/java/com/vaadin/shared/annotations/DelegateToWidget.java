@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,8 @@ package com.vaadin.shared.annotations;
 import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
+
+import com.vaadin.shared.util.SharedUtil;
 
 /**
  * Signals that the property value from a state class should be forwarded to the
@@ -87,8 +89,7 @@ public @interface DelegateToWidget {
                 String annotationValue) {
             String name = annotationValue;
             if (name.isEmpty()) {
-                name = "set" + Character.toUpperCase(propertyName.charAt(0))
-                        + propertyName.substring(1);
+                name = "set" + SharedUtil.capitalize(propertyName);
             }
             return name;
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,8 +38,7 @@ import com.vaadin.v7.shared.ui.progressindicator.ProgressBarState;
  *             the new data binding API
  */
 @Deprecated
-public class ProgressBar extends AbstractField<Float>
-        implements Property.Viewer, Property.ValueChangeListener {
+public class ProgressBar extends AbstractField<Float> {
 
     private static final float DEFAULT_VALUE = 0f;
 
@@ -144,9 +143,9 @@ public class ProgressBar extends AbstractField<Float>
     }
 
     /*
-     * Overridden to keep the shared state in sync with the LegacyAbstractField
-     * internal value. Should be removed once LegacyAbstractField is refactored
-     * to use shared state.
+     * Overridden to keep the shared state in sync with the AbstractField
+     * internal value. Should be removed once AbstractField is refactored to use
+     * shared state.
      *
      * See tickets #10921 and #11064.
      */

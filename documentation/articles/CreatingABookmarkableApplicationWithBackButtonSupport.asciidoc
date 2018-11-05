@@ -1,0 +1,145 @@
+---
+title: Creating A Bookmarkable Application With Back Button Support
+order: 81
+layout: page
+---
+
+[[creating-a-bookmarkable-application-with-back-button-support]]
+= Creating a bookmarkable application with back button support
+
+Vaadin 7 comes with a new set of APIs to aid creation of navigation
+within your application. The main concepts are *Navigator* and *View*,
+and using these you can easily create an application that supports the
+standard browser methods for navigation; bookmarking, history, back- and
+forward navigation using browser buttons. This is (usually) done using
+browser "fragments" (the stuff after the #-character in the URI).
+
+At the same time, the API provides a natural way of partitioning your
+application into views - something most applications did previously
+anyway, but previously without framework 'guidance'.
+
+Let's start by making a View that counts the times it has been created.
+This is a simple example, but will later shed some light on when Views
+are created, but let's not worry about that just yet:
+
+[source,java]
+....
+import com.vaadin.navigator.View;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
+
+public class CountView extends Panel implements View {
+  public static final String NAME = "count";
+
+  private static int count = 1;
+
+  public CountView() {
+    setContent(new Label("Created: " + count++));
+  }
+
+  public void enter(ViewChangeEvent event) {
+  }
+}
+....
+
+We'll extend Panel as a convenient base, and add a Label to that in the
+constructor, updating the static count. The _enter()_ -method comes from
+View, and is called when our View is activated, but we'll do nothing
+about that in our simplistic View.
+
+Note the _static final NAME_: we'll use it instead of a 'magic' string
+when we register the View with the Navigator later. Feel free to use any
+method you like to keep track of your View-names (e.g Enum, simpleName
+of the View's class, and so on…)
+
+In order to do any navigating, we'll need at least two views, so let's
+create a main view that has a link to the counting view we just created.
+
+[source,java]
+....
+import com.vaadin.navigator.View;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.ui.Link;
+import com.vaadin.ui.Panel;
+
+public class MainView extends Panel implements View {
+
+  public static final String NAME = "";
+
+  public MainView() {
+    Link lnk = new Link("Count", new ExternalResource("#!"
+        + CountView.NAME));
+    setContent(lnk);
+  }
+
+  public void enter(ViewChangeEvent event) {
+  }
+}
+....
+
+Note the empty string used as _NAME_. This is because we want this to be
+our main ("home") View, displayed before any navigation is done.
+
+In this example we use a Link and let the browser do the navigating. We
+could just as easily use a Button and tell the Navigator where we want
+to go when the button's ClickListener is invoked. Note that we're using
+_CountView.NAME_, and what we're actually doing is using the "fragment"
+part of the application URI to indicate the view. The resulting URI will
+look something like http://.../application#count .
+
+Ok, one last thing: we need to set up a UI with a Navigator, and
+register our views:
+
+[source,java]
+....
+import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.Navigator.SimpleViewDisplay;
+import com.vaadin.server.Page;
+import com.vaadin.server.WrappedRequest;
+import com.vaadin.ui.UI;
+
+public class NavigationtestUI extends UI {
+  @Override
+  public void init(VaadinRequest request) {
+    // Create Navigator, use the UI content layout to display the views
+    Navigator navigator = new Navigator(this, this);
+
+    // Add some Views
+    navigator.addView(MainView.NAME, new MainView()); // no fragment
+
+    // #count will be a new instance each time we navigate to it, counts:
+    navigator.addView(CountView.NAME, CountView.class);
+
+    // The Navigator attached to the UI will automatically navigate to the initial fragment once
+    // the UI has been initialized.
+  }
+}
+....
+
+There are advanced ways to use the Navigator API, and there are simple
+ways. Most applications will do fine with the simple ways, and the
+Navigator constructor we used is written that in mind. It simply takes
+any ComponentContainer, assumes that all our Views are also Components,
+and on a view change sets the given view as the ComponentContainer's
+only child. Internally, it uses a _ViewDisplay_ subclass called
+ComponentContainerViewDisplay to do this. If we had more advanced
+requirements, we could write our own ViewDisplay subclass to show our
+views in whatever fashion we'd like.
+
+The Navigator finds out about URI fragment changes through the Page, and
+directs the ViewDisplay accordingly. We register our Views using
+_addView()_ so that the Navigator knows how to connect fragments with
+Views. Again notice how we use the static NAME instead of
+_addView("name", view)_ - but feel free to use other approaches.
+
+In order to illustrate how the two differ, we register an _instance_ of
+the MainView, but _CountView.class_. As a result, the MainView is
+created once, when the UI is created, and lives as long as the UI lives.
+On the other hand, a new CountView instance will be created each time we
+navigate to it (but no earlier). You can try navigating back-and-forth
+and see how the count is updated - try registering it using new
+CountView() instead…
+
+It's also good to keep in mind that a new UI is created each time you
+press reload in the browser, unless you use the @PreserveOnRefresh
+annotation on the UI.

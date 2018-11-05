@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -91,6 +91,8 @@ public class ButtonRenderer<T> extends ClickableRenderer<T, String> {
      * @param htmlContentAllowed
      *            <code>true</code> to render as HTML, <code>false</code> to
      *            render as text
+     *
+     * @since 8.0.3
      */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
         getState().htmlContentAllowed = htmlContentAllowed;
@@ -103,6 +105,8 @@ public class ButtonRenderer<T> extends ClickableRenderer<T, String> {
      *
      * @return <code>true</code> if the renderer renders a HTML,
      *         <code>false</code> if the content is rendered as text
+     *
+     * @since 8.0.3
      */
     public boolean isHtmlContentAllowed() {
         return getState(false).htmlContentAllowed;

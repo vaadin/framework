@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,12 +17,8 @@ package com.vaadin.client.widget.grid.selection;
 
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.vaadin.client.widget.grid.DataAvailableEvent;
-import com.vaadin.client.widget.grid.DataAvailableHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyDownHandler;
-import com.vaadin.client.widget.grid.events.BodyKeyUpHandler;
 import com.vaadin.client.widget.grid.events.GridKeyDownEvent;
-import com.vaadin.client.widget.grid.events.GridKeyUpEvent;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 
@@ -44,7 +40,8 @@ public class SpaceSelectHandler<T> {
 
         @Override
         public void onKeyDown(GridKeyDownEvent event) {
-            if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE || spaceDown) {
+            if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE || spaceDown
+                    || grid.isEditorActive()) {
                 return;
             }
 
@@ -59,20 +56,13 @@ public class SpaceSelectHandler<T> {
                 scrollHandler = null;
             }
 
-            scrollHandler = grid
-                    .addDataAvailableHandler(new DataAvailableHandler() {
-
-                        @Override
-                        public void onDataAvailable(
-                                DataAvailableEvent dataAvailableEvent) {
-                            if (dataAvailableEvent.getAvailableRows()
-                                    .contains(rowIndex)) {
-                                setSelected(grid, rowIndex);
-                                scrollHandler.removeHandler();
-                                scrollHandler = null;
-                            }
-                        }
-                    });
+            scrollHandler = grid.addDataAvailableHandler(dataAvailableEvent -> {
+                if (dataAvailableEvent.getAvailableRows().contains(rowIndex)) {
+                    setSelected(grid, rowIndex);
+                    scrollHandler.removeHandler();
+                    scrollHandler = null;
+                }
+            });
             grid.scrollToRow(rowIndex, ScrollDestination.ANY);
         }
 
@@ -104,13 +94,9 @@ public class SpaceSelectHandler<T> {
         this.grid = grid;
         spaceDownHandler = grid
                 .addBodyKeyDownHandler(new SpaceKeyDownHandler());
-        spaceUpHandler = grid.addBodyKeyUpHandler(new BodyKeyUpHandler() {
-
-            @Override
-            public void onKeyUp(GridKeyUpEvent event) {
-                if (event.getNativeKeyCode() == KeyCodes.KEY_SPACE) {
-                    spaceDown = false;
-                }
+        spaceUpHandler = grid.addBodyKeyUpHandler(event -> {
+            if (event.getNativeKeyCode() == KeyCodes.KEY_SPACE) {
+                spaceDown = false;
             }
         });
     }

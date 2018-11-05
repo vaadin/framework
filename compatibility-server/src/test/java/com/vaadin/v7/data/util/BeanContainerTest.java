@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -79,7 +78,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
     @Test
     public void testGetType_existingProperty_typeReturned() {
         BeanContainer<String, ClassName> container = getContainer();
-        Assert.assertEquals(
+        assertEquals(
                 "Unexpected type is returned for property 'simpleName'",
                 String.class, container.getType("simpleName"));
     }
@@ -87,7 +86,7 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
     @Test
     public void testGetType_notExistingProperty_nullReturned() {
         BeanContainer<String, ClassName> container = getContainer();
-        Assert.assertNull("Not null type is returned for property ''",
+        assertNull("Not null type is returned for property ''",
                 container.getType(""));
     }
 
@@ -222,49 +221,49 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
 
         try {
             container.addItem();
-            Assert.fail();
+            fail();
         } catch (UnsupportedOperationException e) {
             // should get exception
         }
 
         try {
             container.addItem(null);
-            Assert.fail();
+            fail();
         } catch (UnsupportedOperationException e) {
             // should get exception
         }
 
         try {
             container.addItemAfter(null, null);
-            Assert.fail();
+            fail();
         } catch (UnsupportedOperationException e) {
             // should get exception
         }
 
         try {
             container.addItemAfter(new Person("Jane"));
-            Assert.fail();
+            fail();
         } catch (UnsupportedOperationException e) {
             // should get exception
         }
 
         try {
             container.addItemAt(0);
-            Assert.fail();
+            fail();
         } catch (UnsupportedOperationException e) {
             // should get exception
         }
 
         try {
             container.addItemAt(0, new Person("Jane"));
-            Assert.fail();
+            fail();
         } catch (UnsupportedOperationException e) {
             // should get exception
         }
 
         try {
             container.addContainerProperty("lastName", String.class, "");
-            Assert.fail();
+            fail();
         } catch (UnsupportedOperationException e) {
             // should get exception
         }
@@ -279,14 +278,14 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
         container.setBeanIdResolver(new PersonNameResolver());
         container.addBean(new Person("John"));
 
-        Assert.assertEquals("John",
+        assertEquals("John",
                 container.getContainerProperty("John", "name").getValue());
-        Assert.assertTrue(container.removeContainerProperty("name"));
-        Assert.assertNull(container.getContainerProperty("John", "name"));
+        assertTrue(container.removeContainerProperty("name"));
+        assertNull(container.getContainerProperty("John", "name"));
 
-        Assert.assertNotNull(container.getItem("John"));
+        assertNotNull(container.getItem("John"));
         // property removed also from item
-        Assert.assertNull(container.getItem("John").getItemProperty("name"));
+        assertNull(container.getItem("John").getItemProperty("name"));
     }
 
     @Test
@@ -335,26 +334,26 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
 
         try {
             container.addBean(new Person("John"));
-            Assert.fail();
+            fail();
         } catch (IllegalStateException e) {
             // should get exception
         }
         try {
             container.addBeanAfter(null, new Person("Jane"));
-            Assert.fail();
+            fail();
         } catch (IllegalStateException e) {
             // should get exception
         }
         try {
             container.addBeanAt(0, new Person("Jack"));
-            Assert.fail();
+            fail();
         } catch (IllegalStateException e) {
             // should get exception
         }
         try {
             container
                     .addAll(Arrays.asList(new Person[] { new Person("Jack") }));
-            Assert.fail();
+            fail();
         } catch (IllegalStateException e) {
             // should get exception
         }
@@ -404,19 +403,19 @@ public class BeanContainerTest extends AbstractBeanContainerTestBase {
 
         try {
             container.addBean(new Person("John"));
-            Assert.fail();
+            fail();
         } catch (IllegalArgumentException e) {
             // should get exception
         }
         try {
             container.addBeanAfter(null, new Person("Jane"));
-            Assert.fail();
+            fail();
         } catch (IllegalArgumentException e) {
             // should get exception
         }
         try {
             container.addBeanAt(0, new Person("Jack"));
-            Assert.fail();
+            fail();
         } catch (IllegalArgumentException e) {
             // should get exception
         }

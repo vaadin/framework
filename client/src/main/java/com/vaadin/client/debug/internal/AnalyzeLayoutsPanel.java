@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,11 +23,8 @@ import java.util.Set;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Style.TextDecoration;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -83,17 +80,17 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
         Set<ComponentConnector> zeroWidthComponents = new HashSet<>();
         findZeroSizeComponents(zeroHeightComponents, zeroWidthComponents,
                 ac.getUIConnector());
-        if (zeroHeightComponents.size() > 0 || zeroWidthComponents.size() > 0) {
+        if (!zeroHeightComponents.isEmpty() || !zeroWidthComponents.isEmpty()) {
             add(new HTML("<h4> Client side notifications</h4>"
                     + " <em>The following relative sized components were "
                     + "rendered to a zero size container on the client side."
                     + " Note that these are not necessarily invalid "
                     + "states, but reported here as they might be.</em>"));
-            if (zeroHeightComponents.size() > 0) {
+            if (!zeroHeightComponents.isEmpty()) {
                 add(new HTML("<p><strong>Vertically zero size:</strong></p>"));
                 printClientSideDetectedIssues(zeroHeightComponents, ac);
             }
-            if (zeroWidthComponents.size() > 0) {
+            if (!zeroWidthComponents.isEmpty()) {
                 add(new HTML(
                         "<p><strong>Horizontally zero size:</strong></p>"));
                 printClientSideDetectedIssues(zeroWidthComponents, ac);
@@ -124,31 +121,20 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
                     Highlight.show(parentConnector, "yellow");
                 }
 
-                errorDetails.addMouseOverHandler(new MouseOverHandler() {
-                    @Override
-                    public void onMouseOver(MouseOverEvent event) {
-                        Highlight.hideAll();
-                        Highlight.show(parentConnector, "yellow");
-                        Highlight.show(connector);
-                        errorDetails.getElement().getStyle()
-                                .setTextDecoration(TextDecoration.UNDERLINE);
-                    }
+                errorDetails.addMouseOverHandler(event -> {
+                    Highlight.hideAll();
+                    Highlight.show(parentConnector, "yellow");
+                    Highlight.show(connector);
+                    errorDetails.getElement().getStyle()
+                            .setTextDecoration(TextDecoration.UNDERLINE);
                 });
-                errorDetails.addMouseOutHandler(new MouseOutHandler() {
-                    @Override
-                    public void onMouseOut(MouseOutEvent event) {
-                        Highlight.hideAll();
-                        errorDetails.getElement().getStyle()
-                                .setTextDecoration(TextDecoration.NONE);
-                    }
+                errorDetails.addMouseOutHandler(event -> {
+                    Highlight.hideAll();
+                    errorDetails.getElement().getStyle()
+                            .setTextDecoration(TextDecoration.NONE);
                 });
-                errorDetails.addClickHandler(new ClickHandler() {
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        fireSelectEvent(connector);
-                    }
-                });
-
+                errorDetails
+                        .addClickHandler(event -> fireSelectEvent(connector));
             }
 
             Highlight.show(connector);
@@ -174,30 +160,21 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
 
         final SimpleTree errorNode = new SimpleTree(
                 connector.getClass().getSimpleName() + " id: " + pid);
-        errorNode.addDomHandler(new MouseOverHandler() {
-            @Override
-            public void onMouseOver(MouseOverEvent event) {
-                Highlight.showOnly(connector);
-                ((Widget) event.getSource()).getElement().getStyle()
-                        .setTextDecoration(TextDecoration.UNDERLINE);
-            }
+        errorNode.addDomHandler(event -> {
+            Highlight.showOnly(connector);
+            ((Widget) event.getSource()).getElement().getStyle()
+                    .setTextDecoration(TextDecoration.UNDERLINE);
         }, MouseOverEvent.getType());
-        errorNode.addDomHandler(new MouseOutHandler() {
-            @Override
-            public void onMouseOut(MouseOutEvent event) {
-                Highlight.hideAll();
-                ((Widget) event.getSource()).getElement().getStyle()
-                        .setTextDecoration(TextDecoration.NONE);
-            }
+        errorNode.addDomHandler(event -> {
+            Highlight.hideAll();
+            ((Widget) event.getSource()).getElement().getStyle()
+                    .setTextDecoration(TextDecoration.NONE);
         }, MouseOutEvent.getType());
 
-        errorNode.addDomHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                if (event.getNativeEvent().getEventTarget().cast() == errorNode
-                        .getElement().getChild(1).cast()) {
-                    fireSelectEvent(connector);
-                }
+        errorNode.addDomHandler(event -> {
+            if (event.getNativeEvent().getEventTarget().cast() == errorNode
+                    .getElement().getChild(1).cast()) {
+                fireSelectEvent(connector);
             }
         }, ClickEvent.getType());
 

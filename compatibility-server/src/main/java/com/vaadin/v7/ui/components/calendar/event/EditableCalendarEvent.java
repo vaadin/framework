@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -72,7 +72,7 @@ public interface EditableCalendarEvent extends CalendarEvent {
     void setStart(Date start);
 
     /**
-     * Set the style name for the event used for styling the event cells
+     * Set the style name for the event used for styling the event cells.
      *
      * @param styleName
      *            The stylename to use
@@ -81,7 +81,7 @@ public interface EditableCalendarEvent extends CalendarEvent {
     void setStyleName(String styleName);
 
     /**
-     * Does the event span the whole day. If so then set this to true
+     * Does the event span the whole day. If so then set this to true.
      *
      * @param isAllDay
      *            True if the event spans the whole day. In this case the start

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +18,7 @@ package com.vaadin.client.ui.window;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link WindowMoveEvent}s
+ * Handler for {@link WindowMoveEvent}s.
  *
  * @since 7.1.9
  * @author Vaadin Ltd

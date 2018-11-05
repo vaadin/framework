@@ -1,33 +1,16 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.LegacyApplication;
-import com.vaadin.server.Page;
-import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalSplitPanel;
@@ -69,8 +52,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
 
     VerticalLayout bodyLayout = new VerticalLayout();
 
-    // TODO this could probably be a simple Set
-    HashMap<Class<?>, String> itemCaptions = new HashMap<>();
+    Set<Class<?>> itemCaptions = new HashSet<>();
 
     @Override
     public void init() {
@@ -81,23 +63,21 @@ public class TestBench extends com.vaadin.server.LegacyApplication
             try {
                 final List<Class<?>> testableClasses = getTestableClassesForPackage(
                         testablePackages[p]);
-                for (final Iterator<Class<?>> it = testableClasses
-                        .iterator(); it.hasNext();) {
-                    final Class<?> t = it.next();
+                for (final Class<?> t : testableClasses) {
                     // ignore TestBench itself
                     if (t.equals(TestBench.class)) {
                         continue;
                     }
                     try {
                         testables.addItem(t);
-                        itemCaptions.put(t, t.getName());
+                        itemCaptions.add(t);
                         testables.setParent(t, testablePackages[p]);
                         testables.setChildrenAllowed(t, false);
                         continue;
                     } catch (final Exception e) {
                         try {
                             testables.addItem(t);
-                            itemCaptions.put(t, t.getName());
+                            itemCaptions.add(t);
                             testables.setParent(t, testablePackages[p]);
                             testables.setChildrenAllowed(t, false);
                             continue;
@@ -113,18 +93,15 @@ public class TestBench extends com.vaadin.server.LegacyApplication
 
         menu = new Tree("Testables", testables);
 
-        for (final Iterator<Class<?>> i = itemCaptions.keySet().iterator(); i
-                .hasNext();) {
-            final Class<?> testable = i.next();
+        for (final Class<?> testable : itemCaptions) {
             // simplify captions
             final String name = testable.getName()
                     .substring(testable.getName().lastIndexOf('.') + 1);
             menu.setItemCaption(testable, name);
         }
         // expand all root items
-        for (final Iterator<?> i = menu.rootItemIds().iterator(); i
-                .hasNext();) {
-            menu.expandItemsRecursively(i.next());
+        for (final Object id : menu.rootItemIds()) {
+            menu.expandItemsRecursively(id);
         }
 
         menu.addListener(this);
@@ -133,83 +110,67 @@ public class TestBench extends com.vaadin.server.LegacyApplication
         VerticalLayout lo = new VerticalLayout();
         lo.addComponent(menu);
 
-        mainWindow.getPage().addUriFragmentChangedListener(
-                new Page.UriFragmentChangedListener() {
-                    @Override
-                    public void uriFragmentChanged(
-                            UriFragmentChangedEvent source) {
-                        String fragment = source.getUriFragment();
-                        if (fragment != null && !"".equals(fragment)) {
-                            // try to find a proper test class
+        mainWindow.getPage().addUriFragmentChangedListener(event -> {
+            String fragment = event.getUriFragment();
+            if (fragment != null && !fragment.isEmpty()) {
+                // try to find a proper test class
 
-                            // exact match
-                            Iterator<?> iterator = menu.getItemIds().iterator();
-                            while (iterator.hasNext()) {
-                                Object next = iterator.next();
-                                if (next instanceof Class) {
-                                    Class<?> c = (Class<?>) next;
-                                    String string = c.getName();
-                                    if (string.equals(fragment)) {
-                                        menu.setValue(c);
-                                        mainLayout.setSplitPosition(0);
-                                        return;
-                                    }
-                                }
-                            }
-
-                            // simple name match
-                            iterator = menu.getItemIds().iterator();
-                            while (iterator.hasNext()) {
-                                Object next = iterator.next();
-                                if (next instanceof Class) {
-                                    Class<?> c = (Class<?>) next;
-                                    String string = c.getSimpleName();
-                                    if (string.equals(fragment)) {
-                                        menu.setValue(c);
-                                        mainLayout.setSplitPosition(0);
-                                        return;
-                                    }
-                                }
-                            }
-                            // ticket match
-                            iterator = menu.getItemIds().iterator();
-                            while (iterator.hasNext()) {
-                                Object next = iterator.next();
-                                if (next instanceof Class) {
-                                    Class<?> c = (Class<?>) next;
-                                    String string = c.getSimpleName();
-                                    if (string
-                                            .startsWith("Ticket" + fragment)) {
-                                        menu.setValue(c);
-                                        mainLayout.setSplitPosition(0);
-                                        return;
-                                    }
-                                }
-                            }
-
-                            // just partly mach lowercase
-                            iterator = menu.getItemIds().iterator();
-                            while (iterator.hasNext()) {
-                                Object next = iterator.next();
-                                if (next instanceof Class) {
-                                    Class<?> c = (Class<?>) next;
-                                    String string = c.getSimpleName();
-                                    if (string.toLowerCase()
-                                            .contains(fragment.toLowerCase())) {
-                                        menu.setValue(c);
-                                        mainLayout.setSplitPosition(0);
-                                        return;
-                                    }
-                                }
-                            }
-
-                            getMainWindow().showNotification(
-                                    "No potential matc for #" + fragment);
-
+                // exact match
+                for (Object next : menu.getItemIds()) {
+                    if (next instanceof Class) {
+                        Class<?> c = (Class<?>) next;
+                        String string = c.getName();
+                        if (string.equals(fragment)) {
+                            menu.setValue(c);
+                            mainLayout.setSplitPosition(0);
+                            return;
                         }
-
                     }
-                });
+                }
+
+                // simple name match
+                for (Object next : menu.getItemIds()) {
+                    if (next instanceof Class) {
+                        Class<?> c = (Class<?>) next;
+                        String string = c.getSimpleName();
+                        if (string.equals(fragment)) {
+                            menu.setValue(c);
+                            mainLayout.setSplitPosition(0);
+                            return;
+                        }
+                    }
+                }
+                // ticket match
+                for (Object next : menu.getItemIds()) {
+                    if (next instanceof Class) {
+                        Class<?> c = (Class<?>) next;
+                        String string = c.getSimpleName();
+                        if (string.startsWith("Ticket" + fragment)) {
+                            menu.setValue(c);
+                            mainLayout.setSplitPosition(0);
+                            return;
+                        }
+                    }
+                }
+
+                // just partly match lowercase
+                for (Object next : menu.getItemIds()) {
+                    if (next instanceof Class) {
+                        Class<?> c = (Class<?>) next;
+                        String string = c.getSimpleName();
+                        if (string.toLowerCase(Locale.ROOT)
+                                .contains(fragment.toLowerCase(Locale.ROOT))) {
+                            menu.setValue(c);
+                            mainLayout.setSplitPosition(0);
+                            return;
+                        }
+                    }
+                }
+
+                getMainWindow()
+                        .showNotification("No potential matc for #" + fragment);
+            }
+        });
 
         mainLayout.addComponent(lo);
 
@@ -242,8 +203,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                 e1.printStackTrace();
                 VerticalLayout lo = new VerticalLayout();
                 lo.addComponent(new Label(
-                        "Cannot create application / custom component: "
-                                + e1.toString()));
+                        "Cannot create application / custom component: " + e1));
 
                 Link l = new Link("Try opening via app runner",
                         new ExternalResource("../run/" + c.getName()));
@@ -281,7 +241,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
      */
     public static List<Class<?>> getTestableClassesForPackage(
             String packageName) throws Exception {
-        final ArrayList<File> directories = new ArrayList<>();
+        final List<File> directories = new ArrayList<>();
         try {
             final ClassLoader cld = Thread.currentThread()
                     .getContextClassLoader();
@@ -300,10 +260,9 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                     packageName + " does not appear to be a valid package.");
         }
 
-        final ArrayList<Class<?>> classes = new ArrayList<>();
+        final List<Class<?>> classes = new ArrayList<>();
         // For every directory identified capture all the .class files
-        for (final Iterator<File> it = directories.iterator(); it.hasNext();) {
-            final File directory = it.next();
+        for (final File directory : directories) {
             if (directory.exists()) {
                 // Get the list of the files contained in the package
                 final String[] files = directory.list();
@@ -324,9 +283,8 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                             }
                         }
 
-                        // for (int i = 0; i < c.getInterfaces().length; i++) {
-                        // Class cc = c.getInterfaces()[i];
-                        // if (c.getInterfaces()[i].equals(Testable.class)) {
+                        // for (Class cc : c.getInterfaces()) {
+                        // if (cc.equals(Testable.class)) {
                         // // Class is testable
                         // classes.add(c);
                         // }

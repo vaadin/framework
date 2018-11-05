@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,13 +15,21 @@
  */
 package com.vaadin.v7.ui.themes;
 
+import java.util.Locale;
+
+import com.vaadin.ui.themes.ValoTheme;
+
+/**
+ * @deprecated As of 8.0, no replacement available, only {@link ValoTheme} is
+ *             supported.
+ */
 @Deprecated
 public class Runo extends BaseTheme {
 
     public static final String THEME_NAME = "runo";
 
     public static String themeName() {
-        return THEME_NAME.toLowerCase();
+        return THEME_NAME.toLowerCase(Locale.ROOT);
     }
 
     /***************************************************************************
@@ -31,12 +39,13 @@ public class Runo extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Small sized button, use for context specific actions for example
+     * Small sized button, use for context specific actions for example.
      */
     public static final String BUTTON_SMALL = "small";
 
     /**
-     * Big sized button, use to gather much attention for some particular action
+     * Big sized button, use to gather much attention for some particular
+     * action.
      */
     public static final String BUTTON_BIG = "big";
 
@@ -54,7 +63,7 @@ public class Runo extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Removes borders and background color from the panel
+     * Removes borders and background color from the panel.
      */
     public static final String PANEL_LIGHT = "light";
 
@@ -77,7 +86,7 @@ public class Runo extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Smaller tabs, no border and background for content area
+     * Smaller tabs, no border and background for content area.
      */
     public static final String TABSHEET_SMALL = "light";
 
@@ -160,7 +169,7 @@ public class Runo extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Small sized text field with small font
+     * Small sized text field with small font.
      */
     public static final String TEXTFIELD_SMALL = "small";
 

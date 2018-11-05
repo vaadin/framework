@@ -1,22 +1,26 @@
 package com.vaadin.v7.data.util;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 public class PerformanceTestIndexedContainerTest {
 
     private static final int REPEATS = 10;
-    private final static int ITEMS = 50000;
+    private static final int ITEMS = 50000;
     private static final long ADD_ITEM_FAIL_THRESHOLD = 200;
     // TODO should improve performance of these methods
     private static final long ADD_ITEM_AT_FAIL_THRESHOLD = 5000;
     private static final long ADD_ITEM_AFTER_FAIL_THRESHOLD = 5000;
+    // FIXME: Vaadin 7 compatibility version fails this check with original
+    // value of 5000
     private static final long ADD_ITEM_AFTER_LAST_FAIL_THRESHOLD = 6000;
     private static final long ADD_ITEMS_CONSTRUCTOR_FAIL_THRESHOLD = 200;
 
@@ -106,12 +110,12 @@ public class PerformanceTestIndexedContainerTest {
         long median = median(times);
         System.out.println(
                 methodName + " timings (ms) for " + items + " items: " + times);
-        Assert.assertTrue(methodName + " too slow, median time " + median
-                + "ms for " + items + " items", median <= threshold);
+        assertTrue(methodName + " too slow, median time " + median + "ms for "
+                + items + " items", median <= threshold);
     }
 
     private Long median(Collection<Long> times) {
-        ArrayList<Long> list = new ArrayList<Long>(times);
+        List<Long> list = new ArrayList<Long>(times);
         Collections.sort(list);
         // not exact median in some cases, but good enough
         return list.get(list.size() / 2);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,6 +35,22 @@ public class AbstractMediaState extends AbstractComponentState {
 
     @NoLayout
     public boolean muted;
+
+    /**
+     * Preload mode for the media.
+     *
+     * @since 7.7.11
+     */
+    @NoLayout
+    public PreloadMode preload;
+
+    /**
+     * Looping of media active (true) or not.
+     *
+     * @since 7.7.11
+     */
+    @NoLayout
+    public boolean loop;
 
     public List<URLReference> sources = new ArrayList<>();
 

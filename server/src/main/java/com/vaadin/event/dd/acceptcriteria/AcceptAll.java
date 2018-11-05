@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -12,9 +12,6 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- */
-/**
- *
  */
 package com.vaadin.event.dd.acceptcriteria;
 
@@ -32,13 +29,13 @@ import com.vaadin.event.dd.DragAndDropEvent;
 public final class AcceptAll extends ClientSideCriterion {
 
     private static final long serialVersionUID = 7406683402153141461L;
-    private static final AcceptCriterion singleton = new AcceptAll();
+    private static final AcceptCriterion SINGLETON = new AcceptAll();
 
     private AcceptAll() {
     }
 
     public static AcceptCriterion get() {
-        return singleton;
+        return SINGLETON;
     }
 
     @Override

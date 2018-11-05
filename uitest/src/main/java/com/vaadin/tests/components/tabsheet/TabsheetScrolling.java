@@ -2,8 +2,6 @@ package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
 
@@ -22,15 +20,8 @@ public class TabsheetScrolling extends TestBase {
 
         for (int i = 0; i < 100; i++) {
             Button b = new Button("Hide this tab (" + i + ")",
-                    new ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                            fixedSizeTabSheet.getTab(event.getButton())
-                                    .setVisible(false);
-                        }
-
-                    });
+                    event -> fixedSizeTabSheet.getTab(event.getButton())
+                            .setVisible(false));
             Tab t = fixedSizeTabSheet.addTab(b, "Tab " + i, null);
             if (i % 2 == 0) {
                 t.setVisible(false);
@@ -45,14 +36,8 @@ public class TabsheetScrolling extends TestBase {
 
         for (int i = 0; i < 10; i++) {
             Button b = new Button("Hide this tab (" + i + ")",
-                    new ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                            autoWideTabSheet.getTab(event.getButton())
-                                    .setVisible(false);
-                        }
-                    });
+                    event -> autoWideTabSheet.getTab(event.getButton())
+                            .setVisible(false));
 
             Tab t = autoWideTabSheet.addTab(b, "Tab " + i, null);
             if (i % 2 == 0) {
@@ -63,25 +48,18 @@ public class TabsheetScrolling extends TestBase {
 
         addComponent(autoWideTabSheet);
         Button selectFirst = new Button("Select first tab in both tabsheets",
-                new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        fixedSizeTabSheet.setSelectedTab(0);
-                        autoWideTabSheet.setSelectedTab(0);
-                    }
+                event -> {
+                    fixedSizeTabSheet.setSelectedTab(0);
+                    autoWideTabSheet.setSelectedTab(0);
                 });
         selectFirst.setId(SELECT_FIRST);
         addComponent(selectFirst);
         Button selectLast = new Button("Select last tab in both tabsheets",
-                new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        int lastFixed = fixedSizeTabSheet.getComponentCount()
-                                - 1;
-                        fixedSizeTabSheet.setSelectedTab(lastFixed);
-                        int lastAuto = autoWideTabSheet.getComponentCount() - 1;
-                        autoWideTabSheet.setSelectedTab(lastAuto);
-                    }
+                event -> {
+                    int lastFixed = fixedSizeTabSheet.getComponentCount() - 1;
+                    fixedSizeTabSheet.setSelectedTab(lastFixed);
+                    int lastAuto = autoWideTabSheet.getComponentCount() - 1;
+                    autoWideTabSheet.setSelectedTab(lastAuto);
                 });
         selectLast.setId(SELECT_LAST);
         addComponent(selectLast);

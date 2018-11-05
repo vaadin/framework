@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,18 +15,7 @@
  */
 package com.vaadin.client.ui.ui;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadElement;
@@ -37,18 +26,16 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -69,11 +56,12 @@ import com.vaadin.client.ValueMap;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
+import com.vaadin.client.extensions.DragSourceExtensionConnector;
+import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.ShortcutActionHandler;
-import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.VWindow;
@@ -103,8 +91,17 @@ import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.UI;
-
 import elemental.client.Browser;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 @Connect(value = UI.class, loadStyle = LoadStyle.EAGER)
 public class UIConnector extends AbstractSingleComponentContainerConnector
@@ -122,36 +119,31 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      */
     private String currentLocation;
 
-    private final StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
-        @Override
-        public void onStateChanged(StateChangeEvent stateChangeEvent) {
-            // TODO Should use a more specific handler that only reacts to
-            // size changes
-            onChildSizeChange();
+    private final StateChangeHandler childStateChangeHandler = event -> {
+        // TODO Should use a more specific handler that only reacts to
+        // size changes
+        onChildSizeChange();
+    };
+
+    private WindowOrderHandler windowOrderHandler = event -> {
+        VWindow[] windows = event.getWindows();
+        Map<Integer, Connector> orders = new HashMap<>();
+        boolean hasEventListener = hasEventListener(EventId.WINDOW_ORDER);
+        for (VWindow window : windows) {
+            Connector connector = Util.findConnectorFor(window);
+            orders.put(window.getWindowOrder(), connector);
+            if (connector instanceof AbstractConnector
+                    && ((AbstractConnector) connector)
+                            .hasEventListener(EventId.WINDOW_ORDER)) {
+                hasEventListener = true;
+            }
+        }
+        if (hasEventListener) {
+            getRpcProxy(WindowOrderRpc.class).windowOrderChanged(orders);
         }
     };
 
-    private WindowOrderHandler windowOrderHandler = new WindowOrderHandler() {
-
-        @Override
-        public void onWindowOrderChange(WindowOrderEvent event) {
-            VWindow[] windows = event.getWindows();
-            HashMap<Integer, Connector> orders = new HashMap<>();
-            boolean hasEventListener = hasEventListener(EventId.WINDOW_ORDER);
-            for (VWindow window : windows) {
-                Connector connector = Util.findConnectorFor(window);
-                orders.put(window.getWindowOrder(), connector);
-                if (connector instanceof AbstractConnector
-                        && ((AbstractConnector) connector)
-                                .hasEventListener(EventId.WINDOW_ORDER)) {
-                    hasEventListener = true;
-                }
-            }
-            if (hasEventListener) {
-                getRpcProxy(WindowOrderRpc.class).windowOrderChanged(orders);
-            }
-        }
-    };
+    private boolean firstSizeReported;
 
     @Override
     protected void init() {
@@ -165,6 +157,11 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 Window.Location.reload();
 
             }
+
+            @Override
+            public void initializeMobileHtml5DndPolyfill() {
+                initializeMobileDndPolyfill();
+            }
         });
         registerRpc(ScrollClientRpc.class, new ScrollClientRpc() {
             @Override
@@ -177,26 +174,20 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 getWidget().getElement().setScrollLeft(scrollLeft);
             }
         });
-        registerRpc(UIClientRpc.class, new UIClientRpc() {
-            @Override
-            public void uiClosed(final boolean sessionExpired) {
-                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        // Only notify user if we're still running and not eg.
-                        // navigating away (#12298)
-                        if (getConnection().isApplicationRunning()) {
-                            if (sessionExpired) {
-                                getConnection().showSessionExpiredError(null);
-                            } else {
-                                getState().enabled = false;
-                                updateEnabledState(getState().enabled);
-                            }
-                            getConnection().setApplicationRunning(false);
-                        }
+        registerRpc(UIClientRpc.class, sessionExpired -> {
+            Scheduler.get().scheduleDeferred(() -> {
+                // Only notify user if we're still running and not e.g.
+                // navigating away (#12298)
+                if (getConnection().isApplicationRunning()) {
+                    if (sessionExpired) {
+                        getConnection().showSessionExpiredError(null);
+                    } else {
+                        getState().enabled = false;
+                        updateEnabledState(getState().enabled);
                     }
-                });
-            }
+                    getConnection().setApplicationRunning(false);
+                }
+            });
         });
         registerRpc(DebugWindowClientRpc.class, new DebugWindowClientRpc() {
 
@@ -212,13 +203,24 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             }-*/;
         });
 
-        getWidget().addResizeHandler(new ResizeHandler() {
+        // Used to avoid choking server with hundreds of resize events when user
+        // changes the window size
+        Timer lazyFlusher = new Timer() {
             @Override
-            public void onResize(ResizeEvent event) {
-                getRpcProxy(UIServerRpc.class).resize(event.getHeight(),
-                        event.getWidth(), Window.getClientWidth(),
-                        Window.getClientHeight());
+            public void run() {
                 getConnection().getServerRpcQueue().flush();
+            }
+        };
+
+        getWidget().addResizeHandler(event -> {
+            getRpcProxy(UIServerRpc.class).resize(event.getWidth(),
+                    event.getHeight(), Window.getClientWidth(),
+                    Window.getClientHeight());
+            if (!firstSizeReported) {
+                firstSizeReported = true;
+                getConnection().getServerRpcQueue().flush();
+            } else {
+                lazyFlusher.schedule(100);
             }
         });
         getWidget().addScrollHandler(new ScrollHandler() {
@@ -270,25 +272,26 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
-        getWidget().id = getConnectorId();
-        boolean firstPaint = getWidget().connection == null;
-        getWidget().connection = client;
+        VUI ui = getWidget();
+        ui.id = getConnectorId();
+        boolean firstPaint = ui.connection == null;
+        ui.connection = client;
 
-        getWidget().resizeLazy = uidl.hasAttribute(UIConstants.RESIZE_LAZY);
+        ui.resizeLazy = uidl.hasAttribute(UIConstants.RESIZE_LAZY);
         // this also implicitly removes old styles
         String styles = "";
-        styles += getWidget().getStylePrimaryName() + " ";
+        styles += ui.getStylePrimaryName() + " ";
         if (ComponentStateUtil.hasStyles(getState())) {
             for (String style : getState().styles) {
                 styles += style + " ";
             }
         }
         if (!client.getConfiguration().isStandalone()) {
-            styles += getWidget().getStylePrimaryName() + "-embedded";
+            styles += ui.getStylePrimaryName() + "-embedded";
         }
-        getWidget().setStyleName(styles.trim());
+        ui.setStyleName(styles.trim());
 
-        getWidget().makeScrollable();
+        ui.makeScrollable();
 
         clickEventHandler.handleEventHandlerRegistration();
 
@@ -307,12 +310,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 // source will be opened to this browser window, but we may have
                 // to finish rendering this window in case this is a download
                 // (and window stays open).
-                Scheduler.get().scheduleDeferred(new Command() {
-                    @Override
-                    public void execute() {
-                        VUI.goTo(url);
-                    }
-                });
+                Scheduler.get().scheduleDeferred(() -> VUI.goTo(url));
             } else if ("_self".equals(target)) {
                 // This window is closing (for sure). Only other opens are
                 // relevant in this change. See #3558, #2144
@@ -364,17 +362,10 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         while ((childUidl = uidl.getChildUIDL(childIndex++)) != null) {
             String tag = childUidl.getTag().intern();
             if (tag == "actions") {
-                if (getWidget().actionHandler == null) {
-                    getWidget().actionHandler = new ShortcutActionHandler(
-                            getWidget().id, client);
+                if (ui.actionHandler == null) {
+                    ui.actionHandler = new ShortcutActionHandler(ui.id, client);
                 }
-                getWidget().actionHandler.updateActionMap(childUidl);
-            } else if (tag == "notifications") {
-                for (final Iterator<?> it = childUidl.getChildIterator(); it
-                        .hasNext();) {
-                    final UIDL notification = (UIDL) it.next();
-                    VNotification.showNotification(client, notification);
-                }
+                ui.actionHandler.updateActionMap(childUidl);
             } else if (tag == "css-injections") {
                 injectCSS(childUidl);
             }
@@ -382,47 +373,27 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
         if (uidl.hasAttribute("focused")) {
             // set focused component when render phase is finished
-            Scheduler.get().scheduleDeferred(new Command() {
-                @Override
-                public void execute() {
-                    ComponentConnector connector = (ComponentConnector) uidl
-                            .getPaintableAttribute("focused", getConnection());
+            Scheduler.get().scheduleDeferred(() -> {
+                Timer timer = new Timer() {
+                    @Override
+                    public void run() {
+                        ComponentConnector connector = (ComponentConnector) uidl
+                                .getPaintableAttribute("focused",
+                                        getConnection());
 
-                    if (connector == null) {
-                        // Do not try to focus invisible components which not
-                        // present in UIDL
-                        return;
+                        focus(connector);
                     }
+                };
 
-                    final Widget toBeFocused = connector.getWidget();
-                    /*
-                     * Two types of Widgets can be focused, either implementing
-                     * GWT Focusable of a thinner Vaadin specific Focusable
-                     * interface.
-                     */
-                    if (toBeFocused instanceof com.google.gwt.user.client.ui.Focusable) {
-                        final com.google.gwt.user.client.ui.Focusable toBeFocusedWidget = (com.google.gwt.user.client.ui.Focusable) toBeFocused;
-                        toBeFocusedWidget.setFocus(true);
-                    } else if (toBeFocused instanceof Focusable) {
-                        ((Focusable) toBeFocused).focus();
-                    } else {
-                        getLogger()
-                                .severe("Server is trying to set focus to the widget of connector "
-                                        + Util.getConnectorString(connector)
-                                        + " but it is not focusable. The widget should implement either "
-                                        + com.google.gwt.user.client.ui.Focusable.class
-                                                .getName()
-                                        + " or " + Focusable.class.getName());
-                    }
-                }
+                timer.schedule(0);
             });
         }
 
         // Add window listeners on first paint, to prevent premature
         // variablechanges
         if (firstPaint) {
-            Window.addWindowClosingHandler(getWidget());
-            Window.addResizeHandler(getWidget());
+            Window.addWindowClosingHandler(ui);
+            Window.addResizeHandler(ui);
         }
 
         if (uidl.hasAttribute("scrollTo")) {
@@ -432,23 +403,48 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
 
         if (uidl.hasAttribute(UIConstants.ATTRIBUTE_PUSH_STATE)) {
-            Browser.getWindow().getHistory().pushState(null, "",
+            Browser.getWindow().getHistory().pushState(null,
+                    getState().pageState.title,
                     uidl.getStringAttribute(UIConstants.ATTRIBUTE_PUSH_STATE));
         }
         if (uidl.hasAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE)) {
-            Browser.getWindow().getHistory().replaceState(null, "", uidl
-                    .getStringAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE));
+            Browser.getWindow().getHistory().replaceState(null,
+                    getState().pageState.title, uidl.getStringAttribute(
+                            UIConstants.ATTRIBUTE_REPLACE_STATE));
         }
 
         if (firstPaint) {
             // Queue the initial window size to be sent with the following
             // request.
-            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    getWidget().sendClientResized();
-                }
-            });
+            Scheduler.get().scheduleDeferred(() -> ui.sendClientResized());
+        }
+    }
+
+    private void focus(ComponentConnector connector) {
+        if (connector == null) {
+            // Do not try to focus invisible components which not
+            // present in UIDL
+            return;
+        }
+
+        final Widget toBeFocused = connector.getWidget();
+        /*
+         * Two types of Widgets can be focused, either implementing GWT
+         * Focusable of a thinner Vaadin specific Focusable interface.
+         */
+        if (toBeFocused instanceof com.google.gwt.user.client.ui.Focusable) {
+            final com.google.gwt.user.client.ui.Focusable toBeFocusedWidget = (com.google.gwt.user.client.ui.Focusable) toBeFocused;
+            toBeFocusedWidget.setFocus(true);
+        } else if (toBeFocused instanceof Focusable) {
+            ((Focusable) toBeFocused).focus();
+        } else {
+            getLogger().severe(
+                    "Server is trying to set focus to the widget of connector "
+                            + Util.getConnectorString(connector)
+                            + " but it is not focusable. The widget should implement either "
+                            + com.google.gwt.user.client.ui.Focusable.class
+                                    .getName()
+                            + " or " + Focusable.class.getName());
         }
     }
 
@@ -464,8 +460,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         /*
          * Search the UIDL stream for CSS resources and strings to be injected.
          */
-        for (Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
-            UIDL cssInjectionsUidl = (UIDL) it.next();
+        for (Object child : uidl) {
+            UIDL cssInjectionsUidl = (UIDL) child;
 
             // Check if we have resources to inject
             if (cssInjectionsUidl.getTag().equals("css-resource")) {
@@ -479,9 +475,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 getHead().appendChild(link);
                 // Check if we have CSS string to inject
             } else if (cssInjectionsUidl.getTag().equals("css-string")) {
-                for (Iterator<?> it2 = cssInjectionsUidl.getChildIterator(); it2
-                        .hasNext();) {
-                    StyleInjector.injectAtEnd((String) it2.next());
+                for (Object c : cssInjectionsUidl) {
+                    StyleInjector.injectAtEnd((String) c);
                     StyleInjector.flush();
                 }
             }
@@ -523,37 +518,66 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
     }
 
+    /**
+     * Initialize UIConnector and attach UI to the rootPanelElement.
+     *
+     * @param rootPanelElement
+     *            element to attach ui into
+     * @param applicationConnection
+     *            application connection
+     * @since 8.4
+     */
+    public void init(Element rootPanelElement,
+            ApplicationConnection applicationConnection) {
+        Panel root = new AbsolutePanel(rootPanelElement) {
+            {
+                onAttach();
+            }
+        };
+
+        initConnector(root, applicationConnection);
+    }
+
+    /**
+     * Initialize UIConnector and attach UI to RootPanel for rootPanelId
+     * element.
+     *
+     * @param rootPanelId
+     *            root panel element id
+     * @param applicationConnection
+     *            application connection
+     */
     public void init(String rootPanelId,
             ApplicationConnection applicationConnection) {
-        Widget shortcutContextWidget = getWidget();
+        initConnector(RootPanel.get(rootPanelId), applicationConnection);
+    }
+
+    private void initConnector(Panel root,
+            ApplicationConnection applicationConnection) {
+        VUI ui = getWidget();
+        Widget shortcutContextWidget = ui;
         if (applicationConnection.getConfiguration().isStandalone()) {
             // Listen to body for standalone apps (#19392)
             shortcutContextWidget = RootPanel.get(); // document body
         }
 
-        shortcutContextWidget.addDomHandler(new KeyDownHandler() {
-            @Override
-            public void onKeyDown(KeyDownEvent event) {
-                if (VWindow.isModalWindowOpen()) {
-                    return;
-                }
-                if (getWidget().actionHandler != null) {
-                    Element target = Element
-                            .as(event.getNativeEvent().getEventTarget());
-                    if (target == Document.get().getBody()
-                            || getWidget().getElement().isOrHasChild(target)) {
-                        // Only react to body and elements inside the UI
-                        getWidget().actionHandler.handleKeyboardEvent(
-                                (Event) event.getNativeEvent().cast());
-                    }
-
+        shortcutContextWidget.addDomHandler(event -> {
+            if (VWindow.isModalWindowOpen()) {
+                return;
+            }
+            if (ui.actionHandler != null) {
+                Element target = Element
+                        .as(event.getNativeEvent().getEventTarget());
+                if (target == Document.get().getBody()
+                        || ui.getElement().isOrHasChild(target)) {
+                    // Only react to body and elements inside the UI
+                    ui.actionHandler.handleKeyboardEvent(
+                            (Event) event.getNativeEvent().cast());
                 }
             }
         }, KeyDownEvent.getType());
 
-        DOM.sinkEvents(getWidget().getElement(), Event.ONSCROLL);
-
-        RootPanel root = RootPanel.get(rootPanelId);
+        DOM.sinkEvents(ui.getElement(), Event.ONSCROLL);
 
         // Remove the v-app-loading or any splash screen added inside the div by
         // the user
@@ -565,18 +589,18 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         activeTheme = applicationConnection.getConfiguration().getThemeName();
         root.addStyleName(activeTheme);
 
-        root.add(getWidget());
+        root.add(ui);
 
         // Set default tab index before focus call. State change handler
         // will update this later if needed.
-        getWidget().setTabIndex(1);
+        ui.setTabIndex(1);
 
         if (applicationConnection.getConfiguration().isStandalone()) {
             // set focus to iview element by default to listen possible keyboard
             // shortcuts. For embedded applications this is unacceptable as we
             // don't want to steal focus from the main page nor we don't want
             // side-effects from focusing (scrollIntoView).
-            getWidget().getElement().focus();
+            ui.getElement().focus();
         }
 
         applicationConnection.addHandler(
@@ -624,9 +648,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         // but it's never a content widget
         if (connector instanceof WindowConnector) {
             return null;
-        } else {
-            return connector;
         }
+        return connector;
     }
 
     protected void onChildSizeChange() {
@@ -650,7 +673,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     /**
-     * Checks if the given sub window is a child of this UI Connector
+     * Checks if the given sub window is a child of this UI Connector.
      *
      * @deprecated Should be replaced by a more generic mechanism for getting
      *             non-ComponentConnector children
@@ -669,7 +692,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * @return
      */
     public List<WindowConnector> getSubWindows() {
-        ArrayList<WindowConnector> windows = new ArrayList<>();
+        List<WindowConnector> windows = new ArrayList<>();
         for (ComponentConnector child : getChildComponents()) {
             if (child instanceof WindowConnector) {
                 windows.add((WindowConnector) child);
@@ -746,7 +769,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     window.setVisible(false);
                     window.show();
                 }
-
             }
         }
 
@@ -782,12 +804,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             return;
         }
 
-        Scheduler.get().scheduleDeferred(new Command() {
-            @Override
-            public void execute() {
-                componentConnector.getWidget().getElement().scrollIntoView();
-            }
-        });
+        Scheduler.get().scheduleDeferred(() -> componentConnector.getWidget()
+                .getElement().scrollIntoView());
     }
 
     @Override
@@ -872,7 +890,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     /**
-     * Invokes the layout analyzer on the server
+     * Invokes the layout analyzer on the server.
      *
      * @since 7.1
      */
@@ -941,7 +959,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     /**
-     * Loads the new theme and removes references to the old theme
+     * Loads the new theme and removes references to the old theme.
      *
      * @since 7.4.3
      * @param oldTheme
@@ -1151,7 +1169,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     /**
-     * Returns the name of the theme currently in used by the UI
+     * Returns the name of the theme currently in used by the UI.
      *
      * @since 7.3
      * @return the theme name used by this UI
@@ -1160,18 +1178,22 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         return activeTheme;
     }
 
-    private static Logger getLogger() {
-        return Logger.getLogger(UIConnector.class.getName());
+    /**
+     * Returns whether HTML5 DnD extensions {@link DragSourceExtensionConnector}
+     * and {@link DropTargetExtensionConnector} and alike should be enabled for
+     * mobile devices.
+     * <p>
+     * By default, it is disabled.
+     *
+     * @return {@code true} if enabled, {@code false} if not
+     * @since 8.1
+     */
+    public boolean isMobileHTML5DndEnabled() {
+        return getState().enableMobileHTML5DnD;
     }
 
-    /**
-     * Send an acknowledgement RPC to the server. This allows the server to know
-     * which messages the client has received, even when the client is not
-     * sending any other traffic.
-     */
-    public void sendAck() {
-        getRpcProxy(UIServerRpc.class).acknowledge();
-
+    private static Logger getLogger() {
+        return Logger.getLogger(UIConnector.class.getName());
     }
 
     private void setWindowOrderAndPosition() {
@@ -1212,11 +1234,19 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             return window1.getWindowOrder() > window2.getWindowOrder() ? 1 : -1;
         }
 
-        ArrayList<VWindow> getWindows() {
-            ArrayList<VWindow> result = new ArrayList<>();
+        List<VWindow> getWindows() {
+            List<VWindow> result = new ArrayList<>();
             result.addAll(windows);
             Collections.sort(result, this);
             return result;
         }
-    };
+    }
+
+    private static native void initializeMobileDndPolyfill()
+    /*-{
+         var conf = new Object();
+         // this is needed or the drag image will offset to weird place in for grid rows
+         conf['dragImageCenterOnTouch'] = true;
+         $wnd.DragDropPolyfill.Initialize(conf);
+    }-*/;
 }

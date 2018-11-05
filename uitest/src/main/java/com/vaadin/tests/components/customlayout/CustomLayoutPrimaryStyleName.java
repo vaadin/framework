@@ -6,7 +6,6 @@ import java.io.InputStream;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.v7.ui.TextField;
 
@@ -25,15 +24,9 @@ public class CustomLayoutPrimaryStyleName extends TestBase {
             addComponent(cl);
 
             addComponent(new Button("Set primary stylename",
-                    new Button.ClickListener() {
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                            cl.setPrimaryStyleName("my-second-customlayout");
-                        }
-                    }));
+                    event -> cl.setPrimaryStyleName("my-second-customlayout")));
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

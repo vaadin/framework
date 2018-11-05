@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,7 +65,8 @@ public class SASSAddonImportFileCreator {
     }
 
     /**
-     * Updates a themes addons.scss with the addon themes found on the classpath
+     * Updates a themes addons.scss with the addon themes found on the
+     * classpath.
      *
      * @param themeDirectory
      *            The target theme directory
@@ -85,9 +87,8 @@ public class SASSAddonImportFileCreator {
         LocationInfo info = ClassPathExplorer
                 .getAvailableWidgetSetsAndStylesheets();
 
-        try {
-            PrintStream printStream = new PrintStream(
-                    new FileOutputStream(addonImports));
+        try (PrintStream printStream = new PrintStream(
+                new FileOutputStream(addonImports))) {
 
             printStream.println("/* " + ADDON_IMPORTS_FILE_TEXT + " */");
 
@@ -101,12 +102,12 @@ public class SASSAddonImportFileCreator {
             // last
             List<String> paths = new ArrayList<>(addonThemes.keySet());
             Collections.sort(paths, (String path1, String path2) -> {
-                if (path1.toLowerCase().endsWith(".css")
-                        && path2.toLowerCase().endsWith(".scss")) {
+                if (path1.toLowerCase(Locale.ROOT).endsWith(".css")
+                        && path2.toLowerCase(Locale.ROOT).endsWith(".scss")) {
                     return -1;
                 }
-                if (path1.toLowerCase().endsWith(".scss")
-                        && path2.toLowerCase().endsWith(".css")) {
+                if (path1.toLowerCase(Locale.ROOT).endsWith(".scss")
+                        && path2.toLowerCase(Locale.ROOT).endsWith(".css")) {
                     return 1;
                 }
                 return 0;

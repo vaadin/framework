@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,6 +23,8 @@ import java.io.Serializable;
  *
  * The sorting rule is simple and contains only the affected column's name and
  * the direction of the sort.
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public class OrderBy implements Serializable {

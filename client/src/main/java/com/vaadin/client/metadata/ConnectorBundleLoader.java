@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,10 @@ package com.vaadin.client.metadata;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
@@ -26,10 +29,6 @@ import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.dom.client.Style.WhiteSpace;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.vaadin.client.FastStringMap;
@@ -164,18 +163,8 @@ public abstract class ConnectorBundleLoader {
     private void notice(String productName) {
         if (notice == null) {
             notice = new HTML();
-            notice.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    notice.removeFromParent();
-                }
-            });
-            notice.addTouchStartHandler(new TouchStartHandler() {
-                @Override
-                public void onTouchStart(TouchStartEvent event) {
-                    notice.removeFromParent();
-                }
-            });
+            notice.addClickHandler(event -> notice.removeFromParent());
+            notice.addTouchStartHandler(event -> notice.removeFromParent());
         }
         String msg = notice.getText().trim();
         msg += msg.isEmpty() ? "Using Evaluation License of: " : ", ";
@@ -207,5 +196,54 @@ public abstract class ConnectorBundleLoader {
         s.setWhiteSpace(WhiteSpace.NORMAL);
         s.setVisibility(Visibility.VISIBLE);
         s.setMargin(0, Unit.PX);
+    }
+
+    /**
+     * Starts loading the deferred bundle if it hasn't already been started.
+     *
+     * @since 8.0.3
+     */
+    public void ensureDeferredBundleLoaded() {
+        if (!isBundleLoaded(DEFERRED_BUNDLE_NAME)) {
+            loadBundle(DEFERRED_BUNDLE_NAME, new BundleLoadCallback() {
+                @Override
+                public void loaded() {
+                    // Nothing to do
+                }
+
+                @Override
+                public void failed(Throwable reason) {
+                    getLogger().log(Level.SEVERE,
+                            "Error loading deferred bundle", reason);
+                }
+            });
+        }
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(ConnectorBundleLoader.class.getName());
+    }
+
+    /**
+     * Gets a list of all currently loaded bundle names.
+     * <p>
+     * This method is intended for testing the loading mechanism.
+     *
+     * @return a list of bundles, not <code>null</code>
+     *
+     * @since 8.0.3
+     */
+    public List<String> getLoadedBundles() {
+        List<String> bundles = new ArrayList<>();
+
+        JsArrayString keys = asyncBlockLoaders.getKeys();
+        for (int i = 0; i < keys.length(); i++) {
+            String bundleName = keys.get(i);
+            if (isBundleLoaded(bundleName)) {
+                bundles.add(bundleName);
+            }
+        }
+
+        return bundles;
     }
 }

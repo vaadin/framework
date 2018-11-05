@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -12,9 +12,6 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
- */
-/**
- *
  */
 package com.vaadin.client;
 
@@ -53,9 +50,9 @@ public final class ValueMap extends JavaScriptObject {
     /*-{
         var a = new Array();
         var attr = this;
-        for(var j in attr) {
+        for (var j in attr) {
             // workaround for the infamous chrome hosted mode hack (__gwt_ObjectId)
-            if(attr.hasOwnProperty(j))
+            if (attr.hasOwnProperty(j))
                 a.push(j);
         }
         return a;

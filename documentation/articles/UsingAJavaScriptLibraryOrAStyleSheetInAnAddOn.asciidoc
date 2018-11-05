@@ -1,0 +1,51 @@
+---
+title: Using A JavaScript Library Or A Style Sheet In An Add On
+order: 40
+layout: page
+---
+
+[[using-a-javascript-library-or-a-style-sheet-in-an-addon]]
+= Using a JavaScript library or a style sheet in an add-on
+
+Including style sheets or JavaScript files in your add-ons or as a part
+of your application can now be done by adding a `@StyleSheet` or
+`@JavaScript` annotation to a `Component` or `Extension` class. Each
+annotation takes a list of strings with URLs to the resources that
+should be loaded on the page before the framework initializes the
+client-side `Component` or `Extension`.
+
+The URLs can either be complete absolute urls (e.g. https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js) or
+relative URLs (e.g. _redbutton.css_). A relative URL is converted to a
+special URL that will download the file from the Java package where the
+defining class is located. This means that e.g.
+`@StyleSheet({"redbutton.css"})` on the class `com.example.RedButton` will
+cause the file `com/example/redbutton.css` on the classpath to be loaded
+in the browser. `@JavaScript` works in exactly the same way - see
+link:IntegratingAJavaScriptComponent.asciidoc[Integrating a JavaScript component]
+for a practical example.
+
+[source,java]
+....
+@StyleSheet("redbutton.css")
+public class RedButton extends NativeButton {
+  public RedButton(String caption) {
+    super(caption);
+    addStyleName("redButton");
+  }
+}
+....
+
+In this simple example, the `RedButton` component just adds a `redButton`
+style name to a normal `NativeButton`. _redbutton.css_ is located in the
+same folder as _RedButton.java_ and has this content:
+
+[source,css]
+....
+.redButton {
+  background-color: red;
+}
+....
+
+This new mechanism makes it very easy to include style sheet or
+JavaScript files with add-ons and automatically load them in the browser
+when the add-on is used.

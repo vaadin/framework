@@ -53,25 +53,42 @@ $v-component-group-spacing: null !default;
   @if $v-border-radius > 0 {
     .v-widget ~ .v-widget:not(:last-child) {
       border-radius: 0;
+      &.v-upload .v-button {
+        border-radius: 0;
+      }
     }
 
     .v-widget:last-child {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
+      &.v-upload .v-button {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
     }
 
     .v-widget:first-child,
     .v-caption:first-child + .v-widget {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
+      &.v-upload .v-button {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
     }
 
     .v-widget ~ .v-widget.first.first {
       border-radius: $v-border-radius 0 0 $v-border-radius;
+      &.v-upload .v-button {
+        border-radius: $v-border-radius 0 0 $v-border-radius;
+      }
     }
 
     .v-widget ~ .v-widget.last.last {
       border-radius: 0 $v-border-radius $v-border-radius 0;
+      &.v-upload .v-button {
+        border-radius: 0 $v-border-radius $v-border-radius 0;
+      }
     }
   }
 

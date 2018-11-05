@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.grid;
 
 import java.util.Date;
@@ -26,6 +11,7 @@ import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.util.PortableRandom;
 import com.vaadin.tests.util.TestDataGenerator;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.renderers.NumberRenderer;
 
 public class GridInitiallyHiddenColumns extends AbstractTestUIWithLog {
@@ -36,8 +22,11 @@ public class GridInitiallyHiddenColumns extends AbstractTestUIWithLog {
 
         grid.addColumn(Person::getFirstName).setHidden(true).setHidable(true)
                 .setCaption("First Name");
-        grid.addColumn(Person::getLastName).setHidable(true)
-                .setCaption("Last Name");
+        Column<Person, String> col2 = grid.addColumn(Person::getLastName)
+                .setHidable(true).setCaption("Last Name");
+        if (request.getParameter("allHidden") != null) {
+            col2.setHidden(true);
+        }
         grid.addColumn(Person::getAge, new NumberRenderer()).setHidden(true)
                 .setHidable(true).setCaption("Age");
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -60,9 +60,9 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
             el = DOM.getNextSibling(el);
         }
 
-        if (BrowserInfo.get().isWebkit()) {
-            // Webkit does not focus non-text input elements on click
-            // (#11854)
+        if (BrowserInfo.get().isWebkit() || BrowserInfo.get().isFirefox()) {
+            // Webkit and Firefox do not focus non-text input elements on click
+            // (#3944)
             addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {

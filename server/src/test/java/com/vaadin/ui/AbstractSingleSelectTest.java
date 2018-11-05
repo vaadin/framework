@@ -1,22 +1,9 @@
-/*
- * Copyright 2000-2014 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.ui;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -27,7 +14,6 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.jsoup.nodes.Element;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -83,8 +69,10 @@ public class AbstractSingleSelectTest {
 
         selectionChanges = new ArrayList<>();
         oldSelections = new ArrayList<>();
-        listing.addSelectionListener(e -> selectionChanges.add(e.getValue()));
-        listing.addSelectionListener(e -> oldSelections.add(e.getOldValue()));
+        listing.addSelectionListener(
+                event -> selectionChanges.add(event.getValue()));
+        listing.addSelectionListener(
+                event -> oldSelections.add(event.getOldValue()));
     }
 
     public static final Person PERSON_C = new Person("c", 3);
@@ -190,10 +178,10 @@ public class AbstractSingleSelectTest {
     public void getValue() {
         listing.setSelectedItem(PERSON_B);
 
-        Assert.assertEquals(PERSON_B, listing.getValue());
+        assertEquals(PERSON_B, listing.getValue());
 
         listing.setValue(null);
-        Assert.assertNull(listing.getValue());
+        assertNull(listing.getValue());
         verifyValueChanges();
     }
 
@@ -205,22 +193,22 @@ public class AbstractSingleSelectTest {
         Mockito.when(select.getSelectedItem()).thenReturn(selected);
         Mockito.doCallRealMethod().when(select).getValue();
 
-        Assert.assertSame(selected.get(), select.getValue());
+        assertSame(selected.get(), select.getValue());
 
         selected = Optional.empty();
         Mockito.when(select.getSelectedItem()).thenReturn(selected);
-        Assert.assertNull(select.getValue());
+        assertNull(select.getValue());
     }
 
     @Test
     public void setValue() {
         listing.setValue(PERSON_C);
 
-        Assert.assertEquals(PERSON_C, listing.getSelectedItem().get());
+        assertEquals(PERSON_C, listing.getSelectedItem().get());
 
         listing.setValue(null);
 
-        Assert.assertFalse(listing.getSelectedItem().isPresent());
+        assertFalse(listing.getSelectedItem().isPresent());
         verifyValueChanges();
     }
 
@@ -281,22 +269,22 @@ public class AbstractSingleSelectTest {
 
         AtomicReference<ValueChangeEvent<?>> event = new AtomicReference<>();
         Registration actualRegistration = select.addValueChangeListener(evt -> {
-            Assert.assertNull(event.get());
+            assertNull(event.get());
             event.set(evt);
         });
-        Assert.assertSame(registration, actualRegistration);
+        assertSame(registration, actualRegistration);
 
         selectionListener.get().selectionChange(
                 new SingleSelectionEvent<>(select, value, true));
 
-        Assert.assertEquals(select, event.get().getComponent());
-        Assert.assertEquals(value, event.get().getOldValue());
-        Assert.assertEquals(value, event.get().getValue());
-        Assert.assertTrue(event.get().isUserOriginated());
+        assertEquals(select, event.get().getComponent());
+        assertEquals(value, event.get().getOldValue());
+        assertEquals(value, event.get().getValue());
+        assertTrue(event.get().isUserOriginated());
     }
 
     private void verifyValueChanges() {
-        if (oldSelections.size() > 0) {
+        if (!oldSelections.isEmpty()) {
             assertEquals(null, oldSelections.get(0));
             assertEquals(selectionChanges.size(), oldSelections.size());
             for (int i = 0; i < oldSelections.size() - 1; i++) {

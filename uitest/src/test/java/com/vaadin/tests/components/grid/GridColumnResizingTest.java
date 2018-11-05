@@ -1,6 +1,8 @@
 package com.vaadin.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -33,11 +35,11 @@ public class GridColumnResizingTest extends MultiBrowserTest {
         ButtonElement toggleResizableButton = $(ButtonElement.class).get(4);
         GridCellElement cell = getGrid().getHeaderCell(0, 0);
 
-        Assert.assertEquals(true, cell.isElementPresent(
+        assertEquals(true, cell.isElementPresent(
                 By.cssSelector("div.v-grid-column-resize-handle")));
 
         toggleResizableButton.click();
-        Assert.assertEquals(false, cell.isElementPresent(
+        assertEquals(false, cell.isElementPresent(
                 By.cssSelector("div.v-grid-column-resize-handle")));
     }
 
@@ -87,16 +89,13 @@ public class GridColumnResizingTest extends MultiBrowserTest {
     public void resizeEventListener() {
         openTestURL();
 
-        Assert.assertEquals("not resized",
-                $(LabelElement.class).get(1).getText());
+        assertEquals("not resized", $(LabelElement.class).get(1).getText());
 
         serverSideSetWidth(150);
-        Assert.assertEquals("server resized",
-                $(LabelElement.class).get(1).getText());
+        assertEquals("server resized", $(LabelElement.class).get(1).getText());
 
         dragResizeColumn(0, 0, 100);
-        Assert.assertEquals("client resized",
-                $(LabelElement.class).get(1).getText());
+        assertEquals("client resized", $(LabelElement.class).get(1).getText());
     }
 
     private GridElement getGrid() {
@@ -131,19 +130,20 @@ public class GridColumnResizingTest extends MultiBrowserTest {
         GridCellElement headerCell = getGrid().getHeaderCell(0, columnIndex);
         Dimension size = headerCell.getSize();
         new Actions(getDriver())
-                .moveToElement(headerCell, size.getWidth() + posX,
-                        size.getHeight() / 2)
+                .moveToElement(headerCell,
+                        getXOffset(headerCell, size.getWidth() + posX),
+                        getYOffset(headerCell, size.getHeight() / 2))
                 .clickAndHold().moveByOffset(offset, 0).release().perform();
     }
 
     private void assertColumnWidth(int width, int columnIndex) {
-        Assert.assertEquals(width,
+        assertEquals(width,
                 getGrid().getCell(0, columnIndex).getSize().getWidth());
     }
 
     private void assertColumnWidthWithThreshold(int width, int columnIndex,
             int threshold) {
-        Assert.assertTrue(
+        assertTrue(
                 Math.abs(getGrid().getCell(0, columnIndex).getSize().getWidth()
                         - width) <= threshold);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,8 +17,8 @@
 package com.vaadin.client.ui;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
@@ -30,9 +30,8 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
-import com.vaadin.shared.ui.embedded.EmbeddedConstants;
+import com.vaadin.shared.ui.embedded.EmbeddedState;
 
 public class VEmbedded extends HTML {
     public static String CLASSNAME = "v-embedded";
@@ -59,11 +58,14 @@ public class VEmbedded extends HTML {
      * <p>
      * For internal use only. May be removed or replaced in the future.
      *
-     * @param uidl
-     *            The UIDL
+     * @param state
+     *            The EmbeddedState
+     * @param src
+     *            The src attribute
      * @return Tags concatenated into a string
+     * @since 8.2
      */
-    public String createFlashEmbed(UIDL uidl) {
+    public String createFlashEmbed(EmbeddedState state, String src) {
         /*
          * To ensure cross-browser compatibility we are using the twice-cooked
          * method to embed flash i.e. we add a OBJECT tag for IE ActiveX and
@@ -82,12 +84,9 @@ public class VEmbedded extends HTML {
          * http://kb2.adobe.com/cps/415/tn_4150.html. Allow user to override
          * this by setting his own classid.
          */
-        if (uidl.hasAttribute("classid")) {
-            html.append(
-                    "classid=\""
-                            + WidgetUtil.escapeAttribute(
-                                    uidl.getStringAttribute("classid"))
-                            + "\" ");
+        if (state.classId != null) {
+            html.append("classid=\"" + WidgetUtil.escapeAttribute(state.classId)
+                    + "\" ");
         } else {
             html.append(
                     "classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" ");
@@ -101,12 +100,9 @@ public class VEmbedded extends HTML {
          * 6.0.0.0 and above. Allow user to override this by setting his own
          * codebase
          */
-        if (uidl.hasAttribute("codebase")) {
-            html.append(
-                    "codebase=\""
-                            + WidgetUtil.escapeAttribute(
-                                    uidl.getStringAttribute("codebase"))
-                            + "\" ");
+        if (state.codebase != null) {
+            html.append("codebase=\""
+                    + WidgetUtil.escapeAttribute(state.codebase) + "\" ");
         } else {
             html.append(
                     "codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" ");
@@ -123,39 +119,30 @@ public class VEmbedded extends HTML {
         html.append("type=\"application/x-shockwave-flash\" ");
 
         // Codetype
-        if (uidl.hasAttribute("codetype")) {
-            html.append(
-                    "codetype=\""
-                            + WidgetUtil.escapeAttribute(
-                                    uidl.getStringAttribute("codetype"))
-                            + "\" ");
+        if (state.codetype != null) {
+            html.append("codetype=\""
+                    + WidgetUtil.escapeAttribute(state.codetype) + "\" ");
         }
 
         // Standby
-        if (uidl.hasAttribute("standby")) {
-            html.append(
-                    "standby=\""
-                            + WidgetUtil.escapeAttribute(
-                                    uidl.getStringAttribute("standby"))
-                            + "\" ");
+        if (state.standby != null) {
+            html.append("standby=\"" + WidgetUtil.escapeAttribute(state.standby)
+                    + "\" ");
         }
 
         // Archive
-        if (uidl.hasAttribute("archive")) {
-            html.append(
-                    "archive=\""
-                            + WidgetUtil.escapeAttribute(
-                                    uidl.getStringAttribute("archive"))
-                            + "\" ");
+        if (state.archive != null) {
+            html.append("archive=\"" + WidgetUtil.escapeAttribute(state.archive)
+                    + "\" ");
         }
 
         // End object tag
-        html.append(">");
+        html.append('>');
 
         // Ensure we have an movie parameter
-        Map<String, String> parameters = getParameters(uidl);
+        Map<String, String> parameters = state.parameters;
         if (parameters.get("movie") == null) {
-            parameters.put("movie", getSrc(uidl, client));
+            parameters.put("movie", getSrc(src, client));
         }
 
         // Add parameters to OBJECT
@@ -169,7 +156,7 @@ public class VEmbedded extends HTML {
 
         // Build inner EMBED tag
         html.append("<embed ");
-        html.append("src=\"" + WidgetUtil.escapeAttribute(getSrc(uidl, client))
+        html.append("src=\"" + WidgetUtil.escapeAttribute(getSrc(src, client))
                 + "\" ");
         html.append("width=\"" + WidgetUtil.escapeAttribute(width) + "\" ");
         html.append("height=\"" + WidgetUtil.escapeAttribute(height) + "\" ");
@@ -178,7 +165,7 @@ public class VEmbedded extends HTML {
         // Add the parameters to the Embed
         for (String name : parameters.keySet()) {
             html.append(WidgetUtil.escapeAttribute(name));
-            html.append("=");
+            html.append('=');
             html.append("\"" + WidgetUtil.escapeAttribute(parameters.get(name))
                     + "\"");
         }
@@ -186,9 +173,8 @@ public class VEmbedded extends HTML {
         // End embed tag
         html.append("></embed>");
 
-        if (uidl.hasAttribute(EmbeddedConstants.ALTERNATE_TEXT)) {
-            html.append(
-                    uidl.getStringAttribute(EmbeddedConstants.ALTERNATE_TEXT));
+        if (state.altText != null) {
+            html.append(state.altText);
         }
 
         // End object tag
@@ -208,10 +194,7 @@ public class VEmbedded extends HTML {
     public static Map<String, String> getParameters(UIDL uidl) {
         Map<String, String> parameters = new HashMap<>();
 
-        Iterator<Object> childIterator = uidl.getChildIterator();
-        while (childIterator.hasNext()) {
-
-            Object child = childIterator.next();
+        for (Object child : uidl) {
             if (child instanceof UIDL) {
 
                 UIDL childUIDL = (UIDL) child;
@@ -232,12 +215,13 @@ public class VEmbedded extends HTML {
      * <p>
      * For internal use only. May be removed or replaced in the future.
      *
-     * @param uidl
+     * @param src
+     *            the src attribute
      * @param client
      * @return
      */
-    public String getSrc(UIDL uidl, ApplicationConnection client) {
-        String url = client.translateVaadinUri(uidl.getStringAttribute("src"));
+    public String getSrc(String src, ApplicationConnection client) {
+        String url = client.translateVaadinUri(src);
         if (url == null) {
             return "";
         }
@@ -267,9 +251,12 @@ public class VEmbedded extends HTML {
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (DOM.eventGetType(event) == Event.ONLOAD) {
-            VConsole.log("Embeddable onload");
+            getLogger().info("Embeddable onload");
             Util.notifyParentOfSizeChange(this, true);
         }
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(VEmbedded.class.getName());
+    }
 }

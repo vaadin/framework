@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -49,6 +49,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * Callback used by
      * {@link AbstractRemoteDataSource#requestRows(int, int, RequestRowsCallback)}
      * to pass data to the underlying implementation when data has been fetched.
+     *
+     * @param <T>
+     *            the row type
      */
     public static class RequestRowsCallback<T> {
         private final Range requestedRange;
@@ -56,7 +59,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         private final AbstractRemoteDataSource<T> source;
 
         /**
-         * Creates a new callback
+         * Creates a new callback.
          *
          * @param source
          *            the data source for which the request is made
@@ -178,19 +181,34 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     private Range cached = Range.between(0, 0);
 
-    private final HashMap<Integer, T> indexToRowMap = new HashMap<>();
-    private final HashMap<Object, Integer> keyToIndexMap = new HashMap<>();
+    private final Map<Integer, T> indexToRowMap = new HashMap<>();
+    private final Map<Object, Integer> keyToIndexMap = new HashMap<>();
+
+    /**
+     * Map used to temporarily store rows invalidated by
+     * {@link #insertRowData(int, int)}. All invalidated rows are stored with
+     * their indices matching the state after row insertion. If the backend has
+     * pre-emptively pushed the row data for the added rows, these rows will be
+     * used again to fill the cache.
+     * <p>
+     * To avoid this cache invalidation issue from getting too big, this class
+     * does not attempt to track these rows indefinitely. Multiple row
+     * manipulations without filling the gaps in between will remove all
+     * invalidated rows and prevent any attempts to restore them. This is
+     * indicated by having the map empty, not {@code null}.
+     * <p>
+     * The map is set to {@code null} upon requesting the rows from the backend
+     * to indicate that future row additions can attempt to restore the cache.
+     */
+    private Map<Integer, T> invalidatedRows;
 
     private Set<DataChangeHandler> dataChangeHandlers = new LinkedHashSet<>();
 
     private CacheStrategy cacheStrategy = new CacheStrategy.DefaultCacheStrategy();
 
-    private final ScheduledCommand coverageChecker = new ScheduledCommand() {
-        @Override
-        public void execute() {
-            coverageCheckPending = false;
-            checkCacheCoverage();
-        }
+    private final ScheduledCommand coverageChecker = () -> {
+        coverageCheckPending = false;
+        checkCacheCoverage();
     };
 
     private Map<Object, Integer> pinnedCounts = new HashMap<>();
@@ -277,6 +295,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         Profiler.enter("AbstractRemoteDataSource.checkCacheCoverage");
 
+        // Clean up invalidated data
+        invalidatedRows = null;
+
         Range minCacheRange = getMinCacheRange();
 
         if (!minCacheRange.intersects(cached) || cached.isEmpty()) {
@@ -332,7 +353,13 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         dropFromCache(cacheParition[2]);
     }
 
-    private void dropFromCache(Range range) {
+    /**
+     * Drop the given range of rows from this data source's cache.
+     *
+     * @param range
+     *            the range of rows to drop
+     */
+    protected void dropFromCache(Range range) {
         for (int i = range.getStart(); i < range.getEnd(); i++) {
             // Called after dropping from cache. Dropped row is passed as a
             // parameter, but is no longer present in the DataSource
@@ -469,6 +496,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         Range newUsefulData = partition[1];
         if (!newUsefulData.isEmpty()) {
+            if (!cached.isEmpty())
+                discardStaleCacheEntries();
+
             // Update the parts that are actually inside
             int start = newUsefulData.getStart();
             for (int i = start; i < newUsefulData.getEnd(); i++) {
@@ -488,7 +518,6 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             if (cached.isEmpty()) {
                 cached = newUsefulData;
             } else {
-                discardStaleCacheEntries();
 
                 /*
                  * everything might've become stale so we need to re-check for
@@ -496,6 +525,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                  */
                 if (!cached.isEmpty()) {
                     cached = cached.combineWith(newUsefulData);
+                    // Attempt to restore invalidated items
+                    fillCacheFromInvalidatedRows(maxCacheRange);
                 } else {
                     cached = newUsefulData;
                 }
@@ -505,6 +536,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                     cached.length()));
 
             updatePinnedRows(rowData);
+
         }
 
         if (!partition[0].isEmpty() || !partition[2].isEmpty()) {
@@ -531,6 +563,58 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
         Profiler.leave("AbstractRemoteDataSource.setRowData");
 
+    }
+
+    /**
+     * Go through items invalidated by {@link #insertRowData(int, int)}. If the
+     * server has pre-emptively sent added row data immediately after informing
+     * of row addition, the invalid cache can be restored to proper index range.
+     *
+     * @param maxCacheRange
+     *            the maximum amount of rows that can cached
+     */
+    private void fillCacheFromInvalidatedRows(Range maxCacheRange) {
+        if (invalidatedRows == null || invalidatedRows.isEmpty()) {
+            // No old invalid cache available
+            return;
+        }
+
+        Range potentialCache = maxCacheRange.partitionWith(cached)[2];
+        int start = potentialCache.getStart();
+        int last = start;
+        try {
+            if (potentialCache.isEmpty()
+                    || invalidatedRows.containsKey(start - 1)) {
+                // Cache is already full or invalidated rows contains unexpected
+                // indices.
+                return;
+            }
+
+            for (int i = start; i < potentialCache.getEnd(); ++i) {
+                if (!invalidatedRows.containsKey(i)) {
+                    return;
+                }
+                T row = invalidatedRows.get(i);
+                indexToRowMap.put(i, row);
+                keyToIndexMap.put(getRowKey(row), i);
+                last = i;
+            }
+
+            // Cache filled from invalidated rows. Can continue as if it was
+            // never invalidated.
+            invalidatedRows = null;
+        } finally {
+            // Update cache range and clean up
+            if (invalidatedRows != null) {
+                invalidatedRows.clear();
+            }
+
+            Range updated = Range.between(start, last + 1);
+            cached = cached.combineWith(updated);
+
+            dataChangeHandlers.forEach(dch -> dch
+                    .dataUpdated(updated.getStart(), updated.length()));
+        }
     }
 
     private Stream<DataChangeHandler> getHandlers() {
@@ -560,6 +644,12 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     protected void removeRowData(int firstRowIndex, int count) {
         Profiler.enter("AbstractRemoteDataSource.removeRowData");
 
+        // Cache was not filled since previous insertRowData. The old rows are
+        // no longer useful.
+        if (invalidatedRows != null) {
+            invalidatedRows.clear();
+        }
+
         size -= count;
 
         Range removedRange = Range.withLength(firstRowIndex, count);
@@ -580,7 +670,15 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             Range remainsBefore = partitions[0];
             Range transposedRemainsAfter = partitions[2]
                     .offsetBy(-removedRange.length());
-            cached = remainsBefore.combineWith(transposedRemainsAfter);
+            // #8840 either can be empty if the removed range was over the
+            // cached range
+            if (remainsBefore.isEmpty()) {
+                cached = transposedRemainsAfter;
+            } else if (transposedRemainsAfter.isEmpty()) {
+                cached = remainsBefore;
+            } else {
+                cached = remainsBefore.combineWith(transposedRemainsAfter);
+            }
         } else if (removedRange.getEnd() <= cached.getStart()) {
             // Removal was before the cache. offset the cache.
             cached = cached.offsetBy(-removedRange.length());
@@ -604,6 +702,12 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     protected void insertRowData(int firstRowIndex, int count) {
         Profiler.enter("AbstractRemoteDataSource.insertRowData");
 
+        // Cache was not filled since previous insertRowData. The old rows are
+        // no longer useful.
+        if (invalidatedRows != null) {
+            invalidatedRows.clear();
+        }
+
         size += count;
 
         if (firstRowIndex <= cached.getStart()) {
@@ -625,7 +729,24 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
              * If holes were supported, we could shift the higher part of
              * "cached" and leave a hole the size of "count" in the middle.
              */
-            cached = cached.splitAt(firstRowIndex)[0];
+            Range[] splitAt = cached.splitAt(firstRowIndex);
+            cached = splitAt[0];
+            Range invalid = splitAt[1];
+
+            /*
+             * If we already have a map in invalidatedRows, we're in a state
+             * where multiple row manipulations without data received have
+             * happened and the cache restoration is prevented completely.
+             */
+
+            if (!invalid.isEmpty() && invalidatedRows == null) {
+                invalidatedRows = new HashMap<>();
+                // Store all invalidated items to a map. Indices are updated to
+                // match what they should be after the insertion.
+                for (int i = invalid.getStart(); i < invalid.getEnd(); ++i) {
+                    invalidatedRows.put(i + count, indexToRowMap.get(i));
+                }
+            }
 
             for (int i = firstRowIndex; i < oldCacheEnd; i++) {
                 T row = indexToRowMap.remove(Integer.valueOf(i));
@@ -657,7 +778,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     }
 
     /**
-     * Gets the current range of cached rows
+     * Gets the current range of cached rows.
      *
      * @return the range of currently cached rows
      */
@@ -760,7 +881,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * @return a non-null object that uniquely and consistently represents the
      *         row object
      */
-    abstract public Object getRowKey(T row);
+    public abstract Object getRowKey(T row);
 
     @Override
     public int size() {
@@ -782,7 +903,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      */
     protected void resetDataAndSize(int newSize) {
         size = newSize;
-        dropFromCache(getCachedRange());
+        indexToRowMap.clear();
+        keyToIndexMap.clear();
         cached = Range.withLength(0, 0);
 
         getHandlers().forEach(dch -> dch.resetDataAndSize(newSize));

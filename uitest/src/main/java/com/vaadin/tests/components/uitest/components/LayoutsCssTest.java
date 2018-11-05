@@ -79,7 +79,7 @@ public class LayoutsCssTest extends GridLayout {
         horiz.setSplitPosition(50);
         horiz.setFirstComponent(new Label("Some content 1"));
         horiz.setSecondComponent(new Label("Some content 2"));
-        horiz.setIcon(new ThemeResource(parent.ICON_URL));
+        horiz.setIcon(new ThemeResource(TestSampler.ICON_URL));
         horiz.setCaption("HorizSplitPan");
         horiz.setId("layout" + debugIdCounter++);
 
@@ -110,7 +110,6 @@ public class LayoutsCssTest extends GridLayout {
 
             addComponent(custom);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -137,7 +136,7 @@ public class LayoutsCssTest extends GridLayout {
         panelLayout.setMargin(true);
         Panel panel = new Panel(caption, panelLayout);
         panelLayout.addComponent(new Label("Some content"));
-        panel.setIcon(new ThemeResource(parent.ICON_URL));
+        panel.setIcon(new ThemeResource(TestSampler.ICON_URL));
         panel.setComponentError(new UserError("A error message..."));
         panel.setId("layout" + debugIdCounter++);
 

@@ -1,25 +1,11 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -37,8 +23,7 @@ public class GridSwitchRenderersTest extends MultiBrowserTest {
 
         GridElement grid = $(GridElement.class).first();
 
-        Assert.assertTrue(
-                "Initial rendering of column 1 is not unformatted text",
+        assertTrue("Initial rendering of column 1 is not unformatted text",
                 cellTextIsUnformatted(grid.getCell(0, 1).getText()));
 
         // NOTE: must click at 5,5 because of Valo and rendering in Chrome
@@ -46,12 +31,12 @@ public class GridSwitchRenderersTest extends MultiBrowserTest {
         CheckBoxElement cb = $(CheckBoxElement.class).first();
         cb.click(5, 5);
 
-        Assert.assertTrue(
+        assertTrue(
                 "Column 1 data has not been rendered with HTMLRenderer after renderer swap",
                 cellTextIsHTMLFormatted(grid.getCell(0, 1).getText()));
         cb.click(5, 5);
 
-        Assert.assertTrue(
+        assertTrue(
                 "Column 1 data has not been re-rendered as text after renderer swap",
                 cellTextIsUnformatted(grid.getCell(0, 1).getText()));
     }

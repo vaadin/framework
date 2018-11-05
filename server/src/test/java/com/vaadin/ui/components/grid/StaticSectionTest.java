@@ -1,26 +1,12 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.ui.components.grid;
+
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.HashSet;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -129,9 +115,9 @@ public class StaticSectionTest {
 
         staticRow.writeDesign(container, null);
 
-        Assert.assertEquals(2, container.children().size());
-        Assert.assertEquals("col1,col2", container.child(0).attr("column-ids"));
-        Assert.assertEquals("col3", container.child(1).attr("column-ids"));
+        assertEquals(2, container.children().size());
+        assertEquals("col1,col2", container.child(0).attr("column-ids"));
+        assertEquals("col3", container.child(1).attr("column-ids"));
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,8 @@
  */
 
 package com.vaadin.v7.client.ui;
+
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -38,7 +40,6 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.StyleConstants;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.v7.client.ui.upload.UploadConnector;
 import com.vaadin.v7.client.ui.upload.UploadIFrameOnloadStrategy;
@@ -146,7 +147,7 @@ public class VUpload extends SimplePanel {
             @Override
             public void onClick(ClickEvent event) {
                 if (immediate) {
-                    // fire click on upload (eg. focused button and hit space)
+                    // fire click on upload (e.g. focused button and hit space)
                     fireNativeClick(fu.getElement());
                 } else {
                     submit();
@@ -161,6 +162,7 @@ public class VUpload extends SimplePanel {
     private static native void setEncoding(Element form, String encoding)
     /*-{
       form.enctype = encoding;
+      // IE8 not supported in Vaadin 8
     }-*/;
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -247,11 +249,13 @@ public class VUpload extends SimplePanel {
                         if (t != null) {
                             t.cancel();
                         }
-                        VConsole.log("VUpload:Submit complete");
-                        ((UploadConnector) ConnectorMap.get(client)
-                                .getConnector(VUpload.this))
-                                        .getRpcProxy(UploadServerRpc.class)
-                                        .poll();
+                        getLogger().info("VUpload:Submit complete");
+                        if (isAttached()) {
+                            // no need to call poll() if component is already
+                            // detached #8728
+                            ((UploadConnector) ConnectorMap.get(client).getConnector(VUpload.this))
+                                    .getRpcProxy(UploadServerRpc.class).poll();
+                        }
                     }
 
                     rebuildPanel();
@@ -293,7 +297,7 @@ public class VUpload extends SimplePanel {
                     // Only visit the server if the upload has not already
                     // finished
                     if (thisUploadId == nextUploadId) {
-                        VConsole.log(
+                        getLogger().info(
                                 "Visiting server to see if upload started event changed UI.");
                         client.updateVariable(paintableId, "pollForStart",
                                 thisUploadId, true);
@@ -308,11 +312,11 @@ public class VUpload extends SimplePanel {
     /** For internal use only. May be removed or replaced in the future. */
     public void submit() {
         if (submitted || !enabled) {
-            VConsole.log("Submit cancelled (disabled or already submitted)");
+            getLogger().info("Submit cancelled (disabled or already submitted)");
             return;
         }
-        if (fu.getFilename().length() == 0) {
-            VConsole.log("Submitting empty selection (no file)");
+        if (fu.getFilename().isEmpty()) {
+            getLogger().info("Submitting empty selection (no file)");
         }
         // flush possibly pending variable changes, so they will be handled
         // before upload
@@ -391,4 +395,7 @@ public class VUpload extends SimplePanel {
         }
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(VUpload.class.getName());
+    }
 }

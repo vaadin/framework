@@ -1,14 +1,10 @@
 package com.vaadin.tests.urifragments;
 
-import java.util.Iterator;
-
 import com.vaadin.server.Page;
-import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
@@ -28,18 +24,15 @@ public class FragmentHandlingAndAsynchUIUpdate extends AbstractTestUIWithLog {
 
         button.setId(BUTTON_ID);
 
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Label c = new Label("Thank you for clicking");
-                c.setId(String.valueOf(fragmentId));
-                getLayout().addComponent(c);
+        button.addClickListener(event -> {
+            Label c = new Label("Thank you for clicking");
+            c.setId(String.valueOf(fragmentId));
+            getLayout().addComponent(c);
 
-                log(String.format("Button was clicked for fragmentId %s",
-                        fragmentId));
-                Page.getCurrent().setUriFragment(
-                        String.format(FRAG_NAME_TPL, fragmentId++));
-            }
+            log(String.format("Button was clicked for fragmentId %s",
+                    fragmentId));
+            Page.getCurrent()
+                    .setUriFragment(String.format(FRAG_NAME_TPL, fragmentId++));
         });
 
         getLayout().addComponent(button);
@@ -49,43 +42,33 @@ public class FragmentHandlingAndAsynchUIUpdate extends AbstractTestUIWithLog {
     }
 
     private UriFragmentChangedListener createUriFragmentChangedListener() {
-        return new UriFragmentChangedListener() {
+        return event -> {
+            log(String.format("uriFragmentChanged %s", event.getUriFragment()));
 
-            @Override
-            public void uriFragmentChanged(
-                    final UriFragmentChangedEvent event) {
-
-                log(String.format("uriFragmentChanged %s",
-                        event.getUriFragment()));
-
-                if (!event.getUriFragment().startsWith("FRAG")) {
-                    return;
-                }
-
-                Iterator<Component> it = getLayout().iterator();
-                final String frag = event.getUriFragment().substring(4);
-
-                Component fragComp = null;
-                while (it.hasNext()) {
-                    Component comp = it.next();
-                    if (comp.getId() != null && comp instanceof Label
-                            && comp.getId().equals(frag)) {
-                        fragComp = comp;
-                        break;
-                    }
-                }
-
-                if (fragComp == null) {
-                    return;
-                }
-                final Label fragLabel = (Label) fragComp;
-
-                createThread(frag, fragLabel).start();
-
-                fragLabel.setCaption(
-                        String.format("Thread running for %s!", frag));
-                UI.getCurrent().setPollInterval(1000);
+            if (!event.getUriFragment().startsWith("FRAG")) {
+                return;
             }
+
+            final String frag = event.getUriFragment().substring(4);
+
+            Component fragComp = null;
+            for (Component comp : getLayout()) {
+                if (comp.getId() != null && comp instanceof Label
+                        && comp.getId().equals(frag)) {
+                    fragComp = comp;
+                    break;
+                }
+            }
+
+            if (fragComp == null) {
+                return;
+            }
+            final Label fragLabel = (Label) fragComp;
+
+            createThread(frag, fragLabel).start();
+
+            fragLabel.setCaption(String.format("Thread running for %s!", frag));
+            UI.getCurrent().setPollInterval(1000);
         };
     }
 
@@ -100,24 +83,19 @@ public class FragmentHandlingAndAsynchUIUpdate extends AbstractTestUIWithLog {
                     e.printStackTrace();
                 }
 
-                UI.getCurrent().access(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        log(String.format(
-                                "setCaption in synch mode for fragment %s",
-                                frag));
-                        java.util.Random rand = new java.util.Random();
-                        fragLabel.setCaption(
-                                String.format("Thread finished on %s (%s)",
-                                        frag, rand.nextInt()));
+                UI.getCurrent().access(() -> {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
+
+                    log(String.format(
+                            "setCaption in synch mode for fragment %s", frag));
+                    java.util.Random rand = new java.util.Random();
+                    fragLabel.setCaption(
+                            String.format("Thread finished on %s (%s)", frag,
+                                    rand.nextInt()));
                 });
 
             };

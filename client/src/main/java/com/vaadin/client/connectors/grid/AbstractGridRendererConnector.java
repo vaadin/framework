@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,12 +25,13 @@ import elemental.json.JsonObject;
 
 /**
  * An abstract base class for renderer connectors. A renderer connector is used
- * to link a client-side {@link Renderer} to a server-side
- * {@link com.vaadin.client.renderers.Renderer Renderer}. As a connector, it can
- * use the regular Vaadin RPC and shared state mechanism to pass additional
- * state and information between the client and the server. This base class
- * itself only uses the basic {@link com.vaadin.shared.communication.SharedState
- * SharedState} and no RPC interfaces.
+ * to link a client-side {@link com.vaadin.client.renderers.Renderer Renderer}
+ * to a server-side {@link com.vaadin.ui.renderers.Renderer Renderer}. As a
+ * connector, it can use the regular Vaadin RPC and shared state mechanism to
+ * pass additional state and information between the client and the server. This
+ * base class itself only uses the basic
+ * {@link com.vaadin.shared.communication.SharedState SharedState} and no RPC
+ * interfaces.
  *
  * @param <T>
  *            the presentation type of the renderer

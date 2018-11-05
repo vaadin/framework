@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -47,7 +47,7 @@ public interface EditorServerRpc extends ServerRpc {
      * Tells the server to cancel editing. When sending a cancel request, the
      * client does not need to wait for confirmation by the server before hiding
      * the editor.
-     * 
+     *
      * @param afterBeingSaved
      *            if {@code true} then this method is called to close editor
      *            after save action, otherwise it represents a cancel action

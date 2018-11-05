@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,9 +15,20 @@
  */
 package com.vaadin.v7.data.util.filter;
 
+import java.util.Locale;
+
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.Item;
 
+/**
+ * @deprecated As of 8.0, the whole filtering feature is integrated into
+ *             {@link DataProvider}. For in-memory case
+ *             ({@link ListDataProvider}), use predicates as filters. For
+ *             back-end DataProviders, filters are specific to the
+ *             implementation.
+ */
 @Deprecated
 public class Like implements Filter {
     private final Object propertyId;
@@ -70,7 +81,8 @@ public class Like implements Filter {
         if (isCaseSensitive()) {
             return colValue.matches(pattern);
         }
-        return colValue.toUpperCase().matches(pattern.toUpperCase());
+        return colValue.toUpperCase(Locale.ROOT)
+                .matches(pattern.toUpperCase(Locale.ROOT));
     }
 
     @Override
@@ -100,7 +112,8 @@ public class Like implements Filter {
                 ? getPropertyId().equals(o.getPropertyId())
                 : null == o.getPropertyId();
         boolean valueEqual = (null != getValue())
-                ? getValue().equals(o.getValue()) : null == o.getValue();
+                ? getValue().equals(o.getValue())
+                : null == o.getValue();
         return propertyIdEqual && valueEqual;
     }
 }

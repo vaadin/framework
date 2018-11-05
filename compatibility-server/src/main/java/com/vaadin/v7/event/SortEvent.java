@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,8 +23,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.v7.data.sort.SortOrder;
 
 /**
- * Event describing a change in sorting of a {@link Container}. Fired by
- * {@link SortNotifier SortNotifiers}.
+ * Event describing a change in sorting of a {@link com.vaadin.v7.data.Container Container}.
+ * Fired by {@link SortNotifier SortNotifiers}.
  *
  * @see SortListener
  *

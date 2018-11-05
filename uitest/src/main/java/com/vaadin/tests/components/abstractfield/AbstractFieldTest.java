@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
@@ -124,8 +125,7 @@ public abstract class AbstractFieldTest<T extends AbstractField<V>, V>
             // Sort collections to avoid problems with values printed in
             // different order
             try {
-                ArrayList<Comparable> c = new ArrayList<Comparable>(
-                        (Collection) o);
+                List<Comparable> c = new ArrayList<Comparable>((Collection) o);
                 Collections.sort(c);
                 o = c;
             } catch (Exception e) {
@@ -145,7 +145,7 @@ public abstract class AbstractFieldTest<T extends AbstractField<V>, V>
                         Locale.ENGLISH);
                 value = format.format(date);
             } else {
-                value = "'" + o.toString() + "'";
+                value = "'" + o + "'";
             }
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,6 @@
 package com.vaadin.v7.client.ui.table;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
@@ -31,7 +30,6 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
 import com.vaadin.client.DirectionalManagedLayout;
 import com.vaadin.client.HasChildMeasurementHintConnector;
-import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.TooltipInfo;
@@ -53,7 +51,7 @@ import com.vaadin.v7.shared.ui.table.TableState;
 
 @Connect(com.vaadin.v7.ui.Table.class)
 public class TableConnector extends AbstractFieldConnector
-        implements HasComponentsConnector, ConnectorHierarchyChangeHandler,
+        implements ConnectorHierarchyChangeHandler,
         Paintable, DirectionalManagedLayout, PostLayoutListener,
         HasChildMeasurementHintConnector {
 
@@ -190,7 +188,8 @@ public class TableConnector extends AbstractFieldConnector
 
         // Update child measure hint
         int childMeasureHint = uidl.hasAttribute("measurehint")
-                ? uidl.getIntAttribute("measurehint") : 0;
+                ? uidl.getIntAttribute("measurehint")
+                : 0;
         getWidget().setChildMeasurementHint(
                 ChildMeasurementHint.values()[childMeasureHint]);
 
@@ -334,7 +333,7 @@ public class TableConnector extends AbstractFieldConnector
                     // in selection and exists with same index
                     getWidget().setRowFocus(getWidget().getRenderedRowByKey(
                             getWidget().focusedRow.getKey()));
-                } else if (getWidget().selectedRowKeys.size() > 0) {
+                } else if (!getWidget().selectedRowKeys.isEmpty()) {
                     // try to focus any row in selection
                     getWidget().setRowFocus(getWidget().getRenderedRowByKey(
                             getWidget().selectedRowKeys.iterator().next()));
@@ -386,6 +385,8 @@ public class TableConnector extends AbstractFieldConnector
     public void updateEnabledState(boolean enabledState) {
         super.updateEnabledState(enabledState);
         getWidget().enabled = isEnabled();
+
+        // IE8 is no longer supported
     }
 
     @Override
@@ -416,6 +417,7 @@ public class TableConnector extends AbstractFieldConnector
             Scheduler.get().scheduleFinally(new ScheduledCommand() {
                 @Override
                 public void execute() {
+                    // IE8 is no longer supported
                     getLayoutManager().setNeedsMeasure(TableConnector.this);
                     ServerConnector parent = getParent();
                     if (parent instanceof ComponentConnector) {
@@ -448,9 +450,7 @@ public class TableConnector extends AbstractFieldConnector
      */
     public void showSavedContextMenu(ContextMenuDetails savedContextMenu) {
         if (isEnabled() && savedContextMenu != null) {
-            Iterator<Widget> iterator = getWidget().scrollBody.iterator();
-            while (iterator.hasNext()) {
-                Widget w = iterator.next();
+            for (Widget w : getWidget().scrollBody) {
                 VScrollTableRow row = (VScrollTableRow) w;
                 if (row.getKey().equals(savedContextMenu.rowKey)) {
                     row.showContextMenu(savedContextMenu.left,

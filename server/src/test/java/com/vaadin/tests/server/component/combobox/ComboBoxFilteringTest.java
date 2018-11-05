@@ -1,19 +1,7 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.server.component.combobox;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +9,6 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,8 +29,8 @@ import com.vaadin.ui.ComboBox;
  * @author Vaadin Ltd
  */
 public class ComboBoxFilteringTest {
-    private static final String[] PERSON_NAMES = new String[] {
-            "Enrique Iglesias", "Henry Dunant", "Erwin Engelbrecht" };
+    private static final String[] PERSON_NAMES = { "Enrique Iglesias",
+            "Henry Dunant", "Erwin Engelbrecht" };
 
     private ComboBox<Person> comboBox;
 
@@ -196,28 +183,26 @@ public class ComboBoxFilteringTest {
 
         comboBox.setDataProvider(provider);
 
-        Assert.assertSame(provider, comboBox.getDataProvider());
+        assertSame(provider, comboBox.getDataProvider());
     }
 
     @Test
     public void setItems_hasListDataProvider() {
         comboBox.setItems();
 
-        Assert.assertEquals(ListDataProvider.class,
+        assertEquals(ListDataProvider.class,
                 comboBox.getDataProvider().getClass());
     }
 
     private void checkFiltering(String filterText, String nonMatchingFilterText,
             int totalMatches, int matchingResults) {
-        Assert.assertEquals(
-                "ComboBox filtered out results with no filter applied",
+        assertEquals("ComboBox filtered out results with no filter applied",
                 totalMatches, comboBoxSizeWithFilter(null));
-        Assert.assertEquals(
-                "ComboBox filtered out results with empty filter string",
+        assertEquals("ComboBox filtered out results with empty filter string",
                 totalMatches, comboBoxSizeWithFilter(""));
-        Assert.assertEquals("ComboBox filtered out wrong number of results",
+        assertEquals("ComboBox filtered out wrong number of results",
                 matchingResults, comboBoxSizeWithFilter(filterText));
-        Assert.assertEquals(
+        assertEquals(
                 "ComboBox should have no results with a non-matching filter", 0,
                 comboBoxSizeWithFilter(nonMatchingFilterText));
     }

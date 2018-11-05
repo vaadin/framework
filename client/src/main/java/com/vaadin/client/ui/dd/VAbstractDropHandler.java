@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,10 +20,17 @@ import java.util.Iterator;
 import com.google.gwt.user.client.Command;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 
+/**
+ *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with {@link DropTargetExtensionConnector}
+ */
+@Deprecated
 public abstract class VAbstractDropHandler implements VDropHandler {
 
     private UIDL criterioUIDL;
@@ -43,7 +50,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
          * contained in given uidl node
          */
         if (!uidl.getTag().equals("-ac")) {
-            Iterator<Object> childIterator = uidl.getChildIterator();
+            Iterator<Object> childIterator = uidl.iterator();
             while (!uidl.getTag().equals("-ac") && childIterator.hasNext()) {
                 uidl = (UIDL) childIterator.next();
             }
@@ -89,12 +96,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      */
     @Override
     public void dragEnter(final VDragEvent drag) {
-        validate(new VAcceptCallback() {
-            @Override
-            public void accepted(VDragEvent event) {
-                dragAccepted(drag);
-            }
-        }, drag);
+        validate(event -> dragAccepted(drag), drag);
     }
 
     /**
@@ -106,15 +108,11 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      *
      * @param drag
      */
-    abstract protected void dragAccepted(VDragEvent drag);
+    protected abstract void dragAccepted(VDragEvent drag);
 
     protected void validate(final VAcceptCallback cb, final VDragEvent event) {
-        Command checkCriteria = new Command() {
-            @Override
-            public void execute() {
-                acceptCriteria.accept(event, criterioUIDL, cb);
-            }
-        };
+        Command checkCriteria = () -> acceptCriteria.accept(event, criterioUIDL,
+                cb);
 
         VDragAndDropManager.get().executeWhenReady(checkCriteria);
     }
@@ -132,15 +130,10 @@ public abstract class VAbstractDropHandler implements VDropHandler {
             return true;
         } else {
             validated = false;
-            acceptCriteria.accept(drag, criterioUIDL, new VAcceptCallback() {
-                @Override
-                public void accepted(VDragEvent event) {
-                    validated = true;
-                }
-            });
+            acceptCriteria.accept(drag, criterioUIDL,
+                    event -> validated = true);
             return validated;
         }
-
     }
 
     /**

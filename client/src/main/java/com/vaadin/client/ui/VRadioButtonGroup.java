@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,9 +20,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -32,6 +35,7 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.widgets.FocusableFlowPanelComposite;
 import com.vaadin.shared.Registration;
@@ -51,6 +55,7 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
 
     public static final String CLASSNAME = "v-select-optiongroup";
     public static final String CLASSNAME_OPTION = "v-select-option";
+    public static final String CLASSNAME_OPTION_SELECTED = "v-select-option-selected";
 
     private final Map<RadioButton, JsonObject> optionsToItems;
     private final Map<String, RadioButton> keyToOptions;
@@ -101,6 +106,28 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         }
     }
 
+    /**
+     * Returns the JsonObject used to populate the RadioButton widget that
+     * contains given Element.
+     *
+     * @since 8.2
+     * @param element
+     *            the element to search for
+     * @return the related JsonObject; {@code null} if not found
+     */
+    public JsonObject getItem(Element element) {
+        // The HTML populated in updateItem does not match RadioButton directly,
+        // which is why tryGetItem is also attempted on the parent element
+        return tryGetItem(element)
+                .orElse(tryGetItem(element.getParentElement()).orElse(null));
+    }
+
+    private Optional<JsonObject> tryGetItem(Element element) {
+        return optionsToItems.entrySet().stream()
+                .filter(entry -> entry.getKey().getElement().equals(element))
+                .map(entry -> entry.getValue()).findFirst();
+    }
+
     private void remove(Widget widget) {
         getWidget().remove(widget);
         JsonObject item = optionsToItems.remove(widget);
@@ -112,6 +139,13 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
 
     private void updateItem(RadioButton button, JsonObject item,
             boolean requireInitialization) {
+        if (requireInitialization) {
+            getWidget().add(button);
+            button.setStyleName("v-radiobutton");
+            button.addStyleName(CLASSNAME_OPTION);
+            button.addClickHandler(this);
+        }
+
         String itemHtml = item
                 .getString(ListingJsonConstants.JSONKEY_ITEM_VALUE);
         if (!isHtmlContentAllowed()) {
@@ -119,26 +153,20 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         }
 
         String iconUrl = item.getString(ListingJsonConstants.JSONKEY_ITEM_ICON);
-        if (iconUrl != null && iconUrl.length() != 0) {
+        if (iconUrl != null && !iconUrl.isEmpty()) {
             Icon icon = client.getIcon(iconUrl);
             itemHtml = icon.getElement().getString() + itemHtml;
         }
 
         button.setHTML(itemHtml);
-        button.setValue(
-                item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
         boolean optionEnabled = !item
                 .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
-        boolean enabled = optionEnabled && !isReadonly() && isEnabled();
-        button.setEnabled(enabled);
+        updateItemEnabled(button, optionEnabled);
+        updateItemSelection(button,
+                item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
+
         String key = item.getString(DataCommunicatorConstants.KEY);
 
-        if (requireInitialization) {
-            getWidget().add(button);
-            button.setStyleName("v-radiobutton");
-            button.addStyleName(CLASSNAME_OPTION);
-            button.addClickHandler(this);
-        }
         optionsToItems.put(button, item);
         keyToOptions.put(key, button);
     }
@@ -174,16 +202,15 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
     }
 
     protected void updateEnabledState() {
-        boolean radioButtonEnabled = isEnabled() && !isReadonly();
         // sets options enabled according to the widget's enabled,
         // readonly and each options own enabled
         for (Map.Entry<RadioButton, JsonObject> entry : optionsToItems
                 .entrySet()) {
             RadioButton radioButton = entry.getKey();
             JsonObject value = entry.getValue();
-            Boolean isOptionEnabled = !value
+            boolean optionEnabled = !value
                     .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
-            radioButton.setEnabled(radioButtonEnabled && isOptionEnabled);
+            updateItemEnabled(radioButton, optionEnabled);
         }
     }
 
@@ -227,9 +254,67 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
     }
 
     public void selectItemKey(String selectedItemKey) {
-        RadioButton radioButton = keyToOptions.get(selectedItemKey);
-        if (radioButton != null) {// Items might not be loaded yet
-            radioButton.setValue(true);
+        // At most one item could be selected so reset all radio buttons
+        // before applying current selection
+        keyToOptions.values()
+                .forEach(button -> updateItemSelection(button, false));
+        if (selectedItemKey != null) {
+            RadioButton radioButton = keyToOptions.get(selectedItemKey);
+            if (radioButton != null) { // Items might not be loaded yet
+                updateItemSelection(radioButton, true);
+            }
         }
+    }
+
+    /**
+     * Set focus to the selected radio button (or first radio button if there is
+     * no selection).
+     */
+    @Override
+    public void focus() {
+        // If focus is set on creation, need to wait until options are populated
+        Scheduler.get().scheduleDeferred(() -> {
+            // if there's a selected radio button, focus it
+            for (String key : keyToOptions.keySet()) {
+                RadioButton radioButton = keyToOptions.get(key);
+                if (radioButton != null && radioButton.getValue()) {
+                    radioButton.setFocus(true);
+                    return;
+                }
+            }
+            // otherwise focus the first enabled child
+            getWidget().focusFirstEnabledChild();
+        });
+    }
+
+    /**
+     * Updates the selected state of a radio button.
+     *
+     * @param radioButton
+     *            the radio button to update
+     * @param value
+     *            {@code true} if selected; {@code false} if not
+     */
+    protected void updateItemSelection(RadioButton radioButton, boolean value) {
+        radioButton.setValue(value);
+        radioButton.setStyleName(CLASSNAME_OPTION_SELECTED, value);
+    }
+
+    /**
+     * Updates the enabled state of a radio button.
+     *
+     * @param radioButton
+     *            the radio button to update
+     * @param value
+     *            {@code true} if enabled; {@code false} if not
+     *
+     * @since 8.3.3
+     */
+    protected void updateItemEnabled(RadioButton radioButton, boolean value) {
+        boolean enabled = value && !isReadonly() && isEnabled();
+        radioButton.setEnabled(enabled);
+        // #9258 apply the v-disabled class when disabled for UX
+        boolean hasDisabledStyle = !isEnabled() || !value;
+        radioButton.setStyleName(StyleConstants.DISABLED, hasDisabledStyle);
     }
 }

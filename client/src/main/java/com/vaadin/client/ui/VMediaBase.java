@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -66,6 +66,31 @@ public abstract class VMediaBase extends Widget {
 
     public void setMuted(boolean mediaMuted) {
         media.setMuted(mediaMuted);
+    }
+
+    /**
+     * Sets the preload attribute that is intended to provide a hint to the
+     * browser how the media should be preloaded. See
+     * AbstractMedia.setPreload(PreloadMode) and PreloadMode for more
+     * information.
+     *
+     * @param preload
+     *            preload mode
+     * @since 7.7.11
+     */
+    public void setPreload(final String preload) {
+        media.setPreload(preload);
+    }
+
+    /**
+     * Enables or disables looping.
+     *
+     * @param loop
+     *            if true, enable looping
+     * @since 7.7.11
+     */
+    public void setLoop(final boolean loop) {
+        media.setLoop(loop);
     }
 
     public void removeAllSources() {

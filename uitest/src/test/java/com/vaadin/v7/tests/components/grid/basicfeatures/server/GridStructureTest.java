@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.components.grid.basicfeatures.server;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -24,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
@@ -58,11 +44,11 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         setDebug(true);
         openTestURL();
 
-        assertEquals("column 0",
-                getGridElement().getHeaderCell(0, 0).getText().toLowerCase());
+        assertEquals("column 0", getGridElement().getHeaderCell(0, 0).getText()
+                .toLowerCase(Locale.ROOT));
         selectMenuPath("Component", "Columns", "Column 0", "Add / Remove");
-        assertEquals("column 1",
-                getGridElement().getHeaderCell(0, 0).getText().toLowerCase());
+        assertEquals("column 1", getGridElement().getHeaderCell(0, 0).getText()
+                .toLowerCase(Locale.ROOT));
         selectMenuPath("Component", "Columns", "Column 0", "Add / Remove");
 
         // Column 0 is now the last column in Grid.
@@ -76,14 +62,16 @@ public class GridStructureTest extends GridBasicFeaturesTest {
 
         // Column 0 should be visible
         List<TestBenchElement> cells = getGridHeaderRowCells();
-        assertEquals("column 0", cells.get(0).getText().toLowerCase());
+        assertEquals("column 0",
+                cells.get(0).getText().toLowerCase(Locale.ROOT));
 
         // Hide column 0
         selectMenuPath("Component", "Columns", "Column 0", "Add / Remove");
 
         // Column 1 should now be the first cell
         cells = getGridHeaderRowCells();
-        assertEquals("column 1", cells.get(0).getText().toLowerCase());
+        assertEquals("column 1",
+                cells.get(0).getText().toLowerCase(Locale.ROOT));
     }
 
     @Test
@@ -512,7 +500,7 @@ public class GridStructureTest extends GridBasicFeaturesTest {
     public void testAddThirdRowToGrid() {
         openTestURL();
         selectMenuPath("Component", "Body rows", "Add third row");
-        assertFalse(logContainsText("Exception occured"));
+        assertFalse(logContainsText("Exception occurred"));
     }
 
     @Test

@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.launcher;
 
 import java.io.File;
@@ -46,12 +31,10 @@ import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.LegacyVaadinServlet;
 import com.vaadin.server.ServiceException;
-import com.vaadin.server.SessionInitEvent;
-import com.vaadin.server.SessionInitListener;
 import com.vaadin.server.SystemMessages;
-import com.vaadin.server.SystemMessagesInfo;
 import com.vaadin.server.SystemMessagesProvider;
 import com.vaadin.server.UIClassSelectionEvent;
+import com.vaadin.server.UICreateEvent;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
@@ -59,6 +42,7 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
@@ -131,13 +115,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     @Override
     protected void servletInitialized() throws ServletException {
         super.servletInitialized();
-        getService().addSessionInitListener(new SessionInitListener() {
-            @Override
-            public void sessionInit(SessionInitEvent event)
-                    throws ServiceException {
-                onVaadinSessionStarted(event.getRequest(), event.getSession());
-            }
-        });
+        getService().addSessionInitListener(event -> onVaadinSessionStarted(
+                event.getRequest(), event.getSession()));
     }
 
     private void addDirectories(File parent, LinkedHashSet<String> packages,
@@ -232,7 +211,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         return getApplicationRunnerURIs(request).applicationClassname;
     }
 
-    private final static class ProxyDeploymentConfiguration
+    private static final class ProxyDeploymentConfiguration
             implements InvocationHandler, Serializable {
         private final DeploymentConfiguration originalConfiguration;
 
@@ -267,6 +246,13 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
             return (Class<? extends UI>) classToRun;
         }
+
+        @Override
+        public UI createInstance(UICreateEvent event) {
+            event.getRequest().setAttribute(ApplicationConstants.UI_ROOT_PATH,
+                    "/" + event.getUIClass().getName());
+            return super.createInstance(event);
+        }
     }
 
     // TODO Don't need to use a data object now that there's only one field
@@ -295,8 +281,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
      *         context, runner, application classname
      */
     private static URIS getApplicationRunnerURIs(HttpServletRequest request) {
-        final String[] urlParts = request.getRequestURI().toString()
-                .split("\\/");
+        final String[] urlParts = request.getRequestURI().split("\\/");
         // String runner = null;
         URIS uris = new URIS();
         String applicationClassname = null;
@@ -337,7 +322,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     private static String findLastModifiedApplication() {
         String lastModifiedClassName = null;
 
-        File uitestDir = new File("uitest/src");
+        File uitestDir = new File("src/main/java");
         if (uitestDir.isDirectory()) {
             LinkedList<File> stack = new LinkedList<>();
             stack.add(uitestDir);
@@ -358,7 +343,6 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                             lastModifiedTimestamp = file.lastModified();
                             lastModifiedClassName = className;
                         }
-
                     }
                 }
             }
@@ -452,22 +436,16 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                 deploymentConfiguration);
         final SystemMessagesProvider provider = service
                 .getSystemMessagesProvider();
-        service.setSystemMessagesProvider(new SystemMessagesProvider() {
-
-            @Override
-            public SystemMessages getSystemMessages(
-                    SystemMessagesInfo systemMessagesInfo) {
-                if (systemMessagesInfo.getRequest() == null) {
-                    return provider.getSystemMessages(systemMessagesInfo);
-                }
-                Object messages = systemMessagesInfo.getRequest()
-                        .getAttribute(CUSTOM_SYSTEM_MESSAGES_PROPERTY);
-                if (messages instanceof SystemMessages) {
-                    return (SystemMessages) messages;
-                }
+        service.setSystemMessagesProvider(systemMessagesInfo -> {
+            if (systemMessagesInfo.getRequest() == null) {
                 return provider.getSystemMessages(systemMessagesInfo);
             }
-
+            Object messages = systemMessagesInfo.getRequest()
+                    .getAttribute(CUSTOM_SYSTEM_MESSAGES_PROPERTY);
+            if (messages instanceof SystemMessages) {
+                return (SystemMessages) messages;
+            }
+            return provider.getSystemMessages(systemMessagesInfo);
         });
         return service;
     }

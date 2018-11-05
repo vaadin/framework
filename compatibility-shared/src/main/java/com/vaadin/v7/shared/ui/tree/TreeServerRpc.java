@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.ServerRpc;
 
 /**
- * Client-to-server RPC interface for the Tree component
+ * Client-to-server RPC interface for the Tree component.
  *
  * @since 7.6
  * @author Vaadin Ltd
@@ -27,7 +27,7 @@ import com.vaadin.shared.communication.ServerRpc;
 public interface TreeServerRpc extends ServerRpc {
 
     /**
-     * Informs the server that a context click happened inside of Tree
+     * Informs the server that a context click happened inside of Tree.
      */
     public void contextClick(String rowKey, MouseEventDetails details);
 

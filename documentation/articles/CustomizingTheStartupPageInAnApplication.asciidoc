@@ -1,0 +1,119 @@
+---
+title: Customizing The Startup Page In An Application
+order: 25
+layout: page
+---
+
+[[customizing-the-startup-page-in-an-application]]
+= Customizing the startup page in an application
+
+In Vaadin 6, the startup page - used to bootstrap a new Vaadin UI
+instance in the browser - was generated as a monolithic chunk of HTML
+and was not easily customizable. In Vaadin 7, we added a new facility
+for registering special _bootstrap listeners_ that are invoked before
+the bootstrap response is sent. In addition, instead of bare HTML in a
+string, the response is now built as a DOM tree that is easy to
+manipulate programmatically.
+
+Here's an example of a simple bootstrap listener:
+
+[source,java]
+....
+import org.jsoup.nodes.Comment;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.parser.Tag;
+
+// ...
+
+new BootstrapListener() {
+  @Override
+  public void modifyBootstrapPage(BootstrapPageResponse response) {
+    response.getDocument().body().appendChild(new Comment("Powered by Vaadin!", ""));
+  }
+
+  @Override
+  public void modifyBootstrapFragment(BootstrapFragmentResponse response) {
+    // Wrap the fragment in a custom div element
+    Element myDiv = new Element(Tag.valueOf("div"), "");
+    List<Node> nodes = response.getFragmentNodes();
+    for(Node node : nodes) {
+      myDiv.appendChild(node);
+    }
+    nodes.clear();
+    nodes.add(myDiv);
+  }
+}
+....
+
+The HTML library we use is http://jsoup.org/[jsoup]. It provides a very
+convenient API for traversing, manipulating and extracting data from a
+DOM, and is HTML5 compliant.
+
+The `BootstrapListener` interface contains two methods, one of which is
+usually left empty. This is because a Vaadin application can be either
+stand-alone, in which case it "owns" the whole page its UI resides in,
+or embedded, such as a portlet, in which case it does not control the
+content of the page it is embedded in.
+
+The `modifyBootstrapFragment` method is called in both cases. It
+receives a `BootstrapFragmentResponse` that represents the HTML fragment
+that is inserted in the host page, whether the page is controlled by
+Vaadin or not. Hence, you only need to implement this method if you do
+not care about the host page, whether your application is embedded or
+standalone.
+
+The `modifyBootstrapPage` method is called with a
+`BootstrapPageResponse` argument that represents the whole bootstrap
+page, including the fragment mentioned above. Thus, it is only invoked
+when the application is standalone and actually responsible for
+generating the page. This method allows you to, for instance, add things
+to the `head` element. The `BootstrapPageResponse` class also allows
+setting arbitrary HTTP response headers:
+
+[source,java]
+....
+public void modifyBootstrapPage(BootstrapPageResponse response) {
+  response.setHeader("X-Powered-By", "Vaadin 7");
+}
+....
+
+But how and where should the bootstrap listeners be registered? It
+should be only once per session, and right in the beginning, so that
+they are already added when the first response is sent.
+
+To do that you should write a custom servlet that extends
+`VaadinServlet`, or a custom portlet extending `VaadinPortlet`, and a
+session init listener that adds the bootstrap listener to the new
+session.
+
+[source,java]
+....
+class MyVaadinServlet extends VaadinServlet {
+  @Override
+  protected void servletInitialized() throws ServletException {
+    super.servletInitialized();
+    getService().addSessionInitListener(new SessionInitListener() {
+      @Override
+      public void sessionInit(SessionInitEvent event) {
+        event.getSession().addBootstrapListener(listener);
+      }
+    });
+  }
+}
+
+// Or...
+
+class MyVaadinPortlet extends VaadinPortlet {
+  @Override
+  protected void portletInitialized() throws PortletException {
+    super.portletInitialized();
+    getService().addSessionInitListener(new SessionInitListener() {
+      @Override
+      public void sessionInit(SessionInitEvent event) {
+        event.getSession().addBootstrapListener(listener);
+      }
+    });
+  }
+}
+....

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,9 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
+
+import com.vaadin.shared.ui.ErrorLevel;
 
 /**
  * Represents the result of a validation. A result may be either successful or
@@ -35,26 +38,30 @@ public interface ValidationResult extends Serializable {
     class SimpleValidationResult implements ValidationResult {
 
         private final String error;
+        private final ErrorLevel errorLevel;
 
-        SimpleValidationResult(String error) {
+        SimpleValidationResult(String error, ErrorLevel errorLevel) {
+            if (error != null && errorLevel == null) {
+                throw new IllegalStateException("ValidationResult has an "
+                        + "error message, but no ErrorLevel is provided.");
+            }
             this.error = error;
+            this.errorLevel = errorLevel;
         }
 
         @Override
         public String getErrorMessage() {
-            if (error == null) {
+            if (!getErrorLevel().isPresent()) {
                 throw new IllegalStateException("The result is not an error. "
                         + "It cannot contain error message");
             } else {
-                return error;
+                return error != null ? error : "";
             }
         }
 
-        @Override
-        public boolean isError() {
-            return error != null;
+        public Optional<ErrorLevel> getErrorLevel() {
+            return Optional.ofNullable(errorLevel);
         }
-
     }
 
     /**
@@ -69,12 +76,36 @@ public interface ValidationResult extends Serializable {
     String getErrorMessage();
 
     /**
+     * Returns optional error level for this validation result. Error level is
+     * not present for successful validation results.
+     * <p>
+     * <strong>Note:</strong> By default {@link ErrorLevel#INFO} and
+     * {@link ErrorLevel#WARNING} are not considered to be blocking the
+     * validation and conversion chain.
+     *
+     * @see #isError()
+     *
+     * @return optional error level; error level is present for validation
+     *         results that have not passed validation
+     *
+     * @since 8.2
+     */
+    Optional<ErrorLevel> getErrorLevel();
+
+    /**
      * Checks if the result denotes an error.
+     * <p>
+     * <strong>Note:</strong> By default {@link ErrorLevel#INFO} and
+     * {@link ErrorLevel#WARNING} are not considered to be errors.
      *
      * @return <code>true</code> if the result denotes an error,
      *         <code>false</code> otherwise
      */
-    boolean isError();
+    default boolean isError() {
+        ErrorLevel errorLevel = getErrorLevel().orElse(null);
+        return errorLevel != null && errorLevel != ErrorLevel.INFO
+                && errorLevel != ErrorLevel.WARNING;
+    }
 
     /**
      * Returns a successful result.
@@ -82,7 +113,7 @@ public interface ValidationResult extends Serializable {
      * @return the successful result
      */
     public static ValidationResult ok() {
-        return new SimpleValidationResult(null);
+        return new SimpleValidationResult(null, null);
     }
 
     /**
@@ -98,6 +129,32 @@ public interface ValidationResult extends Serializable {
      */
     public static ValidationResult error(String errorMessage) {
         Objects.requireNonNull(errorMessage);
-        return new SimpleValidationResult(errorMessage);
+        return create(errorMessage, ErrorLevel.ERROR);
+    }
+
+    /**
+     * Creates the validation result with the given {@code errorMessage} and
+     * {@code errorLevel}. Results with {@link ErrorLevel} of {@code INFO} or
+     * {@code WARNING} are not errors by default.
+     *
+     * @see #ok()
+     * @see #error(String)
+     *
+     * @param errorMessage
+     *            error message, not {@code null}
+     * @param errorLevel
+     *            error level, not {@code null}
+     * @return validation result with the given {@code errorMessage} and
+     *         {@code errorLevel}
+     * @throws NullPointerException
+     *             if {@code errorMessage} or {@code errorLevel} is {@code null}
+     *
+     * @since 8.2
+     */
+    public static ValidationResult create(String errorMessage,
+            ErrorLevel errorLevel) {
+        Objects.requireNonNull(errorMessage);
+        Objects.requireNonNull(errorLevel);
+        return new SimpleValidationResult(errorMessage, errorLevel);
     }
 }

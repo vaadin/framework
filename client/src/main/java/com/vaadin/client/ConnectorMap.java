@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@ package com.vaadin.client;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
@@ -36,9 +37,9 @@ public class ConnectorMap {
             .create();
 
     /**
-     * Returns a {@link ServerConnector} by its id
+     * Returns a {@link ServerConnector} by its id.
      *
-     * @param id
+     * @param connectorId
      *            The connector id
      * @return A connector or null if a connector with the given id has not been
      *         registered
@@ -103,7 +104,7 @@ public class ConnectorMap {
     }
 
     /**
-     * Removes all registered connectors
+     * Removes all registered connectors.
      */
     public void clear() {
         idToComponentDetail.clear();
@@ -139,7 +140,7 @@ public class ConnectorMap {
      *            element of the connector whose id is desired
      * @return the id of the element's connector, if it's a connector
      */
-    native static final String getConnectorId(Element el)
+    static final native String getConnectorId(Element el)
     /*-{
         return el.tkPid;
     }-*/;
@@ -196,7 +197,7 @@ public class ConnectorMap {
     }
 
     /**
-     * Gets all registered {@link ComponentConnector} instances
+     * Gets all registered {@link ComponentConnector} instances.
      *
      * @return An array of all registered {@link ComponentConnector} instances
      *
@@ -205,7 +206,7 @@ public class ConnectorMap {
      */
     @Deprecated
     public ComponentConnector[] getComponentConnectors() {
-        ArrayList<ComponentConnector> result = new ArrayList<>();
+        List<ComponentConnector> result = new ArrayList<>();
 
         JsArrayObject<ServerConnector> connectors = getConnectorsAsJsArray();
         int size = connectors.size();
@@ -255,7 +256,7 @@ public class ConnectorMap {
     @Deprecated
     public Collection<? extends ServerConnector> getConnectors() {
         Collection<ComponentDetail> values = idToComponentDetail.values();
-        ArrayList<ServerConnector> arrayList = new ArrayList<>(values.size());
+        List<ServerConnector> arrayList = new ArrayList<>(values.size());
         for (ComponentDetail componentDetail : values) {
             arrayList.add(componentDetail.getConnector());
         }
@@ -284,8 +285,8 @@ public class ConnectorMap {
      * @return true if the widget is the root widget of a
      *         {@link ComponentConnector}, false otherwise
      */
-    public boolean isConnector(Widget w) {
-        return getConnectorId(w.getElement()) != null;
+    public boolean isConnector(Widget widget) {
+        return getConnectorId(widget.getElement()) != null;
     }
 
     private static Logger getLogger() {

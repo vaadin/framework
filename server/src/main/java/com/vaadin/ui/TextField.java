@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -68,7 +68,7 @@ public class TextField extends AbstractTextField {
      * Constructs a new {@code TextField} with a value change listener. The
      * listener is called when the value of this {@code TextField} is changed
      * either by the user or programmatically.
-     * 
+     *
      * @param valueChangeListener
      *            the value change listener, not {@code null}
      */
@@ -100,7 +100,7 @@ public class TextField extends AbstractTextField {
      * <p>
      * The listener is called when the value of this {@code TextField} is
      * changed either by the user or programmatically.
-     * 
+     *
      * @param caption
      *            the caption {@code String} for the editor.
      * @param value

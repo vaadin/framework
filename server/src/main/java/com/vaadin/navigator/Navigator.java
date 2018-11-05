@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,30 +15,20 @@
  */
 package com.vaadin.navigator;
 
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
+import com.vaadin.server.Page.PopStateEvent;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
@@ -46,6 +36,7 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.SingleComponentContainer;
 import com.vaadin.ui.UI;
+import com.vaadin.util.ReflectTools;
 
 /**
  * A navigator utility that allows switching of views in a part of an
@@ -69,6 +60,11 @@ public class Navigator implements Serializable {
 
     // TODO investigate relationship with TouchKit navigation support
 
+    private static final String DEFAULT_VIEW_SEPARATOR = "/";
+
+    private static final String DEFAULT_STATE_PARAMETER_SEPARATOR = "&";
+    private static final String DEFAULT_STATE_PARAMETER_KEY_VALUE_SEPARATOR = "=";
+
     /**
      * Empty view component.
      */
@@ -88,6 +84,93 @@ public class Navigator implements Serializable {
     }
 
     /**
+     * A {@link NavigationStateManager} using path info, HTML5 push state and
+     * {@link PopStateEvent}s to track views and enable listening to view
+     * changes. This manager can be enabled with UI annotation
+     * {@link PushStateNavigation}.
+     * <p>
+     * The part of path after UI's "root path" (UI's path without view
+     * identifier) is used as {@link View}s identifier. The rest of the path
+     * after the view name can be used by the developer for extra parameters for
+     * the View.
+     * <p>
+     * This class is mostly for internal use by Navigator, and is only public
+     * and static to enable testing.
+     *
+     * @since 8.2
+     */
+    public static class PushStateManager implements NavigationStateManager {
+        private Registration popStateListenerRegistration;
+        private UI ui;
+
+        /**
+         * Creates a new PushStateManager.
+         *
+         * @param ui
+         *            the UI where the Navigator is attached to
+         */
+        public PushStateManager(UI ui) {
+            this.ui = ui;
+        }
+
+        @Override
+        public void setNavigator(Navigator navigator) {
+            if (popStateListenerRegistration != null) {
+                popStateListenerRegistration.remove();
+                popStateListenerRegistration = null;
+            }
+            if (navigator != null) {
+                popStateListenerRegistration = ui.getPage().addPopStateListener(
+                        event -> navigator.navigateTo(getState()));
+            }
+        }
+
+        @Override
+        public String getState() {
+            // Get the current URL
+            URI location = ui.getPage().getLocation();
+            String path = location.getPath();
+            if (ui.getUiPathInfo() != null
+                    && path.contains(ui.getUiPathInfo())) {
+                // Split the path from after the UI PathInfo
+                path = path.substring(path.indexOf(ui.getUiPathInfo())
+                        + ui.getUiPathInfo().length());
+            } else if (path.startsWith(ui.getUiRootPath())) {
+                // Use the whole path after UI RootPath
+                String uiRootPath = ui.getUiRootPath();
+                path = path.substring(uiRootPath.length());
+            } else {
+                throw new IllegalStateException(getClass().getSimpleName()
+                        + " is unable to determine the view path from the URL.");
+            }
+
+            if (path.startsWith("/")) {
+                // Strip leading '/'
+                path = path.substring(1);
+            }
+            return path;
+        }
+
+        @Override
+        public void setState(String state) {
+            StringBuilder sb = new StringBuilder(ui.getUiRootPath());
+            if (!ui.getUiRootPath().endsWith("/")) {
+                // make sure there is a '/' between the root path and the
+                // navigation state.
+                sb.append('/');
+            }
+            sb.append(state);
+            URI location = ui.getPage().getLocation();
+            if (location != null) {
+                ui.getPage().pushState(location.resolve(sb.toString()));
+            } else {
+                throw new IllegalStateException(
+                        "The Page of the UI does not have a location.");
+            }
+        }
+    }
+
+    /**
      * A {@link NavigationStateManager} using hashbang fragments in the Page
      * location URI to track views and enable listening to view changes.
      * <p>
@@ -98,6 +181,10 @@ public class Navigator implements Serializable {
      * <p>
      * This class is mostly for internal use by Navigator, and is only public
      * and static to enable testing.
+     * <p>
+     * <strong>Note:</strong> Since 8.2 you can use {@link PushStateManager},
+     * which is based on HTML5 History API. To use it, add
+     * {@link PushStateNavigation} annotation to the UI.
      */
     public static class UriFragmentManager implements NavigationStateManager {
         private final Page page;
@@ -186,13 +273,8 @@ public class Navigator implements Serializable {
 
         @Override
         public void showView(View view) {
-            if (view instanceof Component) {
-                container.removeAllComponents();
-                container.addComponent((Component) view);
-            } else {
-                throw new IllegalArgumentException(
-                        "View is not a component: " + view);
-            }
+            container.removeAllComponents();
+            container.addComponent(view.getViewComponent());
         }
     }
 
@@ -220,12 +302,7 @@ public class Navigator implements Serializable {
 
         @Override
         public void showView(View view) {
-            if (view instanceof Component) {
-                container.setContent((Component) view);
-            } else {
-                throw new IllegalArgumentException(
-                        "View is not a component: " + view);
-            }
+            container.setContent(view.getViewComponent());
         }
     }
 
@@ -332,15 +409,7 @@ public class Navigator implements Serializable {
         @Override
         public View getView(String viewName) {
             if (this.viewName.equals(viewName)) {
-                try {
-                    View view = viewClass.newInstance();
-                    return view;
-                } catch (InstantiationException | IllegalAccessException e) {
-                    // TODO error handling
-                    throw new RuntimeException(e);
-                }
-                // TODO error handling
-
+                return ReflectTools.createInstance(viewClass);
             }
             return null;
         }
@@ -368,18 +437,18 @@ public class Navigator implements Serializable {
      * The {@link UI} bound with the Navigator.
      */
     protected UI ui;
-    
+
     /**
-     * The {@link NavigationStateManager} that is used to get, listen to
-     * and manipulate the navigation state used by the Navigator.
+     * The {@link NavigationStateManager} that is used to get, listen to and
+     * manipulate the navigation state used by the Navigator.
      */
     protected NavigationStateManager stateManager;
-    
+
     /**
-     *  The {@link ViewDisplay} used by the Navigator.
+     * The {@link ViewDisplay} used by the Navigator.
      */
     protected ViewDisplay display;
-    
+
     private View currentView = null;
     private List<ViewChangeListener> listeners = new LinkedList<>();
     private List<ViewProvider> providers = new LinkedList<>();
@@ -450,7 +519,7 @@ public class Navigator implements Serializable {
      *            The ViewDisplay used to display the views.
      */
     public Navigator(UI ui, ViewDisplay display) {
-        this(ui, new UriFragmentManager(ui.getPage()), display);
+        this(ui, null, display);
     }
 
     /**
@@ -518,11 +587,33 @@ public class Navigator implements Serializable {
         this.ui = ui;
         this.ui.setNavigator(this);
         if (stateManager == null) {
-            stateManager = new UriFragmentManager(ui.getPage());
+            stateManager = createNavigationStateManager(ui);
+        }
+        if (stateManager != null && this.stateManager != null
+                && stateManager != this.stateManager) {
+            this.stateManager.setNavigator(null);
         }
         this.stateManager = stateManager;
         this.stateManager.setNavigator(this);
         this.display = display;
+    }
+
+    /**
+     * Creates a navigation state manager for given UI. This method should take
+     * into account any navigation related annotations.
+     *
+     * @param ui
+     *            the ui
+     * @return the navigation state manager
+     *
+     * @since 8.2
+     */
+    protected NavigationStateManager createNavigationStateManager(UI ui) {
+        if (ui.getClass().getAnnotation(PushStateNavigation.class) != null) {
+            return new PushStateManager(ui);
+        }
+        // Fall back to old default
+        return new UriFragmentManager(ui.getPage());
     }
 
     /**
@@ -607,6 +698,65 @@ public class Navigator implements Serializable {
      *            parameters passed in the navigation state to the view
      */
     protected void navigateTo(View view, String viewName, String parameters) {
+        runAfterLeaveConfirmation(
+                () -> performNavigateTo(view, viewName, parameters));
+    }
+
+    /**
+     * Triggers {@link View#beforeLeave(ViewBeforeLeaveEvent)} for the current
+     * view with the given action.
+     * <p>
+     * This method is typically called by
+     * {@link #navigateTo(View, String, String)} but can be called from
+     * application code when you want to e.g. show a confirmation dialog before
+     * perfoming an action which is not a navigation but which would cause the
+     * view to be hidden, e.g. logging out.
+     * <p>
+     * Note that this method will not trigger any {@link ViewChangeListener}s as
+     * it does not navigate to a new view. Use {@link #navigateTo(String)} to
+     * change views and trigger all listeners.
+     *
+     * @param action
+     *            the action to execute when the view confirms it is ok to leave
+     * @since 8.1
+     */
+    public void runAfterLeaveConfirmation(ViewLeaveAction action) {
+        View currentView = getCurrentView();
+        if (currentView == null) {
+            action.run();
+        } else {
+            ViewBeforeLeaveEvent beforeLeaveEvent = new ViewBeforeLeaveEvent(
+                    this, action);
+            currentView.beforeLeave(beforeLeaveEvent);
+            if (!beforeLeaveEvent.isNavigateRun()) {
+                // The event handler prevented navigation
+                // Revert URL to previous state in case the navigation was
+                // caused by the back-button
+                revertNavigation();
+            }
+        }
+    }
+
+    /**
+     * Internal method for activating a view, setting its parameters and calling
+     * listeners.
+     * <p>
+     * Invoked after the current view has confirmed that leaving is ok.
+     * <p>
+     * This method also verifies that the user is allowed to perform the
+     * navigation operation.
+     *
+     * @param view
+     *            view to activate
+     * @param viewName
+     *            (optional) name of the view or null not to change the
+     *            navigation state
+     * @param parameters
+     *            parameters passed in the navigation state to the view
+     * @since 8.1
+     */
+    protected void performNavigateTo(View view, String viewName,
+            String parameters) {
         ViewChangeEvent event = new ViewChangeEvent(this, currentView, view,
                 viewName, parameters);
         boolean navigationAllowed = beforeViewChange(event);
@@ -755,6 +905,97 @@ public class Navigator implements Serializable {
      */
     public String getState() {
         return getStateManager().getState();
+    }
+
+    /**
+     * Returns the current navigation state reported by this Navigator's
+     * {@link NavigationStateManager} as Map<String, String> where each key
+     * represents a parameter in the state.
+     *
+     * Uses {@literal &} as parameter separator. If the state contains
+     * {@literal #!view/foo&bar=baz} then this method will return a map
+     * containing {@literal foo => ""} and {@literal bar => baz}.
+     *
+     * @return The parameters from the navigation state as a map
+     * @see #getStateParameterMap(String)
+     * @since 8.1
+     */
+    public Map<String, String> getStateParameterMap() {
+        return getStateParameterMap(DEFAULT_STATE_PARAMETER_SEPARATOR);
+    }
+
+    /**
+     * Returns the current navigation state reported by this Navigator's
+     * {@link NavigationStateManager} as Map<String, String> where each key
+     * represents a parameter in the state. The state parameter separator
+     * character needs to be specified with the separator.
+     *
+     * @param separator
+     *            the string (typically one character) used to separate values
+     *            from each other
+     * @return The parameters from the navigation state as a map
+     * @see #getStateParameterMap()
+     * @since 8.1
+     */
+    public Map<String, String> getStateParameterMap(String separator) {
+        return parseStateParameterMap(Objects.requireNonNull(separator));
+    }
+
+    /**
+     * Parses the state parameter to a map using the given separator string.
+     *
+     * @param separator
+     *            the string (typically one character) used to separate values
+     *            from each other
+     * @return The navigation state as Map<String, String>.
+     * @since 8.1
+     */
+    protected Map<String, String> parseStateParameterMap(String separator) {
+        if (getState() == null || getState().isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        String state = getState();
+        int viewSeparatorLocation = state.indexOf(DEFAULT_VIEW_SEPARATOR);
+
+        String parameterString;
+        if (viewSeparatorLocation == -1) {
+            parameterString = "";
+        } else {
+            parameterString = state.substring(viewSeparatorLocation + 1,
+                    state.length());
+        }
+        return parseParameterStringToMap(parameterString, separator);
+    }
+
+    /**
+     * Parses the given parameter string to a map using the given separator
+     * string.
+     *
+     * @param parameterString
+     *            the parameter string to parse
+     * @param separator
+     *            the string (typically one character) used to separate values
+     *            from each other
+     * @return The navigation state as Map<String, String>.
+     * @since 8.1
+     */
+    protected Map<String, String> parseParameterStringToMap(
+            String parameterString, String separator) {
+        if (parameterString.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        Map<String, String> parameterMap = new HashMap<>();
+        String[] parameters = parameterString.split(separator);
+        for (String parameter : parameters) {
+            String[] keyAndValue = parameter
+                    .split(DEFAULT_STATE_PARAMETER_KEY_VALUE_SEPARATOR);
+            parameterMap.put(keyAndValue[0],
+                    keyAndValue.length > 1 ? keyAndValue[1] : "");
+        }
+
+        return parameterMap;
     }
 
     /**
@@ -922,11 +1163,7 @@ public class Navigator implements Serializable {
         setErrorProvider(new ViewProvider() {
             @Override
             public View getView(String viewName) {
-                try {
-                    return viewClass.newInstance();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+                return ReflectTools.createInstance(viewClass);
             }
 
             @Override
@@ -1034,4 +1271,5 @@ public class Navigator implements Serializable {
         stateManager.setNavigator(null);
         ui.setNavigator(null);
     }
+
 }

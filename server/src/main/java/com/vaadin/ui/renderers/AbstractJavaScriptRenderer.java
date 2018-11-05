@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -70,7 +70,7 @@ import elemental.json.JsonValue;
  * <li><code>init(cell)</code> - Prepares a cell for rendering. Corresponds to
  * {@link com.vaadin.client.renderers.ComplexRenderer#init(com.vaadin.client.widget.grid.RendererCellReference)}
  * .</li>
- * <li><code>destory(cell)</code> - Allows the renderer to release resources
+ * <li><code>destroy(cell)</code> - Allows the renderer to release resources
  * allocate for a cell that will no longer be used. Corresponds to
  * {@link com.vaadin.client.renderers.ComplexRenderer#destroy(com.vaadin.client.widget.grid.RendererCellReference)}
  * .</li>

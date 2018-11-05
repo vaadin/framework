@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,7 @@ package com.vaadin.data.converter;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import com.vaadin.data.ErrorMessageProvider;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
 
@@ -64,17 +65,45 @@ public class StringToDoubleConverter
         super(emptyValue, errorMessage);
     }
 
+    /**
+     * Creates a new converter instance with the given error message provider.
+     * Empty strings are converted to <code>null</code>.
+     *
+     * @param errorMessageProvider
+     *            the error message provider to use if conversion fails
+     *
+     * @since 8.4
+     */
+    public StringToDoubleConverter(ErrorMessageProvider errorMessageProvider) {
+        this(null, errorMessageProvider);
+    }
+
+    /**
+     * Creates a new converter instance with the given empty string value and
+     * error message provider.
+     *
+     * @param emptyValue
+     *            the presentation value to return when converting an empty
+     *            string, may be <code>null</code>
+     * @param errorMessageProvider
+     *            the error message provider to use if conversion fails
+     *
+     * @since 8.4
+     */
+    public StringToDoubleConverter(Double emptyValue,
+            ErrorMessageProvider errorMessageProvider) {
+        super(emptyValue, errorMessageProvider);
+    }
+
     @Override
     public Result<Double> convertToModel(String value, ValueContext context) {
-        Result<Number> n = convertToNumber(value,
-                context.getLocale().orElse(null));
+        Result<Number> n = convertToNumber(value, context);
 
         return n.map(number -> {
             if (number == null) {
                 return null;
-            } else {
-                return number.doubleValue();
             }
+            return number.doubleValue();
         });
     }
 

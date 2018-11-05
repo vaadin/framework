@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,6 +25,8 @@ import java.util.TimeZone;
  * @since 7.1.0
  * @author Vaadin Ltd.
  *
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -37,7 +39,7 @@ public class CalendarDateRange implements Serializable {
     private final transient TimeZone tz;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param start
      *            The start date and time of the date range
@@ -52,7 +54,7 @@ public class CalendarDateRange implements Serializable {
     }
 
     /**
-     * Get the start date of the date range
+     * Get the start date of the date range.
      *
      * @return the start Date of the range
      */
@@ -61,7 +63,7 @@ public class CalendarDateRange implements Serializable {
     }
 
     /**
-     * Get the end date of the date range
+     * Get the end date of the date range.
      *
      * @return the end Date of the range
      */
@@ -70,7 +72,7 @@ public class CalendarDateRange implements Serializable {
     }
 
     /**
-     * Is a date in the date range
+     * Is a date in the date range.
      *
      * @param date
      *            The date to check

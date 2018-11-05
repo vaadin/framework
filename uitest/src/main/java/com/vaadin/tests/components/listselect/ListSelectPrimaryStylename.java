@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.ui.ListSelect;
 
 public class ListSelectPrimaryStylename extends TestBase {
@@ -17,13 +16,7 @@ public class ListSelectPrimaryStylename extends TestBase {
         addComponent(list);
 
         addComponent(new Button("Change primary stylename",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        list.setPrimaryStyleName("my-second-list");
-                    }
-                }));
-
+                event -> list.setPrimaryStyleName("my-second-list")));
     }
 
     @Override

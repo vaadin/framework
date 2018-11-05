@@ -1,8 +1,10 @@
 package com.vaadin.test.defaultwidgetset;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.openqa.selenium.By;
@@ -44,30 +46,32 @@ public abstract class AbstractWidgetSetIT extends TestBenchTestCase {
 
         $(ButtonElement.class).first().click();
 
-        Assert.assertEquals("Label shown", 2,
-                $(LabelElement.class).all().size());
+        assertEquals("Label shown", 2, $(LabelElement.class).all().size());
 
-        Assert.assertEquals("Thanks John Dåe, it works!",
+        assertEquals("Thanks John Dåe, it works!",
                 $(LabelElement.class).get(1).getText());
 
-        Assert.assertEquals(expectedWidgetSet,
+        assertEquals(expectedWidgetSet,
                 findElement(By.id("widgetsetinfo")).getText());
 
     }
 
     protected void assertNoUnknownComponentShown() {
-        Assert.assertEquals(0,
+        assertEquals(0,
                 findElements(By.className("vaadin-unknown-caption")).size());
     }
 
     protected void assertUnknownComponentShown(String componentClass) {
         WebElement unknownComponentCaption = findElement(
                 By.className("vaadin-unknown-caption"));
-        Assert.assertTrue(unknownComponentCaption.getText().contains(
+        assertTrue(unknownComponentCaption.getText().contains(
                 "does not contain implementation for " + componentClass));
     }
 
     protected void assertHasDebugMessage(String message) {
+        // Make sure the correct debug window tab is open.
+        findElements(By.className("v-debugwindow-tab")).get(0).click();
+
         List<WebElement> elements = getDriver().findElements(
                 By.xpath("//span[@class='v-debugwindow-message']"));
         boolean found = false;
@@ -77,8 +81,7 @@ public abstract class AbstractWidgetSetIT extends TestBenchTestCase {
                 break;
             }
         }
-        Assert.assertTrue(
-                "Cannot find debug message containing '" + message + "'",
+        assertTrue("Cannot find debug message containing '" + message + "'",
                 found);
     }
 

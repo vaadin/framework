@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,6 +24,9 @@ import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.util.sqlcontainer.RowId;
 import com.vaadin.v7.data.util.sqlcontainer.RowItem;
 
+/**
+ * @deprecated As of 8.0, no replacement available.
+ */
 @Deprecated
 public interface QueryDelegate extends Serializable {
     /**
@@ -91,9 +94,8 @@ public interface QueryDelegate extends Serializable {
      * decides how to identify whether to store a new row or update an existing
      * one.
      *
-     * @param columnToValueMap
-     *            A map containing the values for all columns to be stored or
-     *            updated.
+     * @param row
+     *            The row to be stored or updated.
      * @return the number of affected rows in the database table
      * @throws UnsupportedOperationException
      *             if the implementation is read only.
@@ -220,7 +222,7 @@ public interface QueryDelegate extends Serializable {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #addRowIdChangeListener(RowIdChangeListener)}
-         **/
+         */
         @Deprecated
         public void addListener(QueryDelegate.RowIdChangeListener listener);
 
@@ -236,7 +238,7 @@ public interface QueryDelegate extends Serializable {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #removeRowIdChangeListener(RowIdChangeListener)}
-         **/
+         */
         @Deprecated
         public void removeListener(QueryDelegate.RowIdChangeListener listener);
     }

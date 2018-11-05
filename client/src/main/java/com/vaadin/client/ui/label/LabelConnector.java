@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,30 +40,31 @@ public class LabelConnector extends AbstractComponentConnector {
         super.onStateChanged(stateChangeEvent);
         boolean sinkOnloads = false;
         Profiler.enter("LabelConnector.onStateChanged update content");
+        VLabel widget = getWidget();
         switch (getState().contentMode) {
         case PREFORMATTED:
             PreElement preElement = Document.get().createPreElement();
             preElement.setInnerText(getState().text);
             // clear existing content
-            getWidget().setHTML("");
+            widget.setHTML("");
             // add preformatted text to dom
-            getWidget().getElement().appendChild(preElement);
+            widget.getElement().appendChild(preElement);
             break;
 
         case TEXT:
-            getWidget().setText(getState().text);
+            widget.setText(getState().text);
             break;
 
         case HTML:
             sinkOnloads = true;
-            getWidget().setHTML(getState().text);
+            widget.setHTML(getState().text);
             break;
         }
         Profiler.leave("LabelConnector.onStateChanged update content");
 
         if (sinkOnloads) {
             Profiler.enter("LabelConnector.onStateChanged sinkOnloads");
-            WidgetUtil.sinkOnloadForImages(getWidget().getElement());
+            WidgetUtil.sinkOnloadForImages(widget.getElement());
             Profiler.leave("LabelConnector.onStateChanged sinkOnloads");
         }
     }

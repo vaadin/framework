@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -46,9 +46,9 @@ import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider.EventSet
 public class BasicEventProvider implements CalendarEditableEventProvider,
         EventSetChangeNotifier, CalendarEvent.EventChangeListener {
 
-    protected List<CalendarEvent> eventList = new ArrayList<>();
+    protected List<CalendarEvent> eventList = new ArrayList<CalendarEvent>();
 
-    private List<EventSetChangeListener> listeners = new ArrayList<>();
+    private List<EventSetChangeListener> listeners = new ArrayList<EventSetChangeListener>();
 
     /*
      * (non-Javadoc)
@@ -59,7 +59,7 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
      */
     @Override
     public List<CalendarEvent> getEvents(Date startDate, Date endDate) {
-        ArrayList<CalendarEvent> activeEvents = new ArrayList<>();
+        List<CalendarEvent> activeEvents = new ArrayList<CalendarEvent>();
 
         for (CalendarEvent ev : eventList) {
             long from = startDate.getTime();
@@ -81,7 +81,7 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
     }
 
     /**
-     * Does this event provider container this event
+     * Does this event provider container this event.
      *
      * @param event
      *            The event to check for

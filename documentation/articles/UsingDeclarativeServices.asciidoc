@@ -1,0 +1,257 @@
+---
+title: Using Declarative Services
+order: 74
+layout: page
+---
+
+[[using-declarative-services]]
+= Using declarative services
+
+Declarative Services (DS) are very common to define OSGi services. The
+DS bundle scans all bundles (extender pattern), parses the component
+definition xml-file and provides services based on that information. DS
+may also be used to define references to other services. For instance
+service A may require 0:n services of type B. The DS runtime will
+ensure, that they are properly injected into the service A. References
+to other services also influence the lifecycle of a service. For
+instance service A requires 1:1 of service C. Thus service A will not be
+activated before service C is injected properly. This short overview of
+OSGi-DS is enough to understand the example defined below.
+
+[[setup-example]]
+Setup example
+~~~~~~~~~~~~~
+
+To follow my explanation
+
+* clone repository from
+https://github.com/lunifera/lunifera-Vaadin-examples.git
+* use Import -> "Existing Maven Projects" in Eclipse IDE (Make sure that
+m2e is installed)
+* expand `org.lunifera.example.Vaadin.osgi.bootstrap.ds/setup` and set
+`targetDS.target`
+* `open targetDS.target`
+** wait until resolved
+** if error, then select all repository in target and press update
+button on the right side
+** wait until resolved
+** press "set as target platform"
+* Now there should be no problems.
+* To build the project use `mvn clean verify`
+
+You will recognize that the bundle does not contain an `Activator`. Thats
+not necessary since we use OSGi services managed by OSGi-DS. The
+component runtime of DS manages the lifecycle of the services. Instead
+of an activator we are using the class `ServiceComponent`. It contains all
+logic to wire things together properly.
+
+[[servicecomponent]]
+ServiceComponent
+~~~~~~~~~~~~~~~~
+
+The service component will become instantiated by OSGi DS and DS
+controls its lifecycle. If the bundle containing the class is stopped,
+the service will be deactivated by invoking `deactivate()`. If mandatory
+references can be resolved, the service will be activated automatically. The `bindService` and `unbindService` are invoked by DS,
+if a http service becomes available or unavailable. We do not need to
+use a `ServiceTracker` anymore to get notified about the
+`HttpService`-lifecycle. All that stuff is handled by OSGi-DS.
+
+[source,java]
+....
+package org.lunifera.example.Vaadin.osgi.bootstrap.ds;
+
+import javax.servlet.ServletException;
+
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleEvent;
+import org.osgi.framework.BundleListener;
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.http.HttpService;
+import org.osgi.service.http.NamespaceException;
+
+/**
+ * The service will look for the HttpService and registers the Vaadin servlet at
+ * it.
+ */
+public class ServiceComponent implements BundleListener {
+
+  private HttpService httpService;
+  private ResourceProvider resourceProvider;
+
+  /**
+   * Called by OSGi DS if the component is activated.
+   *
+   * @param context
+   */
+  protected void activate(ComponentContext context) {
+    handleStartedBundles(context);
+    context.getBundleContext().addBundleListener(this);
+  }
+
+  /**
+   * Called by OSGi DS if the component is deactivated.
+   *
+   * @param context
+   */
+  protected void deactivate(ComponentContext context) {
+    context.getBundleContext().removeBundleListener(this);
+    resourceProvider = null;
+  }
+
+  /**
+   * Binds the http service to this component. Called by OSGi-DS.
+   *
+   * @param service
+   */
+  protected void bindHttpService(HttpService service) {
+    httpService = service;
+
+    try {
+      // register the servlet at the http service
+      httpService.registerServlet("/", new SimpleVaadinServlet(), null,
+          getResourceProvider());
+    } catch (ServletException e) {
+      e.printStackTrace();
+    } catch (NamespaceException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Unbinds the http service from this component. Called by OSGi-DS.
+   *
+   * @param service
+   */
+  protected void unbindHttpService(HttpService service) {
+    // unregister the servlet from the http service
+    httpService.unregister("/");
+  }
+....
+
+If a http service is available, it becomes injected and will be used to
+register the Vaadin servlet at it. If it becomes unbound (bundle
+containing the http service stopped), the servlet will be unregistered.
+
+[[usecase-study]]
+Usecase study
+~~~~~~~~~~~~~
+
+Imagine the following usecase. There are 2 bundle providing http
+services.
+
+* `org.abc.http.jetty`
+* `org.abc.http.tomcat` (can be achieved using virgo for instance)
+
+[[what-you-may-do...]]
+What you may do...
+^^^^^^^^^^^^^^^^^^
+
+* Start the jetty bundle → then jetty-httpService will be bound to our
+service component and Vaadin is running on a jetty
+* Start the tomcat bundle → nothing will happen so far (service
+component requires 0:1 http services - see below)
+* Stop the jetty bundle → The jetty-httpService will become unbound and
+Vaadin stops
+* Some milliseconds later the tomcat-httpService will be bound
+automatically → Vaadin will become installed to the tomcat
+* Update the jetty bundle in the running OSGi environment (new bundle
+with latest version is installed and old uninstalled)
+* Start the jetty bundle (with the new version) again
+* Stop tomcat bundle → The tomcat-httpService will become unbound and
+Vaadin stops
+* Some milliseconds later the jetty-httpService will be bound
+automatically → Vaadin will become available at jetty
+
+That’s real modularity... Give it a try and play around. Indeed, you
+won't write your own http services. But there are a lot of other use
+cases too. I will blog about them later when I am talking about "Content
+Provider by OSGi DS".
+
+[[servicecomponent-definition]]
+ServiceComponent-Definition
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The service component definition is the description about the service.
+It defines the implementation class, the provided services and the
+referenced (required) services. Eclipse PDE comes with an editor to
+define them. Expand the `OSGI-INF` folder in the bundle and double click
+`VaadinComponent.xml`. Now you see the definition of the service
+component.
+
+[source,xml]
+....
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.lunifera.example.Vaadin.osgi.bootstrap.ds">
+  <implementation class="org.lunifera.example.Vaadin.osgi.bootstrap.ds.ServiceComponent"/>
+  <reference bind="bindHttpService" cardinality="0..1" interface="org.osgi.service.http.HttpService"
+        name="HttpService" policy="dynamic" unbind="unbindHttpService"/>
+</scr:component>
+....
+
+* Line 2 defines the name of the service. Feel free to insert a unique
+name
+* Line 3 defines the class name of the service class that needs to
+become instantiated
+* Line 4 defines a reference to a required service - the HttpService
+* *bind* means the method that is called to bind the HttpService
+instance to the service instance
+* *unbind* means the method that is called to unbind the HttpService
+instance from the service instance
+* *cardinality* defines how many services may / must be bound - 0..1,
+1..1, 0..n, 1..n
+* *interface* is the name of the service that should be bound
+
+A *very important* issue is an entry in the `MANIFEST.mf`. Using the
+manifest header `Service-Component: OSGI-INF/*.xml` all xml files from
+OSGI-INF are registered as component definitions to the DS runtime. If
+you miss to add this statement, DS will never resolve your service!
+
+[[run-example]]
+Run example
+~~~~~~~~~~~
+
+To run the example, we need to prepare an OSGi-launch-configuration. The
+following bundles are required to run the example properly. In
+difference to part 1, the `org.eclipse.equinox.ds` and
+`org.eclipse.equinox.util` bundles are required. Otherwise OSGi-DS will
+not become started.
+
+[cols=",,",options="header",]
+|============================================================
+|bundle |start level |autostart
+|org.lunifera.example.Vaadin.osgi.bootstrap.ds |default |true
+|com.Vaadin.client-compiled |default |false
+|com.Vaadin.server |default |false
+|com.Vaadin.shared |default |false
+|com.Vaadin.shared.deps |default |false
+|com.Vaadin.themes |default |false
+|javax.annotation |default |false
+|javax.servlet |default |false
+|org.apache.felix.gogo.command |default |false
+|org.apache.felix.gogo.runtime |default |false
+|org.apache.felix.gogo.shell |default |false
+|org.eclipse.equinox.console |default |false
+|org.eclipse.equinox.ds |1 |false
+|org.eclipse.equinox.http.jetty |default |false
+|org.eclipse.equinox.http.servlet |default |false
+|org.eclipse.equinox.util |default |false
+|org.eclipse.jetty.continuation |default |false
+|org.eclipse.jetty.http |default |false
+|org.eclipse.jetty.io |default |false
+|org.eclipse.jetty.security |default |false
+|org.eclipse.jetty.server |default |false
+|org.eclipse.jetty.servlet |default |false
+|org.eclipse.jetty.util |default |false
+|org.eclipse.osgi |default |false
+|org.eclipse.osgi.services |default |false
+|org.json |default |false
+|org.jsoup |default |false
+|============================================================
+
+To start a jetty server on a proper port, use the VM argument:
+`-Dorg.osgi.service.http.port=8082` in your launch configuration. Now
+you can access the Vaadin page under http://localhost:8082. Have fun!
+
+By http://de.gravatar.com/florianpi[Florian Pirchner] - based on
+lunifera.org - OSGi components for business applications

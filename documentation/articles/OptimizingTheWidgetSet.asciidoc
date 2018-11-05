@@ -1,0 +1,193 @@
+---
+title: Optimizing The Widget Set
+order: 29
+layout: page
+---
+
+[[optimizing-the-widget-set]]
+= Optimizing the widget set
+
+Vaadin contains a lot of components and most of those components
+contains a client side part which is executed in the browser. Together
+all the client side implementations sum up to a big amount of data the
+enduser needs to download to the browser even if he might never use all
+the components.
+
+For that reason Vaadin uses three strategies for downloading the
+components:
+
+[[eager]]
+Eager
++++++
+
+What eager means is that the client implementation for the component is
+included in the payload that is initially downloaded when the
+application starts. The more components that is made eager the more will
+need to be downloaded before the initial view of the application is
+shown. By default Vaadin puts most components here since Vaadin does not
+know which components will be used in the first view and cannot thus
+optimize any further. You would have noticed this if you ever made a
+Hello World type of application and wondered why Vaadin needed to
+download so much for such a simple application.
+
+[[deferred]]
+Deferred
+++++++++
+
+When marking a component as deferred it means that its client side
+implementation will be downloaded right after the initial rendering of
+the application is done. This can be useful if you know for instance
+that a component will soon be used in that application but is not
+displayed in the first view.
+
+[[lazy]]
+Lazy
+++++
+
+Lazy components client side implementation doesn't get downloaded until
+the component is shown. This will sometimes mean that a view might take
+a bit longer to render if several components client side implementation
+needs to first be downloaded. This strategy is useful for components
+that are rarely used in the application which everybody might not see.
+`RichTextArea` and `ColorPicker` are examples of components in Vaadin that by
+default are Lazy.
+
+[[optimizing-the-loading-of-the-widgets]]
+Optimizing the loading of the widgets
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Now that we know what Vaadin provides, lets see how we can modify how a
+component is loaded to provide the best experience for our application.
+
+Lets say we want to build a HelloWorld application which only needs a
+few components. Specifically these components will be shown on the
+screen:
+
+* UI - The UI of the application.
+* VerticalLayout - The Vertical layout inside the UI where the message
+is shown
+* Label - A label with the text "Hello World"
+
+All other Vaadin components provided by Vaadin we don't want to load. To
+do this we are going to mark those three components as Eager (initially
+loaded) and all the rest as Lazy.
+
+To do that we need to implement our own `ConnectorBundleLoaderFactory`.
+Here is my example one:
+
+[source,java]
+....
+public class MyConnectorBundleLoaderFactory extends
+    ConnectorBundleLoaderFactory {
+  private static final List<Class> eagerComponents = new
+    LinkedList<Class>();
+
+  static {
+    eagerComponents.add(UI.class);
+    eagerComponents.add(VerticalLayout.class);
+    eagerComponents.add(Label.class);
+  }
+
+  @Override
+  protected LoadStyle getLoadStyle(JClassType connectorType){
+    Connect annotation = connectorType.getAnnotation(Connect.class);
+    Class componentClass = annotation.value();
+
+    // Load eagerly marked connectors eagerly
+    if(eagerComponents.contains(componentClass)) {
+      return LoadStyle.EAGER;
+    }
+
+    //All other components should be lazy
+    return LoadStyle.LAZY;
+  }
+}
+....
+
+We also need to add our factory to the widgetset by adding the following
+to our <widgetset>.gwt.xml:
+
+[source,xml]
+....
+<generate-with class="com.example.widgetsetoptimization.MyConnectorBundleLoaderFactory">
+  <when-type-assignable class="com.vaadin.client.metadata.ConnectorBundleLoader" />
+</generate-with>
+....
+
+If you are using the Eclipse Plugin to compile the widgetset you will
+also want to add the following meta data for the compiler so it does not
+overwrite our generator setting:
+
+[source,xml]
+....
+<!-- WS Compiler: manually edited -->
+....
+
+If you have used the Maven archetype for setting up your project, you
+might need to add vaadin-client-compiler as a dependency in your project
+as it is by default only used when actually starting the widgetset
+compiler. See http://dev.vaadin.com/ticket/11533 for more details.
+
+Finally, here is my simple test application UI for which I have
+optimized the widgetset:
+
+[source,java]
+....
+public class HelloWorldUI extends UI {
+
+  @Override
+  protected void init(VaadinRequest request) {
+    VerticalLayout layout = new VerticalLayout();
+    layout.addComponent(new Label("Hello world"));
+    setContent(layout);
+  }
+}
+....
+
+Now, all I have to do is recompile the widgetset for the new load
+strategy to take effect.
+
+If you now check the network traffic when you load the application you
+will notice a *huge difference*. Using the default widgetset with the
+default loading strategy our Hello World application will load over *1
+Mb* of widgetset data. If you then switch to using our own widgetset
+with our own custom loader factory the widgetset will only be about *375
+kb*. That is over *60% less!*
+
+Using your own custom widgetset loader factory is highly recommended in
+all projects.
+
+[[finding-out-which-components-are-loaded-by-a-view]]
+Finding out which components are loaded by a View
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+So you want to start optimizing your widgetset but how do you find out
+which components are needed for the initial view so you can make them
+eager while keeping everything else deferred or lazy? Fortunately there
+is an addon
+https://vaadin.com/directory#addon/widget-set-optimizer[WidgetSetOptimizer]
+for doing just this.
+
+To use it you download this addon and add it to your project.
+
+Add the following to the <widgetset>.gwt.xml:
+
+[source,xml]
+....
+<inherits name="org.vaadin.artur.widgetsetoptimizer.WidgetSetOptimizerWidgetSet" />
+....
+
+You will also need to add the following to your UI classes init method
+
+[source,java]
+....
+new WidgetSetOptimizer().extend(this);
+....
+
+Finally compile the widgetset and run the application with the &debug
+parameter. In the debug window there will be a new button "OWS" which by
+pressing you will get the Generator class automatically generated for
+you. The generated generator class will mark the currently displayed
+components as Eager while loading everything else as Deferred. More
+information about the addon and its usage can be found on the Addon page
+in the directory.

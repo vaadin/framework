@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -294,7 +294,7 @@ public class RichTextArea extends AbstractField<String>
 
     @Override
     public boolean isEmpty() {
-        return super.isEmpty() || getValue().length() == 0;
+        return super.isEmpty() || getValue().isEmpty();
     }
 
     @Override

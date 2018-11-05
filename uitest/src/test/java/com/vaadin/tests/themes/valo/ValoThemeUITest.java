@@ -1,34 +1,15 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.themes.valo;
-
-import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.CssLayoutElement;
 import com.vaadin.testbench.elements.LabelElement;
-import com.vaadin.testbench.elements.TreeElement;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.elements.TreeElement;
 
 public class ValoThemeUITest extends MultiBrowserTest {
 
@@ -170,6 +151,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
     public void tabs() throws Exception {
         openTestURL("test");
         open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
+        sleep(200);
         compareScreen("tabs");
 
     }
@@ -181,6 +163,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
         check("Closable");
         check("Disable tabs");
         check("Overflow");
+        sleep(200);
         compareScreen("tabs-closable-disabled");
     }
 
@@ -192,6 +175,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
         // Framed option is checked by default so we are actually unchecking
         check("Framed");
         check("Overflow");
+        sleep(200);
         compareScreen("tabs-closable-unframed");
     }
 
@@ -200,6 +184,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
         openTestURL("test");
         open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
         check("Right-aligned tabs");
+        sleep(200);
         compareScreen("tabs-align-right");
     }
 
@@ -215,6 +200,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
         openTestURL("test");
         open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
         check("Centered tabs");
+        sleep(200);
         compareScreen("tabs-align-center");
     }
 
@@ -223,6 +209,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
         openTestURL("test");
         open("Tabs <span class=\"valo-menu-badge\">123</span>", "Tabs");
         check("Icons on top");
+        sleep(200);
         compareScreen("tabs-icons-on-top");
     }
 
@@ -233,6 +220,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
         check("Equal-width tabs");
         check("Padded tabbar");
         check("Compact");
+
         compareScreen("tabs-equal-compact-padded");
     }
 
@@ -315,13 +303,4 @@ public class ValoThemeUITest extends MultiBrowserTest {
     protected boolean usePersistentHoverForIE() {
         return false;
     }
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsersToTest = getBrowserCapabilities(
-                Browser.IE11, Browser.FIREFOX, Browser.CHROME);
-        browsersToTest.add(PHANTOMJS2());
-        return browsersToTest;
-    }
-
 }

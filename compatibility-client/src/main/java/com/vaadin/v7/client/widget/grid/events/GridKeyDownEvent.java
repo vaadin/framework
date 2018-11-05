@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,8 +31,26 @@ import com.vaadin.v7.shared.ui.grid.GridConstants.Section;
  */
 public class GridKeyDownEvent extends AbstractGridKeyEvent<GridKeyDownHandler> {
 
+    public static final Type<GridKeyDownHandler> TYPE = new Type<GridKeyDownHandler>(
+            BrowserEvents.KEYDOWN, new GridKeyDownEvent());
+
+    /**
+     * @since 7.7.9
+     */
+    public GridKeyDownEvent() {
+    }
+
+    /**
+     * @deprecated This constructor's arguments are no longer used. Use the
+     *             no-args constructor instead.
+     */
+    @Deprecated
     public GridKeyDownEvent(Grid<?> grid, CellReference<?> targetCell) {
-        super(grid, targetCell);
+    }
+
+    @Override
+    public Type<GridKeyDownHandler> getAssociatedType() {
+        return TYPE;
     }
 
     @Override

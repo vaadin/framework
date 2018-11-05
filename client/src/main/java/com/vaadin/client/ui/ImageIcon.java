@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,6 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.BrowserInfo;
@@ -50,12 +49,8 @@ public class ImageIcon extends Icon {
 
         if (BrowserInfo.get().isIE()) {
             // apply src later for IE, to ensure onload is fired
-            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    DOM.setElementProperty(getElement(), "src", imageUrl);
-                }
-            });
+            Scheduler.get().scheduleDeferred(() -> DOM
+                    .setElementProperty(getElement(), "src", imageUrl));
         }
 
         DOM.setElementProperty(getElement(), "src", imageUrl);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -145,7 +145,7 @@ public class Overlay extends PopupPanel {
 
     /**
      * Style name for the overlay container element (see
-     * {@link #getOverlayContainer()}
+     * {@link #getOverlayContainer()}.
      */
     public static final String CLASSNAME_CONTAINER = "v-overlay-container";
 
@@ -238,12 +238,7 @@ public class Overlay extends PopupPanel {
                 if (left < 0) {
                     // Would move left of screen, shrink to fit in window
                     setOuterWidthThroughWidget(windowRight - windowLeft);
-                    runOnClose.add(new Command() {
-                        @Override
-                        public void execute() {
-                            getWidget().setWidth("");
-                        }
-                    });
+                    runOnClose.add(() -> getWidget().setWidth(""));
                     left = 0;
                 }
             }
@@ -259,12 +254,7 @@ public class Overlay extends PopupPanel {
                 if (top < 0) {
                     // Would move above screen, shrink to fit in window
                     setOuterHeightThroughWidget(windowBottom - windowTop);
-                    runOnClose.add(new Command() {
-                        @Override
-                        public void execute() {
-                            getWidget().setHeight("");
-                        }
-                    });
+                    runOnClose.add(() -> getWidget().setHeight(""));
                     top = 0;
                 }
             }
@@ -352,15 +342,15 @@ public class Overlay extends PopupPanel {
         return topFix;
     }
 
-    private native static int detectRelativeBodyFixes(String axis)
+    private static native int detectRelativeBodyFixes(String axis)
     /*-{
         try {
             var b = $wnd.document.body;
             var cstyle = b.currentStyle ? b.currentStyle : getComputedStyle(b);
-            if(cstyle && cstyle.position == 'relative') {
+            if (cstyle && cstyle.position == 'relative') {
                 return b.getBoundingClientRect()[axis];
             }
-        } catch(e){}
+        } catch(e) {}
         return 0;
     }-*/;
 
@@ -509,7 +499,7 @@ public class Overlay extends PopupPanel {
         // Calculate proper z-index
         int zIndex = -1;
         try {
-            // Odd behaviour with Windows Hosted Mode forces us to use
+            // Odd behavior with Windows Hosted Mode forces us to use
             // this redundant try/catch block (See dev.vaadin.com #2011)
             zIndex = Integer.parseInt(getElement().getStyle().getZIndex());
         } catch (Exception ignore) {
@@ -552,7 +542,7 @@ public class Overlay extends PopupPanel {
 
     /**
      * Returns true if we should add a shim iframe below the overlay to deal
-     * with zindex issues with PDFs and applets. Can be overriden to disable
+     * with zindex issues with PDFs and applets. Can be overridden to disable
      * shim iframes if they are not needed.
      *
      * @return true if a shim iframe should be added, false otherwise
@@ -579,7 +569,7 @@ public class Overlay extends PopupPanel {
 
     /**
      * Get owner (Widget that made this Overlay, not the layout parent) of
-     * Overlay
+     * Overlay.
      *
      * @return Owner (creator) or null if not defined
      */
@@ -589,7 +579,7 @@ public class Overlay extends PopupPanel {
 
     /**
      * Set owner (Widget that made this Overlay, not the layout parent) of
-     * Overlay
+     * Overlay.
      *
      * @param owner
      *            Owner (creator) of Overlay

@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
@@ -42,7 +27,6 @@ import com.vaadin.tests.widgetset.server.v7.grid.GridClientColumnRenderers;
 /**
  * Tests Grid client side renderers
  *
- * @since
  * @author Vaadin Ltd
  */
 @TestCategory("grid")
@@ -274,9 +258,4 @@ public class GridClientRenderers extends MultiBrowserTest {
         return $(MyClientGridElement.class).first();
     }
 
-    private void addColumn(Renderers renderer) {
-        // Add widget renderer column
-        $(NativeSelectElement.class).first().selectByText(renderer.toString());
-        $(NativeButtonElement.class).caption("Add").first().click();
-    }
 }

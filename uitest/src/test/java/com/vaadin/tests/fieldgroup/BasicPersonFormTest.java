@@ -1,32 +1,21 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.fieldgroup;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.NotificationElement;
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TableRowElement;
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.data.bean.Sex;
+import com.vaadin.tests.tb3.AbstractTB3Test;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.PrivateTB3Configuration;
 
 public abstract class BasicPersonFormTest extends MultiBrowserTest {
 
@@ -38,6 +27,11 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
         super.setup();
 
         logCounter = 0;
+
+        if (BrowserUtil.isFirefox(getDesiredCapabilities())) {
+            // Use larger view port to make sure everything is visible.
+            testBench().resizeViewPortTo(1500, 1500);
+        }
     }
 
     @Override
@@ -115,14 +109,13 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
 
     private void assertFieldValue(String caption, String expected,
             TestBenchElement field) {
-        Assert.assertEquals(
-                String.format("Unexpected value for field '%s',", caption),
+        assertEquals(String.format("Unexpected value for field '%s',", caption),
                 expected, field.getAttribute("value"));
     }
 
     protected void assertSelectedSex(Sex sex) {
         TableRowElement row = getGenderTable().getRow(getIndex(sex));
-        Assert.assertTrue(
+        assertTrue(
                 String.format("Given sex (%s) isn't selected.",
                         sex.getStringRepresentation()),
                 hasCssClass(row, "v-selected"));
@@ -164,8 +157,8 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
 
     protected void assertLogText(String expected) {
         ++logCounter;
-        Assert.assertEquals("Unexpected log contents,",
-                logCounter + ". " + expected, getLogRow(0));
+        assertEquals("Unexpected log contents,", logCounter + ". " + expected,
+                getLogRow(0));
     }
 
     protected void assertDefaults() {

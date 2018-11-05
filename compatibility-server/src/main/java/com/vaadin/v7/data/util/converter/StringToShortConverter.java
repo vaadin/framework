@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,6 +29,9 @@ import java.util.Locale;
  *
  * @author Vaadin Ltd
  * @since 7.4
+ *
+ * @deprecated As of 8.0, no direct replacement available, see
+ *             {@link com.vaadin.data.converter.StringToIntegerConverter}
  */
 @Deprecated
 public class StringToShortConverter
@@ -37,7 +40,7 @@ public class StringToShortConverter
     /**
      * Returns the format used by
      * {@link #convertToPresentation(Short, Class, Locale)} and
-     * {@link #convertToModel(String, Class, Locale)}
+     * {@link #convertToModel(String, Class, Locale)}.
      *
      * @param locale
      *            The locale to use

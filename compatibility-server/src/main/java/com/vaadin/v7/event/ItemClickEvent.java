@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,22 +21,24 @@ import java.lang.reflect.Method;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.Component;
+import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
 
 /**
  *
- * Click event fired by a {@link Component} implementing
- * {@link com.vaadin.v7.data.Container} interface. ItemClickEvents happens on an
- * {@link Item} rendered somehow on terminal. Event may also contain a specific
- * {@link Property} on which the click event happened.
+ * Click event fired by a {@link Component} implementing {@link Container}
+ * interface. ItemClickEvents happens on an {@link Item} rendered somehow on
+ * terminal. Event may also contain a specific {@link Property} on which the
+ * click event happened.
  *
  * @since 5.3
  *
+ * @deprecated As of 8.0, see component-specific click events.
  */
 @SuppressWarnings("serial")
 @Deprecated
-public class ItemClickEvent extends ClickEvent implements Serializable {
+public class ItemClickEvent extends ClickEvent {
     private Item item;
     private Object itemId;
     private Object propertyId;
@@ -59,7 +61,7 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
     }
 
     /**
-     * Gets a possible identifier in source for clicked Item
+     * Gets a possible identifier in source for clicked Item.
      *
      * @return
      */
@@ -85,9 +87,9 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
         try {
             ITEM_CLICK_METHOD = ItemClickListener.class.getDeclaredMethod(
                     "itemClick", new Class[] { ItemClickEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException();
+            throw new RuntimeException();
         }
     }
 
@@ -127,7 +129,7 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #addItemClickListener(ItemClickListener)}
-         **/
+         */
         @Deprecated
         public void addListener(ItemClickListener listener);
 
@@ -142,7 +144,7 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #removeItemClickListener(ItemClickListener)}
-         **/
+         */
         @Deprecated
         public void removeListener(ItemClickListener listener);
     }

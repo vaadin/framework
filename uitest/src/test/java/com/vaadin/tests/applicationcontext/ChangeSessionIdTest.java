@@ -1,6 +1,7 @@
 package com.vaadin.tests.applicationcontext;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -20,7 +21,7 @@ public class ChangeSessionIdTest extends MultiBrowserTest {
 
     private void checkLogMatches(String expected) {
         String actual = getLogRow(0);
-        Assert.assertTrue(String.format(
+        assertTrue(String.format(
                 "Unexpected log row.\n expected format: '%s'\n was: '%s'",
                 expected, actual), actual.matches(expected));
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,8 +18,23 @@ package com.vaadin.shared.ui.ui;
 
 import com.vaadin.shared.communication.ClientRpc;
 
+/**
+ * Client side rpc class for Page / UI.
+ *
+ * @author Vaadin Ltd
+ * @since 7.0
+ */
 public interface PageClientRpc extends ClientRpc {
 
+    /**
+     * Reloads the page.
+     */
     public void reload();
 
+    /**
+     * Initialize Mobile HTML5 Drag and Drop Polyfill.
+     *
+     * @since 8.1
+     */
+    public void initializeMobileHtml5DndPolyfill();
 }

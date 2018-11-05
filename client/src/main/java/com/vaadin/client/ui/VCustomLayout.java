@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,8 @@
 package com.vaadin.client.ui;
 
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
@@ -50,13 +51,13 @@ public class VCustomLayout extends ComplexPanel {
     public static final String CLASSNAME = "v-customlayout";
 
     /** Location-name to containing element in DOM map */
-    private final HashMap<String, Element> locationToElement = new HashMap<>();
+    private final Map<String, Element> locationToElement = new HashMap<>();
 
     /** Location-name to contained widget map */
-    final HashMap<String, Widget> locationToWidget = new HashMap<>();
+    final Map<String, Widget> locationToWidget = new HashMap<>();
 
     /** Widget to captionwrapper map */
-    private final HashMap<Widget, VCaptionWrapper> childWidgetToCaptionWrapper = new HashMap<>();
+    private final Map<Widget, VCaptionWrapper> childWidgetToCaptionWrapper = new HashMap<>();
 
     /**
      * Unexecuted scripts loaded from the template.
@@ -196,7 +197,7 @@ public class VCustomLayout extends ComplexPanel {
     private native boolean uriEndsWithSlash()
     /*-{
         var path =  $wnd.location.pathname;
-        if(path.charAt(path.length - 1) == "/")
+        if (path.charAt(path.length - 1) == "/")
             return true;
         return false;
     }-*/;
@@ -210,6 +211,10 @@ public class VCustomLayout extends ComplexPanel {
     private void scanForLocations(Element elem) {
         if (elem.hasAttribute("location")) {
             final String location = elem.getAttribute("location");
+            locationToElement.put(location, elem);
+            elem.setInnerHTML("");
+        } else if (elem.hasAttribute("data-location")) {
+            final String location = elem.getAttribute("data-location");
             locationToElement.put(location, elem);
             elem.setInnerHTML("");
         } else {
@@ -228,7 +233,7 @@ public class VCustomLayout extends ComplexPanel {
     public static native void eval(String script)
     /*-{
       try {
-     	 if (script != null)
+          if (script != null)
       eval("{ var document = $doc; var window = $wnd; "+ script + "}");
       } catch (e) {
       }
@@ -267,7 +272,7 @@ public class VCustomLayout extends ComplexPanel {
         scripts = "";
         int endOfPrevScript = 0;
         int nextPosToCheck = 0;
-        String lc = html.toLowerCase();
+        String lc = html.toLowerCase(Locale.ROOT);
         String res = "";
         int scriptStart = lc.indexOf("<script", nextPosToCheck);
         while (scriptStart > 0) {
@@ -282,7 +287,7 @@ public class VCustomLayout extends ComplexPanel {
 
         // Extract body
         html = res;
-        lc = html.toLowerCase();
+        lc = html.toLowerCase(Locale.ROOT);
         int startOfBody = lc.indexOf("<body");
         if (startOfBody < 0) {
             res = html;
@@ -305,10 +310,12 @@ public class VCustomLayout extends ComplexPanel {
      */
     public void updateCaption(ComponentConnector childConnector) {
         Widget widget = childConnector.getWidget();
-        if (widget.getParent() != this) {
+
+        if (!widget.isAttached()) {
             // Widget has not been added because the location was not found
             return;
         }
+
         VCaptionWrapper wrapper = childWidgetToCaptionWrapper.get(widget);
         if (VCaption.isNeeded(childConnector)) {
             if (wrapper == null) {
@@ -331,11 +338,9 @@ public class VCustomLayout extends ComplexPanel {
         }
     }
 
-    /** Get the location of an widget */
+    /** Get the location of an widget. */
     public String getLocation(Widget w) {
-        for (final Iterator<String> i = locationToWidget.keySet().iterator(); i
-                .hasNext();) {
-            final String location = i.next();
+        for (final String location : locationToWidget.keySet()) {
             if (locationToWidget.get(location) == w) {
                 return location;
             }
@@ -343,7 +348,7 @@ public class VCustomLayout extends ComplexPanel {
         return null;
     }
 
-    /** Removes given widget from the layout */
+    /** Removes given widget from the layout. */
     @Override
     public boolean remove(Widget w) {
         final String location = getLocation(w);
@@ -360,13 +365,13 @@ public class VCustomLayout extends ComplexPanel {
         return false;
     }
 
-    /** Adding widget without specifying location is not supported */
+    /** Adding widget without specifying location is not supported. */
     @Override
     public void add(Widget w) {
         throw new UnsupportedOperationException();
     }
 
-    /** Clear all widgets from the layout */
+    /** Clear all widgets from the layout. */
     @Override
     public void clear() {
         super.clear();
@@ -393,21 +398,21 @@ public class VCustomLayout extends ComplexPanel {
 
     private native void detachResizedFunction(Element element)
     /*-{
-    	element.notifyChildrenOfSizeChange = null;
+        element.notifyChildrenOfSizeChange = null;
     }-*/;
 
     private native void publishResizedFunction(Element element)
     /*-{
-    	var self = this;
-    	element.notifyChildrenOfSizeChange = $entry(function() {
-    		self.@com.vaadin.client.ui.VCustomLayout::notifyChildrenOfSizeChange()();
-    	});
+        var self = this;
+        element.notifyChildrenOfSizeChange = $entry(function() {
+            self.@com.vaadin.client.ui.VCustomLayout::notifyChildrenOfSizeChange()();
+        });
     }-*/;
 
     /**
      * In custom layout one may want to run layout functions made with
      * JavaScript. This function tests if one exists (with name "iLayoutJS" in
-     * layouts first DOM node) and runs et. Return value is used to determine if
+     * layouts first DOM node) and runs it. Return value is used to determine if
      * children needs to be notified of size changes.
      * <p>
      * Note! When implementing a JS layout function you most likely want to call
@@ -418,21 +423,22 @@ public class VCustomLayout extends ComplexPanel {
      * For internal use only. May be removed or replaced in the future.
      *
      * @param el
+     *            The first element of the layout
      * @return true if layout function exists and was run successfully, else
      *         false.
      */
     public native boolean iLayoutJS(com.google.gwt.user.client.Element el)
     /*-{
-    	if(el && el.iLayoutJS) {
-    		try {
-    			el.iLayoutJS();
-    			return true;
-    		} catch (e) {
-    			return false;
-    		}
-    	} else {
-    		return false;
-    	}
+        if (el && el.iLayoutJS) {
+            try {
+                el.iLayoutJS();
+                return true;
+            } catch (e) {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }-*/;
 
     @Override

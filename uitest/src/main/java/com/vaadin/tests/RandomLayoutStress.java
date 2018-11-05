@@ -1,25 +1,10 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests;
 
 import java.time.LocalDate;
 import java.util.Random;
 
 import com.vaadin.server.ExternalResource;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractDateField;
@@ -88,7 +73,7 @@ public class RandomLayoutStress extends com.vaadin.server.LegacyApplication {
         panelBLayout.addComponent(layoutB);
 
         // Create grid layout
-        final int gridSize = (int) java.lang.Math.sqrt(componentCountC);
+        final int gridSize = (int) Math.sqrt(componentCountC);
         VerticalLayout panelGLayout = new VerticalLayout();
         panelGLayout.setMargin(true);
         final Panel panelG = new Panel("Panel containing grid layout ("
@@ -177,21 +162,24 @@ public class RandomLayoutStress extends com.vaadin.server.LegacyApplication {
             panelLayout.addComponent(new Label(
                     "Panel is a container for other components, by default it draws a frame around it's "
                             + "extremities and may have a caption to clarify the nature of the contained components' purpose."
-                            + " Panel contains an layout where the actual contained components are added, "
+                            + " Panel contains a layout where the actual contained components are added, "
                             + "this layout may be switched on the fly."));
             ((Panel) result).setWidth("250px");
             break;
         case 6:
             // Datefield
             result = new TestDateField();
-            ((AbstractDateField) result).setStyleName("calendar");
-            ((AbstractDateField) result).setValue(LocalDate.now());
+            ((AbstractDateField<LocalDate, DateResolution>) result)
+                    .setStyleName("calendar");
+            ((AbstractDateField<LocalDate, DateResolution>) result)
+                    .setValue(LocalDate.now());
             result.setCaption("Calendar component " + caption);
             break;
         case 7:
             // Datefield
             result = new TestDateField();
-            ((AbstractDateField) result).setValue(LocalDate.now());
+            ((AbstractDateField<LocalDate, DateResolution>) result)
+                    .setValue(LocalDate.now());
             result.setCaption("Calendar component " + caption);
             break;
         }

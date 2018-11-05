@@ -1,19 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests.serialization;
 
 import java.text.DateFormat;
@@ -266,9 +250,10 @@ public class SerializerTest extends AbstractReindeerTestUI {
         state.list = Arrays.asList(ContentMode.HTML);
 
         rpc.sendDate(new Date(1));
-        rpc.sendDate(new Date(2013 - 1900, 5 - 1, 31, 11, 12, 13));
-        rpc.sendDateArray(new Date[] { new Date(2013 - 1900, 1, 1),
-                new Date(2012 - 1900, 1, 1) });
+        rpc.sendDate(new Date(Date.UTC(2013 - 1900, 4, 1, 11, 12, 13)));
+        rpc.sendDateArray(
+                new Date[] { new Date(Date.UTC(2013 - 1900, 0, 31, 0, 0, 0)),
+                        new Date(Date.UTC(2012 - 1900, 0, 31, 0, 0, 0)) });
 
         state.jsonNull = Json.createNull();
         state.jsonString = Json.create("a string");
@@ -277,7 +262,7 @@ public class SerializerTest extends AbstractReindeerTestUI {
 
         state.dateArray = new Date[] { new Date(1), new Date(2) };
         state.date1 = new Date(1);
-        state.date2 = new Date(2013 - 1900, 5 - 1, 31, 11, 12, 13);
+        state.date2 = new Date(Date.UTC(2013 - 1900, 4, 1, 11, 12, 13));
 
         testExtension.registerRpc(new SerializerTestRpc() {
             @Override
@@ -452,7 +437,7 @@ public class SerializerTest extends AbstractReindeerTestUI {
             @Override
             public void sendWrappedGenerics(
                     Map<Set<SimpleTestBean>, Map<Integer, List<SimpleTestBean>>> generics) {
-                log.log("sendWrappedGenerics: " + generics.toString());
+                log.log("sendWrappedGenerics: " + generics);
             }
 
             @Override

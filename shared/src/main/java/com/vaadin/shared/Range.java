@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,6 +31,9 @@ import java.io.Serializable;
  * @author Vaadin Ltd
  */
 public final class Range implements Serializable {
+
+    private static final Range EMPTY = Range.withLength(0, 0);
+
     private final int start;
     private final int end;
 
@@ -90,6 +93,10 @@ public final class Range implements Serializable {
         return new Range(start, start + length);
     }
 
+    public static Range emptyRange() {
+        return EMPTY;
+    }
+
     /**
      * Creates a new range between two numbers: <code>[start..end[</code>.
      *
@@ -141,7 +148,7 @@ public final class Range implements Serializable {
     /**
      * Checks whether the range has no elements between the start and end.
      *
-     * @return <code>true</code> iff the range contains no elements.
+     * @return <code>true</code> if the range contains no elements.
      */
     public boolean isEmpty() {
         return getStart() >= getEnd();
@@ -164,7 +171,7 @@ public final class Range implements Serializable {
      *
      * @param integer
      *            an integer to test for presence in this range
-     * @return <code>true</code> iff <code>integer</code> is in this range
+     * @return <code>true</code> if <code>integer</code> is in this range
      */
     public boolean contains(final int integer) {
         return getStart() <= integer && integer < getEnd();
@@ -173,7 +180,7 @@ public final class Range implements Serializable {
     /**
      * Checks whether this range is a subset of another range.
      *
-     * @return <code>true</code> iff <code>other</code> completely wraps this
+     * @return <code>true</code> if <code>other</code> completely wraps this
      *         range
      */
     public boolean isSubsetOf(final Range other) {
@@ -229,7 +236,7 @@ public final class Range implements Serializable {
     @Override
     public String toString() {
         return getClass().getSimpleName() + " [" + getStart() + ".." + getEnd()
-                + "[" + (isEmpty() ? " (empty)" : "");
+                + "]" + (isEmpty() ? " (empty)" : "");
     }
 
     @Override
@@ -267,7 +274,7 @@ public final class Range implements Serializable {
      *
      * @param other
      *            the other range to compare against
-     * @return <code>true</code> iff this range starts before the
+     * @return <code>true</code> if this range starts before the
      *         <code>other</code>
      */
     public boolean startsBefore(final Range other) {
@@ -279,7 +286,7 @@ public final class Range implements Serializable {
      *
      * @param other
      *            the other range to compare against
-     * @return <code>true</code> iff this range ends before the
+     * @return <code>true</code> if this range ends before the
      *         <code>other</code>
      */
     public boolean endsBefore(final Range other) {
@@ -291,8 +298,7 @@ public final class Range implements Serializable {
      *
      * @param other
      *            the other range to compare against
-     * @return <code>true</code> iff this range ends after the
-     *         <code>other</code>
+     * @return <code>true</code> if this range ends after the <code>other</code>
      */
     public boolean endsAfter(final Range other) {
         return getEnd() > other.getEnd();
@@ -303,7 +309,7 @@ public final class Range implements Serializable {
      *
      * @param other
      *            the other range to compare against
-     * @return <code>true</code> iff this range starts after the
+     * @return <code>true</code> if this range starts after the
      *         <code>other</code>
      */
     public boolean startsAfter(final Range other) {

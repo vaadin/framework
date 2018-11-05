@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,21 +18,21 @@ package com.vaadin.v7.data;
 
 import java.io.Serializable;
 
+import com.vaadin.data.Binder;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.AbstractErrorMessage.ContentMode;
 import com.vaadin.server.ErrorMessage;
-import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.server.ErrorMessageProducer;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.shared.ui.ErrorLevel;
 
 /**
  * Interface that implements a method for validating if an {@link Object} is
  * valid or not.
  * <p>
- * Implementors of this class can be added to any
- * {@link com.vaadin.v7.data.Validatable Validatable} implementor to verify its
- * value.
+ * Implementors of this class can be added to any {@link Validatable}
+ * implementor to verify its value.
  * </p>
  * <p>
  * {@link #validate(Object)} can be used to check if a value is valid. An
@@ -52,6 +52,9 @@ import com.vaadin.server.VaadinServlet;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ * @deprecated As of 8.0, replaced by {@link com.vaadin.data.Validator}. The
+ *             validation is performed outside components, see
+ *             {@link Binder}.{@code withValidator(...)}
  */
 @Deprecated
 public interface Validator extends Serializable {
@@ -134,12 +137,12 @@ public interface Validator extends Serializable {
          */
         public boolean isInvisible() {
             String msg = getMessage();
-            if (msg != null && msg.length() > 0) {
+            if (msg != null && !msg.isEmpty()) {
                 return false;
             }
             if (causes != null) {
-                for (int i = 0; i < causes.length; i++) {
-                    if (!causes[i].isInvisible()) {
+                for (InvalidValueException e : causes) {
+                    if (!e.isInvisible()) {
                         return false;
                     }
                 }
@@ -168,6 +171,7 @@ public interface Validator extends Serializable {
             return causes;
         }
 
+        // Intentional change in compatibility package
         @Override
         public ErrorMessage getErrorMessage() {
             UserError error = new UserError(getHtmlMessage(), ContentMode.HTML,

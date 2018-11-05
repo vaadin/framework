@@ -2,7 +2,6 @@ package com.vaadin.tests.themes.valo;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.Button;
 import com.vaadin.v7.ui.Grid;
 
 public class GridDisabled extends AbstractTestUI {
@@ -17,11 +16,6 @@ public class GridDisabled extends AbstractTestUI {
 
         addComponent(grid);
 
-        addButton("Disable", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                grid.setEnabled(!grid.isEnabled());
-            }
-        });
+        addButton("Disable", event -> grid.setEnabled(!grid.isEnabled()));
     }
 }

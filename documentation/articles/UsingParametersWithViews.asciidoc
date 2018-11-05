@@ -1,0 +1,117 @@
+---
+title: Using Parameters With Views
+order: 14
+layout: page
+---
+
+[[using-parameters-with-views]]
+= Using parameters with Views
+
+When the Navigator API is in use, one can pass "parameters" to Views in
+the URI fragment.
+
+The remainder of the fragment that is left after the (longest) view name
+matched is removed, is considered to be "fragment parameters". These are
+passed to the View in question, which can then handle the parameter(s).
+Basically: `#viewname/parameters`.
+
+Continuing from the basic navigation example, let's make a View that
+displays a message passed as a fragment parameter:
+
+[source,java]
+....
+import com.vaadin.navigator.View;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
+
+public class MessageView extends Panel implements View {
+    public static final String NAME = "message";
+
+    public MessageView() {
+        super(new VerticalLayout());
+        setCaption("Messages");
+    }
+
+    @Override
+    public void enter(ViewChangeEvent event) {
+       if(event.getParameters() != null){
+           // split at "/", add each part as a label
+           String[] msgs = event.getParameters().split("/");
+           for (String msg : msgs) {
+               ((Layout)getContent()).addComponent(new Label(msg));
+           }
+       }
+    }
+}
+....
+
+Let's register `MessageView` along with the other Views:
+
+[source,java]
+....
+import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.Navigator.SimpleViewDisplay;
+import com.vaadin.server.Page;
+import com.vaadin.server.WrappedRequest;
+import com.vaadin.ui.UI;
+
+public class NavigationtestUI extends UI {
+
+    @Override
+    public void init(VaadinRequest request) {
+        // Create Navigator, make it control the ViewDisplay
+        Navigator navigator = new Navigator(this, this);
+
+        // Add some Views
+        navigator.addView(MainView.NAME, new MainView()); // no fragment
+
+        // #count will be a new instance each time we navigate to it, counts:
+        navigator.addView(CountView.NAME, CountView.class);
+
+        // #message adds a label with whatever it receives as a parameter
+        navigator.addView(MessageView.NAME, new MessageView());
+    }
+}
+....
+
+Finally, we'll add two labels to the MainView so we don't have to type
+in the browsers address-bar to try it out:
+
+[source,java]
+....
+import com.vaadin.navigator.View;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.ui.Link;
+import com.vaadin.ui.Panel;
+
+public class MainView extends Panel implements View {
+
+    public static final String NAME = "";
+
+    public MainView() {
+
+        VerticalLayout layout = new VerticalLayout();
+
+        Link lnk = new Link("Count", new ExternalResource("#!" + CountView.NAME));
+        layout.addComponent(lnk);
+
+        lnk = new Link("Message: Hello", new ExternalResource("#!"
+                + MessageView.NAME + "/Hello"));
+        layout.addComponent(lnk);
+
+        lnk = new Link("Message: Bye", new ExternalResource("#!"
+                + MessageView.NAME + "/Bye/Goodbye"));
+        layout.addComponent(lnk);
+        setContent(layout);
+    }
+
+    @Override
+    public void enter(ViewChangeEvent event) {
+
+    }
+}
+....
+
+Simple! Let's just conclude by noting that it's usually a good idea to
+make sure the parameters are URI encoded, or the browser might
+disapprove.

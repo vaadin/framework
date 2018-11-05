@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,12 +18,11 @@ package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 import java.util.EventObject;
-import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -34,15 +33,12 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.AnimationUtil;
-import com.vaadin.client.AnimationUtil.AnimationEndListener;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.Position;
 import com.vaadin.shared.ui.ui.NotificationRole;
-import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIState.NotificationTypeConfiguration;
 
 public class VNotification extends VOverlay {
@@ -77,11 +73,11 @@ public class VNotification extends VOverlay {
     public static final int DELAY_NONE = 0;
 
     private static final String STYLENAME = "v-Notification";
-    private static final int mouseMoveThreshold = 7;
+    private static final int MOUSE_MOVE_THRESHOLD = 7;
     private static final int Z_INDEX_BASE = 20000;
     public static final String STYLE_SYSTEM = "system";
 
-    private static final ArrayList<VNotification> notifications = new ArrayList<>();
+    private static final List<VNotification> NOTIFICATIONS = new ArrayList<>();
 
     private boolean infiniteDelay = false;
     private int hideDelay = 0;
@@ -93,7 +89,7 @@ public class VNotification extends VOverlay {
 
     private String temporaryStyle;
 
-    private ArrayList<EventListener> listeners;
+    private List<EventListener> listeners;
     private static final int TOUCH_DEVICE_IDLE_DELAY = 1000;
 
     /**
@@ -198,8 +194,8 @@ public class VNotification extends VOverlay {
                 && !styleSetup.prefix.isEmpty();
     }
 
-    public void show(String html, Position position, String style) {
-        NotificationTypeConfiguration styleSetup = getUiState(style);
+    public void show(String html, Position position, String styleName) {
+        NotificationTypeConfiguration styleSetup = getUiState(styleName);
         String assistiveDeviceOnlyStyle = AriaHelper.ASSISTIVE_DEVICE_ONLY_STYLE;
 
         setWaiAriaRole(styleSetup);
@@ -218,7 +214,7 @@ public class VNotification extends VOverlay {
         }
 
         setWidget(new HTML(type + html + usage));
-        show(position, style);
+        show(position, styleName);
     }
 
     private NotificationTypeConfiguration getUiState(String style) {
@@ -247,7 +243,7 @@ public class VNotification extends VOverlay {
             removeStyleDependentName(temporaryStyle);
             temporaryStyle = null;
         }
-        if (style != null && style.length() > 0) {
+        if (style != null && !style.isEmpty()) {
             temporaryStyle = style;
             addStyleName(style);
             addStyleDependentName(style);
@@ -256,7 +252,7 @@ public class VNotification extends VOverlay {
         setPosition(position);
         super.show();
         updatePositionOffsets(position);
-        notifications.add(this);
+        NOTIFICATIONS.add(this);
         positionOrSizeUpdated();
         /**
          * Android 4 fails to render notifications correctly without a little
@@ -290,7 +286,7 @@ public class VNotification extends VOverlay {
             delay.cancel();
         }
         // Run only once
-        if (notifications.contains(this)) {
+        if (NOTIFICATIONS.contains(this)) {
             DOM.removeEventPreview(this);
 
             // Still animating in, wait for it to finish before touching
@@ -298,21 +294,16 @@ public class VNotification extends VOverlay {
             // in some browsers)
             if (getStyleName()
                     .contains(VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
-                AnimationUtil.addAnimationEndListener(getElement(),
-                        new AnimationEndListener() {
-                            @Override
-                            public void onAnimationEnd(NativeEvent event) {
-                                if (AnimationUtil.getAnimationName(event)
-                                        .contains(
-                                                VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
-                                    VNotification.this.hide();
-                                }
-                            }
-                        });
+                AnimationUtil.addAnimationEndListener(getElement(), event -> {
+                    if (AnimationUtil.getAnimationName(event).contains(
+                            VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                        VNotification.this.hide();
+                    }
+                });
             } else {
                 VNotification.super.hide();
                 fireEvent(new HideEvent(this));
-                notifications.remove(this);
+                NOTIFICATIONS.remove(this);
             }
         }
     }
@@ -426,11 +417,7 @@ public class VNotification extends VOverlay {
                 hide();
                 return false;
             }
-            if (temporaryStyle == STYLE_SYSTEM) {
-                return true;
-            } else {
-                return false;
-            }
+            return temporaryStyle == STYLE_SYSTEM;
         }
         // default
         switch (type) {
@@ -439,9 +426,9 @@ public class VNotification extends VOverlay {
                 x = DOM.eventGetClientX(event);
                 y = DOM.eventGetClientY(event);
             } else if (Math
-                    .abs(DOM.eventGetClientX(event) - x) > mouseMoveThreshold
+                    .abs(DOM.eventGetClientX(event) - x) > MOUSE_MOVE_THRESHOLD
                     || Math.abs(DOM.eventGetClientY(event)
-                            - y) > mouseMoveThreshold) {
+                            - y) > MOUSE_MOVE_THRESHOLD) {
                 hideAfterDelay();
             }
             break;
@@ -470,70 +457,72 @@ public class VNotification extends VOverlay {
     }
 
     public void removeEventListener(EventListener listener) {
-        if (listeners == null) {
-            return;
+        if (listeners != null) {
+            listeners.remove(listener);
         }
-        listeners.remove(listener);
     }
 
     private void fireEvent(HideEvent event) {
         if (listeners != null) {
-            for (Iterator<EventListener> it = listeners.iterator(); it
-                    .hasNext();) {
-                EventListener l = it.next();
+            for (EventListener l : listeners) {
                 l.notificationHidden(event);
             }
         }
     }
 
-    public static void showNotification(ApplicationConnection client,
-            final UIDL notification) {
-        boolean onlyPlainText = notification.hasAttribute(
-                UIConstants.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED);
+    /**
+     * Creates and shows a {@code Notification} with the specified parameters.
+     *
+     * @param client
+     *            The client connection, cannot be {@code null}.
+     * @param caption
+     *            The Notification caption, can be {@code null}.
+     * @param description
+     *            The Notification description, can be {@code null}.
+     * @param htmlContentAllowed
+     *            Whether {@code caption} and {@code description} are
+     *            interpreted as HTML or not.
+     * @param iconUri
+     *            The icon URI, can be {@code null}.
+     * @param styleName
+     *            The Notification style name, can be {@code null}.
+     * @param position
+     *            The desired {@link Position}, can not be {@code null}.
+     * @param delayMsec
+     *            The delay in milliseconds before disappearing, -1 for forever.
+     *
+     * @since 8.2
+     */
+    public static VNotification showNotification(ApplicationConnection client,
+            String caption, String description, boolean htmlContentAllowed,
+            String iconUri, String styleName, Position position,
+            int delayMsec) {
         String html = "";
-        if (notification
-                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON)) {
-            String iconUri = notification.getStringAttribute(
-                    UIConstants.ATTRIBUTE_NOTIFICATION_ICON);
+        if (iconUri != null) {
             html += client.getIcon(iconUri).getElement().getString();
         }
-        if (notification
-                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_CAPTION)) {
-            String caption = notification.getStringAttribute(
-                    UIConstants.ATTRIBUTE_NOTIFICATION_CAPTION);
-            if (onlyPlainText) {
+        if (caption != null) {
+            if (!htmlContentAllowed) {
                 caption = WidgetUtil.escapeHTML(caption);
                 caption = caption.replaceAll("\\n", "<br />");
             }
             html += "<h1 class='" + getDependentStyle(client, CAPTION) + "'>"
                     + caption + "</h1>";
         }
-        if (notification
-                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_MESSAGE)) {
-            String message = notification.getStringAttribute(
-                    UIConstants.ATTRIBUTE_NOTIFICATION_MESSAGE);
-            if (onlyPlainText) {
-                message = WidgetUtil.escapeHTML(message);
-                message = message.replaceAll("\\n", "<br />");
+        if (description != null) {
+            if (!htmlContentAllowed) {
+                description = WidgetUtil.escapeHTML(description);
+                description = description.replaceAll("\\n", "<br />");
             }
             html += "<p class='" + getDependentStyle(client, DESCRIPTION) + "'>"
-                    + message + "</p>";
+                    + description + "</p>";
         }
 
-        final String style = notification
-                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_STYLE)
-                        ? notification.getStringAttribute(
-                                UIConstants.ATTRIBUTE_NOTIFICATION_STYLE)
-                        : null;
+        VNotification vNotification = createNotification(delayMsec,
+                client.getUIConnector().getWidget());
 
-        final int pos = notification
-                .getIntAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_POSITION);
-        Position position = Position.values()[pos];
-
-        final int delay = notification
-                .getIntAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_DELAY);
-        createNotification(delay, client.getUIConnector().getWidget())
-                .show(html, position, style);
+        vNotification.show(html, position, styleName);
+        return vNotification;
     }
 
     /**
@@ -597,7 +586,7 @@ public class VNotification extends VOverlay {
      * TODO Should this be a generic Overlay feature instead?
      */
     public static void bringNotificationsToFront() {
-        for (VNotification notification : notifications) {
+        for (VNotification notification : NOTIFICATIONS) {
             DOM.removeEventPreview(notification);
             DOM.addEventPreview(notification);
         }
@@ -642,7 +631,7 @@ public class VNotification extends VOverlay {
             html.append("</p>");
         }
 
-        if (html.length() > 0) {
+        if (html.length() != 0) {
 
             // Add error description
             if (details != null) {

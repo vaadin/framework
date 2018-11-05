@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,7 @@ package com.vaadin.client.connectors.data;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.vaadin.client.ServerConnector;
@@ -25,6 +26,7 @@ import com.vaadin.client.data.AbstractRemoteDataSource;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.data.provider.DataCommunicator;
+import com.vaadin.shared.Range;
 import com.vaadin.shared.data.DataCommunicatorClientRpc;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.DataRequestRpc;
@@ -62,7 +64,7 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
 
                         @Override
                         public void setData(int firstIndex, JsonArray data) {
-                            ArrayList<JsonObject> rows = new ArrayList<>(
+                            List<JsonObject> rows = new ArrayList<>(
                                     data.length());
                             for (int i = 0; i < data.length(); i++) {
                                 JsonObject rowObject = data.getObject(i);
@@ -78,6 +80,16 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
                                 updateRowData(data.getObject(i));
                             }
                         }
+
+                        @Override
+                        public void insertRows(int firstRowIndex, int count) {
+                            insertRowData(firstRowIndex, count);
+                        }
+
+                        @Override
+                        public void removeRows(int firstRowIndex, int count) {
+                            removeRowData(firstRowIndex, count);
+                        }
                     });
         }
 
@@ -85,21 +97,20 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
         protected void requestRows(int firstRowIndex, int numberOfRows,
                 RequestRowsCallback<JsonObject> callback) {
             getRpcProxy(DataRequestRpc.class).requestRows(firstRowIndex,
-                    numberOfRows, 0, 0);
-
-            JsonArray dropped = Json.createArray();
-            int i = 0;
-            for (String key : droppedKeys) {
-                dropped.set(i++, key);
-            }
-            droppedKeys.clear();
-
-            getRpcProxy(DataRequestRpc.class).dropRows(dropped);
+                    numberOfRows, getCachedRange().getStart(),
+                    getCachedRange().length());
+            sendDroppedRows();
         }
 
         @Override
         public String getRowKey(JsonObject row) {
             return row.getString(DataCommunicatorConstants.KEY);
+        }
+
+        @Override
+        protected void dropFromCache(Range range) {
+            super.dropFromCache(range);
+            sendDroppedRows();
         }
 
         @Override
@@ -112,13 +123,32 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
         /**
          * Updates row data based on row key.
          *
-         * @param row
+         * @param rowData
          *            new row object
          */
-        protected void updateRowData(JsonObject row) {
-            int index = indexOfKey(getRowKey(row));
+        protected void updateRowData(JsonObject rowData) {
+            int index = indexOfKey(getRowKey(rowData));
             if (index >= 0) {
-                setRowData(index, Collections.singletonList(row));
+                JsonObject oldRowData = getRow(index);
+                onRowDataUpdate(rowData, oldRowData);
+
+                setRowData(index, Collections.singletonList(rowData));
+            }
+        }
+
+        /**
+         * Inform the server of any dropped rows.
+         */
+        private void sendDroppedRows() {
+            if (!droppedKeys.isEmpty()) {
+                JsonArray dropped = Json.createArray();
+                int i = 0;
+                for (String key : droppedKeys) {
+                    dropped.set(i++, key);
+                }
+                droppedKeys.clear();
+
+                getRpcProxy(DataRequestRpc.class).dropRows(dropped);
             }
         }
     }
@@ -133,6 +163,25 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
         } else {
             assert false : "Parent not implementing HasDataSource";
         }
+    }
+
+    /**
+     * Called row updates from server side.
+     * <p>
+     * This method exists for making it possible to copy data from the old
+     * object to the new one, if e.g. some data is not available in the server
+     * side when doing updates and would be missed otherwise.
+     *
+     * @param newRowData
+     *            the new row data
+     * @param oldRowData
+     *            the previous row data
+     *
+     * @since 8.1
+     */
+    protected void onRowDataUpdate(JsonObject newRowData,
+            JsonObject oldRowData) {
+        // NOOP, see overrides for concrete use cases
     }
 
     @Override

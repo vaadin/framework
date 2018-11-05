@@ -1,0 +1,177 @@
+---
+title: Creating A UI Extension
+order: 73
+layout: page
+---
+
+[[creating-a-ui-extension]]
+= Creating a UI extension
+
+An *Extension* is an entity that is not a full-fledged UI component, but
+is instead used to enhance or extend the functionality of an existing
+component (or connector, more generally.) Unlike components, extensions
+cannot be detached and reattached once they are attached to their
+target.
+
+Extensions usually consist of a pair of `Connector`{empty}s like components do.
+Hence, they can use the regular shared state and RPC mechanisms to
+communicate between the client and the server. Extensions may or may not
+have a UI. They can create and display widgets on the client side, but
+are not part of the regular layout hierarchy.
+
+We will rewrite the
+https://vaadin.com/directory/component/refresher[Refresher] add-on as an
+extension. The Refresher causes the client to "ping" the server at
+regular intervals, allowing the server to keep the client up-to-date if
+the application state is changed eg. by a background thread (because of
+the way Vaadin works, the server cannot itself initiate communication.)
+
+We start by writing the barebones server-side class for our extension:
+
+[source,java]
+....
+public class Refresher extends AbstractExtension {
+  public Refresher(UI ui) {
+    extend(target);
+  }
+}
+....
+
+Two things to note:
+
+* If we were writing a component, we would probably want to inherit from
+`AbstractComponent`. Here, we inherit from `AbstractExtension` instead.
+* The connector that should be extended is passed to the constructor,
+which then uses the protected `extend(Connector)` method to attach
+itself to the target connector. In this case it does not make much sense
+attached to individual components, so the constructor only accepts `UI`.
+
+Next, the Refresher needs an RPC interface to ping the server and a
+shared state to keep track of the interval. These are rather trivial:
+
+[source,java]
+....
+public interface RefresherRpc extends ServerRpc {
+  public void refresh();
+}
+....
+
+[source,java]
+....
+public class RefresherState extends SharedState {
+  public int interval;
+}
+....
+
+The client-side connector is just like a component connector except that
+we inherit from `AbstractExtensionConnector`, not
+`AbstractComponentConnector`. We do not write a client-side widget at
+all, because the Refresher does not have a UI.
+
+We create a `Timer` instance that calls the `refresh` RPC method when
+run. In `onStateChange()`, we know that either the interval, enabled
+state, or both have changed, so we always cancel a possible
+currently-running timer and schedule a new one if we're enabled. We also
+remember to cancel the timer when the extension is detached.
+
+[source,java]
+....
+@Connect(Refresher.class)
+public class RefresherConnector extends AbstractExtensionConnector {
+
+  private Timer timer = new Timer() {
+    @Override
+    public void run() {
+     getRpcProxy(RefresherRpc.class).refresh();
+    }
+  };
+
+  @Override
+  public void onStateChanged(StateChangeEvent event) {
+    super.onStateChanged(event);
+    timer.cancel();
+    if (isEnabled()) {
+      timer.scheduleRepeating(getState().interval);
+    }
+  }
+
+  @Override
+  public void onUnregister() {
+    timer.cancel();
+  }
+
+  @Override
+  protected void extend(ServerConnector target) {
+    // Nothing for refresher to do here as it does not need to access the
+    // connector it extends
+  }
+
+  @Override
+  public RefresherState getState() {
+    return (RefresherState) super.getState();
+  }
+}
+....
+
+Finally, we add an event listener interface and some accessor methods to
+`Refresher`. There is nothing extension-specific in the following code:
+
+[source,java]
+....
+public interface RefreshListener {
+  static Method METHOD = ReflectTools.findMethod(RefreshListener.class,
+      "refresh", RefreshEvent.class);
+
+  public void refresh(RefreshEvent refreshEvent);
+}
+
+public class RefreshEvent extends EventObject {
+  public RefreshEvent(Refresher refresher) {
+    super(refresher);
+  }
+
+  public Refresher getRefresher() {
+    return (Refresher) getSource();
+  }
+}
+
+public Refresher(UI ui) {
+  registerRpc(new RefresherRpc() {
+    @Override
+    public void refresh() {
+      fireEvent(new RefreshEvent(Refresher.this));
+    }
+  });
+  extend(ui);
+}
+
+@Override
+public RefresherState getState() {
+  return (RefresherState) super.getState();
+}
+
+public void setInterval(int millis) {
+  getState().interval = millis;
+}
+
+public int getInterval() {
+  return getState().interval;
+}
+
+public void setEnabled(boolean enabled) {
+  getState().enabled = enabled;
+}
+
+public boolean isEnabled() {
+  return getState().enabled;
+}
+
+public void addRefreshListener(RefreshListener listener) {
+  super.addListener(RefreshEvent.class, listener, RefreshListener.METHOD);
+}
+
+public void removeRefreshListener(RefreshListener listener) {
+  super.removeListener(RefreshEvent.class, listener,
+        RefreshListener.METHOD);
+}
+....

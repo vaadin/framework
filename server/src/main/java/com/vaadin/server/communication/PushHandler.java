@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,6 +41,7 @@ import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 
@@ -48,7 +49,7 @@ import elemental.json.JsonException;
 
 /**
  * Handles incoming push connections and messages and dispatches them to the
- * correct {@link UI}/ {@link AtmospherePushConnection}
+ * correct {@link UI}/ {@link AtmospherePushConnection}.
  *
  * @author Vaadin Ltd
  * @since 7.1
@@ -56,6 +57,8 @@ import elemental.json.JsonException;
 public class PushHandler {
 
     private int longPollingSuspendTimeout = -1;
+
+    private final ServerRpcHandler rpcHandler = createRpcHandler();
 
     /**
      * Callback interface used internally to process an event with the
@@ -90,10 +93,10 @@ public class PushHandler {
         }
 
         String requestToken = resource.getRequest()
-                .getParameter(ApplicationConstants.CSRF_TOKEN_PARAMETER);
-        if (!VaadinService.isCsrfTokenValid(session, requestToken)) {
+                .getParameter(ApplicationConstants.PUSH_ID_PARAMETER);
+        if (!isPushIdValid(session, requestToken)) {
             getLogger().log(Level.WARNING,
-                    "Invalid CSRF token in new connection received from {0}",
+                    "Invalid identifier in new connection received from {0}",
                     resource.getRequest().getRemoteHost());
             // Refresh on client side, create connection just for
             // sending a message
@@ -142,7 +145,7 @@ public class PushHandler {
         assert vaadinRequest != null;
 
         try {
-            new ServerRpcHandler().handleRpc(ui, reader, vaadinRequest);
+            rpcHandler.handleRpc(ui, reader, vaadinRequest);
             connection.push(false);
         } catch (JsonException e) {
             getLogger().log(Level.SEVERE, "Error writing JSON to response", e);
@@ -164,7 +167,17 @@ public class PushHandler {
     }
 
     /**
-     * Suspends the given resource
+     * Creates the ServerRpcHandler to use.
+     *
+     * @return the ServerRpcHandler to use
+     * @since 8.5
+     */
+    protected ServerRpcHandler createRpcHandler() {
+        return new ServerRpcHandler();
+    }
+
+    /**
+     * Suspends the given resource.
      *
      * @since 7.6
      * @param resource
@@ -308,8 +321,20 @@ public class PushHandler {
         // We don't want to use callWithUi here, as it assumes there's a client
         // request active and does requestStart and requestEnd among other
         // things.
+        if (event == null) {
+            getLogger().log(Level.SEVERE,
+                    "Could not get event. This should never happen.");
+            return;
+        }
 
         AtmosphereResource resource = event.getResource();
+
+        if (resource == null) {
+            getLogger().log(Level.SEVERE,
+                    "Could not get resource. This should never happen.");
+            return;
+        }
+
         VaadinServletRequest vaadinRequest = new VaadinServletRequest(
                 resource.getRequest(), service);
         VaadinSession session = null;
@@ -341,11 +366,10 @@ public class PushHandler {
                 /*
                  * UI not found, could be because FF has asynchronously closed
                  * the websocket connection and Atmosphere has already done
-                 * cleanup of the request attributes.
-                 *
-                 * In that case, we still have a chance of finding the right UI
-                 * by iterating through the UIs in the session looking for one
-                 * using the same AtmosphereResource.
+                 * cleanup of the request attributes. In that case, we still
+                 * have a chance of finding the right UI by iterating through
+                 * the UIs in the session looking for one using the same
+                 * AtmosphereResource.
                  */
                 ui = findUiUsingResource(resource, session.getUIs());
 
@@ -455,6 +479,8 @@ public class PushHandler {
                         "sendNotificationAndDisconnect called for resource no longer in scope");
                 return;
             }
+            resource.getResponse()
+                    .setContentType(JsonConstants.JSON_CONTENT_TYPE);
             resource.getResponse().getWriter().write(notificationJson);
             resource.resume();
         } catch (Exception e) {
@@ -465,6 +491,25 @@ public class PushHandler {
 
     private static final Logger getLogger() {
         return Logger.getLogger(PushHandler.class.getName());
+    }
+
+    /**
+     * Checks whether a given push id matches the session's push id.
+     *
+     * @param session
+     *            the vaadin session for which the check should be done
+     * @param requestPushId
+     *            the push id provided in the request
+     * @return {@code true} if the id is valid, {@code false} otherwise
+     */
+    private static boolean isPushIdValid(VaadinSession session,
+            String requestPushId) {
+
+        String sessionPushId = session.getPushId();
+        if (requestPushId == null || !requestPushId.equals(sessionPushId)) {
+            return false;
+        }
+        return true;
     }
 
     /**

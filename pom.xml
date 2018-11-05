@@ -10,7 +10,7 @@
     <artifactId>vaadin-root</artifactId>
     <name>vaadin-root</name>
     <packaging>pom</packaging>
-    <version>8.0-SNAPSHOT</version>
+    <version>8.7-SNAPSHOT</version>
 
     <prerequisites>
         <maven>3.1.0</maven>
@@ -24,30 +24,31 @@
 
         <!-- Used version numbers for dependencies -->
         <liferay.portal-service.version>6.2.5</liferay.portal-service.version>
+        <liferay.portal-kernel.version>2.0.0</liferay.portal-kernel.version>
 
-        <vaadin.gwt.version>2.8.0</vaadin.gwt.version>
-        <vaadin.plugin.version>8.0-SNAPSHOT</vaadin.plugin.version>
+        <vaadin.gwt.version>2.8.2</vaadin.gwt.version>
+        <vaadin.plugin.version>8.7-SNAPSHOT</vaadin.plugin.version>
 
         <!-- Used in OSGi manifests -->
         <javax.validation.version>1.0.0.GA</javax.validation.version>
-        <jsoup.version>1.8.3</jsoup.version>
+        <jsoup.version>1.11.2</jsoup.version>
         <javax.portlet.version>2.0</javax.portlet.version>
         <vaadin.sass.version>0.9.13</vaadin.sass.version>
         <!-- Note that this should be kept in sync with the class Constants -->
-        <atmosphere.runtime.version>2.4.5.vaadin1</atmosphere.runtime.version>
+        <atmosphere.runtime.version>2.4.30.vaadin1</atmosphere.runtime.version>
 
         <!-- OSGi -->
-        <osgi.javax.servlet.version>3.0.0</osgi.javax.servlet.version>
         <osgi.execution.environment>JavaSE-1.8</osgi.execution.environment>
         <osgi.bundle.version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</osgi.bundle.version>
+        <osgi.version>6.0.0</osgi.version>
+        <osgi.annotation.version>6.0.1</osgi.annotation.version>
+
+        <bnd.version>3.3.0</bnd.version>
 
         <!-- Dependency unpack directory -->
         <dependency.unpack.directory>${project.build.directory}/dependency-unpack</dependency.unpack.directory>
-
-        <!-- Cannot use 9.3 or 9.4 because they sometimes reset the connection too early in case of errors -->
-        <!-- See e.g. https://issues.apache.org/jira/browse/SOLR-8453 -->
-        <jetty.version>9.2.9.v20150224</jetty.version>
-        <phantomjs.version>2.1.1</phantomjs.version>
+        
+        <jetty.version>9.2.26.v20180806</jetty.version>
 
         <!-- Sonar properties -->
         <sonar.java.source>8</sonar.java.source>
@@ -56,15 +57,10 @@
         <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
 
         <vaadin.icons.version>3.0.1</vaadin.icons.version>
-        <vaadin.testbench.version>5.0.0.beta5</vaadin.testbench.version>
+        <vaadin.testbench.version>5.2.0</vaadin.testbench.version>
     </properties>
 
-    <!-- TODO: remove this after maven plugin has been released -->
     <pluginRepositories>
-        <pluginRepository>
-            <id>vaadin-prereleases</id>
-            <url>http://maven.vaadin.com/vaadin-prereleases</url>
-        </pluginRepository>
         <pluginRepository>
             <id>vaadin-snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
@@ -76,6 +72,19 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+
+    <repositories>
+        <repository>
+            <id>vaadin-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <organization>
         <name>Vaadin Ltd</name>
@@ -270,11 +279,6 @@
                 <version>${jetty.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.jcraft</groupId>
-                <artifactId>jsch</artifactId>
-                <version>0.1.52</version>
-            </dependency>
-            <dependency>
                 <groupId>org.eclipse.jgit</groupId>
                 <artifactId>org.eclipse.jgit</artifactId>
                 <version>3.5.1.201410131835-r</version>
@@ -288,6 +292,25 @@
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-icons</artifactId>
                 <version>${vaadin.icons.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>osgi.core</artifactId>
+                <version>${osgi.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>osgi.annotation</artifactId>
+                <version>${osgi.annotation.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>osgi.cmpn</artifactId>
+                <version>${osgi.version}</version>
                 <scope>provided</scope>
             </dependency>
         </dependencies>
@@ -321,7 +344,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <pluginManagement>
             <plugins>
@@ -367,23 +389,25 @@
                     <version>2.19.1</version>
                 </plugin>
                 <plugin>
-                    <groupId>com.github.klieber</groupId>
-                    <artifactId>phantomjs-maven-plugin</artifactId>
-                    <version>0.7</version>
-                </plugin>
-                <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>1.8</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <groupId>biz.aQute.bnd</groupId>
+                    <artifactId>bnd-maven-plugin</artifactId>
+                    <version>${bnd.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>bnd-process</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>2.10</version>
+                    <version>3.0.1</version>
                     <configuration>
                         <outputDirectory>${dependency.unpack.directory}</outputDirectory>
                         <overWriteReleases>false</overWriteReleases>
@@ -393,7 +417,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.4.0</version>
+                    <version>1.6.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -407,12 +431,44 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.0.1</version>
                 </plugin>
                 <plugin>
                     <groupId>com.vaadin</groupId>
                     <artifactId>vaadin-maven-plugin</artifactId>
                     <version>${vaadin.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>net.revelc.code.formatter</groupId>
+                    <artifactId>formatter-maven-plugin</artifactId>
+                    <version>2.7.2</version>
+                    <configuration>
+                        <configFile>${project.basedir}/../eclipse/VaadinJavaConventions.xml</configFile>
+                        <skipJsFormatting>true</skipJsFormatting>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>format-source</id>
+                            <goals>
+                                <goal>format</goal>
+                            </goals>
+                            <phase>process-sources</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.dantwining.whitespace-maven-plugin</groupId>
+                    <artifactId>whitespace-maven-plugin</artifactId>
+                    <version>1.0.4</version>
+                    <executions>
+                        <execution>
+                            <id>trim-trailing-spaces-source</id>
+                            <goals>
+                                <goal>trim</goal>
+                            </goals>
+                            <phase>process-sources</phase>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -428,9 +484,10 @@
                         </dependency>
                     </dependencies>
                     <configuration>
+                        <propertyExpansion>config_loc=${basedir}/../checkstyle</propertyExpansion>
                         <configLocation>../checkstyle/vaadin-checkstyle.xml</configLocation>
                         <headerLocation>../checkstyle/header</headerLocation>
-                        <suppressionsLocation>../checkstyle/suppressions.xml</suppressionsLocation>
+<!--                        <suppressionsLocation>../checkstyle/suppressions.xml</suppressionsLocation> -->
                         <encoding>UTF-8</encoding>
                         <consoleOutput>false</consoleOutput>
                         <failsOnError>false</failsOnError>
@@ -471,16 +528,35 @@
                                 <pluginExecution>
                                     <pluginExecutionFilter>
                                         <groupId>
-                                            com.github.klieber
+                                            net.revelc.code.formatter
                                         </groupId>
                                         <artifactId>
-                                            phantomjs-maven-plugin
+                                            formatter-maven-plugin
                                         </artifactId>
                                         <versionRange>
-                                            [0.7,)
+                                            [2.7.2,)
                                         </versionRange>
                                         <goals>
-                                            <goal>install</goal>
+                                            <goal>format</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            com.github.dantwining.whitespace-maven-plugin
+                                        </groupId>
+                                        <artifactId>
+                                            whitespace-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.0.4,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>trim</goal>
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
@@ -491,27 +567,15 @@
                         </lifecycleMappingMetadata>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>3.3.0</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
         <plugins>
-            <plugin>
-                <groupId>com.marvinformatics.formatter</groupId>
-                <artifactId>formatter-maven-plugin</artifactId>
-                <version>1.8.1</version>
-                <configuration>
-                    <configFile>classpath:/eclipse/VaadinJavaConventions.xml</configFile>
-                    <!-- Provide a dummy JS config file to avoid errors -->
-                    <configJsFile>classpath:/eclipse/VaadinJavaConventions.xml</configJsFile>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>${project.groupId}</groupId>
-                        <artifactId>vaadin-buildhelpers</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-maven-plugin</artifactId>
@@ -577,7 +641,6 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>buildhelpers</module>
                 <module>shared</module>
                 <module>push</module>
                 <module>server</module>
@@ -587,8 +650,11 @@
                 <module>themes</module>
                 <module>uitest</module>
                 <module>liferay</module>
+                <module>liferay-integration</module>
+                <module>osgi-integration</module>
                 <module>all</module>
                 <module>compatibility-server</module>
+                <module>compatibility-server-gae</module>
                 <module>compatibility-client</module>
                 <module>compatibility-client-compiled</module>
                 <module>compatibility-shared</module>
@@ -622,7 +688,6 @@
                 <vaadin.plugin.version>${project.version}</vaadin.plugin.version>
             </properties>
             <modules>
-                <module>buildhelpers</module>
                 <module>shared</module>
                 <module>push</module>
                 <module>server</module>
@@ -631,10 +696,13 @@
                 <module>client-compiled</module>
                 <module>themes</module>
                 <module>compatibility-server</module>
+                <module>compatibility-server-gae</module>
                 <module>compatibility-client</module>
                 <module>compatibility-client-compiled</module>
                 <module>compatibility-shared</module>
                 <module>compatibility-themes</module>
+                <module>liferay-integration</module>
+                <module>osgi-integration</module>
                 <!-- Nexus staging bug needs the last module to be deployed. -->
                 <module>testbench-api</module>
                 <!-- BOM is built and released separately -->
@@ -686,7 +754,6 @@
                 <vaadin.plugin.version>${project.version}</vaadin.plugin.version>
             </properties>
             <modules>
-                <module>buildhelpers</module>
                 <module>shared</module>
                 <module>push</module>
                 <module>server</module>
@@ -695,10 +762,13 @@
                 <module>client-compiled</module>
                 <module>themes</module>
                 <module>compatibility-server</module>
+                <module>compatibility-server-gae</module>
                 <module>compatibility-client</module>
                 <module>compatibility-client-compiled</module>
                 <module>compatibility-shared</module>
                 <module>compatibility-themes</module>
+                <module>liferay-integration</module>
+                <module>osgi-integration</module>
                 <!-- Nexus staging bug needs the last module to be deployed. -->
                 <module>testbench-api</module>
                 <!-- BOM is built and released separately -->
@@ -750,7 +820,6 @@
                 <vaadin.plugin.version>${project.version}</vaadin.plugin.version>
             </properties>
             <modules>
-                <module>buildhelpers</module>
                 <module>shared</module>
                 <module>push</module>
                 <module>server</module>
@@ -759,10 +828,13 @@
                 <module>client-compiled</module>
                 <module>themes</module>
                 <module>compatibility-server</module>
+                <module>compatibility-server-gae</module>
                 <module>compatibility-client</module>
                 <module>compatibility-client-compiled</module>
                 <module>compatibility-shared</module>
                 <module>compatibility-themes</module>
+                <module>liferay-integration</module>
+                <module>osgi-integration</module>
                 <module>testbench-api</module>
                 <module>bom</module>
             </modules>
@@ -817,11 +889,20 @@
                 <module>push</module>
                 <module>client</module>
                 <module>compatibility-server</module>
+                <module>compatibility-server-gae</module>
                 <module>compatibility-client</module>
                 <module>client-compiler</module>
                 <module>shared</module>
                 <module>compatibility-shared</module>
+                <module>liferay-integration</module>
+                <module>osgi-integration</module>
             </modules>
+            <repositories>
+                <repository>
+                    <id>vaadin-prereleases</id>
+                    <url>http://maven.vaadin.com/vaadin-prereleases</url>
+                </repository>
+            </repositories>
             <build>
                 <plugins>
                     <plugin>

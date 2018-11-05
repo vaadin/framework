@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -87,7 +87,7 @@ public class EventCellReference<T> extends CellReference<T> {
      * Is the cell reference for a cell in the header of the Grid.
      *
      * @since 7.5
-     * @return <code>true</true> if referenced cell is in the header, 
+     * @return <code>true</code> if referenced cell is in the header,
      *         <code>false</code> if not
      */
     public boolean isHeader() {
@@ -98,7 +98,7 @@ public class EventCellReference<T> extends CellReference<T> {
      * Is the cell reference for a cell in the body of the Grid.
      *
      * @since 7.5
-     * @return <code>true</true> if referenced cell is in the body, 
+     * @return <code>true</code> if referenced cell is in the body,
      *         <code>false</code> if not
      */
     public boolean isBody() {
@@ -109,7 +109,7 @@ public class EventCellReference<T> extends CellReference<T> {
      * Is the cell reference for a cell in the footer of the Grid.
      *
      * @since 7.5
-     * @return <code>true</true> if referenced cell is in the footer, 
+     * @return <code>true</code> if referenced cell is in the footer,
      *         <code>false</code> if not
      */
     public boolean isFooter() {

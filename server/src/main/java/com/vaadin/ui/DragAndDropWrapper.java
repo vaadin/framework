@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -43,11 +43,25 @@ import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperConstants;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperServerRpc;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperState;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.dnd.DragSourceExtension;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
+/**
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with {@link DragSourceExtension} and
+ *             {@link DropTargetExtension}.
+ */
 @SuppressWarnings("serial")
+@Deprecated
 public class DragAndDropWrapper extends CustomComponent
         implements DropTarget, DragSource, LegacyComponent {
 
+    /**
+     * @deprecated Since 8.1, will be replaced by FileDropTargetExtension and
+     *             FileDropEvent,
+     *             https://github.com/vaadin/framework/issues/8891
+     */
+    @Deprecated
     public class WrapperTransferable extends TransferableImpl {
 
         private Html5File[] files;
@@ -161,7 +175,7 @@ public class DragAndDropWrapper extends CustomComponent
 
     public enum DragStartMode {
         /**
-         * {@link DragAndDropWrapper} does not start drag events at all
+         * {@link DragAndDropWrapper} does not start drag events at all.
          */
         NONE,
         /**
@@ -258,7 +272,7 @@ public class DragAndDropWrapper extends CustomComponent
         if (getDropHandler() != null) {
             getDropHandler().getAcceptCriterion().paint(target);
         }
-        if (receivers != null && receivers.size() > 0) {
+        if (receivers != null && !receivers.isEmpty()) {
             for (Iterator<Entry<String, ProxyReceiver>> it = receivers
                     .entrySet().iterator(); it.hasNext();) {
                 Entry<String, ProxyReceiver> entry = it.next();
@@ -445,10 +459,6 @@ public class DragAndDropWrapper extends CustomComponent
             @Override
             public long getContentLength() {
                 return file.getFileSize();
-            }
-
-            public StreamVariable getReceiver() {
-                return ProxyReceiver.this;
             }
 
             @Override

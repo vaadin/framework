@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,16 +16,13 @@
 
 package com.vaadin.v7.ui;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Logger;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -41,6 +38,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.v7.data.Buffered;
+import com.vaadin.v7.data.BufferedValidatable;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.Validatable;
 import com.vaadin.v7.data.Validator;
@@ -54,21 +52,20 @@ import com.vaadin.v7.shared.AbstractFieldState;
  * <p>
  * Abstract field component for implementing buffered property editors. The
  * field may hold an internal value, or it may be connected to any data source
- * that implements the {@link com.vaadin.v7.data.Property}interface.
- * <code>LegacyAbstractField</code> implements that interface itself, too, so
- * accessing the Property value represented by it is straightforward.
+ * that implements the {@link Property} interface. <code>AbstractField</code>
+ * implements that interface itself, too, so accessing the Property value
+ * represented by it is straightforward.
  * </p>
  *
  * <p>
- * LegacyAbstractField also provides the {@link com.vaadin.v7.data.Buffered}
- * interface for buffering the data source value. By default the LegacyField is
- * in write through-mode and {@link #setWriteThrough(boolean)}should be called
- * to enable buffering.
+ * AbstractField also provides the {@link Buffered} interface for buffering the
+ * data source value. By default the Field is in write through-mode and
+ * {@link #setWriteThrough(boolean)}should be called to enable buffering.
  * </p>
  *
  * <p>
- * The class also supports {@link com.vaadin.v7.data.Validator validators} to
- * make sure the value contained in the field is valid.
+ * The class also supports {@link Validator validators} to make sure the value
+ * contained in the field is valid.
  * </p>
  *
  * @author Vaadin Ltd.
@@ -192,13 +189,13 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     }
 
     /**
-     * Returns the type of the LegacyField. The methods <code>getValue</code>
-     * and <code>setValue</code> must be compatible with this type: one must be
-     * able to safely cast the value returned from <code>getValue</code> to the
-     * given type and pass any variable assignable to this type as an argument
-     * to <code>setValue</code>.
+     * Returns the type of the Field. The methods <code>getValue</code> and
+     * <code>setValue</code> must be compatible with this type: one must be able
+     * to safely cast the value returned from <code>getValue</code> to the given
+     * type and pass any variable assignable to this type as an argument to
+     * <code>setValue</code>.
      *
-     * @return the type of the LegacyField
+     * @return the type of the Field
      */
     @Override
     public abstract Class<? extends T> getType();
@@ -227,7 +224,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     /**
      * Tests if the invalid data is committed to datasource.
      *
-     * @see com.vaadin.v7.data.BufferedValidatable#isInvalidCommitted()
+     * @see BufferedValidatable#isInvalidCommitted()
      */
     @Override
     public boolean isInvalidCommitted() {
@@ -237,7 +234,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     /**
      * Sets if the invalid data should be committed to datasource.
      *
-     * @see com.vaadin.v7.data.BufferedValidatable#setInvalidCommitted(boolean)
+     * @see BufferedValidatable#setInvalidCommitted(boolean)
      */
     @Override
     public void setInvalidCommitted(boolean isCommitted) {
@@ -347,7 +344,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     }
 
     /**
-     * Sets the buffered mode of this LegacyField.
+     * Sets the buffered mode of this Field.
      * <p>
      * When the field is in buffered mode, changes will not be committed to the
      * property data source until {@link #commit()} is called.
@@ -375,7 +372,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     }
 
     /**
-     * Checks the buffered mode of this LegacyField.
+     * Checks the buffered mode of this Field.
      *
      * @return true if buffered mode is on, false otherwise
      */
@@ -383,6 +380,8 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     public boolean isBuffered() {
         return buffered;
     }
+
+    // LegacyPropertyHelper has been removed in Vaadin 8
 
     /* Property interface implementation */
 
@@ -434,7 +433,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      * @param newFieldValue
      *            the New value of the field.
      * @param repaintIsNotNeeded
-     *            True iff caller is sure that repaint is not needed.
+     *            True if caller is sure that repaint is not needed.
      * @throws Property.ReadOnlyException
      * @throws Converter.ConversionException
      * @throws InvalidValueException
@@ -450,9 +449,9 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      * @param newFieldValue
      *            the New value of the field.
      * @param repaintIsNotNeeded
-     *            True iff caller is sure that repaint is not needed.
+     *            True if caller is sure that repaint is not needed.
      * @param ignoreReadOnly
-     *            True iff if the read-only check should be ignored
+     *            True if the read-only check should be ignored
      * @throws Property.ReadOnlyException
      * @throws Converter.ConversionException
      * @throws InvalidValueException
@@ -582,14 +581,12 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      * </p>
      *
      * <p>
-     * If the data source implements
-     * {@link com.vaadin.v7.data.Property.ValueChangeNotifier} and/or
-     * {@link com.vaadin.v7.data.Property.ReadOnlyStatusChangeNotifier}, the
-     * field registers itself as a listener and updates itself according to the
-     * events it receives. To avoid memory leaks caused by references to a field
-     * no longer in use, the listener registrations are removed on
-     * {@link AbstractField#detach() detach} and re-added on
-     * {@link AbstractField#attach() attach}.
+     * If the data source implements {@link Property.ValueChangeNotifier} and/or
+     * {@link Property.ReadOnlyStatusChangeNotifier}, the field registers itself
+     * as a listener and updates itself according to the events it receives. To
+     * avoid memory leaks caused by references to a field no longer in use, the
+     * listener registrations are removed on {@link AbstractField#detach()
+     * detach} and re-added on {@link AbstractField#attach() attach}.
      * </p>
      *
      * <p>
@@ -652,9 +649,8 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
             final Collection<Validator> validators = ((Validatable) dataSource)
                     .getValidators();
             if (validators != null) {
-                for (final Iterator<Validator> i = validators.iterator(); i
-                        .hasNext();) {
-                    addValidator(i.next());
+                for (final Validator v : validators) {
+                    addValidator(v);
                 }
             }
         }
@@ -840,7 +836,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     @Override
     public void addValidator(Validator validator) {
         if (validators == null) {
-            validators = new LinkedList<>();
+            validators = new LinkedList<Validator>();
         }
         validators.add(validator);
         markAsDirty();
@@ -914,7 +910,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     }
 
     /**
-     * Checks the validity of the LegacyField.
+     * Checks the validity of the Field.
      *
      * A field is invalid if it is set as required (using
      * {@link #setRequired(boolean)} and is empty, if one or several of the
@@ -925,7 +921,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      * is required and empty this method throws an EmptyValueException with the
      * error message set using {@link #setRequiredError(String)}.
      *
-     * @see com.vaadin.v7.data.Validatable#validate()
+     * @see Validatable#validate()
      */
     @Override
     public void validate() throws Validator.InvalidValueException {
@@ -963,7 +959,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
             }
         }
 
-        List<InvalidValueException> validationExceptions = new ArrayList<>();
+        List<InvalidValueException> validationExceptions = new ArrayList<InvalidValueException>();
         if (validators != null) {
             // Gets all the validation errors
             for (Validator v : validators) {
@@ -996,8 +992,8 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      * Fields allow invalid values by default. In most cases this is wanted,
      * because the field otherwise visually forget the user input immediately.
      *
-     * @return true iff the invalid values are allowed.
-     * @see com.vaadin.v7.data.Validatable#isInvalidAllowed()
+     * @return true if invalid values are allowed.
+     * @see Validatable#isInvalidAllowed()
      */
     @Override
     public boolean isInvalidAllowed() {
@@ -1015,7 +1011,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      * datasource is set.
      * </p>
      *
-     * @see com.vaadin.v7.data.Validatable#setInvalidAllowed(boolean)
+     * @see Validatable#setInvalidAllowed(boolean)
      */
     @Override
     public void setInvalidAllowed(boolean invalidAllowed)
@@ -1077,10 +1073,10 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
             VALUE_CHANGE_METHOD = Property.ValueChangeListener.class
                     .getDeclaredMethod("valueChange",
                             new Class[] { Property.ValueChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
-                    "Internal error finding methods in LegacyAbstractField");
+            throw new RuntimeException(
+                    "Internal error finding methods in AbstractField");
         }
     }
 
@@ -1098,8 +1094,8 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addValueChangeListener(com.vaadin.v7.data.Property.ValueChangeListener)}
-     **/
+     *             {@link #addValueChangeListener(Property.ValueChangeListener)}
+     */
     @Override
     @Deprecated
     public void addListener(Property.ValueChangeListener listener) {
@@ -1122,8 +1118,8 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removeValueChangeListener(com.vaadin.v7.data.Property.ValueChangeListener)}
-     **/
+     *             {@link #removeValueChangeListener(Property.ValueChangeListener)}
+     */
     @Override
     @Deprecated
     public void removeListener(Property.ValueChangeListener listener) {
@@ -1150,10 +1146,10 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
             READ_ONLY_STATUS_CHANGE_METHOD = Property.ReadOnlyStatusChangeListener.class
                     .getDeclaredMethod("readOnlyStatusChange", new Class[] {
                             Property.ReadOnlyStatusChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
-                    "Internal error finding methods in LegacyAbstractField");
+            throw new RuntimeException(
+                    "Internal error finding methods in AbstractField");
         }
     }
 
@@ -1186,7 +1182,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      */
     @Deprecated
     public static class ReadOnlyStatusChangeEvent extends Component.Event
-            implements Property.ReadOnlyStatusChangeEvent, Serializable {
+            implements Property.ReadOnlyStatusChangeEvent {
 
         /**
          * New instance of text change event.
@@ -1223,8 +1219,8 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addReadOnlyStatusChangeListener(com.vaadin.v7.data.Property.ReadOnlyStatusChangeListener)}
-     **/
+     *             {@link #addReadOnlyStatusChangeListener(Property.ReadOnlyStatusChangeListener)}
+     */
     @Override
     @Deprecated
     public void addListener(Property.ReadOnlyStatusChangeListener listener) {
@@ -1245,8 +1241,8 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removeReadOnlyStatusChangeListener(com.vaadin.v7.data.Property.ReadOnlyStatusChangeListener)}
-     **/
+     *             {@link #removeReadOnlyStatusChangeListener(Property.ReadOnlyStatusChangeListener)}
+     */
     @Override
     @Deprecated
     public void removeListener(Property.ReadOnlyStatusChangeListener listener) {
@@ -1349,10 +1345,10 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     }
 
     /**
-     * Sets the internal field value. This is purely used by LegacyAbstractField
-     * to change the internal LegacyField value. It does not trigger valuechange
-     * events. It can be overridden by the inheriting classes to update all
-     * dependent variables.
+     * Sets the internal field value. This is purely used by AbstractField to
+     * change the internal Field value. It does not trigger valuechange events.
+     * It can be overridden by the inheriting classes to update all dependent
+     * variables.
      *
      * Subclasses can also override {@link #getInternalValue()} if necessary.
      *
@@ -1767,16 +1763,11 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
-        AbstractField def = (AbstractField) designContext
-                .getDefaultInstance(this);
+        AbstractField<?> def = designContext.getDefaultInstance(this);
         Attributes attr = design.attributes();
         // handle readonly
         DesignAttributeHandler.writeAttribute("readonly", attr,
                 super.isReadOnly(), def.isReadOnly(), Boolean.class,
                 designContext);
-    }
-
-    private static final Logger getLogger() {
-        return Logger.getLogger(AbstractField.class.getName());
     }
 }

@@ -1,27 +1,9 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests.application.calculator;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -57,54 +39,44 @@ public class Calc extends AbstractReindeerTestUI {
             addCommentButton = new Button("Add Comment");
             addCommentButton.setWidth("100%");
 
-            addCommentButton.addClickListener(new ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
+            addCommentButton.addClickListener(event -> {
+                final Window w = new Window("Add comment");
+                VerticalLayout vl = new VerticalLayout();
+                vl.setMargin(true);
 
-                    final Window w = new Window("Add comment");
-                    VerticalLayout vl = new VerticalLayout();
-                    vl.setMargin(true);
+                final TextField tf = new TextField();
+                tf.setSizeFull();
+                vl.addComponent(tf);
 
-                    final TextField tf = new TextField();
-                    tf.setSizeFull();
-                    vl.addComponent(tf);
+                HorizontalLayout hl = new HorizontalLayout();
 
-                    HorizontalLayout hl = new HorizontalLayout();
+                Button okButton = new Button("OK");
+                okButton.setWidth("100%");
+                okButton.addClickListener(event2 -> {
+                    addRow("[ " + tf.getValue() + " ]");
+                    tf.setValue("");
+                    w.close();
+                    removeWindow(w);
+                });
 
-                    Button okButton = new Button("OK");
-                    okButton.setWidth("100%");
-                    okButton.addClickListener(new ClickListener() {
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                            addRow("[ " + tf.getValue() + " ]");
-                            tf.setValue("");
-                            w.close();
-                            removeWindow(w);
-                        }
-                    });
+                Button cancelButton = new Button("Cancel");
+                cancelButton.setWidth("100%");
+                cancelButton.addClickListener(event2 -> {
+                    tf.setValue("");
+                    w.close();
+                    removeWindow(w);
+                });
 
-                    Button cancelButton = new Button("Cancel");
-                    cancelButton.setWidth("100%");
-                    cancelButton.addClickListener(new ClickListener() {
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                            tf.setValue("");
-                            w.close();
-                            removeWindow(w);
-                        }
-                    });
+                hl.addComponent(cancelButton);
+                hl.addComponent(okButton);
+                hl.setSpacing(true);
+                hl.setWidth("100%");
 
-                    hl.addComponent(cancelButton);
-                    hl.addComponent(okButton);
-                    hl.setSpacing(true);
-                    hl.setWidth("100%");
+                vl.addComponent(hl);
+                vl.setSpacing(true);
 
-                    vl.addComponent(hl);
-                    vl.setSpacing(true);
-
-                    w.setContent(vl);
-                    addWindow(w);
-                }
+                w.setContent(vl);
+                addWindow(w);
             });
 
             addComponent(addCommentButton);
@@ -223,29 +195,26 @@ public class Calc extends AbstractReindeerTestUI {
 
         // The operations for the calculator in the order they appear on the
         // screen (left to right, top to bottom)
-        String[] operations = new String[] { "7", "8", "9", "/", "4", "5", "6",
-                "*", "1", "2", "3", "-", "0", "=", "C", "+" };
+        String[] operations = { "7", "8", "9", "/", "4", "5", "6", "*", "1",
+                "2", "3", "-", "0", "=", "C", "+" };
 
         for (String caption : operations) {
 
             // Create a button and use this application for event handling
             Button button = new Button(caption);
             button.setWidth("40px");
-            button.addClickListener(new ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    // Get the button that was clicked
-                    Button button = event.getButton();
+            button.addClickListener(event -> {
+                // Get the button that was clicked
+                Button b = event.getButton();
 
-                    // Get the requested operation from the button caption
-                    char requestedOperation = button.getCaption().charAt(0);
+                // Get the requested operation from the button caption
+                char requestedOperation = b.getCaption().charAt(0);
 
-                    // Calculate the new value
-                    double newValue = calculate(requestedOperation);
+                // Calculate the new value
+                double newValue = calculate(requestedOperation);
 
-                    // Update the result label with the new value
-                    display.setValue("" + newValue);
-                }
+                // Update the result label with the new value
+                display.setValue("" + newValue);
             });
             button.setId("button_" + caption);
 

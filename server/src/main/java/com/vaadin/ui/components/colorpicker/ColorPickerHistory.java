@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -109,14 +109,7 @@ public class ColorPickerHistory extends CustomField<Color> {
         ArrayBlockingQueue<Color> colorHistory = getColorHistory();
 
         // Check that the color does not already exist
-        boolean exists = false;
-        Iterator<Color> iter = colorHistory.iterator();
-        while (iter.hasNext()) {
-            if (color.equals(iter.next())) {
-                exists = true;
-                break;
-            }
-        }
+        boolean exists = colorHistory.contains(color);
 
         // If the color does not exist then add it
         if (!exists) {
@@ -136,7 +129,7 @@ public class ColorPickerHistory extends CustomField<Color> {
 
         // Create 2d color map
         Color[][] colors = new Color[ROWS][COLUMNS];
-        iter = colorList.iterator();
+        Iterator<Color> iter = colorList.iterator();
 
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLUMNS; col++) {

@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.components.grid.basicfeatures;
 
 import static org.junit.Assert.assertEquals;
@@ -22,8 +7,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -827,20 +812,17 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Row details", "Toggle details for...",
                 "Row 1");
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
-        Assert.assertNotNull("Details not found",
-                getGridElement().getDetails(1));
+        assertNotNull("Details not found", getGridElement().getDetails(1));
 
         toggleHideColumnAPI(0);
 
         assertColumnHeaderOrder(1, 2, 3, 4);
-        Assert.assertNotNull("Details not found",
-                getGridElement().getDetails(1));
+        assertNotNull("Details not found", getGridElement().getDetails(1));
 
         toggleHideColumnAPI(0);
 
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
-        Assert.assertNotNull("Details not found",
-                getGridElement().getDetails(1));
+        assertNotNull("Details not found", getGridElement().getDetails(1));
     }
 
     @Test
@@ -884,17 +866,13 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         toggleHideColumnAPI(1);
 
         getGridElement().scrollToRow(500);
-        Assert.assertEquals("(500, 0)",
-                getGridElement().getCell(500, 0).getText());
-        Assert.assertEquals("(500, 2)",
-                getGridElement().getCell(500, 1).getText());
+        assertEquals("(500, 0)", getGridElement().getCell(500, 0).getText());
+        assertEquals("(500, 2)", getGridElement().getCell(500, 1).getText());
 
         toggleHideColumnAPI(1);
 
-        Assert.assertEquals("(500, 0)",
-                getGridElement().getCell(500, 0).getText());
-        Assert.assertEquals("(500, 1)",
-                getGridElement().getCell(500, 1).getText());
+        assertEquals("(500, 0)", getGridElement().getCell(500, 0).getText());
+        assertEquals("(500, 1)", getGridElement().getCell(500, 1).getText());
     }
 
     @Test
@@ -902,26 +880,20 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         toggleHidableColumnAPI(0);
         toggleHidableColumnAPI(1);
 
-        Assert.assertEquals("(500, 0)",
-                getGridElement().getCell(500, 0).getText());
-        Assert.assertEquals("(500, 1)",
-                getGridElement().getCell(500, 1).getText());
+        assertEquals("(500, 0)", getGridElement().getCell(500, 0).getText());
+        assertEquals("(500, 1)", getGridElement().getCell(500, 1).getText());
 
         toggleHideColumnAPI(0);
         toggleHideColumnAPI(1);
 
-        Assert.assertEquals("(500, 2)",
-                getGridElement().getCell(500, 0).getText());
-        Assert.assertEquals("(500, 3)",
-                getGridElement().getCell(500, 1).getText());
+        assertEquals("(500, 2)", getGridElement().getCell(500, 0).getText());
+        assertEquals("(500, 3)", getGridElement().getCell(500, 1).getText());
 
         toggleHideColumnAPI(0);
         toggleHideColumnAPI(1);
 
-        Assert.assertEquals("(500, 0)",
-                getGridElement().getCell(500, 0).getText());
-        Assert.assertEquals("(500, 1)",
-                getGridElement().getCell(500, 1).getText());
+        assertEquals("(500, 0)", getGridElement().getCell(500, 0).getText());
+        assertEquals("(500, 1)", getGridElement().getCell(500, 1).getText());
     }
 
     private void loadSpannedCellsFixture() {
@@ -987,7 +959,8 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
     private void verifyHeaderCellContent(int row, int column, String content) {
         GridCellElement headerCell = getGridElement().getHeaderCell(row,
                 column);
-        assertEquals(content.toLowerCase(), headerCell.getText().toLowerCase());
+        assertEquals(content.toLowerCase(Locale.ROOT),
+                headerCell.getText().toLowerCase(Locale.ROOT));
         assertTrue(headerCell.isDisplayed());
     }
 

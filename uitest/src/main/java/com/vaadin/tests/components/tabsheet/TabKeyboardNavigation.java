@@ -1,17 +1,12 @@
 package com.vaadin.tests.components.tabsheet;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import com.vaadin.event.FieldEvents.BlurEvent;
-import com.vaadin.event.FieldEvents.BlurListener;
-import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
@@ -25,13 +20,12 @@ import com.vaadin.v7.ui.TextField;
  *
  * The solution was broken in ticket (#14304)
  *
- * @since
  * @author Vaadin Ltd
  */
 public class TabKeyboardNavigation extends AbstractReindeerTestUI {
 
     int index = 1;
-    ArrayList<Component> tabs = new ArrayList<>();
+    List<Component> tabs = new ArrayList<>();
     TabSheet ts = new TabSheet();
     Log focusblur = new Log(10);
 
@@ -40,36 +34,16 @@ public class TabKeyboardNavigation extends AbstractReindeerTestUI {
         ts.setWidth("500px");
         ts.setHeight("500px");
 
-        ts.addFocusListener(new FocusListener() {
-            @Override
-            public void focus(FocusEvent event) {
-                focusblur.log("Tabsheet focused!");
-            }
-        });
+        ts.addFocusListener(event -> focusblur.log("Tabsheet focused!"));
 
-        ts.addBlurListener(new BlurListener() {
-            @Override
-            public void blur(BlurEvent event) {
-                focusblur.log("Tabsheet blurred!");
-            }
-        });
+        ts.addBlurListener(event -> focusblur.log("Tabsheet blurred!"));
 
         for (int i = 0; i < 5; ++i) {
             addTab();
         }
 
-        Button addTab = new Button("Add a tab", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                addTab();
-            }
-        });
-        Button focus = new Button("Focus tabsheet", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                ts.focus();
-            }
-        });
+        Button addTab = new Button("Add a tab", event -> addTab());
+        Button focus = new Button("Focus tabsheet", event -> ts.focus());
 
         addComponent(addTab);
         addComponent(focus);
@@ -92,9 +66,9 @@ public class TabKeyboardNavigation extends AbstractReindeerTestUI {
         return 5100;
     }
 
-    public final static String LABEL_ID = "sheetLabel";
+    public static final String LABEL_ID = "sheetLabel";
 
-    public final static String labelID(int index) {
+    public static final String labelID(int index) {
         return LABEL_ID + index;
     }
 

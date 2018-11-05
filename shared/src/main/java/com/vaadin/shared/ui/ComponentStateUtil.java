@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,16 +29,16 @@ public final class ComponentStateUtil implements Serializable {
     }
 
     public static final boolean isUndefinedWidth(AbstractComponentState state) {
-        return state.width == null || "".equals(state.width);
+        return state.width == null || state.width.isEmpty();
     }
 
     public static final boolean isUndefinedHeight(
             AbstractComponentState state) {
-        return state.height == null || "".equals(state.height);
+        return state.height == null || state.height.isEmpty();
     }
 
     public static final boolean hasDescription(AbstractComponentState state) {
-        return state.description != null && !"".equals(state.description);
+        return state.description != null && !state.description.isEmpty();
     }
 
     public static final boolean hasStyles(AbstractComponentState state) {

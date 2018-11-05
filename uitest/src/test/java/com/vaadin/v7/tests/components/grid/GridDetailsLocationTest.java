@@ -1,25 +1,12 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.components.grid;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -30,9 +17,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.testbench.parallel.TestCategory;
@@ -80,7 +67,7 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
     public static Collection<Param> parameters() {
         List<Param> data = new ArrayList<>();
 
-        int[] params = new int[] { 0, 500, 999 };
+        int[] params = { 0, 500, 999 };
 
         for (int rowIndex : params) {
 
@@ -156,7 +143,7 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
             int visibleIndexOfSpacer) {
         waitForDetailsVisible();
         WebElement details = getDetailsElement(visibleIndexOfSpacer);
-        Assert.assertEquals("Wrong details row height", expectedHeight,
+        assertEquals("Wrong details row height", expectedHeight,
                 details.getSize().getHeight());
     }
 
@@ -167,11 +154,10 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
                 visibleIndexOfDeco);
         GridRowElement rowElement = getGrid().getRow(row);
 
-        Assert.assertEquals(
-                "Details deco top position does not match row top pos",
+        assertEquals("Details deco top position does not match row top pos",
                 rowElement.getLocation().getY(),
                 detailsDecoElement.getLocation().getY());
-        Assert.assertEquals(
+        assertEquals(
                 "Details deco bottom position does not match details bottom pos",
                 detailsElement.getLocation().getY()
                         + detailsElement.getSize().getHeight(),
@@ -180,7 +166,7 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
     }
 
     private void verifyLocation(Param param) {
-        Assert.assertFalse("Notification was present",
+        assertFalse("Notification was present",
                 isElementPresent(By.className("v-Notification")));
 
         TestBenchElement headerRow = getGrid().getHeaderRow(0);
@@ -205,11 +191,13 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
                         + bottomBoundary + " decoratorBotton:" + detailsBottom,
                 detailsBottom, bottomBoundary);
 
-        verifyDetailsRowHeight(param.getRowIndex(), param.useGenerator()
-                ? detailsDefinedHeight : detailsDefaultHeight, 0);
+        verifyDetailsRowHeight(param.getRowIndex(),
+                param.useGenerator() ? detailsDefinedHeight
+                        : detailsDefaultHeight,
+                0);
         verifyDetailsDecoratorLocation(param.getRowIndex(), 0, 0);
 
-        Assert.assertFalse("Notification was present",
+        assertFalse("Notification was present",
                 isElementPresent(By.className("v-Notification")));
     }
 
@@ -236,7 +224,8 @@ public class GridDetailsLocationTest extends MultiBrowserTest {
                     WebElement detailsElement = getDetailsElement();
                     return detailsElement.isDisplayed()
                             && detailsElement.getSize().getHeight() > 3
-                                    ? detailsElement : null;
+                                    ? detailsElement
+                                    : null;
                 } catch (StaleElementReferenceException e) {
                     return null;
                 }

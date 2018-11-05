@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.components.grid.basicfeatures.server;
 
 import static org.junit.Assert.assertEquals;
@@ -58,12 +43,13 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         }
     }
 
-    private static SortInfo _(int sortOrder, SortDirection sortDirection) {
+    private static SortInfo getSortInfo(int sortOrder,
+            SortDirection sortDirection) {
         return new SortInfo(sortOrder, sortDirection);
     }
 
-    private static SortInfoWithColumn _(int columnIndex, int sortOrder,
-            SortDirection sortDirection) {
+    private static SortInfoWithColumn getSortInfo(int columnIndex,
+            int sortOrder, SortDirection sortDirection) {
         return new SortInfoWithColumn(columnIndex, sortOrder, sortDirection);
     }
 
@@ -79,7 +65,7 @@ public class GridSortingTest extends GridBasicFeaturesTest {
 
         // Verify that programmatic sorting calls are identified as originating
         // from API
-        assertColumnsAreSortedAs(_(9, 1, SortDirection.DESCENDING));
+        assertColumnsAreSortedAs(getSortInfo(9, 1, SortDirection.DESCENDING));
 
         String row = "";
         for (int i = 0; i < 3; ++i) {
@@ -99,7 +85,7 @@ public class GridSortingTest extends GridBasicFeaturesTest {
                 getGridElement().getHeaderCell(0, 9).getAttribute("class")
                         .contains("sort-desc"));
 
-        assertColumnsAreSortedAs(_(10, 1, SortDirection.ASCENDING));
+        assertColumnsAreSortedAs(getSortInfo(10, 1, SortDirection.ASCENDING));
 
         for (int i = 0; i < 5; ++i) {
             Integer firstRow = Integer
@@ -126,7 +112,7 @@ public class GridSortingTest extends GridBasicFeaturesTest {
                 getGridElement().getHeaderCell(0, 10).getAttribute("class")
                         .contains("sort-asc"));
 
-        assertColumnsAreSortedAs(_(7, 1, SortDirection.DESCENDING));
+        assertColumnsAreSortedAs(getSortInfo(7, 1, SortDirection.DESCENDING));
     }
 
     @Test
@@ -147,9 +133,9 @@ public class GridSortingTest extends GridBasicFeaturesTest {
 
         assertLastSortIsUserOriginated(true);
 
-        assertColumnsAreSortedAs(_(9, 1, SortDirection.ASCENDING));
+        assertColumnsAreSortedAs(getSortInfo(9, 1, SortDirection.ASCENDING));
         clickHeader(grid.getHeaderCell(0, 9));
-        assertColumnsAreSortedAs(_(9, 1, SortDirection.DESCENDING));
+        assertColumnsAreSortedAs(getSortInfo(9, 1, SortDirection.DESCENDING));
 
         // First cells for first 3 rows are (9, 0), (99, 0) and (999, 0)
         String row = "";
@@ -166,7 +152,7 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         // Column 10 is random numbers from Random with seed 13334
         // Click header to sort ascending
         clickHeader(grid.getHeaderCell(0, 10));
-        assertColumnsAreSortedAs(_(10, 1, SortDirection.ASCENDING));
+        assertColumnsAreSortedAs(getSortInfo(10, 1, SortDirection.ASCENDING));
 
         for (int i = 0; i < 5; ++i) {
             Integer firstRow = Integer
@@ -184,9 +170,9 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         // 2, 1 and 0.
         // Click header twice to sort descending
         clickHeader(grid.getHeaderCell(0, 7));
-        assertColumnsAreSortedAs(_(7, 1, SortDirection.ASCENDING));
+        assertColumnsAreSortedAs(getSortInfo(7, 1, SortDirection.ASCENDING));
         clickHeader(grid.getHeaderCell(0, 7));
-        assertColumnsAreSortedAs(_(7, 1, SortDirection.DESCENDING));
+        assertColumnsAreSortedAs(getSortInfo(7, 1, SortDirection.DESCENDING));
 
         for (int i = 0; i < 3; ++i) {
             assertEquals(
@@ -257,7 +243,7 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         // Sort ASCENDING on first column
         sendKey(Keys.ENTER);
         assertLastSortIsUserOriginated(true);
-        assertColumnsAreSortedAs(_(1, SortDirection.ASCENDING));
+        assertColumnsAreSortedAs(getSortInfo(1, SortDirection.ASCENDING));
 
         // Move to next column
         sendKey(Keys.RIGHT);
@@ -266,8 +252,8 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         holdKey(Keys.SHIFT);
         sendKey(Keys.ENTER);
         releaseKey(Keys.SHIFT);
-        assertColumnsAreSortedAs(_(1, SortDirection.ASCENDING),
-                _(2, SortDirection.ASCENDING));
+        assertColumnsAreSortedAs(getSortInfo(1, SortDirection.ASCENDING),
+                getSortInfo(2, SortDirection.ASCENDING));
 
         // Move to next column
         sendKey(Keys.RIGHT);
@@ -276,8 +262,9 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         holdKey(Keys.SHIFT);
         sendKey(Keys.ENTER);
         releaseKey(Keys.SHIFT);
-        assertColumnsAreSortedAs(_(1, SortDirection.ASCENDING),
-                _(2, SortDirection.ASCENDING), _(3, SortDirection.ASCENDING));
+        assertColumnsAreSortedAs(getSortInfo(1, SortDirection.ASCENDING),
+                getSortInfo(2, SortDirection.ASCENDING),
+                getSortInfo(3, SortDirection.ASCENDING));
 
         // Move back to the second column
         sendKey(Keys.LEFT);
@@ -286,22 +273,23 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         holdKey(Keys.SHIFT);
         sendKey(Keys.ENTER);
         releaseKey(Keys.SHIFT);
-        assertColumnsAreSortedAs(_(1, SortDirection.ASCENDING),
-                _(2, SortDirection.DESCENDING), _(3, SortDirection.ASCENDING));
+        assertColumnsAreSortedAs(getSortInfo(1, SortDirection.ASCENDING),
+                getSortInfo(2, SortDirection.DESCENDING),
+                getSortInfo(3, SortDirection.ASCENDING));
 
         // Move back to the third column
         sendKey(Keys.RIGHT);
 
         // Set sorting to third column, ASCENDING
         sendKey(Keys.ENTER);
-        assertColumnsAreSortedAs(_(2, 1, SortDirection.ASCENDING));
+        assertColumnsAreSortedAs(getSortInfo(2, 1, SortDirection.ASCENDING));
 
         // Move to the fourth column
         sendKey(Keys.RIGHT);
 
         // Make sure that single-column sorting also works as expected
         sendKey(Keys.ENTER);
-        assertColumnsAreSortedAs(_(3, 1, SortDirection.ASCENDING));
+        assertColumnsAreSortedAs(getSortInfo(3, 1, SortDirection.ASCENDING));
 
     }
 

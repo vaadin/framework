@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,10 +56,11 @@ public class CurrentInstance implements Serializable {
     private static final Object NULL_OBJECT = new Object();
     private static final CurrentInstance CURRENT_INSTANCE_NULL = new CurrentInstance(
             NULL_OBJECT);
+    private static final ConcurrentHashMap<Class<?>, CurrentInstanceFallbackResolver<?>> fallbackResolvers = new ConcurrentHashMap<Class<?>, CurrentInstanceFallbackResolver<?>>();
 
     private final WeakReference<Object> instance;
 
-    private static final ThreadLocal<Map<Class<?>, CurrentInstance>> instances = new ThreadLocal<>();
+    private static final ThreadLocal<Map<Class<?>, CurrentInstance>> INSTANCES = new ThreadLocal<>();
 
     private CurrentInstance(Object instance) {
         this.instance = new WeakReference<>(instance);
@@ -66,6 +68,11 @@ public class CurrentInstance implements Serializable {
 
     /**
      * Gets the current instance of a specific type if available.
+     * <p>
+     * When a current instance of the specific type is not found, the
+     * {@link CurrentInstanceFallbackResolver} registered via
+     * {@link #defineFallbackResolver(Class, CurrentInstanceFallbackResolver)}
+     * (if any) is invoked.
      *
      * @param type
      *            the class to get an instance of
@@ -73,7 +80,20 @@ public class CurrentInstance implements Serializable {
      *         if there is no current instance.
      */
     public static <T> T get(Class<T> type) {
-        Map<Class<?>, CurrentInstance> map = instances.get();
+        T result = doGet(type);
+        if (result != null) {
+            return result;
+        }
+        CurrentInstanceFallbackResolver<?> fallbackResolver = fallbackResolvers
+                .get(type);
+        if (fallbackResolver != null) {
+            return (T) fallbackResolver.resolve();
+        }
+        return null;
+    }
+
+    private static <T> T doGet(Class<T> type) {
+        Map<Class<?>, CurrentInstance> map = INSTANCES.get();
         if (map == null) {
             return null;
         }
@@ -97,7 +117,7 @@ public class CurrentInstance implements Serializable {
                 removeStaleInstances(map);
 
                 if (map.isEmpty()) {
-                    instances.remove();
+                    INSTANCES.remove();
                 }
 
                 return null;
@@ -105,6 +125,35 @@ public class CurrentInstance implements Serializable {
             return type.cast(value);
         } else {
             return null;
+        }
+    }
+
+    /**
+     * Adds a CurrentInstanceFallbackResolver, that is triggered when
+     * {@link #get(Class)} can't find a suitable instance for the given type
+     * parameter.
+     *
+     * @param type
+     *            the class used on {@link #get(Class)} invocations to retrieve
+     *            the current instance
+     * @param fallbackResolver
+     *            the resolver, not <code>null</code>
+     *
+     * @throws IllegalArgumentException
+     *             if there's already a defined fallback resolver for the given
+     *             type
+     * @since 8.5.2
+     */
+    public static <T> void defineFallbackResolver(Class<T> type,
+            CurrentInstanceFallbackResolver<T> fallbackResolver) {
+        if (fallbackResolver == null) {
+            throw new IllegalArgumentException(
+                    "The fallback resolver can not be null.");
+        }
+        if (fallbackResolvers.putIfAbsent(type, fallbackResolver) != null) {
+            throw new IllegalArgumentException(
+                    "A fallback resolver for the type " + type
+                            + " is already defined.");
         }
     }
 
@@ -135,14 +184,14 @@ public class CurrentInstance implements Serializable {
      *            the actual instance
      */
     public static <T> CurrentInstance set(Class<T> type, T instance) {
-        Map<Class<?>, CurrentInstance> map = instances.get();
+        Map<Class<?>, CurrentInstance> map = INSTANCES.get();
         CurrentInstance previousInstance = null;
         if (instance == null) {
             // remove the instance
             if (map != null) {
                 previousInstance = map.remove(type);
                 if (map.isEmpty()) {
-                    instances.remove();
+                    INSTANCES.remove();
                     map = null;
                 }
             }
@@ -150,7 +199,7 @@ public class CurrentInstance implements Serializable {
             assert type.isInstance(instance) : "Invald instance type";
             if (map == null) {
                 map = new HashMap<>();
-                instances.set(map);
+                INSTANCES.set(map);
             }
 
             previousInstance = map.put(type, new CurrentInstance(instance));
@@ -165,7 +214,7 @@ public class CurrentInstance implements Serializable {
      * Clears all current instances.
      */
     public static void clearAll() {
-        instances.remove();
+        INSTANCES.remove();
     }
 
     /**
@@ -220,7 +269,7 @@ public class CurrentInstance implements Serializable {
      * @return a map containing the current instances
      */
     public static Map<Class<?>, CurrentInstance> getInstances() {
-        Map<Class<?>, CurrentInstance> map = instances.get();
+        Map<Class<?>, CurrentInstance> map = INSTANCES.get();
         if (map == null) {
             return Collections.emptyMap();
         } else {
@@ -237,7 +286,7 @@ public class CurrentInstance implements Serializable {
             if (removeStale) {
                 removeStaleInstances(map);
                 if (map.isEmpty()) {
-                    instances.remove();
+                    INSTANCES.remove();
                 }
             }
             return copy;

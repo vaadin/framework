@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,7 @@ package com.vaadin.shared.ui.dnd;
 import java.util.List;
 import java.util.Map;
 
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.ServerRpc;
 
 /**
@@ -33,15 +34,17 @@ public interface DropTargetRpc extends ServerRpc {
      * Called when drop event happens on client side.
      *
      * @param types
-     *         Data types that are present in {@code data} map in the same order
-     *         as found in {@code DataTransfer.types}.
+     *            List of data types from {@code DataTransfer.types} object.
      * @param data
-     *         Contains data from {@code DataTransfer} object.
+     *            Map containing all types and corresponding data from the
+     *            {@code
+     *         DataTransfer} object.
      * @param dropEffect
-     *         Drop effect set for the drop target where drop happened.
-     * @param dragSourceId
-     *         Drag source component connector's ID.
+     *            The desired drop effect.
+     * @param mouseEventDetails
+     *            mouse event details object containing information about the
+     *            drop event
      */
     public void drop(List<String> types, Map<String, String> data,
-            DropEffect dropEffect, String dragSourceId);
+            String dropEffect, MouseEventDetails mouseEventDetails);
 }

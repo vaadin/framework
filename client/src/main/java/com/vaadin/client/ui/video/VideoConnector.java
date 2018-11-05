@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,7 +34,11 @@ public class VideoConnector extends MediaBaseConnector {
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
-        getWidget().setPoster(getResourceUrl(VideoConstants.POSTER_RESOURCE));
+
+        String resourceUrl = getResourceUrl(VideoConstants.POSTER_RESOURCE);
+        if (resourceUrl != null) {
+            getWidget().setPoster(resourceUrl);
+        }
     }
 
     @Override

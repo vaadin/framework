@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -323,9 +323,8 @@ public abstract class AbstractSingleComponentContainer extends AbstractComponent
     protected void readDesignChildren(Elements children,
             DesignContext context) {
         if (children.size() > 1) {
-            throw new DesignException(
-                    "The container of type " + getClass().toString()
-                            + " can have only one child component.");
+            throw new DesignException("The container of type " + getClass()
+                    + " can have only one child component.");
         } else if (children.size() == 1) {
             setContent(context.readDesign(children.first()));
         }

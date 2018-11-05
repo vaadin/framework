@@ -2,7 +2,6 @@ package com.vaadin.tests.components.orderedlayout;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 
 public class OrderedLayoutComponentOrdering extends TestBase {
@@ -21,52 +20,33 @@ public class OrderedLayoutComponentOrdering extends TestBase {
         addComponent(hl);
 
         Button addFirst = new Button("add first");
-        addFirst.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                hl.addComponent(new Button(String.valueOf(++counter)), 0);
-                hl.addComponent(new Button(String.valueOf(++counter)), 1);
-            }
+        addFirst.addClickListener(event -> {
+            hl.addComponent(new Button(String.valueOf(++counter)), 0);
+            hl.addComponent(new Button(String.valueOf(++counter)), 1);
         });
         addComponent(addFirst);
 
         Button add = new Button("add second");
-        add.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                hl.addComponent(new Button(String.valueOf(++counter)), 1);
-                hl.addComponent(new Button(String.valueOf(++counter)), 2);
-            }
+        add.addClickListener(event -> {
+            hl.addComponent(new Button(String.valueOf(++counter)), 1);
+            hl.addComponent(new Button(String.valueOf(++counter)), 2);
         });
         addComponent(add);
 
         Button addThird = new Button("add third");
-        addThird.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                hl.addComponent(new Button(String.valueOf(++counter)), 2);
-                hl.addComponent(new Button(String.valueOf(++counter)), 3);
-            }
+        addThird.addClickListener(event -> {
+            hl.addComponent(new Button(String.valueOf(++counter)), 2);
+            hl.addComponent(new Button(String.valueOf(++counter)), 3);
         });
         addComponent(addThird);
 
         Button move = new Button("move last to first");
-        move.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                hl.addComponentAsFirst(
-                        hl.getComponent(hl.getComponentCount() - 1));
-            }
-        });
+        move.addClickListener(event -> hl.addComponentAsFirst(
+                hl.getComponent(hl.getComponentCount() - 1)));
         addComponent(move);
 
         Button swap = new Button("move forth to second");
-        swap.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                hl.addComponent(hl.getComponent(3), 1);
-            }
-        });
+        swap.addClickListener(event -> hl.addComponent(hl.getComponent(3), 1));
         addComponent(swap);
 
     }

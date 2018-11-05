@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,6 +30,9 @@ import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
@@ -39,6 +42,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.renderers.ClickableRenderer;
 import com.vaadin.client.widget.grid.CellReference;
@@ -81,7 +85,7 @@ public class MultiSelectionRenderer<T>
      */
     private final class CheckBoxEventHandler
             implements MouseDownHandler, TouchStartHandler, ClickHandler,
-            GridEnabledHandler, GridSelectionAllowedHandler {
+            GridEnabledHandler, GridSelectionAllowedHandler, KeyUpHandler {
         private final CheckBox checkBox;
 
         /**
@@ -112,6 +116,18 @@ public class MultiSelectionRenderer<T>
         @Override
         public void onClick(ClickEvent event) {
             // Clicking is already handled with MultiSelectionRenderer
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        @Override
+        public void onKeyUp(KeyUpEvent event) {
+            if (event.getNativeKeyCode() != KeyCodes.KEY_SPACE
+                    || !checkBox.isEnabled()) {
+                return;
+            }
+            int logicalRow = getLogicalRowIndex(grid, checkBox.getElement());
+            setSelected(logicalRow, !isSelected(logicalRow));
             event.preventDefault();
             event.stopPropagation();
         }
@@ -380,14 +396,10 @@ public class MultiSelectionRenderer<T>
             if (pointerPageY < topBound) {
                 final double distance = pointerPageY - topBound;
                 ratio = Math.max(-1, distance / gradientArea);
-            }
-
-            else if (pointerPageY > bottomBound) {
+            } else if (pointerPageY > bottomBound) {
                 final double distance = pointerPageY - bottomBound;
                 ratio = Math.min(1, distance / gradientArea);
-            }
-
-            else {
+            } else {
                 ratio = 0;
             }
 
@@ -447,13 +459,12 @@ public class MultiSelectionRenderer<T>
             if (topBound == -1) {
                 topBound = Math.min(finalTopBound, pageY);
                 bottomBound = Math.max(finalBottomBound, pageY);
-            }
-
-            /*
-             * Subsequent runs make sure that the scroll area grows (but doesn't
-             * shrink) with the finger, but no further than the final bound.
-             */
-            else {
+            } else {
+                /*
+                 * Subsequent runs make sure that the scroll area grows (but
+                 * doesn't shrink) with the finger, but no further than the
+                 * final bound.
+                 */
                 int oldTopBound = topBound;
                 if (topBound < finalTopBound) {
                     topBound = Math.max(topBound,
@@ -493,30 +504,27 @@ public class MultiSelectionRenderer<T>
         /** The registration info for {@link #scrollPreviewHandler} */
         private HandlerRegistration handlerRegistration;
 
-        private final NativePreviewHandler scrollPreviewHandler = new NativePreviewHandler() {
-            @Override
-            public void onPreviewNativeEvent(final NativePreviewEvent event) {
-                if (autoScroller == null) {
-                    stop();
-                    return;
-                }
+        private final NativePreviewHandler scrollPreviewHandler = event -> {
+            if (autoScroller == null) {
+                stop();
+                return;
+            }
 
-                final NativeEvent nativeEvent = event.getNativeEvent();
-                int pageY = 0;
-                int pageX = 0;
-                switch (event.getTypeInt()) {
-                case Event.ONMOUSEMOVE:
-                case Event.ONTOUCHMOVE:
-                    pageY = WidgetUtil.getTouchOrMouseClientY(nativeEvent);
-                    pageX = WidgetUtil.getTouchOrMouseClientX(nativeEvent);
-                    autoScroller.updatePointerCoords(pageX, pageY);
-                    break;
-                case Event.ONMOUSEUP:
-                case Event.ONTOUCHEND:
-                case Event.ONTOUCHCANCEL:
-                    stop();
-                    break;
-                }
+            final NativeEvent nativeEvent = event.getNativeEvent();
+            int pageY = 0;
+            int pageX = 0;
+            switch (event.getTypeInt()) {
+            case Event.ONMOUSEMOVE:
+            case Event.ONTOUCHMOVE:
+                pageY = WidgetUtil.getTouchOrMouseClientY(nativeEvent);
+                pageX = WidgetUtil.getTouchOrMouseClientX(nativeEvent);
+                autoScroller.updatePointerCoords(pageX, pageY);
+                break;
+            case Event.ONMOUSEUP:
+            case Event.ONTOUCHEND:
+            case Event.ONTOUCHCANCEL:
+                stop();
+                break;
             }
         };
 
@@ -610,15 +618,20 @@ public class MultiSelectionRenderer<T>
 
         CheckBoxEventHandler handler = new CheckBoxEventHandler(checkBox);
 
+        // label of checkbox should only be visible for assistive devices
+        checkBox.addStyleName("v-assistive-device-only-label");
+
         // Sink events
         checkBox.sinkBitlessEvent(BrowserEvents.MOUSEDOWN);
         checkBox.sinkBitlessEvent(BrowserEvents.TOUCHSTART);
         checkBox.sinkBitlessEvent(BrowserEvents.CLICK);
+        checkBox.sinkBitlessEvent(BrowserEvents.KEYUP);
 
         // Add handlers
         checkBox.addMouseDownHandler(handler);
         checkBox.addTouchStartHandler(handler);
         checkBox.addClickHandler(handler);
+        checkBox.addKeyUpHandler(handler);
         grid.addEnabledHandler(handler);
         grid.addSelectionAllowedHandler(handler);
 
@@ -629,7 +642,19 @@ public class MultiSelectionRenderer<T>
     public void render(final RendererCellReference cell, final Boolean data,
             CheckBox checkBox) {
         checkBox.setValue(data, false);
-        checkBox.setEnabled(grid.isEnabled() && !grid.isEditorActive());
+        // this should be a temp fix.
+        checkBox.setText("Selects row number " + getDOMRowIndex(cell) + ".");
+        boolean editorOpen = grid.isEditorActive();
+        boolean editorBuffered = grid.isEditorBuffered();
+        checkBox.setEnabled(
+                grid.isEnabled() && !(editorOpen && editorBuffered));
+    }
+
+    private int getDOMRowIndex(RendererCellReference cell) {
+        // getRowIndex starts with zero, that's why we add an additional 1.
+        // getDOMRowIndex should include getHeaderRows as well, this number
+        // should be equals to aria-rowindex.
+        return cell.getGrid().getHeaderRowCount() + cell.getRowIndex() + 1;
     }
 
     @Override
@@ -655,10 +680,8 @@ public class MultiSelectionRenderer<T>
                         && event.getButton() == NativeEvent.BUTTON_LEFT)) {
             startDragSelect(event, Element.as(event.getEventTarget()));
             return true;
-        } else {
-            throw new IllegalStateException(
-                    "received unexpected event: " + event.getType());
         }
+        return false;
     }
 
     private void startDragSelect(NativeEvent event, final Element target) {

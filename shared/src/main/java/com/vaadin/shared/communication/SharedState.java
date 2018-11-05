@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -62,10 +62,11 @@ public class SharedState implements Serializable {
     public Map<String, URLReference> resources = new HashMap<>();
 
     public boolean enabled = true;
+
     /**
      * A set of event identifiers with registered listeners.
      */
     @NoLayout
-    public Set<String> registeredEventListeners = null;
+    public Set<String> registeredEventListeners;
 
 }

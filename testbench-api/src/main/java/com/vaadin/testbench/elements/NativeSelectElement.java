@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,8 @@ package com.vaadin.testbench.elements;
 
 import java.util.List;
 
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import com.vaadin.testbench.By;
@@ -24,24 +26,36 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.NativeSelect")
-public class NativeSelectElement extends AbstractSelectElement {
-    private Select selectElement;
+public class NativeSelectElement extends AbstractSingleSelectElement {
+    private Select select;
+    private WebElement selectElement;
 
     @Override
     protected void init() {
         super.init();
-        selectElement = new Select(findElement(By.tagName("select")));
+        selectElement = findElement(By.tagName("select"));
+        select = new Select(selectElement);
+    }
+
+    /**
+     * Gets the {@code <select>} element inside the component.
+     *
+     * @return the select element inside the component
+     * @since 8.1.1
+     */
+    public WebElement getSelectElement() {
+        return selectElement;
     }
 
     public List<TestBenchElement> getOptions() {
-        return wrapElements(selectElement.getOptions(), getCommandExecutor());
+        return wrapElements(select.getOptions(), getCommandExecutor());
     }
 
     public void selectByText(String text) throws ReadOnlyException {
         if (isReadOnly()) {
             throw new ReadOnlyException();
         }
-        selectElement.selectByVisibleText(text);
+        select.selectByVisibleText(text);
         waitForVaadin();
     }
 
@@ -55,16 +69,20 @@ public class NativeSelectElement extends AbstractSelectElement {
     }
 
     /**
-     * Return value of the selected item in the native select element
+     * Return value of the selected item in the native select element.
      *
-     * @return value of the selected item in the native select element
+     * @return value of the selected item
+     *
+     * @throws NoSuchElementException
+     *             if no value is selected
      */
-    public String getValue() {
-        return selectElement.getFirstSelectedOption().getText();
+
+    public String getValue() throws NoSuchElementException {
+        return select.getFirstSelectedOption().getText();
     }
 
     /**
-     * Select item of the native select element with the specified value
+     * Select item of the native select element with the specified value.
      *
      * @param chars
      *            value of the native select item will be selected

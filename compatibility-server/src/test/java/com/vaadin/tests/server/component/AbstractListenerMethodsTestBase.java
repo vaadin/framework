@@ -1,13 +1,16 @@
 package com.vaadin.tests.server.component;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
 
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.ui.Component;
@@ -19,7 +22,7 @@ public abstract class AbstractListenerMethodsTestBase {
     }
 
     private static void findAllListenerMethods() {
-        Set<Class<?>> classes = new HashSet<>();
+        Set<Class<?>> classes = new HashSet<Class<?>>();
         for (Class<?> c : VaadinClasses.getAllServerSideClasses()) {
             while (c != null && c.getName().startsWith("com.vaadin.")) {
                 classes.add(c);
@@ -30,6 +33,7 @@ public abstract class AbstractListenerMethodsTestBase {
         for (Class<?> c : classes) {
             boolean found = false;
             for (Method m : c.getDeclaredMethods()) {
+                // Intentional change in compatibility package
                 String methodName = m.getName();
                 if (methodName.startsWith("add")
                         && methodName.endsWith("Listener")
@@ -40,7 +44,7 @@ public abstract class AbstractListenerMethodsTestBase {
                     String packageName = "com.vaadin.tests.server";
                     if (Component.class.isAssignableFrom(c)) {
                         packageName += ".component."
-                                + c.getSimpleName().toLowerCase();
+                                + c.getSimpleName().toLowerCase(Locale.ROOT);
                         continue;
                     }
 
@@ -53,13 +57,11 @@ public abstract class AbstractListenerMethodsTestBase {
                                         .getName()
                                 + ";");
                         System.out.println("import " + c.getName() + ";");
-                        System.out
-                                .println(
-                                        "public class " + c.getSimpleName()
-                                                + "Listeners extends "
-                                                + AbstractListenerMethodsTestBase.class
-                                                        .getSimpleName()
-                                                + " {");
+                        System.out.println("public class " + c.getSimpleName()
+                                + "Listeners extends "
+                                + AbstractListenerMethodsTestBase.class
+                                        .getSimpleName()
+                                + " {");
                     }
 
                     String listenerClassName = m.getParameterTypes()[0]
@@ -154,6 +156,7 @@ public abstract class AbstractListenerMethodsTestBase {
 
     private Method getAddListenerMethod(Class<?> cls, Class<?> listenerClass)
             throws SecurityException, NoSuchMethodException {
+        // Intentional change in compatibility package
         return cls.getMethod("add" + listenerClass.getSimpleName(),
                 listenerClass);
 
@@ -161,6 +164,7 @@ public abstract class AbstractListenerMethodsTestBase {
 
     private Method getRemoveListenerMethod(Class<?> cls, Class<?> listenerClass)
             throws SecurityException, NoSuchMethodException {
+        // Intentional change in compatibility package
         return cls.getMethod("remove" + listenerClass.getSimpleName(),
                 listenerClass);
 
@@ -171,11 +175,10 @@ public abstract class AbstractListenerMethodsTestBase {
             SecurityException, IllegalAccessException,
             InvocationTargetException, NoSuchMethodException {
         Collection<?> registeredListeners = getListeners(c, eventClass);
-        Assert.assertEquals("Number of listeners", expectedListeners.length,
+        assertEquals("Number of listeners", expectedListeners.length,
                 registeredListeners.size());
 
-        Assert.assertArrayEquals(expectedListeners,
-                registeredListeners.toArray());
+        assertArrayEquals(expectedListeners, registeredListeners.toArray());
 
     }
 }

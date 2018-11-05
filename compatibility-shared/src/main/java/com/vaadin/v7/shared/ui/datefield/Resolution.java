@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,11 +18,19 @@ package com.vaadin.v7.shared.ui.datefield;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.shared.ui.datefield.DateResolution;
+import com.vaadin.shared.ui.datefield.DateTimeResolution;
+
 /**
- * Resolutions for DateFields
+ * Resolutions for DateFields.
  *
  * @author Vaadin Ltd.
  * @since 7.0
+ *
+ * @deprecated As of 8.0, replaced by {@link DateResolution} and
+ *             {@link DateTimeResolution}, used by new
+ *             {@code com.vaadin.ui.DateField} and
+ *             {@code com.vaadin.ui.DateTimeField}
  */
 public enum Resolution {
     // Values from Calendar.SECOND etc. Set as ints to avoid Calendar dependency
@@ -56,7 +64,7 @@ public enum Resolution {
      */
     public static Iterable<Resolution> getResolutionsHigherOrEqualTo(
             Resolution r) {
-        List<Resolution> resolutions = new ArrayList<>();
+        List<Resolution> resolutions = new ArrayList<Resolution>();
         Resolution[] values = Resolution.values();
         for (int i = r.ordinal(); i < values.length; i++) {
             resolutions.add(values[i]);
@@ -74,7 +82,7 @@ public enum Resolution {
      * @return An iterable for the resolutions lower than r
      */
     public static List<Resolution> getResolutionsLowerThan(Resolution r) {
-        List<Resolution> resolutions = new ArrayList<>();
+        List<Resolution> resolutions = new ArrayList<Resolution>();
         Resolution[] values = Resolution.values();
         for (int i = r.ordinal() - 1; i >= 0; i--) {
             resolutions.add(values[i]);

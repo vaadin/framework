@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,7 @@
  */
 package com.vaadin.client.ui;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.ui.Widget;
@@ -23,15 +23,15 @@ import com.google.gwt.user.client.ui.Widget;
 public class JavaScriptWidget extends Widget {
 
     /**
-     * Creats a JavaScriptWidget based on a &lt;div&gt; element
+     * Creates a JavaScriptWidget based on a &lt;div&gt; element.
      */
     public JavaScriptWidget() {
         this("div");
     }
 
     /**
-     * Creates a JavaScriptWidget based on an element with the given tag
-     * 
+     * Creates a JavaScriptWidget based on an element with the given tag.
+     *
      * @param tagName
      *            the tag to use for the element
      */
@@ -39,7 +39,7 @@ public class JavaScriptWidget extends Widget {
         setElement(Document.get().createElement(tagName));
     }
 
-    public void showNoInitFound(ArrayList<String> attemptedNames) {
+    public void showNoInitFound(List<String> attemptedNames) {
         String message = "Could not initialize JavaScriptConnector because no JavaScript init function was found. Make sure one of these functions are defined: <ul>";
         for (String name : attemptedNames) {
             message += "<li>" + name + "</li>";

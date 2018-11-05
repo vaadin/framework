@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,13 +21,13 @@ import com.vaadin.ui.Grid;
 
 /**
  * An event listener for a {@link Grid} editor cancel events.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  *
  * @see EditorCancelEvent
  * @see Editor#addCancelListener(EditorCancelListener)
- * 
+ *
  * @param <T>
  *            the bean type
  */
@@ -36,7 +36,7 @@ public interface EditorCancelListener<T> extends Serializable {
 
     /**
      * Called when the editor is cancelled.
-     * 
+     *
      * @param event
      *            cancel event
      */

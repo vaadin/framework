@@ -84,10 +84,10 @@ launch a Vaadin Maven application on the light-weight Jetty web server.
 
 . Select "Run > Edit Configurations".
 
-. Click [guibutton]#+# and select menu:Maven[] to create a new Maven run/debug configuration.
+. Click [guibutton]#+# and select [guilabel]#Maven# to create a new Maven run/debug configuration.
 
 . Enter a [guilabel]#Name# for the run configuration.
-For the [guilabel]#Command line#, enter "`package jetty:run`# to first compile and package the project, and then launch Jetty to run it.
+For the [guilabel]#Command line#, enter `package jetty:run` to first compile and package the project, and then launch Jetty to run it.
 
 +
 Click [guibutton]#OK#.

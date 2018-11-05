@@ -1,0 +1,144 @@
+---
+title: Sending Events From The Client To The Server Using RPC
+order: 20
+layout: page
+---
+
+[[sending-events-from-the-client-to-the-server-using-RPC]]
+= Sending events from the client to the server using RPC
+An RPC mechanism can be used to communicate from the client to the
+server. In effect, the client can call methods that are executed by the
+server component. The server component can then take appropriate action
+- e.g updating the shared state or calling event listeners.
+
+To set up client-server RPC we need to create one interface defining the
+RPC methods, and then make use of that interface on both the client and
+the server. Place the `MyComponentServerRpc` interface in the client
+package:
+
+[source,java]
+....
+package com.example.mycomponent.client;
+
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.terminal.gwt.client.communication.ServerRpc;
+
+public interface MyComponentServerRpc extends ServerRpc {
+    public void clicked(MouseEventDetails mouseDetails);
+}
+....
+
+Note that the RPC methods can not have return values. In this example,
+we pass `MouseEventDetails` to get a more complete example, but you
+could pass almost any (or no) parameters.
+
+In the server side `MyComponent` we need to implement the interface, and
+register it for use:
+
+[source,java]
+....
+package com.example.mycomponent;
+
+import com.example.mycomponent.client.MyComponentServerRpc;
+import com.example.mycomponent.client.MyComponentState;
+import com.vaadin.terminal.gwt.client.MouseEventDetails;
+import com.vaadin.ui.AbstractComponent;
+
+public class MyComponent extends AbstractComponent {
+
+    private int clickCount = 0;
+
+    private MyComponentServerRpc rpc = new MyComponentServerRpc() {
+        public void clicked(MouseEventDetails mouseDetails) {
+            clickCount++;
+            setText("You have clicked " + clickCount + " times");
+        }
+    };
+
+    public MyComponent() {
+        registerRpc(rpc);
+    }
+
+/* Previous code commented out for clarity:
+    @Override
+    public MyComponentState getState() {
+        return (MyComponentState) super.getState();
+    }
+    public void setText(String text) {
+        getState().text = text;
+    }
+    public String getText() {
+        return getState().text;
+    }
+*/
+}
+....
+
+Here we react to the RPC call by incrementing a counter. We do not make
+use of the `MouseEventDetails` (yet). Notice the *important call to
+`registerRpc()`* in the added constructor.
+
+In the client side `MyComponentConnector`, we use `RpcProxy` to get an
+implementation of the RPC interface, and call the `clicked()` method
+when the widget is clicked:
+
+[source,java]
+....
+package com.example.mycomponent.client;
+
+// imports removed for clarity
+import com.vaadin.terminal.gwt.client.communication.RpcProxy;
+
+@Connect(MyComponent.class)
+public class MyComponentConnector extends AbstractComponentConnector {
+
+    MyComponentServerRpc rpc = RpcProxy
+            .create(MyComponentServerRpc.class, this);
+
+    public MyComponentConnector() {
+        getWidget().addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+
+                final MouseEventDetails mouseDetails = MouseEventDetailsBuilder
+                        .buildMouseEventDetails(event.getNativeEvent(),
+                                getWidget().getElement());
+
+                rpc.clicked(mouseDetails);
+            }
+        });
+    }
+
+/* Previous code commented out for clarity:
+    @Override
+    protected Widget createWidget() {
+        return GWT.create(MyComponentWidget.class);
+    }
+    @Override
+    public MyComponentWidget getWidget() {
+        return (MyComponentWidget) super.getWidget();
+    }
+    @Override
+    public MyComponentState getState() {
+        return (MyComponentState) super.getState();
+    }
+    @OnStateChange("text")
+    void updateText() {
+        getWidget().setText(getState().text);
+    }
+*/
+}
+....
+
+Notice that most of the code is for attaching the click handler and
+creating the `MouseEventDetails`, the code for the actual RPC is quite
+minimal.
+
+Compile the widgetset, and the label text should be updated with the
+click count whenever you click it (remember that the counting is done on
+the server-side).
+
+Finally, note that you can use multiple RPC interfaces in one component,
+allowing for better code separation and reuse.
+
+You can do the same thing in the other direction, see the article about
+server to client RPC for details.

@@ -1,21 +1,9 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.server.component.upload;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.server.StreamVariable;
@@ -23,10 +11,6 @@ import com.vaadin.server.StreamVariable.StreamingErrorEvent;
 import com.vaadin.shared.ui.upload.UploadState;
 import com.vaadin.ui.Upload;
 
-/**
- *
- * @author Vaadin Ltd
- */
 public class UploadTest {
 
     @Test
@@ -38,14 +22,14 @@ public class UploadTest {
             variable.streamingFailed(new TestStreamingErrorEvent());
         } catch (Exception e) {
         }
-        Assert.assertFalse(upload.isUploading());
+        assertFalse(upload.isUploading());
     }
 
     @Test
     public void setImmediateMode_defaultTrue() {
         Upload upload = new Upload();
 
-        Assert.assertTrue("Upload should be in immediate mode by default",
+        assertTrue("Upload should be in immediate mode by default",
                 upload.isImmediateMode());
     }
 
@@ -53,7 +37,7 @@ public class UploadTest {
     public void getState_uploadHasCustomState() {
         TestUpload upload = new TestUpload();
         UploadState state = upload.getState();
-        Assert.assertEquals("Unexpected state class", UploadState.class,
+        assertEquals("Unexpected state class", UploadState.class,
                 state.getClass());
     }
 
@@ -61,14 +45,14 @@ public class UploadTest {
     public void getPrimaryStyleName_uploadHasCustomPrimaryStyleName() {
         Upload upload = new Upload();
         UploadState state = new UploadState();
-        Assert.assertEquals("Unexpected primary style name",
-                state.primaryStyleName, upload.getPrimaryStyleName());
+        assertEquals("Unexpected primary style name", state.primaryStyleName,
+                upload.getPrimaryStyleName());
     }
 
     @Test
     public void uploadStateHasCustomPrimaryStyleName() {
         UploadState state = new UploadState();
-        Assert.assertEquals("Unexpected primary style name", "v-upload",
+        assertEquals("Unexpected primary style name", "v-upload",
                 state.primaryStyleName);
     }
 

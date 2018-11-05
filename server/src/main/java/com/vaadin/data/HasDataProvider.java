@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,7 @@ import com.vaadin.data.provider.DataProvider;
  * <p>
  * A listing component should implement either this interface or
  * {@link HasFilterableDataProvider}, but not both.
- * 
+ *
  * @author Vaadin Ltd.
  *
  * @param <T>

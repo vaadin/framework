@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -59,9 +58,9 @@ public class ColorPickerPopup extends Window
         try {
             COLOR_CHANGE_METHOD = ColorChangeListener.class.getDeclaredMethod(
                     "colorChanged", new Class[] { ColorChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in ColorPicker");
         }
     }
@@ -133,7 +132,7 @@ public class ColorPickerPopup extends Window
     private ColorPickerSelect colorSelect;
 
     /** The selectors. */
-    private final Set<ColorSelector> selectors = new HashSet<>();
+    private final Set<ColorSelector> selectors = new HashSet<ColorSelector>();
 
     /**
      * Set true while the slider values are updated after colorChange. When
@@ -211,7 +210,7 @@ public class ColorPickerPopup extends Window
         history.setHeight("22px");
 
         // Create the default colors
-        List<Color> defaultColors = new ArrayList<>();
+        List<Color> defaultColors = new ArrayList<Color>();
         defaultColors.add(Color.BLACK);
         defaultColors.add(Color.WHITE);
 
@@ -266,7 +265,7 @@ public class ColorPickerPopup extends Window
         rgbLayout.setStyleName("rgbtab");
 
         // Add the RGB color gradient
-        rgbGradient = new ColorPickerGradient("rgb-gradient", RGBConverter);
+        rgbGradient = new ColorPickerGradient("rgb-gradient", rgbConverter);
         rgbGradient.setColor(color);
         rgbGradient.addColorChangeListener(this);
         rgbLayout.addComponent(rgbGradient);
@@ -347,7 +346,7 @@ public class ColorPickerPopup extends Window
         hsvLayout.setStyleName("hsvtab");
 
         // Add the hsv gradient
-        hsvGradient = new ColorPickerGradient("hsv-gradient", HSVConverter);
+        hsvGradient = new ColorPickerGradient("hsv-gradient", hsvConverter);
         hsvGradient.setColor(color);
         hsvGradient.addColorChangeListener(this);
         hsvLayout.addComponent(hsvGradient);
@@ -479,24 +478,19 @@ public class ColorPickerPopup extends Window
             }
 
             resize.setData(new Boolean(!state));
-        }
-
-        // Ok button was clicked
-        else if (event.getButton() == ok) {
+        } else if (event.getButton() == ok) {
+            // Ok button was clicked
             history.setColor(getColor());
             fireColorChanged();
             close();
-        }
-
-        // Cancel button was clicked
-        else if (event.getButton() == cancel) {
+        } else if (event.getButton() == cancel) {
+            // Cancel button was clicked
             close();
         }
-
     }
 
     /**
-     * Notifies the listeners that the color changed
+     * Notifies the listeners that the color changed.
      */
     public void fireColorChanged() {
         fireEvent(new ColorChangeEvent(this, getColor()));
@@ -604,9 +598,8 @@ public class ColorPickerPopup extends Window
      * @return true if tab is visible, false otherwise
      */
     private boolean tabIsVisible(Component tab) {
-        Iterator<Component> tabIterator = tabs.getComponentIterator();
-        while (tabIterator.hasNext()) {
-            if (tabIterator.next() == tab) {
+        for (Component comp : tabs) {
+            if (comp == tab) {
                 return true;
             }
         }
@@ -619,10 +612,8 @@ public class ColorPickerPopup extends Window
      * @return The number of tabs visible
      */
     private int tabsNumVisible() {
-        Iterator<Component> tabIterator = tabs.getComponentIterator();
         int tabCounter = 0;
-        while (tabIterator.hasNext()) {
-            tabIterator.next();
+        for (Component comp : tabs) {
             tabCounter++;
         }
         return tabCounter;
@@ -636,7 +627,7 @@ public class ColorPickerPopup extends Window
     }
 
     /**
-     * Set RGB tab visibility
+     * Set RGB tab visibility.
      *
      * @param visible
      *            The visibility of the RGB tab
@@ -652,7 +643,7 @@ public class ColorPickerPopup extends Window
     }
 
     /**
-     * Set HSV tab visibility
+     * Set HSV tab visibility.
      *
      * @param visible
      *            The visibility of the HSV tab
@@ -668,7 +659,7 @@ public class ColorPickerPopup extends Window
     }
 
     /**
-     * Set Swatches tab visibility
+     * Set Swatches tab visibility.
      *
      * @param visible
      *            The visibility of the Swatches tab
@@ -684,7 +675,7 @@ public class ColorPickerPopup extends Window
     }
 
     /**
-     * Set the History visibility
+     * Set the History visibility.
      *
      * @param visible
      */
@@ -694,7 +685,7 @@ public class ColorPickerPopup extends Window
     }
 
     /**
-     * Set the preview visibility
+     * Set the preview visibility.
      *
      * @param visible
      */
@@ -705,7 +696,7 @@ public class ColorPickerPopup extends Window
     }
 
     /** RGB color converter */
-    private Coordinates2Color RGBConverter = new Coordinates2Color() {
+    private Coordinates2Color rgbConverter = new Coordinates2Color() {
 
         @Override
         public Color calculate(int x, int y) {
@@ -742,7 +733,7 @@ public class ColorPickerPopup extends Window
     };
 
     /** HSV color converter */
-    Coordinates2Color HSVConverter = new Coordinates2Color() {
+    Coordinates2Color hsvConverter = new Coordinates2Color() {
         @Override
         public int[] calculate(Color color) {
 

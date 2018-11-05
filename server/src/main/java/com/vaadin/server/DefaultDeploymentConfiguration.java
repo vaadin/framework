@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,7 @@
 
 package com.vaadin.server;
 
+import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -144,7 +145,8 @@ public class DefaultDeploymentConfiguration
         }
 
         // Try lowercased system properties
-        val = System.getProperty(pkgName + parameterName.toLowerCase());
+        val = System
+                .getProperty(pkgName + parameterName.toLowerCase(Locale.ROOT));
         if (val != null) {
             return val;
         }
@@ -170,7 +172,8 @@ public class DefaultDeploymentConfiguration
 
         // Try lower case application properties for backward compatibility with
         // 3.0.2 and earlier
-        val = initParameters.getProperty(parameterName.toLowerCase());
+        val = initParameters
+                .getProperty(parameterName.toLowerCase(Locale.ROOT));
 
         return val;
     }
@@ -322,7 +325,8 @@ public class DefaultDeploymentConfiguration
                 Constants.SERVLET_PARAMETER_PUSH_MODE,
                 PushMode.DISABLED.toString());
         try {
-            pushMode = Enum.valueOf(PushMode.class, mode.toUpperCase());
+            pushMode = Enum.valueOf(PushMode.class,
+                    mode.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
             getLogger().warning(Constants.WARNING_PUSH_MODE_NOT_RECOGNIZED);
             pushMode = PushMode.DISABLED;

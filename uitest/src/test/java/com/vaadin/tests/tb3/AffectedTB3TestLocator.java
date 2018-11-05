@@ -1,24 +1,10 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.tb3;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class AffectedTB3TestLocator extends TB3TestLocator {
@@ -65,7 +51,8 @@ public class AffectedTB3TestLocator extends TB3TestLocator {
             String lastPart = packageParts[packageParts.length - 2];
 
             for (String f : affectedFiles) {
-                if (f.toLowerCase().contains(lastPart.toLowerCase())) {
+                if (f.toLowerCase(Locale.ROOT)
+                        .contains(lastPart.toLowerCase(Locale.ROOT))) {
                     affectedTestClasses.add(c);
 
                     // Break here not to accidentally add the same test class
@@ -82,7 +69,7 @@ public class AffectedTB3TestLocator extends TB3TestLocator {
         List<String> affectedFilePaths = new ArrayList<>();
 
         for (String path : changedTB3TestLocator.getChangedFilePaths()) {
-            if (!path.toLowerCase().contains("test")) {
+            if (!path.toLowerCase(Locale.ROOT).contains("test")) {
                 affectedFilePaths.add(path);
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,12 +19,17 @@ package com.vaadin.v7.data.util;
 import static com.vaadin.util.ReflectTools.convertPrimitiveType;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.ValueProvider;
+import com.vaadin.server.Setter;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.util.SerializerHelper;
@@ -58,6 +63,9 @@ import com.vaadin.v7.util.SerializerHelper;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, replaced by {@link ValueProvider}, {@link Setter}, see
+ *             {@link Binder}
  */
 @Deprecated
 @SuppressWarnings("serial")
@@ -95,8 +103,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     private static final Object[] DEFAULT_SET_ARGS = new Object[1];
 
     /* Special serialization to handle method references */
-    private void writeObject(java.io.ObjectOutputStream out)
-            throws IOException {
+    private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         SerializerHelper.writeClass(out, type);
         out.writeObject(instance);
@@ -121,7 +128,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     }
 
     /* Special serialization to handle method references */
-    private void readObject(java.io.ObjectInputStream in)
+    private void readObject(ObjectInputStream in)
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         try {
@@ -198,7 +205,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         getMethod = null;
         try {
             getMethod = initGetterMethod(beanPropertyName, beanClass);
-        } catch (final java.lang.NoSuchMethodException ignored) {
+        } catch (final NoSuchMethodException ignored) {
             throw new MethodException(this,
                     "Bean property " + beanPropertyName + " can not be found");
         }
@@ -211,7 +218,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         try {
             setMethod = beanClass.getMethod("set" + beanPropertyName,
                     new Class[] { returnType });
-        } catch (final java.lang.NoSuchMethodException skipped) {
+        } catch (final NoSuchMethodException skipped) {
         }
 
         // Gets the return type from get method
@@ -344,26 +351,26 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         this.type = type;
 
         // Find set and get -methods
-        final Method[] m = instance.getClass().getMethods();
+        final Method[] methods = instance.getClass().getMethods();
 
         // Finds get method
         boolean found = false;
-        for (int i = 0; i < m.length; i++) {
+        for (Method m : methods) {
 
             // Tests the name of the get Method
-            if (!m[i].getName().equals(getMethodName)) {
+            if (!m.getName().equals(getMethodName)) {
 
                 // name does not match, try next method
                 continue;
             }
 
             // Tests return type
-            if (!type.equals(m[i].getReturnType())) {
+            if (!type.equals(m.getReturnType())) {
                 continue;
             }
 
             // Tests the parameter types
-            final Class<?>[] c = m[i].getParameterTypes();
+            final Class<?>[] c = m.getParameterTypes();
             if (c.length != getArgs.length) {
 
                 // not the right amount of parameters, try next method
@@ -381,18 +388,18 @@ public class MethodProperty<T> extends AbstractProperty<T> {
             }
             if (j == c.length) {
 
-                // all paramteters matched
-                if (found == true) {
+                // all parameters matched
+                if (found) {
                     throw new MethodException(this,
                             "Could not uniquely identify " + getMethodName
                                     + "-method");
                 } else {
                     found = true;
-                    getMethod = m[i];
+                    getMethod = m;
                 }
             }
         }
-        if (found != true) {
+        if (!found) {
             throw new MethodException(this,
                     "Could not find " + getMethodName + "-method");
         }
@@ -402,17 +409,17 @@ public class MethodProperty<T> extends AbstractProperty<T> {
 
             // Finds setMethod
             found = false;
-            for (int i = 0; i < m.length; i++) {
+            for (Method m : methods) {
 
                 // Checks name
-                if (!m[i].getName().equals(setMethodName)) {
+                if (!m.getName().equals(setMethodName)) {
 
                     // name does not match, try next method
                     continue;
                 }
 
                 // Checks parameter compatibility
-                final Class<?>[] c = m[i].getParameterTypes();
+                final Class<?>[] c = m.getParameterTypes();
                 if (c.length != setArgs.length) {
 
                     // not the right amount of parameters, try next method
@@ -435,17 +442,17 @@ public class MethodProperty<T> extends AbstractProperty<T> {
                 if (j == c.length) {
 
                     // all parameters match
-                    if (found == true) {
+                    if (found) {
                         throw new MethodException(this,
                                 "Could not identify unique " + setMethodName
                                         + "-method");
                     } else {
                         found = true;
-                        setMethod = m[i];
+                        setMethod = m;
                     }
                 }
             }
-            if (found != true) {
+            if (!found) {
                 throw new MethodException(this,
                         "Could not identify " + setMethodName + "-method");
             }
@@ -540,11 +547,11 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         try {
             getMethod = beanClass.getMethod("get" + propertyName,
                     new Class[] {});
-        } catch (final java.lang.NoSuchMethodException ignored) {
+        } catch (final NoSuchMethodException ignored) {
             try {
                 getMethod = beanClass.getMethod("is" + propertyName,
                         new Class[] {});
-            } catch (final java.lang.NoSuchMethodException ignoredAsWell) {
+            } catch (final NoSuchMethodException ignoredAsWell) {
                 getMethod = beanClass.getMethod("are" + propertyName,
                         new Class[] {});
             }
@@ -745,7 +752,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
          */
         public MethodProperty getMethodProperty() {
             return (property instanceof MethodProperty)
-                    ? (MethodProperty) property : null;
+                    ? (MethodProperty) property
+                    : null;
         }
 
         /**
@@ -770,9 +778,10 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     }
 
     /**
-     * The instance used by this property
+     * The instance used by this property.
      *
      * @return the instance used for fetching the property value
+     * @since 7.7.7
      */
     public Object getInstance() {
         return instance;
@@ -788,6 +797,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
      *
      * @param instance
      *            the instance to use
+     * @since 7.7.7
      */
     public void setInstance(Object instance) {
         if (this.instance.getClass() != instance.getClass()) {

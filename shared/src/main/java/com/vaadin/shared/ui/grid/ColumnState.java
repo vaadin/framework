@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,7 @@
 package com.vaadin.shared.ui.grid;
 
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.ui.ContentMode;
 
 /**
  * Shared state for a Grid column.
@@ -27,8 +28,19 @@ public class ColumnState extends AbstractGridExtensionState {
 
     public String caption;
     public String internalId;
-    public boolean sortable = true;
+    public boolean sortable = false;
     public boolean editable = false;
+
+    /**
+     * Sets whether Grid should handle events from Widgets from this column or
+     * not.
+     *
+     * @since 8.3
+     */
+    public boolean handleWidgetEvents = false;
+
+    /** The assistive device caption for the column. */
+    public String assistiveCaption;
 
     /** The caption for the column hiding toggle. */
     public String hidingToggleCaption;
@@ -64,5 +76,17 @@ public class ColumnState extends AbstractGridExtensionState {
     public boolean resizable = true;
 
     public Connector renderer;
+    /**
+     * Whether the contents define the minimum width for this column.
+     *
+     * @since 8.1
+     */
+    public boolean minimumWidthFromContent = true;
 
+    /**
+     * The content mode for tooltips.
+     *
+     * @since 8.2
+     */
+    public ContentMode tooltipContentMode;
 }

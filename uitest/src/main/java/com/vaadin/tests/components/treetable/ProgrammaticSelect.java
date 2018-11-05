@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.HierarchicalContainer;
@@ -20,15 +19,10 @@ public class ProgrammaticSelect extends TestBase {
         tt.setSelectable(true);
         addComponent(tt);
 
-        Button selectItem = new Button("Select first row",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        Object id = tt.getItemIds().iterator().next();
-                        tt.select(id);
-                    }
-                });
+        Button selectItem = new Button("Select first row", event -> {
+            Object id = tt.getItemIds().iterator().next();
+            tt.select(id);
+        });
 
         addComponent(selectItem);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +18,7 @@ package com.vaadin.client.communication;
 import com.vaadin.client.ApplicationConnection;
 
 /**
- * Interface which must be implemented by the reconnect dialog
+ * Interface which must be implemented by the reconnect dialog.
  *
  * @since 7.6
  * @author Vaadin Ltd
@@ -26,7 +26,7 @@ import com.vaadin.client.ApplicationConnection;
 public interface ReconnectDialog {
 
     /**
-     * Sets the main text shown in the dialog
+     * Sets the main text shown in the dialog.
      *
      * @param text
      *            the text to show
@@ -44,14 +44,14 @@ public interface ReconnectDialog {
     void setReconnecting(boolean reconnecting);
 
     /**
-     * Checks if the reconnect dialog is visible to the user
+     * Checks if the reconnect dialog is visible to the user.
      *
      * @return true if the user can see the dialog, false otherwise
      */
     boolean isVisible();
 
     /**
-     * Shows the dialog to the user
+     * Shows the dialog to the user.
      *
      * @param connection
      *            the application connection this is related to
@@ -59,7 +59,7 @@ public interface ReconnectDialog {
     void show(ApplicationConnection connection);
 
     /**
-     * Hides the dialog from the user
+     * Hides the dialog from the user.
      */
     void hide();
 
@@ -87,7 +87,7 @@ public interface ReconnectDialog {
     /**
      * Called once after initialization to allow the reconnect dialog to preload
      * required resources, which might not be available when the server
-     * connection is gone
+     * connection is gone.
      */
     void preload(ApplicationConnection connection);
 }

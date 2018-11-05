@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,7 +29,7 @@ public class RowHeightChangedEvent extends GwtEvent<RowHeightChangedHandler> {
     /**
      * Handler type.
      */
-    public final static Type<RowHeightChangedHandler> TYPE = new Type<RowHeightChangedHandler>();
+    public static final Type<RowHeightChangedHandler> TYPE = new Type<RowHeightChangedHandler>();
 
     public static final Type<RowHeightChangedHandler> getType() {
         return TYPE;

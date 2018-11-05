@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,7 +30,7 @@ public class SelectAllEvent<T> extends GwtEvent<SelectAllHandler<T>> {
     /**
      * Handler type.
      */
-    private final static Type<SelectAllHandler<?>> TYPE = new Type<SelectAllHandler<?>>();;
+    private static final Type<SelectAllHandler<?>> TYPE = new Type<SelectAllHandler<?>>();;
 
     private SelectionModel.Multi<T> selectionModel;
 

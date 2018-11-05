@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,8 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.VConsole;
+import com.vaadin.client.extensions.DragSourceExtensionConnector;
+import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.client.ui.VDragAndDropWrapper;
 import com.vaadin.client.ui.customcomponent.CustomComponentConnector;
 import com.vaadin.shared.ui.Connect;
@@ -33,6 +34,13 @@ import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperConstants;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperServerRpc;
 import com.vaadin.ui.DragAndDropWrapper;
 
+/**
+ *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with {@link DragSourceExtensionConnector} and
+ *             {@link DropTargetExtensionConnector}.
+ */
+@Deprecated
 @Connect(DragAndDropWrapper.class)
 public class DragAndDropWrapperConnector extends CustomComponentConnector
         implements Paintable, VDragAndDropWrapper.UploadHandler {
@@ -45,16 +53,17 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidget().client = client;
+        VDragAndDropWrapper widget = getWidget();
+        widget.client = client;
         if (isRealUpdate(uidl) && !uidl.hasAttribute("hidden")) {
             UIDL acceptCrit = uidl.getChildByTagName("-ac");
             if (acceptCrit == null) {
-                getWidget().dropHandler = null;
+                widget.dropHandler = null;
             } else {
-                if (getWidget().dropHandler == null) {
-                    getWidget().dropHandler = getWidget().new CustomDropHandler();
+                if (widget.dropHandler == null) {
+                    widget.dropHandler = widget.new CustomDropHandler();
                 }
-                getWidget().dropHandler.updateAcceptRules(acceptCrit);
+                widget.dropHandler.updateAcceptRules(acceptCrit);
             }
 
             Set<String> variableNames = uidl.getVariableNames();
@@ -62,37 +71,35 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
                 if (fileId.startsWith("rec-")) {
                     String receiverUrl = uidl.getStringVariable(fileId);
                     fileId = fileId.substring(4);
-                    if (getWidget().fileIdToReceiver == null) {
-                        getWidget().fileIdToReceiver = new HashMap<>();
+                    if (widget.fileIdToReceiver == null) {
+                        widget.fileIdToReceiver = new HashMap<>();
                     }
                     if ("".equals(receiverUrl)) {
                         Integer id = Integer.parseInt(fileId);
-                        int indexOf = getWidget().fileIds.indexOf(id);
+                        int indexOf = widget.fileIds.indexOf(id);
                         if (indexOf != -1) {
-                            getWidget().files.remove(indexOf);
-                            getWidget().fileIds.remove(indexOf);
+                            widget.files.remove(indexOf);
+                            widget.fileIds.remove(indexOf);
                         }
                     } else {
-                        if (getWidget().fileIdToReceiver.containsKey(fileId)
-                                && receiverUrl != null
-                                && !receiverUrl
-                                        .equals(getWidget().fileIdToReceiver
-                                                .get(fileId))) {
-                            VConsole.error(
+                        if (widget.fileIdToReceiver.containsKey(fileId)
+                                && receiverUrl != null && !receiverUrl.equals(
+                                        widget.fileIdToReceiver.get(fileId))) {
+                            getLogger().severe(
                                     "Overwriting file receiver mapping for fileId "
                                             + fileId + " . Old receiver URL: "
-                                            + getWidget().fileIdToReceiver
+                                            + widget.fileIdToReceiver
                                                     .get(fileId)
                                             + " New receiver URL: "
                                             + receiverUrl);
                         }
-                        getWidget().fileIdToReceiver.put(fileId, receiverUrl);
+                        widget.fileIdToReceiver.put(fileId, receiverUrl);
                     }
                 }
             }
-            getWidget().startNextUpload();
+            widget.startNextUpload();
 
-            getWidget().dragStartMode = uidl.getIntAttribute(
+            widget.dragStartMode = uidl.getIntAttribute(
                     DragAndDropWrapperConstants.DRAG_START_MODE);
 
             String dragImageComponentConnectorId = uidl.getStringAttribute(
@@ -109,15 +116,15 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
                                     + " connector now found. Make sure the"
                                     + " component is attached.");
                 } else {
-                    getWidget().setDragAndDropWidget(connector.getWidget());
+                    widget.setDragAndDropWidget(connector.getWidget());
                 }
             }
-            getWidget().initDragStartMode();
-            getWidget().html5DataFlavors = uidl.getMapAttribute(
+            widget.initDragStartMode();
+            widget.html5DataFlavors = uidl.getMapAttribute(
                     DragAndDropWrapperConstants.HTML5_DATA_FLAVORS);
 
             // Used to prevent wrapper from stealing tooltips when not defined
-            getWidget().hasTooltip = getState().description != null;
+            widget.hasTooltip = getState().description != null;
         }
     }
 

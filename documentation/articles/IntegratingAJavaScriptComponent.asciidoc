@@ -1,0 +1,106 @@
+---
+title: Integrating A JavaScript Component
+order: 38
+layout: page
+---
+
+[[integrating-a-javascript-component]]
+= Integrating a JavaScript component
+
+You can use an existing JavaScript component as a component in Vaadin by
+creating a server-side API for the component as well as writing the
+JavaScript code that connects the server-side API to the actual
+JavaScript component. Because of the dynamic nature of JavaScript, you
+don't need to use GWT development mode or recompile the widgetset while
+making client-side changes.
+
+The server-side component should extend `AbstractJavaScriptComponent` and
+provide the API that the developer uses to interact with the component.
+The class should also have a `@JavaScript` annotation that defines the
+required JavaScript libraries in the order they should be loaded. This
+example uses the Flot graph library from http://code.google.com/p/flot/.
+Float requires jQuery which is loaded using
+https://developers.google.com/speed/libraries/[Google Libraries API].
+
+[source,java]
+....
+import com.vaadin.annotations.*;
+
+@JavaScript({"https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js", "jquery.flot.js", "flot_connector.js"})
+public class Flot extends AbstractJavaScriptComponent {
+  public void addSeries(double... points) {
+    List<List<Double>> pointList = new ArrayList<List<Double>>();
+    for (int i = 0; i < points.length; i++) {
+      pointList.add(Arrays.asList(Double.valueOf(i),
+        Double.valueOf(points[i])));
+    }
+
+    getState().series.add(pointList);
+  }
+
+  @Override
+  public FlotState getState() {
+    return (FlotState) super.getState();
+  }
+}
+....
+
+The shared state class will not be used by any GWT code so you don't
+have to put it in the widgetset's client package. The state class should
+extend `JavaScriptComponentState` but is otherwise similar to the shared
+state of a normal GWT component.
+
+[source,java]
+....
+public class FlotState extends JavaScriptComponentState {
+  public List<List<List<Double>>> series = new ArrayList<List<List<Double>>>();
+}
+....
+
+The only remaining code is the client-side JavaScript connector in
+`flot_connector.js`. The connector defines a global initializer function
+named based on the fully qualified name of the server-side `Component`
+class with dots replaced with underscores. In this example the
+server-side `Component` is `com.example.Flot` which means that the function
+name should be `com_example_Flot`.
+
+This initializer function should initialize the JavaScript part of the
+component. It is called by the framework with `this` pointing to a
+connector wrapper providing integration to the framework. For full
+information about the services provided by the connector wrapper, please
+read the Javadoc for the `AbstractJavaScriptComponent` class.
+
+In this example, the initializer first initializes the `element`
+variable with a jQuery object for the DOM element of the component.
+Next, a state change listener is defined by assigning a function to the
+`onStateChange` field of the connector wrapper. This function will be
+called whenever the shared state is changed from the server-side code.
+In the state change listener, the Flot API is used to initialize a graph
+with the data series from the shared state into the DOM element.
+
+The format of the series property in the `FlotState` Java class has been
+chosen with the Flot API in mind. Flot expects an array of data series
+where each item is an array of data points where each data point is an
+array with the x value followed by the y value. This is defined in Java
+as `List<List<List<Double>>>` and then the framework takes care of the
+conversion between server-side Java values and client-side JavaScript
+values. `double[][][]` in Java would give the same JavaScript structure,
+but it was not used here as it gives less flexibility in the Java code.
+
+[source,javascript]
+....
+window.com_example_Flot = function() {
+  var element = $(this.getElement());
+
+  this.onStateChange = function() {
+    $.plot(element, this.getState().series);
+  }
+}
+....
+
+By implementing a server-side Java class extending
+`AbstractJavaScriptConnector` and a client-side JavaScript connector
+initialization function, existing JavaScript component libraries can
+easily be integrated to Vaadin. The server-side code is almost similar
+to the code required for a component based on GWT and the client-side
+code is quite similar to a `ComponentConnector` implemented using GWT.

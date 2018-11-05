@@ -19,10 +19,8 @@ public class TablesCssTest extends GridLayout {
     private final Action ACTION_MARK = new Action("Mark");
     private final Action ACTION_UNMARK = new Action("Unmark");
     private final Action ACTION_LOG = new Action("Save");
-    private final Action[] ACTIONS_UNMARKED = new Action[] { ACTION_MARK,
-            ACTION_LOG };
-    private final Action[] ACTIONS_MARKED = new Action[] { ACTION_UNMARK,
-            ACTION_LOG };
+    private final Action[] ACTIONS_UNMARKED = { ACTION_MARK, ACTION_LOG };
+    private final Action[] ACTIONS_MARKED = { ACTION_UNMARK, ACTION_LOG };
 
     public TablesCssTest(TestSampler parent) {
         super();
@@ -68,7 +66,7 @@ public class TablesCssTest extends GridLayout {
         t.setColumnCollapsingAllowed(true);
         // t.setColumnHeaders(new String[] { "Country", "Code", "Icon file" });
         t.setColumnIcon(TestUtils.iso3166_PROPERTY_NAME,
-                new ThemeResource(parent.ICON_URL));
+                new ThemeResource(TestSampler.ICON_URL));
 
         // Actions (a.k.a context menu)
         t.addActionHandler(new Action.Handler() {

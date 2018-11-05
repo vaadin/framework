@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,7 @@ import com.vaadin.v7.client.ui.VCalendarPanel.SubmitListener;
 import com.vaadin.v7.shared.ui.datefield.Resolution;
 
 /**
- * A client side implementation for InlineDateField
+ * A client side implementation for InlineDateField.
  */
 public class VDateFieldCalendar extends VDateField {
 
@@ -105,8 +105,8 @@ public class VDateFieldCalendar extends VDateField {
                                 if (getCurrentResolution()
                                         .getCalendarField() > Resolution.SECOND
                                                 .getCalendarField()) {
-                                    getClient().updateVariable(getId(),
-                                            "msec", DateTimeService
+                                    getClient().updateVariable(
+                                            getId(), "msec", DateTimeService
                                                     .getMilliseconds(date2),
                                             false);
                                 }

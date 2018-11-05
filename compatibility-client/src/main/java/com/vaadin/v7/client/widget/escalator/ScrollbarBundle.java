@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -50,7 +50,7 @@ import com.vaadin.v7.client.widget.grid.events.ScrollHandler;
  */
 public abstract class ScrollbarBundle implements DeferredWorker {
 
-    private static final boolean supportsRequestAnimationFrame = new AnimationSupportDetector()
+    private static final boolean SUPPORTS_REQUEST_ANIMATION_FRAME = new AnimationSupportDetector()
             .isNativelySupported();
 
     private class ScrollEventFirer {
@@ -97,7 +97,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
                  * We'll gather all the scroll events, and only fire once, once
                  * everything has calmed down.
                  */
-                if (supportsRequestAnimationFrame) {
+                if (SUPPORTS_REQUEST_ANIMATION_FRAME) {
                     // Chrome MUST use this as deferred commands will sometimes
                     // be run with a 300+ ms delay when scrolling.
                     AnimationScheduler.get().requestAnimationFrame(
@@ -169,7 +169,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         }
 
         /**
-         * Checks whether the scroll handle is currently visible or not
+         * Checks whether the scroll handle is currently visible or not.
          *
          * @return <code>true</code> if the scroll handle is currently visible.
          *         <code>false</code> if not.
@@ -205,7 +205,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      *
      * @see VerticalScrollbarBundle#getElement()
      */
-    public final static class VerticalScrollbarBundle extends ScrollbarBundle {
+    public static final class VerticalScrollbarBundle extends ScrollbarBundle {
 
         @Override
         public void setStylePrimaryName(String primaryStyleName) {
@@ -275,7 +275,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      *
      * @see HorizontalScrollbarBundle#getElement()
      */
-    public final static class HorizontalScrollbarBundle
+    public static final class HorizontalScrollbarBundle
             extends ScrollbarBundle {
 
         @Override
@@ -362,6 +362,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     private HandlerRegistration scrollSizeTemporaryScrollHandler;
     private HandlerRegistration offsetSizeTemporaryScrollHandler;
+    private HandlerRegistration scrollInProgress;
 
     private ScrollbarBundle() {
         root.appendChild(scrollSizeElement);
@@ -372,7 +373,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     protected abstract String internalGetScrollSize();
 
     /**
-     * Sets the primary style name
+     * Sets the primary style name.
      *
      * @param primaryStyleName
      *            The primary style name to use
@@ -435,6 +436,9 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         boolean offsetSizeBecomesGreaterThanScrollSize = showsScrollHandle()
                 && newOffsetSizeIsGreaterThanScrollSize;
         if (offsetSizeBecomesGreaterThanScrollSize && getScrollPos() != 0) {
+            if (offsetSizeTemporaryScrollHandler != null) {
+                offsetSizeTemporaryScrollHandler.removeHandler();
+            }
             // must be a field because Java insists.
             offsetSizeTemporaryScrollHandler = addScrollHandler(
                     new ScrollHandler() {
@@ -492,7 +496,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     protected abstract void internalForceScrollbar(boolean enable);
 
     /**
-     * Gets the length of the scrollbar
+     * Gets the length of the scrollbar.
      *
      * @return the length of the scrollbar in pixels
      */
@@ -523,6 +527,17 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         scrollPos = Math.max(0, Math.min(maxScrollPos, truncate(px)));
 
         if (!WidgetUtil.pixelValuesEqual(oldScrollPos, scrollPos)) {
+            if (scrollInProgress == null) {
+                // Only used for tracking that there is "workPending"
+                scrollInProgress = addScrollHandler(new ScrollHandler() {
+                    @Override
+                    public void onScroll(ScrollEvent event) {
+                        scrollInProgress.removeHandler();
+                        scrollInProgress = null;
+                    }
+                });
+            }
+
             if (isInvisibleScrollbar) {
                 invisibleScrollbarTemporaryResizer.show();
             }
@@ -631,7 +646,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
          * This needs to be made step-by-step because IE8 flat-out refuses to
          * fire a scroll event when the scroll size becomes smaller than the
          * offset size. All other browser need to suffer alongside.
-         * 
+         *
          * This really should be changed to not use any temporary scroll
          * handlers at all once IE8 support is dropped, like now done only for
          * Firefox.
@@ -649,7 +664,11 @@ public abstract class ScrollbarBundle implements DeferredWorker {
              * 'delayedSizeSet'
              */
             boolean delayedSizeSet = !BrowserInfo.get().isFirefox();
+            // must be a field because Java insists.
             if (delayedSizeSet) {
+                if (scrollSizeTemporaryScrollHandler != null) {
+                    scrollSizeTemporaryScrollHandler.removeHandler();
+                }
                 scrollSizeTemporaryScrollHandler = addScrollHandler(
                         new ScrollHandler() {
                             @Override
@@ -761,7 +780,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * In other words, this method checks whether the contents is larger than
      * can visually fit in the element.
      *
-     * @return <code>true</code> iff the scrollbar's handle is visible
+     * @return <code>true</code> if the scrollbar's handle is visible
      */
     public boolean showsScrollHandle() {
         return getScrollSize() - getOffsetSize() > WidgetUtil.PIXEL_EPSILON;
@@ -859,7 +878,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     /**
      * Checks whether the scrollbar bundle is locked or not.
      *
-     * @return <code>true</code> iff the scrollbar bundle is locked
+     * @return <code>true</code> if the scrollbar bundle is locked
      */
     public boolean isLocked() {
         return isLocked;
@@ -911,6 +930,6 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         // requestAnimationFrame - which is not automatically checked
         return scrollSizeTemporaryScrollHandler != null
                 || offsetSizeTemporaryScrollHandler != null
-                || scrollEventFirer.isBeingFired;
+                || scrollInProgress != null || scrollEventFirer.isBeingFired;
     }
 }

@@ -1,5 +1,7 @@
 package com.vaadin.tests.server;
 
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -19,7 +21,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.jar.JarEntry;
@@ -27,7 +28,6 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.Component;
@@ -54,6 +54,7 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.ui\\.themes\\..*", //
             // exact class level filtering
             "com\\.vaadin\\.event\\.FieldEvents", //
+            "com\\.vaadin\\.util\\.FileTypeResolver",
             "com\\.vaadin\\.event\\.LayoutEvents", //
             "com\\.vaadin\\.event\\.MouseEvents", //
             "com\\.vaadin\\.event\\.UIEvents", //
@@ -68,20 +69,20 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.server\\.communication\\.PushHandler.*", // PushHandler
             "com\\.vaadin\\.server\\.communication\\.DateSerializer", //
             "com\\.vaadin\\.server\\.communication\\.JSONSerializer", //
+            "com\\.vaadin\\.ui\\.declarative\\.DesignContext", //
             // and its inner classes do not need to be serializable
-            "com\\.vaadin\\.util\\.SerializerHelper", // fully static
+            "com\\.vaadin\\.v7\\.util\\.SerializerHelper", // fully static
             // class level filtering, also affecting nested classes and
             // interfaces
             "com\\.vaadin\\.server\\.LegacyCommunicationManager.*", //
             "com\\.vaadin\\.buildhelpers.*", //
             "com\\.vaadin\\.util\\.EncodeUtil.*", //
             "com\\.vaadin\\.util\\.ReflectTools.*", //
+            "com\\.vaadin\\.data\\.provider\\.InMemoryDataProviderHelpers",
+            "com\\.vaadin\\.data\\.provider\\.HierarchyMapper\\$TreeLevelQuery",
             "com\\.vaadin\\.data\\.util\\.ReflectTools.*", //
             "com\\.vaadin\\.data\\.util\\.JsonUtil.*", //
-            "com\\.vaadin\\.data\\.util.BeanItemContainerGenerator.*",
-            "com\\.vaadin\\.data\\.util\\.sqlcontainer\\.connection\\.MockInitialContextFactory",
-            "com\\.vaadin\\.data\\.util\\.sqlcontainer\\.DataGenerator",
-            "com\\.vaadin\\.data\\.util\\.sqlcontainer\\.FreeformQueryUtil",
+            "com\\.vaadin\\.data\\.util\\.BeanUtil.*",
             // the JSR-303 constraint interpolation context
             "com\\.vaadin\\.data\\.validator\\.BeanValidator\\$1", //
             "com\\.vaadin\\.sass.*", //
@@ -92,6 +93,7 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.server\\.JsonCodec\\$1", //
             "com\\.vaadin\\.server\\.communication\\.PushConnection", //
             "com\\.vaadin\\.server\\.communication\\.AtmospherePushConnection.*", //
+            "com\\.vaadin\\.ui\\.components\\.colorpicker\\.ColorUtil", //
             "com\\.vaadin\\.util\\.ConnectorHelper", //
             "com\\.vaadin\\.server\\.VaadinSession\\$FutureAccess", //
             "com\\.vaadin\\.external\\..*", //
@@ -99,7 +101,19 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.themes\\.valoutil\\.BodyStyleName", //
             "com\\.vaadin\\.server\\.communication\\.JSR356WebsocketInitializer.*", //
             "com\\.vaadin\\.screenshotbrowser\\.ScreenshotBrowser.*", //
-    };
+            "com\\.vaadin\\.osgi.*", //
+            "com\\.vaadin\\.server\\.osgi.*",
+            // V7
+            "com\\.vaadin\\.v7\\.ui\\.themes\\.BaseTheme",
+            "com\\.vaadin\\.v7\\.ui\\.themes\\.ChameleonTheme",
+            "com\\.vaadin\\.v7\\.ui\\.themes\\.Reindeer",
+            "com\\.vaadin\\.v7\\.ui\\.themes\\.Runo",
+            "com\\.vaadin\\.v7\\.tests\\.VaadinClasses",
+            "com\\.vaadin\\.v7\\.event\\.FieldEvents", //
+            "com\\.vaadin\\.v7\\.data\\.util.BeanItemContainerGenerator.*",
+            "com\\.vaadin\\.v7\\.data\\.util\\.sqlcontainer\\.connection\\.MockInitialContextFactory",
+            "com\\.vaadin\\.v7\\.data\\.util\\.sqlcontainer\\.DataGenerator",
+            "com\\.vaadin\\.v7\\.data\\.util\\.sqlcontainer\\.FreeformQueryUtil", };
 
     /**
      * Tests that all the relevant classes and interfaces under
@@ -118,7 +132,7 @@ public class ClassesSerializableTest {
 
         ArrayList<Field> nonSerializableFunctionFields = new ArrayList<>();
 
-        ArrayList<Class<?>> nonSerializableClasses = new ArrayList<>();
+        List<Class<?>> nonSerializableClasses = new ArrayList<>();
         for (String className : classes) {
             Class<?> cls = Class.forName(className);
             // Don't add classes that have a @Ignore annotation on the class
@@ -127,7 +141,7 @@ public class ClassesSerializableTest {
             }
 
             // report fields that use lambda types that won't be serializable
-            // (also in syntehtic classes)
+            // (also in synthetic classes)
             Stream.of(cls.getDeclaredFields())
                     .filter(field -> isFunctionalType(field.getGenericType()))
                     .forEach(nonSerializableFunctionFields::add);
@@ -137,7 +151,7 @@ public class ClassesSerializableTest {
                 continue;
             }
 
-            if (Component.class.isAssignableFrom(cls) && !cls.isInterface()
+            if (!cls.isInterface()
                     && !Modifier.isAbstract(cls.getModifiers())) {
                 serializeAndDeserialize(cls);
             }
@@ -205,22 +219,20 @@ public class ClassesSerializableTest {
     }
 
     private void failSerializableFields(
-            ArrayList<Field> nonSerializableFunctionFields) {
+            List<Field> nonSerializableFunctionFields) {
         String nonSerializableString = nonSerializableFunctionFields.stream()
                 .map(field -> String.format("%s.%s",
                         field.getDeclaringClass().getName(), field.getName()))
                 .collect(Collectors.joining(", "));
 
-        Assert.fail("Fields with functional types that are not serializable: "
+        fail("Fields with functional types that are not serializable: "
                 + nonSerializableString);
     }
 
     private void failSerializableClasses(
-            ArrayList<Class<?>> nonSerializableClasses) {
+            List<Class<?>> nonSerializableClasses) {
         String nonSerializableString = "";
-        Iterator<Class<?>> it = nonSerializableClasses.iterator();
-        while (it.hasNext()) {
-            Class<?> c = it.next();
+        for (Class<?> c : nonSerializableClasses) {
             nonSerializableString += ", " + c.getName();
             if (c.isAnonymousClass()) {
                 nonSerializableString += "(super: ";
@@ -233,9 +245,8 @@ public class ClassesSerializableTest {
                 nonSerializableString += ")";
             }
         }
-        Assert.fail(
-                "Serializable not implemented by the following classes and interfaces: "
-                        + nonSerializableString);
+        fail("Serializable not implemented by the following classes and interfaces: "
+                + nonSerializableString);
 
     }
 
@@ -267,7 +278,7 @@ public class ClassesSerializableTest {
      *
      * @return List of class path segment strings
      */
-    private final static List<String> getRawClasspathEntries() {
+    private static final List<String> getRawClasspathEntries() {
         // try to keep the order of the classpath
         List<String> locations = new ArrayList<>();
 
@@ -352,15 +363,16 @@ public class ClassesSerializableTest {
     private Collection<String> findClassesInJar(File file) throws IOException {
         Collection<String> classes = new ArrayList<>();
 
-        JarFile jar = new JarFile(file);
-        Enumeration<JarEntry> e = jar.entries();
-        while (e.hasMoreElements()) {
-            JarEntry entry = e.nextElement();
-            if (entry.getName().endsWith(".class")) {
-                String nameWithoutExtension = entry.getName()
-                        .replaceAll("\\.class", "");
-                String className = nameWithoutExtension.replace('/', '.');
-                classes.add(className);
+        try (JarFile jar = new JarFile(file)) {
+            Enumeration<JarEntry> e = jar.entries();
+            while (e.hasMoreElements()) {
+                JarEntry entry = e.nextElement();
+                if (entry.getName().endsWith(".class")) {
+                    String nameWithoutExtension = entry.getName()
+                            .replaceAll("\\.class", "");
+                    String className = nameWithoutExtension.replace('/', '.');
+                    classes.add(className);
+                }
             }
         }
         return classes;
@@ -377,7 +389,7 @@ public class ClassesSerializableTest {
      *            File representing the directory to scan
      * @return collection of fully qualified class names in the directory
      */
-    private final static Collection<String> findClassesInDirectory(
+    private static final Collection<String> findClassesInDirectory(
             String parentPackage, File parent) {
         if (parent.isHidden()
                 || parent.getPath().contains(File.separator + ".")) {

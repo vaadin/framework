@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -493,7 +493,7 @@ public class WeekGrid extends SimplePanel {
     }
 
     /**
-     * Get width of the single date cell
+     * Get width of the single date cell.
      *
      * @return Date cell width
      */
@@ -540,7 +540,7 @@ public class WeekGrid extends SimplePanel {
 
     public static class Timebar extends HTML {
 
-        private static final int[] timesFor12h = { 12, 1, 2, 3, 4, 5, 6, 7, 8,
+        private static final int[] TIMES_FOR_12H = { 12, 1, 2, 3, 4, 5, 6, 7, 8,
                 9, 10, 11 };
 
         private int height;
@@ -592,7 +592,7 @@ public class WeekGrid extends SimplePanel {
             } else {
                 // FIXME Use dts.getAmPmStrings(); and make sure that
                 // DateTimeService has a some Locale set.
-                String[] ampm = new String[] { "AM", "PM" };
+                String[] ampm = { "AM", "PM" };
 
                 int amStop = (lastHour < 11) ? lastHour : 11;
                 int pmStart = (firstHour > 11) ? firstHour % 11 : 0;
@@ -601,7 +601,7 @@ public class WeekGrid extends SimplePanel {
                     for (int i = firstHour + 1; i <= amStop; i++) {
                         e = DOM.createDiv();
                         setStyleName(e, "v-calendar-time");
-                        e.setInnerHTML("<span>" + timesFor12h[i] + "</span>"
+                        e.setInnerHTML("<span>" + TIMES_FOR_12H[i] + "</span>"
                                 + " " + ampm[0]);
                         getElement().appendChild(e);
                     }
@@ -611,7 +611,7 @@ public class WeekGrid extends SimplePanel {
                     for (int i = pmStart; i < lastHour - 11; i++) {
                         e = DOM.createDiv();
                         setStyleName(e, "v-calendar-time");
-                        e.setInnerHTML("<span>" + timesFor12h[i] + "</span>"
+                        e.setInnerHTML("<span>" + TIMES_FOR_12H[i] + "</span>"
                                 + " " + ampm[1]);
                         getElement().appendChild(e);
                     }

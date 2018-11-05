@@ -1,0 +1,97 @@
+---
+title: Creating A Component Extension
+order: 72
+layout: page
+---
+
+[[creating-a-component-extension]]
+= Creating a component extension
+
+In this tutorial we create a simple extension that can be attached to a
+`PasswordField`, displaying a floating notification if the user's Caps
+Lock seems to be enabled. We assume the reader is already familiar with
+the link:CreatingAUIExtension.asciidoc[Creating a UI extension]
+tutorial.
+
+This extension has almost no server-side functionality; the whole Extension
+class is as follows:
+
+[source,java]
+....
+public class CapsLockWarning extends AbstractExtension {
+  protected CapsLockWarning(PasswordField field) {
+    // Non-public constructor to discourage direct instantiation
+    extend(field);
+  }
+
+  public static CapsLockWarning warnFor(PasswordField field) {
+    return new CapsLockWarning(field);
+  }
+}
+....
+
+When there's nothing to configure for the extension, users just want to
+enable it for some component and be done with it. By defining a static
+factory method, the user only needs to do something like
+`CapsLockWarning.warnFor(myPasswordField);` to make `myPasswordField`
+get the new functionality.
+
+The client side is not overly complicated, either. We override the
+`extend` method, called by the framework when the client-side extension
+connector is attached to its target the client-side counterpart of the
+connector to which the server-side extension instance is attached in
+this case, `PasswordFieldConnector`.
+
+We add a key press handler to the password widget, checking if the input
+looks like Caps Lock might be enabled. The Caps Lock state cannot be
+directly queried in GWT/JavaScript, so we use a trick: check if either
+
+* the shift key was not held but the entered character was uppercase, or
+* the shift key _was_ held but the entered character was lowercase.
+
+If this is the case, we show a warning in the form of a floating widget
+(`VOverlay`). This demonstrates how an extension may make use of UI
+elements even though it is not a part of the layout hierarchy. A
+frequent use case for extensions is showing different types of floating
+overlay elements that are temporary in character.
+
+[source,java]
+....
+
+@Connect(CapsLockWarning.class)
+public class CapsLockWarningConnector extends AbstractExtensionConnector {
+  @Override
+  protected void extend(ServerConnector target) {
+    final Widget passwordWidget = ((ComponentConnector) target).getWidget();
+
+    final VOverlay warning = new VOverlay();
+    warning.setOwner(passwordWidget);
+    warning.add(new HTML("Caps Lock is enabled!"));
+
+    passwordWidget.addDomHandler(new KeyPressHandler() {
+      @Override
+      public void onKeyPress(KeyPressEvent event) {
+        if (isEnabled() && isCapsLockOn(event)) {
+          warning.showRelativeTo(passwordWidget);
+        } else {
+          warning.hide();
+        }
+      }
+    }, KeyPressEvent.getType());
+  }
+
+  private boolean isCapsLockOn(KeyPressEvent e) {
+    return e.isShiftKeyDown() ^ Character.isUpperCase(e.getCharCode());
+  }
+}
+....
+
+To use the Caps Lock warning, compile your widgetset and extend a
+PasswordField with something like this
+
+[source,java]
+....
+PasswordField field = new PasswordField("Enter your password");
+CapsLockWarning.warnFor(field);
+addComponent(field);
+....

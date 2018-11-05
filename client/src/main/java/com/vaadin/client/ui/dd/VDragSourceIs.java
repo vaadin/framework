@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,14 +20,18 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.UIDL;
 import com.vaadin.event.dd.acceptcriteria.SourceIs;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 /**
- * TODO Javadoc!
  *
  * @since 6.3
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with
+ *             {@link DropTargetExtension#setDropCriteria(String)}
  */
+@Deprecated
 @AcceptCriterion(SourceIs.class)
-final public class VDragSourceIs extends VAcceptCriterion {
+public final class VDragSourceIs extends VAcceptCriterion {
 
     @Override
     protected boolean accept(VDragEvent drag, UIDL configuration) {

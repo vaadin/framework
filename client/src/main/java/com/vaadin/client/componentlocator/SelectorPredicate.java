@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,9 +42,9 @@ public class SelectorPredicate {
     }
 
     /**
-     * Generate a list of predicates from a single predicate string
+     * Generates a list of predicates from a single predicate string.
      *
-     * @param str
+     * @param path
      *            a comma separated string of predicates
      * @return a List of Predicate objects
      */
@@ -52,7 +52,7 @@ public class SelectorPredicate {
         List<SelectorPredicate> predicates = new ArrayList<>();
 
         String predicateStr = extractPredicateString(path);
-        if (null == predicateStr || predicateStr.length() == 0) {
+        if (null == predicateStr || predicateStr.isEmpty()) {
             return predicates;
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,6 +26,7 @@ import com.vaadin.client.UIDL;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.v7.client.ui.VOptionGroup;
+import com.vaadin.v7.shared.ui.optiongroup.OptionGroupConstants;
 import com.vaadin.v7.shared.ui.optiongroup.OptionGroupState;
 import com.vaadin.v7.ui.OptionGroup;
 
@@ -34,6 +35,9 @@ public class OptionGroupConnector extends OptionGroupBaseConnector {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        getWidget().htmlContentAllowed = uidl
+                .hasAttribute(OptionGroupConstants.HTML_CONTENT_ALLOWED);
+
         super.updateFromUIDL(uidl, client);
 
         getWidget().sendFocusEvents = client.hasEventListeners(this,

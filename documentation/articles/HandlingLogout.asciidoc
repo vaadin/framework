@@ -1,0 +1,34 @@
+---
+title: Handling Logout
+order: 21
+layout: page
+---
+
+[[handling-logout]]
+= Handling logout
+What should happen the user wants to log out from a Vaadin application
+depends on how the user is stored when the user logged in.
+
+If the user information is stored in the `VaadinSession`, that session
+should be closed using its `close()` method. If the information on the
+other hand is stored in the `HttpSession` or `PortletSession`, then that
+session should be invalidated using the `invalidate()` method in Vaadin's
+`WrappedSession` that represents either underlying session type.
+
+Aside from removing the user's information, the user should also be
+redirected to a logout page to avoid keeping the UI open in the browser
+after all server-side information about is has been removed.
+
+[source,java]
+....
+private void logout() {
+    // Close the VaadinServiceSession
+    getUI().getSession().close();
+
+    // Invalidate underlying session instead if login info is stored there
+    // VaadinService.getCurrentRequest().getWrappedSession().invalidate();
+
+    // Redirect to avoid keeping the removed UI open in the browser
+    getUI().getPage().setLocation(getLogoutPageLocation());
+}
+....

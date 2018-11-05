@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,7 +17,7 @@ package com.vaadin.v7.shared.ui.grid;
 
 /**
  * Collection of modes used for resizing columns in the Grid.
- * 
+ *
  * @since 7.7.5
  */
 public enum ColumnResizeMode {

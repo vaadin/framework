@@ -1,12 +1,13 @@
 package com.vaadin.tests.components.loginform;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.customelements.LoginFormElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.LoginFormElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class LoginFormUITest extends SingleBrowserTest {
@@ -17,7 +18,7 @@ public class LoginFormUITest extends SingleBrowserTest {
         getUsername().sendKeys("user123");
         getPassword().sendKeys("pass123");
         getLogin().click();
-        Assert.assertEquals("User 'user123', password='pass123' logged in",
+        assertEquals("User 'user123', password='pass123' logged in",
                 getInfo().getText());
     }
 

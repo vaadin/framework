@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -105,10 +105,16 @@ public abstract class AbstractLayout extends AbstractComponentContainer
      */
     protected void writeMargin(Element design, MarginInfo margin,
             MarginInfo defMargin, DesignContext context) {
-        if (margin.hasAll() || margin.hasNone()) {
+        if (defMargin.getBitMask() == margin.getBitMask()) {
+            // Default, no need to write
+        } else if (margin.hasNone()) {
+            // Write "margin='false'"
             DesignAttributeHandler.writeAttribute("margin", design.attributes(),
-                    margin.hasAll(), defMargin.hasAll(), boolean.class,
-                    context);
+                    false, true, boolean.class, context);
+        } else if (margin.hasAll()) {
+            // Write "margin"
+            DesignAttributeHandler.writeAttribute("margin", design.attributes(),
+                    true, false, boolean.class, context);
         } else {
 
             DesignAttributeHandler.writeAttribute("margin-left",

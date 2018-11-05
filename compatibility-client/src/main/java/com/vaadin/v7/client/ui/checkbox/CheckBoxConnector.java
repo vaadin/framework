@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,8 +21,10 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.VTooltip;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
@@ -67,7 +69,7 @@ public class CheckBoxConnector extends AbstractFieldConnector
                 getWidget().errorIndicatorElement = DOM.createSpan();
                 getWidget().errorIndicatorElement.setInnerHTML("&nbsp;");
                 DOM.setElementProperty(getWidget().errorIndicatorElement,
-                        "className", "v-errorindicator");
+                        "className", StyleConstants.STYLE_NAME_ERROR_INDICATOR);
                 DOM.appendChild(getWidget().getElement(),
                         getWidget().errorIndicatorElement);
                 DOM.sinkEvents(getWidget().errorIndicatorElement,
@@ -75,6 +77,11 @@ public class CheckBoxConnector extends AbstractFieldConnector
             } else {
                 getWidget().errorIndicatorElement.getStyle().clearDisplay();
             }
+
+            ErrorUtil.setErrorLevelStyle(getWidget().errorIndicatorElement,
+                    StyleConstants.STYLE_NAME_ERROR_INDICATOR,
+                    getState().errorLevel);
+
         } else if (getWidget().errorIndicatorElement != null) {
             getWidget().errorIndicatorElement.getStyle()
                     .setDisplay(Display.NONE);

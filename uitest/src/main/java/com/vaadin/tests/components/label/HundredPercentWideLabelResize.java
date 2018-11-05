@@ -2,7 +2,6 @@ package com.vaadin.tests.components.label;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
 public class HundredPercentWideLabelResize extends TestBase {
@@ -25,19 +24,13 @@ public class HundredPercentWideLabelResize extends TestBase {
         text.setWidth("100%");
         getLayout().addComponent(text);
 
-        getLayout().addComponent(
-                new Button("toggle width", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        if (getLayout().getWidth() == 500) {
-                            getLayout().setWidth("100px");
-                        } else {
-                            getLayout().setWidth("500px");
-                        }
-
-                    }
-
-                }));
+        getLayout().addComponent(new Button("toggle width", event -> {
+            if (getLayout().getWidth() == 500) {
+                getLayout().setWidth("100px");
+            } else {
+                getLayout().setWidth("500px");
+            }
+        }));
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -43,18 +43,29 @@ public abstract class OptionGroupBaseConnector extends AbstractFieldConnector
         getWidget().selectedKeys = uidl.getStringArrayVariableAsSet("selected");
 
         getWidget().setReadonly(isReadOnly());
-        getWidget().multiselect = getState().multiSelect;
+        getWidget().multiselect = "multi"
+                .equals(uidl.getStringAttribute("selectmode"));
         getWidget().immediate = getState().immediate;
         getWidget().nullSelectionAllowed = uidl
                 .getBooleanAttribute("nullselect");
         getWidget().nullSelectionItemAvailable = uidl
                 .getBooleanAttribute("nullselectitem");
 
+        if (uidl.hasAttribute("cols")) {
+            getWidget().cols = uidl.getIntAttribute("cols");
+        }
         if (uidl.hasAttribute("rows")) {
             getWidget().rows = uidl.getIntAttribute("rows");
         }
 
         final UIDL ops = uidl.getChildUIDL(0);
+
+        if (getWidget().getColumns() > 0) {
+            getWidget().container.setWidth(getWidget().getColumns() + "em");
+            if (getWidget().container != getWidget().optionsContainer) {
+                getWidget().optionsContainer.setWidth("100%");
+            }
+        }
 
         getWidget().buildOptions(ops);
 

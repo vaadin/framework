@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@
 package com.vaadin.client.ui.orderedlayout;
 
 import java.util.List;
+import java.util.Locale;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
@@ -30,16 +31,19 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.ui.FontIcon;
+import com.vaadin.client.ui.HasErrorIndicatorElement;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ImageIcon;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ui.AlignmentInfo;
+import com.vaadin.shared.ui.ErrorLevel;
 
 /**
  * Represents a slot which contains the actual widget in the layout.
  */
-public class Slot extends SimplePanel {
+public class Slot extends SimplePanel implements HasErrorIndicatorElement {
 
     private static final String ALIGN_CLASS_PREFIX = "v-align-";
 
@@ -219,7 +223,7 @@ public class Slot extends SimplePanel {
     }
 
     /**
-     * Returns the alignment for the slot
+     * Returns the alignment for the slot.
      *
      */
     public AlignmentInfo getAlignment() {
@@ -227,7 +231,7 @@ public class Slot extends SimplePanel {
     }
 
     /**
-     * Sets the style names for the slot containing the widget
+     * Sets the style names for the slot containing the widget.
      *
      * @param stylenames
      *            The style names for the slot
@@ -245,7 +249,7 @@ public class Slot extends SimplePanel {
     }
 
     /**
-     * Sets how the widget is aligned inside the slot
+     * Sets how the widget is aligned inside the slot.
      *
      * @param alignment
      *            The alignment inside the slot
@@ -333,7 +337,7 @@ public class Slot extends SimplePanel {
     }
 
     /**
-     * Get the element which is added to make the spacing
+     * Get the element which is added to make the spacing.
      *
      * @return
      */
@@ -342,14 +346,14 @@ public class Slot extends SimplePanel {
     }
 
     /**
-     * Does the slot have spacing
+     * Does the slot have spacing.
      */
     public boolean hasSpacing() {
         return getSpacingElement() != null;
     }
 
     /**
-     * Get the vertical amount in pixels of the spacing
+     * Get the vertical amount in pixels of the spacing.
      */
     protected int getVerticalSpacing() {
         if (spacer == null) {
@@ -361,7 +365,7 @@ public class Slot extends SimplePanel {
     }
 
     /**
-     * Get the horizontal amount of pixels of the spacing
+     * Get the horizontal amount of pixels of the spacing.
      *
      * @return
      */
@@ -375,7 +379,7 @@ public class Slot extends SimplePanel {
     }
 
     /**
-     * Set the position of the caption relative to the slot
+     * Set the position of the caption relative to the slot.
      *
      * @param captionPosition
      *            The position of the caption
@@ -384,8 +388,8 @@ public class Slot extends SimplePanel {
         if (caption == null) {
             return;
         }
-        captionWrap.removeClassName(
-                "v-caption-on-" + this.captionPosition.name().toLowerCase());
+        captionWrap.removeClassName("v-caption-on-"
+                + this.captionPosition.name().toLowerCase(Locale.ROOT));
 
         this.captionPosition = captionPosition;
         if (captionPosition == CaptionPosition.BOTTOM
@@ -395,19 +399,19 @@ public class Slot extends SimplePanel {
             captionWrap.insertFirst(caption);
         }
 
-        captionWrap.addClassName(
-                "v-caption-on-" + captionPosition.name().toLowerCase());
+        captionWrap.addClassName("v-caption-on-"
+                + captionPosition.name().toLowerCase(Locale.ROOT));
     }
 
     /**
-     * Get the position of the caption relative to the slot
+     * Get the position of the caption relative to the slot.
      */
     public CaptionPosition getCaptionPosition() {
         return captionPosition;
     }
 
     /**
-     * Set the caption of the slot
+     * Set the caption of the slot.
      *
      * @param captionText
      *            The text of the caption
@@ -445,7 +449,7 @@ public class Slot extends SimplePanel {
     }
 
     /**
-     * Set the caption of the slot as text
+     * Set the caption of the slot as text.
      *
      * @param captionText
      *            The text of the caption
@@ -470,7 +474,7 @@ public class Slot extends SimplePanel {
     }
 
     /**
-     * Set the caption of the slot
+     * Set the caption of the slot.
      *
      * @param captionText
      *            The text of the caption
@@ -493,6 +497,37 @@ public class Slot extends SimplePanel {
     public void setCaption(String captionText, Icon icon, List<String> styles,
             String error, boolean showError, boolean required, boolean enabled,
             boolean captionAsHtml) {
+        setCaption(captionText, icon, styles, error, null, showError, required,
+                enabled, captionAsHtml);
+    }
+
+    /**
+     * Set the caption of the slot.
+     *
+     * @param captionText
+     *            The text of the caption
+     * @param icon
+     *            The icon
+     * @param styles
+     *            The style names
+     * @param error
+     *            The error message
+     * @param errorLevel
+     *            The error level
+     * @param showError
+     *            Should the error message be shown
+     * @param required
+     *            Is the (field) required
+     * @param enabled
+     *            Is the component enabled
+     * @param captionAsHtml
+     *            true if the caption should be rendered as HTML, false
+     *            otherwise
+     * @since 8.2
+     */
+    public void setCaption(String captionText, Icon icon, List<String> styles,
+            String error, ErrorLevel errorLevel, boolean showError,
+            boolean required, boolean enabled, boolean captionAsHtml) {
 
         // TODO place for optimization: check if any of these have changed
         // since last time, and only run those changes
@@ -538,7 +573,7 @@ public class Slot extends SimplePanel {
                 this.captionText.addClassName("v-captiontext");
                 caption.appendChild(this.captionText);
             }
-            if (captionText.trim().equals("")) {
+            if (captionText.trim().isEmpty()) {
                 this.captionText.setInnerHTML("&nbsp;");
             } else {
                 if (captionAsHtml) {
@@ -583,14 +618,11 @@ public class Slot extends SimplePanel {
 
         // Error
         if (error != null && showError) {
-            if (errorIcon == null) {
-                errorIcon = DOM.createSpan();
-                errorIcon.setClassName("v-errorindicator");
-            }
-            caption.appendChild(errorIcon);
-        } else if (errorIcon != null) {
-            errorIcon.removeFromParent();
-            errorIcon = null;
+            setErrorIndicatorElementVisible(true);
+            ErrorUtil.setErrorLevelStyle(getErrorIndicatorElement(),
+                    StyleConstants.STYLE_NAME_ERROR_INDICATOR, errorLevel);
+        } else {
+            setErrorIndicatorElementVisible(false);
         }
 
         if (caption != null) {
@@ -653,14 +685,14 @@ public class Slot extends SimplePanel {
     }
 
     /**
-     * Does the slot have a caption
+     * Does the slot have a caption.
      */
     public boolean hasCaption() {
         return caption != null;
     }
 
     /**
-     * Get the slots caption element
+     * Get the slots caption element.
      */
     public com.google.gwt.user.client.Element getCaptionElement() {
         return DOM.asOld(caption);
@@ -669,7 +701,7 @@ public class Slot extends SimplePanel {
     private boolean relativeWidth = false;
 
     /**
-     * Set if the slot has a relative width
+     * Set if the slot has a relative width.
      *
      * @param relativeWidth
      *            True if slot uses relative width, false if the slot has a
@@ -687,7 +719,7 @@ public class Slot extends SimplePanel {
     private boolean relativeHeight = false;
 
     /**
-     * Set if the slot has a relative height
+     * Set if the slot has a relative height.
      *
      * @param relativeHeight
      *            True if the slot uses a relative height, false if the slot has
@@ -797,6 +829,24 @@ public class Slot extends SimplePanel {
             return hasRelativeHeight();
         } else {
             return hasRelativeWidth();
+        }
+    }
+
+    @Override
+    public Element getErrorIndicatorElement() {
+        return errorIcon;
+    }
+
+    @Override
+    public void setErrorIndicatorElementVisible(boolean visible) {
+        if (visible) {
+            if (errorIcon == null) {
+                errorIcon = ErrorUtil.createErrorIndicatorElement();
+            }
+            caption.appendChild(errorIcon);
+        } else if (errorIcon != null) {
+            errorIcon.removeFromParent();
+            errorIcon = null;
         }
     }
 }

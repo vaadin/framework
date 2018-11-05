@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,7 +37,6 @@ import com.vaadin.v7.ui.components.calendar.event.CalendarEditableEventProvider;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEvent.EventChangeListener;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEvent.EventChangeNotifier;
-import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider.EventSetChangeNotifier;
 
 /**
@@ -48,6 +47,8 @@ import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider.EventSet
  *
  * @since 7.1.0
  * @author Vaadin Ltd.
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -85,14 +86,14 @@ public class ContainerEventProvider
     /**
      * Listeners attached to the container
      */
-    private final List<EventSetChangeListener> eventSetChangeListeners = new LinkedList<>();
-    private final List<EventChangeListener> eventChangeListeners = new LinkedList<>();
+    private final List<EventSetChangeListener> eventSetChangeListeners = new LinkedList<EventSetChangeListener>();
+    private final List<EventChangeListener> eventChangeListeners = new LinkedList<EventChangeListener>();
 
     /**
      * The event cache contains the events previously created by
      * {@link #getEvents(Date, Date)}
      */
-    private final List<CalendarEvent> eventCache = new LinkedList<>();
+    private final List<CalendarEvent> eventCache = new LinkedList<CalendarEvent>();
 
     /**
      * The container used as datasource
@@ -111,7 +112,7 @@ public class ContainerEventProvider
     private Object allDayProperty = ALL_DAY_PROPERTY;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param container
      *            Container to use as a data source.
@@ -122,7 +123,7 @@ public class ContainerEventProvider
     }
 
     /**
-     * Set the container data source
+     * Set the container data source.
      *
      * @param container
      *            The container to use as datasource
@@ -137,7 +138,7 @@ public class ContainerEventProvider
     }
 
     /**
-     * Returns the container used as data source
+     * Returns the container used as data source.
      *
      */
     public Container.Indexed getContainerDataSource() {
@@ -241,13 +242,6 @@ public class ContainerEventProvider
         return event;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.calendar.event.CalendarEventProvider#getEvents(java.
-     * util.Date, java.util.Date)
-     */
     @Override
     public List<CalendarEvent> getEvents(Date startDate, Date endDate) {
         eventCache.clear();
@@ -280,14 +274,6 @@ public class ContainerEventProvider
         return Collections.unmodifiableList(eventCache);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.addon.calendar.event.CalendarEventProvider.
-     * EventSetChangeNotifier
-     * #addListener(com.vaadin.addon.calendar.event.CalendarEventProvider.
-     * EventSetChangeListener)
-     */
     @Override
     public void addEventSetChangeListener(EventSetChangeListener listener) {
         if (!eventSetChangeListeners.contains(listener)) {
@@ -295,26 +281,11 @@ public class ContainerEventProvider
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.addon.calendar.event.CalendarEventProvider.
-     * EventSetChangeNotifier
-     * #removeListener(com.vaadin.addon.calendar.event.CalendarEventProvider.
-     * EventSetChangeListener)
-     */
     @Override
     public void removeEventSetChangeListener(EventSetChangeListener listener) {
         eventSetChangeListeners.remove(listener);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.addon.calendar.event.CalendarEvent.EventChangeNotifier#
-     * addListener
-     * (com.vaadin.addon.calendar.event.CalendarEvent.EventChangeListener)
-     */
     @Override
     public void addEventChangeListener(EventChangeListener listener) {
         if (eventChangeListeners.contains(listener)) {
@@ -322,90 +293,83 @@ public class ContainerEventProvider
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.addon.calendar.event.CalendarEvent.EventChangeNotifier#
-     * removeListener
-     * (com.vaadin.addon.calendar.event.CalendarEvent.EventChangeListener)
-     */
     @Override
     public void removeEventChangeListener(EventChangeListener listener) {
         eventChangeListeners.remove(listener);
     }
 
     /**
-     * Get the property which provides the caption of the event
+     * Get the property which provides the caption of the event.
      */
     public Object getCaptionProperty() {
         return captionProperty;
     }
 
     /**
-     * Set the property which provides the caption of the event
+     * Set the property which provides the caption of the event.
      */
     public void setCaptionProperty(Object captionProperty) {
         this.captionProperty = captionProperty;
     }
 
     /**
-     * Get the property which provides the description of the event
+     * Get the property which provides the description of the event.
      */
     public Object getDescriptionProperty() {
         return descriptionProperty;
     }
 
     /**
-     * Set the property which provides the description of the event
+     * Set the property which provides the description of the event.
      */
     public void setDescriptionProperty(Object descriptionProperty) {
         this.descriptionProperty = descriptionProperty;
     }
 
     /**
-     * Get the property which provides the starting date and time of the event
+     * Get the property which provides the starting date and time of the event.
      */
     public Object getStartDateProperty() {
         return startDateProperty;
     }
 
     /**
-     * Set the property which provides the starting date and time of the event
+     * Set the property which provides the starting date and time of the event.
      */
     public void setStartDateProperty(Object startDateProperty) {
         this.startDateProperty = startDateProperty;
     }
 
     /**
-     * Get the property which provides the ending date and time of the event
+     * Get the property which provides the ending date and time of the event.
      */
     public Object getEndDateProperty() {
         return endDateProperty;
     }
 
     /**
-     * Set the property which provides the ending date and time of the event
+     * Set the property which provides the ending date and time of the event.
      */
     public void setEndDateProperty(Object endDateProperty) {
         this.endDateProperty = endDateProperty;
     }
 
     /**
-     * Get the property which provides the style name for the event
+     * Get the property which provides the style name for the event.
      */
     public Object getStyleNameProperty() {
         return styleNameProperty;
     }
 
     /**
-     * Set the property which provides the style name for the event
+     * Set the property which provides the style name for the event.
      */
     public void setStyleNameProperty(Object styleNameProperty) {
         this.styleNameProperty = styleNameProperty;
     }
 
     /**
-     * Set the all day property for the event
+     * Set the all day property for the event.
      *
      * @since 7.3.4
      */
@@ -414,7 +378,7 @@ public class ContainerEventProvider
     }
 
     /**
-     * Get the all day property for the event
+     * Get the all day property for the event.
      *
      * @since 7.3.4
      */
@@ -422,13 +386,6 @@ public class ContainerEventProvider
         return allDayProperty;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.data.Container.ItemSetChangeListener#containerItemSetChange
-     * (com.vaadin.data.Container.ItemSetChangeEvent)
-     */
     @Override
     public void containerItemSetChange(ItemSetChangeEvent event) {
         if (event.getContainer() == container) {
@@ -439,13 +396,6 @@ public class ContainerEventProvider
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.data.Property.ValueChangeListener#valueChange(com.vaadin.data
-     * .Property.ValueChangeEvent)
-     */
     @Override
     public void valueChange(ValueChangeEvent event) {
         /*
@@ -455,14 +405,6 @@ public class ContainerEventProvider
          */
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventMoveHandler
-     * #eventMove
-     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.MoveEvent)
-     */
     @Override
     public void eventMove(MoveEvent event) {
         CalendarEvent ce = event.getCalendarEvent();
@@ -486,14 +428,6 @@ public class ContainerEventProvider
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventResizeHandler
-     * #eventResize
-     * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventResize)
-     */
     @Override
     public void eventResize(EventResize event) {
         CalendarEvent ce = event.getCalendarEvent();
@@ -517,19 +451,12 @@ public class ContainerEventProvider
      * If you are reusing the container which previously have been attached to
      * this ContainerEventProvider call this method to remove this event
      * providers container listeners before attaching it to an other
-     * ContainerEventProvider
+     * ContainerEventProvider.
      */
     public void detachContainerDataSource() {
         ignoreContainerEvents();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.calendar.event.CalendarEditableEventProvider#addEvent
-     * (com.vaadin.addon.calendar.event.CalendarEvent)
-     */
     @Override
     public void addEvent(CalendarEvent event) {
         Item item;
@@ -553,13 +480,6 @@ public class ContainerEventProvider
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.addon.calendar.event.CalendarEditableEventProvider#removeEvent
-     * (com.vaadin.addon.calendar.event.CalendarEvent)
-     */
     @Override
     public void removeEvent(CalendarEvent event) {
         container.removeItem(event);

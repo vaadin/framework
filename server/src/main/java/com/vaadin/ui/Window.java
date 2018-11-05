@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -59,7 +59,6 @@ import com.vaadin.util.ReflectTools;
  * A component that represents a floating popup window that can be added to a
  * {@link UI}. A window is added to a {@code UI} using
  * {@link UI#addWindow(Window)}.
- * </p>
  * <p>
  * The contents of a window is set using {@link #setContent(Component)} or by
  * using the {@link #Window(String, Component)} constructor.
@@ -80,8 +79,7 @@ import com.vaadin.util.ReflectTools;
  * @since 3.0
  */
 @SuppressWarnings({ "serial", "deprecation" })
-public class Window extends Panel
-        implements FocusNotifier, BlurNotifier, LegacyComponent {
+public class Window extends Panel implements FocusNotifier, BlurNotifier {
 
     private WindowServerRpc rpc = new WindowServerRpc() {
 
@@ -121,7 +119,7 @@ public class Window extends Panel
     private int orderPosition = -1;
 
     /**
-     * Creates a new, empty window
+     * Creates a new, empty window.
      */
     public Window() {
         this("", null);
@@ -286,7 +284,7 @@ public class Window extends Panel
 
     /**
      * Sets the position of the window on the screen using
-     * {@link #setPositionX(int)} and {@link #setPositionY(int)}
+     * {@link #setPositionX(int)} and {@link #setPositionY(int)}.
      *
      * @since 7.5
      * @param x
@@ -367,9 +365,9 @@ public class Window extends Panel
         try {
             WINDOW_CLOSE_METHOD = CloseListener.class
                     .getDeclaredMethod("windowClose", CloseEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error, window close method not found");
         }
     }
@@ -505,7 +503,7 @@ public class Window extends Panel
          * {@link Window} that was closed.
          *
          * @param e
-         *            Event containing
+         *            The triggered event
          */
         public void windowClose(CloseEvent e);
     }
@@ -663,9 +661,9 @@ public class Window extends Panel
         try {
             WINDOW_RESIZE_METHOD = ResizeListener.class
                     .getDeclaredMethod("windowResized", ResizeEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error, window resized method not found");
         }
     }
@@ -686,7 +684,7 @@ public class Window extends Panel
         }
 
         /**
-         * Get the window form which this event originated
+         * Get the window form which this event originated.
          *
          * @return the window
          */
@@ -912,7 +910,7 @@ public class Window extends Panel
     }
 
     /**
-     * Sets the mode for the window
+     * Sets the mode for the window.
      *
      * @see WindowMode
      * @param windowMode

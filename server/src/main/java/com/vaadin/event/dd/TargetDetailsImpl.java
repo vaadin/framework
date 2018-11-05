@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,18 +19,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.ui.dnd.event.DropEvent;
 
 /**
  * A HashMap backed implementation of {@link TargetDetails} for terminal
  * implementation and for extension.
  *
  * @since 6.3
- *
+ * @deprecated Replaced in 8.1 by {@link DropEvent#getTransferData(String)}
  */
+@Deprecated
 @SuppressWarnings("serial")
 public class TargetDetailsImpl implements TargetDetails {
 
-    private HashMap<String, Object> data = new HashMap<>();
+    private Map<String, Object> data = new HashMap<>();
     private DropTarget dropTarget;
 
     protected TargetDetailsImpl(Map<String, Object> rawDropData) {

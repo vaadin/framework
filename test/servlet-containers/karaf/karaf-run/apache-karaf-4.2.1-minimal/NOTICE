@@ -1,0 +1,65 @@
+Apache Karaf
+Copyright 2010-2018 The Apache Software Foundation
+
+I. Included Software
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+Licensed under the Apache License 2.0.
+
+This product includes software developed at
+The OSGi Alliance (http://www.osgi.org/).
+Copyright (c) OSGi Alliance (2000, 2010).
+Licensed under the Apache License 2.0.
+
+This product includes software developed at
+OW2 (http://www.ow2.org/).
+Licensed under the BSD License.
+
+This product includes software developed at
+OPS4J (http://www.ops4j.org/).
+Licensed under the Apache License 2.0.
+
+This product includes software developed at
+Eclipse Foundation (http://www.eclipse.org/).
+Licensed under the EPL.
+
+This product includes software written by
+Antony Lesuisse.
+Licensed under Public Domain.
+
+II. Used Software
+
+This product uses software developed at
+FUSE Source (http://www.fusesource.org/).
+Licensed under the Apache License 2.0.
+
+This product uses software developed at
+AOP Alliance (http://aopalliance.sourceforge.net/).
+Licensed under the Public Domain.
+
+This product uses software developed at
+Tanuki Software (http://www.tanukisoftware.com/).
+Licensed under the Apache License 2.0.
+
+This product uses software developed at
+Jasypt (http://jasypt.sourceforge.net/).
+Licensed under the Apache License 2.0.
+
+This product uses software developed at
+JLine (https://github.com/jline/).
+Licensed under the BSD License.
+
+This product uses software developed at
+SLF4J (http://www.slf4j.org/).
+Licensed under the MIT License.
+
+This product uses software developed at
+SpringSource (http://www.springsource.org/).
+Licensed under the Apache License 2.0.
+
+III. License Summary
+- Apache License 2.0
+- BSD License
+- EPL License
+- MIT License

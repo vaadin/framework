@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,7 +24,7 @@ import com.vaadin.v7.shared.ui.calendar.CalendarServerRpc;
 import com.vaadin.v7.shared.ui.calendar.DateConstants;
 
 /**
- * Action performed by the calendar
+ * Action performed by the calendar.
  *
  * @since 7.1
  * @author Vaadin Ltd.
@@ -41,7 +41,7 @@ public class VCalendarAction extends Action {
 
     private CalendarEvent event;
 
-    private final DateTimeFormat dateformat_datetime = DateTimeFormat
+    private static final DateTimeFormat DATE_FORMAT_DATE_TIME = DateTimeFormat
             .getFormat(DateConstants.ACTION_DATE_FORMAT_PATTERN);
 
     /**
@@ -53,7 +53,7 @@ public class VCalendarAction extends Action {
     }
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param owner
      *            The owner who trigger this kinds of events
@@ -76,8 +76,8 @@ public class VCalendarAction extends Action {
      */
     @Override
     public void execute() {
-        String startDate = dateformat_datetime.format(actionStartDate);
-        String endDate = dateformat_datetime.format(actionEndDate);
+        String startDate = DATE_FORMAT_DATE_TIME.format(actionStartDate);
+        String endDate = DATE_FORMAT_DATE_TIME.format(actionEndDate);
 
         if (event == null) {
             rpc.actionOnEmptyCell(actionKey.split("-")[0], startDate, endDate);
@@ -90,7 +90,7 @@ public class VCalendarAction extends Action {
     }
 
     /**
-     * Get the date and time when the action starts
+     * Get the date and time when the action starts.
      *
      * @return
      */
@@ -99,7 +99,7 @@ public class VCalendarAction extends Action {
     }
 
     /**
-     * Set the date when the actions start
+     * Set the date when the actions start.
      *
      * @param actionStartDate
      *            The date and time when the action starts
@@ -109,7 +109,7 @@ public class VCalendarAction extends Action {
     }
 
     /**
-     * Get the date and time when the action ends
+     * Get the date and time when the action ends.
      *
      * @return
      */
@@ -118,7 +118,7 @@ public class VCalendarAction extends Action {
     }
 
     /**
-     * Set the date and time when the action ends
+     * Set the date and time when the action ends.
      *
      * @param actionEndDate
      *            The date and time when the action ends

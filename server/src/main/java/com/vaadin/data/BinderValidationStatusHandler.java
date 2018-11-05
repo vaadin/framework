@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,18 +16,18 @@
 package com.vaadin.data;
 
 import com.vaadin.event.SerializableEventListener;
-import com.vaadin.ui.AbstractComponent;
 
 /**
  * Handler for {@link BinderValidationStatus} changes.
  * <p>
- * {@link Binder#setValidationStatusHandler(BinderValidationStatusHandler) Register} an
- * instance of this class to be able to customize validation status handling.
+ * {@link Binder#setValidationStatusHandler(BinderValidationStatusHandler)
+ * Register} an instance of this class to be able to customize validation status
+ * handling.
  * <p>
  * The default handler will show
- * {@link AbstractComponent#setComponentError(com.vaadin.server.ErrorMessage) an
- * error message} for failed field validations. For bean level validation errors
- * it will display the first error message in
+ * {@link com.vaadin.ui.AbstractComponent#setComponentError(com.vaadin.server.ErrorMessage)
+ * an error message} for failed field validations. For bean level validation
+ * errors it will display the first error message in
  * {@link Binder#setStatusLabel(com.vaadin.ui.Label) status label}, if one has
  * been set.
  *
@@ -53,5 +53,4 @@ public interface BinderValidationStatusHandler<BEAN>
      *            the changed status
      */
     void statusChange(BinderValidationStatus<BEAN> statusChange);
-
 }

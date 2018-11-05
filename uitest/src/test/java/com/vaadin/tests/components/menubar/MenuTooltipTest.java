@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.menubar;
 
 import static org.hamcrest.Matchers.greaterThan;
@@ -23,9 +8,7 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 
 import org.junit.Test;
-import org.openqa.selenium.interactions.HasInputDevices;
-import org.openqa.selenium.interactions.Mouse;
-import org.openqa.selenium.interactions.internal.Coordinates;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.MenuBarElement;
@@ -47,24 +30,21 @@ public class MenuTooltipTest extends MultiBrowserTest {
     public void testToolTipDelay() throws InterruptedException {
         openTestURL();
 
-        Coordinates elementCoordinates = getCoordinates(
-                $(MenuBarElement.class).first());
-        sleep(1000);
+        final MenuBarElement menuBar = $(MenuBarElement.class).first();
+        // Open menu bar and move on top of the first menu item
+        new Actions(getDriver()).moveToElement(menuBar).click()
+                .moveByOffset(0, menuBar.getSize().getHeight()).perform();
 
-        Mouse mouse = ((HasInputDevices) getDriver()).getMouse();
-
-        mouse.click(elementCoordinates);
-        mouse.mouseMove(elementCoordinates, 15, 40);
-
-        sleep(1000);
-
+        // Make sure tooltip is outside of the screen
         assertThat(getTooltipElement().getLocation().getX(),
                 is(lessThan(-1000)));
 
+        // Wait for tooltip to open up
         sleep(3000);
 
+        // Make sure it's the correct tooltip
         assertThat(getTooltipElement().getLocation().getX(),
-                is(greaterThan(elementCoordinates.onPage().getX())));
+                is(greaterThan(menuBar.getLocation().getX())));
         assertThat(getTooltipElement().getText(), is("TOOLTIP 1"));
     }
 }

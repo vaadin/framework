@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.javascriptcomponent;
 
 import com.vaadin.annotations.JavaScript;
@@ -47,14 +32,14 @@ public class JavaScriptStateTracking extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         StateTrackingComponent stateTrackingComponent = new StateTrackingComponent();
 
-        Button setField2 = new Button("Set field2", e -> {
+        Button setField2 = new Button("Set field2", event -> {
             stateTrackingComponent.getState().counter++;
             stateTrackingComponent.getState().field2 = "updated value "
                     + stateTrackingComponent.getState().counter;
         });
         setField2.setId("setField2");
 
-        Button clearField1 = new Button("Clear field1", e -> {
+        Button clearField1 = new Button("Clear field1", event -> {
             stateTrackingComponent.getState().counter++;
             stateTrackingComponent.getState().field1 = null;
         });

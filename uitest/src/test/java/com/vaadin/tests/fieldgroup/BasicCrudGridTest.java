@@ -1,32 +1,21 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.fieldgroup;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import java.util.List;
 
-import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 
 import com.vaadin.testbench.AbstractHasTestBenchCommandExecutor;
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.AbstractComponentElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
+import com.vaadin.testbench.parallel.BrowserUtil;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class BasicCrudGridTest extends SingleBrowserTestPhantomJS2 {
+public class BasicCrudGridTest extends SingleBrowserTest {
 
     @Test
     public void fieldsInitiallyEmpty() {
@@ -35,7 +24,7 @@ public class BasicCrudGridTest extends SingleBrowserTestPhantomJS2 {
                 .$(TextFieldElement.class).all();
 
         for (TextFieldElement e : textFields) {
-            Assert.assertEquals("TextField should be empty", "", e.getValue());
+            assertEquals("TextField should be empty", "", e.getValue());
         }
     }
 
@@ -45,6 +34,9 @@ public class BasicCrudGridTest extends SingleBrowserTestPhantomJS2 {
 
     @Test
     public void fieldsClearedOnDeselect() {
+        Assume.assumeFalse("PhantomJS has issues with this test",
+                BrowserUtil.isPhantomJS(getDesiredCapabilities()));
+
         openTestURL();
 
         // Select row
@@ -54,15 +46,14 @@ public class BasicCrudGridTest extends SingleBrowserTestPhantomJS2 {
                 .$(TextFieldElement.class).all();
 
         for (TextFieldElement e : textFields) {
-            Assert.assertNotEquals("TextField should not be empty", "",
-                    e.getValue());
+            assertNotEquals("TextField should not be empty", "", e.getValue());
         }
 
         // Deselect row
         $(GridElement.class).first().getCell(2, 2).click();
 
         for (TextFieldElement e : textFields) {
-            Assert.assertEquals("TextField should be empty", "", e.getValue());
+            assertEquals("TextField should be empty", "", e.getValue());
         }
 
     }

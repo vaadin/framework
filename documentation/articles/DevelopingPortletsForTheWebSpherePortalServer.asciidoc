@@ -1,0 +1,100 @@
+---
+title: Developing Portlets For The WebSphere Portal Server
+order: 4
+layout: page
+---
+
+[[developing-portlets-for-the-websphere-portal-server]]
+= Developing portlets for the Websphere Portal Server
+
+When creating portlets for the Websphere Portal Server (aka WPS) you
+have the choice between different frameworks
+
+* JSF (2.0)
+* Spring Portlet MVC
+* Vaadin 6 / 7
+
+While using JSF seems to be a bit outdated, because WPS just supports an
+old JSF Version (MyFaces 2.0.2) Spring Portlet MVC is a good and valid
+options for developing portlets.
+
+On this page I will try to collect all information to
+develop Vaadin portlets in a fast and easy to use way. I will also
+handle topics like using CDI and the navigator in a portal environment
+as well as some architectural ideas like using the MVP pattern for a
+portlet project. As an example portlet I will use a simple master /
+detail portlet just like the Vaadin address book application. I have
+developed all code examples on this wiki pages with the current Vaadin
+version (7.4.2 as I am writing this) and tested the portlets on WPS 8.0
+and 8.5.
+
+I use Maven for dependency management and SLF4J for logging. You can
+download the small zipped project in the attachments section. Please,
+feel free to leave comments and / or questions on the bottom of the
+page.
+
+[[a-simple-portlet]]
+A simple Portlet
+~~~~~~~~~~~~~~~~
+
+Lets start with a "Click Me" (aka "Hello World") Vaading portlet.
+
+The UI class is identical to servlet development (create a button with a
+click listener and show a notification when clicking the button). The
+interesting part is the configuration of the portlet.xml file.
+
+[[portlet.xml]]
+Portlet.xml
+^^^^^^^^^^^
+
+[source,xml]
+....
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" id="com.gisag.vaadin.ClickMeUI">     
+  <portlet>         
+    <description>Vaadin Click Me Portlet </description>         
+    <portlet-name>Vaadin Click Me Portlet</portlet-name>         
+    <display-name>Vaadin Click Me Portlet</display-name>        
+    <portlet-class>com.vaadin.server.VaadinPortlet</portlet-class>
+
+    <init-param>           
+      <name>UI</name>           
+      <value>com.gisag.vaadin.ClickMeUI</value>         
+    </init-param>         
+
+    <init-param>             
+      <name>productionMode</name>             
+      <value>false</value>         
+    </init-param>     
+        
+    <init-param>           
+      <description>Path of all static vaadin resources (configurable from context root)</description>             
+      <name>vaadin.resources.path</name>             
+      <value>PORTLET_CONTEXT</value>       
+    </init-param>
+
+    <!-- Supported portlet modes and content types. -->         
+    <supports>             
+      <mime-type>text/html</mime-type>             
+      <portlet-mode>view</portlet-mode>         
+    </supports>     
+  </portlet>
+</portlet-app>
+....
+
+In the `portlet` tag you have to set a value for the `portlet-class`. For
+this simple we can use the default Vaadin portlet class
+`com.vaadin.server.VaadinPortlet`; you also have to name you UI class as a
+portlet init parameter.
+
+To let WPS find the Vaadin javascript and theme resources you have to
+use the portlet init parameter `vaadin.resources.path`. The value
+`PORTLET_CONTEXT` is a Vaadin constant value that makes the vaadin
+resources available in the portlets resource path.
+
+Run the Maven build with `clean package` as goals and deploy the created
+war file in the portal administration. Create a blank portal page and
+add your portlet to the page. Your "Click me" portlet should look like
+this:
+
+image:img/Click_Me_2015-03-31_21-03-27.png[Your first portlet]

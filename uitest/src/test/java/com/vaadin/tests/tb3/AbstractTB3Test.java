@@ -1,20 +1,9 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests.tb3;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +16,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.logging.Level;
 
 import org.apache.commons.io.IOUtils;
@@ -35,32 +25,32 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
-import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.rules.TestName;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
-import org.openqa.selenium.interactions.internal.Coordinates;
-import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.internal.WrapsElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UIProvider;
+import com.vaadin.testbench.ScreenshotOnFailureRule;
 import com.vaadin.testbench.TestBenchDriverProxy;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.annotations.BrowserConfiguration;
@@ -99,8 +89,16 @@ public abstract class AbstractTB3Test extends ParallelTest {
     @Rule
     public TestName testName = new TestName();
 
-    @Rule
-    public RetryOnFail retry = new RetryOnFail();
+    {
+        // Override default screenshotOnFailureRule to close application
+        screenshotOnFailure = new ScreenshotOnFailureRule(this, true) {
+            @Override
+            protected void finished(Description description) {
+                closeApplication();
+                super.finished(description);
+            }
+        };
+    }
 
     /**
      * Height of the screenshots we want to capture
@@ -116,15 +114,6 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Timeout used by the TB grid
      */
     private static final int BROWSER_TIMEOUT_IN_MS = 30 * 1000;
-
-    protected static DesiredCapabilities PHANTOMJS2() {
-        DesiredCapabilities phantomjs2 = new VaadinBrowserFactory()
-                .create(Browser.PHANTOMJS, "2");
-        // Hack for the test cluster
-        phantomjs2.setCapability("phantomjs.binary.path",
-                "/usr/bin/phantomjs2");
-        return phantomjs2;
-    }
 
     private boolean debug = false;
 
@@ -159,7 +148,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Method for closing the tested application.
      */
     protected void closeApplication() {
-        if (driver != null) {
+        if (getDriver() != null) {
             try {
                 openTestURL("closeApplication");
             } catch (Exception e) {
@@ -179,10 +168,6 @@ public abstract class AbstractTB3Test extends ParallelTest {
                 com.vaadin.testbench.By.className("v-tooltip-text"));
     }
 
-    protected Coordinates getCoordinates(TestBenchElement element) {
-        return ((Locatable) element.getWrappedElement()).getCoordinates();
-    }
-
     private boolean hasDebugMessage(String message) {
         return getDebugMessage(message) != null;
     }
@@ -193,37 +178,44 @@ public abstract class AbstractTB3Test extends ParallelTest {
                 message)));
     }
 
+    protected void minimizeDebugWindow() {
+        if (findElement(By.className("v-debugwindow-tabs")).isDisplayed()) {
+            findElements(By.className("v-debugwindow-button")).stream()
+                    .filter(e -> e.getAttribute("title").equals("Minimize"))
+                    .findFirst().ifPresent(WebElement::click);
+        }
+    }
+
+    protected void showDebugWindow() {
+        if (!findElement(By.className("v-debugwindow-tabs")).isDisplayed()) {
+            findElements(By.className("v-debugwindow-button")).stream()
+                    .filter(e -> e.getAttribute("title").equals("Minimize"))
+                    .findFirst().ifPresent(WebElement::click);
+        }
+    }
+
     protected void waitForDebugMessage(final String expectedMessage) {
         waitForDebugMessage(expectedMessage, 30);
     }
 
     protected void waitForDebugMessage(final String expectedMessage,
             int timeout) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                return hasDebugMessage(expectedMessage);
-            }
-        }, timeout);
+        waitUntil(input -> hasDebugMessage(expectedMessage), timeout);
     }
 
     protected void clearDebugMessages() {
-        driver.findElement(By
-                .xpath("//button[@class='v-debugwindow-button' and @title='Clear log']"))
+        driver.findElement(By.xpath(
+                "//button[@class='v-debugwindow-button' and @title='Clear log']"))
                 .click();
     }
 
     protected void waitUntilRowIsVisible(final TableElement table,
             final int row) {
-        waitUntil(new ExpectedCondition<Object>() {
-            @Override
-            public Object apply(WebDriver input) {
-                try {
-                    return table.getCell(row, 0) != null;
-                } catch (NoSuchElementException e) {
-                    return false;
-                }
+        waitUntil(input -> {
+            try {
+                return table.getCell(row, 0) != null;
+            } catch (NoSuchElementException e) {
+                return false;
             }
         });
     }
@@ -273,7 +265,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
             parameters.add("restartApplication");
         }
 
-        if (parameters.size() > 0) {
+        if (!parameters.isEmpty()) {
             url += "?" + StringUtils.join(parameters, "&");
         }
 
@@ -309,7 +301,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     /**
      * Used to determine what port the test is running on
      *
-     * @return The port teh test is running on, by default 8888
+     * @return The port the test is running on, by default 8888
      */
     protected abstract int getDeploymentPort();
 
@@ -412,30 +404,6 @@ public abstract class AbstractTB3Test extends ParallelTest {
     }
 
     /**
-     * Waits up to 10s for the given condition to become true. Use e.g. as
-     * {@link #waitUntil(ExpectedConditions.textToBePresentInElement(by, text))}
-     *
-     * @param condition
-     *            the condition to wait for to become true
-     */
-    protected <T> void waitUntil(ExpectedCondition<T> condition) {
-        waitUntil(condition, 10);
-    }
-
-    /**
-     * Waits the given number of seconds for the given condition to become true.
-     * Use e.g. as
-     * {@link #waitUntil(ExpectedConditions.textToBePresentInElement(by, text))}
-     *
-     * @param condition
-     *            the condition to wait for to become true
-     */
-    protected <T> void waitUntil(ExpectedCondition<T> condition,
-            long timeoutInSeconds) {
-        new WebDriverWait(driver, timeoutInSeconds).until(condition);
-    }
-
-    /**
      * Waits up to 10s for the given condition to become false. Use e.g. as
      * {@link #waitUntilNot(ExpectedConditions.textToBePresentInElement(by,
      * text))}
@@ -466,12 +434,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     }
 
     protected void waitForElementNotPresent(final By by) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return input.findElements(by).isEmpty();
-            }
-        });
+        waitUntil(input -> input.findElements(by).isEmpty());
     }
 
     protected void waitForElementVisible(final By by) {
@@ -771,7 +734,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
         // Remove any possible URL parameters
         String pathWithoutQueryParameters = pathWithQueryParameters
                 .replaceAll("\\?.*", "");
-        if ("".equals(pathWithoutQueryParameters)) {
+        if (pathWithoutQueryParameters.isEmpty()) {
             return "ROOT";
         }
 
@@ -837,11 +800,12 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     protected void openDebugLogTab() {
 
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
+        waitUntil(input -> {
+            try {
                 WebElement element = getDebugLogButton();
                 return element != null;
+            } catch (NoSuchElementException e) {
+                return false;
             }
         }, 15);
         getDebugLogButton().click();
@@ -861,8 +825,8 @@ public abstract class AbstractTB3Test extends ParallelTest {
             for (WebElement e : logElements) {
                 logRows += "\n" + e.getText();
             }
-            Assert.fail("Found debug messages with level " + level.getName()
-                    + ": " + logRows);
+            fail("Found debug messages with level " + level.getName() + ": "
+                    + logRows);
         }
     }
 
@@ -942,16 +906,17 @@ public abstract class AbstractTB3Test extends ParallelTest {
             String hostName = ce.getAddressOfRemoteServer().getHost();
             int port = ce.getAddressOfRemoteServer().getPort();
             HttpHost host = new HttpHost(hostName, port);
-            DefaultHttpClient client = new DefaultHttpClient();
-            URL sessionURL = new URL("http://" + hostName + ":" + port
-                    + "/grid/api/testsession?session=" + d.getSessionId());
-            BasicHttpEntityEnclosingRequest r = new BasicHttpEntityEnclosingRequest(
-                    "POST", sessionURL.toExternalForm());
-            HttpResponse response = client.execute(host, r);
-            JsonObject object = extractObject(response);
-            URL myURL = new URL(object.getString("proxyId"));
-            if ((myURL.getHost() != null) && (myURL.getPort() != -1)) {
-                return myURL.getHost();
+            try (DefaultHttpClient client = new DefaultHttpClient()) {
+                URL sessionURL = new URL("http://" + hostName + ":" + port
+                        + "/grid/api/testsession?session=" + d.getSessionId());
+                BasicHttpEntityEnclosingRequest r = new BasicHttpEntityEnclosingRequest(
+                        "POST", sessionURL.toExternalForm());
+                HttpResponse response = client.execute(host, r);
+                JsonObject object = extractObject(response);
+                URL myURL = new URL(object.getString("proxyId"));
+                if ((myURL.getHost() != null) && (myURL.getPort() != -1)) {
+                    return myURL.getHost();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1059,10 +1024,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      */
     protected void selectMenu(String menuCaption, boolean click) {
         WebElement menuElement = getMenuElement(menuCaption);
-        Dimension size = menuElement.getSize();
-        new Actions(getDriver())
-                .moveToElement(menuElement, size.width - 10, size.height / 2)
-                .perform();
+        new Actions(getDriver()).moveToElement(menuElement).perform();
         if (click) {
             new Actions(getDriver()).click().perform();
         }
@@ -1079,8 +1041,9 @@ public abstract class AbstractTB3Test extends ParallelTest {
      */
     protected WebElement getMenuElement(String menuCaption)
             throws NoSuchElementException {
+        // Need the parent span to obtain the correct size
         return getDriver().findElement(
-                By.xpath("//span[text() = '" + menuCaption + "']"));
+                By.xpath("//span[text() = '" + menuCaption + "']/.."));
     }
 
     /**
@@ -1093,6 +1056,10 @@ public abstract class AbstractTB3Test extends ParallelTest {
     protected void selectMenuPath(String... menuCaptions) {
         selectMenu(menuCaptions[0], true);
 
+        // Make sure menu popup is opened.
+        waitUntil(e -> isElementPresent(By.className("gwt-MenuBarPopup"))
+                || isElementPresent(By.className("v-menubar-popup")));
+
         // Move to the menu item opened below the menu bar.
         new Actions(getDriver())
                 .moveByOffset(0,
@@ -1101,7 +1068,9 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
         for (int i = 1; i < menuCaptions.length - 1; i++) {
             selectMenu(menuCaptions[i]);
-            new Actions(getDriver()).moveByOffset(40, 0).build().perform();
+            new Actions(getDriver()).moveByOffset(
+                    getMenuElement(menuCaptions[i]).getSize().getWidth(), 0)
+                    .build().perform();
         }
         selectMenu(menuCaptions[menuCaptions.length - 1], true);
     }
@@ -1110,20 +1079,20 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Asserts that an element is present
      *
      * @param by
-     *            the locatore for the element
+     *            the locator for the element
      */
     protected void assertElementPresent(By by) {
-        Assert.assertTrue("Element is not present", isElementPresent(by));
+        assertTrue("Element is not present", isElementPresent(by));
     }
 
     /**
      * Asserts that an element is not present
      *
      * @param by
-     *            the locatore for the element
+     *            the locator for the element
      */
     protected void assertElementNotPresent(By by) {
-        Assert.assertFalse("Element is present", isElementPresent(by));
+        assertFalse("Element is present", isElementPresent(by));
     }
 
     /**
@@ -1131,8 +1100,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * "?debug" as exceptions are otherwise not shown as notifications.
      */
     protected void assertNoErrorNotifications() {
-        Assert.assertFalse(
-                "Error notification with client side exception is shown",
+        assertFalse("Error notification with client side exception is shown",
                 isNotificationPresent("error"));
     }
 
@@ -1140,8 +1108,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Asserts that no system notifications are shown.
      */
     protected void assertNoSystemNotifications() {
-        Assert.assertFalse(
-                "Error notification with system error exception is shown",
+        assertFalse("Error notification with system error exception is shown",
                 isNotificationPresent("system"));
     }
 
@@ -1149,14 +1116,14 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Asserts that a system notification is shown.
      */
     protected void assertSystemNotification() {
-        Assert.assertTrue(
+        assertTrue(
                 "Error notification with system error exception is not shown",
                 isNotificationPresent("system"));
     }
 
     private boolean isNotificationPresent(String type) {
         if ("error".equals(type)) {
-            Assert.assertTrue(
+            assertTrue(
                     "Debug window must be open to be able to see error notifications",
                     isDebugWindowOpen());
         }
@@ -1169,18 +1136,29 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     protected void assertNoHorizontalScrollbar(WebElement element,
             String errorMessage) {
+        assertHasHorizontalScrollbar(element, errorMessage, false);
+    }
+
+    protected void assertHorizontalScrollbar(WebElement element,
+            String errorMessage) {
+        assertHasHorizontalScrollbar(element, errorMessage, true);
+    }
+
+    private void assertHasHorizontalScrollbar(WebElement element,
+            String errorMessage, boolean expected) {
         // IE rounds clientWidth/clientHeight down and scrollHeight/scrollWidth
         // up, so using clientWidth/clientHeight will fail if the element height
         // is not an integer
         int clientWidth = getClientWidth(element);
         int scrollWidth = getScrollWidth(element);
         boolean hasScrollbar = scrollWidth > clientWidth;
-
-        Assert.assertFalse(
-                "The element should not have a horizontal scrollbar (scrollWidth: "
-                        + scrollWidth + ", clientWidth: " + clientWidth + "): "
-                        + errorMessage,
-                hasScrollbar);
+        String message = "The element should";
+        if (!expected) {
+            message += " not";
+        }
+        message += " have a horizontal scrollbar (scrollWidth: " + scrollWidth
+                + ", clientWidth: " + clientWidth + "): " + errorMessage;
+        assertEquals(message, expected, hasScrollbar);
     }
 
     protected void assertNoVerticalScrollbar(WebElement element,
@@ -1192,7 +1170,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
         int scrollHeight = getScrollHeight(element);
         boolean hasScrollbar = scrollHeight > clientHeight;
 
-        Assert.assertFalse(
+        assertFalse(
                 "The element should not have a vertical scrollbar (scrollHeight: "
                         + scrollHeight + ", clientHeight: " + clientHeight
                         + "): " + errorMessage,
@@ -1207,6 +1185,53 @@ public abstract class AbstractTB3Test extends ParallelTest {
     protected int getScrollWidth(WebElement element) {
         return ((Number) executeScript("return arguments[0].scrollWidth;",
                 element)).intValue();
+    }
+
+    protected int getScrollTop(WebElement element) {
+        return ((Number) executeScript("return arguments[0].scrollTop;",
+                element)).intValue();
+    }
+
+    /**
+     * Gets the X offset for
+     * {@link Actions#moveToElement(WebElement, int, int)}. This method takes
+     * into account the W3C specification in browsers that properly implement
+     * it.
+     *
+     * @param element
+     *            the element
+     * @param targetX
+     *            the X coordinate where the move is wanted to go to
+     * @return the correct X offset
+     */
+    protected int getXOffset(WebElement element, int targetX) {
+        if (BrowserUtil.isFirefox(getDesiredCapabilities())) {
+            // Firefox follow W3C spec and moveToElement is relative to center
+            final int width = element.getSize().getWidth();
+            return targetX - ((width + width % 2) / 2);
+        }
+        return targetX;
+    }
+
+    /**
+     * Gets the Y offset for
+     * {@link Actions#moveToElement(WebElement, int, int)}. This method takes
+     * into account the W3C specification in browsers that properly implement
+     * it.
+     *
+     * @param element
+     *            the element
+     * @param targetY
+     *            the Y coordinate where the move is wanted to go to
+     * @return the correct Y offset
+     */
+    protected int getYOffset(WebElement element, int targetY) {
+        if (BrowserUtil.isFirefox(getDesiredCapabilities())) {
+            // Firefox follow W3C spec and moveToElement is relative to center
+            final int height = element.getSize().getHeight();
+            return targetY - ((height + height % 2) / 2);
+        }
+        return targetY;
     }
 
     /**
@@ -1231,6 +1256,19 @@ public abstract class AbstractTB3Test extends ParallelTest {
         return ((Number) executeScript(script, e)).intValue();
     }
 
+    protected TimeZone getBrowserTimeZone() {
+        Assume.assumeFalse(
+                "Internet Explorer 11 does not support resolvedOptions timeZone",
+                BrowserUtil.isIE(getDesiredCapabilities(), 11));
+
+        // Ask TimeZone from browser
+        String browserTimeZone = ((JavascriptExecutor) getDriver())
+                .executeScript(
+                        "return Intl.DateTimeFormat().resolvedOptions().timeZone;")
+                .toString();
+        return TimeZone.getTimeZone(browserTimeZone);
+    }
+
     protected void assertElementsEquals(WebElement expectedElement,
             WebElement actualElement) {
         while (expectedElement instanceof WrapsElement) {
@@ -1241,7 +1279,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
             actualElement = ((WrapsElement) actualElement).getWrappedElement();
         }
 
-        Assert.assertEquals(expectedElement, actualElement);
+        assertEquals(expectedElement, actualElement);
     }
 
     protected WebElement getActiveElement() {
@@ -1253,14 +1291,10 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
         final WebElement rootDiv = findElement(
                 By.xpath("//div[contains(@class,'v-app')]"));
-        waitUntil(new ExpectedCondition<Boolean>() {
+        waitUntil(input -> {
+            String rootClass = rootDiv.getAttribute("class").trim();
 
-            @Override
-            public Boolean apply(WebDriver input) {
-                String rootClass = rootDiv.getAttribute("class").trim();
-
-                return rootClass.contains(theme);
-            }
+            return rootClass.contains(theme);
         }, 30);
     }
 

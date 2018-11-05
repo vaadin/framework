@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.server.component.grid;
 
 import static org.junit.Assert.assertEquals;
@@ -25,6 +10,7 @@ import org.junit.Test;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.components.grid.HeaderCell;
 import com.vaadin.ui.components.grid.HeaderRow;
 
 public class GridDefaultHeaderTest {
@@ -83,5 +69,30 @@ public class GridDefaultHeaderTest {
         column1.setCaption("1st");
 
         assertEquals("First", grid.getHeaderRow(0).getCell(column1).getText());
+    }
+
+    @Test
+    public void updateDefaultRow_columnCaptionUpdated() {
+        grid.getDefaultHeaderRow().getCell(column1).setText("new");
+        assertEquals("new", column1.getCaption());
+        assertEquals("Second", column2.getCaption());
+    }
+
+    @Test
+    public void updateDefaultRowWithMergedCell_columnCaptionNotUpdated() {
+        HeaderCell merged = grid.getDefaultHeaderRow().join(column1, column2);
+        merged.setText("new");
+        assertEquals("First", column1.getCaption());
+        assertEquals("Second", column2.getCaption());
+    }
+
+    @Test
+    public void updateColumnCaption_defaultRowWithMergedCellNotUpdated() {
+        HeaderCell merged = grid.getDefaultHeaderRow().join(column1, column2);
+        merged.setText("new");
+        column1.setCaption("foo");
+        column2.setCaption("bar");
+
+        assertEquals("new", merged.getText());
     }
 }

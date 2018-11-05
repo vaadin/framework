@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,29 +25,13 @@ public class UIConstants implements Serializable {
     public static final String RESIZE_LAZY = "rL";
 
     @Deprecated
-    public static final String NOTIFICATION_HTML_CONTENT_NOT_ALLOWED = "useplain";
-
-    @Deprecated
     public static final String ATTRIBUTE_PUSH_STATE = "ps";
 
     @Deprecated
     public static final String ATTRIBUTE_REPLACE_STATE = "rs";
 
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_STYLE = "style";
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_CAPTION = "caption";
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_MESSAGE = "message";
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_ICON = "icon";
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_POSITION = "position";
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_DELAY = "delay";
-
     /**
-     * Name of the parameter used to transmit UI ids back and forth
+     * Name of the parameter used to transmit UI ids back and forth.
      */
     public static final String UI_ID_PARAMETER = "v-uiId";
 

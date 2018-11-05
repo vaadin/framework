@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,7 +22,7 @@ import java.util.List;
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.AbstractSingleSelectState;
-import elemental.json.JsonArray;
+import com.vaadin.shared.ui.ContentMode;
 
 /**
  * The shared state for the {@link com.vaadin.ui.Grid} component.
@@ -42,42 +42,48 @@ public class GridState extends AbstractSingleSelectState {
     /**
      * The key in which a row's data can be found.
      *
-     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, JsonArray)
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int,
+     *      elemental.json.JsonArray)
      */
     public static final String JSONKEY_DATA = "d";
 
     /**
      * The key in which a row's own key can be found.
      *
-     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, JsonArray)
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int,
+     *      elemental.json.JsonArray)
      */
     public static final String JSONKEY_ROWKEY = "k";
 
     /**
      * The key in which a row's generated style can be found.
      *
-     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, JsonArray)
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int,
+     *      elemental.json.JsonArray)
      */
     public static final String JSONKEY_ROWSTYLE = "rs";
 
     /**
      * The key in which a generated styles for a row's cells can be found.
      *
-     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, JsonArray)
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int,
+     *      elemental.json.JsonArray)
      */
     public static final String JSONKEY_CELLSTYLES = "cs";
 
     /**
      * The key in which a row's description can be found.
      *
-     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, JsonArray)
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int,
+     *      elemental.json.JsonArray)
      */
     public static final String JSONKEY_ROWDESCRIPTION = "rd";
 
     /**
      * The key in which a cell's description can be found.
      *
-     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int, JsonArray)
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int,
+     *      elemental.json.JsonArray)
      */
     public static final String JSONKEY_CELLDESCRIPTION = "cd";
 
@@ -102,7 +108,7 @@ public class GridState extends AbstractSingleSelectState {
 
     /**
      * Column resize mode in grid.
-     * 
+     *
      * @since 7.7.5
      */
     public ColumnResizeMode columnResizeMode = ColumnResizeMode.ANIMATED;
@@ -145,4 +151,34 @@ public class GridState extends AbstractSingleSelectState {
     @DelegateToWidget
     public boolean columnReorderingAllowed;
 
+    /**
+     * Explicit body row height in pixels for grid rows, or -1 to calculate
+     * automatically based on the theme.
+     *
+     * @since 8.2
+     */
+    public double bodyRowHeight = -1;
+
+    /**
+     * Explicit body row height in pixels for grid rows, or -1 to calculate
+     * automatically based on the theme.
+     *
+     * @since 8.2
+     */
+    public double headerRowHeight = -1;
+
+    /**
+     * Explicit body row height in pixels for grid rows, or -1 to calculate
+     * automatically based on the theme.
+     *
+     * @since 8.2
+     */
+    public double footerRowHeight = -1;
+
+    /**
+     * The content mode for row descriptions.
+     *
+     * @since 8.2
+     */
+    public ContentMode rowDescriptionContentMode;
 }

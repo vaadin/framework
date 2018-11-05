@@ -1,0 +1,27 @@
+daysUntilStale: 150
+daysUntilClose: 900
+exemptLabels:
+ - BFP
+ - Pinned
+ - enhancement
+staleLabel: Stale
+only: issues
+# Comment to post when closing a stale Issue or Pull Request.
+closeComment: >
+  The issue was automatically closed due to inactivity. If you found some new details to it or started working on it, comment on the issue so that maintainers can re-open it.
+
+markComment: |
+  Hello there!
+  
+  We are sorry that this issue hasn't progressed lately. We are prioritizing issues by severity and the number of customers we expect are experiencing this and haven't gotten around to fix this issue yet.
+  
+  There are a couple of things you could help to get things rolling on this issue (this is an automated message, so expect that some of these are already in use):
+  
+   * Check if the issue is still valid for the latest version. There are dozens of duplicates in our issue tracker, so it is possible that the issue is already tackled. If it appears to be fixed, close the issue, otherwise report to the issue that it is still valid.
+   * Provide more details how to reproduce the issue.
+   * Explain why it is important to get this issue fixed and politely draw others attention to it e.g. via the forum or social media.
+   * Add a reduced test case about the issue, so it is easier for somebody to start working on a solution.
+   * Try [fixing the issue yourself](https://github.com/vaadin/framework/blob/master/CONTRIBUTING.md) and [create a pull request](https://help.github.com/categories/collaborating-with-issues-and-pull-requests/) that contains the test case and/or a fix for it. Handling the pull requests is the top priority for the core team.
+   * If the issue is clearly a bug, use the [Warranty](https://vaadin.com/pricing) in your Vaadin subscription to raise its priority.
+  
+  Thanks again for your contributions! Even though we haven't been able to get this issue fixed, we hope you to report your findings and enhancement ideas in the future too!

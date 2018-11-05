@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,9 +18,6 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.user.client.Command;
 
-/**
- *
- */
 public abstract class Action implements Command {
 
     protected ActionOwner owner;
@@ -34,13 +31,13 @@ public abstract class Action implements Command {
     }
 
     /**
-     * Executed when action fired
+     * Executed when action fired.
      */
     @Override
     public abstract void execute();
 
     public String getHTML() {
-        final StringBuffer sb = new StringBuffer();
+        final StringBuilder sb = new StringBuilder();
         sb.append("<div>");
         // Could store the icon in a field instead, but it doesn't really matter
         // right now because Actions are recreated every time they are needed

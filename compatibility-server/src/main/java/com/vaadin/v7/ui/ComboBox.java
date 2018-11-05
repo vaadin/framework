@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,6 @@ package com.vaadin.v7.ui;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -188,7 +187,7 @@ public class ComboBox extends AbstractSelect
     }
 
     private boolean isFilteringNeeded() {
-        return filterstring != null && filterstring.length() > 0
+        return filterstring != null && !filterstring.isEmpty()
                 && filteringMode != FilteringMode.OFF;
     }
 
@@ -286,12 +285,9 @@ public class ComboBox extends AbstractSelect
                 target.endTag("so");
             }
 
-            final Iterator<?> i = options.iterator();
             // Paints the available selection options from data source
 
-            while (i.hasNext()) {
-
-                final Object id = i.next();
+            for (final Object id : options) {
 
                 if (!isNullSelectionAllowed() && id != null
                         && id.equals(getNullSelectionItemId())
@@ -672,7 +668,7 @@ public class ComboBox extends AbstractSelect
     protected List<?> getFilteredOptions() {
         if (!isFilteringNeeded()) {
             prevfilterstring = null;
-            filteredOptions = new LinkedList<>(getItemIds());
+            filteredOptions = new LinkedList<Object>(getItemIds());
             return filteredOptions;
         }
 
@@ -689,9 +685,8 @@ public class ComboBox extends AbstractSelect
         }
         prevfilterstring = filterstring;
 
-        filteredOptions = new LinkedList<>();
-        for (final Iterator<?> it = items.iterator(); it.hasNext();) {
-            final Object itemId = it.next();
+        filteredOptions = new LinkedList<Object>();
+        for (final Object itemId : items) {
             String caption = getItemCaption(itemId);
             if (caption == null || caption.equals("")) {
                 continue;
@@ -762,7 +757,7 @@ public class ComboBox extends AbstractSelect
         } else if (isNewItemsAllowed()) {
             // New option entered (and it is allowed)
             final String newitem = (String) variables.get("newitem");
-            if (newitem != null && newitem.length() > 0) {
+            if (newitem != null && !newitem.isEmpty()) {
                 getNewItemHandler().addNewItem(newitem);
                 // rebuild list
                 filterstring = null;

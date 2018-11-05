@@ -1,23 +1,7 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.VerticalLayout;
@@ -25,26 +9,6 @@ import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Table;
 
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
-/**
- *
- * @author Vaadin Ltd
- */
 @SuppressWarnings("serial")
 public class TableScrollAfterAddRow extends AbstractReindeerTestUI {
 
@@ -76,44 +40,18 @@ public class TableScrollAfterAddRow extends AbstractReindeerTestUI {
         layout.addComponent(label);
 
         NativeButton addRowButton = new NativeButton("Add row",
-                new NativeButton.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        addRow(datasource);
-                    }
-                });
+                event -> addRow(datasource));
 
         NativeButton jumpToLastRowButton = new NativeButton("Jump to last row",
-                new NativeButton.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        jumpToLastRow(table);
-                    }
-                });
+                event -> jumpToLastRow(table));
         NativeButton jumpTo15thRowButton = new NativeButton("Jump to 15th row",
-                new NativeButton.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        jumpToFifteenthRow(table);
-                    }
-                });
+                event -> jumpToFifteenthRow(table));
         NativeButton jumpToFirstRowButton = new NativeButton(
-                "Jump to first row", new NativeButton.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        jumpToFirstRow(table);
-                    }
-                });
+                "Jump to first row", event -> jumpToFirstRow(table));
 
         NativeButton updateLabelButton = new NativeButton("UpdateLabel",
-                new NativeButton.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        label.setValue(Integer.toString(
-                                table.getCurrentPageFirstItemIndex()));
-                    }
-                });
+                event -> label.setValue(Integer
+                        .toString(table.getCurrentPageFirstItemIndex())));
         layout.addComponent(addRowButton);
         layout.addComponent(jumpToLastRowButton);
         layout.addComponent(jumpTo15thRowButton);

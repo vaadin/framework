@@ -1,25 +1,12 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.nativeselect;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.TestBenchElement;
@@ -60,12 +47,12 @@ public class NativeSelectEmptySelectionTest extends MultiBrowserTest {
         Set<String> options = select.getOptions().stream()
                 .map(TestBenchElement::getText).collect(Collectors.toSet());
         if (emptyCaption == null) {
-            Assert.assertEquals(49, options.size());
-            Assert.assertTrue(options.containsAll(originalOptions));
+            assertEquals(49, options.size());
+            assertTrue(options.containsAll(originalOptions));
         } else {
             options.contains(emptyCaption);
-            Assert.assertEquals(50, options.size());
-            Assert.assertTrue(options.containsAll(originalOptions));
+            assertEquals(50, options.size());
+            assertTrue(options.containsAll(originalOptions));
         }
     }
 }

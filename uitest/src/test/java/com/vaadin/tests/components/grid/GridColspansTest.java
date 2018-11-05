@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
@@ -57,14 +42,14 @@ public class GridColspansTest extends MultiBrowserTest {
 
         GridElement grid = $(GridElement.class).first();
         assertEquals("Failed initial condition.", "all the stuff",
-                grid.getHeaderCell(0, 1).getText().toLowerCase(Locale.ENGLISH));
+                grid.getHeaderCell(0, 1).getText().toLowerCase(Locale.ROOT));
         assertEquals("Failed initial condition.", "first name",
-                grid.getHeaderCell(2, 1).getText().toLowerCase(Locale.ENGLISH));
+                grid.getHeaderCell(2, 1).getText().toLowerCase(Locale.ROOT));
         $(ButtonElement.class).caption("Show/Hide firstName").first().click();
         assertEquals("Header text changed on column hide.", "all the stuff",
-                grid.getHeaderCell(0, 1).getText().toLowerCase(Locale.ENGLISH));
+                grid.getHeaderCell(0, 1).getText().toLowerCase(Locale.ROOT));
         assertEquals("Failed initial condition.", "last name",
-                grid.getHeaderCell(2, 1).getText().toLowerCase(Locale.ENGLISH));
+                grid.getHeaderCell(2, 1).getText().toLowerCase(Locale.ROOT));
     }
 
     @Test
@@ -74,17 +59,17 @@ public class GridColspansTest extends MultiBrowserTest {
         GridElement grid = $(GridElement.class).first();
 
         assertEquals("Failed initial condition.", "first name",
-                grid.getHeaderCell(2, 1).getText().toLowerCase(Locale.ENGLISH));
+                grid.getHeaderCell(2, 1).getText().toLowerCase(Locale.ROOT));
 
         $(ButtonElement.class).caption("Show/Hide firstName").first().click();
 
         assertEquals("Failed initial condition.", "last name",
-                grid.getHeaderCell(2, 1).getText().toLowerCase(Locale.ENGLISH));
+                grid.getHeaderCell(2, 1).getText().toLowerCase(Locale.ROOT));
 
         $(ButtonElement.class).caption("Show/Hide firstName").first().click();
 
         assertEquals("Failed to find first name in last column", "first name",
-                grid.getHeaderCell(2, 5).getText().toLowerCase(Locale.ENGLISH));
+                grid.getHeaderCell(2, 5).getText().toLowerCase(Locale.ROOT));
 
     }
 
@@ -95,18 +80,18 @@ public class GridColspansTest extends MultiBrowserTest {
         GridElement grid = $(GridElement.class).first();
         GridCellElement headerCell = grid.getHeaderCell(1, 1);
         assertEquals("Failed initial condition.", "full name",
-                headerCell.getText().toLowerCase(Locale.ENGLISH));
+                headerCell.getText().toLowerCase(Locale.ROOT));
         assertEquals("Failed initial condition.", "first name",
-                grid.getHeaderCell(2, 1).getText().toLowerCase(Locale.ENGLISH));
+                grid.getHeaderCell(2, 1).getText().toLowerCase(Locale.ROOT));
         $(ButtonElement.class).get(1).click();
         headerCell = grid.getHeaderCell(1, 1);
         assertEquals("Joined Header text not changed on column reorder.",
-                "misc", headerCell.getText().toLowerCase(Locale.ENGLISH));
+                "misc", headerCell.getText().toLowerCase(Locale.ROOT));
         assertEquals("Unexpected colspan", "1",
                 headerCell.getAttribute("colspan"));
         headerCell = grid.getHeaderCell(1, 2);
         assertEquals("Header text not changed on column reorder", "full name",
-                headerCell.getText().toLowerCase(Locale.ENGLISH));
+                headerCell.getText().toLowerCase(Locale.ROOT));
         assertEquals("Unexpected colspan", "2",
                 headerCell.getAttribute("colspan"));
 

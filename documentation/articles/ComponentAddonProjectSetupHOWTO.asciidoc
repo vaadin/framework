@@ -1,0 +1,179 @@
+---
+title: Component Addon Project Setup HOWTO
+order: 77
+layout: page
+---
+
+[[component-add-on-project-setup-howto]]
+= Component add-on project setup how-to
+
+This how-to walks you through a complete setup for a project for
+developing, building and publishing your own Vaadin UI component
+add-ons. The goal here is not to teach how to write an add-on, but to
+make the process of setting up your project environment as smooth as
+possible. I hope this encourages you to try building and publishing your
+own add-ons :)
+
+[[goals-for-the-project-environment]]
+Goals for the project environment
+---------------------------------
+
+* Fully automated build with Maven
+* Allow anyone to re-build your project easily regardless of the IDE:s
+* Almost instant save-build-deploy-try cycle
+* Simple, but complete, project setup
+* Project publishing to GitHub
+* Easy publishing of the results to Vaadin Directory
+
+[[install-toolchain]]
+Install toolchain
+-----------------
+
+If you do not already have the following tools in use, install them:
+
+* Eclipse IDE for Java EE developers from http://www.eclipse.org (Indigo
+Service Release 1 was used in this how-to)
+* Google Chrome browser from https://www.google.com/chrome/ (other
+browsers will do, but Chrome is recommended)
+* Eclipse plugins: m4e-wtp, vaadin, egit (optional) and jrebel
+(optional) from Marketplace (just select Help->Marketplace... from the
+menu)
+
+[[create-a-new-widget-project]]
+Create a new widget project
+---------------------------
+
+Start project creation wizard: File -> New -> Other... -> "Maven
+Project"
+
+Give a proper name for your project and save it under workspace. For
+this example I am building a list widget and name it MyList.
+
+Ensure that your Maven archetype catalogs contain
+http://repo1.maven.org/maven2/archetype-catalog.xml as remote catalog
+and select it.
+
+Select vaadin-archetype-widget from the list.
+
+Give a proper name for the project. I use "org.vaadin" as group id as it
+can be used by anyone who wants to contribute non-commercial widgets to
+Vaadin project and name of the widget as artifact id in this case i use
+"mylist" as example. For a package name use "org.vaadin.mylist".
+
+Observe that pom.xml shows two errors. This is because m2e does not
+directly support gwt and vaadin -plugins. To fix the problem, choose the
+problems one by one and choose "ignore" quick fix. Then edit the pom.xml
+by changing all `<ignore></ignore>` tags to `<execute></execute>` to get the
+plugins to execute. Finally, clear the remaining "project configuration
+needs update" error with quickfix (that not surprisingly updates project
+configuration). In the end, pom.xml should look like
+https://raw.github.com/jojule/MyList/56ac906f9cc6442e0817eb0cc945eee023ff9001/pom.xml[this].
+
+Refactor the name of the component you are building.
+
+* Instead of using `MyComponent` and `VMyComponent`, use your own name. In
+this example I use `MyList` and `VMyList`.
+* Also change the theme directory name from
+`src/main/java/org/vaadin/mylist/gwt/public/mywidget` to
+`src/main/java/org/vaadin/mylist/gwt/public/mylist`
+* and update the reference in `MyWidgetSet.gwt.xml`.
+* Also rename `MyWidgetSet.gwt.xml` to `MyListWidgetSet.gwt.xml`
+* and update references in `pom.xml` and `web.xml`.
+
+Test that the project compiles and runs by running (Run -> Run as ... ->
+Maven Build...) maven goal "package jetty:run". If everything compiles
+fine and Jetty server starts, you can access the application at
+http://localhost:8080/mylist/. You should see "It works!" on the web
+page. Do not worry that the build takes a lot of time, we'll get back to
+it in a minute.
+
+Finally, if you prefer to use Git, create a repository for the project.
+You could simply choose "Share Project..." from the Project's Team menu.
+Choose "Use or create repository in parent folder" and click "Create
+Repository". Then, add project resources to commit. Choose pom.xml and
+src directory from Navigator view and select Team -> Add to Index. Then
+add the rest of the files (.settings, .project, .classpath and target)
+to .gitignore with Team -> Ignore. Finally, just do Team -> Commit.
+
+At this point - or later whenever you are ready for it - you can
+publish the project to GitHub. Just go to github.com and create a new
+repository. Use MyList as the name for the repository. Then follow the
+instructions on the screen. In my case, I executed the following command
+line commands: `cd /Users/phoenix/Documents/workspace/mylist; git remote
+add origin git@github.com:jojule/MyList.git; git push -u origin master`.
+You can see the results
+https://github.com/jojule/MyList/tree/56ac906f9cc6442e0817eb0cc945eee023ff9001[at
+GitHub].
+
+[[save---build---deploy---try]]
+Save - Build - Deploy - Try
+---------------------------
+
+If it takes minutes each time from code change to seeing that change on
+the screen, you are not going to get your component ready anytime soon.
+To solve the issue, we use two tools: 1) Google GWT Developer Mode and
+2) JRebel. The first one is more important here as the GWT compilation
+step is the really slow step, but JRebel also helps as it gives you
+instant redeploy for the server-side changes.
+
+To enable JRebel, open project popup menu and choose JRebel -> Generate
+rebel.xml in `src/main/java`. Then click "Enable JRebel" on the JRebel tab
+for Maven run configuration for "jetty:run". Now when you make any
+changes to server-side code - for example to `WidgetTestApplication.java`
+- hit save and reload the browser pointing to
+http://localhost:8080/mylist/?restartApplication, the changes are
+applied immediately. Even better - you can start the project with Debug
+As and add break points to the application.
+
+Client-side changes are more tricky as they are compiled from Java to
+JavaScript by GWT. To make those changes immediately you, must be
+running a GWT Development Mode. This is done by running Maven goal gwt:run
+instead of just pointing your web browser to the running application.
+Note that must be running both jetty:run and gwt:run concurrently.
+gwt:run starts application called "GWT Development Mode". From there you
+can launch your browser - or cut-n-paste URL to Chrome - if that is not
+your default browser. When the application is started, add
+`&restartApplication` parameter to the end of the URL to ensure that the
+server-side of the application is reloaded each time you reload the
+page. In this case, the full url is
+http://127.0.0.1:8080/mylist/?gwt.codesvr=127.0.0.1:9997&restartApplication.
+Try making a change to the client-side code (for example `VMyList.java`),
+hitting save and reloading the page to see how everything works
+together. You can also run gwt:run in Debug As to debug the client-side
+code.
+
+Now the "save - build - deploy - try" cycle has been reduced to almost
+instant for both client-side as well as server-side changes. Let the
+real development begin.
+
+[[developing-a-new-component-for-vaadin]]
+Developing a new component for Vaadin
+-------------------------------------
+
+Wait for an amazing idea, code like crazy, enjoy and POOOF, there it is
+- your own brand new component.
+
+If you need guidance with this,
+https://vaadin.com/book/-/page/gwt.html[Book of Vaadin] is a recommended
+reading :)
+
+For this example, I implemented a trivial list component. Take a look of
+1.0.0 version
+https://github.com/jojule/MyList/tree/496a8bdf629154a4da7b83c4a11979272959aa96[at
+GitHub], but do not expect too much :) To try it out just do: `git clone
+git@github.com:jojule/MyList.git; mvn package; mvn jetty:run` and point
+your web browser to http://localhost:8080/mylist/.
+
+[[packaging-and-submitting-the-widget-to-directory]]
+Packaging and submitting the widget to directory
+------------------------------------------------
+
+Set the version number in pom.xml
+
+Run Maven target "package" and you'll have a ready made package at
+target/mylist-1.0.0.jar ready for upload to vaadin directory.
+
+Go to https://vaadin.com/directory/my-components, select UI Component and
+click upload.
+
+Fill the form, preview and publish.

@@ -1,24 +1,10 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.grid.basics;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -37,14 +23,17 @@ public abstract class GridEditorTest extends GridBasicsTest {
             .className("v-grid-editor-cancel");
     protected static final org.openqa.selenium.By BY_EDITOR_SAVE = By
             .className("v-grid-editor-save");
-    protected static final String[] TOGGLE_EDIT_ENABLED = new String[] {
-            "Component", "Editor", "Enabled" };
+    protected static final String[] TOGGLE_EDIT_ENABLED = { "Component",
+            "Editor", "Enabled" };
 
     @Override
     @Before
     public void setUp() {
         setDebug(true);
         openTestURL();
+
+        minimizeDebugWindow();
+
         selectMenuPath(TOGGLE_EDIT_ENABLED);
     }
 
@@ -55,6 +44,16 @@ public abstract class GridEditorTest extends GridBasicsTest {
 
         selectMenuPath("Component", "Editor", "Cancel edit");
         assertEditorClosed();
+    }
+
+    public void testEditorReopenAfterHide() {
+        editRow(5);
+        assertEditorOpen();
+        selectMenuPath("Component", "Editor", "Hide grid");
+        selectMenuPath("Component", "Editor", "Show grid");
+        assertEditorClosed();
+        editRow(5);
+        assertEditorOpen();
     }
 
     @Test
@@ -77,8 +76,8 @@ public abstract class GridEditorTest extends GridBasicsTest {
     }
 
     protected void assertEditorOpen() {
-        assertTrue("Editor is supposed to be open",
-                getGridElement().isElementPresent(By.vaadin("#editor")));
+        waitUntil(driver -> getGridElement()
+                .isElementPresent(By.vaadin("#editor")));
     }
 
     protected void assertEditorClosed() {
@@ -197,12 +196,11 @@ public abstract class GridEditorTest extends GridBasicsTest {
                 editorPos == editor.getLocation().getY());
     }
 
-    @Ignore("Needs programmatic sorting")
     @Test
     public void testEditorClosedOnSort() {
         editRow(5);
 
-        selectMenuPath("Component", "State", "Sort by column", "Column 0, ASC");
+        selectMenuPath("Component", "Columns", "Column 0", "Sort ASC");
 
         assertEditorClosed();
     }
@@ -215,6 +213,43 @@ public abstract class GridEditorTest extends GridBasicsTest {
         selectMenuPath("Component", "Filter", "Column 1 starts with \"(23\"");
 
         assertEditorClosed();
+    }
+
+    @Test
+    public void testEditorOpeningFromServer() {
+        selectMenuPath("Component", "Editor", "Edit row 5");
+        assertEditorOpen();
+
+        Assert.assertEquals("Unexpected editor field content", "5",
+                getEditor().getField(3).getAttribute("value"));
+        Assert.assertEquals("Unexpected not-editable column content", "(5, 1)",
+                getEditor().findElement(By.className("not-editable"))
+                        .getText());
+    }
+
+    @Test
+    public void testEditorOpenWithScrollFromServer() {
+        selectMenuPath("Component", "Editor", "Edit last row");
+        assertEditorOpen();
+
+        Assert.assertEquals("Unexpected editor field content", "999",
+                getEditor().getField(3).getAttribute("value"));
+        Assert.assertEquals("Unexpected not-editable column content",
+                "(999, 1)", getEditor()
+                        .findElement(By.className("not-editable")).getText());
+    }
+
+    @Test
+    public void testEditorCancelOnOpen() {
+        editRow(2);
+        getGridElement().sendKeys(Keys.ESCAPE);
+
+        selectMenuPath("Component", "Editor", "Cancel next edit");
+        getGridElement().getCell(2, 0).doubleClick();
+        assertEditorClosed();
+
+        editRow(2);
+        assertNoErrorNotifications();
     }
 
     protected WebElement getSaveButton() {

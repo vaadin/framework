@@ -1,21 +1,6 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests;
 
+import java.time.LocalDate;
 import java.util.Locale;
 
 import com.vaadin.server.Sizeable;
@@ -23,8 +8,6 @@ import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
@@ -38,27 +21,14 @@ public class TestForBasicApplicationLayout extends CustomComponent {
 
     private final Button click;
     private final Button click2;
-    private final TabSheet tab;
+    private final TabSheet tab = new TabSheet();
 
     public TestForBasicApplicationLayout() {
 
-        click = new Button("Set height -1", new ClickListener() {
+        click = new Button("Set height -1", event -> tab.setHeight(null));
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                tab.setHeight(null);
-            }
-
-        });
-
-        click2 = new Button("Set height 100%", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                tab.setHeight(100, TabSheet.UNITS_PERCENTAGE);
-            }
-
-        });
+        click2 = new Button("Set height 100%",
+                event -> tab.setHeight(100, TabSheet.UNITS_PERCENTAGE));
 
         final HorizontalSplitPanel sp = new HorizontalSplitPanel();
         sp.setSplitPosition(290, Sizeable.UNITS_PIXELS);
@@ -71,7 +41,6 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         final Panel p = new Panel("Accordion Panel", pl);
         p.setSizeFull();
 
-        tab = new TabSheet();
         tab.setSizeFull();
 
         VerticalLayout reportLayout = new VerticalLayout();
@@ -82,7 +51,7 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         controls.addComponent(click);
         controls.addComponent(click2);
         reportLayout.addComponent(controls);
-        final AbstractDateField cal = new TestDateField();
+        final AbstractDateField<LocalDate, DateResolution> cal = new TestDateField();
         cal.setResolution(DateResolution.DAY);
         cal.setLocale(new Locale("en", "US"));
         reportLayout.addComponent(cal);

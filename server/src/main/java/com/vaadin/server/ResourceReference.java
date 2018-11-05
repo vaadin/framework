@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,8 @@
  * the License.
  */
 package com.vaadin.server;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -102,7 +104,7 @@ public class ResourceReference extends URLReference {
 
     static String urlEncode(String filename) {
         try {
-            return URLEncoder.encode(filename, "UTF-8");
+            return URLEncoder.encode(filename, UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(
                     "UTF-8 charset not available (\"this should never happen\")",

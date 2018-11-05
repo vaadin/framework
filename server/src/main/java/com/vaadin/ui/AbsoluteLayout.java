@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,7 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -85,7 +86,9 @@ public class AbsoluteLayout extends AbstractLayout
      */
     @Override
     public Iterator<Component> iterator() {
-        return componentToCoordinates.keySet().iterator();
+        return Collections
+                .unmodifiableCollection(componentToCoordinates.keySet())
+                .iterator();
     }
 
     /**
@@ -299,9 +302,8 @@ public class AbsoluteLayout extends AbstractLayout
                 return;
             }
 
-            String[] cssProperties = css.split(";");
-            for (int i = 0; i < cssProperties.length; i++) {
-                String[] keyValuePair = cssProperties[i].split(":");
+            for (String cssProperty : css.split(";")) {
+                String[] keyValuePair = cssProperty.split(":");
                 String key = keyValuePair[0].trim();
                 if (key.isEmpty()) {
                     continue;
@@ -430,7 +432,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Sets the 'z-index' attribute; the visual stacking order
+         * Sets the 'z-index' attribute; the visual stacking order.
          *
          * @param zIndex
          *            The z-index for the component.
@@ -535,7 +537,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Gets the unit for the 'top' attribute
+         * Gets the unit for the 'top' attribute.
          *
          * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *         available units.
@@ -545,7 +547,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Sets the unit for the 'top' attribute
+         * Sets the unit for the 'top' attribute.
          *
          * @param topUnits
          *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
@@ -557,7 +559,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Gets the unit for the 'right' attribute
+         * Gets the unit for the 'right' attribute.
          *
          * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *         available units.
@@ -567,7 +569,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Sets the unit for the 'right' attribute
+         * Sets the unit for the 'right' attribute.
          *
          * @param rightUnits
          *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
@@ -579,7 +581,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Gets the unit for the 'bottom' attribute
+         * Gets the unit for the 'bottom' attribute.
          *
          * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *         available units.
@@ -589,7 +591,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Sets the unit for the 'bottom' attribute
+         * Sets the unit for the 'bottom' attribute.
          *
          * @param bottomUnits
          *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
@@ -601,7 +603,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Gets the unit for the 'left' attribute
+         * Gets the unit for the 'left' attribute.
          *
          * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *         available units.
@@ -611,7 +613,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Sets the unit for the 'left' attribute
+         * Sets the unit for the 'left' attribute.
          *
          * @param leftUnits
          *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
@@ -673,20 +675,20 @@ public class AbsoluteLayout extends AbstractLayout
             Component newChild = designContext.readDesign(childComponent);
             StringBuilder css = new StringBuilder();
             if (attr.hasKey(ATTR_TOP)) {
-                css.append("top:").append(attr.get(ATTR_TOP)).append(";");
+                css.append("top:").append(attr.get(ATTR_TOP)).append(';');
             }
             if (attr.hasKey(ATTR_RIGHT)) {
-                css.append("right:").append(attr.get(ATTR_RIGHT)).append(";");
+                css.append("right:").append(attr.get(ATTR_RIGHT)).append(';');
             }
             if (attr.hasKey(ATTR_BOTTOM)) {
-                css.append("bottom:").append(attr.get(ATTR_BOTTOM)).append(";");
+                css.append("bottom:").append(attr.get(ATTR_BOTTOM)).append(';');
             }
             if (attr.hasKey(ATTR_LEFT)) {
-                css.append("left:").append(attr.get(ATTR_LEFT)).append(";");
+                css.append("left:").append(attr.get(ATTR_LEFT)).append(';');
             }
             if (attr.hasKey(ATTR_Z_INDEX)) {
                 css.append("z-index:").append(attr.get(ATTR_Z_INDEX))
-                        .append(";");
+                        .append(';');
             }
             addComponent(newChild, css.toString());
         }

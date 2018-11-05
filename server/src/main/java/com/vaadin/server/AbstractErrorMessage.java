@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,6 +20,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.vaadin.shared.ui.ErrorLevel;
 
 /**
  * Base class for component error messages.
@@ -119,7 +121,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
             break;
         }
         // if no message, combine the messages of all children
-        if (null == result && null != getCauses() && getCauses().size() > 0) {
+        if (null == result && null != getCauses() && !getCauses().isEmpty()) {
             StringBuilder sb = new StringBuilder();
             for (ErrorMessage cause : getCauses()) {
                 String childMessage = cause.getFormattedHtmlMessage();
@@ -129,7 +131,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
                     sb.append("</div>\n");
                 }
             }
-            if (sb.length() > 0) {
+            if (sb.length() != 0) {
                 result = sb.toString();
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,8 +20,7 @@ package com.vaadin.v7.data.validator;
  * complete according to RFC 822 but handles the vast majority of valid e-mail
  * addresses correctly.
  *
- * See {@link com.vaadin.v7.data.validator.AbstractStringValidator} for more
- * information.
+ * See {@link AbstractStringValidator} for more information.
  *
  * <p>
  * An empty string or a null is always accepted - use the required flag on

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -120,9 +120,8 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
             // Must wait until iframe is attached to be able to access body
             BodyElement rtaBody = IFrameElement.as(rta.getElement())
                     .getContentDocument().getBody();
-            addInputListener(rtaBody, event -> {
-                inputHandlers.forEach(handler -> handler.execute());
-            });
+            addInputListener(rtaBody, event -> inputHandlers
+                    .forEach(handler -> handler.execute()));
         });
 
         formatter = new VRichTextToolbar(rta);
@@ -164,8 +163,8 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
     public void setEnabled(boolean enabled) {
         if (this.enabled != enabled) {
             // rta.setEnabled(enabled);
-            swapEditableArea();
             this.enabled = enabled;
+            swapEditableArea();
         }
     }
 
@@ -180,6 +179,9 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
     private void swapEditableArea() {
         String value = getValue();
         if (html.isAttached()) {
+            if (isReadOnly() || !isEnabled()) {
+                return;
+            }
             fp.remove(html);
             if (BrowserInfo.get().isWebkit()) {
                 fp.remove(formatter);
@@ -219,8 +221,8 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
 
     public void setReadOnly(boolean b) {
         if (isReadOnly() != b) {
-            swapEditableArea();
             readOnly = b;
+            swapEditableArea();
         }
         // reset visibility in case enabled state changed and the formatter was
         // recreated
@@ -234,14 +236,14 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
     @Override
     public void setHeight(String height) {
         super.setHeight(height);
-        if (height == null || height.equals("")) {
+        if (height == null || height.isEmpty()) {
             rta.setHeight("");
         }
     }
 
     @Override
     public void setWidth(String width) {
-        if (width.equals("")) {
+        if (width.isEmpty()) {
             /*
              * IE cannot calculate the width of the 100% iframe correctly if
              * there is no width specified for the parent. In this case we would
@@ -260,12 +262,9 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
     @Override
     public void onKeyPress(KeyPressEvent event) {
         if (maxLength >= 0) {
-            Scheduler.get().scheduleDeferred(new Command() {
-                @Override
-                public void execute() {
-                    if (rta.getHTML().length() > maxLength) {
-                        rta.setHTML(rta.getHTML().substring(0, maxLength));
-                    }
+            Scheduler.get().scheduleDeferred(() -> {
+                if (rta.getHTML().length() > maxLength) {
+                    rta.setHTML(rta.getHTML().substring(0, maxLength));
                 }
             });
         }

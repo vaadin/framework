@@ -1,0 +1,138 @@
+---
+title: Creating A Simple Component
+order: 32
+layout: page
+---
+
+[[creating-a-simple-component]]
+= Creating a simple component
+
+To make a component with a new client-side widget (as opposed to making
+a server-side composite), you will need to make three things: the
+_server-side component_ you'll actually use in your application (let's
+call it *MyComponent*), the corresponding _client-side (GWT) widget_
+that will render your component in the browser (*MyComponentWidget*) and
+a _Connector_ that handles the communication between the two
+(*MyComponentConnector*). (Note that although MyComponentWidget could in
+principle be a Connector as well, in practice it's a good idea to
+separate the two.)
+
+At this point the basic MyComponent has no functionality except
+inherited basic component features (we'll add functionality in following
+articles):
+
+[source,java]
+....
+package com.example.mycomponent;
+
+import com.vaadin.ui.AbstractComponent;
+
+public class MyComponent extends AbstractComponent {
+
+}
+....
+
+The main thing to notice here is that it inherits `AbstractComponent`,
+which is the most common case (unless it will contain other components,
+see separate article about component containers). The component will
+automatically have the basic component features, such as size and
+caption.
+
+At this point our basic client-side widget will just statically render
+some text:
+
+[source,java]
+....
+package com.example.mycomponent.client;
+
+import com.google.gwt.user.client.ui.Label;
+
+public class MyComponentWidget extends Label {
+
+  public static final String CLASSNAME = "mycomponent";
+
+  public MyComponentWidget() {
+    setText("This is MyComponent");
+    setStyleName(CLASSNAME);
+  }
+}
+....
+
+Notice that this is actually a plain GWT widget that can be used as any
+other GWT widget. It's a good idea to set a style name from the start,
+so that the component can be styled.
+
+Now all we have to do is connect the component to the widget using a
+Connector:
+
+[source,java]
+....
+package com.example.mycomponent.client;
+
+import com.example.mycomponent.MyComponent;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.Connect;
+
+@Connect(com.example.mycomponent.MyComponent.class)
+public class MyComponentConnector extends AbstractComponentConnector {
+  @Override
+  protected Widget createWidget() {
+    return GWT.create(MyComponentWidget.class);
+  }
+}
+....
+
+The *crucial Connect annotation* is what actually tells the framework
+what is connected where - do this first, since it's easy to forget.
+
+In `createWidget()` use `GWT.create()` instead of `new` whenever possible,
+since it allows for some flexibility that might come in handy later on.
+
+Though this is optional, you might also want to override getWidget() so
+that you can narrow it's return type from Widget to your actual
+implementation class:
+
+[source,java]
+....
+@Override
+public MyComponentWidget getWidget() {
+  return (MyComponentWidget) super.getWidget();
+}
+....
+
+The package structure usually looks something like this:
+
+* com.example.mycomponent
+** MyComponent.java
+** MyComponentWidgetset.gwt.xml
+* com.example.mycomponent.client
+** MyComponentConnector.java
+** MyComponentWidget.java
+
+Finally, compile the widgetset, and *make sure web.xml contains the
+widgetset parameter:*
+
+[source,xml]
+....
+<servlet>
+  <servlet-name>My Vaadin App</servlet-name>
+  <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
+  <init-param>
+    <description>Vaadin UI</description>
+    <param-name>UI</param-name>
+    <param-value>com.example.myexampleproject.MyApplicationUI</param-value>
+  </init-param>
+  <init-param>
+    <param-name>widgetset</param-name>
+    <param-value>com.example.mycomponent.MyComponentWidgetset</param-value>
+  </init-param>
+</servlet>
+....
+
+Add MyComponent to your application, and it should render a label saying
+"This is MyComponent".
+
+Next have a look at the articles covering shared state and RPC, to learn
+how to add more functionality to the component.

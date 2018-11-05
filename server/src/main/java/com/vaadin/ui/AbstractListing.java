@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -205,8 +205,9 @@ public abstract class AbstractListing<T> extends AbstractComponent
 
     /**
      * Sets the item icon generator that is used to produce custom icons for
-     * showing items in the popup. The generator can return null for items with
-     * no icon.
+     * shown items. The generator can return null for items with no icon.
+     * <p>
+     * Implementations that support item icons make this method public.
      *
      * @see IconGenerator
      *
@@ -225,6 +226,8 @@ public abstract class AbstractListing<T> extends AbstractComponent
     /**
      * Gets the currently used item icon generator. The default item icon
      * provider returns null for all items, resulting in no icons being used.
+     * <p>
+     * Implementations that support item icons make this method public.
      *
      * @see IconGenerator
      * @see #setItemIconGenerator(IconGenerator)
@@ -427,9 +430,8 @@ public abstract class AbstractListing<T> extends AbstractComponent
             ((DeclarativeCaptionGenerator) captionGenerator).setCaption(item,
                     caption);
         } else {
-            throw new IllegalStateException(String.format(
-                    "Don't know how "
-                            + "to set caption using current caption generator '%s'",
+            throw new IllegalStateException(String.format("Don't know how "
+                    + "to set caption using current caption generator '%s'",
                     captionGenerator.getClass().getName()));
         }
 
@@ -440,9 +442,8 @@ public abstract class AbstractListing<T> extends AbstractComponent
                         DesignAttributeHandler.readAttribute("icon",
                                 child.attributes(), Resource.class));
             } else {
-                throw new IllegalStateException(String.format(
-                        "Don't know how "
-                                + "to set icon using current caption generator '%s'",
+                throw new IllegalStateException(String.format("Don't know how "
+                        + "to set icon using current caption generator '%s'",
                         iconGenerator.getClass().getName()));
             }
         }

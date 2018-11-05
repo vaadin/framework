@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,23 +42,24 @@ public class AccordionConnector extends TabsheetBaseConnector
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
+        VAccordion widget = getWidget();
         /*
          * Render content after all tabs have been created and we know how large
          * the content area is
          */
-        if (getWidget().selectedItemIndex >= 0) {
-            StackItem selectedItem = getWidget()
-                    .getStackItem(getWidget().selectedItemIndex);
+        if (widget.selectedItemIndex >= 0) {
+            StackItem selectedItem = widget
+                    .getStackItem(widget.selectedItemIndex);
 
             ComponentConnector contentConnector = getChildComponents().get(0);
             if (contentConnector != null) {
                 selectedItem.setContent(contentConnector.getWidget());
             }
 
-            getWidget().open(getWidget().selectedItemIndex);
+            widget.open(widget.selectedItemIndex);
 
-        } else if (getWidget().getOpenStackItem() != null) {
-            getWidget().close(getWidget().getOpenStackItem());
+        } else if (widget.getOpenStackItem() != null) {
+            widget.close(widget.getOpenStackItem());
         }
         getLayoutManager().setNeedsVerticalLayout(this);
     }

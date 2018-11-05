@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -160,7 +160,7 @@ public abstract class ClickableRenderer<T, W extends Widget>
             return cellReference;
         }
 
-        private native static Escalator getEscalator(Grid<?> grid)
+        private static native Escalator getEscalator(Grid<?> grid)
         /*-{
           return grid.@com.vaadin.client.widgets.Grid::escalator;
         }-*/;
@@ -171,16 +171,15 @@ public abstract class ClickableRenderer<T, W extends Widget>
          * <strong>Note:</strong> This method may not work reliably if the grid
          * in question is wrapped in a {@link Composite} <em>unless</em> the
          * element is inside another widget that is a child of the wrapped grid;
-         * please refer to the note in
-         * {@link WidgetUtil#findWidget(Element, Class) Util.findWidget} for
-         * details.
+         * please refer to the note in {@link WidgetUtil#findWidget(Element)
+         * Util.findWidget} for details.
          *
          * @param e
          *            the element whose parent grid to find
          * @return the parent grid or null if none found.
          */
         private static Grid<?> findClosestParentGrid(Element e) {
-            Widget w = WidgetUtil.findWidget(e, null);
+            Widget w = WidgetUtil.findWidget(e);
 
             while (w != null && !(w instanceof Grid)) {
                 w = w.getParent();

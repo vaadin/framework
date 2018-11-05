@@ -1,0 +1,55 @@
+---
+title: Accessing Web Page And Browser Information
+order: 27
+layout: page
+---
+
+[[accessing-web-page-and-browser-information]]
+= Accessing web page and browser information
+
+Vaadin 7 includes a new *Page* class offering access to various
+client-side information and events concerning the web page and browser
+window in which the Vaadin UI resides. The Page instance corresponding
+to a given UI is accessed via the `getPage()` method of the UI or using
+a static method `Page.getCurrent()`.
+
+You can access the browser window size and add size change listeners:
+
+[source,java]
+....
+Page page = someUI.getPage();
+page.addBrowserWindowResizeListener(new BrowserWindowResizeListener() {
+  public void browserWindowResized(BrowserWindowResizeEvent event) {
+    Notification.show("Window width=" + event.getWidth() + ", height=" + event.getHeight());
+  }
+});
+....
+
+You can access the optional fragment part of the location URI and add
+fragment change listeners:
+
+[source,java]
+....
+page.setUriFragment(page.getUriFragment() + "foo");
+page.addUriFragmentChangedListener(new UriFragmentChangedListener() {
+  public void uriFragmentChanged(UriFragmentChangedEvent event) {
+    Notification.show("Fragment=" + event.getUriFragment());
+  }
+});
+....
+
+You can access client browser details:
+
+[source,java]
+....
+Notification.show("IP" + browser.getAddress() +
+                "User-Agent:" + browser.getBrowserApplication() +
+                "Linux: " + browser.isLinux());
+....
+
+https://demo.vaadin.com/sampler/#foundation/advanced/browser-information[Live
+Demo]
+
+Note: If you are using a reverse proxy, you must get the value
+`X-Forwarded-For` from request headers. You cannot get a browser name,
+but you can check which browser are using.

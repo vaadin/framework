@@ -1,0 +1,94 @@
+---
+title: Setting And Reading Session Attributes
+order: 9
+layout: page
+---
+
+[[setting-and-reading-session-attributes]]
+= Setting and reading session attributes
+
+Vaadin has a few different ways of storing data that should be
+accessible later. Which one you should use depends on the scope of the
+data, e.g. how long it should be kept around and what parts of the code
+should have access to it.
+
+1.  Store the data as a field in your UI subclass. The data is easily
+accessible from components belonging to that UI instance and the data
+will be gone when the UI is closed.
+2.  Store data in the `VaadinServiceSession`. The data is easily
+accessible from any UI belonging to the same VaadinServlet or
+VaadinPortlet and it will be gone when the session is closed.
+3.  Store data in the `HttpSession` or `PortletSession` (represented in
+Vaadin through `WrappedSession`). The data is easily accessible from any
+part of your web application (i.e. your .war) and it will be gone when
+the session is invalidated.
+
+The following example code demonstrates how the data is stored and
+retrieved in different ways.
+
+[source,java]
+....
+//Remove comment to preserve UI value when reloading
+//@PreserveOnRefresh
+public class SettingReadingSessionAttributesUI extends UI {
+
+    private String value;
+
+    private VerticalLayout statusHolder = new VerticalLayout();
+    private TextField textField = new TextField();
+
+    @Override
+    protected void init(VaadinRequest request) {
+        addComponent(statusHolder);
+        addComponent(textField);
+        addComponent(new Button("Set new values", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                String value = textField.getValue();
+
+                saveValue(SettingReadingSessionAttributesUI.this, value);
+            }
+        }));
+        addComponent(new Button("Reload page", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                getPage().setLocation(getPage().getLocation());
+            }
+        }));
+
+        showValue(this);
+    }
+
+    private static void saveValue(SettingReadingSessionAttributesUI ui,
+            String value) {
+        // Save to UI instance
+        ui.value = value;
+        // Save to VaadinServiceSession
+        ui.getSession().setAttribute("myValue", value);
+        // Save to HttpSession
+        VaadinService.getCurrentRequest().getWrappedSession()
+                .setAttribute("myValue", value);
+
+        // Show new values
+        showValue(ui);
+    }
+
+    private static void showValue(SettingReadingSessionAttributesUI ui) {
+        ui.statusHolder.removeAllComponents();
+        ui.statusHolder.addComponent(new Label("Value in UI: " + ui.value));
+        ui.statusHolder.addComponent(new Label(
+                "Value in VaadinServiceSession: "
+                        + ui.getSession().getAttribute("myValue")));
+        ui.statusHolder.addComponent(new Label("Value in HttpSession: "
+                + VaadinService.getCurrentRequest().getWrappedSession()
+                        .getAttribute("myValue")));
+    }
+
+}
+....
+
+The UI stores and reads the value in three different ways. The UI
+instance value gets lost just by reloading the page as a new UI instance
+is then created unless the UI has been marked with `@PreserveOnRefresh`.
+If you deploy two different `VaadinServlet` instances using the same UI
+class, they will only share the `HttpSession` value.

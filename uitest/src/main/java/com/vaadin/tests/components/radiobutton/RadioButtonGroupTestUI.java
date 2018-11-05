@@ -1,25 +1,13 @@
-/*
- * Copyright 2000-2014 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.radiobutton;
 
 import java.util.LinkedHashMap;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.tests.components.abstractlisting.AbstractListingTestUI;
+import com.vaadin.ui.DescriptionGenerator;
 import com.vaadin.ui.ItemCaptionGenerator;
 import com.vaadin.ui.RadioButtonGroup;
 
@@ -46,6 +34,8 @@ public class RadioButtonGroupTestUI
         createSelectionMenu();
         createItemIconGeneratorMenu();
         createItemCaptionGeneratorMenu();
+        createItemDescriptionGeneratorMenu();
+        createItemEnabledProviderMenu();
     }
 
     protected void createSelectionMenu() {
@@ -82,12 +72,38 @@ public class RadioButtonGroupTestUI
         LinkedHashMap<String, ItemCaptionGenerator<Object>> options = new LinkedHashMap<>();
         options.put("Null Caption Generator", item -> null);
         options.put("Default Caption Generator", item -> item.toString());
-        options.put("Custom Caption Generator",
-                item -> item.toString() + " Caption");
+        options.put("Custom Caption Generator", item -> item + " Caption");
 
         createSelectAction("Item Caption Generator", "Item Caption Generator",
                 options, "None", (radioButtonGroup, captionGenerator, data) -> {
                     radioButtonGroup.setItemCaptionGenerator(captionGenerator);
+                    radioButtonGroup.getDataProvider().refreshAll();
+                }, true);
+    }
+
+    private void createItemDescriptionGeneratorMenu() {
+        LinkedHashMap<String, DescriptionGenerator<Object>> options = new LinkedHashMap<>();
+        options.put("Null Description Generator", item -> null);
+        options.put("Default Description Generator", item -> item.toString());
+        options.put("Custom Description Generator",
+                item -> item + " Description");
+
+        createSelectAction("Item Description Generator",
+                "Item Description Generator", options, "None",
+                (radioButtonGroup, generator, data) -> {
+                    radioButtonGroup.setItemDescriptionGenerator(generator);
+                }, true);
+    }
+
+    private void createItemEnabledProviderMenu() {
+        LinkedHashMap<String, SerializablePredicate<Object>> options = new LinkedHashMap<>();
+        options.put("Disable Item 0", o -> !Objects.equals(o, "Item 0"));
+        options.put("Disable Item 3", o -> !Objects.equals(o, "Item 3"));
+        options.put("Disable Item 5", o -> !Objects.equals(o, "Item 5"));
+
+        createSelectAction("Item Enabled Provider", "Item Enabled Provider",
+                options, "None", (radioButtonGroup, generator, data) -> {
+                    radioButtonGroup.setItemEnabledProvider(generator);
                     radioButtonGroup.getDataProvider().refreshAll();
                 }, true);
     }
@@ -103,7 +119,7 @@ public class RadioButtonGroupTestUI
     protected void createListenerMenu() {
         createListenerAction("Selection listener", "Listeners",
                 c -> c.addSelectionListener(
-                        e -> log("Selected: " + e.getSelectedItem())));
+                        event -> log("Selected: " + event.getSelectedItem())));
     }
 
     private int getIndex(Object item) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -66,15 +66,15 @@ public class AnimationUtil {
         listener.@com.vaadin.client.AnimationUtil.AnimationEndListener::onAnimationEnd(Lcom/google/gwt/dom/client/NativeEvent;)(e);
       });
       callbackFunc.listener = listener;
-    
+
       elem.addEventListener(@com.vaadin.client.AnimationUtil::ANIMATION_END_EVENT_NAME, callbackFunc, false);
-    
+
       // Store function reference for later removal
-      if(!elem._vaadin_animationend_callbacks) {
+      if (!elem._vaadin_animationend_callbacks) {
         elem._vaadin_animationend_callbacks = [];
       }
       elem._vaadin_animationend_callbacks.push(callbackFunc);
-    
+
       return callbackFunc;
     }-*/;
 
@@ -88,7 +88,7 @@ public class AnimationUtil {
     /**
      * Removes the given animation listener.
      *
-     * @param element
+     * @param elem
      *            the element which has the listener
      * @param animationEndListener
      *            the listener to remove
@@ -98,9 +98,9 @@ public class AnimationUtil {
     public static native boolean removeAnimationEndListener(Element elem,
             AnimationEndListener animationEndListener)
     /*-{
-      if(elem._vaadin_animationend_callbacks) {
+      if (elem._vaadin_animationend_callbacks) {
         var callbacks = elem._vaadin_animationend_callbacks;
-        for(var i=0; i < callbacks.length; i++) {
+        for (var i=0; i < callbacks.length; i++) {
           if (callbacks[i].listener == animationEndListener) {
               elem.removeEventListener(@com.vaadin.client.AnimationUtil::ANIMATION_END_EVENT_NAME, callbacks[i], false);
               return true;
@@ -113,9 +113,9 @@ public class AnimationUtil {
     /** For internal use only. May be removed or replaced in the future. */
     public static native void removeAllAnimationEndListeners(Element elem)
     /*-{
-      if(elem._vaadin_animationend_callbacks) {
+      if (elem._vaadin_animationend_callbacks) {
         var callbacks = elem._vaadin_animationend_callbacks;
-        for(var i=0; i < callbacks.length; i++) {
+        for (var i=0; i < callbacks.length; i++) {
           elem.removeEventListener(@com.vaadin.client.AnimationUtil::ANIMATION_END_EVENT_NAME, callbacks[i], false);
         }
       }
@@ -129,15 +129,15 @@ public class AnimationUtil {
     /** For internal use only. May be removed or replaced in the future. */
     public static native String getAnimationName(NativeEvent event)
     /*-{
-        if(event.webkitAnimationName)
+        if (event.webkitAnimationName)
             return event.webkitAnimationName;
-        else if(event.animationName)
+        if (event.animationName)
             return event.animationName;
-        else if(event.mozAnimationName)
+        if (event.mozAnimationName)
             return event.mozAnimationName;
-        else if(event.oAnimationName)
+        if (event.oAnimationName)
             return event.oAnimationName;
-    
+
         return "";
     }-*/;
 
@@ -145,22 +145,22 @@ public class AnimationUtil {
     public static native String getAnimationName(ComputedStyle cstyle)
     /*-{
         var cs = cstyle.@com.vaadin.client.ComputedStyle::computedStyle;
-    
-        if(!cs.getPropertyValue)
+
+        if (!cs.getPropertyValue)
             return "";
-    
-        if(cs.getPropertyValue("-webkit-animation-name"))
+
+        if (cs.getPropertyValue("-webkit-animation-name"))
             return cs.getPropertyValue("-webkit-animation-name");
-    
-        else if(cs.getPropertyValue("animation-name"))
+
+        if (cs.getPropertyValue("animation-name"))
             return cs.getPropertyValue("animation-name");
-    
-        else if(cs.getPropertyValue("-moz-animation-name"))
+
+        if (cs.getPropertyValue("-moz-animation-name"))
             return cs.getPropertyValue("-moz-animation-name");
-    
-        else if(cs.getPropertyValue("-o-animation-name"))
+
+        if (cs.getPropertyValue("-o-animation-name"))
             return cs.getPropertyValue("-o-animation-name");
-    
+
         return "";
     }-*/;
 
@@ -175,9 +175,9 @@ public class AnimationUtil {
           'MozAnimation': 'animationend',
           'WebkitAnimation': 'webkitAnimationEnd'
         }
-    
-        for(var a in anims){
-            if( el.style[a] !== undefined ){
+
+        for (var a in anims) {
+            if ( el.style[a] !== undefined ) {
                 return anims[a];
             }
         }
@@ -194,9 +194,9 @@ public class AnimationUtil {
           'mozAnimation',
           'webkitAnimation'
         ]
-    
-        for(var i=0; i < anims.length; i++) {
-            if( el.style[anims[i]] !== undefined ){
+
+        for (var i=0; i < anims.length; i++) {
+            if ( el.style[anims[i]] !== undefined ) {
                 return anims[i];
             }
         }

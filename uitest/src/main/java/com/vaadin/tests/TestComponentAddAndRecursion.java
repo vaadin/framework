@@ -1,11 +1,7 @@
-/**
- *
- */
 package com.vaadin.tests;
 
 import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -50,94 +46,55 @@ public class TestComponentAddAndRecursion extends CustomComponent {
         p3 = new Panel("p3", p3l);
         p2l.addComponent(p3);
 
-        Button b = new Button("use gridlayout", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                p.setContent(new GridLayout());
-                p2.setContent(new GridLayout());
-                p3.setContent(new GridLayout());
-            }
-
+        Button b = new Button("use gridlayout", event -> {
+            p.setContent(new GridLayout());
+            p2.setContent(new GridLayout());
+            p3.setContent(new GridLayout());
         });
         main.addComponent(b);
-        b = new Button("use orderedlayout", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                p.setContent(new VerticalLayout());
-                p2.setContent(new VerticalLayout());
-                p3.setContent(new VerticalLayout());
-            }
-
+        b = new Button("use orderedlayout", event -> {
+            p.setContent(new VerticalLayout());
+            p2.setContent(new VerticalLayout());
+            p3.setContent(new VerticalLayout());
         });
         main.addComponent(b);
-        b = new Button("move B", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                p2l.addComponent(l2);
-            }
-
+        b = new Button("move B", event -> p2l.addComponent(l2));
+        main.addComponent(b);
+        b = new Button("move p", event -> p3l.addComponent(p));
+        main.addComponent(b);
+        b = new Button("add to both", event -> {
+            Label l = new Label("both");
+            pl.addComponent(l);
+            p2l.addComponent(l);
         });
         main.addComponent(b);
-        b = new Button("move p", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
+        b = new Button("recurse", event -> {
+            try {
+                p3l.addComponent(p2);
+                new Notification("ERROR", "This should have failed",
+                        Notification.TYPE_ERROR_MESSAGE)
+                                .show(Page.getCurrent());
+            } catch (Exception e) {
+                new Notification("OK", "threw, as expected",
+                        Notification.TYPE_ERROR_MESSAGE)
+                                .show(Page.getCurrent());
+            }
+        });
+        main.addComponent(b);
+        b = new Button("recurse2", event -> {
+            VerticalLayout layout = new VerticalLayout();
+            Panel p = new Panel("dynamic", layout);
+            layout.addComponent(p2);
+            try {
                 p3l.addComponent(p);
+                new Notification("ERROR", "This should have failed",
+                        Notification.TYPE_ERROR_MESSAGE)
+                                .show(Page.getCurrent());
+            } catch (Exception e) {
+                new Notification("OK", "threw, as expected",
+                        Notification.TYPE_ERROR_MESSAGE)
+                                .show(Page.getCurrent());
             }
-
-        });
-        main.addComponent(b);
-        b = new Button("add to both", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Label l = new Label("both");
-                pl.addComponent(l);
-                p2l.addComponent(l);
-            }
-
-        });
-        main.addComponent(b);
-        b = new Button("recurse", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                try {
-                    p3l.addComponent(p2);
-                    new Notification("ERROR", "This should have failed",
-                            Notification.TYPE_ERROR_MESSAGE)
-                                    .show(Page.getCurrent());
-                } catch (Exception e) {
-                    new Notification("OK", "threw, as expected",
-                            Notification.TYPE_ERROR_MESSAGE)
-                                    .show(Page.getCurrent());
-                }
-            }
-
-        });
-        main.addComponent(b);
-        b = new Button("recurse2", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                VerticalLayout layout = new VerticalLayout();
-                Panel p = new Panel("dynamic", layout);
-                layout.addComponent(p2);
-                try {
-                    p3l.addComponent(p);
-                    new Notification("ERROR", "This should have failed",
-                            Notification.TYPE_ERROR_MESSAGE)
-                                    .show(Page.getCurrent());
-                } catch (Exception e) {
-                    new Notification("OK", "threw, as expected",
-                            Notification.TYPE_ERROR_MESSAGE)
-                                    .show(Page.getCurrent());
-                }
-            }
-
         });
         main.addComponent(b);
         /*

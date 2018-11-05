@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -56,5 +56,26 @@ public interface DataCommunicatorClientRpc extends ClientRpc {
      */
     void updateData(JsonArray data);
 
-    // TODO: Notify add / remove
+    /**
+     * Informs that new data has been inserted from the server.
+     *
+     * @param firstRowIndex
+     *            the destination index of the new row data
+     * @param count
+     *            the number of rows inserted
+     * @since 8.1
+     */
+    void insertRows(int firstRowIndex, int count);
+
+    /**
+     * Informs that the server has removed data.
+     *
+     * @param firstRowIndex
+     *            the index of the first removed row
+     * @param count
+     *            the number of removed rows, starting from
+     *            <code>firstRowIndex</code>
+     * @since 8.1
+     */
+    void removeRows(int firstRowIndex, int count);
 }

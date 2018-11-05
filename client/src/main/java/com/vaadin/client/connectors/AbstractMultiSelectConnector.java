@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.data.DataSource;
-import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
@@ -45,7 +44,7 @@ import elemental.json.JsonObject;
  * @since 8.0
  */
 public abstract class AbstractMultiSelectConnector
-        extends AbstractListingConnector implements HasRequiredIndicator {
+        extends AbstractListingConnector {
 
     /**
      * Abstraction layer to help populate different multiselect widgets based on

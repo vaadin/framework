@@ -39,8 +39,6 @@ subnav:
 [[framework.tutorial]]
 = Vaadin Tutorial
 
-WARNING: Please keep in mind that some of the videos and screenshots in this tutorial were built with Vaadin Framework 7 and Designer 1.0. There are some small differences if you use the latest versions.
-
 This tutorial gives you an overview of how you can use https://vaadin.com/framework[Vaadin Framework] to build single-page web UIs for your Java application.
 All you need to start with it is JDK 8 and an https://en.wikipedia.org/wiki/Integrated_development_environment[IDE], such as Eclipse.
 While this tutorial is written for Eclipse users, you can use your IDE of choice.
@@ -49,7 +47,7 @@ No extensive knowledge of Java is needed, only basic programming skills are requ
 [[framework.tutorial.overview]]
 == Overview
 
-You need about 20 to 60 minutes to complete the tutorial, depending on your existing experience.
+You'll have your first Vaadin app running in your IDE in a couple of minutes. To complete the whole tutorial, you'll need about 20 to 60 minutes, depending on your existing experience.
 Naturally, you can just do the beginning of the exercise or pick any of the steps you want.
 To start from a specific step, we have prepared the example code after each step to be downloaded as a zip file.
 
@@ -63,7 +61,7 @@ image::img/finalUI.jpg[]
 
 If you do not want to do the exercise at all, you can also just https://github.com/vaadin/tutorial/[download the final application] and play around with it.
 
-TIP: In addition to this written tutorial, we have recorded the steps as https://www.youtube.com/playlist?list=PLcRrh9hGNalkIgvImLRO9u3D0YpmEWuqo[a series of videos]. You can just watch all the videos or watch the video of each step before you do the same step yourself.
+TIP: In addition to this written tutorial, we have recorded the steps as https://www.youtube.com/playlist?list=PLcRrh9hGNalkZx921iMqZ-jXR0C72eIPR[a series of videos]. You can just watch all the videos or watch the video of each step before you do the same step yourself.
 
 [[framework.tutorial.overview.tools]]
 === Installing the Development Tools
@@ -79,9 +77,9 @@ Eclipse is available in various packages; be sure to download the *Eclipse IDE f
 [[framework.tutorial.archetype]]
 == Creating a Project from an Archetype
 
-You can get an overview of this step with the following video, which first shows how to install Eclipse, then how to create a Vaadin application using Maven, and finally how to run it:
+The following video shows how to do this step of the tutorial:
 
-video::o93ofXBIkf8[youtube, width="640", height="400"]
+video::sMGHSK_97NI[youtube, width="640", height="400"]
 
 As the starting point for the application, we use a Maven archetype called `vaadin-archetype-application`.
 Archetypes are project stubs that have some example code and a basic Maven build script.
@@ -122,7 +120,7 @@ Enter the following values:
 [guilabel]#Artifact ID#::
  Give `vaadin-archetype-application`
 [guilabel]#Version#::
- You can find the latest Vaadin version number from http://vaadin.com/download/[vaadin.com/download].
+ You can find the latest Vaadin version number from https://vaadin.com/framework/releases[vaadin.com/framework/releases].
 [guilabel]#Repository URL#::
  This can be left blank.
 
@@ -238,10 +236,6 @@ history/Debug history > Run in Jetty".
 
 To get back to the _Java EE Perspective_, an Eclipse mode designed for editing Java web app code, click the [guibutton]#Java EE# button in the toolbar.
 
-The following video shows how to implement a _Hello World_ application from scratch:
-
-video::9-qwPfpSHWc[youtube, width="640", height="400"]
-
 [[framework.tutorial.backend]]
 == Adding a demo "backend"
 
@@ -250,11 +244,9 @@ TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archiv
 Before getting more into real Vaadin development, let us introduce some domain objects and a "fake backend".
 In a real-world application, you will most likely have something similar, implemented with, for example, JPA and EJB or a Spring-based service.
 
-The following video covers steps 3 and 4 (<<framework.tutorial.grid>>) of this tutorial:
+The following video shows how to do this step of the tutorial:
 
-WARNING: This video is built with Vaadin Framework 7. There are some small differences if you use the latest version.
-
-video::0W0frepDKWI[youtube, width="640", height="400"]
+video::qF31jkBFbR0[youtube, width="640", height="400"]
 
 Copy the following three classes from github to your project.
 Class names point to the classes hosted in Github.
@@ -283,6 +275,10 @@ thing you want to do is to list your data from your back-end.
 There are several components and ways in Vaadin to do this.
 In this example, we will use the Grid component for tabular presentation of our customers.
 
+The following video shows how to do this step of the tutorial:
+
+video::EBCm-Vf_fUs[youtube, width="640", height="400"]
+
 We start by introducing a [classname]#Grid# to the [classname]#MyUI# class.
 We could of course just introduce the Grid as a variable in the [methodname]#init()# method, but we most likely want to refer to it later.
 Also, let us get a reference to the [classname]#CustomerService#.
@@ -292,7 +288,7 @@ Also, let us get a reference to the [classname]#CustomerService#.
 public class MyUI extends UI {
     // Add the next two lines:
     private CustomerService service = CustomerService.getInstance();
-    private Grid<Customer> grid = new Grid<>();
+    private Grid<Customer> grid = new Grid<>(Customer.class);
 
     // The rest is already there...
     @Override
@@ -362,7 +358,7 @@ omitted):
 [source,java]
 ----
 private CustomerService service = CustomerService.getInstance();
-private Grid grid = new Grid();
+private Grid<Customer> grid = new Grid<>(Customer.class);
 
 @Override
 protected void init(VaadinRequest vaadinRequest) {
@@ -399,9 +395,7 @@ the Customer listing we created in the previous step.
 
 The following video shows how to do this step of the tutorial:
 
-WARNING: This video is built with Vaadin Framework 7. There are some small differences if you use the latest version.
-
-video::fAeC_mZH_7w[youtube, width="640", height="400"]
+video::kyMaJLUtz3g[youtube, width="640", height="400"]
 
 We'll start by introducing a [classname]#TextField# component as a field to our [classname]#UI# class:
 
@@ -450,13 +444,13 @@ to the init method, for example right after your _filterText_ configuration:
 
 [source,java]
 ----
-Button clearFilterTextBtn = new Button(FontAwesome.TIMES);
+Button clearFilterTextBtn = new Button(VaadinIcons.CLOSE);
 clearFilterTextBtn.setDescription("Clear the current filter");
 clearFilterTextBtn.addClickListener(e -> filterText.clear());
 ----
 
 Vaadin contains a set of built in icons, from which we use the "X" icon,
-_FontAwesome.TIMES_, here, which most users will recognise as a functionality to clear
+_VaadinIcons.CLOSE_, here, which most users will recognise as a functionality to clear
 the value. If we set the description to a component, it will be shown as a
 tooltip for those users who hover the cursor over the button and wonder what to
 do with it. In the click listener, we simply clear the text from the field.
@@ -540,14 +534,16 @@ The following screencast will show you how to produce the
 _CustomerFormDesign.html_, a design file we need in this tutorial. Use pause and
 slow motion to follow better what is being done in the video. Feel free to get creative!
 
-WARNING: This video is built with Designer 1.0. There are some small differences if you use the latest version.
-
-video::B5dN69NSS78[youtube, width="640", height="400"]
+video::zLE2YfLB1MM[youtube, width="640", height="400"]
 
 TIP: At any point of the process, you can also switch to the markup mode where
 you can edit the raw content of the .html file. If you wish to take a shortcut
 or think you did something wrong when using the designer, you can just
 copy-paste the content of https://github.com/vaadin/tutorial/blob/master/src/main/resources/my/vaadin/app/CustomerFormDesign.html[the final state] to your own .html file.
+
+TIP: With Vaadin Framework 8, make following things differently:
+For status' NativeSelect Component, set Itemtype as CustomerStatus enum.
+Use DateField Component for birthday, instead of PopupDateField.
 
 At this point we only have a static mockup of the actual UI. To implement a
 functional form component, we need some Java code as well. Vaadin Designer
@@ -628,10 +624,9 @@ constructor:
 save.setClickShortcut(KeyCode.ENTER);
 ----
 
-To finish our form, we need to create a public API that we will use in the next
-part from MyUI, to pass in a Customer object that the form should edit. We
-will also add some logic to actually save the changes. We'll start by adding a
-_Binder_ as a field to the _CustomerForm_ class:
+To finish our form, we need to create a public API that we will use in the next part from MyUI, to pass in a Customer object that the form should edit.
+We will also add some logic to actually save the changes.
+We'll start by adding a [classname]#Binder# as a field to the [classname]#CustomerForm# class:
 
 [source,java]
 ----
@@ -728,9 +723,7 @@ completed the step using Vaadin Designer, you can proceed to
 
 The following video shows how to create a form using plain Java:
 
-WARNING: This video is built with Vaadin Framework 7. There are some small differences if you use the latest version.
-
-video::OA6-lSxiXO0[youtube, width="640", height="400"]
+video::jOhkclbdwp0[youtube, width="640", height="400"]
 
 Start by creating a new Java class with the name CustomerForm. In Eclipse right
 click on the "my.vaadin.app" package and choose menu:New[Class]. Type in the
@@ -907,7 +900,7 @@ delete.addClickListener(e -> this.delete());
 ----
 
 TIP: For a truly re-usable form component in a real life project, you'd want to
-introduce an interface to replace the myUI field or, event better, use an event
+introduce an interface to replace the myUI field or, even better, use an event
 system like https://vaadin.com/wiki/-/wiki/main/Events+and+contexts[CDI events]
 to completely decouple the components. We'll leave that out of this tutorial for
 simplicity.
@@ -923,7 +916,7 @@ customers and creating new ones.
 
 The following video shows how to do this step of the tutorial:
 
-video::HuhhsI0GJNc[youtube, width="640", height="400"]
+video::eMCWf3PfXLs[youtube, width="640", height="400"]
 
 In the previous part, we already added the form to the _MyUI_ to see what it looks
 like. By default, we want it to be invisible, so let's first hide it
@@ -1010,6 +1003,7 @@ Data JPA. We have also collected a couple of other resources for an easy
 start in your Vaadin developer career.
 
  * https://vaadin.com/docs/-/part/framework/introduction/intro-overview.html[Vaadin online documentation]
+ * https://vaadin.com/full-stack-starter[Bakery App Starter for Vaadin Framework 8 and Spring] - A fully functional and tested full stack application for you to use as a starting point and a reference implementation on how business grade Vaadin applications should be made.
  * http://spring.io/guides/gs/crud-with-vaadin/[Creating CRUD UI with Vaadin] - the tutorial for your first Vaadin application using a Spring based backend.
  * https://github.com/mstahv/jpa-invoicer[Jave EE example app] - a Vaadin app example for creating invoices that uses Java EE backend, Apache DeltaSpike Data for simple JPA layer, OAuth2 based login, PDF generation etc.
  * http://vaadin.com/directory[Directory] - a vast source of awesome Vaadin add-ons

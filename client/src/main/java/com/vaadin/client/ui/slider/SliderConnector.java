@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,7 +21,6 @@ import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.VSlider;
-import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.slider.SliderServerRpc;
@@ -35,13 +34,8 @@ public class SliderConnector extends AbstractFieldConnector
     protected SliderServerRpc rpc = RpcProxy.create(SliderServerRpc.class,
             this);
 
-    private final ElementResizeListener resizeListener = new ElementResizeListener() {
-
-        @Override
-        public void onElementResize(ElementResizeEvent e) {
-            getWidget().iLayout();
-        }
-    };
+    private final ElementResizeListener resizeListener = event -> getWidget()
+            .iLayout();
 
     @Override
     public void init() {

@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-root</artifactId>
-        <version>8.0-SNAPSHOT</version>
+        <version>8.7-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-uitest</artifactId>
     <name>vaadin-uitest</name>
@@ -15,6 +15,9 @@
         <skip.uitest.failsafe>true</skip.uitest.failsafe>
         <!-- Don't care about coding style for tests -->
         <sonar.skip>true</sonar.skip>
+
+        <!-- Parallel test count -->
+        <parallel.tests>12</parallel.tests>
     </properties>
 
     <url>https://vaadin.com/</url>
@@ -26,11 +29,6 @@
             <url>http://maven.vaadin.com/vaadin-addons</url>
         </repository>
     </repositories>
-
-    <prerequisites>
-        <!-- phantomjs-maven-plugin required maven 3.1 or newer -->
-        <maven>3.1</maven>
-    </prerequisites>
 
     <dependencies>
 
@@ -72,19 +70,16 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>${jetty.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-util</artifactId>
-            <version>${jetty.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-proxy</artifactId>
-            <version>${jetty.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -185,10 +180,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-        </dependency>
-        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
         </dependency>
@@ -221,14 +212,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-testbench-api</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-        
+
     </dependencies>
 
     <build>
@@ -247,6 +238,15 @@
 
         <plugins>
             <plugin>
+                <groupId>net.revelc.code.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.github.dantwining.whitespace-maven-plugin</groupId>
+                <artifactId>whitespace-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <configuration>
@@ -262,24 +262,6 @@
                             <goal>compile</goal>
                             <goal>compile-theme</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>com.github.klieber</groupId>
-                <artifactId>phantomjs-maven-plugin</artifactId>
-                <configuration>
-                    <skip>${skip.uitest.failsafe}</skip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>install</goal>
-                        </goals>
-                        <configuration>
-                            <version>${phantomjs.version}</version>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -317,18 +299,20 @@
                     <skip>${skip.uitest.failsafe}</skip>
                     <systemPropertyVariables>
                         <!-- Static path for screenshots pointing to submodule -->
-                        <com.vaadin.testbench.screenshot.directory>${project.parent.basedir}/tests/screenshots</com.vaadin.testbench.screenshot.directory>
+                        <com.vaadin.testbench.Parameters.screenshotReferenceDirectory>${project.basedir}/reference-screenshots</com.vaadin.testbench.Parameters.screenshotReferenceDirectory>
+                        <com.vaadin.testbench.Parameters.screenshotErrorDirectory>${project.build.directory}/error-screenshots</com.vaadin.testbench.Parameters.screenshotErrorDirectory>
 
                         <!-- Optional properties for the test build -->
                         <vaadin.testbench.developer.license>${vaadin.testbench.developer.license}</vaadin.testbench.developer.license>
-                        <com.vaadin.testbench.max.retries>${com.vaadin.testbench.max.retries}</com.vaadin.testbench.max.retries>
+                        <com.vaadin.testbench.Parameters.maxAttempts>${com.vaadin.testbench.Parameters.maxAttempts}</com.vaadin.testbench.Parameters.maxAttempts>
+                        <com.vaadin.testbench.Parameters.testsInParallel>${parallel.tests}</com.vaadin.testbench.Parameters.testsInParallel>
+                        <com.vaadin.testbench.hub.url>${com.vaadin.testbench.hub.url}</com.vaadin.testbench.hub.url>
+                        <browser.factory>${browser.factory}</browser.factory>
                         <browsers.include>${browsers.include}</browsers.include>
                         <browsers.exclude>${browsers.exclude}</browsers.exclude>
                         <categories.include>${categories.include}</categories.include>
                         <categories.exclude>${categories.exclude}</categories.exclude>
-                        <useLocalWebDriver>${useLocalWebDriver}</useLocalWebDriver>
-                        <!-- PhantomJS binary downloaded by phantomjs-maven-plugin -->
-<!--                        <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path> -->
+                        <browserstack.identifier>${browserstack.identifier}</browserstack.identifier>
                     </systemPropertyVariables>
                     <includes>
                         <include>**/AllTB3Tests.java</include>
@@ -359,7 +343,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.5.0</version>
                 <executions>
                     <execution>
                         <id>run-development-server</id>
@@ -371,7 +354,7 @@
                             <arguments>
                                 <argument>-ea</argument>
                                 <argument>-classpath</argument>
-                                <classpath/>
+                                <classpath />
                                 <argument>com.vaadin.launcher.DevelopmentServerLauncher</argument>
                             </arguments>
                             <classpathScope>test</classpathScope>
@@ -388,7 +371,7 @@
                                 <argument>-ea</argument>
                                 <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argument>
                                 <argument>-classpath</argument>
-                                <classpath/>
+                                <classpath />
                                 <argument>com.vaadin.launcher.DevelopmentServerLauncher</argument>
                             </arguments>
                             <classpathScope>test</classpathScope>
@@ -464,7 +447,6 @@
                     </plugins>
                 </pluginManagement>
             </build>
-
         </profile>
         <profile>
             <id>measurements</id>

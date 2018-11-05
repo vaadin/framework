@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,7 +32,7 @@ import com.vaadin.shared.MouseEventDetails.MouseButton;
 public class MouseEventDetailsBuilder {
 
     /**
-     * Construct a {@link MouseEventDetails} object from the given event
+     * Construct a {@link MouseEventDetails} object from the given event.
      *
      * @param evt
      *            The event to use as a source for the details
@@ -43,7 +43,7 @@ public class MouseEventDetailsBuilder {
     }
 
     /**
-     * Construct a {@link MouseEventDetails} object from the given event
+     * Construct a {@link MouseEventDetails} object from the given event.
      *
      * @param evt
      *            The event to use as a source for the details

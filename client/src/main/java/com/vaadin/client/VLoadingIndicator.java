@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -71,7 +71,7 @@ public class VLoadingIndicator {
 
     /**
      * Returns the delay (in ms) which must pass before the loading indicator
-     * moves into the "first" state and is shown to the user
+     * moves into the "first" state and is shown to the user.
      *
      * @return The delay (in ms) until moving into the "first" state. Counted
      *         from when {@link #trigger()} is called.
@@ -82,7 +82,7 @@ public class VLoadingIndicator {
 
     /**
      * Sets the delay (in ms) which must pass before the loading indicator moves
-     * into the "first" state and is shown to the user
+     * into the "first" state and is shown to the user.
      *
      * @param firstDelay
      *            The delay (in ms) until moving into the "first" state. Counted
@@ -190,7 +190,7 @@ public class VLoadingIndicator {
 
     /**
      * Returns the {@link ApplicationConnection} which uses this loading
-     * indicator
+     * indicator.
      *
      * @return The ApplicationConnection for this loading indicator
      */
@@ -236,7 +236,7 @@ public class VLoadingIndicator {
     }
 
     /**
-     * Returns the root element of the loading indicator
+     * Returns the root element of the loading indicator.
      *
      * @return The loading indicator DOM element
      */

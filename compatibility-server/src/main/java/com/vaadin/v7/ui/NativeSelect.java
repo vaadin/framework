@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,6 +23,8 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.event.FieldEvents;
 
@@ -39,6 +41,9 @@ import com.vaadin.v7.event.FieldEvents;
 @Deprecated
 public class NativeSelect extends AbstractSelect
         implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
+
+    // width in characters, mimics TextField
+    private int columns = 0;
 
     public NativeSelect() {
         super();
@@ -60,10 +65,61 @@ public class NativeSelect extends AbstractSelect
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
     }
 
+    /**
+     * Sets the width of the component so that it can display approximately the
+     * given number of letters.
+     * <p>
+     * Calling {@code setColumns(10);} is equivalent to calling
+     * {@code setWidth("10em");}
+     * </p>
+     *
+     * @deprecated As of 7.0. "Columns" does not reflect the exact number of
+     *             characters that will be displayed. It is better to use
+     *             setWidth together with "em" to control the width of the
+     *             field.
+     * @param columns
+     *            the number of columns to set.
+     */
+    @Deprecated
+    public void setColumns(int columns) {
+        if (columns < 0) {
+            columns = 0;
+        }
+        if (this.columns != columns) {
+            this.columns = columns;
+            markAsDirty();
+        }
+    }
+
+    /**
+     * Gets the number of columns for the component.
+     *
+     * @see #setColumns(int)
+     * @deprecated As of 7.0. "Columns" does not reflect the exact number of
+     *             characters that will be displayed. It is better to use
+     *             setWidth together with "em" to control the width of the
+     *             field.
+     */
+    @Deprecated
+    public int getColumns() {
+        return columns;
+    }
+
+    @Override
+    public void paintContent(PaintTarget target) throws PaintException {
+        target.addAttribute("type", "native");
+        // Adds the number of columns
+        if (columns != 0) {
+            target.addAttribute("cols", columns);
+        }
+
+        super.paintContent(target);
+    }
+
     @Override
     public void setMultiSelect(boolean multiSelect)
             throws UnsupportedOperationException {
-        if (multiSelect == true) {
+        if (multiSelect) {
             throw new UnsupportedOperationException(
                     "Multiselect not supported");
         }
@@ -72,7 +128,7 @@ public class NativeSelect extends AbstractSelect
     @Override
     public void setNewItemsAllowed(boolean allowNewOptions)
             throws UnsupportedOperationException {
-        if (allowNewOptions == true) {
+        if (allowNewOptions) {
             throw new UnsupportedOperationException(
                     "newItemsAllowed not supported");
         }

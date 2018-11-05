@@ -1,27 +1,13 @@
 package com.vaadin.server;
 
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.JsonCodec.BeanProperty;
@@ -41,8 +27,8 @@ import elemental.json.JsonValue;
  *
  */
 public class JSONSerializerTest {
-    HashMap<String, AbstractSplitPanelState> stringToStateMap;
-    HashMap<AbstractSplitPanelState, String> stateToStringMap;
+    Map<String, AbstractSplitPanelState> stringToStateMap;
+    Map<AbstractSplitPanelState, String> stateToStringMap;
 
     @Test
     public void testStringToBeanMapSerialization() throws Exception {
@@ -91,7 +77,7 @@ public class JSONSerializerTest {
         inputArray.set(1, Json.createNull());
         UidlValue decodedObject = (UidlValue) JsonCodec
                 .decodeInternalType(UidlValue.class, true, inputArray, null);
-        Assert.assertNull(decodedObject.getValue());
+        assertNull(decodedObject.getValue());
     }
 
     @Test(expected = JsonException.class)
@@ -107,8 +93,7 @@ public class JSONSerializerTest {
             Type type) throws Exception {
         Object serverSideDecoded = JsonCodec.decodeInternalOrCustomType(type,
                 encoded, null);
-        Assert.assertTrue("Server decoded",
-                equals(original, serverSideDecoded));
+        assertTrue("Server decoded", equals(original, serverSideDecoded));
 
     }
 

@@ -1,24 +1,12 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.server.component.grid;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -28,6 +16,7 @@ import com.vaadin.data.PropertyDefinition;
 import com.vaadin.data.PropertySet;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.grid.editor.EditorServerRpc;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.components.grid.EditorCancelEvent;
 import com.vaadin.ui.components.grid.EditorCancelListener;
 import com.vaadin.ui.components.grid.EditorImpl;
@@ -43,6 +32,11 @@ public class EditorImplTest {
     public static class TestEditorImpl extends EditorImpl<Object> implements
             EditorSaveListener<Object>, EditorCancelListener<Object> {
 
+        @Override
+        public void doEdit(Object bean) {
+            super.doEdit(bean);
+        }
+
         public TestEditorImpl() {
             super(new PropertySet<Object>() {
                 @Override
@@ -56,6 +50,12 @@ public class EditorImplTest {
                     return null;
                 }
             });
+
+        }
+
+        @Override
+        public Grid<Object> getParent() {
+            return new Grid<>();
         }
 
         EditorCancelEvent<Object> cancelEvent;
@@ -63,11 +63,6 @@ public class EditorImplTest {
         EditorSaveEvent<Object> saveEvent;
 
         EditorServerRpc rpc;
-
-        @Override
-        public boolean isOpen() {
-            return true;
-        }
 
         @Override
         public boolean isBuffered() {
@@ -80,13 +75,13 @@ public class EditorImplTest {
 
         @Override
         public void onEditorCancel(EditorCancelEvent<Object> event) {
-            Assert.assertNull(cancelEvent);
+            assertNull(cancelEvent);
             cancelEvent = event;
         }
 
         @Override
         public void onEditorSave(EditorSaveEvent<Object> event) {
-            Assert.assertNull(saveEvent);
+            assertNull(saveEvent);
             saveEvent = event;
         }
 
@@ -99,6 +94,8 @@ public class EditorImplTest {
         }
     }
 
+    private Object beanToEdit = new Object();
+
     private TestEditorImpl editor;
     private Binder<Object> binder;
 
@@ -109,6 +106,8 @@ public class EditorImplTest {
         editor.addCancelListener(editor);
         binder = Mockito.mock(Binder.class);
         editor.setBinder(binder);
+        editor.setEnabled(true);
+        editor.doEdit(beanToEdit);
     }
 
     @Test
@@ -117,20 +116,23 @@ public class EditorImplTest {
 
         editor.save();
 
-        Assert.assertNotNull(editor.saveEvent);
-        Assert.assertNull(editor.cancelEvent);
+        assertNotNull(editor.saveEvent);
+        assertNull(editor.cancelEvent);
 
-        Assert.assertEquals(editor, editor.saveEvent.getSource());
+        assertEquals(editor, editor.saveEvent.getSource());
+        assertEquals(beanToEdit, editor.saveEvent.getBean());
     }
 
     @Test
     public void cancel_eventIsFired() {
         editor.cancel();
 
-        Assert.assertNull(editor.saveEvent);
-        Assert.assertNotNull(editor.cancelEvent);
+        assertNull(editor.saveEvent);
+        assertNotNull(editor.cancelEvent);
 
-        Assert.assertEquals(editor, editor.cancelEvent.getSource());
+        assertEquals(editor, editor.cancelEvent.getSource());
+
+        assertEquals(beanToEdit, editor.cancelEvent.getBean());
     }
 
     @Test
@@ -139,27 +141,31 @@ public class EditorImplTest {
 
         editor.rpc.save();
 
-        Assert.assertNotNull(editor.saveEvent);
-        Assert.assertNull(editor.cancelEvent);
+        assertNotNull(editor.saveEvent);
+        assertNull(editor.cancelEvent);
 
-        Assert.assertEquals(editor, editor.saveEvent.getSource());
+        assertEquals(editor, editor.saveEvent.getSource());
+
+        assertEquals(beanToEdit, editor.saveEvent.getBean());
     }
 
     @Test
     public void cancelFromClient_eventIsFired() {
         editor.rpc.cancel(false);
 
-        Assert.assertNull(editor.saveEvent);
-        Assert.assertNotNull(editor.cancelEvent);
+        assertNull(editor.saveEvent);
+        assertNotNull(editor.cancelEvent);
 
-        Assert.assertEquals(editor, editor.cancelEvent.getSource());
+        assertEquals(editor, editor.cancelEvent.getSource());
+
+        assertEquals(beanToEdit, editor.cancelEvent.getBean());
     }
 
     @Test
     public void cancelAfterSaveFromClient_eventIsNotFired() {
         editor.rpc.cancel(true);
 
-        Assert.assertNull(editor.saveEvent);
-        Assert.assertNull(editor.cancelEvent);
+        assertNull(editor.saveEvent);
+        assertNull(editor.cancelEvent);
     }
 }

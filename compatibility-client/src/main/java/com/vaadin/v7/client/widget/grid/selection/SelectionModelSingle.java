@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,7 +29,7 @@ import com.vaadin.v7.client.widgets.Grid;
  * @since 7.4
  */
 public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
-        implements SelectionModel.Single<T> {
+        implements SelectionModel.Single<T>, HasUserSelectionAllowed<T> {
 
     private Grid<T> grid;
     private RowHandle<T> selectedRow;
@@ -41,6 +41,7 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
     private ClickSelectHandler<T> clickSelectHandler;
 
     private boolean deselectAllowed = true;
+    private boolean userSelectionAllowed = true;
 
     @Override
     public boolean isSelected(T row) {
@@ -172,4 +173,13 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
         }
     }
 
+    @Override
+    public boolean isUserSelectionAllowed() {
+        return userSelectionAllowed;
+    }
+
+    @Override
+    public void setUserSelectionAllowed(boolean userSelectionAllowed) {
+        this.userSelectionAllowed = userSelectionAllowed;
+    }
 }

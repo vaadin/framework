@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,14 +34,15 @@ public class TabsheetState extends AbstractComponentContainerState {
      * tabs.
      */
     @NoLayout
+    @DelegateToWidget
     public int tabIndex;
 
     public List<TabState> tabs = new ArrayList<>();
 
-    /** true to show the tab bar, false to only show the contained component */
+    /** true to show the tab bar, false to only show the contained component. */
     public boolean tabsVisible = true;
 
-    /** the key of the currently selected tab */
+    /** the key of the currently selected tab. */
     public String selected;
 
     @DelegateToWidget

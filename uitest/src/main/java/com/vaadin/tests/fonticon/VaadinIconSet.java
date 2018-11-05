@@ -1,7 +1,5 @@
 package com.vaadin.tests.fonticon;
 
-import java.util.List;
-
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FontIcon;
 import com.vaadin.server.Page;
@@ -40,8 +38,6 @@ import com.vaadin.ui.VerticalLayout;
 
 public class VaadinIconSet extends AbstractTestUI {
 
-    private List<Component> componentz;
-
     @Override
     protected void setup(VaadinRequest request) {
         buildUI(com.vaadin.icons.VaadinIcons.VAADIN_V);
@@ -68,7 +64,7 @@ public class VaadinIconSet extends AbstractTestUI {
         n.setDelayMsec(300000);
         n.show(Page.getCurrent());
 
-        // grid of compoents
+        // grid of components
         layout.addComponent(gl);
 
         // Basic components, caption icon only
@@ -112,9 +108,7 @@ public class VaadinIconSet extends AbstractTestUI {
         grid.setItems("item 1", "item 2", "item 3");
         grid.addColumn(string -> string).setCaption("column 1");
         grid.addColumn(string -> "Another " + string).setCaption("column 2");
-        // vaadin/framework#8207
-        // grid.setHeightByRows(3);
-        grid.setHeight("150px");
+        grid.setHeightByRows(3);
         gl.addComponent(grid);
 
         // Selects, caption + item icons
@@ -140,6 +134,7 @@ public class VaadinIconSet extends AbstractTestUI {
                 ((ComboBox) sel).setItemIconGenerator(item -> icon);
             }
             gl.addComponent(sel);
+            sel.setWidth("100%");
         }
 
         // MenuBar, caption + item + sub-item icons

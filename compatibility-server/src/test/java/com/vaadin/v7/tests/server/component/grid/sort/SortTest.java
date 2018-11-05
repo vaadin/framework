@@ -1,25 +1,12 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.server.component.grid.sort;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,17 +28,15 @@ public class SortTest {
 
         @Override
         public void sort(Object[] propertyId, boolean[] ascending) {
-            Assert.assertEquals(
-                    "Different amount of expected and actual properties,",
+            assertEquals("Different amount of expected and actual properties,",
                     expectedProperties.length, propertyId.length);
-            Assert.assertEquals(
-                    "Different amount of expected and actual directions",
+            assertEquals("Different amount of expected and actual directions",
                     expectedAscending.length, ascending.length);
             for (int i = 0; i < propertyId.length; ++i) {
-                Assert.assertEquals("Sorting properties differ",
-                        expectedProperties[i], propertyId[i]);
-                Assert.assertEquals("Sorting directions differ",
-                        expectedAscending[i], ascending[i]);
+                assertEquals("Sorting properties differ", expectedProperties[i],
+                        propertyId[i]);
+                assertEquals("Sorting directions differ", expectedAscending[i],
+                        ascending[i]);
             }
             sorted = true;
         }
@@ -83,7 +68,7 @@ public class SortTest {
         }
 
         public void assertEventFired(SortOrder... expectedOrder) {
-            Assert.assertEquals(Arrays.asList(expectedOrder), order);
+            assertEquals(Arrays.asList(expectedOrder), order);
 
             // Reset for nest test
             order = null;
@@ -108,7 +93,7 @@ public class SortTest {
 
     @After
     public void tearDown() {
-        Assert.assertTrue("Container was not sorted after the test.",
+        assertTrue("Container was not sorted after the test.",
                 container.isSorted());
     }
 

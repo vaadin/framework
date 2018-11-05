@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,8 +30,26 @@ import com.vaadin.v7.shared.ui.grid.GridConstants.Section;
  */
 public class GridClickEvent extends AbstractGridMouseEvent<GridClickHandler> {
 
+    public static final Type<GridClickHandler> TYPE = new Type<GridClickHandler>(
+            BrowserEvents.CLICK, new GridClickEvent());
+
+    /**
+     * @since 7.7.9
+     */
+    public GridClickEvent() {
+    }
+
+    /**
+     * @deprecated This constructor's arguments are no longer used. Use the
+     *             no-args constructor instead.
+     */
+    @Deprecated
     public GridClickEvent(Grid<?> grid, CellReference<?> targetCell) {
-        super(grid, targetCell);
+    }
+
+    @Override
+    public Type<GridClickHandler> getAssociatedType() {
+        return TYPE;
     }
 
     @Override

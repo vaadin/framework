@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,7 @@
 
 package com.vaadin.v7.data;
 
-import java.io.Serializable;
+import com.vaadin.data.Binder;
 
 /**
  * <p>
@@ -27,10 +27,11 @@ import java.io.Serializable;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ * @deprecated As of 8.0, no direct replacement available. See {@link Binder}, {@link com.vaadin.data.Validator}.
  */
 @Deprecated
 public interface BufferedValidatable
-        extends Buffered, Validatable, Serializable {
+        extends Buffered, Validatable {
 
     /**
      * Tests if the invalid data is committed to datasource. The default is

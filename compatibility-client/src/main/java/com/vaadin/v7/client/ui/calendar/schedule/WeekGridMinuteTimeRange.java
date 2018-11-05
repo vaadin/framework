@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +18,7 @@ package com.vaadin.v7.client.ui.calendar.schedule;
 import java.util.Date;
 
 /**
- * Internally used by the calendar
+ * Internally used by the calendar.
  *
  * @since 7.1
  */
@@ -34,9 +34,6 @@ public class WeekGridMinuteTimeRange {
      *            Start time of the range
      * @param end
      *            End time of the range
-     * @param clearSeconds
-     *            Boolean Indicates, if seconds should be dropped from the range
-     *            start and end
      */
     public WeekGridMinuteTimeRange(Date start, Date end) {
         this.start = new Date(start.getTime());

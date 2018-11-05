@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,6 +35,9 @@ public interface HasComponents extends Component, Iterable<Component> {
      * Gets an iterator to the collection of contained components. Using this
      * iterator it is possible to step through all components contained in this
      * container.
+     * <p>
+     * The iterator is typically unmodifiable, and calls to
+     * {@link Iterator#remove()} throw an exception.
      *
      * @return the component iterator.
      */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,8 +25,9 @@ import com.vaadin.shared.ui.abstractmultiselect.AbstractMultiSelectState;
  * @since 8.0
  */
 public class ListSelectState extends AbstractMultiSelectState {
+    public static final String PRIMARY_STYLENAME = "v-select";
     {
-        primaryStyleName = "v-select";
+        primaryStyleName = PRIMARY_STYLENAME;
     }
     @DelegateToWidget
     public int rows;

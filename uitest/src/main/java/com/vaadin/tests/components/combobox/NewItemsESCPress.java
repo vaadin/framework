@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.v7.ui.AbstractSelect.NewItemHandler;
 import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.TextArea;
 
@@ -16,13 +15,10 @@ public class NewItemsESCPress extends TestBase {
 
         final ComboBox box = new ComboBox("New items are allowed");
         box.setNewItemsAllowed(true);
-        box.setNewItemHandler(new NewItemHandler() {
-            @Override
-            public void addNewItem(String newItemCaption) {
-                String value = addedItems.getValue();
-                addedItems.setValue(value + newItemCaption + "\n");
-                box.addItem(newItemCaption);
-            }
+        box.setNewItemHandler(newItemCaption -> {
+            String value = addedItems.getValue();
+            addedItems.setValue(value + newItemCaption + "\n");
+            box.addItem(newItemCaption);
         });
         box.setImmediate(true);
         addComponent(box);

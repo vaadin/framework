@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,6 @@
 
 package com.vaadin.v7.server.communication.data;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,7 +31,6 @@ import com.vaadin.server.KeyMapper;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.data.DataProviderRpc;
 import com.vaadin.shared.data.DataRequestRpc;
-import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Container.Indexed;
 import com.vaadin.v7.data.Container.Indexed.ItemAddEvent;
 import com.vaadin.v7.data.Container.Indexed.ItemRemoveEvent;
@@ -54,13 +52,15 @@ import elemental.json.JsonObject;
 
 /**
  * Provides Vaadin server-side container data source to a
- * {@link com.vaadin.client.ui.grid.GridConnector}. This is currently
+ * {@link com.vaadin.v7.client.connectors.GridConnector GridConnector}. This is currently
  * implemented as an Extension hardcoded to support a specific connector type.
  * This will be changed once framework support for something more flexible has
  * been implemented.
  *
  * @since 7.4
  * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public class RpcDataProviderExtension extends AbstractExtension {
@@ -70,11 +70,11 @@ public class RpcDataProviderExtension extends AbstractExtension {
      *
      * @since 7.6
      */
-    private class ActiveItemHandler implements Serializable, DataGenerator {
+    private class ActiveItemHandler implements DataGenerator {
 
-        private final Map<Object, GridValueChangeListener> activeItemMap = new HashMap<>();
-        private final KeyMapper<Object> keyMapper = new KeyMapper<>();
-        private final Set<Object> droppedItems = new HashSet<>();
+        private final Map<Object, GridValueChangeListener> activeItemMap = new HashMap<Object, GridValueChangeListener>();
+        private final KeyMapper<Object> keyMapper = new KeyMapper<Object>();
+        private final Set<Object> droppedItems = new HashSet<Object>();
 
         /**
          * Registers ValueChangeListeners for given item ids.
@@ -118,7 +118,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
          * @return collection of item ids
          */
         public Collection<Object> getActiveItemIds() {
-            return new HashSet<>(activeItemMap.keySet());
+            return new HashSet<Object>(activeItemMap.keySet());
         }
 
         /**
@@ -127,7 +127,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
          * @return collection of value change listeners
          */
         public Collection<GridValueChangeListener> getValueChangeListeners() {
-            return new HashSet<>(activeItemMap.values());
+            return new HashSet<GridValueChangeListener>(activeItemMap.values());
         }
 
         @Override
@@ -152,9 +152,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     /**
      * A class to listen to changes in property values in the Container added
-     * with {@link Grid#setContainerDatasource(Container.Indexed)}, and notifies
-     * the data source to update the client-side representation of the modified
-     * item.
+     * with {@link Grid#setContainerDatasource(com.vaadin.v7.data.Container.Indexed)
+     * Grid#setContainerDatasource(Container.Indexed)},
+     * and notifies the data source to update the client-side representation
+     * of the modified item.
      * <p>
      * One instance of this class can (and should) be reused for all the
      * properties in an item, since this class will inform that the entire row
@@ -165,7 +166,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * value changes, an instance of this class needs to be attached to each and
      * every Item's Property in the container.
      *
-     * @see Grid#addValueChangeListener(Container, Object, Object)
+     * @see Grid#addValueChangeListener(com.vaadin.v7.data.Container, Object, Object)
+     *      Grid#addValueChangeListener(Container, Object, Object)
      * @see Grid#valueChangeListeners
      */
     private class GridValueChangeListener implements ValueChangeListener {
@@ -234,18 +236,14 @@ public class RpcDataProviderExtension extends AbstractExtension {
                 int firstIndex = addEvent.getFirstIndex();
                 int count = addEvent.getAddedItemsCount();
                 insertRowData(firstIndex, count);
-            }
-
-            else if (event instanceof ItemRemoveEvent) {
+            } else if (event instanceof ItemRemoveEvent) {
                 ItemRemoveEvent removeEvent = (ItemRemoveEvent) event;
                 int firstIndex = removeEvent.getFirstIndex();
                 int count = removeEvent.getRemovedItemsCount();
                 removeRowData(firstIndex, count);
-            }
-
-            else {
+            } else {
                 // Remove obsolete value change listeners.
-                Set<Object> keySet = new HashSet<>(
+                Set<Object> keySet = new HashSet<Object>(
                         activeItemHandler.activeItemMap.keySet());
                 for (Object itemId : keySet) {
                     activeItemHandler.removeListener(itemId);
@@ -273,7 +271,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
     /** Size possibly changed with a bare ItemSetChangeEvent */
     private boolean bareItemSetTriggeredSizeChange = false;
 
-    private final Set<DataGenerator> dataGenerators = new LinkedHashSet<>();
+    private final Set<DataGenerator> dataGenerators = new LinkedHashSet<DataGenerator>();
 
     private final ActiveItemHandler activeItemHandler = new ActiveItemHandler();
 
@@ -414,8 +412,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
      *
      * @param component
      *            the remote data grid component to extend
-     * @param columnKeys
-     *            the key mapper for columns
      */
     public void extend(Grid component) {
         super.extend(component);
@@ -458,7 +454,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     private void insertRowData(final int index, final int count) {
         if (rowChanges == null) {
-            rowChanges = new ArrayList<>();
+            rowChanges = new ArrayList<Runnable>();
         }
 
         if (rowChanges.isEmpty()) {
@@ -491,7 +487,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     private void removeRowData(final int index, final int count) {
         if (rowChanges == null) {
-            rowChanges = new ArrayList<>();
+            rowChanges = new ArrayList<Runnable>();
         }
 
         if (rowChanges.isEmpty()) {
@@ -516,7 +512,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      */
     public void updateRowData(Object itemId) {
         if (updatedItemIds == null) {
-            updatedItemIds = new LinkedHashSet<>();
+            updatedItemIds = new LinkedHashSet<Object>();
         }
 
         if (updatedItemIds.isEmpty()) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,12 +16,13 @@
 package com.vaadin.v7.client.ui.datefield;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.VConsole;
 import com.vaadin.v7.client.ui.AbstractFieldConnector;
 import com.vaadin.v7.client.ui.VDateField;
 import com.vaadin.v7.shared.ui.datefield.DateFieldConstants;
@@ -51,10 +52,11 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
                 getWidget().setCurrentLocale(locale);
             } catch (final LocaleNotLoadedException e) {
                 getWidget().setCurrentLocale(getWidget().dts.getLocale());
-                VConsole.error("Tried to use an unloaded locale \"" + locale
+                getLogger().severe("Tried to use an unloaded locale \"" + locale
                         + "\". Using default locale ("
                         + getWidget().getCurrentLocale() + ").");
-                VConsole.error(e);
+                getLogger().log(Level.SEVERE,
+                        e.getMessage() == null ? "" : e.getMessage(), e);
             }
         }
 
@@ -108,7 +110,7 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
 
         // Construct new date for this datefield (only if not null)
         if (year > -1) {
-            getWidget().setCurrentDate(new Date((long) getWidget().getTime(year,
+            getWidget().setCurrentDate(new Date((long) VDateField.getTime(year,
                     month, day, hour, min, sec, 0)));
         } else {
             getWidget().setCurrentDate(null);
@@ -118,5 +120,9 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
     @Override
     public VDateField getWidget() {
         return (VDateField) super.getWidget();
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(AbstractDateFieldConnector.class.getName());
     }
 }

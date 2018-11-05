@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,6 @@ package com.vaadin.client;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -47,7 +46,7 @@ public class Profiler {
 
     private static RelativeTimeSupplier RELATIVE_TIME_SUPPLIER;
 
-    private static final String evtGroup = "VaadinProfiler";
+    private static final String EVT_GROUP = "VaadinProfiler";
 
     private static ProfilerResultConsumer consumer;
 
@@ -106,7 +105,7 @@ public class Profiler {
         }
 
         /**
-         * Gets the name of the node
+         * Gets the name of the node.
          *
          * @return the name of the node
          */
@@ -137,7 +136,7 @@ public class Profiler {
 
         /**
          * Gets the total time spent in this node, including time spent in sub
-         * nodes
+         * nodes.
          *
          * @return the total time spent, in milliseconds
          */
@@ -147,7 +146,7 @@ public class Profiler {
 
         /**
          * Gets the minimum time spent for one invocation of this node,
-         * including time spent in sub nodes
+         * including time spent in sub nodes.
          *
          * @return the time spent for the fastest invocation, in milliseconds
          */
@@ -157,7 +156,7 @@ public class Profiler {
 
         /**
          * Gets the maximum time spent for one invocation of this node,
-         * including time spent in sub nodes
+         * including time spent in sub nodes.
          *
          * @return the time spent for the slowest invocation, in milliseconds
          */
@@ -166,7 +165,7 @@ public class Profiler {
         }
 
         /**
-         * Gets the number of times this node has been entered
+         * Gets the number of times this node has been entered.
          *
          * @return the number of times the node has been entered
          */
@@ -176,7 +175,7 @@ public class Profiler {
 
         /**
          * Gets the total time spent in this node, excluding time spent in sub
-         * nodes
+         * nodes.
          *
          * @return the total time spent, in milliseconds
          */
@@ -189,24 +188,12 @@ public class Profiler {
         }
 
         /**
-         * Gets the child nodes of this node
+         * Gets the child nodes of this node.
          *
          * @return a collection of child nodes
          */
         public Collection<Node> getChildren() {
             return Collections.unmodifiableCollection(children.values());
-        }
-
-        private void buildRecursiveString(StringBuilder builder,
-                String prefix) {
-            if (getName() != null) {
-                String msg = getStringRepresentation(prefix);
-                builder.append(msg + '\n');
-            }
-            String childPrefix = prefix + "*";
-            for (Node node : children.values()) {
-                node.buildRecursiveString(builder, childPrefix);
-            }
         }
 
         @Override
@@ -337,7 +324,7 @@ public class Profiler {
 
         public final String getEventName() {
             String group = getEvtGroup();
-            if (evtGroup.equals(group)) {
+            if (EVT_GROUP.equals(group)) {
                 return getSubSystem();
             } else {
                 return group + "." + getSubSystem();
@@ -396,10 +383,10 @@ public class Profiler {
         return RELATIVE_TIME_SUPPLIER.getRelativeTime();
     }
 
-    private static native final void logGwtEvent(String name, String type)
+    private static final native void logGwtEvent(String name, String type)
     /*-{
         $wnd.__gwtStatsEvent({
-            evtGroup: @com.vaadin.client.Profiler::evtGroup,
+            evtGroup: @com.vaadin.client.Profiler::EVT_GROUP,
             moduleName: @com.google.gwt.core.client.GWT::getModuleName()(),
             millis: (new Date).getTime(),
             sessionId: undefined,
@@ -475,7 +462,13 @@ public class Profiler {
         Set<Node> extendedTimeNodes = new HashSet<>();
         for (int i = 0; i < gwtStatsEvents.length(); i++) {
             GwtStatsEvent gwtStatsEvent = gwtStatsEvents.get(i);
+            if (!EVT_GROUP.equals(gwtStatsEvent.getEvtGroup())) {
+                // Only log our own events to avoid problems with events which
+                // are not of type start+end
+                continue;
+            }
             String eventName = gwtStatsEvent.getEventName();
+
             String type = gwtStatsEvent.getType();
             boolean isExtendedEvent = gwtStatsEvent.isExtendedEvent();
             boolean isBeginEvent = "begin".equals(type);
@@ -543,13 +536,9 @@ public class Profiler {
         Map<String, Node> totals = new HashMap<>();
         rootNode.sumUpTotals(totals);
 
-        ArrayList<Node> totalList = new ArrayList<>(totals.values());
-        Collections.sort(totalList, new Comparator<Node>() {
-            @Override
-            public int compare(Node o1, Node o2) {
-                return (int) (o2.getTimeSpent() - o1.getTimeSpent());
-            }
-        });
+        List<Node> totalList = new ArrayList<>(totals.values());
+        Collections.sort(totalList,
+                (o1, o2) -> (int) (o2.getTimeSpent() - o1.getTimeSpent()));
 
         if (getConsumer() != null) {
             getConsumer().addProfilerData(stack.getFirst(), totalList);
@@ -575,14 +564,14 @@ public class Profiler {
         if (isEnabled()) {
             double now = Duration.currentTimeMillis();
 
-            String[] keys = new String[] { "navigationStart",
-                    "unloadEventStart", "unloadEventEnd", "redirectStart",
-                    "redirectEnd", "fetchStart", "domainLookupStart",
-                    "domainLookupEnd", "connectStart", "connectEnd",
-                    "requestStart", "responseStart", "responseEnd",
-                    "domLoading", "domInteractive",
-                    "domContentLoadedEventStart", "domContentLoadedEventEnd",
-                    "domComplete", "loadEventStart", "loadEventEnd" };
+            String[] keys = { "navigationStart", "unloadEventStart",
+                    "unloadEventEnd", "redirectStart", "redirectEnd",
+                    "fetchStart", "domainLookupStart", "domainLookupEnd",
+                    "connectStart", "connectEnd", "requestStart",
+                    "responseStart", "responseEnd", "domLoading",
+                    "domInteractive", "domContentLoadedEventStart",
+                    "domContentLoadedEventEnd", "domComplete", "loadEventStart",
+                    "loadEventEnd" };
 
             LinkedHashMap<String, Double> timings = new LinkedHashMap<>();
 

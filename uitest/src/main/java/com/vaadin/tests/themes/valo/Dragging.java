@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.themes.valo;
 
 import java.util.ArrayList;
@@ -34,7 +19,6 @@ import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
@@ -48,11 +32,6 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class Dragging extends VerticalLayout implements View {
 
     SortableLayout sample;
@@ -153,12 +132,7 @@ public class Dragging extends VerticalLayout implements View {
         buttonLayout.setSpacing(false);
         buttonLayout.setMargin(false);
         final Button button = new Button("Button");
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                Notification.show("Button clicked");
-            }
-        });
+        button.addClickListener(event -> Notification.show("Button clicked"));
         buttonLayout.addComponent(button);
         buttonLayout.setComponentAlignment(button, Alignment.MIDDLE_CENTER);
         components.add(buttonLayout);

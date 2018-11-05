@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,7 +21,7 @@ import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
 
 public class MeasuredSize {
-    private final static boolean debugSizeChanges = false;
+    private static final boolean DEBUG_SIZE_CHANGES = false;
 
     public static class MeasureResult {
         private final boolean widthChanged;
@@ -278,9 +278,9 @@ public class MeasuredSize {
 
     private void debugSizeChange(Element element, String sizeChangeType,
             String changedFrom, String changedTo) {
-        if (debugSizeChanges) {
+        if (DEBUG_SIZE_CHANGES) {
             getLogger().info(sizeChangeType + " has changed from " + changedFrom
-                    + " to " + changedTo + " for " + element.toString());
+                    + " to " + changedTo + " for " + element);
         }
     }
 

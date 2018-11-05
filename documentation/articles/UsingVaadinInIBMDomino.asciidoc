@@ -1,0 +1,315 @@
+---
+title: Using Vaadin In IBM Domino
+order: 7
+layout: page
+---
+
+[[using-vaadin-in-ibm-domino]]
+= Using Vaadin In IBM Domino
+
+Vaadin can be used as a UI technology in Domino. This page will contain
+the instruction how to setup the development environment and to get
+started with your first Vaadin app in Domino.
+
+The steps for setting up XPages SDK are:
+
+1.  Download the
+http://www.openntf.org/main.nsf/project.xsp?r=project/XPages%20SDK%20for%20Eclipse%20RCP/releases/0C60A1BFF5F40FD586257D8D005AA593[XPages
+SDK for Luna and above from OpenNTF]
+2.  In Eclipse, from the Help menu select *Install New Software….*
+3.  Select *Add…*, then choose *Archive…* and navigate to the zip file
+downloaded. +
+image:https://lh3.googleusercontent.com/PznhvZ1_SL6oJAm_J7BDsd0uBRHK7HDgCm6XJThdSRrPxDymwjYWOxbDpJ5Kt_5VIOIR-SP4Zl9KDAwCG0wzWni1iTwK8FUcmT8P_mYo4GxdtGjPZS4D8Y9pQus3dHM-kNeaRmfChg[Add XPages repository]
+4.  You will need to deselect *Group items by category*. Two features
+will show. The first includes sources, so select the second and click
+*Next*. +
+image:https://lh6.googleusercontent.com/PcTpwSQ-XpG-6c51FQ0W2upuK7XTNmawdi8vVgMb31pCBUg8Lt1oInKXT7r7o21Qjj_KJtie3yLxtPvGtCnltuNwGtj42ChuMEJBkqys8nt3KCmilFydpm6iFrme6Ro-FL4uZtUjkA[Select features]
+5.  Accept the terms and finish the dialog. You will be prompted to
+restart Eclipse to complete the install.
+6.  Select *Window* > *Preferences* (on Mac the location is *Eclipse* >
+*Preferences*). In the XPages SDK category tick *Automatically create
+JRE* and point to your local Notes and Domino installs. Then click
+*Apply*. +
+image:https://lh4.googleusercontent.com/22p8lT8-LrVTSKMDM0rpK2rFJT2EVfAuT62DyTYu6-x_eeddy6pEm1Io1haYlbGMwIE6PY8YRAUIEw0HQkXcHs6sNdnxkguXO4vv5VRKnoWUulDC6t46oDYI8Y9EjraTEV-dDHT6Wg[Select XPages SDK]
+7.  In the *Java* > *Installed JREs* category you should now have two
+additional options, “XPages Domino JRE” and “XPages Notes JRE”. Under
+*Plug-in Development* > *Target Platform* click *Add…*. Select the
+*Domino Install Target* template and complete. +
+image:https://lh5.googleusercontent.com/q0i66CSxHHvtQHXX4d-sq6AzElKUH_Lj-D9bg2awQL0Gn3WkcW_eTC7p_WBL94GUpB7ohEGw_i33Mk9K-q8wJ-2F5cguXimdrcCJxkELNLYC1FBzmDsx6FJo3-7wotvPdPGYVq_EeA[Configure target definition]
+8.  Apply this as the target platform. +
+image:https://lh6.googleusercontent.com/bguj0lMgODnG96vnU-RyBXCpz-FsodyAuvR6E-X3AsOoi4jC5iEilOtfssxk_Mwl3Ks1RPIbm6Pu6VzjmhOAnaL5c219wStTvw8cGKlG3pKSCVuSCcqHmHHpAxDHqK9c8TYT18siGA[Apply target definition]
+
+If you do not have a Domino server installed, there is an alternative
+approach. However, to test your OSGi plugin, you will need to create a
+Feature project, add the Plugin to that feature, then create an Update
+Site Project, add the feature to the update site, build and export. Then
+you will need to import that into an Update Site database on your
+server. This is the same process for creating and testing any other OSGi
+plugin on the server, such as XPages Extension Library.
+
+1.  Download the
+http://www.openntf.org/main.nsf/project.xsp?r=project/XPages%20SDK%20for%20Eclipse%20RCP/releases/0C60A1BFF5F40FD586257D8D005AA593[IBM
+Domino Update Site for Build Management from OpenNTF]. This is basically
+a zip file that contains features and plugins required for Maven and
+Tycho development in Eclipse, but also has all the dependencies required
+for Eclipse.
+2.  In Eclipse, go to *Window* > *Preferences* (on Mac the location is
+*Eclipse* > *Preferences*). Then go to *Plug-in Development* > *Target
+Platform*.
+3.  Edit the existing target platform configuration and in the dialog,
+click *Add…*, then *Directory*, then Next. Browse to and select the
+folder where you extracted the Update Site.> +
+image:https://lh5.googleusercontent.com/H2SiM2GdW9GYFzX_Az1Y7S_KAPnxYaGxwludqlqQoT3P1oVRDNxlC53uTt6SIrtQkPn42hr7yYqaJPK3hY9yF7BVeH8dPdwknzwLdeTIGgOXToWkKhy4smxg0hucyt3aWbmtjFpsgg[Add content]
+4.  The current release of Domino, 9.0.1, only supports Java 1.6. The
+next release, probably called Domino 9.0.2 and expected to ship first
+half 2016, is expected to include Java 1.8. But in the meantime, it’s
+best to set the JRE accordingly. In the preferences, go to *Java* >
+*Installed JREs* category.
+5.  *Add…*, *Standard VM*, then *Next* +
+image:https://lh6.googleusercontent.com/CGTOZTDGlIzgLNWn-1gTnrmhl7knp3SM2up9CX1cknk4Fyu5NfzQXjBDu2_yBz6gfq2HBppWH4gessWitIqUMOW793v_E7VekqUPJSAw0lVXj0inSusqi7gzjw6NjRsIDwJqvirjDA[Add JRE]
+6.  Click *Directory* and browse to your IBM Notes install’s “jvm”
+library. Give it an appropriate name and click *Finish*. Alternatively,
+if you don’t have IBM Notes installed on the development environment,
+download Java SE 6 SDK from Oracle. +
+image:https://lh5.googleusercontent.com/ipTTRFnUl_Ew0UE0X7XOaqqGcjEwUMAosAY6LDJ0_XZg8d7TyjsnRmDXDjGY3yrCOZ_54q9a23eqKZU0G__HwLKlglRxw5XeW2eDHvKPsgBpRu7YKcP46nKL_2KcCN4ljt1F3NAlFw[Configure JRE]
+
+[[setting-up-vaadin]]
+Setting up Vaadin
+^^^^^^^^^^^^^^^^^
+
+Eclipse has a set of Vaadin plugins that can easily be installed to set
+up your environment.
+
+1.  *Select *Help* > *Eclipse Marketplace…*.*
+2.  Search for "Vaadin" amd install the**Vaadin Plugin for Eclipse** +
+image:https://lh4.googleusercontent.com/SpgGN3m6aFksfRJG47RVBg4qi5D7r9dhfaIUwHkm3A8TLfkF6M2farq2ZZf-zvjZakrNl1wALHHqGtiP6GNoVyIFHJs9Dpr9Tt3yqtWS6TwFMN1qsJ47o3T4UqU-G1SW0KCIbQGBnA[Select Vaadin plugin]
+3.  The options to install will include the *Vaadin Designer*, so leave
+all selected, confirm and accept the license. You will be prompted to
+restart Eclipse to complete the install.
+
+[[hello-world-example]]
+Hello World Example
+^^^^^^^^^^^^^^^^^^^
+
+Now the development environment is set up, it’s time to create a Hello
+World application. But this one will not just print “Hello World” to the
+browser, instead it will add in the other key aspect, integrating with
+Domino. Maven is a useful tool for loading dependencies automatically,
+but will require the
+http://www.openntf.org/main.nsf/project.xsp?r=project/IBM%20Domino%20Update%20Site%20for%20Build%20Management[IBM
+Domino Update Site for Build Management] mentioned earlier. So at this
+point the approach will just create a simple non-Mavenized plugin.
+
+1.  In Eclipse, select *File* > *New* > *Plug-in Project* and give it a
+name. As an OSGi plugin, tell it to run with the OSGi framework
+“Equinox”.
+image:img/domino1.png[1]
+
+2.  Until the next release of Domino is out, the execution environment
+needs to be changed to Java 1.6. Then finish – the Eclipse perspective
+used for development is not significant at this stage.
+image:img/domino2.png[2]
+
+3.  The MANIFEST.MF will be opened and some additional configuration is
+required. The plugin should be set as a singleton on the Overview tab.
+image:img/domino3.png[3]
+
+4.  On the Dependencies tab some plugins and packages need loading for
+OSGi and Domino, as below.
+image:img/domino4.png[4]
+
+5.  Back on the Overview tab, click the Extension Points link and
+confirm you want to display the Extension and Extension Point pages.
+image:img/domino4.png[5]
+
+6.  On the Extensions tab, click *Add…* and choose
+`com.ibm.pvc.webcontainer.application`.
+image:img/domino6.png[6]
+
+7.  Set the contextRoot to “/helloVaadin”.
+image:img/domino7.png[7]
+
+8.  Right-click on *com.ibm.pvc.webcontainer.application* and select
+*New* > *contentLocation*. Set it to “WebContent”. These two steps can
+be done by manually typing the relevant XML onto the plugin.xml tab and
+I would recommend you loop at what the resulting XML is.
+image:img/domino8.png[8]
+
+9.  Next download the Vaadin jar files that will be needed from the
+https://vaadin.com/download#direct-download[Vaadin website]. The
+README.txt file outlines the steps required to add it to the project,
+but are repeated below.
+
+10. Right-click the project and select *New* > *Folder* and call it
+WebContent/WEB-INF/lib.
+image:img/domino9.png[9]
+
+11. Copy all jars to WebContent/WEB-INF/lib. Copy all jars in the lib
+folder to WebContent/WEB-INF/lib.
+
+12. In the MANIFEST.MF, on the *Runtime* tab in the *Classpath* section,
+click *Add…* and add all the jar files added to WebContent/WEB-INF/lib.
+You must select the jars, not the folder. Then remember to move the “.”
+entry to the top of the list.
+image:img/domino10.png[10]
+
+13. Right-click the WebContent/WEB-INF folder and select *New* > *File*.
+Call it web.xml.
+
+14. Paste in the code below:
++
+[source,xml]
+....
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+<display-name>HelloVaadin</display-name>
+   <welcome-file-list>
+     <welcome-file>index.html</welcome-file>
+     <welcome-file>index.htm</welcome-file>
+     <welcome-file>index.jsp</welcome-file>
+     <welcome-file>default.html</welcome-file>
+     <welcome-file>default.htm</welcome-file>
+     <welcome-file>default.jsp</welcome-file>
+   </welcome-file-list>
+   <context-param>
+       <description>Vaadin production mode</description>
+       <param-name>productionMode</param-name>
+       <param-value>false</param-value>
+   </context-param>
+   
+   <servlet>
+       <servlet-name>HelloVaadinServlet</servlet-name>
+       <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
+       <init-param>
+           <param-name>UI</param-name>
+           <param-value>com.paulwithers.hellovaadin.HelloVaadinUI</param-value>
+       </init-param>
+   </servlet>
+
+   <servlet-mapping>
+       <servlet-name>HelloVaadinServlet</servlet-name>
+       <url-pattern>/*</url-pattern>
+   </servlet-mapping>
+</web-app>
+....
++
+This first block gives a list of default URL extensions accepted for
+mapping and tells the application to run in development mode. The
+<servlet> block gives the servlet name and points to a class we will
+create later which will initialise the NotesThread required for talking
+to Domino. The initParam points to a class we will create later that
+will be the entry point into the application.
+
+15.  Right-click com.paulwithers.hellovaadin and select *New* > *Vaadin
+Design*. You will need an evaluation or full license for Vaadin
+Designer. To get the trial license, log into the vaadin.com website and
+go to https://vaadin.com/designer#license-modal[https://vaadin.com/designer#license-modal.]
+
+16.  Call the design page “WelcomeDesign” and use the *Vertical Layout*
+template. Finish and confirm to switch to the Vaadin perspective.
+
+17.  Drag and drop a new Label onto the page (components are displayed
+alphabetically). In the Properties view set the name to “label1”. Click
+the ellipsis button next to *StyleName*. Select “LABEL_H2” and click
+*Add ->*, then OK. Change *ComponentAlignment* to “TOP_CENTER”. Save and
+close.
+
+18. Switch back to the Plug-in Development perspective. This is better
+suited to plugin development. Note the “WelcomeDesign.html” and
+“WelcomeDesign.java” files. Review WelcomeDesign.java.
+
+19. Right-click on com.paulwithers.hellovaadin and select *New* >
+*Class*. Call it WelcomeView and set the superclass as WelcomeDesign.
+image:img/domino12.png[12]
+
+20. Add the following code to the class to extend the auto-generated class and to compute the value of label1.
++
+[source,java]
+....
+import com.ibm.domino.osgi.core.context.ContextInfo;
+
+public class WelcomeView extends WelcomeDesign {
+    private static final long serialVersionUID = 1L;
+
+    public WelcomeView() {
+        super();
+        try {
+            label1.setValue("Welcome " +
+ContextInfo.getUserSession().getEffectiveUserName());
+        } catch (final Exception e) {
+            // TODO: handle exception
+        }
+    }
+}
+....
+
+21. You may get an error that the method Session.getEffectiveUserName()
+is not API. That can be fixed by amending the Java compiler settings, by
+changing the setting for forbidden reference to “Warning”.
+image:img/domino13.png[13]
+
+22. Right-click on *src/com.paulwithers.hellovaadin* and select *New* >
+*Class*. Class it “HelloVaadinUI” and set the superclass as
+“com.vaadin.ui.UI”.
+image:img/domino14.png[14]
+
+23. Add the following code to the class:
++
+[source,java]
+....
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.UI;
+
+public class HelloVaadinUI extends UI {
+    @Override
+    protected void init(VaadinRequest request) {
+        final WelcomeView welcome = new WelcomeView();
+        setContent(welcome);
+    }
+}
+....
+This creates an instance of the WelcomeView class just created and loads
+it to the page.
+
+24. On the *Build* tab ensure META-INF, WebContent, plugin.xml, src are
+all ticked for Binary Build.
+
+25. On the Overview tab, launch the *Organize Manifests Wizard* and
+complete.
+image:img/domino15.png[15]
+
+26. Select *File* > *New* > *Feature Project*. Call it
+com.paulwithers.helloVaadinFeature.
+image:img/domino16.png[16]
+
+27. Click Next and initialize from the com.paulwithers.helloVaadin
+plugin.
+
+28. Select *File* > *New* > *Update Site Project*. Call it
+com.paulwithers.helloVaadinUpdate and click Finish. Click *Add Feature…*
+and select com.paulwithers.helloVaadinFeature. Click *Build All*.
+
+29. Right-click com.paulwithers.helloVaadinUpdate and click *Export…*.
+Choose *General > File System*. You only need to select the site.xml.
+Export to an appropriate location.
+image:img/domino17.png[17]
+
+30. In an Update Site database on the relevant server, import the update
+site by pointing to the site.xml.
+image:img/domino18.png[18]
++
+As with any OSGi plugin, you will need to issue “restart task http”
+command to the server for the plugin to be available.
+
+31. If you browse to the “helloVaadin” URL on the server (corresponding
+to the contextRoot in the plugin.xml), you should now see “Hello
+Anonymous” message.
+image:img/domino19.png[19]
+
+If you log in or prefix the contextRoot with the filepath of a database
+that does not allow anonymous access, you will see a welcome message for
+the current logged in user.
+image:img/domino20.png[20]

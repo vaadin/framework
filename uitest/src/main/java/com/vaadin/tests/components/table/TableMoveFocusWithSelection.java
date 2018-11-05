@@ -1,31 +1,12 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.table;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.vaadin.event.LayoutEvents.LayoutClickEvent;
-import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.Table;
 
@@ -53,17 +34,14 @@ public class TableMoveFocusWithSelection extends AbstractReindeerTestUI {
             l.setId("row-" + i);
             l.setHeight(20, Unit.PIXELS);
             l.setData(i);
-            l.addLayoutClickListener(new LayoutClickListener() {
-                @Override
-                public void layoutClick(LayoutClickEvent event) {
-                    if (t.isMultiSelect()) {
-                        Set<Object> values = new HashSet<>(
-                                (Set<Object>) t.getValue());
-                        values.add(l.getData());
-                        t.setValue(values);
-                    } else {
-                        t.setValue(l.getData());
-                    }
+            l.addLayoutClickListener(event -> {
+                if (t.isMultiSelect()) {
+                    Set<Object> values = new HashSet<>(
+                            (Set<Object>) t.getValue());
+                    values.add(l.getData());
+                    t.setValue(values);
+                } else {
+                    t.setValue(l.getData());
                 }
             });
             t.getContainerProperty(i, "layout").setValue(l);
@@ -72,31 +50,22 @@ public class TableMoveFocusWithSelection extends AbstractReindeerTestUI {
         addComponent(t);
 
         // Select mode
-        Button toggleSelectMode = new Button(t.isMultiSelect()
-                ? "Press to use single select" : "Press to use multi select");
+        Button toggleSelectMode = new Button(
+                t.isMultiSelect() ? "Press to use single select"
+                        : "Press to use multi select");
         toggleSelectMode.setId("toggle-mode");
-        toggleSelectMode.addClickListener(new ClickListener() {
+        toggleSelectMode.addClickListener(event -> {
+            t.setMultiSelect(!t.isMultiSelect());
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                t.setMultiSelect(!t.isMultiSelect());
-
-                event.getButton().setCaption(
-                        t.isMultiSelect() ? "Press to use single select"
-                                : "Press to use multi select");
-            }
+            event.getButton()
+                    .setCaption(t.isMultiSelect() ? "Press to use single select"
+                            : "Press to use multi select");
         });
 
         addComponent(toggleSelectMode);
 
         Button select5210 = new Button("Select row 5-10",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        t.setValue(Arrays.asList(5, 6, 7, 8, 9, 10));
-                    }
-                });
+                event -> t.setValue(Arrays.asList(5, 6, 7, 8, 9, 10)));
         select5210.setId("select-510");
         addComponent(select5210);
     }

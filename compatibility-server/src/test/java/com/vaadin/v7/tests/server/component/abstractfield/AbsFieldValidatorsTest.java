@@ -75,5 +75,4 @@ public class AbsFieldValidatorsTest {
         assertFalse("field should be non-immediate because explicitly set",
                 field.isImmediate());
     }
-
 }

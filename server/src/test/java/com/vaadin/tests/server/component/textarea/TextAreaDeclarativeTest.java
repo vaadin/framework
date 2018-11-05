@@ -1,25 +1,9 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.server.component.textarea;
 
 import java.io.IOException;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.tests.server.component.abstracttextfield.AbstractTextFieldDeclarativeTest;
@@ -68,7 +52,7 @@ public class TextAreaDeclarativeTest
     public void testHtmlEntities() throws IOException {
         String design = "<vaadin-text-area>&amp; Test</vaadin-text-area>";
         TextArea read = read(design);
-        Assert.assertEquals("& Test", read.getValue());
+        assertEquals("& Test", read.getValue());
 
         read.setValue("&amp; Test");
 
@@ -76,7 +60,7 @@ public class TextAreaDeclarativeTest
         Element root = new Element(Tag.valueOf("vaadin-text-area"), "");
         read.writeDesign(root, dc);
 
-        Assert.assertEquals("&amp;amp; Test", root.html());
+        assertEquals("&amp;amp; Test", root.html());
     }
 
     @Test

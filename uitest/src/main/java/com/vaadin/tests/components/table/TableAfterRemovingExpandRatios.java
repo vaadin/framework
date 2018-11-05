@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.table;
 
 /**
@@ -23,8 +8,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.v7.ui.Table;
@@ -64,43 +47,26 @@ public class TableAfterRemovingExpandRatios extends AbstractReindeerTestUI {
     }
 
     private NativeButton createSetExpandRatiosButton(final Table table) {
-        NativeButton button = new NativeButton("Set expand",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        table.setColumnExpandRatio("column1", 1.0f);
-                        table.setColumnExpandRatio("column2", 3.0f);
-
-                    }
-                });
+        NativeButton button = new NativeButton("Set expand", event -> {
+            table.setColumnExpandRatio("column1", 1.0f);
+            table.setColumnExpandRatio("column2", 3.0f);
+        });
         button.setId("expand-button");
         return button;
     }
 
     private NativeButton createUnsetExpandRatiosButton(final Table table) {
-        NativeButton button = new NativeButton("Unset expand",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        table.setColumnExpandRatio("column1", -1);
-                        table.setColumnExpandRatio("column2", -1);
-                    }
-                });
+        NativeButton button = new NativeButton("Unset expand", event -> {
+            table.setColumnExpandRatio("column1", -1);
+            table.setColumnExpandRatio("column2", -1);
+        });
         button.setId("unexpand-button");
         return button;
     }
 
     private NativeButton createAddItemButton(final Table table) {
         NativeButton button = new NativeButton("Add item",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        table.addItem();
-                    }
-                });
+                event -> table.addItem());
         button.setId("add-button");
         return button;
 

@@ -9,7 +9,6 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -83,7 +82,8 @@ public class LayoutPerformanceTests extends TestBase {
         protected AbstractOrderedLayout createOrderedLayout(int depth,
                 boolean fullHeight) {
             AbstractOrderedLayout layout = (depth % 2) == 0
-                    ? new VerticalLayout() : new HorizontalLayout();
+                    ? new VerticalLayout()
+                    : new HorizontalLayout();
             layout.setWidth("100%");
             if (fullHeight) {
                 layout.setHeight("100%");
@@ -212,39 +212,32 @@ public class LayoutPerformanceTests extends TestBase {
         controls.addComponent(leafSelector);
         controls.addComponent(childAmount);
 
-        controls.addComponent(new Button("Clear", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                setTestLayout(new Label(""));
+        controls.addComponent(
+                new Button("Clear", event -> setTestLayout(new Label(""))));
+
+        controls.addComponent(new Button("Apply", event -> {
+            SampleType leafType = (SampleType) leafSelector.getValue();
+            if (leafType == null) {
+                return;
             }
-        }));
 
-        controls.addComponent(new Button("Apply", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                SampleType leafType = (SampleType) leafSelector.getValue();
-                if (leafType == null) {
-                    return;
-                }
+            ContainerType containerType = (ContainerType) containerSelector
+                    .getValue();
+            if (containerType == null) {
+                return;
+            }
 
-                ContainerType containerType = (ContainerType) containerSelector
-                        .getValue();
-                if (containerType == null) {
-                    return;
-                }
-
-                boolean wrapped = wrapInPanel.getValue();
-                ComponentContainer container = containerType.buildLayout(
-                        ((Number) levels.getValue()).intValue(),
-                        ((Number) childAmount.getValue()).intValue(), leafType,
-                        !wrapped);
-                if (wrapped) {
-                    Panel panel = new Panel(container);
-                    panel.setSizeFull();
-                    setTestLayout(panel);
-                } else {
-                    setTestLayout(container);
-                }
+            boolean wrapped = wrapInPanel.getValue();
+            ComponentContainer container = containerType.buildLayout(
+                    ((Number) levels.getValue()).intValue(),
+                    ((Number) childAmount.getValue()).intValue(), leafType,
+                    !wrapped);
+            if (wrapped) {
+                Panel panel = new Panel(container);
+                panel.setSizeFull();
+                setTestLayout(panel);
+            } else {
+                setTestLayout(container);
             }
         }));
 

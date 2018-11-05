@@ -1,0 +1,75 @@
+---
+title: Configure Combo Boxes Wisely
+order: 5
+layout: page
+---
+
+[[configure-comboboxes-wisely]]
+= Configure ComboBoxes wisely
+The Vaadin *ComboBox* is a versatile input field with lots of settings
+that change its behavior. The default settings are a good start, but are
+not necessarily suitable for all situations. Configure your ComboBoxes
+properly to avoid usability issues and make use of their advanced
+features.
+
+image:img/combo2.png[ComboBox]
+
+[[null-selection]]
+Null selection
+^^^^^^^^^^^^^^
+
+By default, the *ComboBox* component has null selection enabled,
+which means that the drop down list contains an *empty element* that
+maps to `null`. If you don’t want users to be able to select _“none”_,
+you should disable null selection with `setNullSelectionAllowed(false)`.
+
+If you _do_ want to allow null selection, you might want to set a
+specific caption for the empty item by adding a “dummy” option to the
+list and setting it as the null selection item:
+
+[source,java]
+....
+ComboBox cbExample = new ComboBox();
+cbExample.setNullSelectionAllowed(true);
+cbExample.addItem(“[ None ]”);
+cbExample.setNullSelectionItemId(“[ None ]”);
+....
+
+Consider surrounding the null item’s caption with brackets or dashes to
+distinguish it from the other options, and make sure that it ends up in
+the beginning or end of the list.
+
+[[enable-text-input-only-when-appropriate]]
+Enable text input only when appropriate
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The Vaadin ComboBox can behave either as an actual combo box (i.e.
+combining a textfield with a dropdown list), but also as a normal
+dropdown menu, like the html `<select>` element without text entry.
+This is controlled through the `setTextInputAllowed()` method.
+
+Text input is great if
+
+1. the list is very long, where using the text field as a filter helps in finding the correct item, or
+2. the users need to be able to add new values to the list, in which case adding new items must also be enabled using `setNewItemsAllowed(true)`.
+
+[source,java]
+....
+ComboBox cbEducation = new ComboBox(“Education”);
+cbEducation.setInputPrompt(“Choose degree from list or enter your own”);
+cbEducation.setTextInputAllowed(true);
+cbEducation.setNewItemsAllowed(true);
+....
+
+If only items in the list can be chosen, and the list is quite short
+(say, less than 10 entries), it’s actually better to *disable text
+input*, because that makes the click target for opening the dropdown
+cover the entire field, instead of just the small arrow-icon/button at
+the end (dropdown menu click-target areas marked in pink below):
+
+image:img/combos-textinput.png[Text input]
+
+(Actually in these cases, you might want to consider *NativeSelect*,
+which is really just a wrapper around the normal html `<select>`
+element. But then you can’t have an input prompt or any of the other
+nice features of *ComboBox*.)

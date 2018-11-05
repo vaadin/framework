@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,17 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-/**
- *
- */
 package com.vaadin.client.ui.dd;
 
 import com.vaadin.client.UIDL;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
+import com.vaadin.ui.dnd.DragSourceExtension;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
+/**
+ *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with
+ *             {@link DragSourceExtension#setEffectAllowed(com.vaadin.shared.ui.dnd.EffectAllowed)}
+ *             and
+ *             {@link DropTargetExtension#setDropEffect(com.vaadin.shared.ui.dnd.DropEffect)}
+ */
+@Deprecated
 @AcceptCriterion(AcceptAll.class)
-final public class VAcceptAll extends VAcceptCriterion {
+public final class VAcceptAll extends VAcceptCriterion {
 
     @Override
     protected boolean accept(VDragEvent drag, UIDL configuration) {

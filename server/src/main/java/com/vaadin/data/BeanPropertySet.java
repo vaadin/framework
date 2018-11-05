@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -32,8 +34,6 @@ import java.util.stream.Stream;
 
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.server.Setter;
-import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.util.ReflectTools;
 
 /**
  * A {@link PropertySet} that uses reflection to find bean properties.
@@ -55,11 +55,11 @@ public class BeanPropertySet<T> implements PropertySet<T> {
      * @see #readResolve()
      * @see BeanPropertyDefinition#writeReplace()
      */
-    private static class SerializedPropertySet implements Serializable {
-        private final Class<?> beanType;
+    private static class SerializedPropertySet<T> implements Serializable {
+        private final InstanceKey<T> instanceKey;
 
-        private SerializedPropertySet(Class<?> beanType) {
-            this.beanType = beanType;
+        private SerializedPropertySet(InstanceKey<T> instanceKey) {
+            this.instanceKey = instanceKey;
         }
 
         private Object readResolve() {
@@ -67,7 +67,9 @@ public class BeanPropertySet<T> implements PropertySet<T> {
              * When this instance is deserialized, it will be replaced with a
              * property set for the corresponding bean type and property name.
              */
-            return get(beanType);
+            return get(instanceKey.type, instanceKey.checkNestedDefinitions,
+                    new PropertyFilterDefinition(instanceKey.depth,
+                            instanceKey.ignorePackageNames));
         }
     }
 
@@ -104,29 +106,17 @@ public class BeanPropertySet<T> implements PropertySet<T> {
     }
 
     private static class BeanPropertyDefinition<T, V>
-            implements PropertyDefinition<T, V> {
-
-        private final PropertyDescriptor descriptor;
-        private final BeanPropertySet<T> propertySet;
+            extends AbstractBeanPropertyDefinition<T, V> {
 
         public BeanPropertyDefinition(BeanPropertySet<T> propertySet,
-                PropertyDescriptor descriptor) {
-            this.propertySet = propertySet;
-            this.descriptor = descriptor;
-
-            if (descriptor.getReadMethod() == null) {
-                throw new IllegalArgumentException(
-                        "Bean property has no accessible getter: "
-                                + propertySet.beanType + "."
-                                + descriptor.getName());
-            }
-
+                Class<T> propertyHolderType, PropertyDescriptor descriptor) {
+            super(propertySet, propertyHolderType, descriptor);
         }
 
         @Override
         public ValueProvider<T, V> getGetter() {
             return bean -> {
-                Method readMethod = descriptor.getReadMethod();
+                Method readMethod = getDescriptor().getReadMethod();
                 Object value = invokeWrapExceptions(readMethod, bean);
                 return getType().cast(value);
             };
@@ -134,40 +124,19 @@ public class BeanPropertySet<T> implements PropertySet<T> {
 
         @Override
         public Optional<Setter<T, V>> getSetter() {
-            if (descriptor.getWriteMethod() == null) {
+            if (getDescriptor().getWriteMethod() == null) {
                 return Optional.empty();
             }
 
             Setter<T, V> setter = (bean, value) -> {
                 // Do not "optimize" this getter call,
                 // if its done outside the code block, that will produce
-                // NotSerializableException because of some lambda compilation magic
-                Method innerSetter = descriptor.getWriteMethod();
+                // NotSerializableException because of some lambda compilation
+                // magic
+                Method innerSetter = getDescriptor().getWriteMethod();
                 invokeWrapExceptions(innerSetter, bean, value);
             };
             return Optional.of(setter);
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public Class<V> getType() {
-            return (Class<V>) ReflectTools
-                    .convertPrimitiveType(descriptor.getPropertyType());
-        }
-
-        @Override
-        public String getName() {
-            return descriptor.getName();
-        }
-
-        @Override
-        public String getCaption() {
-            return SharedUtil.propertyIdToHumanFriendly(getName());
-        }
-
-        @Override
-        public BeanPropertySet<T> getPropertySet() {
-            return propertySet;
         }
 
         private Object writeReplace() {
@@ -176,33 +145,249 @@ public class BeanPropertySet<T> implements PropertySet<T> {
              * serialize a DTO that when deserialized will get the corresponding
              * property definition from the cache.
              */
-            return new SerializedPropertyDefinition(getPropertySet().beanType,
-                    getName());
+            return new SerializedPropertyDefinition(
+                    getPropertySet().instanceKey.type, getName());
         }
     }
 
-    private static final ConcurrentMap<Class<?>, BeanPropertySet<?>> instances = new ConcurrentHashMap<>();
+    /**
+     * Contains properties for a bean type which is nested in another
+     * definition.
+     *
+     * @since 8.1
+     * @param <T>
+     *            the bean type
+     * @param <V>
+     *            the value type returned by the getter and set by the setter
+     */
+    public static class NestedBeanPropertyDefinition<T, V>
+            extends AbstractBeanPropertyDefinition<T, V> {
 
-    private final Class<T> beanType;
+        /**
+         * Default maximum depth for scanning nested properties.
+         *
+         * @since 8.2
+         */
+        protected static final int MAX_PROPERTY_NESTING_DEPTH = 10;
+
+        private final PropertyDefinition<T, ?> parent;
+
+        public NestedBeanPropertyDefinition(BeanPropertySet<T> propertySet,
+                PropertyDefinition<T, ?> parent,
+                PropertyDescriptor descriptor) {
+            super(propertySet, parent.getType(), descriptor);
+            this.parent = parent;
+        }
+
+        @Override
+        public ValueProvider<T, V> getGetter() {
+            return bean -> {
+                Method readMethod = getDescriptor().getReadMethod();
+                Object value = invokeWrapExceptions(readMethod,
+                        parent.getGetter().apply(bean));
+                return getType().cast(value);
+            };
+        }
+
+        @Override
+        public Optional<Setter<T, V>> getSetter() {
+            if (getDescriptor().getWriteMethod() == null) {
+                return Optional.empty();
+            }
+
+            Setter<T, V> setter = (bean, value) -> {
+                // Do not "optimize" this getter call,
+                // if its done outside the code block, that will produce
+                // NotSerializableException because of some lambda compilation
+                // magic
+                Method innerSetter = getDescriptor().getWriteMethod();
+                invokeWrapExceptions(innerSetter,
+                        parent.getGetter().apply(bean), value);
+            };
+            return Optional.of(setter);
+        }
+
+        @Override
+        public String getName() {
+            return parent.getName() + "." + super.getName();
+        }
+
+        @Override
+        public String getTopLevelName() {
+            return super.getName();
+        }
+
+        private Object writeReplace() {
+            /*
+             * Instead of serializing this actual property definition, only
+             * serialize a DTO that when deserialized will get the corresponding
+             * property definition from the cache.
+             */
+            return new SerializedPropertyDefinition(
+                    getPropertySet().instanceKey.type, getName());
+        }
+
+        /**
+         * Gets the parent property definition.
+         *
+         * @return the property definition for the parent
+         */
+        public PropertyDefinition<T, ?> getParent() {
+            return parent;
+        }
+    }
+
+    /**
+     * Key for identifying cached BeanPropertySet instances.
+     *
+     * @since 8.2
+     */
+    private static class InstanceKey<T> implements Serializable {
+        private Class<T> type;
+        private boolean checkNestedDefinitions;
+        private int depth;
+        private List<String> ignorePackageNames;
+
+        public InstanceKey(Class<T> type, boolean checkNestedDefinitions,
+                int depth, List<String> ignorePackageNames) {
+            this.type = type;
+            this.checkNestedDefinitions = checkNestedDefinitions;
+            this.depth = depth;
+            this.ignorePackageNames = ignorePackageNames;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + (checkNestedDefinitions ? 1231 : 1237);
+            result = prime * result + depth;
+            result = prime * result + ((ignorePackageNames == null) ? 0
+                    : ignorePackageNames.hashCode());
+            result = prime * result + ((type == null) ? 0 : type.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            InstanceKey other = (InstanceKey) obj;
+            if (checkNestedDefinitions != other.checkNestedDefinitions) {
+                return false;
+            }
+            if (depth != other.depth) {
+                return false;
+            }
+            if (ignorePackageNames == null) {
+                if (other.ignorePackageNames != null) {
+                    return false;
+                }
+            } else if (!ignorePackageNames.equals(other.ignorePackageNames)) {
+                return false;
+            }
+            return Objects.equals(type, other.type);
+        }
+
+    }
+
+    private static final ConcurrentMap<InstanceKey<?>, BeanPropertySet<?>> INSTANCES = new ConcurrentHashMap<>();
+
+    private final InstanceKey<T> instanceKey;
 
     private final Map<String, PropertyDefinition<T, ?>> definitions;
 
-    private BeanPropertySet(Class<T> beanType) {
-        this.beanType = beanType;
+    private BeanPropertySet(InstanceKey<T> instanceKey) {
+        this.instanceKey = instanceKey;
 
         try {
-            definitions = BeanUtil.getBeanPropertyDescriptors(beanType).stream()
-                    .filter(BeanPropertySet::hasNonObjectReadMethod)
+            definitions = BeanUtil.getBeanPropertyDescriptors(instanceKey.type)
+                    .stream().filter(BeanPropertySet::hasNonObjectReadMethod)
                     .map(descriptor -> new BeanPropertyDefinition<>(this,
-                            descriptor))
+                            instanceKey.type, descriptor))
                     .collect(Collectors.toMap(PropertyDefinition::getName,
                             Function.identity()));
         } catch (IntrospectionException e) {
             throw new IllegalArgumentException(
                     "Cannot find property descriptors for "
-                            + beanType.getName(),
+                            + instanceKey.type.getName(),
                     e);
         }
+    }
+
+    private BeanPropertySet(InstanceKey<T> instanceKey,
+            Map<String, PropertyDefinition<T, ?>> definitions) {
+        this.instanceKey = instanceKey;
+        this.definitions = new HashMap<>(definitions);
+    }
+
+    private BeanPropertySet(InstanceKey<T> instanceKey,
+            boolean checkNestedDefinitions,
+            PropertyFilterDefinition propertyFilterDefinition) {
+        this(instanceKey);
+        if (checkNestedDefinitions) {
+            Objects.requireNonNull(propertyFilterDefinition,
+                    "You must define a property filter callback if using nested property scan.");
+            findNestedDefinitions(definitions, 0, propertyFilterDefinition);
+        }
+    }
+
+    private void findNestedDefinitions(
+            Map<String, PropertyDefinition<T, ?>> parentDefinitions, int depth,
+            PropertyFilterDefinition filterCallback) {
+        if (depth >= filterCallback.getMaxNestingDepth()) {
+            return;
+        }
+        if (parentDefinitions == null) {
+            return;
+        }
+        Map<String, PropertyDefinition<T, ?>> moreProps = new HashMap<>();
+        for (String parentPropertyKey : parentDefinitions.keySet()) {
+            PropertyDefinition<T, ?> parentProperty = parentDefinitions
+                    .get(parentPropertyKey);
+            Class<?> type = parentProperty.getType();
+            if (type.getPackage() == null || type.isEnum()) {
+                continue;
+            }
+            String packageName = type.getPackage().getName();
+            if (filterCallback.getIgnorePackageNamesStartingWith().stream()
+                    .anyMatch(prefix -> packageName.startsWith(prefix))) {
+                continue;
+            }
+
+            try {
+                List<PropertyDescriptor> descriptors = BeanUtil
+                        .getBeanPropertyDescriptors(type).stream()
+                        .filter(BeanPropertySet::hasNonObjectReadMethod)
+                        .collect(Collectors.toList());
+                for (PropertyDescriptor descriptor : descriptors) {
+                    String name = parentPropertyKey + "."
+                            + descriptor.getName();
+                    PropertyDescriptor subDescriptor = BeanUtil
+                            .getPropertyDescriptor(instanceKey.type, name);
+                    moreProps.put(name, new NestedBeanPropertyDefinition<>(this,
+                            parentProperty, subDescriptor));
+
+                }
+            } catch (IntrospectionException e) {
+                throw new IllegalArgumentException(
+                        "Error finding nested property descriptors for "
+                                + type.getName(),
+                        e);
+            }
+        }
+        if (moreProps.size() > 0) {
+            definitions.putAll(moreProps);
+            findNestedDefinitions(moreProps, ++depth, filterCallback);
+        }
+
     }
 
     /**
@@ -215,10 +400,41 @@ public class BeanPropertySet<T> implements PropertySet<T> {
     @SuppressWarnings("unchecked")
     public static <T> PropertySet<T> get(Class<? extends T> beanType) {
         Objects.requireNonNull(beanType, "Bean type cannot be null");
-
+        InstanceKey key = new InstanceKey(beanType, false, 0, null);
         // Cache the reflection results
-        return (PropertySet<T>) instances.computeIfAbsent(beanType,
-                BeanPropertySet::new);
+        return (PropertySet<T>) INSTANCES
+                .computeIfAbsent(key, ignored -> new BeanPropertySet<>(key))
+                .copy();
+    }
+
+    private BeanPropertySet<T> copy() {
+        return new BeanPropertySet<>(instanceKey, definitions);
+    }
+
+    /**
+     * Gets a {@link BeanPropertySet} for the given bean type.
+     *
+     * @param beanType
+     *            the bean type to get a property set for, not <code>null</code>
+     * @param checkNestedDefinitions
+     *            whether to scan for nested definitions in beanType
+     * @param filterDefinition
+     *            filtering conditions for nested properties
+     * @return the bean property set, not <code>null</code>
+     * @since 8.2
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> PropertySet<T> get(Class<? extends T> beanType,
+            boolean checkNestedDefinitions,
+            PropertyFilterDefinition filterDefinition) {
+        Objects.requireNonNull(beanType, "Bean type cannot be null");
+        InstanceKey key = new InstanceKey(beanType, false,
+                filterDefinition.getMaxNestingDepth(),
+                filterDefinition.getIgnorePackageNamesStartingWith());
+        return (PropertySet<T>) INSTANCES
+                .computeIfAbsent(key, k -> new BeanPropertySet<>(key,
+                        checkNestedDefinitions, filterDefinition))
+                .copy();
     }
 
     @Override
@@ -227,8 +443,52 @@ public class BeanPropertySet<T> implements PropertySet<T> {
     }
 
     @Override
-    public Optional<PropertyDefinition<T, ?>> getProperty(String name) {
-        return Optional.ofNullable(definitions.get(name));
+    public Optional<PropertyDefinition<T, ?>> getProperty(String name)
+            throws IllegalArgumentException {
+        Optional<PropertyDefinition<T, ?>> definition = Optional
+                .ofNullable(definitions.get(name));
+        if (!definition.isPresent() && name.contains(".")) {
+            try {
+                String parentName = name.substring(0, name.lastIndexOf('.'));
+                Optional<PropertyDefinition<T, ?>> parent = getProperty(
+                        parentName);
+                if (!parent.isPresent()) {
+                    throw new IllegalArgumentException(
+                            "Cannot find property descriptor [" + parentName
+                                    + "] for " + instanceKey.type.getName());
+                }
+
+                Optional<PropertyDescriptor> descriptor = Optional.ofNullable(
+                        BeanUtil.getPropertyDescriptor(instanceKey.type, name));
+                if (descriptor.isPresent()) {
+                    NestedBeanPropertyDefinition<T, ?> nestedDefinition = new NestedBeanPropertyDefinition<>(
+                            this, parent.get(), descriptor.get());
+                    definitions.put(name, nestedDefinition);
+                    return Optional.of(nestedDefinition);
+                } else {
+                    throw new IllegalArgumentException(
+                            "Cannot find property descriptor [" + name
+                                    + "] for " + instanceKey.type.getName());
+                }
+
+            } catch (IntrospectionException e) {
+                throw new IllegalArgumentException(
+                        "Cannot find property descriptors for "
+                                + instanceKey.type.getName(),
+                        e);
+            }
+        }
+        return definition;
+    }
+
+    /**
+     * Gets the bean type of this bean property set.
+     *
+     * @since 8.2
+     * @return the bean type of this bean property set
+     */
+    public Class<T> getBeanType() {
+        return instanceKey.type;
     }
 
     private static boolean hasNonObjectReadMethod(
@@ -249,7 +509,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
 
     @Override
     public String toString() {
-        return "Property set for bean " + beanType.getName();
+        return "Property set for bean " + instanceKey.type.getName();
     }
 
     private Object writeReplace() {
@@ -258,6 +518,6 @@ public class BeanPropertySet<T> implements PropertySet<T> {
          * that when deserialized will get the corresponding property set from
          * the cache.
          */
-        return new SerializedPropertySet(beanType);
+        return new SerializedPropertySet(instanceKey);
     }
 }

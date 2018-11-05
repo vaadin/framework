@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,7 +29,7 @@ import elemental.json.JsonValue;
 public class ProgressBarRenderer extends AbstractRenderer<Object, Double> {
 
     /**
-     * Creates a new text renderer
+     * Creates a new text renderer.
      */
     public ProgressBarRenderer() {
         super(Double.class, null);

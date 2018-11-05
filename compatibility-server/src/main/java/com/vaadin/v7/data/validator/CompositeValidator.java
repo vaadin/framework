@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,17 +21,24 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.HasValue;
 import com.vaadin.v7.data.Validator;
 
 /**
  * The <code>CompositeValidator</code> allows you to chain (compose) many
  * validators to validate one field. The contained validators may be required to
  * all validate the value to validate or it may be enough that one contained
- * validator validates the value. This behaviour is controlled by the modes
+ * validator validates the value. This behavior is controlled by the modes
  * <code>AND</code> and <code>OR</code>.
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, no direct replacement available. See
+ *             {@link Binder#forField(HasValue)} and various methods for
+ *             validation and conversion chaining: {@code withValidator(...)},
+ *             {@code withConverter(...)}, {@code withNullRepresentation(...)}
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -74,7 +81,7 @@ public class CompositeValidator implements Validator {
     /**
      * List of contained validators.
      */
-    private final List<Validator> validators = new LinkedList<>();
+    private final List<Validator> validators = new LinkedList<Validator>();
 
     /**
      * Construct a composite validator in <code>AND</code> mode without error
@@ -240,7 +247,7 @@ public class CompositeValidator implements Validator {
             return null;
         }
 
-        final HashSet<Validator> found = new HashSet<>();
+        final HashSet<Validator> found = new HashSet<Validator>();
         for (Validator v : validators) {
             if (validatorType.isAssignableFrom(v.getClass())) {
                 found.add(v);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -29,17 +29,10 @@ public class VSchedulerImpl extends SchedulerImpl {
     public void scheduleDeferred(ScheduledCommand cmd) {
         deferredCommandTrackers++;
         super.scheduleDeferred(cmd);
-        super.scheduleDeferred(new ScheduledCommand() {
-
-            @Override
-            public void execute() {
-                deferredCommandTrackers--;
-            }
-        });
+        super.scheduleDeferred(() -> deferredCommandTrackers--);
     }
 
     public boolean hasWorkQueued() {
-        boolean hasWorkQueued = (deferredCommandTrackers != 0);
-        return hasWorkQueued;
+        return deferredCommandTrackers != 0;
     }
 }

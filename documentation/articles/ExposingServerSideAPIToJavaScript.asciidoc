@@ -1,0 +1,139 @@
+---
+title: Exposing Server Side API To JavaScript
+order: 41
+layout: page
+---
+
+[[exposing-server-side-api-to-javascript]]
+= Exposing server-side API to JavaScript
+
+The new JavaScript integration functionality will allow you to easily
+publish methods that can be called with JavaScript on the client side.
+In effect, you can publish a JavaScript API for your application.
+Although you will probably not find yourself using this very often, it
+can be useful when integrating with JavaScript frameworks or embedding
+within legacy sites.
+
+Exposing a `notify()` method that takes a message and displays that as a
+notification can be done in one simple block in e.g `UI.init()`:
+
+[source,java]
+....
+JavaScript.getCurrent().addFunction("notify", new JavaScriptFunction() {
+  public void call(JSONArray arguments) throws JSONException {
+    Notification.show(arguments.getString(0));
+  }
+});
+....
+
+This will expose the `notify()`{empty}-method globally in the window object.
+Technically it's thus `window.notify()`, but you can call it by simply
+by `notify()`. Try entering `notify("Hey!")` into the Firebug or
+Developler Tools console, or `javascript:notify("Hey!")` into the
+address bar.
+
+You'll notice that this assumes there is a String in the first position
+of the array. Also, this will clutter the global namespace, which is
+generally not a good idea, unless you really have a specific need for
+that.
+
+Let's make a complete example with two arguments, some simple error
+handling, and namespacing:
+
+[source,java]
+....
+JavaScript.getCurrent().addFunction("com.example.api.notify",
+  new JavaScriptFunction() {
+    public void call(JSONArray arguments) throws JSONException {
+      try {
+        String caption = arguments.getString(0);
+        if (arguments.length() == 1) {
+            // only caption
+            Notification.show(caption);
+        } else {
+            // type should be in [1]
+            Notification.show(caption,
+                Type.values()[arguments.getInt(1)]);
+        }
+      } catch (JSONException e) {
+        // We'll log in the console, you might not want to
+        JavaScript.getCurrent().execute(
+            "console.error('" + e.getMessage() + "')");
+      }
+    }
+  });
+}
+....
+
+Using the dotted notation for the method will automatically create those
+objects in the browser; you'll call this method like so:
+`com.example.api.notify("Hey!")`. You do not have to use a long name
+like this, though - it's up to you and your use-case.
+
+The second thing to notice is that we now wrapped the code in a
+try-catch, so that the wrong number or wrong types of arguments does not
+cause an ugly stacktrace in our server logs. Again, how you should react
+to erroneous use of your exposed API depends on your use-case. We'll log
+an error message to the browser console as an example.
+
+We're now accepting a second (integer) argument, and using that as
+_type_ for the `Notification`.
+
+Finally, we'll add a link that will call the function, and work as a
+_Bookmarklet_. You can drag the link to your bookmarks bar, and when you
+invoke it when viewing the application with our exposed `notify()`{empty}-method, you will be prompted for a message that will then be sent to
+the method. Here is the plain HTML code for creating such a link:
+
+[source,html]
+....
+<a href="javascript:(function(){com.example.api.notify(prompt('Message'),2);})();">Send message</a>
+....
+
+Here is the full source for our application:
+
+[source,java]
+....
+import org.json.JSONArray;
+import org.json.JSONException;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.JavaScript;
+import com.vaadin.ui.JavaScriptFunction;
+import com.vaadin.ui.Link;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.UI;
+
+public class JSAPIUI extends UI {
+  @Override
+  public void init(VaadinRequest request) {
+
+    JavaScript.getCurrent().addFunction("com.example.api.notify",
+        new JavaScriptFunction() {
+          public void call(JSONArray arguments) throws JSONException {
+            try {
+              String caption = arguments.getString(0);
+              if (arguments.length() == 1) {
+                // only caption
+                Notification.show(caption);
+              } else {
+                // type should be in [1]
+                Notification.show(caption,
+                    Type.values()[arguments.getInt(1)]);
+              }
+            } catch (JSONException e) {
+              // We'll log in the console, you might not want to
+              JavaScript.getCurrent().execute(
+                  "console.error('" + e.getMessage() + "')");
+            }
+          }
+        });
+
+
+    setContent(new Link(
+        "Send message",
+        new ExternalResource(
+            "javascript:(function(){com.example.api.notify(prompt('Message'),2);})();")));
+  }
+}
+....

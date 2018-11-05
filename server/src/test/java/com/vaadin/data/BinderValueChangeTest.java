@@ -1,23 +1,11 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.data;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,32 +45,32 @@ public class BinderValueChangeTest
         BindingBuilder<Person, String> binding = binder.forField(nameField);
 
         nameField.setValue("");
-        Assert.assertNull(event.get());
+        assertNull(event.get());
 
         binding.bind(Person::getFirstName, Person::setFirstName);
-        Assert.assertNull(event.get());
+        assertNull(event.get());
     }
 
     @Test
     public void setBean_unbound_noEvents() {
         binder.addValueChangeListener(this::statusChanged);
 
-        Assert.assertNull(event.get());
+        assertNull(event.get());
 
         binder.setBean(item);
 
-        Assert.assertNull(event.get());
+        assertNull(event.get());
     }
 
     @Test
     public void readBean_unbound_noEvents() {
         binder.addValueChangeListener(this::statusChanged);
 
-        Assert.assertNull(event.get());
+        assertNull(event.get());
 
         binder.readBean(item);
 
-        Assert.assertNull(event.get());
+        assertNull(event.get());
     }
 
     @Test
@@ -95,7 +83,7 @@ public class BinderValueChangeTest
 
         binder.addValueChangeListener(this::statusChanged);
 
-        Assert.assertNull(event.get());
+        assertNull(event.get());
         nameField.setValue("foo");
         verifyEvent(nameField);
     }
@@ -111,7 +99,7 @@ public class BinderValueChangeTest
 
         binder.addValueChangeListener(this::statusChanged);
 
-        Assert.assertNull(event.get());
+        assertNull(event.get());
         nameField.setValue("foo");
         verifyEvent(nameField);
     }
@@ -127,7 +115,7 @@ public class BinderValueChangeTest
 
         binder.addValueChangeListener(this::statusChanged);
 
-        Assert.assertNull(event.get());
+        assertNull(event.get());
         field.setValue("foo", true);
         verifyEvent(field, true);
     }
@@ -143,7 +131,7 @@ public class BinderValueChangeTest
                 .bind(Person::getAge, Person::setAge);
         binder.setBean(item);
 
-        Assert.assertNull(event.get());
+        assertNull(event.get());
         ageField.setValue(String.valueOf(1));
         verifyEvent(ageField);
     }
@@ -154,14 +142,14 @@ public class BinderValueChangeTest
 
     private void verifyEvent(HasValue<?> field, boolean isUserOriginated) {
         ValueChangeEvent<?> changeEvent = event.get();
-        Assert.assertNotNull(changeEvent);
-        Assert.assertEquals(field, changeEvent.getSource());
-        Assert.assertEquals(field, changeEvent.getComponent());
-        Assert.assertEquals(isUserOriginated, changeEvent.isUserOriginated());
+        assertNotNull(changeEvent);
+        assertEquals(field, changeEvent.getSource());
+        assertEquals(field, changeEvent.getComponent());
+        assertEquals(isUserOriginated, changeEvent.isUserOriginated());
     }
 
     private void statusChanged(ValueChangeEvent<?> evt) {
-        Assert.assertNull(event.get());
+        assertNull(event.get());
         event.set(evt);
     }
 }

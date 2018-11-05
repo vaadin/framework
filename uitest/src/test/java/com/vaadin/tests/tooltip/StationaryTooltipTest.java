@@ -7,9 +7,7 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 
 import org.junit.Test;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.interactions.Mouse;
-import org.openqa.selenium.interactions.internal.Coordinates;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -25,46 +23,28 @@ public class StationaryTooltipTest extends MultiBrowserTest {
     @Test
     public void tooltipShouldBeStationary() throws InterruptedException {
         openTestURL();
+        ButtonElement button = getButtonElement();
 
-        Mouse mouse = getMouse();
-
-        moveMouseToButtonUpperLeftCorner(mouse);
+        // Top left corner
+        new Actions(getDriver()).moveToElement(button, 2, 2).perform();
         sleep(3000); // wait for the tooltip to become visible
-        int originalTooltipLocationX = getTooltipLocationX();
 
-        moveMouseToButtonBottomRightCorner(mouse);
+        int originalTooltipLocationX = getTooltipLocationX();
+        assertThat("Tooltip not displayed", originalTooltipLocationX,
+                is(greaterThan(0)));
+
+        // Bottom right corner
+        new Actions(getDriver()).moveToElement(button,
+                button.getSize().width - 2, button.getSize().height - 2)
+                .perform();
         int actualTooltipLocationX = getTooltipLocationX();
 
-        assertThat(actualTooltipLocationX, is(greaterThan(0)));
-        assertThat(actualTooltipLocationX, is(originalTooltipLocationX));
-    }
-
-    private Coordinates getButtonCoordinates() {
-        return getCoordinates(getButtonElement());
+        assertThat("Tooltip should not move", actualTooltipLocationX,
+                is(originalTooltipLocationX));
     }
 
     private ButtonElement getButtonElement() {
         return $(ButtonElement.class).first();
-    }
-
-    private void moveMouseToButtonBottomRightCorner(Mouse mouse) {
-        Coordinates buttonCoordinates = getButtonCoordinates();
-        Dimension buttonDimensions = getButtonDimensions();
-
-        mouse.mouseMove(buttonCoordinates, buttonDimensions.getWidth() - 1,
-                buttonDimensions.getHeight() - 1);
-    }
-
-    private void moveMouseToButtonUpperLeftCorner(Mouse mouse) {
-        Coordinates buttonCoordinates = getButtonCoordinates();
-
-        mouse.mouseMove(buttonCoordinates, 0, 0);
-    }
-
-    private org.openqa.selenium.Dimension getButtonDimensions() {
-        ButtonElement buttonElement = getButtonElement();
-
-        return buttonElement.getWrappedElement().getSize();
     }
 
     private int getTooltipLocationX() {

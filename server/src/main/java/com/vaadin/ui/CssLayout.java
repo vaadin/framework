@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,7 @@
  */
 package com.vaadin.ui;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -75,10 +76,10 @@ import com.vaadin.ui.declarative.DesignContext;
 public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
 
     private CssLayoutServerRpc rpc = (MouseEventDetails mouseDetails,
-            Connector clickedConnector) -> {
-        fireEvent(LayoutClickEvent.createEvent(CssLayout.this, mouseDetails,
-                clickedConnector));
-    };
+            Connector clickedConnector) -> fireEvent(
+                    LayoutClickEvent.createEvent(CssLayout.this, mouseDetails,
+                            clickedConnector));
+
     /**
      * Custom layout slots containing the components.
      */
@@ -194,7 +195,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
      */
     @Override
     public Iterator<Component> iterator() {
-        return components.iterator();
+        return Collections.unmodifiableCollection(components).iterator();
     }
 
     /**

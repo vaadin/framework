@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,28 +15,25 @@
  */
 package com.vaadin.testbench.elements;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
 import com.vaadin.testbench.elementsbase.ServerClass;
 
+/**
+ * Element class for testing InlineDateField.
+ */
 @ServerClass("com.vaadin.ui.InlineDateField")
-public class InlineDateFieldElement extends DateFieldElement {
+public class InlineDateFieldElement extends AbstractFieldElement {
 
     /**
-     * Operation is not supported
-     * 
-     * @throws UnsupportedOperationException
+     * Returns the element which receives focus when the component is focused.
+     *
+     * @return the element which receives focus when the component is focused
+     * @since 8.1.1
      */
-    @Override
-    public String getValue() {
-        throw new UnsupportedOperationException();
-    }
+    public WebElement getFocusElement() {
+        return findElement(By.tagName("table"));
 
-    /**
-     * Operation is not supported
-     * 
-     * @throws UnsupportedOperationException
-     */
-    @Override
-    public void setValue(CharSequence chars) throws ReadOnlyException {
-        throw new UnsupportedOperationException();
     }
 }

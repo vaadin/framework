@@ -1,23 +1,10 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.tabsheet;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -29,7 +16,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * from a server side selection listener. This test makes sure that actually
  * happen.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class TabSelectionRevertedByServerTest extends MultiBrowserTest {
@@ -57,14 +43,14 @@ public class TabSelectionRevertedByServerTest extends MultiBrowserTest {
         TestBenchElement tabExpected = tab(expectedIndex);
         String attributeClassExpected = tabExpected.getAttribute("class");
 
-        Assert.assertTrue("Tab " + expectedIndex + " should be selected.",
+        assertTrue("Tab " + expectedIndex + " should be selected.",
                 attributeClassExpected
                         .contains("v-tabsheet-tabitemcell-selected"));
 
         TestBenchElement tabWrong = tab(wrongIndex);
         String attributeClassWrong = tabWrong.getAttribute("class");
 
-        Assert.assertTrue(
+        assertTrue(
                 "Tab " + wrongIndex + " should be selected when click on Tab 4",
                 !attributeClassWrong
                         .contains("v-tabsheet-tabitemcell-selected"));
@@ -91,7 +77,7 @@ public class TabSelectionRevertedByServerTest extends MultiBrowserTest {
     /*
      * Delay for PhantomJS.
      */
-    private final static int DELAY = 10;
+    private static final int DELAY = 10;
 
     /*
      * Provide the tab at specified index.
@@ -103,7 +89,7 @@ public class TabSelectionRevertedByServerTest extends MultiBrowserTest {
                 .findElements(by).get(index - 1);
 
         String expected = "Tab " + index;
-        Assert.assertEquals(expected,
+        assertEquals(expected,
                 element.getText().substring(0, expected.length()));
 
         return element;

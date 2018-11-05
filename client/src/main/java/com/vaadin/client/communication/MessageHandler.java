@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,7 +31,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
@@ -58,6 +57,7 @@ import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
+import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.metadata.Type;
@@ -133,6 +133,9 @@ public class MessageHandler {
     // will hold the CSRF token once received
     private String csrfToken = ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE;
 
+    // holds the push identifier once received
+    private String pushId = null;
+
     /** Timer for automatic redirect to SessionExpiredURL */
     private Timer redirectTimer;
 
@@ -140,7 +143,7 @@ public class MessageHandler {
     private int sessionExpirationInterval;
 
     /**
-     * Holds the time spent rendering the last request
+     * Holds the time spent rendering the last request.
      */
     protected int lastProcessingTime;
 
@@ -225,7 +228,7 @@ public class MessageHandler {
      * Handles a received UIDL JSON text, parsing it, and passing it on to the
      * appropriate handlers, while logging timing information.
      *
-     * @param jsonText
+     * @param json
      *            The JSON to handle
      */
     public void handleMessage(final ValueMap json) {
@@ -244,12 +247,7 @@ public class MessageHandler {
                 .getApplicationState() == ApplicationState.INITIALIZING) {
             // Application is starting up for the first time
             connection.setApplicationRunning(true);
-            connection.executeWhenCSSLoaded(new Command() {
-                @Override
-                public void execute() {
-                    handleJSON(json);
-                }
-            });
+            connection.executeWhenCSSLoaded(() -> handleJSON(json));
         } else {
             getLogger().warning(
                     "Ignored received message because application has already been stopped");
@@ -349,6 +347,12 @@ public class MessageHandler {
             csrfToken = json
                     .getString(ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
         }
+
+        // Get push id if present
+        if (json.containsKey(ApplicationConstants.UIDL_PUSH_ID)) {
+            pushId = json.getString(ApplicationConstants.UIDL_PUSH_ID);
+        }
+
         getLogger().info(" * Handling resources from server");
 
         if (json.containsKey("resources")) {
@@ -485,13 +489,9 @@ public class MessageHandler {
                             .handleServerResponse(json.getValueMap("dd"));
                 }
 
-                int removed = unregisterRemovedConnectors(
+                unregisterRemovedConnectors(
                         connectorHierarchyUpdateResult.detachedConnectorIds);
-                if (removed > 0 && !isResponse(json)) {
-                    // Must acknowledge the removal using an XHR or server
-                    // memory usage will keep growing
-                    getUIConnector().sendAck();
-                }
+
                 getLogger().info("handleUIDLMessage: "
                         + (Duration.currentTimeMillis() - processUidlStart)
                         + " ms");
@@ -565,13 +565,12 @@ public class MessageHandler {
                 endRequestIfResponse(json);
                 resumeResponseHandling(lock);
 
+                ConnectorBundleLoader.get().ensureDeferredBundleLoaded();
+
                 if (Profiler.isEnabled()) {
-                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                        @Override
-                        public void execute() {
-                            Profiler.logTimings();
-                            Profiler.reset();
-                        }
+                    Scheduler.get().scheduleDeferred(() -> {
+                        Profiler.logTimings();
+                        Profiler.reset();
                     });
                 }
             }
@@ -799,13 +798,12 @@ public class MessageHandler {
                         "verifyConnectorHierarchy - this is only performed in debug mode");
             }
 
-            private int unregisterRemovedConnectors(
+            private void unregisterRemovedConnectors(
                     FastStringSet detachedConnectors) {
                 Profiler.enter("unregisterRemovedConnectors");
 
                 JsArrayString detachedArray = detachedConnectors.dump();
-                int nrDetached = detachedArray.length();
-                for (int i = 0; i < nrDetached; i++) {
+                for (int i = 0; i < detachedArray.length(); i++) {
                     ServerConnector connector = getConnectorMap()
                             .getConnector(detachedArray.get(i));
 
@@ -822,10 +820,9 @@ public class MessageHandler {
                     verifyConnectorHierarchy();
                 }
 
-                getLogger()
-                        .info("* Unregistered " + nrDetached + " connectors");
+                getLogger().info("* Unregistered " + detachedArray.length()
+                        + " connectors");
                 Profiler.leave("unregisterRemovedConnectors");
-                return nrDetached;
             }
 
             private JsArrayString createConnectorsIfNeeded(ValueMap json) {
@@ -930,13 +927,13 @@ public class MessageHandler {
                                 Profiler.leave(key);
                             }
                         } else if (legacyConnector == null) {
-                            getLogger().severe(
-                                    "Received update for " + uidl.getTag()
-                                            + ", but there is no such paintable ("
-                                            + connectorId + ") rendered.");
+                            getLogger().severe("Received update for "
+                                    + uidl.getTag()
+                                    + ", but there is no such paintable ("
+                                    + connectorId + ") rendered.");
                         } else {
-                            getLogger()
-                                    .severe("Server sent Vaadin 6 style updates for "
+                            getLogger().severe(
+                                    "Server sent Vaadin 6 style updates for "
                                             + Util.getConnectorString(
                                                     legacyConnector)
                                             + " but this is not a Vaadin 6 Paintable");
@@ -1607,7 +1604,7 @@ public class MessageHandler {
         }
     }
 
-    private static native final int calculateBootstrapTime()
+    private static final native int calculateBootstrapTime()
     /*-{
         if ($wnd.performance && $wnd.performance.timing) {
             return (new Date).getTime() - $wnd.performance.timing.responseStart;
@@ -1691,6 +1688,18 @@ public class MessageHandler {
     }
 
     /**
+     * Gets the push connection identifier for this session. Used when
+     * establishing a push connection with the client.
+     *
+     * @return the push connection identifier string
+     *
+     * @since 8.0.6
+     */
+    public String getPushId() {
+        return pushId;
+    }
+
+    /**
      * Checks whether state changes are currently being processed. Certain
      * operations are not allowed when the internal state of the application
      * might be in an inconsistent state because some state changes have been
@@ -1705,7 +1714,7 @@ public class MessageHandler {
     }
 
     /**
-     * Checks if the first UIDL has been handled
+     * Checks if the first UIDL has been handled.
      *
      * @return true if the initial UIDL has already been processed, false
      *         otherwise
@@ -1759,7 +1768,7 @@ public class MessageHandler {
     }
 
     /**
-     * Unwraps and parses the given JSON, originating from the server
+     * Unwraps and parses the given JSON, originating from the server.
      *
      * @param jsonText
      *            the json from the server
@@ -1793,7 +1802,7 @@ public class MessageHandler {
     }-*/;
 
     /**
-     * Parse the given wrapped JSON, received from the server, to a ValueMap
+     * Parse the given wrapped JSON, received from the server, to a ValueMap.
      *
      * @param wrappedJsonText
      *            the json, wrapped as done by the server

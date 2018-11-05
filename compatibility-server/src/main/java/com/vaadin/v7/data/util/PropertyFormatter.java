@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,7 +31,7 @@ import com.vaadin.v7.data.util.converter.Converter;
  * For example <code>
  * <pre>textfield.setPropertyDataSource(new PropertyFormatter(property) {
             public String format(Object value) {
-                return ((Double) value).toString() + "000000000";
+                return ((Double) value) + "000000000";
             }
 
             public Object parse(String formattedValue) throws Exception {
@@ -182,7 +182,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
      *            datasource.
      * @return
      */
-    abstract public String format(T value);
+    public abstract String format(T value);
 
     /**
      * Parse string and convert it to format compatible with datasource.
@@ -196,7 +196,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
      *             Any type of exception can be thrown to indicate that the
      *             conversion was not succesful.
      */
-    abstract public T parse(String formattedValue) throws Exception;
+    public abstract T parse(String formattedValue) throws Exception;
 
     /**
      * Sets the Property's read-only mode to the specified status.
@@ -223,7 +223,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
             }
         } else {
             try {
-                dataSource.setValue(parse(newValue.toString()));
+                dataSource.setValue(parse(newValue));
                 if (!newValue.equals(getValue())) {
                     fireValueChange();
                 }
@@ -239,8 +239,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
      * This should not be called directly.
      */
     @Override
-    public void valueChange(
-            com.vaadin.v7.data.Property.ValueChangeEvent event) {
+    public void valueChange(Property.ValueChangeEvent event) {
         fireValueChange();
     }
 
@@ -250,8 +249,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
      * This should not be called directly.
      */
     @Override
-    public void readOnlyStatusChange(
-            com.vaadin.v7.data.Property.ReadOnlyStatusChangeEvent event) {
+    public void readOnlyStatusChange(Property.ReadOnlyStatusChangeEvent event) {
         fireReadOnlyStatusChange();
     }
 

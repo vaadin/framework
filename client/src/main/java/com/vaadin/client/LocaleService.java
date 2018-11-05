@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 import com.vaadin.shared.ui.ui.UIState.LocaleData;
 
 /**
- * Date / time etc. localisation service for all widgets. Caches all loaded
+ * Date / time etc. localization service for all widgets. Caches all loaded
  * locales as JSONObjects.
  *
  * @author Vaadin Ltd.
@@ -42,7 +42,7 @@ public class LocaleService {
         if (cache.containsKey(key)) {
             cache.remove(key);
         }
-        getLogger().fine("Received locale data for " + localeData.name);
+        getLogger().fine("Received locale data for " + key);
         cache.put(key, localeData);
         if (cache.size() == 1) {
             setDefaultLocale(key);
@@ -65,81 +65,72 @@ public class LocaleService {
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
             return cache.get(locale).monthNames;
-        } else {
-            throw new LocaleNotLoadedException(locale);
         }
+        throw new LocaleNotLoadedException(locale);
     }
 
     public static String[] getShortMonthNames(String locale)
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
             return cache.get(locale).shortMonthNames;
-        } else {
-            throw new LocaleNotLoadedException(locale);
         }
+        throw new LocaleNotLoadedException(locale);
     }
 
     public static String[] getDayNames(String locale)
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
             return cache.get(locale).dayNames;
-        } else {
-            throw new LocaleNotLoadedException(locale);
         }
+        throw new LocaleNotLoadedException(locale);
     }
 
     public static String[] getShortDayNames(String locale)
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
             return cache.get(locale).shortDayNames;
-        } else {
-            throw new LocaleNotLoadedException(locale);
         }
+        throw new LocaleNotLoadedException(locale);
     }
 
     public static int getFirstDayOfWeek(String locale)
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
             return cache.get(locale).firstDayOfWeek;
-        } else {
-            throw new LocaleNotLoadedException(locale);
         }
+        throw new LocaleNotLoadedException(locale);
     }
 
     public static String getDateFormat(String locale)
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
             return cache.get(locale).dateFormat;
-        } else {
-            throw new LocaleNotLoadedException(locale);
         }
+        throw new LocaleNotLoadedException(locale);
     }
 
     public static boolean isTwelveHourClock(String locale)
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
             return cache.get(locale).twelveHourClock;
-        } else {
-            throw new LocaleNotLoadedException(locale);
         }
+        throw new LocaleNotLoadedException(locale);
     }
 
     public static String getClockDelimiter(String locale)
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
             return cache.get(locale).hourMinuteDelimiter;
-        } else {
-            throw new LocaleNotLoadedException(locale);
         }
+        throw new LocaleNotLoadedException(locale);
     }
 
     public static String[] getAmPmStrings(String locale)
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
             return new String[] { cache.get(locale).am, cache.get(locale).pm };
-        } else {
-            throw new LocaleNotLoadedException(locale);
         }
+        throw new LocaleNotLoadedException(locale);
     }
 
     public static void addLocales(List<LocaleData> localeDatas) {

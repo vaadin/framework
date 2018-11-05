@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The column group data shared between the server and the client
+ * The column group data shared between the server and the client.
  *
  * @since 7.4
  * @author Vaadin Ltd
@@ -29,17 +29,17 @@ import java.util.List;
 public class ColumnGroupState implements Serializable {
 
     /**
-     * The columns that is included in the group
+     * The columns that is included in the group.
      */
     public List<String> columns = new ArrayList<String>();
 
     /**
-     * The header text of the group
+     * The header text of the group.
      */
     public String header;
 
     /**
-     * The footer text of the group
+     * The footer text of the group.
      */
     public String footer;
 }

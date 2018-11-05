@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,14 +27,14 @@ import com.vaadin.client.event.PointerEvent.EventType;
  */
 public class PointerEventSupport {
 
-    private static final PointerEventSupportImpl impl = GWT
+    private static final PointerEventSupportImpl IMPL = GWT
             .create(PointerEventSupportImpl.class);
 
     private PointerEventSupport() {
     }
 
     public static void init() {
-        impl.init();
+        IMPL.init();
     }
 
     /**
@@ -42,7 +42,7 @@ public class PointerEventSupport {
      *         otherwise
      */
     public static boolean isSupported() {
-        return impl.isSupported();
+        return IMPL.isSupported();
     }
 
     /**
@@ -50,6 +50,6 @@ public class PointerEventSupport {
      * @return the native event name of the given event
      */
     public static String getNativeEventName(EventType eventType) {
-        return impl.getNativeEventName(eventType);
+        return IMPL.getNativeEventName(eventType);
     }
 }

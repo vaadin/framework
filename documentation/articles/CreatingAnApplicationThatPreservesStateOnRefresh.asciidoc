@@ -1,0 +1,55 @@
+---
+title: Creating An Application That Preserves State On Refresh
+order: 19
+layout: page
+---
+
+[[creating-an-application-that-preserves-state-on-refresh]]
+= Creating an application that preserves state on refresh
+
+By default, Vaadin 7 does not preserve UI state when the browser page is
+refreshed. This means that the instance number in this example is
+incremented and the text field cleared on every page refresh:
+
+[source,java]
+....
+public class CreatingPreserveState extends UI {
+    private static int instanceCounter = 0;
+
+    private final CssLayout content = new CssLayout();
+
+    @Override
+    public void init(VaadinRequest request) {
+        TextField tf = new TextField("Instance #" + (++instanceCounter));
+        tf.setImmediate(true);
+
+        content.addComponent(tf);
+        setContent(content);
+    }
+}
+....
+
+You can however modify your application to preserve your UI between page
+refreshes with the `@PreserveOnRefresh` annotation like so
+
+[source,java]
+....
+@PreserveOnRefresh
+public class PreserveStateUI extends UI {
+    ...
+}
+....
+
+If you want to reinitialize some part of your application when the page
+is refreshed, you can (starting from Vaadin 7.2) override the refresh
+method in your UI class. This method is called whenever an already
+initialized UI is refreshed.
+
+[source,java]
+....
+@Override
+protected void refresh(VaadinRequest request) {
+    content.addComponent(new Label("UI was refreshed @"
+            + System.currentTimeMillis()));
+}
+....

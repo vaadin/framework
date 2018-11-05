@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,8 +14,6 @@
  * the License.
  */
 package com.vaadin.event.dd.acceptcriteria;
-
-import java.io.Serializable;
 
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
@@ -32,8 +30,7 @@ import com.vaadin.server.PaintTarget;
  *
  * @since 6.3
  */
-public abstract class ClientSideCriterion
-        implements Serializable, AcceptCriterion {
+public abstract class ClientSideCriterion implements AcceptCriterion {
 
     /*
      * All criteria that extend this must be completely validatable on client

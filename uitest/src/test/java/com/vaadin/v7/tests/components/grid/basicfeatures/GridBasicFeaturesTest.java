@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.components.grid.basicfeatures;
 
 import static org.junit.Assert.assertEquals;
@@ -20,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -146,8 +132,8 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
 
     protected void assertColumnHeader(String expectedHeaderCaption,
             TestBenchElement testBenchElement) {
-        assertEquals(expectedHeaderCaption.toLowerCase(),
-                testBenchElement.getText().toLowerCase());
+        assertEquals(expectedHeaderCaption.toLowerCase(Locale.ROOT),
+                testBenchElement.getText().toLowerCase(Locale.ROOT));
     }
 
     protected GridCellElement getDefaultColumnHeader(int index) {
@@ -244,11 +230,15 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         List<WebElement> elements = sidebar
                 .findElements(By.className("column-hiding-toggle"));
         for (WebElement e : elements) {
-            if ((e.getText().toLowerCase())
+            if ((e.getText().toLowerCase(Locale.ROOT))
                     .startsWith("column " + columnIndex)) {
                 return e;
             }
         }
         return null;
+    }
+
+    protected void toggleColumnHidden(int column) {
+        selectMenuPath("Component", "Columns", "Column " + column, "Hidden");
     }
 }

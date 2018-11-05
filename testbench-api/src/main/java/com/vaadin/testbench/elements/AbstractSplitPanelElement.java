@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -37,7 +37,7 @@ public class AbstractSplitPanelElement
 
     /**
      * Gets the first component of a split panel and wraps it in given class.
-     * 
+     *
      * @param clazz
      *            Components element class
      * @return First component wrapped in given class
@@ -48,7 +48,7 @@ public class AbstractSplitPanelElement
 
     /**
      * Gets the second component of a split panel and wraps it in given class.
-     * 
+     *
      * @param clazz
      *            Components element class
      * @return Second component wrapped in given class
@@ -59,7 +59,7 @@ public class AbstractSplitPanelElement
 
     /**
      * Gets a component of a split panel and wraps it in the given class.
-     * 
+     *
      * @param clazz
      *            Components element class
      * @param byContainer

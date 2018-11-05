@@ -1,8 +1,6 @@
 package com.vaadin.tests.components;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
@@ -31,35 +29,14 @@ public class DisableEnableCascade extends TestBase {
         addComponent(outerPanel);
 
         enableDisablePanelButton = new Button("Disable panel",
-                new ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        enableDisable(outerPanel, enableDisablePanelButton);
-
-                    }
-                });
+                event -> enableDisable(outerPanel, enableDisablePanelButton));
 
         enableDisableTabSheetButton = new Button("Disable TabSheet",
-                new ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        enableDisable(innerTabsheet,
-                                enableDisableTabSheetButton);
-
-                    }
-                });
+                event -> enableDisable(innerTabsheet,
+                        enableDisableTabSheetButton));
 
         enableDisableButtonButton = new Button("Disable Button",
-                new ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        enableDisable(button, enableDisableButtonButton);
-
-                    }
-                });
+                event -> enableDisable(button, enableDisableButtonButton));
 
         addComponent(enableDisablePanelButton);
         addComponent(enableDisableTabSheetButton);
@@ -82,7 +59,7 @@ public class DisableEnableCascade extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "Tests the disable state is cascaded correctly to children. Disabling a parent should disabled its children aswell. The buttons only toggle the state of the target component.";
+        return "Tests the disable state is cascaded correctly to children. Disabling a parent should disabled its children as well. The buttons only toggle the state of the target component.";
     }
 
     @Override

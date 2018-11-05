@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,21 +34,18 @@ public class TabsheetConnector extends TabsheetBaseConnector
         implements SimpleManagedLayout, MayScrollChildren {
 
     public TabsheetConnector() {
-        registerRpc(TabsheetClientRpc.class, new TabsheetClientRpc() {
-            @Override
-            public void revertToSharedStateSelection() {
-                for (int i = 0; i < getState().tabs.size(); ++i) {
-                    final String key = getState().tabs.get(i).key;
-                    final boolean selected = key.equals(getState().selected);
-                    if (selected) {
-                        getWidget().waitingForResponse = false;
-                        getWidget().setActiveTabIndex(i);
-                        getWidget().selectTab(i);
-                        break;
-                    }
+        registerRpc(TabsheetClientRpc.class, () -> {
+            for (int i = 0; i < getState().tabs.size(); ++i) {
+                final String key = getState().tabs.get(i).key;
+                final boolean selected = key.equals(getState().selected);
+                if (selected) {
+                    getWidget().waitingForResponse = false;
+                    getWidget().setActiveTabIndex(i);
+                    getWidget().selectTab(i);
+                    break;
                 }
-                renderContent();
             }
+            renderContent();
         });
     }
 

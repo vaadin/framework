@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,8 +31,21 @@ import com.vaadin.v7.shared.ui.grid.GridConstants.Section;
  */
 public class GridKeyUpEvent extends AbstractGridKeyEvent<GridKeyUpHandler> {
 
+    public static final Type<GridKeyUpHandler> TYPE = new Type<GridKeyUpHandler>(
+            BrowserEvents.KEYUP, new GridKeyUpEvent());
+
+    /**
+     * @since 7.7.9
+     */
+    public GridKeyUpEvent() {
+    }
+
+    /**
+     * @deprecated This constructor's arguments are no longer used. Use the
+     *             no-args constructor instead.
+     */
+    @Deprecated
     public GridKeyUpEvent(Grid<?> grid, CellReference<?> targetCell) {
-        super(grid, targetCell);
     }
 
     @Override
@@ -44,6 +57,11 @@ public class GridKeyUpEvent extends AbstractGridKeyEvent<GridKeyUpHandler> {
                         && handler instanceof FooterKeyUpHandler)) {
             handler.onKeyUp(this);
         }
+    }
+
+    @Override
+    public Type<GridKeyUpHandler> getAssociatedType() {
+        return TYPE;
     }
 
     @Override

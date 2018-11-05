@@ -1,0 +1,200 @@
+---
+title: Creating A Theme Using SASS
+order: 78
+layout: page
+---
+
+[[creating-a-theme-using-sass]]
+= Creating a theme using SASS
+
+Vaadin 7 comes with built in support for Sass, which can be thought of
+as a preprocessor for CSS. From the Sass homepage:
+
+_Sass makes CSS fun again. Sass is an extension of CSS3, adding nested
+rules, variables, mixins, selector inheritance, and more._
+
+Sass looks like CSS with some added features, and is compiled into CSS
+before being sent to the browser. The compilation is either done
+beforehand, or (during development) on-the-fly by the servlet.
+
+In Vaadin 7 you can make use of Sass in any of your CSS, and as usual
+there are more than one way to arrange this. The recommended way if you
+do not have a specific reason not to do so, is to compile your theme
+into one CSS file (that is: without any CSS @include), but we'll start
+with the getting-your-feet-wet approach that looks exactly as
+before.It’s worth noting that you can continue to use CSS without Sass
+just as before, if you prefer.
+
+[[getting-your-feet-wet]]
+Getting your feet wet
+^^^^^^^^^^^^^^^^^^^^^
+
+In Vaadin 7 you set the theme in use by specifying the `@Theme` annotation
+on your UI, e.g `@Theme(“themename”)`. Ignoring Sass for a second, you
+would then create a `mytheme/styles.css` that typically `@import` the
+Reindeer theme (in case you forgot, your theme should be located in
+`WebContent/VAADIN/themes/<themename>/styles.css`). You can start using
+Sass with this approach, by renaming your `styles.css` to `styles.scss` and
+importing `legacy-styles.css` instead of `styles.css` - the resulting CSS
+will be exactly as the same as before, BUT now you're free to use Sass
+in your theme:
+
+[source,scss]
+....
+@import url(../reindeer/legacy-styles.css);
+$color : green;
+.v-button-caption {
+  color:  $color;
+}
+....
+
+Here we just define a Sass variable to use as color for button captions.
+
+*NOTE* that this way (using legacy-styles) you still lose one important
+new feature: you can't have multiple themes on the same page when using
+the legacy-styles.css -approach. To gain this feature, which is crucial
+if you intend to run multiple applications with different themes
+embedded in the same page (e.g portals), you must use Sass.
+
+[[compiling]]
+Compiling
+^^^^^^^^^
+
+Provided you’re in development mode (not production), the scss will
+automatically be translated into CSS. You can also compile the scss
+manually (and MUST do so for production). To do this you should run
+`com.vaadin.sass.SassCompiler` with the Vaadin jars on the classpath and
+give it your scss file and output file as arguments. If you have the
+jars readily available, you could do something like this in the command
+line:
+
+[source,bash]
+....
+> java -cp '../../../WEB-INF/lib/*' com.vaadin.sass.SassCompiler styles.scss styles.css
+....
+
+Another way would be to save the auto-compiled styles.css from the
+browser.
+
+Support has been added to the Eclipse plugin through the _Compile Vaadin
+Theme_ button .
+
+NOTE that if you're using Ivy (the default if you're using the Eclipse
+plugin), you must make sure to get the appropriate dependencies on your
+classpath some other way (since they are not present in `WEB-INF/lib`). In
+Eclipse, use the Run -dialog to inherit the classpath from your project.
+
+You'll notice that the resulting theme still uses `@import` to 'extend'
+the Reindeer theme:
+
+[source,scss]
+....
+@import url(../reindeer/legacy-styles.css);
+....
+
+This approach is an easy way to get started with Sass, but will cause
+two requests (one for our theme, one for Reindeer). Let’s have a look at
+the recommended approach next.
+
+[[going-deeper]]
+Going deeper
+^^^^^^^^^^^^
+
+Instead of using CSS `@import` to base your application theme on, you can
+(and probably should) use Sass `@import` to make a monolithic theme (one
+CSS file, one request when using the application). Just `@import reindeer.scss`, and `@include` it:
+
+[source,scss]
+....
+// mytheme.scss
+@import "../reindeer/reindeer.scss";
+
+.mytheme {
+   @include reindeer;
+
+   $color : yellow;
+   .v-button-caption {
+    color:  $color;
+   }
+}
+....
+
+This produces a styles.css that contains all the styles for Reindeer as
+well as your custom styles (note that this makes your final CSS quite
+big to scroll trough, so you might not want to do this when just
+learning the Sass syntax). There is no `@import` in the compiled CSS, so
+it will not cause additional requests. Additionally, due to the way
+Vaadin Sass is structured, this opens up for many possibilities to
+customize, mix-and-match themes, and leave unused stuff out.
+
+One important thing to notice, is that we wrapped everything in
+`.themename {}`, in this case `.mytheme {}`. This is the magic sauce that
+makes it possible to have multiple themes on one page. _It is crucial
+that the name matches your themename, or your styles will not be
+applied._
+
+Some of the nice features you get with Sass include variables, selector
+nesting, mixins (optionally with parameters), selector inheritance. For
+more information of what you can do with Sass, you should refer to the
+official documentation at http://sass-lang.com
+
+Please note that the Vaadin Sass compiler only supports the “SCSS”,
+which is the “new main syntax” (the original Sass also supports another,
+older syntax).The Vaadin version aims to be completely compatible,
+though initially there will be some limitations (and actually some added
+functionality). Please let us know if you find something is not working
+as expected.
+
+[[one-more-thing-recommended-structure]]
+One more thing: Recommended structure
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In Vaadin 7, all Vaadin core themes are using Sass. The
+_reindeer/styles.css_ we included first, is the compiled Reindeer theme,
+including the stuff from the Base theme that Reindeer extends. The Sass
+for the Reindeer theme is in _reindeer/reindeer.scss_, and contains one
+big mixin that will include the whole theme, unless you specifically
+tell it to leave out some parts. The themes are further divided into
+smaller parts, that can be left out, or separately included and renamed
+- providing a powerful way to customize and mix-and-match themes.
+
+*It is recommended* that you go ahead an divide your own theme into at
+least two files as well: *styles.scss* and *themename.scss* (where
+'themename' is the name of your theme). This is will make your theme
+extendable, and also has the nice benefit that file you usually edit is
+uniquely named (themename.scss) instead of a generic styles.scss that
+you might have many of.
+
+For a theme named 'mytheme', this would look as follows:
+
+`mytheme/styles.scss:`
+
+[source,scss]
+....
+@import "mytheme.scss";
+.mytheme {
+   @include mytheme;
+}
+....
+
+`mytheme/mytheme.scss`:
+
+[source,scss]
+....
+@import "../reindeer/reindeer.scss";
+
+@mixin mytheme {
+
+   // your styles go here
+
+   @include reindeer;
+}
+....
+
+This is the exact structure Vaadin core themes are using, and the way
+the Eclipse plugin will set things up for you (not yet in beta 10).
+
+Of course, you're still free to arrange your theme in another way if you
+prefer.
+
+Upcoming tutorials will address specific use-cases!

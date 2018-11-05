@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -141,15 +141,16 @@ public class ShortcutAction extends Action {
      * Insert one or more modifier characters before the character to use as
      * keycode. E.g <code>"&Save"</code> will make a shortcut responding to
      * ALT-S, <code>"E^xit"</code> will respond to CTRL-X.<br/>
-     * Multiple modifiers can be used, e.g <code>"&^Delete"</code> will respond
-     * to CTRL-ALT-D (the order of the modifier characters is not important).
+     * Multiple modifiers can be used, e.g <code>"&amp;^Delete"</code> will
+     * respond to CTRL-ALT-D (the order of the modifier characters is not
+     * important).
      * </p>
      * <p>
      * The modifier characters will be removed from the caption. The modifier
      * character is be escaped by itself: two consecutive characters are turned
      * into the original character w/o the special meaning. E.g
-     * <code>"Save&&&close"</code> will respond to ALT-C, and the caption will
-     * say "Save&close".
+     * <code>"Save&amp;&amp;&amp;close"</code> will respond to ALT-C, and the
+     * caption will say "Save&amp;close".
      * </p>
      *
      * @param shorthandCaption
@@ -168,7 +169,7 @@ public class ShortcutAction extends Action {
      * caption. I.e use any of the modifier characters in the caption to
      * indicate the keycode, but the modifier will be the given set.<br/>
      * E.g
-     * <code>new ShortcutAction("Do &stuff", new int[]{ShortcutAction.ModifierKey.CTRL}));</code>
+     * <code>new ShortcutAction("Do &amp;stuff", new int[]{ShortcutAction.ModifierKey.CTRL}));</code>
      * will respond to CTRL-S.
      * </p>
      *
@@ -255,7 +256,7 @@ public class ShortcutAction extends Action {
     }
 
     /**
-     * Key codes that can be used for shortcuts
+     * Key codes that can be used for shortcuts.
      *
      */
     public interface KeyCode extends Serializable {
@@ -387,7 +388,7 @@ public class ShortcutAction extends Action {
     }
 
     /**
-     * Modifier key constants
+     * Modifier key constants.
      *
      */
     public interface ModifierKey extends Serializable {

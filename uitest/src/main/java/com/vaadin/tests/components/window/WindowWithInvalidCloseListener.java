@@ -3,21 +3,14 @@ package com.vaadin.tests.components.window;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.CloseEvent;
-import com.vaadin.ui.Window.CloseListener;
 
 public class WindowWithInvalidCloseListener extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
         Window w = new Window("Close me");
-        w.addCloseListener(new CloseListener() {
-
-            @Override
-            public void windowClose(CloseEvent e) {
-                throw new RuntimeException(
-                        "Close listener intentionally failed");
-            }
+        w.addCloseListener(event -> {
+            throw new RuntimeException("Close listener intentionally failed");
         });
         addWindow(w);
     }

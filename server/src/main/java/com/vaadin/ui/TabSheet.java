@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -35,11 +36,13 @@ import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
+import com.vaadin.event.HasUserOriginated;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.tabsheet.TabState;
 import com.vaadin.shared.ui.tabsheet.TabsheetClientRpc;
 import com.vaadin.shared.ui.tabsheet.TabsheetServerRpc;
@@ -86,7 +89,7 @@ public class TabSheet extends AbstractComponentContainer
 
         @Override
         public void setSelected(String key) {
-            setSelectedTab(keyMapper.get(key));
+            setSelectedTab(keyMapper.get(key), true);
         }
 
         @Override
@@ -108,7 +111,7 @@ public class TabSheet extends AbstractComponentContainer
     /**
      * Map containing information related to the tabs (caption, icon etc).
      */
-    private final HashMap<Component, Tab> tabs = new HashMap<>();
+    private final Map<Component, Tab> tabs = new HashMap<>();
 
     /**
      * Selected tab content component.
@@ -119,7 +122,7 @@ public class TabSheet extends AbstractComponentContainer
      * Mapper between server-side component instances (tab contents) and keys
      * given to the client that identify tabs.
      */
-    private final KeyMapper<Component> keyMapper = new KeyMapper<>();
+    protected final KeyMapper<Component> keyMapper = new KeyMapper<>();
 
     /**
      * Handler to be called when a tab is closed.
@@ -226,7 +229,7 @@ public class TabSheet extends AbstractComponentContainer
 
                     // select the first enabled and visible tab, if any
                     updateSelection();
-                    fireSelectedTabChange();
+                    fireSelectedTabChange(false);
                 }
             }
         }
@@ -388,7 +391,7 @@ public class TabSheet extends AbstractComponentContainer
 
             if (selected == null) {
                 setSelected(tabComponent);
-                fireSelectedTabChange();
+                fireSelectedTabChange(false);
             }
 
             super.addComponent(tabComponent);
@@ -489,7 +492,7 @@ public class TabSheet extends AbstractComponentContainer
     }
 
     /**
-     * Sets whether the tab selection part should be shown in the UI
+     * Sets whether the tab selection part should be shown in the UI.
      *
      * @since 7.5
      * @param tabsVisible
@@ -500,7 +503,7 @@ public class TabSheet extends AbstractComponentContainer
     }
 
     /**
-     * Checks if the tab selection part should be shown in the UI
+     * Checks if the tab selection part should be shown in the UI.
      *
      * @return true if the tabs are shown in the UI, false otherwise
      * @since 7.5
@@ -524,17 +527,17 @@ public class TabSheet extends AbstractComponentContainer
     }
 
     /**
-     * Returns the {@link Tab} (metadata) for a component. The {@link Tab}
+     * Returns the {@link Tab} (metadata) with the given index. The {@link Tab}
      * object can be used for setting caption,icon, etc for the tab.
      *
-     * @param position
-     *            the position of the tab
-     * @return The tab in the given position, or null if the position is out of
+     * @param index
+     *            the index of the tab
+     * @return The tab with the given index, or null if the index is out of
      *         bounds.
      */
-    public Tab getTab(int position) {
-        if (position >= 0 && position < getComponentCount()) {
-            return getTab(components.get(position));
+    public Tab getTab(int index) {
+        if (index >= 0 && index < getComponentCount()) {
+            return getTab(components.get(index));
         } else {
             return null;
         }
@@ -544,13 +547,30 @@ public class TabSheet extends AbstractComponentContainer
      * Sets the selected tab. The tab is identified by the tab content
      * component. Does nothing if the tabsheet doesn't contain the component.
      *
-     * @param c
+     * @param component
+     *            the component of the tab to select
      */
-    public void setSelectedTab(Component c) {
-        if (c != null && components.contains(c) && !c.equals(selected)) {
-            setSelected(c);
+    public void setSelectedTab(Component component) {
+        setSelectedTab(component, false);
+    }
+
+    /**
+     * Sets the selected tab. The tab is identified by the tab content
+     * component. Does nothing if the tabsheet doesn't contain the component.
+     *
+     * @param component
+     *            the component of the tab to select
+     * @param userOriginated
+     *            <code>true</code> if the event originates from the client
+     *            side, <code>false</code> otherwise
+     * @since 8.1
+     */
+    public void setSelectedTab(Component component, boolean userOriginated) {
+        if (component != null && components.contains(component)
+                && !component.equals(selected)) {
+            setSelected(component);
             updateSelection();
-            fireSelectedTabChange();
+            fireSelectedTabChange(userOriginated);
             markAsDirty();
             getRpcProxy(TabsheetClientRpc.class).revertToSharedStateSelection();
         }
@@ -592,21 +612,23 @@ public class TabSheet extends AbstractComponentContainer
      * the given tab.
      *
      * @param tab
+     *            the tab to select
      */
     public void setSelectedTab(Tab tab) {
         if (tab != null) {
-            setSelectedTab(tab.getComponent());
+            setSelectedTab(tab.getComponent(), false);
         }
     }
 
     /**
-     * Sets the selected tab, identified by its position. Does nothing if the
+     * Sets the selected tab, identified by its index. Does nothing if the
      * position is out of bounds.
      *
-     * @param position
+     * @param index
+     *            the index of the tab to select
      */
-    public void setSelectedTab(int position) {
-        setSelectedTab(getTab(position));
+    public void setSelectedTab(int index) {
+        setSelectedTab(getTab(index));
     }
 
     /**
@@ -741,7 +763,7 @@ public class TabSheet extends AbstractComponentContainer
                 // is changed.
                 // Other cases are handled implicitly by removeComponent() and
                 // addComponent()addTab()
-                fireSelectedTabChange();
+                fireSelectedTabChange(false);
             }
 
             // Tab associations are not changed, but metadata is swapped between
@@ -764,9 +786,9 @@ public class TabSheet extends AbstractComponentContainer
             SELECTED_TAB_CHANGE_METHOD = SelectedTabChangeListener.class
                     .getDeclaredMethod("selectedTabChange",
                             SelectedTabChangeEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in TabSheet");
         }
     }
@@ -778,25 +800,44 @@ public class TabSheet extends AbstractComponentContainer
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    public static class SelectedTabChangeEvent extends Component.Event {
+    public static class SelectedTabChangeEvent extends Component.Event
+            implements HasUserOriginated {
+
+        private final boolean userOriginated;
 
         /**
-         * New instance of selected tab change event
+         * Creates a new instance of the event.
          *
          * @param source
-         *            the Source of the event.
+         *            the source of the event
+         * @param userOriginated
+         *            <code>true</code> if the event originates from the client
+         *            side, <code>false</code> otherwise
+         * @since 8.1
          */
-        public SelectedTabChangeEvent(Component source) {
+        public SelectedTabChangeEvent(Component source,
+                boolean userOriginated) {
             super(source);
+            this.userOriginated = userOriginated;
         }
 
         /**
-         * TabSheet where the event occurred.
+         * The TabSheet where the event occurred.
          *
-         * @return the Source of the event.
+         * @return the TabSheet where the event occurred
          */
         public TabSheet getTabSheet() {
             return (TabSheet) getSource();
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @since 8.1
+         */
+        @Override
+        public boolean isUserOriginated() {
+            return userOriginated;
         }
     }
 
@@ -856,10 +897,27 @@ public class TabSheet extends AbstractComponentContainer
     }
 
     /**
-     * Sends an event that the currently selected tab has changed.
+     * Sends an event originating from the server, telling that the currently
+     * selected tab has changed.
+     *
+     * @deprecated use {@link #fireSelectedTabChange(boolean)} to indicate the
+     *             origin of the event
      */
+    @Deprecated
     protected void fireSelectedTabChange() {
-        fireEvent(new SelectedTabChangeEvent(this));
+        fireSelectedTabChange(false);
+    }
+
+    /**
+     * Sends an event that the currently selected tab has changed.
+     *
+     * @param userOriginated
+     *            <code>true</code> if the event originates from the client
+     *            side, <code>false</code> otherwise
+     * @since 8.1
+     */
+    protected void fireSelectedTabChange(boolean userOriginated) {
+        fireEvent(new SelectedTabChangeEvent(this, userOriginated));
     }
 
     /**
@@ -1011,11 +1069,32 @@ public class TabSheet extends AbstractComponentContainer
          * Sets the description for the tab. The description can be used to
          * briefly describe the state of the tab to the user, and is typically
          * shown as a tooltip when hovering over the tab.
+         * <p>
+         * Setting a description through this method will additionally set the
+         * content mode of the description to preformatted. For setting a
+         * different content mode see the overload
+         * {@link #setDescription(String, ContentMode)}.
          *
          * @param description
          *            the new description string for the tab.
          */
         public void setDescription(String description);
+
+        /**
+         * Sets the description for the tab. The description can be used to
+         * briefly describe the state of the tab to the user, and is typically
+         * shown as a tooltip when hovering over the tab.
+         *
+         * @see ContentMode
+         *
+         * @param description
+         *            the new description string for the tab
+         * @param mode
+         *            content mode used to display the description
+         *
+         * @since 8.1
+         */
+        public void setDescription(String description, ContentMode mode);
 
         /**
          * Sets an error indicator to be shown in the tab. This can be used e.g.
@@ -1039,7 +1118,7 @@ public class TabSheet extends AbstractComponentContainer
         public ErrorMessage getComponentError();
 
         /**
-         * Get the component related to the Tab
+         * Get the component related to the Tab.
          */
         public Component getComponent();
 
@@ -1089,7 +1168,7 @@ public class TabSheet extends AbstractComponentContainer
         public void setId(String id);
 
         /**
-         * Gets currently set debug identifier
+         * Gets currently set debug identifier.
          *
          * @return current id, null if not set
          */
@@ -1178,7 +1257,7 @@ public class TabSheet extends AbstractComponentContainer
             tabState.enabled = enabled;
 
             if (updateSelection()) {
-                fireSelectedTabChange();
+                fireSelectedTabChange(false);
             }
             markAsDirty();
         }
@@ -1193,7 +1272,7 @@ public class TabSheet extends AbstractComponentContainer
             tabState.visible = visible;
 
             if (updateSelection()) {
-                fireSelectedTabChange();
+                fireSelectedTabChange(false);
             }
             markAsDirty();
         }
@@ -1217,7 +1296,13 @@ public class TabSheet extends AbstractComponentContainer
 
         @Override
         public void setDescription(String description) {
+            setDescription(description, ContentMode.PREFORMATTED);
+        }
+
+        @Override
+        public void setDescription(String description, ContentMode mode) {
             tabState.description = description;
+            tabState.descriptionContentMode = mode;
             markAsDirty();
         }
 
@@ -1230,9 +1315,14 @@ public class TabSheet extends AbstractComponentContainer
         public void setComponentError(ErrorMessage componentError) {
             this.componentError = componentError;
 
-            String formattedHtmlMessage = componentError != null
-                    ? componentError.getFormattedHtmlMessage() : null;
-            tabState.componentError = formattedHtmlMessage;
+            if (componentError != null) {
+                tabState.componentError = componentError
+                        .getFormattedHtmlMessage();
+                tabState.componentErrorLevel = componentError.getErrorLevel();
+            } else {
+                tabState.componentError = null;
+                tabState.componentErrorLevel = null;
+            }
 
             markAsDirty();
         }
@@ -1340,7 +1430,7 @@ public class TabSheet extends AbstractComponentContainer
     }
 
     /**
-     * Gets the position of the tab
+     * Gets the position of the tab.
      *
      * @param tab
      *            The tab
@@ -1491,7 +1581,7 @@ public class TabSheet extends AbstractComponentContainer
             boolean selected = DesignAttributeHandler.readAttribute("selected",
                     attr, Boolean.class);
             if (selected) {
-                this.setSelectedTab(tab.getComponent());
+                this.setSelectedTab(tab.getComponent(), false);
             }
         }
     }

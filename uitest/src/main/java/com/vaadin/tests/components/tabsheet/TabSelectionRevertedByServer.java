@@ -2,14 +2,10 @@ package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
-import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 
 /**
  * TabSheet test in case user selects a tab and on the selection listener the
@@ -18,7 +14,6 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
  * This test used to cause nonfunctional TabSheet if the current tab was 1, user
  * selects 5, then the selection listener will revert the selected tab to 1.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class TabSelectionRevertedByServer extends AbstractReindeerTestUI {
@@ -43,28 +38,18 @@ public class TabSelectionRevertedByServer extends AbstractReindeerTestUI {
 
         final Component lastTab = lastLabel;
 
-        tabsheet.addSelectedTabChangeListener(new SelectedTabChangeListener() {
+        tabsheet.addSelectedTabChangeListener(event -> {
+            if (tabsheet.getSelectedTab().equals(lastTab)) {
 
-            @Override
-            public void selectedTabChange(SelectedTabChangeEvent event) {
-                if (tabsheet.getSelectedTab().equals(lastTab)) {
-
-                    // Set focus back to first tab in tabsheet
-                    tabsheet.setSelectedTab(0);
-                    Notification.show("Focus set back to tab at position 0");
-                }
+                // Set focus back to first tab in tabsheet
+                tabsheet.setSelectedTab(0);
+                Notification.show("Focus set back to tab at position 0");
             }
         });
 
         addComponent(tabsheet);
 
-        addButton("Select Last Tab", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                tabsheet.setSelectedTab(lastTab);
-            }
-        });
+        addButton("Select Last Tab", event -> tabsheet.setSelectedTab(lastTab));
     }
 
     @Override

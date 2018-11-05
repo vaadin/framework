@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,7 +24,7 @@ import com.vaadin.shared.communication.ServerRpc;
 
 public class ServerRpcMethodInvocation extends MethodInvocation {
 
-    private static final Map<String, Method> invocationMethodCache = new ConcurrentHashMap<>(
+    private static final Map<String, Method> INVOCATION_METHOD_CACHE = new ConcurrentHashMap<>(
             128, 0.75f, 1);
 
     private final Method method;
@@ -67,14 +67,14 @@ public class ServerRpcMethodInvocation extends MethodInvocation {
         // signature
         String signature = targetType.getName() + "." + methodName + "("
                 + parameterCount;
-        Method invocationMethod = invocationMethodCache.get(signature);
+        Method invocationMethod = INVOCATION_METHOD_CACHE.get(signature);
 
         if (invocationMethod == null) {
             invocationMethod = doFindInvocationMethod(targetType, methodName,
                     parameterCount);
 
             if (invocationMethod != null) {
-                invocationMethodCache.put(signature, invocationMethod);
+                INVOCATION_METHOD_CACHE.put(signature, invocationMethod);
             }
         }
 

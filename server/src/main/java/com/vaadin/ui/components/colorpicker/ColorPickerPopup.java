@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +18,6 @@ package com.vaadin.ui.components.colorpicker;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -29,19 +28,19 @@ import com.vaadin.data.HasValue;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.colorpicker.Color;
-import com.vaadin.ui.AbstractColorPicker.Coordinates2Color;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.Window;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Slider;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.HasComponents;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.Slider;
+import com.vaadin.ui.AbstractColorPicker.Coordinates2Color;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Slider.ValueOutOfBoundsException;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 /**
  * A component that represents color selection popup within a color picker.
@@ -161,8 +160,8 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
      */
     public ColorPickerPopup(Color initialColor) {
         this();
-        selectedColor = initialColor;
         initContents();
+        setValue(initialColor);
     }
 
     private void initContents() {
@@ -249,6 +248,7 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
         buttons.setComponentAlignment(ok, Alignment.MIDDLE_CENTER);
         buttons.setComponentAlignment(cancel, Alignment.MIDDLE_CENTER);
         layout.addComponent(buttons);
+        setRgbSliderValues(selectedColor);
     }
 
     /**
@@ -278,8 +278,8 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
         blueSlider = createRGBSlider("Blue", "blue");
         setRgbSliderValues(color);
 
-        redSlider.addValueChangeListener(e -> {
-            double red = e.getValue();
+        redSlider.addValueChangeListener(event -> {
+            double red = event.getValue();
             if (!updatingColors) {
                 Color newColor = new Color((int) red, selectedColor.getGreen(),
                         selectedColor.getBlue());
@@ -289,8 +289,8 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
 
         sliders.addComponent(redSlider);
 
-        greenSlider.addValueChangeListener(e -> {
-            double green = e.getValue();
+        greenSlider.addValueChangeListener(event -> {
+            double green = event.getValue();
             if (!updatingColors) {
                 Color newColor = new Color(selectedColor.getRed(), (int) green,
                         selectedColor.getBlue());
@@ -299,8 +299,8 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
         });
         sliders.addComponent(greenSlider);
 
-        blueSlider.addValueChangeListener(e -> {
-            double blue = e.getValue();
+        blueSlider.addValueChangeListener(event -> {
+            double blue = event.getValue();
             if (!updatingColors) {
                 Color newColor = new Color(selectedColor.getRed(),
                         selectedColor.getGreen(), (int) blue);
@@ -452,6 +452,9 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
 
     private void okButtonClick(ClickEvent event) {
         fireEvent(new ValueChangeEvent<>(this, previouslySelectedColor, true));
+        rgbPreview.setValue(getValue());
+        hsvPreview.setValue(getValue());
+        selPreview.setValue(getValue());
         close();
     }
 
@@ -517,6 +520,7 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
     }
 
     private void colorChanged(ValueChangeEvent<Color> event) {
+        event.getSource().setValue(event.getValue());
         setValue(event.getValue());
 
         updatingColors = true;
@@ -761,11 +765,14 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
                     .setRequiredIndicatorVisible(isRequiredIndicatorVisible());
         }
         if (component instanceof HasComponents) {
-            Iterator<Component> iterator = ((HasComponents) component)
-                    .iterator();
-            while (iterator.hasNext()) {
-                updateColorComponents(iterator.next());
+            for (Component c : (HasComponents) component) {
+                updateColorComponents(c);
             }
         }
+    }
+
+    @Override
+    public void setModal(boolean modal) {
+        getState().modal = modal;
     }
 }

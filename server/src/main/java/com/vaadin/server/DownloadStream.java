@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -134,7 +134,7 @@ public class DownloadStream implements Serializable {
     }
 
     /**
-     * Sets a paramater for download stream. Parameters are optional information
+     * Sets a parameter for download stream. Parameters are optional information
      * about the downloadable stream and their meaning depends on the used
      * adapter. For example in WebAdapter they are interpreted as HTTP response
      * headers.
@@ -197,8 +197,8 @@ public class DownloadStream implements Serializable {
     /**
      * Sets length of cache expiration time. This gives the adapter the
      * possibility cache streams sent to the client. The caching may be made in
-     * adapter or at the client if the client supports caching. Zero or negavive
-     * value disbales the caching of this stream.
+     * adapter or at the client if the client supports caching. Zero or negative
+     * value disables the caching of this stream.
      *
      * @param cacheTime
      *            the cache time in milliseconds.
@@ -210,7 +210,7 @@ public class DownloadStream implements Serializable {
     /**
      * Gets the size of the download buffer.
      *
-     * @return int The size of the buffer in bytes.
+     * @return The size of the buffer in bytes.
      */
     public int getBufferSize() {
         return bufferSize;

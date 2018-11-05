@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -69,7 +69,7 @@ public class BrowserWindowOpener extends AbstractExtension {
 
     /**
      * Creates a window opener that will open windows containing the provided UI
-     * class
+     * class.
      *
      * @param uiClass
      *            the UI class that should be opened when the extended component
@@ -81,7 +81,7 @@ public class BrowserWindowOpener extends AbstractExtension {
 
     /**
      * Creates a window opener that will open windows containing the provided UI
-     * using the provided path
+     * using the provided path.
      *
      * @param uiClass
      *            the UI class that should be opened when the extended component
@@ -97,7 +97,7 @@ public class BrowserWindowOpener extends AbstractExtension {
     }
 
     /**
-     * Creates a window opener that will open windows to the provided URL
+     * Creates a window opener that will open windows to the provided URL.
      *
      * @param url
      *            the URL to open in the window
@@ -107,7 +107,7 @@ public class BrowserWindowOpener extends AbstractExtension {
     }
 
     /**
-     * Creates a window opener that will open window to the provided resource
+     * Creates a window opener that will open window to the provided resource.
      *
      * @param resource
      *            the resource to open in the window
@@ -122,8 +122,27 @@ public class BrowserWindowOpener extends AbstractExtension {
         setResource(BrowserWindowOpenerState.locationResource, resource);
     }
 
+    /**
+     * Add this extension to the target component.
+     *
+     * @param target
+     *            the component to attach this extension to
+     */
     public void extend(AbstractComponent target) {
         super.extend(target);
+    }
+
+    /**
+     * Add this extension to the {@code EventTrigger}.
+     *
+     * @param eventTrigger
+     *            the trigger to attach this extension to
+     *
+     * @since 8.4
+     */
+    public void extend(EventTrigger eventTrigger) {
+        super.extend(eventTrigger.getConnector());
+        getState().partInformation = eventTrigger.getPartInformation();
     }
 
     /**

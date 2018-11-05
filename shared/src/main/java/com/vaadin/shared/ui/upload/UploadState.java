@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,8 @@
 package com.vaadin.shared.ui.upload;
 
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.annotations.DelegateToWidget;
+import com.vaadin.shared.annotations.NoLayout;
 
 /**
  * Shared state for the Upload component.
@@ -24,10 +26,14 @@ import com.vaadin.shared.AbstractComponentState;
  */
 public class UploadState extends AbstractComponentState {
 
-    /** Is the upload component in immediate mode or not */
+    /** Is the upload component in immediate mode or not. */
     public boolean immediateMode = true;
 
     {
         primaryStyleName = "v-upload";
     }
+
+    @DelegateToWidget
+    @NoLayout
+    public String acceptMimeTypes;
 }

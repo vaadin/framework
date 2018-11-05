@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -121,14 +121,30 @@ public class MultiSelectionModelConnector
             return isSelectionAllowed;
         }
 
+        @Override
+        public boolean isMultiSelectionAllowed() {
+            return true;
+        }
     }
 
     @Override
     protected void initSelectionModel() {
-        getGrid().setSelectionModel(new MultiSelectionModel());
+        getGrid().setSelectionModel(createSelectionModel());
         // capture current rows so that can show selection update immediately
         dataAvailable = getGrid().addDataAvailableHandler(
                 event -> availableRows = event.getAvailableRows());
+    }
+
+    /**
+     * Creates an instance of MultiSelectionModel. Method provided overriding
+     * features of the selection model without copying all logic.
+     *
+     * @since 8.1
+     *
+     * @return selection model instance, not {@code null}
+     */
+    protected MultiSelectionModel createSelectionModel() {
+        return new MultiSelectionModel();
     }
 
     @Override

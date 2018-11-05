@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
@@ -12,6 +13,7 @@ import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class GridRowHeightChange extends AbstractReindeerTestUI {
 
     private final List<String> themes = Arrays.asList("valo", "reindeer",
@@ -44,9 +46,8 @@ public class GridRowHeightChange extends AbstractReindeerTestUI {
                 "Theme selector", themes);
         themeSelector.setSelectedItem("reindeer");
         themeSelector.setEmptySelectionAllowed(false);
-        themeSelector.addValueChangeListener(event -> {
-            setTheme(event.getValue());
-        });
+        themeSelector
+                .addValueChangeListener(event -> setTheme(event.getValue()));
 
         VerticalLayout layout = new VerticalLayout();
         layout.setSpacing(true);

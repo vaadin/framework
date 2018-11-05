@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,8 @@ package com.vaadin.v7.data.util.converter;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import com.vaadin.data.Binder;
+
 /**
  * A converter that converts from {@link String} to {@link Byte} and back. Uses
  * the given locale and a {@link NumberFormat} instance for formatting and
@@ -29,6 +31,9 @@ import java.util.Locale;
  *
  * @author Vaadin Ltd
  * @since 7.4
+ *
+ * @deprecated As of 8.0, a lightweight lambda-based converter can be build with
+ *             {@link Binder}{@code .forField(...).withConverter(...)} methods.
  */
 @Deprecated
 public class StringToByteConverter
@@ -37,7 +42,7 @@ public class StringToByteConverter
     /**
      * Returns the format used by
      * {@link #convertToPresentation(Byte, Class, Locale)} and
-     * {@link #convertToModel(String, Class, Locale)}
+     * {@link #convertToModel(String, Class, Locale)}.
      *
      * @param locale
      *            The locale to use

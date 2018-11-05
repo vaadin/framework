@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,17 +16,21 @@
 package com.vaadin.v7.data.util.sqlcontainer.connection;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 /**
  * Simple implementation of the JDBCConnectionPool interface. Handles loading
  * the JDBC driver, setting up the connections and ensuring they are still
  * usable upon release.
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -86,8 +90,8 @@ public class SimpleJDBCConnectionPool implements JDBCConnectionPool {
     }
 
     private void initializeConnections() throws SQLException {
-        availableConnections = new HashSet<>(initialConnections);
-        reservedConnections = new HashSet<>(initialConnections);
+        availableConnections = new HashSet<Connection>(initialConnections);
+        reservedConnections = new HashSet<Connection>(initialConnections);
         for (int i = 0; i < initialConnections; i++) {
             availableConnections.add(createConnection());
         }
@@ -142,7 +146,7 @@ public class SimpleJDBCConnectionPool implements JDBCConnectionPool {
         Connection c = DriverManager.getConnection(connectionUri, userName,
                 password);
         c.setAutoCommit(false);
-        if (driverName.toLowerCase().contains("mysql")) {
+        if (driverName.toLowerCase(Locale.ROOT).contains("mysql")) {
             try {
                 Statement s = c.createStatement();
                 s.execute("SET SESSION sql_mode = 'ANSI'");
@@ -173,8 +177,7 @@ public class SimpleJDBCConnectionPool implements JDBCConnectionPool {
 
     }
 
-    private void writeObject(java.io.ObjectOutputStream out)
-            throws IOException {
+    private void writeObject(ObjectOutputStream out) throws IOException {
         initialized = false;
         out.defaultWriteObject();
     }

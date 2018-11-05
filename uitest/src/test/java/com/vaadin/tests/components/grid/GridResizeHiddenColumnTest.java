@@ -1,23 +1,11 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.grid;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -44,9 +32,9 @@ public class GridResizeHiddenColumnTest extends MultiBrowserTest {
 
         // Check if column 'Last Name' hidden
         List<GridCellElement> headerCells = grid.getHeaderCells(0);
-        Assert.assertEquals("There should be two visible columns", 2,
+        assertEquals("There should be two visible columns", 2,
                 headerCells.size());
-        Assert.assertFalse("'Last Name' column should be hidden",
+        assertFalse("'Last Name' column should be hidden",
                 containsText("Last Name", headerCells));
 
         // Resize first column
@@ -58,8 +46,7 @@ public class GridResizeHiddenColumnTest extends MultiBrowserTest {
         // (might be an issue with the feature that doesn't start resizing until
         // the cursor moved a few pixels)
         double delta = BrowserUtil.isIE8(getDesiredCapabilities()) ? 5d : 0;
-        Assert.assertEquals(
-                "Column width should've changed by " + dragOffset + "px",
+        assertEquals("Column width should've changed by " + dragOffset + "px",
                 headerCellWidth + dragOffset,
                 headerCells.get(0).getSize().getWidth(), delta);
 
@@ -72,14 +59,14 @@ public class GridResizeHiddenColumnTest extends MultiBrowserTest {
                 By.className("v-grid-sidebar-popup"));
         WebElement visibilityToggle = findElementByText("Last Name",
                 sidebarPopup.findElements(By.className("gwt-MenuItem")));
-        action.click(visibilityToggle).perform(); // Click on "Last Name"
-                                                  // menu item
+        // Click on "Last Name" menu item
+        action.click(visibilityToggle).perform();
 
         // Check if column "Last Name" is visible
         headerCells = grid.getHeaderCells(0);
-        Assert.assertEquals("There should be three visible columns", 3,
+        assertEquals("There should be three visible columns", 3,
                 headerCells.size());
-        Assert.assertTrue("'Last Name' column should be visible",
+        assertTrue("'Last Name' column should be visible",
                 containsText("Last Name", headerCells));
 
         // Check if column "Last Name" has expanded width
@@ -87,8 +74,7 @@ public class GridResizeHiddenColumnTest extends MultiBrowserTest {
         for (GridCellElement e : headerCells) {
             widthSum += e.getSize().getWidth();
         }
-        Assert.assertEquals(
-                "'Last Name' column should take up the remaining space",
+        assertEquals("'Last Name' column should take up the remaining space",
                 grid.getHeader().getSize().getWidth(), widthSum, 1d);
     }
 
@@ -111,8 +97,9 @@ public class GridResizeHiddenColumnTest extends MultiBrowserTest {
             int offset) {
         Dimension size = headerCell.getSize();
         new Actions(getDriver())
-                .moveToElement(headerCell, size.getWidth() + posX,
-                        size.getHeight() / 2)
+                .moveToElement(headerCell,
+                        getXOffset(headerCell, size.getWidth() + posX),
+                        getYOffset(headerCell, size.getHeight() / 2))
                 .clickAndHold().moveByOffset(offset, 0).release().perform();
     }
 }

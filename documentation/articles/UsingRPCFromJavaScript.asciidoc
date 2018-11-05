@@ -1,0 +1,113 @@
+---
+title: Using RPC From JavaScript
+order: 42
+layout: page
+---
+
+[[using-rpc-from-javascript]]
+= Using RPC from JavaScript
+
+This tutorial continues where
+<<IntegratingAJavaScriptComponent.asciidoc#,"Integrating a JavaScript
+component">> ended. We will now add RPC functionality to the JavaScript
+Flot component. RPC can be used in the same way as with ordinary GWT
+components.
+
+We will add RPC from the client to the server when the user clicks a
+data point in the graph and RPC from server to client for highlighting a
+data point in the graph. For each of these, we define an RPC interface.
+Each interface has one method that takes a data series index and the
+index of a point in that series. As with the shared state, the GWT code
+doesn't need to know about these interfaces and it's thus not required
+to put them in the widgetset's client package and to recompile the
+widgetset after making changes.
+
+[source,java]
+....
+public interface FlotClickRpc extends ServerRpc {
+  public void onPlotClick(int seriesIndex, int dataIndex);
+}
+
+public interface FlotHighlightRpc extends ClientRpc {
+  public void highlight(int seriesIndex, int dataIndex);
+}
+....
+
+The server side code for this looks the same as if the client-side
+connector was implemented using GWT. An RPC implementation is registered
+in the constructor.
+
+[source,java]
+....
+public Flot() {
+  registerRpc(new FlotClickRpc() {
+    public void onPlotClick(int seriesIndex, int dataIndex) {
+      Notification.show("Clicked on [" + seriesIndex + ", "
+            + dataIndex + "]");
+    }
+  });
+}
+....
+
+Highlighting is implemented by getting an RPC proxy object and invoking
+the method.
+
+[source,java]
+....
+public void highlight(int seriesIndex, int dataIndex) {
+  getRpcProxy(FlotHighlightRpc.class).highlight(seriesIndex, dataIndex);
+}
+....
+
+The JavaScript connector uses similar functions from the connector
+wrapper: `this.getRpcProxy()` for getting an object with functions that
+will call the server-side counterpart and `this.registerRpc()` for
+registering an object with functions that will be called from the
+server. Because of the dynamic nature of JavaScript, you don't need to
+use the interface names if you don't want to - all methods from all RPC
+interfaces registered for the connector on the server will be available
+in the RPC proxy object and any RPC method invoked from the server will
+be called if present in the RPC object you registered. If a connector
+uses multiple RPC interfaces that define methods with conflicting names,
+you can still use the interface names to distinguish between interfaces.
+
+We need to make some small adjustments to the connector JavaScript to
+make it work with the way Flot processes events. Because a new Flot
+object is created each time the `onStateChange` function is called, we
+need to store a reference to the current object that we can use for
+applying the highlight. We also need to pass a third parameter to
+`$.plot` to make the graph area clickable. Aside from those changes, we
+just call the function on the RPC proxy in a click listener and register
+an RPC implementation with a function that highlights a point.
+
+[source,javascript]
+....
+window.com_example_Flot = function() {
+  var element = $(this.getElement());
+  var rpcProxy = this.getRpcProxy();
+  var flot;
+
+  this.onStateChange = function() {
+    flot = $.plot(element, this.getState().series, {grid: {clickable: true}});
+  }
+
+  element.bind('plotclick', function(event, point, item) {
+    if (item) {
+      rpcProxy.onPlotClick(item.seriesIndex, item.dataIndex);
+    }
+  });
+
+  this.registerRpc({
+    highlight: function(seriesIndex, dataIndex) {
+      if (flot) {
+        flot.highlight(seriesIndex, dataIndex);
+      }
+    }
+  });
+}
+....
+
+When the normal Vaadin RPC is used with JavaScript connectors, you can
+use the same server-side code that you would use with a GWT connector
+and the client-side code uses the same concepts as for GWT connectors,
+just translated to fit into the world of JavaScript.

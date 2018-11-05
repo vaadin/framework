@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -54,9 +54,9 @@ public interface EditorHandler<T> {
         public int getRowIndex();
 
         /**
-         * Returns the index of the column being focused.
+         * Returns the DOM index of the column being focused.
          *
-         * @return the column index
+         * @return the column index (excluding hidden columns)
          */
         public int getColumnIndex();
 
@@ -107,7 +107,7 @@ public interface EditorHandler<T> {
         /**
          * Checks whether the request is completed or not.
          *
-         * @return <code>true</code> iff the request is completed
+         * @return <code>true</code> if the request is completed
          */
         public boolean isCompleted();
     }

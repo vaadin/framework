@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.validation;
 
 import java.util.Set;
@@ -23,11 +8,10 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.data.Validator.InvalidValueException;
 import com.vaadin.v7.data.validator.StringLengthValidator;
 import com.vaadin.v7.ui.AbstractField;
 import com.vaadin.v7.ui.ComboBox;
-import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.ListSelect;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.PasswordField;
@@ -67,18 +51,13 @@ public class FieldErrorIndication extends AbstractReindeerTestUI {
         TwinColSelect twinColSelect = new TwinColSelect("TwinColSelect");
         twinColSelect.addItem("ok");
         twinColSelect.addItem("error");
-        twinColSelect.addValidator(new Validator() {
-
-            @Override
-            public void validate(Object value) throws InvalidValueException {
-                if (value instanceof Set && ((Set) value).size() == 1
-                        && ((Set) value).contains("ok")) {
-                    return;
-                }
-
-                throw new InvalidValueException("fail");
+        twinColSelect.addValidator(value -> {
+            if (value instanceof Set && ((Set) value).size() == 1
+                    && ((Set) value).contains("ok")) {
+                return;
             }
 
+            throw new InvalidValueException("fail");
         });
         twinColSelect.setValue("error");
 
@@ -89,21 +68,15 @@ public class FieldErrorIndication extends AbstractReindeerTestUI {
                 PasswordField.class };
         vl = new VerticalLayout();
         hl.addComponent(vl);
-        for (Class<? extends Field> fieldClass : textFields) {
+        for (Class<? extends AbstractField> fieldClass : textFields) {
             vl.addComponent(getField(fieldClass));
         }
 
     }
 
-    /**
-     * @since
-     * @param fieldClass
-     * @return
-     */
-    private Component getField(Class<? extends Field> fieldClass) {
-        AbstractField f;
+    private Component getField(Class<? extends AbstractField> fieldClass) {
         try {
-            f = (AbstractField) fieldClass.newInstance();
+            AbstractField<?> f = fieldClass.newInstance();
             f.setCaption(fieldClass.getSimpleName());
             f.setComponentError(new UserError("fail"));
             return f;

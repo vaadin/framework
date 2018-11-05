@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,15 +17,14 @@
 package com.vaadin.v7.client.ui;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.ui.ListBox;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.ui.Field;
 
-public class VNativeSelect extends VOptionGroupBase implements Field {
+public class VNativeSelect extends VOptionGroupBase {
 
     public static final String CLASSNAME = "v-select";
 
@@ -57,8 +56,8 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
             select.addItem("", (String) null);
         }
         boolean selected = false;
-        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
-            final UIDL optionUidl = (UIDL) i.next();
+        for (final Object child : uidl) {
+            final UIDL optionUidl = (UIDL) child;
             select.addItem(optionUidl.getStringAttribute("caption"),
                     optionUidl.getStringAttribute("key"));
             if (optionUidl.hasAttribute("selected")) {
@@ -77,7 +76,7 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
 
     @Override
     protected String[] getSelectedItems() {
-        final ArrayList<String> selectedItemKeys = new ArrayList<String>();
+        final List<String> selectedItemKeys = new ArrayList<String>();
         for (int i = 0; i < select.getItemCount(); i++) {
             if (select.isItemSelected(i)) {
                 selectedItemKeys.add(select.getValue(i));

@@ -1,0 +1,214 @@
+---
+title: Vaadin Scalability Testing With Amazon Web Services
+order: 52
+layout: page
+---
+
+[[vaadin-scalability-testing-with-amazon-web-services]]
+= Vaadin scalability testing with Amazon Web Services
+
+This article explains how you can test the scalability of your
+application in the Amazon Web Services (AWS) cloud. The AWS services
+used in this article include http://aws.amazon.com/ec2/[Amazon Elastic
+Compute Cloud] (EC2) and http://aws.amazon.com/rds/[Amazon Relational
+Database Service] (RDS). The use of
+http://aws.amazon.com/elasticloadbalancing/[Amazon Elastic Load
+Balancing] (ELB) is also briefly discussed. The application under
+testing is called QuickTickets, a fictional Vaadin web application that
+sells movie tickets to theaters all over the world. See also the
+https://vaadin.com/blog/vaadin-scalability-study-quicktickets[blog
+post about the experiment and the results].
+
+To fully understand this article and follow through the steps, you
+should have some basic knowledge of Amazon Web Services (AWS),
+http://jakarta.apache.org/jmeter/[Apache JMeter], MySQL and Linux shell
+usage. You will also need to know how to checkout the
+http://dev.vaadin.com/svn/incubator/QuickTickets/trunk/[QuickTickets
+project] from SVN and run http://ant.apache.org/[Ant] targets to
+generate test database and to package the application as a WAR file.
+
+Please notice, that using the AWS services discussed here will incur
+some expenses.
+
+[[setting-up-the-amazon-rds-database]]
+1. Setting up the Amazon RDS database
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Login to http://aws.amazon.com/console/[AWS Management Console] and
+select the Amazon RDS tab.
+
+* Click the Launch DB Instance button.
+
+* Select the following properties for the DB instance:
+** DB Instance Class: db1.m1.large
+** Multi-AZ Deployment: No
+** Allocated Storage: 5 GB
+** DB Instance Idenfitier: `quicktickets`
+** Master User Name: `quicktickets`
+** Master User Password: `<your-password>`
+* Additional configuration:
+** Database Name: `quicktickets`
+* Management options:
+** Backup Retention Period: 0 (disable backups)
+
+* After the DB instance is started up, connect to the database with the
+MySQL client.
+** If this is the first time you are using Amazon RDS, you need to setup
+the DB Security Groups.
+** More information about http://aws.amazon.com/rds/faqs/#31[network
+access to you DB instances].
+
+* Once you have connected to the DB, run the following
+command: `alter database quicktickets charset=utf8;`
+
+* Note that the following steps might be a bit faster to do in an EC2
+instance in the same zone as the RDS database. But you can of course do
+these in your local machine as well.
+
+* Take a checkout of the QuickTickets application project from the
+http://dev.vaadin.com/svn/incubator/QuickTickets/trunk/application/QuickTickets/[SVN
+repository].
+
+* Create the database schema by running the
+http://dev.vaadin.com/svn/incubator/QuickTickets/trunk/application/QuickTickets/db/createSchema.sql[QuickTickets/db/createSchema.sql]
+file to the quicktickets
+database.`mysql -uquicktickets -p<your-password> -h<db-instance-endpoint>.rds.amazonaws.com < QuickTickets/db/createSchema.sql`
+
+* Create a huge test data by running Ant target
+`create-huge-database-script` of the
+http://dev.vaadin.com/svn/incubator/QuickTickets/trunk/application/QuickTickets/build.xml[QuickTickets/build.xml]
+script.`cd QuickTicketsant create-huge-database-script`
+
+* This target will generate a huge SQL file (500MB) into a temporary
+directory containing loads of test data. The location of the file is
+printed to the console by the Ant target.
+
+* Run the resulting `quickticketsdata.sql` file to the quicktickets
+database (this will take quite a while, well over an
+hour). `mysql -uquicktickets -p<your-password> -h<db-instance-endpoint>.rds.amazonaws.com < /tmp/quickticketsdata.sql`
+
+[[setting-up-ec2-instances-for-quicktickets]]
+2. Setting up EC2 instance(s) for QuickTickets
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Login to http://aws.amazon.com/console/[AWS Management Console] and
+select the Amazon EC2 tab.
+
+* Click the Launch Instance button.
+
+* Select Community AMIs tab and search an AMI with following id:
+`ami-fb16f992`
+
+* Launch a large instance of the AMI. Consult the
+http://aws.amazon.com/documentation/ec2/[Amazon EC2 documentation] for
+more details on how to launch a new instance.
+
+* Login to the started instance as root via SSH.
+
+* Copy and execute the
+http://dev.vaadin.com/svn/incubator/QuickTickets/trunk/installationscripts/webserver-memcached.sh[webserver-memcached.sh]
+installation script as the root user. This script will setup
+http://memcached.org/[Memcached] and http://tomcat.apache.org/[Apache
+Tomcat].
+
+* Repeat the above procedure for all the instances you want to setup.
+
+[[deploying-the-quicktickets-application]]
+3. Deploying the QuickTickets application
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Take a checkout of the QuickTickets application project (if you
+haven't already) from:
+** http://dev.vaadin.com/svn/incubator/QuickTickets/trunk/application/QuickTickets/
+
+* Add the *Private DNS* of all the instances you have setup to the list
+of Memcached servers in the `WebContent/WEB-INF/servers.xml` file with
+the default Memcached port 11211. For
+example: `<!-- Memcached servers --&gt;<value>ip-11-111-11-111.ec2.internal:11211</value><value>ip-22-222-22-222.ec2.internal:11211</value>...`
+
+* Create a file called `build.properties` to the root directory of the
+project (right next to the `QuickTickets/build.xml`). Set the
+`productionMode` property to `true` and add your Amazon RDS database
+configuration details to the file. For example:
+
+....
+
+# Debug or production mode?
+productionMode=true
+
+# Database configuration
+database.url=jdbc:mysql:<db-instance-endpoint>.rds.amazonaws.com:3306/quicktickets?characterEncoding=utf8&useCompression=true
+database.username=quicktickets
+database.password=<your-password-here>
+database.driverClassName=com.mysql.jdbc.Driver
+....
+
+* Run the `package-war` target of the `build.xml` to compile and package
+the WAR file (resulting in the `build/ROOT.war` file).`ant package-war`
+
+* Deploy the WAR file into all EC2 instances you just created by copying
+the `ROOT.war` into `/opt/apache-tomcat/webapps` directory.
+
+* Now you should be able to access the application through your web
+browser by opening the following
+URL: `http://<instance-public-dns>.amazonaws.com:8080/app`
+
+* If you did setup more than one instance, you could create an Amazon
+ELB load balancer and attach all instances to that load balancer.
+However, this makes the JMeter testing close to impossible as the ELB
+doesn't scale to sudden increases in traffic fast enough and starts
+dropping connections.
+** More information:
+https://forums.aws.amazon.com/thread.jspa?messageID=130622&tstart=0
+** More information:
+https://wiki.apache.org/jmeter/JMeterAndAmazon
+
+* If you still want to try using ELB, you should add
+`-Dsun.net.inetaddr.ttl=0` to the JMeter JVM args and use the following
+settings with the ELB:
+** Port Configuration: 80 forwarding to 8080
+** Enable Application Generated Cookie Stickiness for cookie name:
+`jsessionid`
+** Set the Health Check port to `8080`
+** Ping Path: `/VAADIN/ticket.html`
+
+[[setting-up-ec2-instances-for-jmeter]]
+4. Setting up EC2 instance(s) for JMeter
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Launch and login to a new EC2 large instance (using the AMI
+`ami-fb16f992`). See the first 5 steps of the second chapter.
+
+* Copy and execute the
+http://dev.vaadin.com/svn/incubator/QuickTickets/trunk/installationscripts/jmeter-instance.sh[jmeter-instance.sh]
+installation script as the root user.
+
+* Download the
+http://dev.vaadin.com/svn/incubator/QuickTickets/trunk/installationscripts/jmeter-test-script.jmx[JMeter
+script].
+** The script contains prerecorded ticket purchase sequence that lasts
+about 2.5 minutes.
+
+* Open the script in JMeter and make sure you configure the following
+settings to suit your test:
+** HTTP Request Defaults (set the server name)
+** Thread Group (thread count, ramp-up, loop count)
+** Summary report (result file name)
+
+* Upload the test script to the JMeter instance(s).
+
+* When logged in as root to the JMeter server you can start the test
+from command line with the following
+command: `~/jakarta-jmeter-2.4/bin/jmeter.sh -n -t ~/jmeter-test-script.jmx`
+
+* After the run is complete you'll have `jmeter-results.jtl` file (or
+the filename you used for the report) which you can open in JMeter for
+analyzing the results.
+
+[[results]]
+5. Results
+^^^^^^^^^^
+
+Jump directly to the results:
+https://vaadin.com/blog/vaadin-scalability-study-quicktickets[blog
+post about the experiment and the results].

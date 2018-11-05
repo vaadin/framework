@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,6 +34,8 @@ import java.util.Objects;
 public class ServiceInitEvent extends EventObject {
 
     private List<RequestHandler> addedRequestHandlers = new ArrayList<>();
+    private List<DependencyFilter> addedDependencyFilters = new ArrayList<>();
+    private List<ConnectorIdGenerator> addedConnectorIdGenerators = new ArrayList<>();
 
     /**
      * Creates a new service init event for a given {@link VaadinService} and
@@ -69,6 +71,68 @@ public class ServiceInitEvent extends EventObject {
      */
     public List<RequestHandler> getAddedRequestHandlers() {
         return Collections.unmodifiableList(addedRequestHandlers);
+    }
+
+    /**
+     * Adds a new dependency filter that will be used by this service.
+     *
+     * @param dependencyFilter
+     *            the dependency filter to add, not <code>null</code>
+     *
+     * @since 8.1
+     */
+    public void addDependencyFilter(DependencyFilter dependencyFilter) {
+        Objects.requireNonNull(dependencyFilter,
+                "Dependency filter cannot be null");
+
+        addedDependencyFilters.add(dependencyFilter);
+    }
+
+    /**
+     * Gets an unmodifiable list of all dependency filters that have been added
+     * for the service.
+     *
+     * @return the current list of added dependency filters.
+     *
+     * @since 8.1
+     */
+    public List<DependencyFilter> getAddedDependencyFilters() {
+        return Collections.unmodifiableList(addedDependencyFilters);
+    }
+
+    /**
+     * Adds as connector id generator to be used by this service. By default,
+     * the service will fail to deploy if more than one connector id generator
+     * has been registered.
+     *
+     * @param connectorIdGenerator
+     *            the connector id generator to add, not <code>null</code>
+     *
+     * @since 8.1
+     */
+    public void addConnectorIdGenerator(
+            ConnectorIdGenerator connectorIdGenerator) {
+        Objects.requireNonNull(connectorIdGenerator,
+                "Connector id generator cannot be null");
+
+        /*
+         * We're collecting all generators so that a custom service
+         * implementation can pick which one to use even though the default
+         * implementation throws if there are more than one.
+         */
+        addedConnectorIdGenerators.add(connectorIdGenerator);
+    }
+
+    /**
+     * Gets an unmodifiable list of all connector id generators that have been
+     * added for the service.
+     *
+     * @return the current list of added connector id generators
+     *
+     * @since 8.1
+     */
+    public List<ConnectorIdGenerator> getAddedConnectorIdGenerators() {
+        return Collections.unmodifiableList(addedConnectorIdGenerators);
     }
 
     @Override

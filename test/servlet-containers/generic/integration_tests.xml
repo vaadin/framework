@@ -56,11 +56,12 @@
         </antcall>
     </target>
     <target name="run-tb3-test">
+        <fail unless="phantomjs.binary.path" message="Define PhantomJS binary using -Dphantomjs.binary.path" />
         <fail unless="server-name" message="Server name must be defined in server-name" />
         <fail unless="deployment.url" message="Deplyoment url must be defined in deployment.url" />
         <fail unless="com.vaadin.testbench.screenshot.directory" message="Screenshot directory must be defined in com.vaadin.testbench.screenshot.directory" />
-	<property name="server.report.dir" location="${report.dir}/integration-test-tb3/${server-name}" />
-         <!-- The junit task does not create the report dir... -->
+        <property name="server.report.dir" location="${report.dir}/integration-test-tb3/${server-name}" />
+        <!-- The junit task does not create the report dir... -->
         <mkdir dir="${server.report.dir}" />
 
         <junit showoutput="no" printsummary="no" fork="yes">
@@ -73,33 +74,30 @@
             <jvmarg value="-Djava.awt.headless=true" />
             <jvmarg value="-Ddemo.war=${demo.war}" />
             <jvmarg value="-Dvaadin.testbench.developer.license=${vaadin.testbench.developer.license}" />
+            <jvmarg value="-Dphantomjs.binary.path=${phantomjs.binary.path}" />
             <test name="${junit.test.suite}" todir="${server.report.dir}" />
         </junit>
     </target>
 
+<!--
     <target name="integration-test-tomcat7">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
             <param name="target-server" value="tomcat7" />
         </antcall>
     </target>
+-->
     <target name="integration-test-tomcat7apacheproxy">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
             <param name="target-server" value="tomcat7apacheproxy" />
         </antcall>
     </target>
+<!--
     <target name="integration-test-tomcat8">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
             <param name="target-server" value="tomcat8" />
-        </antcall>
-    </target>
-
-    <target name="integration-test-osgi">
-        <antcall target="run-generic-integration-test">
-            <param name="startDelay" value="10" />
-            <param name="target-server" value="karaf4" />
         </antcall>
     </target>
 
@@ -109,14 +107,13 @@
             <param name="target-server" value="jetty8" />
         </antcall>
     </target>
-
     <target name="integration-test-jetty9">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="90" />
             <param name="target-server" value="jetty9" />
         </antcall>
     </target>
-
+-->
     <target name="integration-test-jboss-eap6">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
@@ -124,6 +121,7 @@
             <param name="demo.war" value="${demo.jboss6.war}"/>
         </antcall>
     </target>
+<!--
     <target name="integration-test-wildfly8">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
@@ -142,6 +140,7 @@
             <param name="target-server" value="wildfly10" />
         </antcall>
     </target>
+-->
     <target name="integration-test-wildfly9-nginx">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
@@ -149,6 +148,7 @@
             <param name="target-port" value="80" />
         </antcall>
     </target>
+<!--
     <target name="integration-test-glassfish4">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
@@ -161,7 +161,7 @@
             <param name="target-server" value="payara" />
         </antcall>
     </target>
-
+-->
 
     <target name="integration-test-weblogic12">
         <antcall target="run-generic-integration-test">
@@ -183,17 +183,25 @@
 
         <parallel>
             <antcall target="integration-test-weblogic12" />
+
+<!--
             <antcall target="integration-test-glassfish4" />
-            <antcall target="integration-test-payara" />
+            <antcall target="integration-test-payara" /> 
+-->
+
             <antcall target="integration-test-jboss-eap6" />
+
+<!--            
             <antcall target="integration-test-wildfly8" />
             <antcall target="integration-test-wildfly9" />
             <antcall target="integration-test-wildfly10" />
+
             <antcall target="integration-test-jetty8" />
-            <antcall target="integration-test-jetty9" />
+            <antcall target="integration-test-jetty9" /> 
+
             <antcall target="integration-test-tomcat7" />
             <antcall target="integration-test-tomcat8" />
-            <antcall target="integration-test-osgi" />
+-->
             <antcall target="integration-test-tomcat7apacheproxy" />
         </parallel>
 

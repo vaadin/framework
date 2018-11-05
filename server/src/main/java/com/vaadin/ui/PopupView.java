@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -50,9 +50,9 @@ public class PopupView extends AbstractComponent implements HasComponents {
             POPUP_VISIBILITY_METHOD = PopupVisibilityListener.class
                     .getDeclaredMethod("popupVisibilityChange",
                             PopupVisibilityEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in PopupView");
         }
     }
@@ -84,7 +84,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
      * @param large
      *            the full, Component-type representation
      */
-    public PopupView(final java.lang.String small, final Component large) {
+    public PopupView(final String small, final Component large) {
         this(createContent(small, large));
     }
 
@@ -165,7 +165,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
             if (visible) {
                 visibleComponent = content.getPopupComponent();
                 if (visibleComponent == null) {
-                    throw new java.lang.IllegalStateException(
+                    throw new IllegalStateException(
                             "PopupView.Content did not return Component to set visible");
                 }
                 if (visibleComponent.getParent() != null) {
@@ -317,7 +317,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
         public String getMinimizedValueAsHTML();
 
         /**
-         * This should return the full Component representing the data
+         * This should return the full Component representing the data.
          *
          * @return a Component for the value
          */
@@ -412,5 +412,19 @@ public class PopupView extends AbstractComponent implements HasComponents {
          * @see PopupView#addPopupVisibilityListener(PopupVisibilityListener)
          */
         public void popupVisibilityChange(PopupVisibilityEvent event);
+    }
+
+    @Override
+    public void detach() {
+        setPopupVisible(false);
+        super.detach();
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        if (!visible) {
+            setPopupVisible(false);
+        }
+        super.setVisible(visible);
     }
 }

@@ -7,12 +7,14 @@ layout: page
 [[portal.overview]]
 = Overview
 
-Vaadin supports running UIs as portlets in a portal, as defined in the JSR-286
-(Java Portlet API 2.0) standard. A portlet UI is defined just as a regular UI,
-but deploying to a portal is somewhat different from deployment of regular web
-applications, requiring special portlet descriptors, etc. Creating the portlet
-project with the Vaadin Plugin for Eclipse or a Maven archetype automatically
-generates the necessary descriptors.
+Vaadin Framework supports running UIs as portlets in a portal, as defined in
+the JSR-286 (Java Portlet API 2.0) standard. A portlet UI is defined just as a
+regular UI, but deploying to a portal is somewhat different from deployment of
+regular web applications, requiring special portlet descriptors, etc. Creating
+the portlet project with the Maven archetype automatically generates the
+necessary descriptors.
+
+Vaadin Framework also supports developing OSGi portlets for Liferay 7.
 
 In addition to providing user interface through the Vaadin UI, portlets can
 integrate with the portal to switch between portlet modes and process special
@@ -22,6 +24,4 @@ While providing generic support for all portals implementing the standard,
 Vaadin especially supports the Liferay portal and the needed portal-specific
 configuration in this chapter is given for Liferay. Vaadin also has a special
 Liferay IPC add-on to enable communication between portlets.
-
-
 

@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.menubar;
 
 import com.vaadin.icons.VaadinIcons;
@@ -31,7 +16,6 @@ import com.vaadin.ui.MenuBar.MenuItem;
  * items with image icons: the icon should not be considered to be a part of the
  * item's caption.
  *
- * @since
  * @author Vaadin
  */
 @SuppressWarnings("serial")
@@ -41,16 +25,16 @@ public class MenuBarsWithNesting extends AbstractReindeerTestUI {
     private final Label label = new Label("Initial content");
 
     // The captions and icons used in the second MenuBar.
-    public final static String[] itemNames = { "Icon item", "Arrow down",
+    public static final String[] itemNames = { "Icon item", "Arrow down",
             "Arrow up", "Warning" };
-    private final static Resource[] itemIcons = {
+    private static final Resource[] itemIcons = {
             new ThemeResource("window/img/restore.png"), VaadinIcons.ARROW_DOWN,
             VaadinIcons.ARROW_UP, VaadinIcons.WARNING };
 
     // The last menu item is nested with the following submenu items.
-    public final static String[] nestedItemnames = { "No icon", "Font icon",
+    public static final String[] nestedItemnames = { "No icon", "Font icon",
             "Image icon" };
-    private final static Resource[] nestedItemIcons = { null, VaadinIcons.LINK,
+    private static final Resource[] nestedItemIcons = { null, VaadinIcons.LINK,
             new ThemeResource("window/img/restore.png") };
 
     private MenuBar.Command selectionCommand;
@@ -90,6 +74,11 @@ public class MenuBarsWithNesting extends AbstractReindeerTestUI {
         edit.addItem("Paste", selectionCommand);
 
         menuBar.addItem("Help", selectionCommand);
+
+        MenuItem disabled = menuBar.addItem("Disabled", null);
+        disabled.setEnabled(false);
+        disabled.addItem("Can't reach", selectionCommand);
+
         return menuBar;
     }
 

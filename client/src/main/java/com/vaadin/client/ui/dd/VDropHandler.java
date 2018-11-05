@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,11 +17,17 @@ package com.vaadin.client.ui.dd;
 
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.ui.dnd.DropTargetExtension;
+import com.vaadin.ui.dnd.event.DropListener;
 
 /**
  * Vaadin Widgets that want to receive something via drag and drop implement
  * this interface.
+ *
+ * @deprecated Replaced in 8.1 with {@link DropListener} and
+ *             {@link DropTargetExtension}
  */
+@Deprecated
 public interface VDropHandler {
 
     /**
@@ -49,8 +55,8 @@ public interface VDropHandler {
      * drop was performed on this Paintable.
      *
      *
-     * @param dragEvent
-     *            DragEvent which contains the transferable and other
+     * @param drag
+     *            VDragEvent which contains the transferable and other
      *            information for the operation
      *
      * @return true if the Tranferrable of this drag event needs to be sent to
@@ -71,13 +77,13 @@ public interface VDropHandler {
     public void dragOver(VDragEvent currentDrag);
 
     /**
-     * Returns the ComponentConnector with which this DropHandler is associated
+     * Returns the ComponentConnector with which this DropHandler is associated.
      */
     public ComponentConnector getConnector();
 
     /**
      * Returns the application connection to which this {@link VDropHandler}
-     * belongs to. DragAndDropManager uses this fucction to send Transferable to
+     * belongs to. DragAndDropManager uses this function to send Transferable to
      * server side.
      */
     public ApplicationConnection getApplicationConnection();

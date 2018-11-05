@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,10 +19,11 @@ package com.vaadin.v7.data.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
@@ -30,7 +31,7 @@ import com.vaadin.v7.data.Property;
 /**
  * <p>
  * A wrapper class for adding external ordering to containers not implementing
- * the {@link com.vaadin.v7.data.Container.Ordered} interface.
+ * the {@link Container.Ordered} interface.
  * </p>
  *
  * <p>
@@ -42,6 +43,8 @@ import com.vaadin.v7.data.Property;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, replaced by {@link DataProvider}
  */
 @Deprecated
 @SuppressWarnings("serial")
@@ -54,16 +57,16 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     private final Container container;
 
     /**
-     * Ordering information, ie. the mapping from Item ID to the next item ID.
+     * Ordering information, i.e. the mapping from Item ID to the next item ID.
      * The last item id should not be present
      */
-    private Hashtable<Object, Object> next;
+    private Map<Object, Object> next;
 
     /**
      * Reverse ordering information for convenience and performance reasons. The
      * first item id should not be present
      */
-    private Hashtable<Object, Object> prev;
+    private Map<Object, Object> prev;
 
     /**
      * ID of the first Item in the container.
@@ -76,7 +79,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     private Object last;
 
     /**
-     * Is the wrapped container ordered by itself, ie. does it implement the
+     * Is the wrapped container ordered by itself, i.e. does it implement the
      * Container.Ordered interface by itself? If it does, this class will use
      * the methods of the underlying container directly.
      */
@@ -216,22 +219,20 @@ public class ContainerOrderedWrapper implements Container.Ordered,
             if (next == null || first == null || last == null || prev == null) {
                 first = null;
                 last = null;
-                next = new Hashtable<>();
-                prev = new Hashtable<>();
+                next = new Hashtable<Object, Object>();
+                prev = new Hashtable<Object, Object>();
             }
 
             // Filter out all the missing items
-            final LinkedList<?> l = new LinkedList<>(next.keySet());
-            for (final Iterator<?> i = l.iterator(); i.hasNext();) {
-                final Object id = i.next();
+            final LinkedList<?> l = new LinkedList<Object>(next.keySet());
+            for (final Object id : l) {
                 if (!container.containsId(id)) {
                     removeFromOrderWrapper(id);
                 }
             }
 
             // Adds missing items
-            for (final Iterator<?> i = ids.iterator(); i.hasNext();) {
-                final Object id = i.next();
+            for (final Object id : ids) {
                 if (!next.containsKey(id) && last != id) {
                     addToOrderWrapper(id);
                 }
@@ -470,9 +471,9 @@ public class ContainerOrderedWrapper implements Container.Ordered,
         if (ordered) {
             return ((Container.Ordered) container).getItemIds();
         } else if (first == null) {
-            return new ArrayList<>();
+            return new ArrayList<Object>();
         } else {
-            List<Object> itemIds = new ArrayList<>();
+            List<Object> itemIds = new ArrayList<Object>();
             itemIds.add(first);
             Object current = first;
             while (next.containsKey(current)) {
@@ -548,8 +549,8 @@ public class ContainerOrderedWrapper implements Container.Ordered,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addItemSetChangeListener(com.vaadin.v7.data.Container.ItemSetChangeListener)}
-     **/
+     *             {@link #addItemSetChangeListener(Container.ItemSetChangeListener)}
+     */
     @Override
     @Deprecated
     public void addListener(Container.ItemSetChangeListener listener) {
@@ -573,8 +574,8 @@ public class ContainerOrderedWrapper implements Container.Ordered,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removeItemSetChangeListener(com.vaadin.v7.data.Container.ItemSetChangeListener)}
-     **/
+     *             {@link #removeItemSetChangeListener(Container.ItemSetChangeListener)}
+     */
     @Override
     @Deprecated
     public void removeListener(Container.ItemSetChangeListener listener) {
@@ -598,8 +599,8 @@ public class ContainerOrderedWrapper implements Container.Ordered,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addPropertySetChangeListener(com.vaadin.v7.data.Container.PropertySetChangeListener)}
-     **/
+     *             {@link #addPropertySetChangeListener(Container.PropertySetChangeListener)}
+     */
     @Override
     @Deprecated
     public void addListener(Container.PropertySetChangeListener listener) {
@@ -623,20 +624,14 @@ public class ContainerOrderedWrapper implements Container.Ordered,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removePropertySetChangeListener(com.vaadin.v7.data.Container.PropertySetChangeListener)}
-     **/
+     *             {@link #removePropertySetChangeListener(Container.PropertySetChangeListener)}
+     */
     @Override
     @Deprecated
     public void removeListener(Container.PropertySetChangeListener listener) {
         removePropertySetChangeListener(listener);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object,
-     * java.lang.Object)
-     */
     @Override
     public Item addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
@@ -657,11 +652,6 @@ public class ContainerOrderedWrapper implements Container.Ordered,
         return item;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)
-     */
     @Override
     public Object addItemAfter(Object previousItemId)
             throws UnsupportedOperationException {

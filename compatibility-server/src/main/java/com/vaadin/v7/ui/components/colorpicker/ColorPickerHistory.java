@@ -1,12 +1,12 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
- * 
+ * Copyright 2000-2018 Vaadin Ltd.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,12 +28,12 @@ import com.vaadin.v7.shared.ui.colorpicker.Color;
 
 /**
  * A component that represents color selection history within a color picker.
- * 
+ *
  * @since 7.0.0
  */
 @Deprecated
-public class ColorPickerHistory extends CustomComponent implements
-        ColorSelector, ColorChangeListener {
+public class ColorPickerHistory extends CustomComponent
+        implements ColorSelector, ColorChangeListener {
 
     private static final String STYLENAME = "v-colorpicker-history";
 
@@ -42,22 +42,22 @@ public class ColorPickerHistory extends CustomComponent implements
         try {
             COLOR_CHANGE_METHOD = ColorChangeListener.class.getDeclaredMethod(
                     "colorChanged", new Class[] { ColorChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in ColorPicker");
         }
     }
 
     /** The rows. */
-    private static final int rows = 4;
+    private static final int ROWS = 4;
 
     /** The columns. */
-    private static final int columns = 15;
+    private static final int COLUMNS = 15;
 
     /** Temporary color history for when the component is detached. */
-    private ArrayBlockingQueue<Color> tempHistory = new ArrayBlockingQueue<>(
-            rows * columns);
+    private ArrayBlockingQueue<Color> tempHistory = new ArrayBlockingQueue<Color>(
+            ROWS * COLUMNS);
 
     /** The grid. */
     private final ColorPickerGrid grid;
@@ -68,7 +68,7 @@ public class ColorPickerHistory extends CustomComponent implements
     public ColorPickerHistory() {
         setPrimaryStyleName(STYLENAME);
 
-        grid = new ColorPickerGrid(rows, columns);
+        grid = new ColorPickerGrid(ROWS, COLUMNS);
         grid.setWidth("100%");
         grid.setPosition(0, 0);
         grid.addColorChangeListener(this);
@@ -83,10 +83,10 @@ public class ColorPickerHistory extends CustomComponent implements
     }
 
     private void createColorHistoryIfNecessary() {
-        List<Color> tempColors = new ArrayList<>(tempHistory);
+        List<Color> tempColors = new ArrayList<Color>(tempHistory);
         if (getSession().getAttribute("colorPickerHistory") == null) {
             getSession().setAttribute("colorPickerHistory",
-                    new ArrayBlockingQueue<Color>(rows * columns));
+                    new ArrayBlockingQueue<Color>(ROWS * COLUMNS));
         }
         for (Color color : tempColors) {
             setColor(color);
@@ -97,8 +97,8 @@ public class ColorPickerHistory extends CustomComponent implements
     @SuppressWarnings("unchecked")
     private ArrayBlockingQueue<Color> getColorHistory() {
         if (isAttached()) {
-            Object colorHistory = getSession().getAttribute(
-                    "colorPickerHistory");
+            Object colorHistory = getSession()
+                    .getAttribute("colorPickerHistory");
             if (colorHistory instanceof ArrayBlockingQueue<?>) {
                 return (ArrayBlockingQueue<Color>) colorHistory;
             }
@@ -118,14 +118,7 @@ public class ColorPickerHistory extends CustomComponent implements
         ArrayBlockingQueue<Color> colorHistory = getColorHistory();
 
         // Check that the color does not already exist
-        boolean exists = false;
-        Iterator<Color> iter = colorHistory.iterator();
-        while (iter.hasNext()) {
-            if (color.equals(iter.next())) {
-                exists = true;
-                break;
-            }
-        }
+        boolean exists = colorHistory.contains(color);
 
         // If the color does not exist then add it
         if (!exists) {
@@ -135,7 +128,7 @@ public class ColorPickerHistory extends CustomComponent implements
             }
         }
 
-        List<Color> colorList = new ArrayList<>(colorHistory);
+        List<Color> colorList = new ArrayList<Color>(colorHistory);
 
         // Invert order of colors
         Collections.reverse(colorList);
@@ -144,11 +137,11 @@ public class ColorPickerHistory extends CustomComponent implements
         Collections.swap(colorList, colorList.indexOf(color), 0);
 
         // Create 2d color map
-        Color[][] colors = new Color[rows][columns];
-        iter = colorList.iterator();
+        Color[][] colors = new Color[ROWS][COLUMNS];
+        Iterator<Color> iter = colorList.iterator();
 
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < columns; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLUMNS; col++) {
                 if (iter.hasNext()) {
                     colors[row][col] = iter.next();
                 } else {
@@ -168,7 +161,7 @@ public class ColorPickerHistory extends CustomComponent implements
 
     /**
      * Gets the history.
-     * 
+     *
      * @return the history
      */
     public List<Color> getHistory() {
@@ -179,10 +172,10 @@ public class ColorPickerHistory extends CustomComponent implements
 
     /**
      * Checks if the history contains given color.
-     * 
+     *
      * @param c
      *            the color
-     * 
+     *
      * @return true, if successful
      */
     public boolean hasColor(Color c) {
@@ -190,8 +183,8 @@ public class ColorPickerHistory extends CustomComponent implements
     }
 
     /**
-     * Adds a color change listener
-     * 
+     * Adds a color change listener.
+     *
      * @param listener
      *            The listener
      */
@@ -201,8 +194,8 @@ public class ColorPickerHistory extends CustomComponent implements
     }
 
     /**
-     * Removes a color change listener
-     * 
+     * Removes a color change listener.
+     *
      * @param listener
      *            The listener
      */

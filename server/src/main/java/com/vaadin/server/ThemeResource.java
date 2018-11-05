@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -45,7 +45,7 @@ public class ThemeResource implements Resource {
         if (resourceId == null) {
             throw new NullPointerException("Resource ID must not be null");
         }
-        if (resourceId.length() == 0) {
+        if (resourceId.isEmpty()) {
             throw new IllegalArgumentException("Resource ID can not be empty");
         }
         if (resourceId.charAt(0) == '/') {

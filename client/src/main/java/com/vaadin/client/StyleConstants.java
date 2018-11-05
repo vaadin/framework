@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,12 +27,12 @@ public class StyleConstants {
     public static final String HORIZONTAL_SPACING = "hspacing";
 
     /**
-     * Added to all UI components
+     * Added to all UI components.
      */
     public static final String UI_WIDGET = "v-widget";
 
     /**
-     * Added to all layouts to denote they are layouts
+     * Added to all layouts to denote they are layouts.
      */
     public static final String UI_LAYOUT = "v-layout";
 
@@ -44,4 +44,11 @@ public class StyleConstants {
     public static final String REQUIRED_EXT = "-required";
 
     public static final String ERROR_EXT = "-error";
+
+    /**
+     * Style name and style name prefix for the error indicator element.
+     *
+     * @since 8.2
+     */
+    public static final String STYLE_NAME_ERROR_INDICATOR = "v-errorindicator";
 }

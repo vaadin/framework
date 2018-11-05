@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.splitpanel;
 
+import com.vaadin.server.Page;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
@@ -135,6 +136,10 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 percentagePositionWithPixelLimitsHorizontalResersed);
 
         verticalLayout.setSizeFull();
+        // a hack for a Chrome 55+ issue (extra scrollbars) that is only seen on
+        // the testing cluster
+        Page.getCurrent().getStyles().add(
+                ".v-tabsheet-tabsheetpanel .v-scrollable { overflow: hidden }");
         tabs.addComponent(verticalLayout);
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
@@ -275,41 +280,17 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
         buttonLayout.setSpacing(false);
 
         Button disableMinimum = new Button("Disable min limit",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        togglableSplitPanel.setMinSplitPosition(0,
-                                Sizeable.UNITS_PERCENTAGE);
-
-                    }
-                });
+                event -> togglableSplitPanel.setMinSplitPosition(0,
+                        Sizeable.UNITS_PERCENTAGE));
         Button enableMinimum = new Button("Enable min limit",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        togglableSplitPanel.setMinSplitPosition(10,
-                                Sizeable.UNITS_PERCENTAGE);
-
-                    }
-                });
+                event -> togglableSplitPanel.setMinSplitPosition(10,
+                        Sizeable.UNITS_PERCENTAGE));
         Button disableMaximum = new Button("Disable max limit",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        togglableSplitPanel.setMaxSplitPosition(100,
-                                Sizeable.UNITS_PERCENTAGE);
-
-                    }
-                });
+                event -> togglableSplitPanel.setMaxSplitPosition(100,
+                        Sizeable.UNITS_PERCENTAGE));
         Button enableMaximum = new Button("Enable max limit",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        togglableSplitPanel.setMaxSplitPosition(80,
-                                Sizeable.UNITS_PERCENTAGE);
-
-                    }
-                });
+                event -> togglableSplitPanel.setMaxSplitPosition(80,
+                        Sizeable.UNITS_PERCENTAGE));
         buttonLayout.addComponent(disableMinimum);
         buttonLayout.addComponent(enableMinimum);
         buttonLayout.addComponent(disableMaximum);

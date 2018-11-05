@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.server.component.grid;
 
 import static org.junit.Assert.assertEquals;
@@ -21,12 +6,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.lang.reflect.Method;
 
 import org.easymock.EasyMock;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -171,8 +156,7 @@ public class GridEditorTest {
             // Manual fail instead of @Test(expected=...) to check it is
             // saveEditor that fails and not setValue
             grid.saveEditor();
-            Assert.fail(
-                    "CommitException expected when saving an invalid field value");
+            fail("CommitException expected when saving an invalid field value");
         } catch (CommitException e) {
             // expected
         }
@@ -279,7 +263,7 @@ public class GridEditorTest {
         try {
             doEditMethod.invoke(grid);
         } catch (Exception e) {
-            Assert.fail("Editing item " + ITEM_ID + " failed. Cause: "
+            fail("Editing item " + ITEM_ID + " failed. Cause: "
                     + e.getCause().toString());
         }
     }

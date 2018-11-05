@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,11 +15,16 @@
  */
 package com.vaadin.ui.components.colorpicker;
 
-import java.util.Iterator;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.data.HasValue;
+import com.vaadin.server.AbstractErrorMessage.ContentMode;
+import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.UserError;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.shared.ui.colorpicker.Color;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -32,6 +37,8 @@ import com.vaadin.ui.TextField;
  * @since 7.0.0
  */
 public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
+    private static final Logger LOGGER = Logger
+            .getLogger(ColorPickerPreview.class.getName());
 
     private static final String STYLE_DARK_COLOR = "v-textfield-dark";
     private static final String STYLE_LIGHT_COLOR = "v-textfield-light";
@@ -87,6 +94,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
 
         String colorCSS = color.getCSS();
         field.setValue(colorCSS);
+        field.setComponentError(null);
 
         oldValue = colorCSS;
 
@@ -121,68 +129,29 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
     }
 
     private void valueChange(ValueChangeEvent<String> event) {
+        ErrorMessage errorMessage = null;
         String value = event.getValue();
+        value = Objects.toString(value, "").trim();
         Color oldColor = color;
         try {
-            if (value != null) {
-                /*
-                 * Description of supported formats see
-                 * http://www.w3schools.com/cssref/css_colors_legal.asp
-                 */
-                if (value.length() == 7 && value.startsWith("#")) {
-                    // CSS color format (e.g. #000000)
-                    int red = Integer.parseInt(value.substring(1, 3), 16);
-                    int green = Integer.parseInt(value.substring(3, 5), 16);
-                    int blue = Integer.parseInt(value.substring(5, 7), 16);
-                    color = new Color(red, green, blue);
 
-                } else if (value.startsWith("rgb")) {
-                    // RGB color format rgb/rgba(255,255,255,0.1)
-                    String[] colors = value.substring(value.indexOf('(') + 1,
-                            value.length() - 1).split(",");
+            /*
+             * Description of supported formats see
+             * http://www.w3schools.com/cssref/css_colors_legal.asp
+             */
+            color = ColorUtil.stringToColor(value);
 
-                    int red = Integer.parseInt(colors[0]);
-                    int green = Integer.parseInt(colors[1]);
-                    int blue = Integer.parseInt(colors[2]);
-                    if (colors.length > 3) {
-                        int alpha = (int) (Double.parseDouble(colors[3])
-                                * 255d);
-                        color = new Color(red, green, blue, alpha);
-                    } else {
-                        color = new Color(red, green, blue);
-                    }
-
-                } else if (value.startsWith("hsl")) {
-                    // HSL color format hsl/hsla(100,50%,50%,1.0)
-                    String[] colors = value.substring(value.indexOf('(') + 1,
-                            value.length() - 1).split(",");
-
-                    int hue = Integer.parseInt(colors[0]);
-                    int saturation = Integer
-                            .parseInt(colors[1].replace("%", ""));
-                    int lightness = Integer
-                            .parseInt(colors[2].replace("%", ""));
-                    int rgb = Color.HSLtoRGB(hue, saturation, lightness);
-
-                    if (colors.length > 3) {
-                        int alpha = (int) (Double.parseDouble(colors[3])
-                                * 255d);
-                        color = new Color(rgb);
-                        color.setAlpha(alpha);
-                    } else {
-                        color = new Color(rgb);
-                    }
-                }
-
-                oldValue = value;
-                fireEvent(new ValueChangeEvent<>(this, oldColor,
-                        event.isUserOriginated()));
-            }
-
-        } catch (NumberFormatException nfe) {
-            // Revert value
-            field.setValue(oldValue);
+            oldValue = value;
+            fireEvent(new ValueChangeEvent<>(this, oldColor,
+                    event.isUserOriginated()));
+        } catch (NumberFormatException e) {
+            // Pattern matching ensures the validity of
+            // the input, this should never happen
+            LOGGER.log(Level.INFO, e.getMessage());
+            errorMessage = new UserError(getUserErrorText(value),
+                    ContentMode.TEXT, ErrorLevel.WARNING);
         }
+        field.setComponentError(errorMessage);
     }
 
     @Override
@@ -220,11 +189,24 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
             ((HasValue<?>) component).setReadOnly(isReadOnly());
         }
         if (component instanceof HasComponents) {
-            Iterator<Component> iterator = ((HasComponents) component)
-                    .iterator();
-            while (iterator.hasNext()) {
-                updateColorComponents(iterator.next());
+            for (Component c : (HasComponents) component) {
+                updateColorComponents(c);
             }
         }
     }
+
+    /**
+     * Get the client error message text for color input parsing error.
+     *
+     * @param value
+     *            input which caused the error
+     * @return error message text
+     * @since 8.4
+     */
+    protected String getUserErrorText(String value) {
+        return value.isEmpty() ? "Input cannot be empty"
+                : "Input '".concat(value)
+                        .concat("' is not in any recognized format");
+    }
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,24 +34,24 @@ import com.vaadin.data.HasValue;
  * fields, with the name (ID) of the desired property as the parameter.
  * <p>
  * In following usage example, the text field would be bound to property "foo"
- * in the Entity class. <code>
+ * in the Entity class.
+ *
  * <pre>
- *    class Editor extends FormLayout {
-        &#64;PropertyId("foo")
-        TextField myField = new TextField();
-    }
-
-    class Entity {
-        String foo;
-    }
-
-    {
-        Editor editor = new Editor();
-        Binder&lt;Entity&gt; binder = new Binder(Entity.class);
-        binder.bindInstanceFields(editor);
-    }
-   </pre>
- * </code>
+ * class Editor extends FormLayout {
+ *     &#64;PropertyId("foo")
+ *     TextField myField = new TextField();
+ * }
+ *
+ * class Entity {
+ *     String foo;
+ * }
+ *
+ * {
+ *     Editor editor = new Editor();
+ *     Binder&lt;Entity&gt; binder = new Binder(Entity.class);
+ *     binder.bindInstanceFields(editor);
+ * }
+ * </pre>
  *
  * @since 8.0
  * @author Vaadin Ltd

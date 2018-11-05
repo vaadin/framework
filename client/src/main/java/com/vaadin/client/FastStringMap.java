@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -49,7 +49,7 @@ public final class FastStringMap<T> extends JavaScriptObject {
     public native JsArrayString getKeys()
     /*-{
         var keys = [];
-        for(var key in this) {
+        for (var key in this) {
             if (Object.hasOwnProperty.call(this, key)) {
                 keys.push(key);
             }
@@ -60,7 +60,7 @@ public final class FastStringMap<T> extends JavaScriptObject {
     public native int size()
     /*-{
         var size = 0;
-        for(var key in this) {
+        for (var key in this) {
             if (Object.hasOwnProperty.call(this, key)) {
                 size++;
             }

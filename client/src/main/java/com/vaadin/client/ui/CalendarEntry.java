@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,8 @@ package com.vaadin.client.ui;
 import java.util.Date;
 
 import com.vaadin.client.DateTimeService;
+
+import static com.vaadin.client.DateTimeService.asTwoDigits;
 
 public class CalendarEntry {
     private final String styleName;
@@ -113,10 +115,10 @@ public class CalendarEntry {
                         + "." + start.getDate() + " ";
             }
             int i = start.getHours();
-            s += (i < 10 ? "0" : "") + i;
+            s += asTwoDigits(i);
             s += ":";
             i = start.getMinutes();
-            s += (i < 10 ? "0" : "") + i;
+            s += asTwoDigits(i);
             if (!start.equals(end)) {
                 s += " - ";
                 if (!DateTimeService.isSameDay(start, end)) {
@@ -124,10 +126,10 @@ public class CalendarEntry {
                             + "." + end.getDate() + " ";
                 }
                 i = end.getHours();
-                s += (i < 10 ? "0" : "") + i;
+                s += asTwoDigits(i);
                 s += ":";
                 i = end.getMinutes();
-                s += (i < 10 ? "0" : "") + i;
+                s += asTwoDigits(i);
             }
             s += " ";
         }

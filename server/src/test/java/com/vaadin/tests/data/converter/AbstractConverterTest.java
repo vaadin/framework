@@ -1,6 +1,10 @@
 package com.vaadin.tests.data.converter;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.data.Converter;
@@ -23,17 +27,17 @@ public abstract class AbstractConverterTest {
 
     protected <T> void assertValue(String assertMessage, T expectedValue,
             Result<?> result) {
-        Assert.assertNotNull("Result should never be null", result);
-        Assert.assertFalse("Result is not ok", result.isError());
-        Assert.assertEquals(expectedValue,
+        assertNotNull("Result should never be null", result);
+        assertFalse("Result is not ok", result.isError());
+        assertEquals(expectedValue,
                 result.getOrThrow(message -> new AssertionError(
                         assertMessage != null ? assertMessage : message)));
     }
 
     protected void assertError(String expectedResultMessage, Result<?> result) {
-        Assert.assertNotNull("Result should never be null", result);
-        Assert.assertTrue("Result should be an error", result.isError());
-        Assert.assertEquals(expectedResultMessage, result.getMessage().get());
+        assertNotNull("Result should never be null", result);
+        assertTrue("Result should be an error", result.isError());
+        assertEquals(expectedResultMessage, result.getMessage().get());
     }
 
     protected String getErrorMessage() {

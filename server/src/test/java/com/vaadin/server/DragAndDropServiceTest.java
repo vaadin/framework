@@ -1,19 +1,6 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.server;
+
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +12,6 @@ import java.util.logging.Logger;
 import java.util.logging.StreamHandler;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.event.dd.DropHandler;
@@ -64,9 +50,9 @@ public class DragAndDropServiceTest {
                 EasyMock.createMock(VaadinSession.class));
         service.changeVariables(null, variables);
 
-        Assert.assertTrue("isConnectorEnabled() method is not called",
+        assertTrue("isConnectorEnabled() method is not called",
                 isConnectorEnabledCalled[0]);
-        Assert.assertTrue("No warning on drop from disabled source",
+        assertTrue("No warning on drop from disabled source",
                 levels.contains(Level.WARNING));
 
     }
@@ -89,9 +75,9 @@ public class DragAndDropServiceTest {
                 EasyMock.createMock(VaadinSession.class));
         service.changeVariables(null, variables);
 
-        Assert.assertTrue("isConnectorEnabled() method is not called",
+        assertTrue("isConnectorEnabled() method is not called",
                 target.isConnectorEnabledCalled());
-        Assert.assertTrue("No warning on drop to disabled target",
+        assertTrue("No warning on drop to disabled target",
                 levels.contains(Level.WARNING));
 
     }

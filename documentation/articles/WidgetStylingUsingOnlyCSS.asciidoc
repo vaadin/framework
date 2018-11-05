@@ -1,0 +1,177 @@
+---
+title: Widget Styling Using Only CSS
+order: 65
+layout: page
+---
+
+[[widget-styling-using-only-css]]
+= Widget styling using only CSS
+
+The preferred way of styling your widget is to only use static CSS
+included in the theme's styles.css file. For information on how to
+create custom themes, please refer to
+https://vaadin.com/book/-/page/themes.creating.html. Your component can
+be styled using the CSS class names that are defined to the widget using
+`setStyleName`.
+
+Normal styling of components works in the same way as any styling using
+CSS, but there are some special features to pay attention to when Vaadin
+7 is used.
+
+[[some-sizing-theory]]
+Some sizing theory
+~~~~~~~~~~~~~~~~~~
+
+All Vaadin 7 components get the CSS class v-widget which sets the
+box-sizing to border-box. This causes borders and paddings to be
+considered when the browser calculates the component's size. This means
+that e.g. a component with padding: 5px and width: 100% inside a 200px
+wide slot will fill the slot without any overflow because the inner
+width of the component will be calculated to 190px by the browser.
+
+The Vaadin 7 server side API allows setting the size of the component in
+three different ways:
+
+* Undefined size, set e.g. using `setWidth(null)`, means that the
+component's size should have it's default size that might vary depending
+on its content.
+* Relative size, set e.g. using `setWidth("100%")` means that the
+component's size is determined by the size and settings of the
+component's parent.
+* Fixed size, set e.g. using `setWidth("250px")` or `setWidth("10em")` means
+that the component's size is fixed, so that the parent doesn't affect
+the size and neither does the component's content.
+
+The three different ways of setting the size means that a component
+should both support having its own natural size and filling the
+allocated space depending on how the size is set. This usually means
+that the main area of the component should adjust based on the settings.
+
+[[a-simple-sample]]
+A simple sample
+~~~~~~~~~~~~~~~
+
+Consider e.g. a simple date picker component with a text field where a
+date can be entered and where the currently selected is displayed and a
+button that is used to open a calendar view where a date can be picked
+using the mouse.
+
+[source,java]
+....
+public class MyPickerWidget extends ComplexPanel {
+  public static final String CLASSNAME = "mypicker";
+
+  private final TextBox textBox = new TextBox();
+  private final PushButton button = new PushButton("...");
+
+  public MyPickerWidget() {
+    setElement(Document.get().createDivElement());
+    setStylePrimaryName(CLASSNAME);
+
+    textBox.setStylePrimaryName(CLASSNAME + "-field");
+    button.setStylePrimaryName(CLASSNAME + "-button");
+
+    add(textBox, getElement());
+    add(button, getElement());
+
+    button.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        Window.alert("Calendar picker not yet supported!");
+      }
+    });
+  }
+}
+....
+
+We then add this basic styling to the theme CSS file
+
+[source,scss]
+....
+.mypicker {
+  white-space: nowrap;
+}
+.mypicker-button {
+  display: inline-block;
+  border: 1px solid black;
+  padding: 3px;
+  width: 15px;
+  text-align: center;
+}
+....
+
+`display: inline-block` makes the button continue on the same line as the
+text field, placing it to the right of the field. We also add
+`white-space: nowrap` to the main div element to ensure the button is not
+wrapped to the next row. Finally, there is some padding and a border to
+make the button look more like a real button.
+
+[[using-available-space]]
+Using available space
+^^^^^^^^^^^^^^^^^^^^^
+
+This simple layout works well as long as the component's has it's
+default undefined width. Changing the width from the server does however
+not have any visible effect because only the size of the main div is
+changed. If the component is made smaller, the contents goes beyond the
+size of the element (this can be verified by adding `overflow: hidden;` to
+`.mypicker`) and if it gets larger the extra space is just left as empty
+space to the right of the button.
+
+The first step towards making the size adjust is to make the text field
+adjust to the main div element's width whenever the width is something
+else then than undefined. In these situations, Vaadin 7 adds a
+`v-has-width` class to the component's main element (`v-has-height` added
+when the height is not undefined).
+
+[source,scss]
+....
+.mypicker.v-has-width > .mypicker-field {
+    width: 100%;
+}
+....
+
+With this additional CSS, the text field directly inside a picker that
+has a defined width gets full width.
+
+[[making-room-for-the-button-again]]
+Making room for the button again
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We're however not done yet. Setting the width of the text field to 100%
+makes it as wide as the main div is, which means that the button goes
+outside the main div. This can be verified using the DOM inspector in
+your browser or by setting `overflow: hidden` to the style for `mypicker`.
+To reserve space for the button, we can add some padding to the right
+edge of the main div element. This does however cause the padding space
+to remain unused if the component size is undefined. To compensate for
+this, negative margin can be added to the right edge of the button,
+effectively reducing its occupied size to 0px.
+
+Finally, we need to use `box-sizing: border-box` to make the field's
+borders and paddings be included in the 100% width.
+
+The full CSS for the sample component:
+
+[source,scss]
+....
+.mypicker {
+  white-space: nowrap;
+  padding-right: 23px;
+}
+.mypicker-button {
+  display: inline-block;
+  border: 1px solid black;
+  padding: 3px;
+  width: 15px;
+  text-align: center;
+  margin-right: -23px;
+}
+.mypicker.v-has-width > .mypicker-field {
+  width: 100%;
+}
+.mypicker-field {
+  -moz-box-sizing: border-box;
+  -webkit-boz-sizing: border-box;
+  box-sizing: border-box;
+}
+....

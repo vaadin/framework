@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,7 @@
 package com.vaadin.data.provider;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
@@ -28,7 +29,6 @@ import com.vaadin.data.provider.CallbackDataProvider.CountCallback;
 import com.vaadin.data.provider.CallbackDataProvider.FetchCallback;
 import com.vaadin.server.SerializableBiFunction;
 import com.vaadin.server.SerializableFunction;
-import com.vaadin.server.SerializableToIntFunction;
 import com.vaadin.shared.Registration;
 
 /**
@@ -120,6 +120,9 @@ public interface DataProvider<T, F> extends Serializable {
      * Default is to use item itself as its own identifier. If the item has
      * {@link Object#equals(Object)} and {@link Object#hashCode()} implemented
      * in a way that it can be compared to other items, no changes are required.
+     * <p>
+     * <strong>Note:</strong> This method will be called often by the Framework.
+     * It should not do any expensive operations.
      *
      * @param item
      *            the item to get identifier for; not {@code null}
@@ -158,8 +161,8 @@ public interface DataProvider<T, F> extends Serializable {
      * // ComboBox uses String as the filter type
      * DataProvider&lt;Person, String&gt; wrappedProvider = dataProvider
      *         .withConvertedFilter(filterText -&gt; {
-     *             Predicate&lt;Person&gt; predicate = person -&gt; person.getName()
-     *                     .startsWith(filterText);
+     *             SerializablePredicate&lt;Person&gt; predicate = person -&gt; person
+     *                     .getName().startsWith(filterText);
      *             return predicate;
      *         });
      * comboBox.setDataProvider(wrappedProvider);
@@ -264,7 +267,7 @@ public interface DataProvider<T, F> extends Serializable {
      */
     @SafeVarargs
     public static <T> ListDataProvider<T> ofItems(T... items) {
-        return new ListDataProvider<>(Arrays.asList(items));
+        return new ListDataProvider<>(new ArrayList<>(Arrays.asList(items)));
     }
 
     /**
@@ -277,8 +280,8 @@ public interface DataProvider<T, F> extends Serializable {
      * <p>
      * <strong>Using big streams is not recommended, you should instead use a
      * lazy data provider.</strong> See
-     * {@link #fromCallbacks(FetchCallback, CountCallback)}
-     * or {@link BackEndDataProvider} for more info.
+     * {@link #fromCallbacks(FetchCallback, CountCallback)} or
+     * {@link BackEndDataProvider} for more info.
      *
      * @param <T>
      *            the data item type

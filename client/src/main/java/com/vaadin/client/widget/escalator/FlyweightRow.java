@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.dom.client.TableRowElement;
-import com.vaadin.client.widgets.Escalator;
 
 /**
  * An internal implementation of the {@link Row} interface.
@@ -31,13 +30,14 @@ import com.vaadin.client.widgets.Escalator;
  *
  * @since 7.4
  * @author Vaadin Ltd
- * @see Escalator.AbstractRowContainer#refreshRow(Node, int)
+ * @see com.vaadin.client.widgets.Escalator.AbstractRowContainer#refreshRow(TableRowElement,
+ *      int)
  */
 public class FlyweightRow implements Row {
 
     static class CellIterator implements Iterator<FlyweightCell> {
         /** A defensive copy of the cells in the current row. */
-        private final ArrayList<FlyweightCell> cells;
+        private final List<FlyweightCell> cells;
         private final boolean cellsAttached;
         private int cursor = 0;
         private int skipNext = 0;
@@ -215,7 +215,7 @@ public class FlyweightRow implements Row {
      *
      * @return an iterable of flyweight cells
      *
-     * @see #setup(Element, int, int[])
+     * @see #setup(TableRowElement, int, int[])
      * @see #teardown()
      */
     public Iterable<FlyweightCell> getCells() {
@@ -240,13 +240,8 @@ public class FlyweightRow implements Row {
         assertSetup();
         assert offset >= 0 && offset + numberOfCells <= cells
                 .size() : "Invalid range of cells";
-        return new Iterable<FlyweightCell>() {
-            @Override
-            public Iterator<FlyweightCell> iterator() {
-                return CellIterator.attached(
-                        cells.subList(offset, offset + numberOfCells));
-            }
-        };
+        return () -> CellIterator
+                .attached(cells.subList(offset, offset + numberOfCells));
     }
 
     /**
@@ -269,13 +264,8 @@ public class FlyweightRow implements Row {
         assertSetup();
         assert offset >= 0 && offset + numberOfCells <= cells
                 .size() : "Invalid range of cells";
-        return new Iterable<FlyweightCell>() {
-            @Override
-            public Iterator<FlyweightCell> iterator() {
-                return CellIterator.unattached(
-                        cells.subList(offset, offset + numberOfCells));
-            }
-        };
+        return () -> CellIterator
+                .unattached(cells.subList(offset, offset + numberOfCells));
     }
 
     /**

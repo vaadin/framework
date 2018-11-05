@@ -1,19 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tools;
 
 import static com.vaadin.tools.CvalAddonsChecker.VAADIN_AGPL;
@@ -34,11 +18,12 @@ import static com.vaadin.tools.CvalCheckerTest.saveCache;
 import static com.vaadin.tools.CvalCheckerTest.unreachableLicenseProvider;
 import static com.vaadin.tools.CvalCheckerTest.validEvaluationLicenseProvider;
 import static com.vaadin.tools.CvalCheckerTest.validLicenseProvider;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -220,7 +205,8 @@ public class CvalAddonstCheckerUseCasesTest {
             deleteCache(productNameCval);
         } else {
             String type = lic == License.EVAL || lic == License.EVAL_EXPIRED
-                    ? "evaluation" : null;
+                    ? "evaluation"
+                    : null;
             Boolean expired = lic == License.EVAL_EXPIRED
                     || lic == License.REAL_EXPIRED ? true : null;
             String key = val == Validated.OLD_KEY ? "oldkey" : null;
@@ -247,26 +233,24 @@ public class CvalAddonstCheckerUseCasesTest {
             addonChecker.run();
             message = readSystemOut();
             if (res == Compile.NO) {
-                Assert.fail(testNumber + "Exception not thrown:" + message);
+                fail(testNumber + "Exception not thrown:" + message);
             }
         } catch (Exception e) {
             restoreSystemOut();
             message = e.getMessage();
             if (res == Compile.YES) {
-                Assert.fail(
-                        testNumber + "Unexpected Exception: " + e.getMessage());
+                fail(testNumber + "Unexpected Exception: " + e.getMessage());
             }
         }
 
         // System.err.println("\n> " + testNumber + " " + lic + " " + ver + " "
         // + val + " " + net + " " + res + " " + cached + "\n" + message);
 
-        Assert.assertTrue(testNumber + "Fail:\n" + message + "\nDoes not match:"
+        assertTrue(testNumber + "Fail:\n" + message + "\nDoes not match:"
                 + msg.msg, message.matches("(?s).*" + msg.msg + ".*"));
 
         String c = cachedPreferences(productNameCval);
-        Assert.assertTrue(testNumber + "Fail: cacheExists != "
-                + (cached == Cached.YES) + "\n  " + c,
-                (c != null) == (cached == Cached.YES));
+        assertTrue(testNumber + "Fail: cacheExists != " + (cached == Cached.YES)
+                + "\n  " + c, (c != null) == (cached == Cached.YES));
     }
 }

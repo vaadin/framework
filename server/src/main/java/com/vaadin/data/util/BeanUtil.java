@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,11 +19,14 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.data.validator.BeanValidator;
@@ -86,7 +89,7 @@ public final class BeanUtil implements Serializable {
 
     /**
      * Returns the type of the property with the given name and declaring class.
-     * The property name may refer to a nested property, eg.
+     * The property name may refer to a nested property, e.g.
      * "property.subProperty" or "property.subProperty1.subProperty2". The
      * property must have a public read method (or a chain of read methods in
      * case of a nested property).
@@ -112,7 +115,7 @@ public final class BeanUtil implements Serializable {
 
     /**
      * Returns the property descriptor for the property of the given name and
-     * declaring class. The property name may refer to a nested property, eg.
+     * declaring class. The property name may refer to a nested property, e.g.
      * "property.subProperty" or "property.subProperty1.subProperty2". The
      * property must have a public read method (or a chain of read methods in
      * case of a nested property).
@@ -225,6 +228,42 @@ public final class BeanUtil implements Serializable {
         }
     }
 
+    /**
+     * Checks if the object is serializable or not. To be used in assertion
+     * checks only, since the check might be a bit heavyweight.
+     *
+     * @param obj
+     *            to be checked
+     * @return {@code true}
+     * @throws AssertionError
+     *             if the object is not serializable
+     */
+    public static boolean checkSerialization(Object obj) {
+        try {
+            ObjectOutputStream dummyObjectOutputStream = new ObjectOutputStream(
+                    new OutputStream() {
+                        @Override
+                        public void write(int b) {
+                        }
+
+                        @SuppressWarnings("NullableProblems")
+                        @Override
+                        public void write(byte[] ignored) {
+                        }
+
+                        @SuppressWarnings("NullableProblems")
+                        @Override
+                        public void write(byte[] b, int off, int len) {
+                        }
+                    });
+            dummyObjectOutputStream.writeObject(obj);
+        } catch (Throwable e) {
+            throw new AssertionError(
+                    "Formatter supplier should be serializable", e);
+        }
+        return true;
+    }
+
     private static class LazyValidationAvailability implements Serializable {
         private static final boolean BEAN_VALIDATION_AVAILABLE = isAvailable();
 
@@ -236,10 +275,11 @@ public final class BeanUtil implements Serializable {
                 return true;
             } catch (ClassNotFoundException | NoSuchMethodException
                     | InvocationTargetException e) {
-                Logger.getLogger(BeanValidator.class.getName())
-                        .fine("A JSR-303 bean validation implementation not found on the classpath. "
+                Logger.getLogger(BeanValidator.class.getName()).log(Level.INFO,
+                        "A JSR-303 bean validation implementation not found on the classpath or could not be initialized. "
                                 + BeanValidator.class.getSimpleName()
-                                + " cannot be used.");
+                                + " cannot be used.",
+                        e);
                 return false;
             } catch (IllegalAccessException | IllegalArgumentException e) {
                 throw new RuntimeException(

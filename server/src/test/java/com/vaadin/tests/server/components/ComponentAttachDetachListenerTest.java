@@ -7,8 +7,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Iterator;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -63,9 +61,8 @@ public class ComponentAttachDetachListenerTest {
             attachTarget = event.getContainer();
 
             // Search for component in container (should be found)
-            Iterator<Component> iter = attachTarget.iterator();
-            while (iter.hasNext()) {
-                if (iter.next() == attachedComponent) {
+            for (Component c : attachTarget) {
+                if (c == attachedComponent) {
                     foundInContainer = true;
                     break;
                 }
@@ -93,9 +90,8 @@ public class ComponentAttachDetachListenerTest {
             detachedTarget = event.getContainer();
 
             // Search for component in container (should NOT be found)
-            Iterator<Component> iter = detachedTarget.iterator();
-            while (iter.hasNext()) {
-                if (iter.next() == detachedComponent) {
+            for (Component c : detachedTarget) {
+                if (c == detachedComponent) {
                     foundInContainer = true;
                     break;
                 }

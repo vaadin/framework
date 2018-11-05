@@ -1,21 +1,8 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
@@ -56,7 +43,7 @@ public class GridSpacerDecoClipTest extends MultiBrowserTest {
         nearToBottomRow.doubleClick();
         deco = getSpacerDeco(0);
         System.out.println("Lower deco.clip = " + deco.getCssValue("clip"));
-        Assert.assertNotEquals(
+        assertNotEquals(
                 "Spacer deco clipping is not updated after opening another spacer",
                 "auto", deco.getCssValue("clip"));
     }
@@ -75,17 +62,19 @@ public class GridSpacerDecoClipTest extends MultiBrowserTest {
 
         GridElement.GridRowElement nearToBottomRow = gridElement.getRow(993);
 
-        nearToBottomRow.doubleClick(); // Open upper Row Details, lower Row
-                                       // Details goes out of visible range
+        // Open upper Row Details, lower Row
+        // Details goes out of visible range
+        nearToBottomRow.doubleClick();
         Thread.sleep(500);
-        nearToBottomRow.doubleClick(); // Close upper Row Details, lower Row
-                                       // Details goes back to visible range
+        // Close upper Row Details, lower Row
+        // Details goes back to visible range
+        nearToBottomRow.doubleClick();
 
         deco = getSpacerDeco(0);
         String clip = deco.getCssValue("clip");
         System.out.println("deco.rect = " + clip);
 
-        Assert.assertTrue(
+        assertTrue(
                 "Part of lower Row Details is visible, its deco clip height should be positive, but it is negative",
                 clip.indexOf('-') < 0);
     }

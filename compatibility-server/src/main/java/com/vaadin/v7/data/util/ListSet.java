@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Map;
 
 /**
  * ListSet is an internal Vaadin class which implements a combination of a List
@@ -31,6 +31,8 @@ import java.util.Iterator;
  * works.
  *
  * This class is subject to change and should not be used outside Vaadin core.
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public class ListSet<E> extends ArrayList<E> {
@@ -40,22 +42,22 @@ public class ListSet<E> extends ArrayList<E> {
      * Contains a map from an element to the number of duplicates it has. Used
      * to temporarily allow duplicates in the list.
      */
-    private HashMap<E, Integer> duplicates = new HashMap<>();
+    private Map<E, Integer> duplicates = new HashMap<E, Integer>();
 
     public ListSet() {
         super();
-        itemSet = new HashSet<>();
+        itemSet = new HashSet<E>();
     }
 
     public ListSet(Collection<? extends E> c) {
         super(c);
-        itemSet = new HashSet<>(c.size());
+        itemSet = new HashSet<E>(c.size());
         itemSet.addAll(c);
     }
 
     public ListSet(int initialCapacity) {
         super(initialCapacity);
-        itemSet = new HashSet<>(initialCapacity);
+        itemSet = new HashSet<E>(initialCapacity);
     }
 
     // Delegate contains operations to the set
@@ -103,9 +105,7 @@ public class ListSet<E> extends ArrayList<E> {
     @Override
     public boolean addAll(Collection<? extends E> c) {
         boolean modified = false;
-        Iterator<? extends E> i = c.iterator();
-        while (i.hasNext()) {
-            E e = i.next();
+        for (E e : c) {
             if (contains(e)) {
                 continue;
             }
@@ -123,9 +123,7 @@ public class ListSet<E> extends ArrayList<E> {
         ensureCapacity(size() + c.size());
 
         boolean modified = false;
-        Iterator<? extends E> i = c.iterator();
-        while (i.hasNext()) {
-            E e = i.next();
+        for (E e : c) {
             if (contains(e)) {
                 continue;
             }
@@ -185,7 +183,7 @@ public class ListSet<E> extends ArrayList<E> {
 
     @Override
     protected void removeRange(int fromIndex, int toIndex) {
-        HashSet<E> toRemove = new HashSet<>();
+        HashSet<E> toRemove = new HashSet<E>();
         for (int idx = fromIndex; idx < toIndex; idx++) {
             toRemove.add(get(idx));
         }
@@ -270,7 +268,7 @@ public class ListSet<E> extends ArrayList<E> {
     @Override
     public Object clone() {
         ListSet<E> v = (ListSet<E>) super.clone();
-        v.itemSet = new HashSet<>(itemSet);
+        v.itemSet = new HashSet<E>(itemSet);
         return v;
     }
 

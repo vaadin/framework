@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -50,4 +50,11 @@ public interface GridClientRpc extends ClientRpc {
      * Command client Grid to scroll to the last row.
      */
     public void scrollToEnd();
+
+    /**
+     * Command client Grid to recalculate column widths.
+     *
+     * @since 8.1.1
+     */
+    public void recalculateColumnWidths();
 }

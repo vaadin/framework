@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,8 +20,7 @@ import com.vaadin.v7.data.util.converter.StringToDoubleConverter;
 
 /**
  * String validator for a double precision floating point number. See
- * {@link com.vaadin.v7.data.validator.AbstractStringValidator} for more
- * information.
+ * {@link AbstractStringValidator} for more information.
  *
  * @author Vaadin Ltd.
  * @since 5.4
@@ -29,8 +28,8 @@ import com.vaadin.v7.data.util.converter.StringToDoubleConverter;
  *             field instead or bind the field to a {@link Property} of type
  *             {@link Double}.
  */
-@SuppressWarnings("serial")
 @Deprecated
+@SuppressWarnings("serial")
 public class DoubleValidator extends AbstractStringValidator {
 
     /**
@@ -60,7 +59,7 @@ public class DoubleValidator extends AbstractStringValidator {
 
     @Override
     public void validate(Object value) throws InvalidValueException {
-        if (value != null && value instanceof Double) {
+        if (value instanceof Double) {
             // Allow Doubles to pass through the validator for easier
             // migration. Otherwise a TextField connected to an double property
             // with a DoubleValidator will fail.

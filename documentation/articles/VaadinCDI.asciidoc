@@ -1,0 +1,73 @@
+---
+title: Vaadin CDI
+order: 47
+layout: page
+---
+
+[[vaadin-cdi]]
+= Vaadin CDI
+
+During these tutorials we will be solving a number of common problems
+when using the https://vaadin.com/directory/component/vaadin-cdi[Vaadin CDI plugin].
+The principal question we will be addressing is "How do I gain access to
+CDI features in a Vaadin project?"
+
+At the end of these tutorials you will have learned how to
+
+1.  Set up a Vaadin CDI project +
+2.  Create UI's and Views with Vaadin CDI +
+3.  Use injection with standard and Vaadin CDI scopes +
+4.  Pass events between various parts of your application +
+5.  Set up access control for your application
+
+We will assume familiarity with Vaadin 7 and common CDI concepts. As a
+reference development environment we'll be using
+http://www.eclipse.org/downloads/[Eclipse] Luna with the
+http://marketplace.eclipse.org/content/vaadin-plugin-eclipse[Vaadin
+plugin], Maven and http://tomee.apache.org/apache-tomee.html[TomEE].
+Installation and configuration of said environment is outside the scope
+of these tutorials.
+
+The tutorials will build off one another, each starting where the
+previous left off. If you wish to jump in at a later point feel free to
+get a copy of the project here: https://github.com/Vaadin/cdi-tutorial.
+The repository has tags for each tutorial's starting point, called
+tutorial-1 to tutorial-5.
+
+[[vaadin-cdi-for-the-impatient]]
+Vaadin CDI for the impatient
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you are eager to get started right away without following the
+tutorial, feel free to do so. There are still some *practical details*
+that are good to keep in mind if you're not familiar with
+https://vaadin.com/directory/component/vaadin-cdi[Vaadin CDI features] or CDI in
+general.
+
+* *Use http://tomee.apache.org/downloads.html[TomEE Web Profile]* or
+some other JavaEE 6+ *server*. Tomcat or Jetty won't work out of the
+box.
+** *Add the http://mvnrepository.com/artifact/javax/javaee-api[JavaEE
+API] to your classpath* if e.g. the @Inject annotation can't be
+found. Depending on how your project is configured, this might not be
+necessary and might in some cases even cause conflicts. +
+* *Objects must be injected* and managed by the CDI implementation in
+order to use CDI features.
+** *Use @Inject on an instance field* to make the CDI implementation
+inject a managed instance of the corresponding type.
+** *Annotate your UI class with @CDIUI("")* to let Vaadin CDI know that
+it should inject and use instances of that class when the application is
+opened in the browser.
+** *Remove any existing VaadinServlet* from your project (look for
+servlets with @WebServlet or defined in web.xml). Vaadin CDI has its own
+VaadinCDIServlet that will be deployed automatically as long as no other
+Vaadin servlets are present.
+** *Initialize objects in a method annotated with @PostConstruct.* CDI
+features such as @Inject are not yet functional when the constructor is
+run.
+
+[[related-pages]]
+Related pages
+~~~~~~~~~~~~~
+
+<<IIInjectionAndScopes#ii-injection-and-scopes,"II - Injection and scopes">>

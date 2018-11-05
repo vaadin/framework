@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,10 @@
  */
 package com.vaadin.client.ui;
 
+import static com.vaadin.shared.ui.datefield.DateResolution.DAY;
+import static com.vaadin.shared.ui.datefield.DateResolution.MONTH;
+import static com.vaadin.shared.ui.datefield.DateResolution.YEAR;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -24,7 +28,7 @@ import com.vaadin.shared.ui.datefield.DateResolution;
 /**
  * Represents a date selection component with a text field and a popup date
  * selector.
- * 
+ *
  * @author Vaadin Ltd
  *
  */
@@ -32,7 +36,7 @@ public class VPopupCalendar
         extends VAbstractPopupCalendar<VDateCalendarPanel, DateResolution> {
 
     public VPopupCalendar() {
-        super(GWT.create(VDateCalendarPanel.class), DateResolution.YEAR);
+        super(GWT.create(VDateCalendarPanel.class), YEAR);
     }
 
     @Override
@@ -47,25 +51,24 @@ public class VPopupCalendar
 
     @Override
     public void setCurrentResolution(DateResolution resolution) {
-        super.setCurrentResolution(
-                resolution == null ? DateResolution.YEAR : resolution);
+        super.setCurrentResolution(resolution == null ? YEAR : resolution);
     }
 
     public static Date makeDate(Map<DateResolution, Integer> dateValues) {
-        if (dateValues.get(DateResolution.YEAR) == -1) {
+        if (dateValues.get(YEAR) == null) {
             return null;
         }
         Date date = new Date(2000 - 1900, 0, 1);
-        int year = dateValues.get(DateResolution.YEAR);
-        if (year >= 0) {
+        Integer year = dateValues.get(YEAR);
+        if (year != null) {
             date.setYear(year - 1900);
         }
-        int month = dateValues.get(DateResolution.MONTH);
-        if (month >= 0) {
+        Integer month = dateValues.get(MONTH);
+        if (month != null) {
             date.setMonth(month - 1);
         }
-        int day = dateValues.get(DateResolution.DAY);
-        if (day >= 0) {
+        Integer day = dateValues.get(DAY);
+        if (day != null) {
             date.setDate(day);
         }
         return date;
@@ -73,7 +76,7 @@ public class VPopupCalendar
 
     @Override
     public boolean isYear(DateResolution resolution) {
-        return DateResolution.YEAR.equals(resolution);
+        return YEAR.equals(resolution);
     }
 
     @Override
@@ -82,36 +85,35 @@ public class VPopupCalendar
     }
 
     @Override
-    protected void updateDateVariables() {
-        super.updateDateVariables();
-        // Update variables
-        // (only the smallest defining resolution needs to be
-        // immediate)
+    protected void updateBufferedResolutions() {
+        super.updateBufferedResolutions();
         Date currentDate = getDate();
-        if (getCurrentResolution().compareTo(DateResolution.MONTH) <= 0) {
-            getClient().updateVariable(getId(),
-                    getResolutionVariable(DateResolution.MONTH),
-                    currentDate != null ? currentDate.getMonth() + 1 : -1,
-                    getCurrentResolution() == DateResolution.MONTH);
-        }
-        if (getCurrentResolution().compareTo(DateResolution.DAY) <= 0) {
-            getClient().updateVariable(getId(),
-                    getResolutionVariable(DateResolution.DAY),
-                    currentDate != null ? currentDate.getDate() : -1,
-                    getCurrentResolution() == DateResolution.DAY);
+        if (currentDate != null) {
+            DateResolution resolution = getCurrentResolution();
+            if (resolution.compareTo(MONTH) <= 0) {
+                bufferedResolutions.put(MONTH, currentDate.getMonth() + 1);
+            }
+            if (resolution.compareTo(DAY) <= 0) {
+                bufferedResolutions.put(DAY, currentDate.getDate());
+            }
         }
     }
 
     @Override
     protected String cleanFormat(String format) {
         // Remove unnecessary d & M if resolution is too low
-        if (getCurrentResolution().compareTo(DateResolution.DAY) > 0) {
+        if (getCurrentResolution().compareTo(DAY) > 0) {
             format = format.replaceAll("d", "");
         }
-        if (getCurrentResolution().compareTo(DateResolution.MONTH) > 0) {
+        if (getCurrentResolution().compareTo(MONTH) > 0) {
             format = format.replaceAll("M", "");
         }
         return super.cleanFormat(format);
+    }
+
+    @Override
+    protected boolean supportsTime() {
+        return false;
     }
 
 }

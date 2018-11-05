@@ -1,19 +1,9 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.data.converter;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +16,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.Vector;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.util.converter.StringToCollectionConverter;
@@ -46,11 +35,11 @@ public class StringToCollectionConverterTest {
         StringToCollectionConverter converter = new StringToCollectionConverter();
         Collection<?> model = converter.convertToModel("a, b, c", List.class,
                 null);
-        Assert.assertTrue("Unexpected model class", model instanceof ArrayList);
+        assertTrue("Unexpected model class", model instanceof ArrayList);
         Iterator<?> iterator = model.iterator();
-        Assert.assertEquals("Incorrect fist token", "a", iterator.next());
-        Assert.assertEquals("Incorrect second token", "b", iterator.next());
-        Assert.assertEquals("Incorrect third token", "c", iterator.next());
+        assertEquals("Incorrect fist token", "a", iterator.next());
+        assertEquals("Incorrect second token", "b", iterator.next());
+        assertEquals("Incorrect third token", "c", iterator.next());
     }
 
     @Test
@@ -59,11 +48,11 @@ public class StringToCollectionConverterTest {
                 "x");
         Collection<?> model = converter.convertToModel("axbxc", List.class,
                 null);
-        Assert.assertTrue("Unexpected model class", model instanceof ArrayList);
+        assertTrue("Unexpected model class", model instanceof ArrayList);
         Iterator<?> iterator = model.iterator();
-        Assert.assertEquals("Incorrect fist token", "a", iterator.next());
-        Assert.assertEquals("Incorrect second token", "b", iterator.next());
-        Assert.assertEquals("Incorrect third token", "c", iterator.next());
+        assertEquals("Incorrect fist token", "a", iterator.next());
+        assertEquals("Incorrect second token", "b", iterator.next());
+        assertEquals("Incorrect third token", "c", iterator.next());
     }
 
     @Test
@@ -72,11 +61,11 @@ public class StringToCollectionConverterTest {
                 ",", new StringToIntegerConverter(), Integer.class);
         Collection<?> model = converter.convertToModel("6,2,5", List.class,
                 null);
-        Assert.assertTrue("Unexpected model class", model instanceof ArrayList);
+        assertTrue("Unexpected model class", model instanceof ArrayList);
         Iterator<?> iterator = model.iterator();
-        Assert.assertEquals("Incorrect fist token", 6, iterator.next());
-        Assert.assertEquals("Incorrect second token", 2, iterator.next());
-        Assert.assertEquals("Incorrect third token", 5, iterator.next());
+        assertEquals("Incorrect fist token", 6, iterator.next());
+        assertEquals("Incorrect second token", 2, iterator.next());
+        assertEquals("Incorrect third token", 5, iterator.next());
     }
 
     @Test
@@ -85,10 +74,10 @@ public class StringToCollectionConverterTest {
                 " ", new StringToEnumConverter(), TestEnum.class);
         Collection<?> model = converter.convertToModel("Z X Y", Set.class,
                 null);
-        Assert.assertTrue("Unexpected model class", model instanceof HashSet);
+        assertTrue("Unexpected model class", model instanceof HashSet);
         EnumSet<TestEnum> set = EnumSet.allOf(TestEnum.class);
         set.removeAll(model);
-        Assert.assertTrue("Some values are not in resutling collection",
+        assertTrue("Some values are not in resutling collection",
                 set.isEmpty());
     }
 
@@ -106,11 +95,11 @@ public class StringToCollectionConverterTest {
                 ", ", null, String.class, factory);
         Collection<?> model = converter.convertToModel("a, b, c",
                 Collection.class, null);
-        Assert.assertTrue("Unexpected model class", model instanceof Vector);
+        assertTrue("Unexpected model class", model instanceof Vector);
         Iterator<?> iterator = model.iterator();
-        Assert.assertEquals("Incorrect fist token", "a", iterator.next());
-        Assert.assertEquals("Incorrect second token", "b", iterator.next());
-        Assert.assertEquals("Incorrect third token", "c", iterator.next());
+        assertEquals("Incorrect fist token", "a", iterator.next());
+        assertEquals("Incorrect second token", "b", iterator.next());
+        assertEquals("Incorrect third token", "c", iterator.next());
     }
 
     @Test
@@ -119,7 +108,7 @@ public class StringToCollectionConverterTest {
         String presentation = converter.convertToPresentation(
                 Arrays.asList("a", "b", "c"), String.class, null);
 
-        Assert.assertEquals("a, b, c", presentation);
+        assertEquals("a, b, c", presentation);
     }
 
     @Test
@@ -129,7 +118,7 @@ public class StringToCollectionConverterTest {
         String presentation = converter.convertToPresentation(
                 Arrays.asList("a", "b", "c"), String.class, null);
 
-        Assert.assertEquals("axbxc", presentation);
+        assertEquals("axbxc", presentation);
     }
 
     @Test
@@ -139,7 +128,7 @@ public class StringToCollectionConverterTest {
         String presentation = converter.convertToPresentation(
                 Arrays.asList(TestEnum.Z, TestEnum.Y), String.class, null);
 
-        Assert.assertEquals("Z,Y", presentation);
+        assertEquals("Z,Y", presentation);
     }
 
     @Test
@@ -147,22 +136,22 @@ public class StringToCollectionConverterTest {
         StringToCollectionConverter converter = new StringToCollectionConverter();
         Collection<?> model = converter.convertToModel("a", List.class, null);
         Iterator<?> iterator = model.iterator();
-        Assert.assertEquals("Incorrect fist token", "a", iterator.next());
-        Assert.assertFalse("More than one item detected after conversation",
+        assertEquals("Incorrect fist token", "a", iterator.next());
+        assertFalse("More than one item detected after conversation",
                 iterator.hasNext());
     }
 
     @Test
     public void convertToModel_null() {
         StringToCollectionConverter converter = new StringToCollectionConverter();
-        Assert.assertNull(converter.convertToModel(null, ArrayList.class,
+        assertNull(converter.convertToModel(null, ArrayList.class,
                 Locale.ENGLISH));
     }
 
     @Test
     public void convertToPresentation_null() {
         StringToCollectionConverter converter = new StringToCollectionConverter();
-        Assert.assertNull(converter.convertToPresentation(null, String.class,
+        assertNull(converter.convertToPresentation(null, String.class,
                 Locale.ENGLISH));
     }
 

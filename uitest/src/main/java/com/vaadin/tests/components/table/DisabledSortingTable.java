@@ -2,7 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.Button;
 import com.vaadin.v7.ui.Table;
 
 public class DisabledSortingTable extends AbstractReindeerTestUI {
@@ -26,26 +25,12 @@ public class DisabledSortingTable extends AbstractReindeerTestUI {
 
         addComponent(table);
 
-        addButton("Enable sorting", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                table.setSortEnabled(true);
-            }
-        });
+        addButton("Enable sorting", event -> table.setSortEnabled(true));
 
-        addButton("Disable sorting", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                table.setSortEnabled(false);
-            }
-        });
+        addButton("Disable sorting", event -> table.setSortEnabled(false));
 
-        addButton("Sort by empty array", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                table.sort(new Object[] {}, new boolean[] {});
-            }
-        });
+        addButton("Sort by empty array",
+                event -> table.sort(new Object[] {}, new boolean[] {}));
     }
 
     @Override

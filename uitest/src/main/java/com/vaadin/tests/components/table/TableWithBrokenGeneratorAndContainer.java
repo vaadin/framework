@@ -1,30 +1,12 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.table;
 
 import java.lang.reflect.InvocationTargetException;
 
 import com.vaadin.event.ListenerMethod.MethodException;
-import com.vaadin.server.ErrorEvent;
-import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.ServerRpcManager.RpcInvocationException;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Notification;
 import com.vaadin.v7.data.Item;
@@ -45,7 +27,6 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
      * {@link #getContainerProperty(Object, Object)}.
      *
      * @author Vaadin Ltd
-     * @version @VERSION@
      * @since 7.0
      *
      */
@@ -101,15 +82,10 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
         table.addGeneratedColumn("Gen", new BrokenColumnGenerator(4));
         table.setPageLength(20);
 
-        Button refreshTableCache = new Button("Refresh table cache",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        table.markAsDirty();
-                        table.refreshRowCache();
-                    }
-                });
+        Button refreshTableCache = new Button("Refresh table cache", event -> {
+            table.markAsDirty();
+            table.refreshRowCache();
+        });
         addComponent(refreshTableCache);
         addComponent(brokenContainer);
         addComponent(brokenGenerator);
@@ -119,25 +95,21 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
 
     protected void setErrorHandler(boolean enabled) {
         if (enabled) {
-            VaadinSession.getCurrent().setErrorHandler(new ErrorHandler() {
-
-                @Override
-                public void error(ErrorEvent event) {
-                    Throwable t = event.getThrowable();
-                    if (t instanceof RpcInvocationException) {
+            VaadinSession.getCurrent().setErrorHandler(event -> {
+                Throwable t = event.getThrowable();
+                if (t instanceof RpcInvocationException) {
+                    t = t.getCause();
+                    if (t instanceof InvocationTargetException) {
                         t = t.getCause();
-                        if (t instanceof InvocationTargetException) {
+                        if (t instanceof MethodException) {
                             t = t.getCause();
-                            if (t instanceof MethodException) {
-                                t = t.getCause();
-                                if (t instanceof CacheUpdateException) {
-                                    Table table = ((CacheUpdateException) t)
-                                            .getTable();
-                                    table.removeAllItems();
-                                    Notification.show(
-                                            "Problem updating table. Please try again later",
-                                            Notification.Type.ERROR_MESSAGE);
-                                }
+                            if (t instanceof CacheUpdateException) {
+                                Table table = ((CacheUpdateException) t)
+                                        .getTable();
+                                table.removeAllItems();
+                                Notification.show(
+                                        "Problem updating table. Please try again later",
+                                        Notification.Type.ERROR_MESSAGE);
                             }
                         }
                     }

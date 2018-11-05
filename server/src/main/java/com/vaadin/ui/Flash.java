@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,7 @@ package com.vaadin.ui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jsoup.nodes.Element;
@@ -30,7 +31,6 @@ import com.vaadin.ui.declarative.DesignContext;
  * A component for displaying Adobe® Flash® content.
  *
  * @author Vaadin Ltd.
- * @version @VERSION@
  * @since 7.0
  */
 @SuppressWarnings("serial")
@@ -44,7 +44,7 @@ public class Flash extends AbstractEmbedded {
     }
 
     /**
-     * Creates a new empty Flash component with the given caption
+     * Creates a new empty Flash component with the given caption.
      *
      * @param caption
      *            The caption for the component
@@ -216,7 +216,8 @@ public class Flash extends AbstractEmbedded {
      */
     public String getParameter(String name) {
         return getState(false).embedParams != null
-                ? getState(false).embedParams.get(name) : null;
+                ? getState(false).embedParams.get(name)
+                : null;
     }
 
     /**
@@ -238,7 +239,7 @@ public class Flash extends AbstractEmbedded {
         super.writeDesign(design, designContext);
 
         // Parameters, in alphabetic order
-        ArrayList<String> paramNames = new ArrayList<>();
+        List<String> paramNames = new ArrayList<>();
         for (String param : getParameterNames()) {
             paramNames.add(param);
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.ui.dnd.criteria.Payload;
 
 /**
  * State class containing parameters for DragSourceExtension.
@@ -41,6 +42,26 @@ public class DragSourceState extends SharedState {
     public static final String EVENT_DRAGSTART = "dragstart";
 
     /**
+     * Data type {@code "text"} for storing data in {@code DataTransfer} object.
+     */
+    public static final String DATA_TYPE_TEXT = "text";
+
+    /**
+     * Data type {@code "Text"}. IE 11 stores data dragged from the desktop as
+     * "Text" with capital letter.
+     */
+    public static final String DATA_TYPE_TEXT_IE = "Text";
+
+    /**
+     * Data type {@code "text/plain"} for reading data from {@code DataTransfer}
+     * object. Some browsers convert store data with {@code "text"} as {@code
+     * "text/plain"} when transferring data.
+     */
+    public static final String DATA_TYPE_TEXT_PLAIN = "text/plain";
+
+    public static final String RESOURCE_DRAG_IMAGE = "drag-image";
+
+    /**
      * {@code DataTransfer.effectAllowed} parameter for the drag event.
      */
     public EffectAllowed effectAllowed = EffectAllowed.UNINITIALIZED;
@@ -55,4 +76,10 @@ public class DragSourceState extends SharedState {
      * Used to store data in the {@code DataTransfer} object for the drag event.
      */
     public Map<String, String> data = new HashMap<>();
+
+    /**
+     * Payload for comparing against acceptance criteria. Transferred in the
+     * {@code DataTransfer} object as data type.
+     */
+    public Map<String, Payload> payload = new HashMap<>();
 }

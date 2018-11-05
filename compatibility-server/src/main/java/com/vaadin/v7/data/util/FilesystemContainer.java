@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,12 +26,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.vaadin.server.Resource;
-import com.vaadin.util.FileTypeResolver;
+import com.vaadin.v7.util.FileTypeResolver;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
@@ -41,6 +40,10 @@ import com.vaadin.v7.data.Property;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated No direct replacement - use a subclass of
+ *             {@code AbstractBackEndHierarchicalDataProvider}, such as the
+ *             example in Vaadin Sampler for File System Explorer.
  */
 @Deprecated
 @SuppressWarnings("serial")
@@ -71,17 +74,17 @@ public class FilesystemContainer implements Container.Hierarchical {
      */
     public static Collection<String> FILE_PROPERTIES;
 
-    private final static Method FILEITEM_LASTMODIFIED;
+    private static final Method FILEITEM_LASTMODIFIED;
 
-    private final static Method FILEITEM_NAME;
+    private static final Method FILEITEM_NAME;
 
-    private final static Method FILEITEM_ICON;
+    private static final Method FILEITEM_ICON;
 
-    private final static Method FILEITEM_SIZE;
+    private static final Method FILEITEM_SIZE;
 
     static {
 
-        FILE_PROPERTIES = new ArrayList<>();
+        FILE_PROPERTIES = new ArrayList<String>();
         FILE_PROPERTIES.add(PROPERTY_NAME);
         FILE_PROPERTIES.add(PROPERTY_ICON);
         FILE_PROPERTIES.add(PROPERTY_SIZE);
@@ -99,7 +102,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         }
     }
 
-    private File[] roots = new File[] {};
+    private File[] roots = {};
 
     private FilenameFilter filter = null;
 
@@ -275,8 +278,8 @@ public class FilesystemContainer implements Container.Hierarchical {
         if (!(itemId instanceof File)) {
             return false;
         }
-        for (int i = 0; i < roots.length; i++) {
-            if (roots[i].equals(itemId)) {
+        for (File root : roots) {
+            if (root.equals(itemId)) {
                 return true;
             }
         }
@@ -371,10 +374,10 @@ public class FilesystemContainer implements Container.Hierarchical {
         boolean val = false;
 
         // Try to match all roots
-        for (int i = 0; i < roots.length; i++) {
+        for (File root : roots) {
             try {
                 val |= ((File) itemId).getCanonicalPath()
-                        .startsWith(roots[i].getCanonicalPath());
+                        .startsWith(root.getCanonicalPath());
             } catch (final IOException e) {
                 // Exception ignored
             }
@@ -424,8 +427,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         final List<File> ll = Arrays.asList(l);
         Collections.sort(ll);
 
-        for (final Iterator<File> i = ll.iterator(); i.hasNext();) {
-            final File lf = i.next();
+        for (final File lf : ll) {
             col.add(lf);
             if (lf.isDirectory()) {
                 addItemIds(col, lf);
@@ -441,9 +443,9 @@ public class FilesystemContainer implements Container.Hierarchical {
     public Collection<File> getItemIds() {
 
         if (recursive) {
-            final Collection<File> col = new ArrayList<>();
-            for (int i = 0; i < roots.length; i++) {
-                addItemIds(col, roots[i]);
+            final Collection<File> col = new ArrayList<File>();
+            for (File root : roots) {
+                addItemIds(col, root);
             }
             return Collections.unmodifiableCollection(col);
         } else {
@@ -552,24 +554,24 @@ public class FilesystemContainer implements Container.Hierarchical {
      * Internal method to recursively calculate the number of files under a root
      * directory.
      *
-     * @param f
+     * @param directory
      *            the root to start counting from.
      */
-    private int getFileCounts(File f) {
+    private int getFileCounts(File directory) {
         File[] l;
         if (filter != null) {
-            l = f.listFiles(filter);
+            l = directory.listFiles(filter);
         } else {
-            l = f.listFiles();
+            l = directory.listFiles();
         }
 
         if (l == null) {
             return 0;
         }
         int ret = l.length;
-        for (int i = 0; i < l.length; i++) {
-            if (l[i].isDirectory()) {
-                ret += getFileCounts(l[i]);
+        for (File f : l) {
+            if (f.isDirectory()) {
+                ret += getFileCounts(f);
             }
         }
         return ret;
@@ -586,8 +588,8 @@ public class FilesystemContainer implements Container.Hierarchical {
 
         if (recursive) {
             int counts = 0;
-            for (int i = 0; i < roots.length; i++) {
-                counts += getFileCounts(roots[i]);
+            for (File f : roots) {
+                counts += getFileCounts(f);
             }
             return counts;
         } else {
@@ -674,7 +676,7 @@ public class FilesystemContainer implements Container.Hierarchical {
          */
         @Override
         public boolean equals(Object obj) {
-            if (obj == null || !(obj instanceof FileItem)) {
+            if (!(obj instanceof FileItem)) {
                 return false;
             }
             final FileItem fi = (FileItem) obj;
@@ -741,7 +743,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         /**
          * Filesystem container does not support adding new properties.
          *
-         * @see com.vaadin.v7.data.Item#addItemProperty(Object, Property)
+         * @see Item#addItemProperty(Object, Property)
          */
         @Override
         public boolean addItemProperty(Object id, Property property)
@@ -753,7 +755,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         /**
          * Filesystem container does not support removing properties.
          *
-         * @see com.vaadin.v7.data.Item#removeItemProperty(Object)
+         * @see Item#removeItemProperty(Object)
          */
         @Override
         public boolean removeItemProperty(Object id)

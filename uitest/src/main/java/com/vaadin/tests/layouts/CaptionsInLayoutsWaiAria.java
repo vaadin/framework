@@ -10,8 +10,6 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
@@ -22,8 +20,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Item;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.AbstractLegacyComponent;
 import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.NativeSelect;
@@ -70,13 +66,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
 
     private Component addCaptionText() {
         Button b = new Button("Add caption text");
-        b.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                prependCaptions("a");
-            }
-        });
+        b.addClickListener(event -> prependCaptions("a"));
         return b;
     }
 
@@ -84,7 +74,6 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
         for (Component c : components) {
             c.setCaption(prepend + c.getCaption());
         }
-
     }
 
     private Component toggleRequired() {
@@ -178,6 +167,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
         }
     }
 
+    @SuppressWarnings("unused")
     private Component toggleError() {
         CheckBox errorToggle = new CheckBox();
         errorToggle.setCaption("Error");
@@ -320,19 +310,13 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
 
         }
         layoutSelect.setImmediate(true);
-        layoutSelect.addListener(new ValueChangeListener() {
+        layoutSelect.addValueChangeListener(event -> {
+            Item i = layoutSelect.getItem(event.getProperty().getValue());
 
-            @Override
-            @SuppressWarnings("unchecked")
-            public void valueChange(ValueChangeEvent event) {
-                Item i = layoutSelect.getItem(event.getProperty().getValue());
-
-                setLayout(getLayout(
-                        (String) i.getItemProperty(CAPTION).getValue(),
-                        (Class<? extends Layout>) i.getItemProperty(CLASS)
-                                .getValue(),
-                        (String) i.getItemProperty(WIDTH).getValue()));
-            }
+            setLayout(getLayout((String) i.getItemProperty(CAPTION).getValue(),
+                    (Class<? extends Layout>) i.getItemProperty(CLASS)
+                            .getValue(),
+                    (String) i.getItemProperty(WIDTH).getValue()));
         });
 
         return layoutSelect;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,7 +26,9 @@ import com.vaadin.shared.ui.grid.renderers.RendererClickRpc;
 import elemental.json.JsonObject;
 
 /**
- * An abstract base class for {@link ClickableRenderer} connectors.
+ * An abstract base class for
+ * {@link com.vaadin.client.renderers.ClickableRenderer ClickableRenderer}
+ * connectors.
  *
  * @param <T>
  *            the presentation type of the renderer

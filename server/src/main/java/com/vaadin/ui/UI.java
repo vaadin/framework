@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,8 @@
 
 package com.vaadin.ui;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -23,7 +25,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -45,6 +46,7 @@ import com.vaadin.event.UIEvents.PollEvent;
 import com.vaadin.event.UIEvents.PollListener;
 import com.vaadin.event.UIEvents.PollNotifier;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.PushStateNavigation;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ComponentSizeValidator.InvalidLayout;
@@ -62,6 +64,7 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinSession.State;
 import com.vaadin.server.communication.PushConnection;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
@@ -70,14 +73,18 @@ import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.WindowOrderRpc;
 import com.vaadin.shared.ui.ui.DebugWindowClientRpc;
 import com.vaadin.shared.ui.ui.DebugWindowServerRpc;
+import com.vaadin.shared.ui.ui.PageClientRpc;
 import com.vaadin.shared.ui.ui.ScrollClientRpc;
 import com.vaadin.shared.ui.ui.UIClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.ui.Component.Focusable;
+import com.vaadin.ui.Dependency.Type;
 import com.vaadin.ui.Window.WindowOrderChangeListener;
 import com.vaadin.ui.declarative.Design;
+import com.vaadin.ui.dnd.DragSourceExtension;
+import com.vaadin.ui.dnd.DropTargetExtension;
 import com.vaadin.util.ConnectorHelper;
 import com.vaadin.util.CurrentInstance;
 import com.vaadin.util.ReflectTools;
@@ -114,8 +121,7 @@ import com.vaadin.util.ReflectTools;
  * @since 7.0
  */
 public abstract class UI extends AbstractSingleComponentContainer
-        implements Action.Container, Action.Notifier, PollNotifier,
-        LegacyComponent, Focusable {
+        implements Action.Notifier, PollNotifier, LegacyComponent, Focusable {
 
     /**
      * The application to which this UI belongs
@@ -190,14 +196,8 @@ public abstract class UI extends AbstractSingleComponentContainer
         }
 
         @Override
-        public void acknowledge() {
-            // Nothing to do, just need the message to be sent and processed
-        }
-
-        @Override
         public void popstate(String uri) {
             getPage().updateLocation(uri, true, true);
-
         }
     };
     private DebugWindowServerRpc debugRpc = new DebugWindowServerRpc() {
@@ -215,13 +215,13 @@ public abstract class UI extends AbstractSingleComponentContainer
                     .validateLayouts(UI.this);
             StringBuilder json = new StringBuilder();
             json.append("{\"invalidLayouts\":");
-            json.append("[");
+            json.append('[');
 
             if (invalidSizes != null) {
                 boolean first = true;
                 for (InvalidLayout invalidSize : invalidSizes) {
                     if (!first) {
-                        json.append(",");
+                        json.append(',');
                     } else {
                         first = false;
                     }
@@ -250,7 +250,7 @@ public abstract class UI extends AbstractSingleComponentContainer
                 Design.write((Component) connector, baos);
                 getLogger().info("Design for " + connector
                         + " requested from debug window:\n"
-                        + baos.toString("UTF-8"));
+                        + baos.toString(UTF_8.name()));
             } catch (IOException e) {
                 getLogger().log(Level.WARNING,
                         "Error producing design for " + connector, e);
@@ -259,19 +259,14 @@ public abstract class UI extends AbstractSingleComponentContainer
         }
     };
 
-    private WindowOrderRpc windowOrderRpc = new WindowOrderRpc() {
-
-        @Override
-        public void windowOrderChanged(
-                HashMap<Integer, Connector> windowOrders) {
-            Map<Integer, Window> orders = new LinkedHashMap<>();
-            for (Entry<Integer, Connector> entry : windowOrders.entrySet()) {
-                if (entry.getValue() instanceof Window) {
-                    orders.put(entry.getKey(), (Window) entry.getValue());
-                }
+    private WindowOrderRpc windowOrderRpc = windowOrders -> {
+        Map<Integer, Window> orders = new LinkedHashMap<>();
+        for (Entry<Integer, Connector> entry : windowOrders.entrySet()) {
+            if (entry.getValue() instanceof Window) {
+                orders.put(entry.getKey(), (Window) entry.getValue());
             }
-            fireWindowOrder(orders);
         }
+        fireWindowOrder(orders);
     };
 
     /**
@@ -298,6 +293,11 @@ public abstract class UI extends AbstractSingleComponentContainer
      * the client has id 0.
      */
     private int lastProcessedClientToServerId = -1;
+
+    /**
+     * Stores the extension of the active drag source component
+     */
+    private DragSourceExtension<? extends AbstractComponent> activeDragSource;
 
     /**
      * Creates a new empty UI without a caption. The content of the UI must be
@@ -454,7 +454,7 @@ public abstract class UI extends AbstractSingleComponentContainer
     public Iterator<Component> iterator() {
         // TODO could directly create some kind of combined iterator instead of
         // creating a new ArrayList
-        ArrayList<Component> components = new ArrayList<>();
+        List<Component> components = new ArrayList<>();
 
         if (getContent() != null) {
             components.add(getContent());
@@ -462,7 +462,7 @@ public abstract class UI extends AbstractSingleComponentContainer
 
         components.addAll(windows);
 
-        return components.iterator();
+        return Collections.unmodifiableCollection(components).iterator();
     }
 
     /*
@@ -513,18 +513,15 @@ public abstract class UI extends AbstractSingleComponentContainer
                 // on.
                 getPushConfiguration().setPushMode(PushMode.DISABLED);
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // This intentionally does disconnect without locking
-                        // the VaadinSession to avoid deadlocks where the server
-                        // uses a lock for the websocket connection
+                new Thread(() -> {
+                    // This intentionally does disconnect without locking
+                    // the VaadinSession to avoid deadlocks where the server
+                    // uses a lock for the websocket connection
 
-                        // See https://dev.vaadin.com/ticket/18436
-                        // The underlying problem is
-                        // https://dev.vaadin.com/ticket/16919
-                        setPushConnection(null);
-                    }
+                    // See https://dev.vaadin.com/ticket/18436
+                    // The underlying problem is
+                    // https://dev.vaadin.com/ticket/16919
+                    setPushConnection(null);
                 }).start();
             }
             this.session = session;
@@ -539,8 +536,7 @@ public abstract class UI extends AbstractSingleComponentContainer
         if (session == null) {
             return null;
         } else {
-            return session.toString() + " for "
-                    + session.getService().getServiceName();
+            return session + " for " + session.getService().getServiceName();
         }
     }
 
@@ -657,6 +653,12 @@ public abstract class UI extends AbstractSingleComponentContainer
 
     private String embedId;
 
+    private String uiPathInfo;
+
+    private String uiRootPath;
+
+    private boolean mobileHtml5DndPolyfillLoaded;
+
     /**
      * This method is used by Component.Focusable objects to request focus to
      * themselves. Focus renders must be handled at window level (instead of
@@ -734,6 +736,36 @@ public abstract class UI extends AbstractSingleComponentContainer
 
         getPage().init(request);
 
+        String uiPathInfo = (String) request
+                .getAttribute(ApplicationConstants.UI_ROOT_PATH);
+        if (uiPathInfo != null) {
+            setUiPathInfo(uiPathInfo);
+        }
+
+        if (getSession() != null && getSession().getConfiguration() != null
+                && getSession().getConfiguration().isSendUrlsAsParameters()
+                && getPage().getLocation() != null) {
+            // By default the root is the URL from client
+            String uiRootPath = getPage().getLocation().getPath();
+
+            if (uiPathInfo != null && uiRootPath.contains(uiPathInfo)) {
+                // String everything from the URL after uiPathInfo
+                // This will remove the navigation state from the URL
+                uiRootPath = uiRootPath.substring(0,
+                        uiRootPath.indexOf(uiPathInfo) + uiPathInfo.length());
+            } else if (request.getPathInfo() != null) {
+                // uiRootPath does not match the uiPathInfo
+                // This can happen for example when embedding a Vaadin UI
+                String pathInfo = request.getPathInfo();
+                if (uiRootPath.endsWith(pathInfo)) {
+                    uiRootPath = uiRootPath.substring(0,
+                            uiRootPath.length() - pathInfo.length());
+                }
+            }
+            // Store the URL as the UI Root Path
+            setUiRootPath(uiRootPath);
+        }
+
         // Call the init overridden by the application developer
         init(request);
 
@@ -742,6 +774,48 @@ public abstract class UI extends AbstractSingleComponentContainer
             // Kickstart navigation if a navigator was attached in init()
             navigator.navigateTo(navigator.getState());
         }
+    }
+
+    private void setUiRootPath(String uiRootPath) {
+        this.uiRootPath = uiRootPath;
+    }
+
+    /**
+     * Gets the part of path (from browser's URL) that points to this UI.
+     * Basically the same as the value from {@link Page#getLocation()}, but
+     * without possible view identifiers or path parameters.
+     *
+     * @return the part of path (from browser's URL) that points to this UI,
+     *         without possible view identifiers or path parameters
+     *
+     * @since 8.2
+     */
+    public String getUiRootPath() {
+        return uiRootPath;
+    }
+
+    private void setUiPathInfo(String uiPathInfo) {
+        this.uiPathInfo = uiPathInfo;
+    }
+
+    /**
+     * Gets the path info part of the request that is used to detect the UI.
+     * This is defined during UI init by certain {@link UIProvider UIProviders}
+     * that map different UIs to different URIs, like Vaadin Spring. This
+     * information is used by the {@link Navigator} when the {@link UI} is
+     * annotated with {@link PushStateNavigation}.
+     * <p>
+     * For example if the UI is accessed through
+     * {@code http://example.com/MyUI/mainview/parameter=1} the path info would
+     * be {@code /MyUI}.
+     *
+     * @return the path info part of the request; {@code null} if no request
+     *         from client has been processed
+     *
+     * @since 8.2
+     */
+    public String getUiPathInfo() {
+        return uiPathInfo;
     }
 
     /**
@@ -1228,7 +1302,7 @@ public abstract class UI extends AbstractSingleComponentContainer
     }
 
     /**
-     * Gets the theme currently in use by this UI
+     * Gets the theme currently in use by this UI.
      *
      * @return the theme name
      */
@@ -1493,16 +1567,44 @@ public abstract class UI extends AbstractSingleComponentContainer
             @Override
             public void handleError(Exception exception) {
                 try {
-                    if (runnable instanceof ErrorHandlingRunnable) {
-                        ErrorHandlingRunnable errorHandlingRunnable = (ErrorHandlingRunnable) runnable;
+                    exception = ErrorHandlingRunnable.processException(runnable,
+                            exception);
 
-                        errorHandlingRunnable.handleError(exception);
-                    } else {
+                    if (exception instanceof UIDetachedException) {
+                        assert session != null;
+                        /*
+                         * UI was detached after access was run, but before
+                         * accessSynchronously. Furthermore, there wasn't an
+                         * ErrorHandlingRunnable that handled the exception.
+                         */
+                        getLogger().log(Level.WARNING,
+                                "access() task ignored because UI got detached after the task was enqueued."
+                                        + " To suppress this message, change the task to implement {} and make it handle {}."
+                                        + " Affected task: {}",
+                                new Object[] {
+                                        ErrorHandlingRunnable.class.getName(),
+                                        UIDetachedException.class.getName(),
+                                        runnable });
+                    } else if (exception != null) {
+                        /*
+                         * If no ErrorHandlingRunnable, or if it threw an
+                         * exception of its own.
+                         */
                         ConnectorErrorEvent errorEvent = new ConnectorErrorEvent(
                                 UI.this, exception);
 
                         ErrorHandler errorHandler = com.vaadin.server.ErrorEvent
                                 .findErrorHandler(UI.this);
+
+                        if (errorHandler == null && getSession() == null) {
+                            /*
+                             * Special case where findErrorHandler(UI) cannot
+                             * find the session handler because the UI has
+                             * recently been detached.
+                             */
+                            errorHandler = com.vaadin.server.ErrorEvent
+                                    .findErrorHandler(session);
+                        }
 
                         if (errorHandler == null) {
                             errorHandler = new DefaultErrorHandler();
@@ -1772,7 +1874,7 @@ public abstract class UI extends AbstractSingleComponentContainer
      *
      * Used internally for communication tracking.
      *
-     * @param lastProcessedServerMessageId
+     * @param lastProcessedClientToServerId
      *            the id of the last processed server message
      * @since 7.6
      */
@@ -1805,6 +1907,99 @@ public abstract class UI extends AbstractSingleComponentContainer
                 listener, WindowOrderUpdateListener.windowOrderUpdateMethod);
         return () -> removeListener(EventId.WINDOW_ORDER,
                 WindowOrderUpdateEvent.class, listener);
+    }
+
+    /**
+     * Sets the drag source of an active HTML5 drag event.
+     *
+     * @param extension
+     *            Extension of the drag source component.
+     * @see DragSourceExtension
+     * @since 8.1
+     */
+    public void setActiveDragSource(
+            DragSourceExtension<? extends AbstractComponent> extension) {
+        activeDragSource = extension;
+    }
+
+    /**
+     * Gets the drag source of an active HTML5 drag event.
+     *
+     * @return Extension of the drag source component if the drag event is
+     *         active and originated from this UI, {@literal null} otherwise.
+     * @see DragSourceExtension
+     * @since 8.1
+     */
+    public DragSourceExtension<? extends AbstractComponent> getActiveDragSource() {
+        return activeDragSource;
+    }
+
+    /**
+     * Returns whether HTML5 DnD extensions {@link DragSourceExtension} and
+     * {@link DropTargetExtension} and alike should be enabled for mobile
+     * devices.
+     * <p>
+     * By default, it is disabled.
+     *
+     * @return {@code true} if enabled, {@code false} if not
+     * @since 8.1
+     * @see #setMobileHtml5DndEnabled(boolean)
+     */
+    public boolean isMobileHtml5DndEnabled() {
+        return getState(false).enableMobileHTML5DnD;
+    }
+
+    /**
+     * Enable or disable HTML5 DnD for mobile devices.
+     * <p>
+     * Usually you should enable the support in the {@link #init(VaadinRequest)}
+     * method. By default, it is disabled. This operation is NOOP when the user
+     * is not on a mobile device.
+     * <p>
+     * Changing this will effect all {@link DragSourceExtension} and
+     * {@link DropTargetExtension} (and subclasses) that have not yet been
+     * attached to the UI on the client side.
+     * <p>
+     * <em>NOTE: When disabling this after it has been enabled, it will not
+     * affect {@link DragSourceExtension} and {@link DropTargetExtension} (and
+     * subclasses) that have been previously added. Those extensions should be
+     * explicitly removed to make sure user cannot perform DnD operations
+     * anymore.</em>
+     *
+     * @param enabled
+     *            {@code true} if enabled, {@code false} if not
+     * @since 8.1
+     */
+    public void setMobileHtml5DndEnabled(boolean enabled) {
+        if (getState(false).enableMobileHTML5DnD != enabled) {
+            getState().enableMobileHTML5DnD = enabled;
+
+            if (isMobileHtml5DndEnabled()) {
+                loadMobileHtml5DndPolyfill();
+            }
+        }
+    }
+
+    /**
+     * Load and initialize the mobile drag-drop-polyfill if needed and not yet
+     * done so.
+     */
+    private void loadMobileHtml5DndPolyfill() {
+        if (mobileHtml5DndPolyfillLoaded) {
+            return;
+        }
+        if (!getPage().getWebBrowser().isTouchDevice()) {
+            return;
+        }
+        mobileHtml5DndPolyfillLoaded = true;
+
+        String vaadinLocation = getSession().getService().getStaticFileLocation(
+                VaadinService.getCurrentRequest()) + "/VAADIN/";
+
+        getPage().addDependency(new Dependency(Type.JAVASCRIPT,
+                vaadinLocation + ApplicationConstants.MOBILE_DND_POLYFILL_JS));
+
+        getRpcProxy(PageClientRpc.class).initializeMobileHtml5DndPolyfill();
     }
 
     /**

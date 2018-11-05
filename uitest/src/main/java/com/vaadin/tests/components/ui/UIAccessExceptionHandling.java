@@ -1,19 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests.components.ui;
 
 import java.util.Map;
@@ -22,11 +6,11 @@ import java.util.concurrent.Future;
 
 import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.ErrorHandler;
+import com.vaadin.server.ErrorHandlingRunnable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
@@ -39,86 +23,76 @@ public class UIAccessExceptionHandling extends AbstractTestUIWithLog
     protected void setup(VaadinRequest request) {
         getSession().setErrorHandler(this);
 
-        addComponent(new Button("Throw RuntimeException on UI.access",
-                new Button.ClickListener() {
+        addComponent(
+                new Button("Throw RuntimeException on UI.access", event -> {
+                    log.clear();
 
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        log.clear();
+                    // Ensure beforeClientResponse is invoked
+                    markAsDirty();
 
-                        // Ensure beforeClientResponse is invoked
-                        markAsDirty();
-
-                        future = access(new Runnable() {
-                            @Override
-                            public void run() {
-                                throw new RuntimeException();
-                            }
-                        });
-                    }
+                    future = access(() -> {
+                        throw new RuntimeException();
+                    });
                 }));
 
         addComponent(new Button("Throw RuntimeException on Session.access",
-                new Button.ClickListener() {
+                event -> {
+                    log.clear();
 
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        log.clear();
+                    // Ensure beforeClientResponse is invoked
+                    markAsDirty();
 
-                        // Ensure beforeClientResponse is invoked
-                        markAsDirty();
+                    VaadinService service = VaadinService.getCurrent();
 
-                        VaadinService service = VaadinService.getCurrent();
+                    future = service.accessSession(getSession(), () -> {
+                        throw new RuntimeException();
+                    });
+                }));
 
-                        future = service.accessSession(getSession(),
-                                new Runnable() {
+        addComponent(new Button(
+                "Throw RuntimeException after removing instances", event -> {
+                    log.clear();
 
-                                    @Override
-                                    public void run() {
-                                        throw new RuntimeException();
-                                    }
-                                });
-                    }
+                    // Ensure beforeClientResponse is invoked
+                    markAsDirty();
+
+                    assert UI.getCurrent() == UIAccessExceptionHandling.this;
+
+                    Map<Class<?>, CurrentInstance> instances = CurrentInstance
+                            .getInstances();
+                    CurrentInstance.clearAll();
+
+                    assert UI.getCurrent() == null;
+
+                    future = access(() -> {
+                        throw new RuntimeException();
+                    });
+
+                    CurrentInstance.restoreInstances(instances);
                 }));
 
         addComponent(
-                new Button("Throw RuntimeException after removing instances",
-                        new Button.ClickListener() {
+                new Button("Throw through ErrorHandlingRunnable", event -> {
+                    access(new ErrorHandlingRunnable() {
+                        @Override
+                        public void run() {
+                            log.clear();
+                            throw new NullPointerException();
+                        }
 
-                            @Override
-                            public void buttonClick(ClickEvent event) {
-                                log.clear();
-
-                                // Ensure beforeClientResponse is invoked
-                                markAsDirty();
-
-                                assert UI
-                                        .getCurrent() == UIAccessExceptionHandling.this;
-
-                                Map<Class<?>, CurrentInstance> instances = CurrentInstance
-                                        .getInstances();
-                                CurrentInstance.clearAll();
-
-                                assert UI.getCurrent() == null;
-
-                                future = access(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        throw new RuntimeException();
-                                    }
-                                });
-
-                                CurrentInstance.restoreInstances(instances);
+                        @Override
+                        public void handleError(Exception exception) {
+                            // "Handle" other exceptions, but leave NPE for
+                            // default handler
+                            if (exception instanceof NullPointerException) {
+                                NullPointerException npe = (NullPointerException) exception;
+                                throw npe;
                             }
-                        }));
+                        }
+                    });
+                }));
 
-        addComponent(new Button("Clear", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                log.clear();
-            }
-        }));
+        addComponent(new Button("Clear", event -> log.clear()));
     }
 
     @Override

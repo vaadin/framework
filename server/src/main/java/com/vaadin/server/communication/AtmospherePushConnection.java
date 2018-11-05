@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -166,7 +166,7 @@ public class AtmospherePushConnection implements PushConnection {
             try {
                 Writer writer = new StringWriter();
                 new UidlWriter().write(getUI(), writer, async);
-                sendMessage("for(;;);[{" + writer.toString() + "}]");
+                sendMessage("for(;;);[{" + writer + "}]");
             } catch (Exception e) {
                 throw new RuntimeException("Push failed", e);
             }
@@ -180,7 +180,7 @@ public class AtmospherePushConnection implements PushConnection {
      * @param message
      *            The message to send
      */
-    void sendMessage(String message) {
+    protected void sendMessage(String message) {
         assert (isConnected());
         // "Broadcast" the changes to the single client only
         outgoingMessage = getResource().getBroadcaster().broadcast(message,
@@ -230,8 +230,8 @@ public class AtmospherePushConnection implements PushConnection {
 
     /**
      * Associates this {@link AtmospherePushConnection} with the given
-     * {@link AtmosphereResource} representing an established push connection. If
-     * already connected, calls {@link #disconnect()} first. If there is a
+     * {@link AtmosphereResource} representing an established push connection.
+     * If already connected, calls {@link #disconnect()} first. If there is a
      * deferred push, carries it out via the new connection.
      *
      * @since 7.2

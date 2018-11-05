@@ -29,24 +29,16 @@ public class ProgrammaticCollapse extends TestBase {
             }
         }
         layout.addComponent(table);
-        layout.addComponent(
-                new Button("Expand / Collapse", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        boolean collapsed = !table.isCollapsed(1);
-                        Notification.show("set collapsed: " + collapsed);
-                        table.setCollapsed(1, collapsed);
-                    }
-                }));
-        layout.addComponent(
-                new Button("Expand / Collapse last", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        boolean collapsed = !table.isCollapsed(100);
-                        Notification.show("set collapsed: " + collapsed);
-                        table.setCollapsed(100, collapsed);
-                    }
-                }));
+        layout.addComponent(new Button("Expand / Collapse", event -> {
+            boolean collapsed = !table.isCollapsed(1);
+            Notification.show("set collapsed: " + collapsed);
+            table.setCollapsed(1, collapsed);
+        }));
+        layout.addComponent(new Button("Expand / Collapse last", event -> {
+            boolean collapsed = !table.isCollapsed(100);
+            Notification.show("set collapsed: " + collapsed);
+            table.setCollapsed(100, collapsed);
+        }));
         layout.addComponent(
                 new Button("Expand / Collapse multiple", new ClickListener() {
                     private boolean collapsed = true;

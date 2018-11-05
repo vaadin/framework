@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,6 +27,8 @@ import javax.portlet.ResourceResponse;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+
+import com.vaadin.util.CurrentInstance;
 
 /**
  * A generic response from the server, wrapping a more specific response type,
@@ -182,4 +184,34 @@ public interface VaadinResponse extends Serializable {
      * @since 7.3.8
      */
     public void setContentLength(int len);
+
+    /**
+     * Sets all conceivable headers that might prevent a response from being
+     * stored in any caches.
+     *
+     * @since 8.3.2
+     */
+    public default void setNoCacheHeaders() {
+        // no-store to disallow storing even if cache would be revalidated
+        // must-revalidate to not use stored value even if someone asks for it
+        setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+
+        // Also set legacy values in case of old proxies in between
+        setHeader("Pragma", "no-cache");
+        setHeader("Expires", "0");
+    }
+
+    /**
+     * Gets the currently processed Vaadin response. The current response is
+     * automatically defined when the request is started. The current response
+     * can not be used in e.g. background threads because of the way server
+     * implementations reuse response instances.
+     *
+     * @return the current Vaadin response instance if available, otherwise
+     *         <code>null</code>
+     * @since 8.1
+     */
+    public static VaadinResponse getCurrent() {
+        return CurrentInstance.get(VaadinResponse.class);
+    }
 }

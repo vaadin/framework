@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.server.component.abstractlisting;
 
 import java.io.File;
@@ -22,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.provider.Query;
@@ -88,11 +72,11 @@ public abstract class AbstractListingDeclarativeTest<T extends AbstractListing>
 
         List<String> items = Arrays.asList("foo", "bar", "foobar", "barfoo");
 
-        String design = String.format(
-                "<%s>\n" + "<option item='foo' icon='%s'>foo</option>\n"
-                        + "<option item='bar' icon='%s'>bar</option>"
-                        + "<option item='foobar' icon='theme://%s'>foobar</option>"
-                        + "<option item='barfoo'>barfoo</option>" + "</%s>",
+        String design = String.format("<%s>\n"
+                + "<option item='foo' icon='%s'>foo</option>\n"
+                + "<option item='bar' icon='%s'>bar</option>"
+                + "<option item='foobar' icon='theme://%s'>foobar</option>"
+                + "<option item='barfoo'>barfoo</option>" + "</%s>",
                 getComponentTag(), EXTERNAL_URL, FILE_PATH, THEME_PATH,
                 getComponentTag());
 
@@ -170,7 +154,7 @@ public abstract class AbstractListingDeclarativeTest<T extends AbstractListing>
 
     private void testReadData(String design, T expected, T read,
             DesignContext context) {
-        Assert.assertEquals(
+        assertEquals(
                 read.getDataCommunicator().getDataProvider()
                         .size(new Query<>()),
                 expected.getDataCommunicator().getDataProvider()

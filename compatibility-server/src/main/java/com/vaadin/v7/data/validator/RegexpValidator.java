@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,8 +27,7 @@ import java.util.regex.Pattern;
  * {@link java.util.regex.Pattern#sum}
  * </p>
  * <p>
- * See {@link com.vaadin.v7.data.validator.AbstractStringValidator} for more
- * information.
+ * See {@link AbstractStringValidator} for more information.
  * </p>
  * <p>
  * An empty string or a null is always accepted - use the required flag on

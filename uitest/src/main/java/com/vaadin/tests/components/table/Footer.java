@@ -3,7 +3,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
@@ -51,13 +50,10 @@ public class Footer extends AbstractReindeerTestUI {
         options.addComponent(visible);
 
         final TextField footer1Value = new TextField(null, "Footer1");
-        Button footer1Btn = new Button("Change", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setColumnFooter("col1", footer1Value.getValue() == null
-                        ? "" : footer1Value.getValue());
-            }
-        });
+        Button footer1Btn = new Button("Change",
+                event -> table.setColumnFooter("col1",
+                        footer1Value.getValue() == null ? ""
+                                : footer1Value.getValue()));
         HorizontalLayout footer1 = new HorizontalLayout();
         footer1.setSpacing(false);
         footer1.addComponent(footer1Value);
@@ -65,13 +61,10 @@ public class Footer extends AbstractReindeerTestUI {
         options.addComponent(footer1);
 
         final TextField footer2Value = new TextField(null, "Footer2");
-        Button footer2Btn = new Button("Change", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setColumnFooter("col2", footer2Value.getValue() == null
-                        ? "" : footer2Value.getValue());
-            }
-        });
+        Button footer2Btn = new Button("Change",
+                event -> table.setColumnFooter("col2",
+                        footer2Value.getValue() == null ? ""
+                                : footer2Value.getValue()));
         HorizontalLayout footer2 = new HorizontalLayout();
         footer2.setSpacing(false);
         footer2.addComponent(footer2Value);
@@ -79,13 +72,10 @@ public class Footer extends AbstractReindeerTestUI {
         options.addComponent(footer2);
 
         final TextField footer3Value = new TextField(null, "Footer3");
-        Button footer3Btn = new Button("Change", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setColumnFooter("col3", footer3Value.getValue() == null
-                        ? "" : footer3Value.getValue());
-            }
-        });
+        Button footer3Btn = new Button("Change",
+                event -> table.setColumnFooter("col3",
+                        footer3Value.getValue() == null ? ""
+                                : footer3Value.getValue()));
         HorizontalLayout footer3 = new HorizontalLayout();
         footer3.setSpacing(false);
         footer3.addComponent(footer3Value);

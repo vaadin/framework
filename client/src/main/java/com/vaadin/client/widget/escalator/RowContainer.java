@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,9 @@
  */
 
 package com.vaadin.client.widget.escalator;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.TableRowElement;
@@ -116,6 +119,17 @@ public interface RowContainer {
         @Override
         public void removeRows(int index, int numberOfRows)
                 throws IndexOutOfBoundsException, IllegalArgumentException;
+
+        /**
+         * Sets a callback function that is executed when new rows are added to
+         * the escalator.
+         *
+         * @param consumer
+         *            A Consumer function that receives the newly added table
+         *            row elements.
+         * @since 8.1
+         */
+        public void setNewRowCallback(Consumer<List<TableRowElement>> consumer);
     }
 
     /**
@@ -222,6 +236,14 @@ public interface RowContainer {
     public int getRowCount();
 
     /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @since
+     * @return {@code true} if row height calculations have been scheduled
+     */
+    public boolean isAutodetectingRowHeightLater();
+
+    /**
      * The default height of the rows in this RowContainer.
      *
      * @param px
@@ -274,7 +296,7 @@ public interface RowContainer {
             throws IndexOutOfBoundsException, IllegalStateException;
 
     /**
-     * Returns the root element of RowContainer
+     * Returns the root element of RowContainer.
      *
      * @return RowContainer root element
      */

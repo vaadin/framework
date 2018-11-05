@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,6 +18,8 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 
+import com.vaadin.shared.ui.ErrorLevel;
+
 /**
  * Interface for rendering error messages to terminal. All the visible errors
  * shown to user must implement this interface.
@@ -27,66 +29,11 @@ import java.io.Serializable;
  */
 public interface ErrorMessage extends Serializable {
 
-    public enum ErrorLevel {
-        /**
-         * Error code for informational messages.
-         */
-        INFORMATION("info", 0),
-        /**
-         * Error code for warning messages.
-         */
-        WARNING("warning", 1),
-        /**
-         * Error code for regular error messages.
-         */
-        ERROR("error", 2),
-        /**
-         * Error code for critical error messages.
-         */
-        CRITICAL("critical", 3),
-        /**
-         * Error code for system errors and bugs.
-         */
-        SYSTEMERROR("system", 4);
-
-        String text;
-        int errorLevel;
-
-        private ErrorLevel(String text, int errorLevel) {
-            this.text = text;
-            this.errorLevel = errorLevel;
-        }
-
-        /**
-         * Textual representation for server-client communication of level
-         *
-         * @return String for error severity
-         */
-        public String getText() {
-            return text;
-        }
-
-        /**
-         * Integer representation of error severity for comparison
-         *
-         * @return integer for error severity
-         */
-        public int intValue() {
-            return errorLevel;
-        }
-
-        @Override
-        public String toString() {
-            return text;
-        }
-
-    }
-
     /**
-     * @deprecated As of 7.0, use {@link ErrorLevel#SYSTEMERROR} instead    
+     * @deprecated As of 7.0, use {@link ErrorLevel#SYSTEM} instead    
      */
     @Deprecated
-    public static final ErrorLevel SYSTEMERROR = ErrorLevel.SYSTEMERROR;
+    public static final ErrorLevel SYSTEMERROR = ErrorLevel.SYSTEM;
 
     /**
      * @deprecated As of 7.0, use {@link ErrorLevel#CRITICAL} instead    
@@ -108,10 +55,10 @@ public interface ErrorMessage extends Serializable {
     public static final ErrorLevel WARNING = ErrorLevel.WARNING;
 
     /**
-     * @deprecated As of 7.0, use {@link ErrorLevel#INFORMATION} instead    
+     * @deprecated As of 7.0, use {@link ErrorLevel#INFO} instead    
      */
     @Deprecated
-    public static final ErrorLevel INFORMATION = ErrorLevel.INFORMATION;
+    public static final ErrorLevel INFORMATION = ErrorLevel.INFO;
 
     /**
      * Gets the errors level.

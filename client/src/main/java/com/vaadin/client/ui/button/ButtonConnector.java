@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,7 +18,6 @@ package com.vaadin.client.ui.button;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.DOM;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.annotations.OnStateChange;
@@ -48,22 +47,6 @@ public class ButtonConnector extends AbstractComponentConnector
         getWidget().addClickHandler(this);
         getWidget().client = getConnection();
         ConnectorFocusAndBlurHandler.addHandlers(this);
-    }
-
-    @OnStateChange("errorMessage")
-    void setErrorMessage() {
-        if (null != getState().errorMessage) {
-            if (getWidget().errorIndicatorElement == null) {
-                getWidget().errorIndicatorElement = DOM.createSpan();
-                getWidget().errorIndicatorElement
-                        .setClassName("v-errorindicator");
-            }
-            getWidget().wrapper.insertFirst(getWidget().errorIndicatorElement);
-
-        } else if (getWidget().errorIndicatorElement != null) {
-            getWidget().wrapper.removeChild(getWidget().errorIndicatorElement);
-            getWidget().errorIndicatorElement = null;
-        }
     }
 
     @OnStateChange("resources")
@@ -128,4 +111,5 @@ public class ButtonConnector extends AbstractComponentConnector
         getRpcProxy(ButtonServerRpc.class).click(details);
 
     }
+
 }

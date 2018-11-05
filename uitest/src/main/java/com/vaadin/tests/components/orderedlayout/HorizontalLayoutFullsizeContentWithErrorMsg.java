@@ -5,8 +5,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.v7.ui.TextField;
 
@@ -42,13 +40,8 @@ public class HorizontalLayoutFullsizeContentWithErrorMsg
 
         Button toggleError = new Button("Toggle error");
         toggleError.setId(BUTTON_ID);
-        toggleError.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                tf.setComponentError(tf.getComponentError() == null
-                        ? new UserError("foo") : null);
-            }
-        });
+        toggleError.addClickListener(event -> tf.setComponentError(
+                tf.getComponentError() == null ? new UserError("foo") : null));
         hl.addComponent(toggleError);
 
         addComponent(hl);

@@ -1,5 +1,7 @@
 package com.vaadin.v7.data.util.sqlcontainer.connection;
 
+import static org.junit.Assert.assertEquals;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -8,7 +10,6 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class J2EEConnectionPoolTest {
@@ -26,7 +27,7 @@ public class J2EEConnectionPoolTest {
 
         J2EEConnectionPool pool = new J2EEConnectionPool(ds);
         Connection c = pool.reserveConnection();
-        Assert.assertEquals(connection, c);
+        assertEquals(connection, c);
         EasyMock.verify(connection, ds);
     }
 
@@ -44,7 +45,7 @@ public class J2EEConnectionPoolTest {
 
         J2EEConnectionPool pool = new J2EEConnectionPool(ds);
         Connection c = pool.reserveConnection();
-        Assert.assertEquals(connection, c);
+        assertEquals(connection, c);
         pool.releaseConnection(c);
         EasyMock.verify(connection, ds);
     }
@@ -63,7 +64,7 @@ public class J2EEConnectionPoolTest {
         EasyMock.expectLastCall().andReturn(connection);
 
         System.setProperty("java.naming.factory.initial",
-                "com.vaadin.v7.data.util.sqlcontainer.connection.MockInitialContextFactory");
+                MockInitialContextFactory.class.getCanonicalName());
         Context context = EasyMock.createMock(Context.class);
         context.lookup("testDataSource");
         EasyMock.expectLastCall().andReturn(ds);
@@ -73,7 +74,7 @@ public class J2EEConnectionPoolTest {
 
         J2EEConnectionPool pool = new J2EEConnectionPool("testDataSource");
         Connection c = pool.reserveConnection();
-        Assert.assertEquals(connection, c);
+        assertEquals(connection, c);
         pool.releaseConnection(c);
         EasyMock.verify(context, connection, ds);
     }

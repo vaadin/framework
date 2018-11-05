@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,8 +16,6 @@
 package com.vaadin.v7.data.util;
 
 import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeNotifier;
 
 /**
  * Wrapper class that helps implement two-phase commit for a non-transactional
@@ -34,16 +32,19 @@ import com.vaadin.v7.data.Property.ValueChangeNotifier;
  * fired at the end of a successful transaction, whereas listeners attached to
  * the underlying property may receive multiple value change events.
  *
- * @see com.vaadin.v7.data.Property.Transactional
+ * @see Property.Transactional
  *
  * @author Vaadin Ltd
  * @since 7.0
  *
  * @param <T>
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
+
 @Deprecated
 public class TransactionalPropertyWrapper<T> extends AbstractProperty<T>
-        implements ValueChangeNotifier, Property.Transactional<T> {
+        implements Property.Transactional<T> {
 
     private Property<T> wrappedProperty;
     private boolean inTransaction = false;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,8 +21,8 @@ import com.google.gwt.http.client.Response;
 import elemental.json.JsonObject;
 
 /**
- * XhrConnectionError provides detail about an error which occured during an XHR
- * request to the server
+ * XhrConnectionError provides detail about an error which occurred during an
+ * XHR request to the server.
  *
  * @since 7.6
  * @author Vaadin Ltd
@@ -35,7 +35,7 @@ public class XhrConnectionError {
     private JsonObject payload;
 
     /**
-     * Constructs an event from the given request, payload and exception
+     * Constructs an event from the given request, payload and exception.
      *
      * @param request
      *            the request which failed
@@ -52,7 +52,7 @@ public class XhrConnectionError {
     }
 
     /**
-     * Constructs an event from the given request, response and payload
+     * Constructs an event from the given request, response and payload.
      *
      * @param request
      *            the request which failed
@@ -69,7 +69,7 @@ public class XhrConnectionError {
     }
 
     /**
-     * Returns the exception which caused the problem, if available
+     * Returns the exception which caused the problem, if available.
      *
      * @return the exception which caused the problem, or null if not available
      */
@@ -78,7 +78,7 @@ public class XhrConnectionError {
     }
 
     /**
-     * Returns the request for which the problem occurred
+     * Returns the request for which the problem occurred.
      *
      * @return the request where the problem occurred
      */
@@ -87,7 +87,7 @@ public class XhrConnectionError {
     }
 
     /**
-     * Returns the received response, if available
+     * Returns the received response, if available.
      *
      * @return the received response, or null if not available
      */
@@ -96,7 +96,7 @@ public class XhrConnectionError {
     }
 
     /**
-     * Returns the payload which was sent to the server
+     * Returns the payload which was sent to the server.
      *
      * @return the payload which was sent, never null
      */

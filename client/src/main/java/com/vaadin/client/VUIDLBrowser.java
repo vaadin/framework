@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,18 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-/**
- *
- */
 package com.vaadin.client;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
@@ -32,7 +27,6 @@ import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.UnknownComponentConnector;
@@ -108,12 +102,7 @@ public class VUIDLBrowser extends SimpleTree {
 
         protected StateChangeItem() {
             setTitle(HELP);
-            addDomHandler(new MouseOutHandler() {
-                @Override
-                public void onMouseOut(MouseOutEvent event) {
-                    deHiglight();
-                }
-            }, MouseOutEvent.getType());
+            addDomHandler(event -> deHiglight(), MouseOutEvent.getType());
         }
 
         @Override
@@ -314,9 +303,7 @@ public class VUIDLBrowser extends SimpleTree {
                 // Ignored, no variables
             }
 
-            final Iterator<Object> i = uidl.getChildIterator();
-            while (i.hasNext()) {
-                final Object child = i.next();
+            for (final Object child : uidl) {
                 try {
                     add(new UIDLItem((UIDL) child));
                 } catch (final Exception e) {
@@ -325,12 +312,8 @@ public class VUIDLBrowser extends SimpleTree {
             }
             if (highlightedPid != null && highlightedPid.equals(uidl.getId())) {
                 getElement().getStyle().setBackgroundColor("#fdd");
-                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        getElement().scrollIntoView();
-                    }
-                });
+                Scheduler.get()
+                        .scheduleDeferred(() -> getElement().scrollIntoView());
             }
         }
     }

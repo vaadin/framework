@@ -8,9 +8,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.customelements.AbstractDateFieldElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.ComboBoxElement;
+import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.elements.TabSheetElement;
 import com.vaadin.testbench.elements.TableElement;
@@ -38,7 +38,7 @@ public abstract class ThemeTest extends MultiBrowserTest {
         runThemeTest();
     }
 
-    private void runThemeTest() throws IOException {
+    private void runThemeTest() throws IOException, InterruptedException {
         TabSheetElement themeTabSheet = $(TabSheetElement.class).first();
 
         // Labels tab
@@ -129,6 +129,8 @@ public abstract class ThemeTest extends MultiBrowserTest {
     private void testNotification(int id, String identifier)
             throws IOException {
         $(ButtonElement.class).id("notifButt" + id).click();
+        // For some reason, this seems to be more reliable on IE11
+        waitUntil(driver -> isElementPresent(NotificationElement.class), 10);
         compareScreen(identifier);
         $(NotificationElement.class).first().close();
     }
@@ -139,6 +141,7 @@ public abstract class ThemeTest extends MultiBrowserTest {
 
     protected void testWindow(int id, String identifier) throws IOException {
         $(ButtonElement.class).id("windButton" + id).click();
+        sleep(200);
         compareScreen(identifier);
         WindowElement window = $(WindowElement.class).first();
         if (getTheme() == "chameleon"
@@ -185,15 +188,19 @@ public abstract class ThemeTest extends MultiBrowserTest {
         compareScreen("selects-fifth-open");
     }
 
-    private void testDates() throws IOException {
+    private void testDates() throws IOException, InterruptedException {
         compareScreen("dates");
-        $(AbstractDateFieldElement.class).id("datefield0").openPopup();
+        $(DateFieldElement.class).id("datefield0").openPopup();
+        Thread.sleep(200);
         compareScreen("dates-first-popup");
-        $(AbstractDateFieldElement.class).id("datefield1").openPopup();
+        $(DateFieldElement.class).id("datefield1").openPopup();
+        Thread.sleep(200);
         compareScreen("dates-second-popup");
-        $(AbstractDateFieldElement.class).id("datefield2").openPopup();
+        $(DateFieldElement.class).id("datefield2").openPopup();
+        Thread.sleep(200);
         compareScreen("dates-third-popup");
-        $(AbstractDateFieldElement.class).id("datefield3").openPopup();
+        $(DateFieldElement.class).id("datefield3").openPopup();
+        Thread.sleep(200);
         compareScreen("dates-fourth-popup");
     }
 }

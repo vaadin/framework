@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,7 +21,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.vaadin.v7.shared.ui.calendar.DateConstants;
 
 /**
- * A client side implementation of a calendar event
+ * A client side implementation of a calendar event.
  *
  * @since 7.1
  * @author Vaadin Ltd.
@@ -36,8 +36,8 @@ public class CalendarEvent {
     private int slotIndex = -1;
     private boolean format24h;
 
-    DateTimeFormat dateformat_date = DateTimeFormat.getFormat("h:mm a");
-    DateTimeFormat dateformat_date24 = DateTimeFormat.getFormat("H:mm");
+    DateTimeFormat dateformatDate = DateTimeFormat.getFormat("h:mm a");
+    DateTimeFormat dateformatDate24 = DateTimeFormat.getFormat("H:mm");
     private boolean allDay;
 
     /**
@@ -87,7 +87,7 @@ public class CalendarEvent {
     }
 
     /**
-     * Returns the start time of the event
+     * Returns the start time of the event.
      *
      * @return Time embedded in the {@link Date} object
      */
@@ -96,7 +96,7 @@ public class CalendarEvent {
     }
 
     /**
-     * Set the start time of the event
+     * Set the start time of the event.
      *
      * @param startTime
      *            The time of the event. Use the time fields in the {@link Date}
@@ -107,7 +107,7 @@ public class CalendarEvent {
     }
 
     /**
-     * Get the end time of the event
+     * Get the end time of the event.
      *
      * @return Time embedded in the {@link Date} object
      */
@@ -116,7 +116,7 @@ public class CalendarEvent {
     }
 
     /**
-     * Set the end time of the event
+     * Set the end time of the event.
      *
      * @param endTime
      *            Time embedded in the {@link Date} object
@@ -126,7 +126,7 @@ public class CalendarEvent {
     }
 
     /**
-     * Get the (server side) index of the event
+     * Get the (server side) index of the event.
      *
      * @return
      */
@@ -135,7 +135,7 @@ public class CalendarEvent {
     }
 
     /**
-     * Get the index of the slot where the event in rendered
+     * Get the index of the slot where the event in rendered.
      *
      * @return
      */
@@ -144,7 +144,7 @@ public class CalendarEvent {
     }
 
     /**
-     * Set the index of the slot where the event in rendered
+     * Set the index of the slot where the event in rendered.
      *
      * @param index
      *            The index of the slot
@@ -154,7 +154,7 @@ public class CalendarEvent {
     }
 
     /**
-     * Set the (server side) index of the event
+     * Set the (server side) index of the event.
      *
      * @param index
      *            The index
@@ -186,7 +186,7 @@ public class CalendarEvent {
 
     /**
      * Get the description of the event. The description is the text displayed
-     * when hoovering over the event with the mouse
+     * when hovering over the event with the mouse
      *
      * @return
      */
@@ -196,7 +196,7 @@ public class CalendarEvent {
 
     /**
      * Set the description of the event. The description is the text displayed
-     * when hoovering over the event with the mouse
+     * when hovering over the event with the mouse
      *
      * @param description
      */
@@ -205,7 +205,7 @@ public class CalendarEvent {
     }
 
     /**
-     * Does the event use the 24h time format
+     * Does the event use the 24h time format.
      *
      * @param format24h
      *            True if it uses the 24h format, false if it uses the 12h time
@@ -235,20 +235,20 @@ public class CalendarEvent {
     }
 
     /**
-     * Get the time as a formatted string
+     * Get the time as a formatted string.
      *
      * @return
      */
     public String getTimeAsText() {
         if (format24h) {
-            return dateformat_date24.format(startTime);
+            return dateformatDate24.format(startTime);
         } else {
-            return dateformat_date.format(startTime);
+            return dateformatDate.format(startTime);
         }
     }
 
     /**
-     * Get the amount of milliseconds between the start and end of the event
+     * Get the amount of milliseconds between the start and end of the event.
      *
      * @return
      */
@@ -257,7 +257,7 @@ public class CalendarEvent {
     }
 
     /**
-     * Get the amount of minutes between the start and end of the event
+     * Get the amount of minutes between the start and end of the event.
      *
      * @return
      */
@@ -296,7 +296,7 @@ public class CalendarEvent {
     }
 
     /**
-     * Does the event span several days
+     * Does the event span several days.
      *
      * @return
      */

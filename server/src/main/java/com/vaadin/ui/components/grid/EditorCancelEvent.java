@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,10 +21,10 @@ import com.vaadin.ui.Grid;
 
 /**
  * An event that is fired when a Grid editor is cancelled.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
- * 
+ *
  * @see EditorCancelListener
  * @see Editor#addCancelListener(EditorCancelListener)
  *
@@ -33,14 +33,19 @@ import com.vaadin.ui.Grid;
  */
 public class EditorCancelEvent<T> extends EventObject {
 
+    private T bean;
+
     /**
      * Constructor for a editor cancel event.
-     * 
+     *
      * @param editor
      *            the source of the event
+     * @param bean
+     *            the bean being edited
      */
-    public EditorCancelEvent(Editor<T> editor) {
+    public EditorCancelEvent(Editor<T> editor, T bean) {
         super(editor);
+        this.bean = bean;
     }
 
     @SuppressWarnings("unchecked")
@@ -51,10 +56,20 @@ public class EditorCancelEvent<T> extends EventObject {
 
     /**
      * Gets the editors' grid.
-     * 
+     *
      * @return the editors' grid
      */
     public Grid<T> getGrid() {
         return getSource().getGrid();
+    }
+
+    /**
+     * Gets the bean being edited.
+     *
+     * @return the bean being edited
+     * @since 8.0.3
+     */
+    public T getBean() {
+        return bean;
     }
 }

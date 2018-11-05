@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,7 +15,7 @@
  */
 package com.vaadin.data;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -36,7 +36,7 @@ import com.vaadin.ui.Component;
  * @param <T>
  *            the type of the displayed item
  */
-public interface HasItems<T> extends Component, Serializable {
+public interface HasItems<T> extends Component {
 
     /**
      * Returns the source of data items used by this listing.
@@ -56,7 +56,7 @@ public interface HasItems<T> extends Component, Serializable {
      *
      * <pre>
      * <code>
-     * HasDataProvider<String> listing = new CheckBoxGroup<>();
+     * HasDataProvider&lt;String&gt; listing = new CheckBoxGroup&lt;&gt;();
      * listing.setItems(Arrays.asList("a","b"));
      * ...
      *
@@ -87,7 +87,7 @@ public interface HasItems<T> extends Component, Serializable {
      * <pre>
      * <code>
      * HasDataProvider<String> listing = new CheckBoxGroup<>();
-     * listing.setItems(Arrays.asList("a","b"));
+     * listing.setItems("a","b");
      * ...
      *
      * Collection<String> collection = ((ListDataProvider<String>)listing.getDataProvider()).getItems();
@@ -101,7 +101,7 @@ public interface HasItems<T> extends Component, Serializable {
      *            the data items to display
      */
     public default void setItems(@SuppressWarnings("unchecked") T... items) {
-        setItems(Arrays.asList(items));
+        setItems(new ArrayList<>(Arrays.asList(items)));
     }
 
     /**
@@ -121,11 +121,11 @@ public interface HasItems<T> extends Component, Serializable {
      *
      * <pre>
      * <code>
-     * HasDataProvider<String> listing = new CheckBoxGroup<>();
-     * listing.setItems(Arrays.asList("a","b"));
+     * HasDataProvider&lt;String&gt; listing = new CheckBoxGroup<&gt;();
+     * listing.setItems(Stream.of("a","b"));
      * ...
      *
-     * Collection<String> collection = ((ListDataProvider<String>)listing.getDataProvider()).getItems();
+     * Collection<String> collection = ((ListDataProvider&lt;String&gt;)listing.getDataProvider()).getItems();
      * </code>
      * </pre>
      * <p>

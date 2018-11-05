@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,7 +24,7 @@ import com.vaadin.client.Util;
 import com.vaadin.v7.client.ui.VCalendar;
 
 /**
- * The label in a month cell
+ * The label in a month cell.
  *
  * @since 7.1
  */
@@ -41,7 +41,7 @@ public class MonthEventLabel extends HTML implements HasTooltipKey {
     private CalendarEvent calendarEvent;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public MonthEventLabel() {
         setStylePrimaryName(STYLENAME);
@@ -62,7 +62,7 @@ public class MonthEventLabel extends HTML implements HasTooltipKey {
     }
 
     /**
-     * Set the time of the event label
+     * Set the time of the event label.
      *
      * @param date
      *            The date object that specifies the time
@@ -73,7 +73,7 @@ public class MonthEventLabel extends HTML implements HasTooltipKey {
     }
 
     /**
-     * Set the caption of the event label
+     * Set the caption of the event label.
      *
      * @param caption
      *            The caption string, can be HTML if
@@ -112,7 +112,7 @@ public class MonthEventLabel extends HTML implements HasTooltipKey {
     }
 
     /**
-     * Set the (server side) index of the event
+     * Set the (server side) index of the event.
      *
      * @param index
      *            The integer index
@@ -122,7 +122,7 @@ public class MonthEventLabel extends HTML implements HasTooltipKey {
     }
 
     /**
-     * Set the Calendar instance this label belongs to
+     * Set the Calendar instance this label belongs to.
      *
      * @param calendar
      *            The calendar instance
@@ -132,7 +132,7 @@ public class MonthEventLabel extends HTML implements HasTooltipKey {
     }
 
     /**
-     * Is the event bound to a specific time
+     * Is the event bound to a specific time.
      *
      * @return
      */
@@ -141,7 +141,7 @@ public class MonthEventLabel extends HTML implements HasTooltipKey {
     }
 
     /**
-     * Is the event bound to a specific time
+     * Is the event bound to a specific time.
      *
      * @param timeSpecificEvent
      *            True if the event is bound to a time, false if it is only

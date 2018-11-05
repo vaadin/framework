@@ -6,10 +6,6 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
-import com.vaadin.v7.event.ItemClickEvent;
-import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.Table;
 
 public class TableClickValueChangeInteraction extends TestBase {
@@ -59,24 +55,14 @@ public class TableClickValueChangeInteraction extends TestBase {
         table.setWidth("100px");
         table.setHeight("100px");
         if (listenClicks) {
-            table.addListener(new ItemClickListener() {
-
-                @Override
-                public void itemClick(ItemClickEvent event) {
-                    table.markAsDirty();
-                    clickLabel.setValue("Click " + event.getItemId());
-                }
+            table.addItemClickListener(event -> {
+                table.markAsDirty();
+                clickLabel.setValue("Click " + event.getItemId());
             });
         }
         if (listenValueChanges) {
-            table.addListener(new ValueChangeListener() {
-
-                @Override
-                public void valueChange(ValueChangeEvent event) {
-                    valueChangeLabel.setValue(
-                            "Value " + event.getProperty().getValue());
-                }
-            });
+            table.addValueChangeListener(event -> valueChangeLabel
+                    .setValue("Value " + event.getProperty().getValue()));
         }
 
         Layout result = new VerticalLayout();

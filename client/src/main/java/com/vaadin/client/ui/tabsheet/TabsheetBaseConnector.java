@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,6 +17,7 @@ package com.vaadin.client.ui.tabsheet;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
@@ -52,43 +53,44 @@ public abstract class TabsheetBaseConnector
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
+        VTabsheetBase widget = getWidget();
         // Update member references
-        getWidget().setEnabled(isEnabled());
+        widget.setEnabled(isEnabled());
 
         // Widgets in the TabSheet before update
-        ArrayList<Widget> oldWidgets = new ArrayList<>();
-        for (Iterator<Widget> iterator = getWidget()
-                .getWidgetIterator(); iterator.hasNext();) {
+        List<Widget> oldWidgets = new ArrayList<>();
+        for (Iterator<Widget> iterator = widget.getWidgetIterator(); iterator
+                .hasNext();) {
             oldWidgets.add(iterator.next());
         }
 
         // Clear previous values
-        getWidget().clearTabKeys();
+        widget.clearTabKeys();
 
         int index = 0;
         for (TabState tab : getState().tabs) {
             final String key = tab.key;
             final boolean selected = key.equals(getState().selected);
 
-            getWidget().addTabKey(key, !tab.enabled && tab.visible);
+            widget.addTabKey(key, !tab.enabled && tab.visible);
 
             if (selected) {
-                getWidget().setActiveTabIndex(index);
+                widget.setActiveTabIndex(index);
             }
-            getWidget().renderTab(tab, index);
+            widget.renderTab(tab, index);
             if (selected) {
-                getWidget().selectTab(index);
+                widget.selectTab(index);
             }
             index++;
         }
 
-        int tabCount = getWidget().getTabCount();
+        int tabCount = widget.getTabCount();
         while (tabCount-- > index) {
-            getWidget().removeTab(index);
+            widget.removeTab(index);
         }
 
-        for (int i = 0; i < getWidget().getTabCount(); i++) {
-            ComponentConnector p = getWidget().getTab(i);
+        for (int i = 0; i < widget.getTabCount(); i++) {
+            ComponentConnector p = widget.getTab(i);
             // null for PlaceHolder widgets
             if (p != null) {
                 oldWidgets.remove(p.getWidget());
@@ -96,9 +98,7 @@ public abstract class TabsheetBaseConnector
         }
 
         // Detach any old tab widget, should be max 1
-        for (Iterator<Widget> iterator = oldWidgets.iterator(); iterator
-                .hasNext();) {
-            Widget oldWidget = iterator.next();
+        for (Widget oldWidget : oldWidgets) {
             if (oldWidget.isAttached()) {
                 oldWidget.removeFromParent();
             }

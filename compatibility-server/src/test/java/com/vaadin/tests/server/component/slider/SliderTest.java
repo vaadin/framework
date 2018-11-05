@@ -3,8 +3,8 @@ package com.vaadin.tests.server.component.slider;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.fail;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.Slider;
@@ -41,8 +41,8 @@ public class SliderTest {
 
             slider.setValue(-1.0);
         } catch (Slider.ValueOutOfBoundsException e) {
-            assertThat(e.getMessage(),
-                    containsString("Value -1.0 is out of bounds: [0.0, 100.0]"));
+            assertThat(e.getMessage(), containsString(
+                    "Value -1.0 is out of bounds: [0.0, 100.0]"));
         }
     }
 
@@ -61,7 +61,7 @@ public class SliderTest {
 
         try {
             s.setValue(20.0);
-            Assert.fail("Should throw out of bounds exception");
+            fail("Should throw out of bounds exception");
         } catch (Slider.ValueOutOfBoundsException e) {
             // TODO: handle exception
         }

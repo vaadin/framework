@@ -1,0 +1,113 @@
+---
+title: Vaadin On Grails with IntelliJ IDEA
+order: 35
+layout: page
+---
+
+[[vaadin-on-grails-with-intellij-idea]]
+= Vaadin on Grails with IntelliJ IDEA
+
+_Versions used in this tutorial: Grails 2.3.x, Vaadin 7.1.x. News and
+updates about Vaadin on Grails are available on
+https://twitter.com/VaadinOnGrails[VaadinOnGrails]_
+
+In this tutorial we will show how to create and setup
+http://grails.org/doc/latest/guide/single.html[Grails] project together
+with https://vaadin.com/learn[Vaadin], in IntelliJ IDEA. These two
+frameworks Grails and Vaadin are integrated together with this
+http://grails.org/plugin/vaadin[plugin].
+
+First we need to setup Grails with IDE,
+http://www.jetbrains.com/idea/[IntelliJ IDEA 13] in this tutorial. Or we
+could get https://spring.io/tools/ggts[Groovy/Grails Tool Suite]
+which is without any fees.
+
+[[setup-ide]]
+Setup IDE
++++++++++
+
+1.  Go to http://grails.org/download and get the latest version of
+Grails
+2.  Unpack it on your local computer and start up IntelliJ IDEA
+3.  Open the *New Project* window and select Grails from the list. Click
+on *Create...* button and then select the root of your unpacked Grails
+archive. 
+
+image:http://vaadinongrails.com/img/setup-idea.png[Setup IDEA]
+
+[[create-new-project]]
+Create New Project
+++++++++++++++++++
+
+Fill in the name of the project and choose the latest version of Grails.
+
+image:http://vaadinongrails.com/img/new-project.png[Create new project]
+
+Click on *Finish* and on the next dialog, choose **Run 'create
+app'**
+
+image:http://vaadinongrails.com/img/create-app-idea.png[Create app IDEA]
+
+Open file `BuildConfig.groovy` and add new plugin as follows:
+`compile ":vaadin:7.1.11"`. The latest version of the plugin is always
+available on http://grails.org/plugin/vaadin
+
+image:http://vaadinongrails.com/img/build-config-idea.png[Build config IDEA]
+
+We have to disable Grails to take control over the URLs, so Vaadin can
+do it. Open `UrlMappings.groovy` file and remove the mapping, so the
+content of the file is the following:
+
+....
+class UrlMappings {
+  static mappings = {}
+}
+....
+
+If you see this error, run grails again and compile it again. There an
+issue with grails and it is not possible to compile the project in the
+first run.
+
+....
+target/work/plugins/vaadin-7.1.11/scripts/_Events.groovy: 1: unable to resolve class com.vaadin.grails.VaadinConfiguration @ line 1, column 1.   import com.vaadin.grails.VaadinConfiguration
+....
+
+Now we want Vaadin plugin to generate the mandatory files in order to be
+able to run Vaadin application. On the right side in the menu, there is
+a launch button, click on that one.
+
+image:http://vaadinongrails.com/img/run-app-idea.png[Run app IDEA]
+
+You can also press `Alt+Cmd+G` on Mac OS or `Ctrl+Alt+G` on Windows and
+type `run-app` command there.
+
+Mark `grails-app/vaadin` folder as a source folder in IDE.
+
+image:http://vaadinongrails.com/img/source-folder-idea.png[Source folder IDEA]
+
+Run the application again and a Vaadin application with a single *Home*
+label will be available on http://localhost:8080/ria-app in your
+browser.
+
+image:http://vaadinongrails.com/img/first-run.png[First run]
+
+[[developing]]
+Developing
+++++++++++
+
+All the Vaadin code should be placed in `grails-app/vaadin` folder. All
+the other classes that are not UI related can be put to `src/groovy` or
+`src/java`.
+
+Open the generated `MyUI.groovy` file, edit the content a bit and save
+the file. See that the class has been recompiled and when you refresh
+the page, it gets automatically updated. You don't have to restart the
+application or use JRebel for small changes. But if we change the
+application context, add a new bean, change method signature and other
+'big' changes, we have to restart the application.
+
+image:http://vaadinongrails.com/img/recompile-idea.png[Recompile IDEA]
+
+Now you can continue with
+link:VaadinOnGrailsDatabaseAccess.asciidoc[Vaadin
+on Grails - Database access]

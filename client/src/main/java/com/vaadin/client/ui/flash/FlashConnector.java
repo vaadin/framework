@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,9 +15,11 @@
  */
 package com.vaadin.client.ui.flash;
 
+import com.google.gwt.dom.client.Element;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.VFlash;
+import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ui.AbstractEmbeddedState;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.flash.FlashState;
@@ -39,7 +41,6 @@ public class FlashConnector extends AbstractComponentConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
 
         super.onStateChanged(stateChangeEvent);
-
         getWidget().setSource(
                 getResourceUrl(AbstractEmbeddedState.SOURCE_RESOURCE));
         getWidget().setArchive(getState().archive);
@@ -52,4 +53,24 @@ public class FlashConnector extends AbstractComponentConnector {
 
         getWidget().rebuildIfNeeded();
     }
+
+    private final ElementResizeListener listener = event -> {
+        Element slot = event.getElement().getParentElement();
+        getWidget().setSlotHeightAndWidth(slot.getOffsetHeight(),
+                slot.getOffsetWidth());
+    };
+
+    @Override
+    protected void init() {
+        super.init();
+        getLayoutManager().addElementResizeListener(getWidget().getElement(),
+                listener);
+    }
+
+    @Override
+    public void onUnregister() {
+        getLayoutManager().removeElementResizeListener(getWidget().getElement(),
+                listener);
+    }
+
 }

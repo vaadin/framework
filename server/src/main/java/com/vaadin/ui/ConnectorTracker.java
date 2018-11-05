@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,8 @@
 package com.vaadin.ui;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,14 +25,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.NavigableMap;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.vaadin.event.MarkedAsDirtyConnectorEvent;
+import com.vaadin.event.MarkedAsDirtyListener;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.DragAndDropService;
@@ -40,6 +43,7 @@ import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.communication.ConnectorHierarchyWriter;
+import com.vaadin.shared.Registration;
 
 import elemental.json.Json;
 import elemental.json.JsonException;
@@ -67,13 +71,16 @@ import elemental.json.JsonObject;
  */
 public class ConnectorTracker implements Serializable {
 
-    private final HashMap<String, ClientConnector> connectorIdToConnector = new HashMap<>();
+    private final Map<String, ClientConnector> connectorIdToConnector = new HashMap<>();
     private final Set<ClientConnector> dirtyConnectors = new HashSet<>();
     private final Set<ClientConnector> uninitializedConnectors = new HashSet<>();
 
+    private List<MarkedAsDirtyListener> markedDirtyListeners = new ArrayList<>(
+            0);
+
     /**
      * Connectors that have been unregistered and should be cleaned up the next
-     * time {@link #cleanConnectorMap()} is invoked unless they have been
+     * time {@link #cleanConnectorMap(boolean)} is invoked unless they have been
      * registered again.
      */
     private final Set<ClientConnector> unregisteredConnectors = new HashSet<>();
@@ -89,14 +96,6 @@ public class ConnectorTracker implements Serializable {
     private Map<StreamVariable, String> streamVariableToSeckey;
 
     private int currentSyncId = 0;
-
-    /**
-     * Map to track on which syncId each connector was removed.
-     *
-     * @see #getCurrentSyncId()
-     * @see #cleanConcurrentlyRemovedConnectorIds(int)
-     */
-    private final TreeMap<Integer, Set<String>> syncIdToUnregisteredConnectorIds = new TreeMap<>();
 
     /**
      * Gets a logger for this class
@@ -182,17 +181,16 @@ public class ConnectorTracker implements Serializable {
                     + " is not the one that was registered for that id");
         }
 
-        Set<String> unregisteredConnectorIds = syncIdToUnregisteredConnectorIds
-                .get(currentSyncId);
-        if (unregisteredConnectorIds == null) {
-            unregisteredConnectorIds = new HashSet<>();
-            syncIdToUnregisteredConnectorIds.put(currentSyncId,
-                    unregisteredConnectorIds);
-        }
-        unregisteredConnectorIds.add(connectorId);
-
         dirtyConnectors.remove(connector);
-        if (unregisteredConnectors.add(connector)) {
+
+        if (!isClientSideInitialized(connector)) {
+            // Client side has never known about this connector so there is no
+            // point in tracking it
+            removeUnregisteredConnector(connector,
+                    uI.getSession().getGlobalResourceHandler(false));
+        } else if (unregisteredConnectors.add(connector)) {
+            // Client side knows about the connector, track it for a while if it
+            // becomes reattached
             if (getLogger().isLoggable(Level.FINE)) {
                 getLogger().log(Level.FINE, "Unregistered {0} ({1})",
                         new Object[] { connector.getClass().getSimpleName(),
@@ -275,12 +273,30 @@ public class ConnectorTracker implements Serializable {
 
     /**
      * Cleans the connector map from all connectors that are no longer attached
-     * to the application. This should only be called by the framework.
+     * to the application if there are dirty connectors or the force flag is
+     * true. This should only be called by the framework.
+     *
+     * @param force
+     *            {@code true} to force cleaning
+     * @since 8.2
      */
-    public void cleanConnectorMap() {
-        if (!unregisteredConnectors.isEmpty()) {
-            removeUnregisteredConnectors();
+    public void cleanConnectorMap(boolean force) {
+        if (force || !dirtyConnectors.isEmpty()) {
+            cleanConnectorMap();
         }
+    }
+
+    /**
+     * Cleans the connector map from all connectors that are no longer attached
+     * to the application. This should only be called by the framework.
+     *
+     * @deprecated use {@link #cleanConnectorMap(boolean)} instead
+     */
+    @Deprecated
+    public void cleanConnectorMap() {
+        removeUnregisteredConnectors();
+
+        cleanStreamVariables();
 
         // Do this expensive check only with assertions enabled
         assert isHierarchyComplete() : "The connector hierarchy is corrupted. "
@@ -288,8 +304,6 @@ public class ConnectorTracker implements Serializable {
                 + "and that all custom component containers call child.setParent(this) when a child is added and child.setParent(null) when the child is no longer used. "
                 + "See previous log messages for details.";
 
-        // remove detached components from paintableIdMap so they
-        // can be GC'ed
         Iterator<ClientConnector> iterator = connectorIdToConnector.values()
                 .iterator();
         GlobalResourceHandler globalResourceHandler = uI.getSession()
@@ -302,14 +316,11 @@ public class ConnectorTracker implements Serializable {
                 // remove it from the map. If it is re-attached to the
                 // application at some point it will be re-added through
                 // registerConnector(connector)
-
                 // This code should never be called as cleanup should take place
                 // in detach()
-
                 getLogger().log(Level.WARNING,
                         "cleanConnectorMap unregistered connector {0}. This should have been done when the connector was detached.",
                         getConnectorAndParentInfo(connector));
-
                 if (globalResourceHandler != null) {
                     globalResourceHandler.unregisterConnector(connector);
                 }
@@ -319,13 +330,15 @@ public class ConnectorTracker implements Serializable {
             } else if (!uninitializedConnectors.contains(connector)
                     && !LegacyCommunicationManager
                             .isConnectorVisibleToClient(connector)) {
+                // Connector was visible to the client but is no longer (e.g.
+                // setVisible(false) has been called or SelectiveRenderer tells
+                // it's no longer shown) -> make sure that the full state is
+                // sent again when/if made visible
                 uninitializedConnectors.add(connector);
                 diffStates.remove(connector);
-
                 assert isRemovalSentToClient(connector) : "Connector "
                         + connector + " (id = " + connector.getConnectorId()
-                        + ") is no longer visible to the client, but no corresponding hierarchy change is being sent.";
-
+                        + ") is no longer visible to the client, but no corresponding hierarchy change was sent.";
                 if (getLogger().isLoggable(Level.FINE)) {
                     getLogger().log(Level.FINE,
                             "cleanConnectorMap removed state for {0} as it is not visible",
@@ -333,8 +346,6 @@ public class ConnectorTracker implements Serializable {
                 }
             }
         }
-
-        cleanStreamVariables();
     }
 
     private boolean isRemovalSentToClient(ClientConnector connector) {
@@ -395,10 +406,9 @@ public class ConnectorTracker implements Serializable {
     }
 
     private static boolean hasVisibleChild(ClientConnector parent) {
-        Iterator<? extends ClientConnector> iterator = AbstractClientConnector
-                .getAllChildrenIterable(parent).iterator();
-        while (iterator.hasNext()) {
-            ClientConnector child = iterator.next();
+        Iterable<? extends ClientConnector> iterable = AbstractClientConnector
+                .getAllChildrenIterable(parent);
+        for (ClientConnector child : iterable) {
             if (LegacyCommunicationManager.isConnectorVisibleToClient(child)) {
                 return true;
             }
@@ -417,24 +427,48 @@ public class ConnectorTracker implements Serializable {
         return null;
     }
 
+    /**
+     * Removes all references and information about connectors marked as
+     * unregistered.
+     *
+     */
     private void removeUnregisteredConnectors() {
         GlobalResourceHandler globalResourceHandler = uI.getSession()
                 .getGlobalResourceHandler(false);
 
         for (ClientConnector connector : unregisteredConnectors) {
-            ClientConnector removedConnector = connectorIdToConnector
-                    .remove(connector.getConnectorId());
-            assert removedConnector == connector;
-
-            if (globalResourceHandler != null) {
-                globalResourceHandler.unregisterConnector(connector);
-            }
-            uninitializedConnectors.remove(connector);
-            diffStates.remove(connector);
+            removeUnregisteredConnector(connector, globalResourceHandler);
         }
         unregisteredConnectors.clear();
     }
 
+    /**
+     * Removes all references and information about the given connector, which
+     * must not be registered.
+     *
+     * @param connector
+     * @param globalResourceHandler
+     */
+    private void removeUnregisteredConnector(ClientConnector connector,
+            GlobalResourceHandler globalResourceHandler) {
+        ClientConnector removedConnector = connectorIdToConnector
+                .remove(connector.getConnectorId());
+        assert removedConnector == connector;
+
+        if (globalResourceHandler != null) {
+            globalResourceHandler.unregisterConnector(connector);
+        }
+        uninitializedConnectors.remove(connector);
+        diffStates.remove(connector);
+    }
+
+    /**
+     * Checks that the connector hierarchy is consistent.
+     *
+     * @return <code>true</code> if the hierarchy is consistent,
+     *         <code>false</code> otherwise
+     * @since 8.1
+     */
     private boolean isHierarchyComplete() {
         boolean noErrors = true;
 
@@ -475,8 +509,8 @@ public class ConnectorTracker implements Serializable {
     }
 
     /**
-     * Mark the connector as dirty. This should not be done while the response
-     * is being written.
+     * Mark the connector as dirty and notifies any marked as dirty listeners.
+     * This should not be done while the response is being written.
      *
      * @see #getDirtyConnectors()
      * @see #isWritingResponse()
@@ -491,10 +525,14 @@ public class ConnectorTracker implements Serializable {
         }
 
         if (getLogger().isLoggable(Level.FINE)) {
-            if (!dirtyConnectors.contains(connector)) {
+            if (!isDirty(connector)) {
                 getLogger().log(Level.FINE, "{0} is now dirty",
                         getConnectorAndParentInfo(connector));
             }
+        }
+
+        if (!isDirty(connector)) {
+            notifyMarkedAsDirtyListeners(connector);
         }
 
         dirtyConnectors.add(connector);
@@ -701,12 +739,11 @@ public class ConnectorTracker implements Serializable {
     }
 
     /* Special serialization to JsonObjects which are not serializable */
-    private void writeObject(java.io.ObjectOutputStream out)
-            throws IOException {
+    private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         // Convert JsonObjects in diff state to String representation as
         // JsonObject is not serializable
-        HashMap<ClientConnector, String> stringDiffStates = new HashMap<>(
+        Map<ClientConnector, String> stringDiffStates = new HashMap<>(
                 diffStates.size() * 2);
         for (ClientConnector key : diffStates.keySet()) {
             stringDiffStates.put(key, diffStates.get(key).toString());
@@ -715,7 +752,7 @@ public class ConnectorTracker implements Serializable {
     }
 
     /* Special serialization to JsonObjects which are not serializable */
-    private void readObject(java.io.ObjectInputStream in)
+    private void readObject(ObjectInputStream in)
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 
@@ -723,7 +760,7 @@ public class ConnectorTracker implements Serializable {
         // JsonObject is not serializable
         diffStates = new HashMap<>();
         @SuppressWarnings("unchecked")
-        HashMap<ClientConnector, String> stringDiffStates = (HashMap<ClientConnector, String>) in
+        Map<ClientConnector, String> stringDiffStates = (HashMap<ClientConnector, String>) in
                 .readObject();
         diffStates = new HashMap<>(stringDiffStates.size() * 2);
         for (ClientConnector key : stringDiffStates.keySet()) {
@@ -832,7 +869,8 @@ public class ConnectorTracker implements Serializable {
         }
         Map<String, StreamVariable> nameToStreamVar = pidToNameToStreamVariable
                 .get(connectorId);
-        nameToStreamVar.remove(variableName);
+        StreamVariable streamVar = nameToStreamVar.remove(variableName);
+        streamVariableToSeckey.remove(streamVar);
         if (nameToStreamVar.isEmpty()) {
             pidToNameToStreamVariable.remove(connectorId);
         }
@@ -849,48 +887,6 @@ public class ConnectorTracker implements Serializable {
             return null;
         }
         return streamVariableToSeckey.get(variable);
-    }
-
-    /**
-     * Check whether a connector was present on the client when the it was
-     * creating this request, but was removed server-side before the request
-     * arrived.
-     *
-     * @since 7.2
-     * @param connectorId
-     *            The connector id to check for whether it was removed
-     *            concurrently or not.
-     * @param lastSyncIdSeenByClient
-     *            the most recent sync id the client has seen at the time the
-     *            request was sent, or -1 to ignore potential problems
-     * @return <code>true</code> if the connector was removed before the client
-     *         had a chance to react to it.
-     */
-    public boolean connectorWasPresentAsRequestWasSent(String connectorId,
-            long lastSyncIdSeenByClient) {
-        assert getConnector(connectorId) == null : "Connector " + connectorId
-                + " is still attached";
-
-        if (lastSyncIdSeenByClient == -1) {
-            // Ignore potential problems
-            return true;
-        }
-
-        /*
-         * Use non-inclusive tail map to find all connectors that were removed
-         * after the reported sync id was sent to the client.
-         */
-        NavigableMap<Integer, Set<String>> unregisteredAfter = syncIdToUnregisteredConnectorIds
-                .tailMap(Integer.valueOf((int) lastSyncIdSeenByClient), false);
-        for (Set<String> unregisteredIds : unregisteredAfter.values()) {
-            if (unregisteredIds.contains(connectorId)) {
-                // Removed with a higher sync id, so it was most likely present
-                // when this sync id was sent.
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -917,43 +913,34 @@ public class ConnectorTracker implements Serializable {
     }
 
     /**
-     * Maintains the bookkeeping connector removal and concurrency by removing
-     * entries that have become too old.
-     * <p>
-     * <em>It is important to run this call for each transmission from the
-     * client</em> , otherwise the bookkeeping gets out of date and the results
-     * form {@link #connectorWasPresentAsRequestWasSent(String, long)} will
-     * become invalid (that is, even though the client knew the component was
-     * removed, the aforementioned method would start claiming otherwise).
-     * <p>
-     * Entries that both client and server agree upon are removed. Since
-     * argument is the last sync id that the client has seen from the server, we
-     * know that entries earlier than that cannot cause any problems anymore.
-     * <p>
-     * The sync id value <code>-1</code> is ignored to facilitate testing with
-     * pre-recorded requests.
+     * Add a marked as dirty listener that will be called when a client
+     * connector is marked as dirty.
      *
-     * @see #connectorWasPresentAsRequestWasSent(String, long)
-     * @since 7.2
-     * @param lastSyncIdSeenByClient
-     *            the sync id the client has most recently received from the
-     *            server.
+     * @param listener
+     *            listener to add
+     * @since 8.4
+     * @return registration for removing listener registration
      */
-    public void cleanConcurrentlyRemovedConnectorIds(
-            int lastSyncIdSeenByClient) {
-        if (lastSyncIdSeenByClient == -1) {
-            // Sync id checking is not in use, so we should just clear the
-            // entire map to avoid leaking memory
-            syncIdToUnregisteredConnectorIds.clear();
-            return;
-        }
-        /*
-         * We remove all entries _older_ than the one reported right now,
-         * because the remaining still contain components that might cause
-         * conflicts. In any case, it's better to clean up too little than too
-         * much, especially as the data will hardly grow into the kilobytes.
-         */
-        syncIdToUnregisteredConnectorIds.headMap(lastSyncIdSeenByClient, true)
-                .clear();
+    public Registration addMarkedAsDirtyListener(
+            MarkedAsDirtyListener listener) {
+        markedDirtyListeners.add(listener);
+        return () -> markedDirtyListeners.remove(listener);
     }
+
+    /**
+     * Notify all registered MarkedAsDirtyListeners the given client connector
+     * has been marked as dirty.
+     *
+     * @param connector
+     *            client connector marked as dirty
+     * @since 8.4
+     */
+    public void notifyMarkedAsDirtyListeners(ClientConnector connector) {
+        MarkedAsDirtyConnectorEvent event = new MarkedAsDirtyConnectorEvent(
+                connector, uI);
+        new ArrayList<>(markedDirtyListeners).forEach(listener -> {
+            listener.connectorMarkedAsDirty(event);
+        });
+    }
+
 }

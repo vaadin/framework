@@ -1,19 +1,6 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.server.component.gridlayout;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,6 +10,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.tests.server.component.DeclarativeMarginTestBase;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -37,7 +25,7 @@ public class GridLayoutDeclarativeTest
 
     @Test
     public void testMargins() {
-        testMargins("vaadin-grid-layout", false);
+        testMargins("vaadin-grid-layout", new MarginInfo(false));
     }
 
     @Test
@@ -51,8 +39,8 @@ public class GridLayoutDeclarativeTest
         b3.setCaptionAsHtml(true);
         b4.setCaptionAsHtml(true);
         String design = "<vaadin-grid-layout><row>" //
-                + "<column expand=1>" + writeChild(b1) + "</column>" //
-                + "<column expand=3>" + writeChild(b2) + "</column>" //
+                + "<column expand=1.0>" + writeChild(b1) + "</column>" //
+                + "<column expand=3.3>" + writeChild(b2) + "</column>" //
                 + "</row><row>" //
                 + "<column>" + writeChild(b3) + "</column>" //
                 + "<column>" + writeChild(b4) + "</column>" //
@@ -62,9 +50,26 @@ public class GridLayoutDeclarativeTest
         gl.addComponent(b2);
         gl.addComponent(b3);
         gl.addComponent(b4);
-        gl.setColumnExpandRatio(0, 1.0f);
-        gl.setColumnExpandRatio(1, 3.0f);
+        gl.setColumnExpandRatio(0, 1f);
+        gl.setColumnExpandRatio(1, 3.3f);
         testWrite(design, gl);
+        testRead(design, gl);
+    }
+
+    @Test
+    public void testReadIntegerExpandRatioGridLayout() {
+        // To make sure that it can read from old declarative which use
+        // integer expand ratio
+        Button b1 = new Button("Button 0,0");
+        b1.setCaptionAsHtml(true);
+        String design = "<vaadin-grid-layout><row expand=3>" //
+                + "<column expand=1>" + writeChild(b1) + "</column>" //
+                + "</row>"//
+                + "</vaadin-grid-layout>";
+        GridLayout gl = new GridLayout(1, 1);
+        gl.addComponent(b1);
+        gl.setColumnExpandRatio(0, 1.0f);
+        gl.setRowExpandRatio(0, 3.0f);
         testRead(design, gl);
     }
 
@@ -152,7 +157,7 @@ public class GridLayoutDeclarativeTest
         gl.setColumnExpandRatio(2, 2.0f);
 
         String design = "<vaadin-grid-layout><row>" //
-                + "<column colspan=4 rowspan=5 expand='0,0,2,0' />" //
+                + "<column colspan=4 rowspan=5 expand='0.0,0.0,2.0,0.0' />" //
                 + "<column rowspan=5>" + writeChild(b1) + "</column>" //
                 + "</row><row>" //
                 + "</row><row>" //
@@ -173,7 +178,7 @@ public class GridLayoutDeclarativeTest
 
         String design = "<vaadin-grid-layout><row>" //
                 + "<column rowspan=5>" + writeChild(b1) + "</column>" //
-                + "<column colspan=4 rowspan=5 expand='0,0,0,2' />" //
+                + "<column colspan=4 rowspan=5 expand='0.0,0.0,0.0,2.0' />" //
                 + "</row><row>" //
                 + "</row><row>" //
                 + "</row><row>" //
@@ -219,7 +224,7 @@ public class GridLayoutDeclarativeTest
                     continue;
                 }
 
-                Assert.assertEquals(expected.getComponentAlignment(eC),
+                assertEquals(expected.getComponentAlignment(eC),
                         result.getComponentAlignment(rC));
 
             }
@@ -277,7 +282,7 @@ public class GridLayoutDeclarativeTest
         Component component = Design.read(input);
         GridLayout readLayout = (GridLayout) component;
 
-        Assert.assertEquals(layout.getRows(), readLayout.getRows());
+        assertEquals(layout.getRows(), readLayout.getRows());
     }
 
     @Test
@@ -312,16 +317,31 @@ public class GridLayoutDeclarativeTest
                 + "<row><column><vaadin-grid-layout _id=\"marginBottomComponent\" margin-bottom></vaadin-grid-layout></column></row>"
                 + "</vaadin-grid-layout>";
         DesignContext context = Design
-                .read(new ByteArrayInputStream(design.getBytes("UTF-8")), null);
-        Assert.assertEquals(null, context.getCustomAttributes(
+                .read(new ByteArrayInputStream(design.getBytes(UTF_8)), null);
+        assertEquals(null, context.getCustomAttributes(
                 context.getComponentByLocalId("marginComponent")));
-        Assert.assertEquals(null, context.getCustomAttributes(
+        assertEquals(null, context.getCustomAttributes(
                 context.getComponentByLocalId("marginLeftComponent")));
-        Assert.assertEquals(null, context.getCustomAttributes(
+        assertEquals(null, context.getCustomAttributes(
                 context.getComponentByLocalId("marginRightComponent")));
-        Assert.assertEquals(null, context.getCustomAttributes(
+        assertEquals(null, context.getCustomAttributes(
                 context.getComponentByLocalId("marginTopComponent")));
-        Assert.assertEquals(null, context.getCustomAttributes(
+        assertEquals(null, context.getCustomAttributes(
                 context.getComponentByLocalId("marginBottomComponent")));
     }
+
+    @Test
+    public void designWithPreconfiguredGridLayout() throws Exception {
+        String design = "<html>" //
+                + "<head>" //
+                + "<meta name='package-mapping' content='my:com.vaadin.tests.server.component.gridlayout'>"
+                + "</meta>" + "</head>" + "<body>"
+                + "<my-preconfigured-grid-layout></my-preconfigured-grid-layout>";
+
+        PreconfiguredGridLayout myLayout = (PreconfiguredGridLayout) Design
+                .read(new ByteArrayInputStream(design.getBytes(UTF_8)));
+        assertEquals(2, myLayout.getRows());
+        assertEquals(2, myLayout.getColumns());
+    }
+
 }

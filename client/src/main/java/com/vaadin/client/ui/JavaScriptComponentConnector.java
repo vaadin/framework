@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui;
 
+import java.util.List;
+
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.JavaScriptConnectorHelper;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -29,8 +31,7 @@ public final class JavaScriptComponentConnector extends
     private final JavaScriptConnectorHelper helper = new JavaScriptConnectorHelper(
             this) {
         @Override
-        protected void showInitProblem(
-                java.util.ArrayList<String> attemptedNames) {
+        protected void showInitProblem(List<String> attemptedNames) {
             getWidget().showNoInitFound(attemptedNames);
         }
     };

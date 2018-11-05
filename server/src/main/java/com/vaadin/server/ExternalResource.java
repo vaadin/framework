@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,6 @@
 
 package com.vaadin.server;
 
-import java.io.Serializable;
 import java.net.URL;
 
 import com.vaadin.util.FileTypeResolver;
@@ -24,13 +23,13 @@ import com.vaadin.util.FileTypeResolver;
 /**
  * <code>ExternalResource</code> implements source for resources fetched from
  * location specified by URL:s. The resources are fetched directly by the client
- * terminal and are not fetched trough the terminal adapter.
+ * terminal and are not fetched through the terminal adapter.
  *
  * @author Vaadin Ltd.
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class ExternalResource implements Resource, Serializable {
+public class ExternalResource implements Resource {
 
     /**
      * Url of the download.

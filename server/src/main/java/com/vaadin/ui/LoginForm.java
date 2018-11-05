@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.server.StreamResource;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.loginform.LoginFormConstants;
 import com.vaadin.shared.ui.loginform.LoginFormRpc;
@@ -307,7 +308,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
 
         StreamResource resource = new StreamResource(new LoginStreamSource(),
                 LoginFormConstants.LOGIN_RESOURCE_NAME);
-        resource.setMIMEType("text/html; charset=utf-8");
+        resource.setMIMEType(ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8);
         resource.setCacheTime(-1);
         setResource(LoginFormConstants.LOGIN_RESOURCE_NAME, resource);
 
@@ -344,7 +345,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * URL in the method or the password manager will not be triggered.
      */
     private void login() {
-        HashMap<String, String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("username", getUsernameField().getValue());
         params.put("password", getPasswordField().getValue());
         LoginEvent event = new LoginEvent(LoginForm.this, params);

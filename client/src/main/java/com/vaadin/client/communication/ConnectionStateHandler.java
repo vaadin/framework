@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -45,7 +45,7 @@ public interface ConnectionStateHandler {
     void setConnection(ApplicationConnection connection);
 
     /**
-     * Called when an exception occurs during a {@link Heartbeat} request
+     * Called when an exception occurs during a {@link Heartbeat} request.
      *
      * @param request
      *            The heartbeat request
@@ -55,7 +55,8 @@ public interface ConnectionStateHandler {
     void heartbeatException(Request request, Throwable exception);
 
     /**
-     * Called when a heartbeat request returns a status code other than OK (200)
+     * Called when a heartbeat request returns a status code other than OK
+     * (200).
      *
      * @param request
      *            The heartbeat request
@@ -65,7 +66,7 @@ public interface ConnectionStateHandler {
     void heartbeatInvalidStatusCode(Request request, Response response);
 
     /**
-     * Called when a {@link Heartbeat} request succeeds
+     * Called when a {@link Heartbeat} request succeeds.
      */
     void heartbeatOk();
 
@@ -77,7 +78,7 @@ public interface ConnectionStateHandler {
      *
      * @param pushConnection
      *            The push connection which was closed
-     * @param response
+     * @param responseObject
      *            An object containing response data
      */
     void pushClosed(PushConnection pushConnection,
@@ -116,7 +117,7 @@ public interface ConnectionStateHandler {
 
     /**
      * Called when the push connection has lost the connection to the server and
-     * will proceed to try to re-establish the connection
+     * will proceed to try to re-establish the connection.
      *
      * @param pushConnection
      *            The push connection which will be reconnected
@@ -132,7 +133,7 @@ public interface ConnectionStateHandler {
     void pushOk(PushConnection pushConnection);
 
     /**
-     * Called when the required push script could not be loaded
+     * Called when the required push script could not be loaded.
      *
      * @param resourceUrl
      *            The URL which was used for loading the script
@@ -151,11 +152,11 @@ public interface ConnectionStateHandler {
 
     /**
      * Called when invalid content (not JSON) was returned from the server as
-     * the result of an XmlHttpRequest request
+     * the result of an XmlHttpRequest request.
      *
-     * @param communicationProblemEvent
-     *            An event containing what was being sent to the server and what
-     *            was returned
+     * @param xhrConnectionError
+     *            The error containing what was being sent to the server and
+     *            what was returned
      */
     void xhrInvalidContent(XhrConnectionError xhrConnectionError);
 
@@ -163,20 +164,20 @@ public interface ConnectionStateHandler {
      * Called when invalid status code (not 200) was returned by the server as
      * the result of an XmlHttpRequest.
      *
-     * @param communicationProblemEvent
-     *            An event containing what was being sent to the server and what
-     *            was returned
+     * @param xhrConnectionError
+     *            The error containing what was being sent to the server and
+     *            what was returned
      */
     void xhrInvalidStatusCode(XhrConnectionError xhrConnectionError);
 
     /**
-     * Called whenever a XmlHttpRequest to the server completes successfully
+     * Called whenever a XmlHttpRequest to the server completes successfully.
      */
     void xhrOk();
 
     /**
      * Called when a message is to be sent to the server through the push
-     * channel but the push channel is not connected
+     * channel but the push channel is not connected.
      *
      * @param payload
      *            The payload to send to the server
@@ -185,11 +186,12 @@ public interface ConnectionStateHandler {
 
     /**
      * Called when invalid content (not JSON) was pushed from the server through
-     * the push connection
+     * the push connection.
      *
-     * @param communicationProblemEvent
-     *            An event containing what was being sent to the server and what
-     *            was returned
+     * @param pushConnection
+     *            The push connection used
+     * @param message
+     *            The message which was sent to the server
      */
     void pushInvalidContent(PushConnection pushConnection, String message);
 

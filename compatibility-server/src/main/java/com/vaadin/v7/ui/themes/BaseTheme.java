@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +14,8 @@
  * the License.
  */
 package com.vaadin.v7.ui.themes;
+
+import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * <p>
@@ -32,7 +34,7 @@ package com.vaadin.v7.ui.themes;
  * name as a string constant <code>THEME_NAME</code>.
  *
  * @since 6.3.0
- *
+ * @deprecated As of 8.0, no replacement available, only {@link ValoTheme} is supported.
  */
 @Deprecated
 public class BaseTheme {

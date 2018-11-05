@@ -1,21 +1,8 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.server.component.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,12 +29,12 @@ public class GridAddRowBuiltinContainerTest {
     public void testSimpleCase() {
         Object itemId = grid.addRow("Hello");
 
-        Assert.assertEquals(Integer.valueOf(1), itemId);
+        assertEquals(Integer.valueOf(1), itemId);
 
-        Assert.assertEquals("There should be one item in the container", 1,
+        assertEquals("There should be one item in the container", 1,
                 container.size());
 
-        Assert.assertEquals("Hello", container.getItem(itemId)
+        assertEquals("Hello", container.getItem(itemId)
                 .getItemProperty("myColumn").getValue());
     }
 
@@ -62,8 +49,8 @@ public class GridAddRowBuiltinContainerTest {
         // cast to Object to distinguish from a null varargs array
         Object itemId = grid.addRow((Object) null);
 
-        Assert.assertEquals(null, container.getItem(itemId)
-                .getItemProperty("myColumn").getValue());
+        assertEquals(null, container.getItem(itemId).getItemProperty("myColumn")
+                .getValue());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -78,9 +65,8 @@ public class GridAddRowBuiltinContainerTest {
         Object itemId = grid.addRow("Hello", Integer.valueOf(3));
 
         Item item = container.getItem(itemId);
-        Assert.assertEquals("Hello",
-                item.getItemProperty("myColumn").getValue());
-        Assert.assertEquals(Integer.valueOf(3),
+        assertEquals("Hello", item.getItemProperty("myColumn").getValue());
+        assertEquals(Integer.valueOf(3),
                 item.getItemProperty("myOther").getValue());
     }
 
@@ -97,9 +83,9 @@ public class GridAddRowBuiltinContainerTest {
         grid.addRow(Integer.valueOf(3));
 
         Item item = container.getItem(Integer.valueOf(1));
-        Assert.assertEquals("Default value should be used for removed column",
-                "", item.getItemProperty("myColumn").getValue());
-        Assert.assertEquals(Integer.valueOf(3),
+        assertEquals("Default value should be used for removed column", "",
+                item.getItemProperty("myColumn").getValue());
+        assertEquals(Integer.valueOf(3),
                 item.getItemProperty("myOther").getValue());
     }
 
@@ -112,9 +98,8 @@ public class GridAddRowBuiltinContainerTest {
         grid.addRow(Integer.valueOf(3), "Hello");
 
         Item item = container.getItem(Integer.valueOf(1));
-        Assert.assertEquals("Hello",
-                item.getItemProperty("myColumn").getValue());
-        Assert.assertEquals(Integer.valueOf(3),
+        assertEquals("Hello", item.getItemProperty("myColumn").getValue());
+        assertEquals(Integer.valueOf(3),
                 item.getItemProperty("myOther").getValue());
     }
 
@@ -125,10 +110,9 @@ public class GridAddRowBuiltinContainerTest {
 
             // Can't use @Test(expect = Foo.class) since we also want to verify
             // state after exception was thrown
-            Assert.fail("Adding wrong type should throw ClassCastException");
+            fail("Adding wrong type should throw ClassCastException");
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals("No row should have been added", 0,
-                    container.size());
+            assertEquals("No row should have been added", 0, container.size());
         }
     }
 
@@ -141,11 +125,9 @@ public class GridAddRowBuiltinContainerTest {
 
             // Can't use @Test(expect = Foo.class) since we also want to verify
             // state after exception was thrown
-            Assert.fail(
-                    "Adding to BeanItemContainer container should throw UnsupportedOperationException");
+            fail("Adding to BeanItemContainer container should throw UnsupportedOperationException");
         } catch (UnsupportedOperationException e) {
-            Assert.assertEquals("No row should have been added", 0,
-                    container.size());
+            assertEquals("No row should have been added", 0, container.size());
         }
     }
 
@@ -164,9 +146,9 @@ public class GridAddRowBuiltinContainerTest {
 
         grid.addRow("name");
 
-        Assert.assertEquals(1, container.size());
+        assertEquals(1, container.size());
 
-        Assert.assertEquals("name", container.getIdByIndex(0).getFirstName());
+        assertEquals("name", container.getIdByIndex(0).getFirstName());
     }
 
     @Test
@@ -197,12 +179,12 @@ public class GridAddRowBuiltinContainerTest {
 
             // Can't use @Test(expect = Foo.class) since we also want to verify
             // state after exception was thrown
-            Assert.fail("Adding row should throw MethodException");
+            fail("Adding row should throw MethodException");
         } catch (MethodException e) {
-            Assert.assertEquals("Got the wrong exception", "name",
+            assertEquals("Got the wrong exception", "name",
                     e.getCause().getMessage());
 
-            Assert.assertEquals("There should be no rows in the container", 0,
+            assertEquals("There should be no rows in the container", 0,
                     container.size());
         }
     }

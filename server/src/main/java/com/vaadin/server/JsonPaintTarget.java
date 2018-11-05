@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -26,6 +26,7 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -49,7 +50,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /* Document type declarations */
 
-    private final static String UIDL_ARG_NAME = "name";
+    private static final String UIDL_ARG_NAME = "name";
 
     private final Deque<String> mOpenTags;
 
@@ -177,7 +178,7 @@ public class JsonPaintTarget implements PaintTarget {
                     "Attempted to write to a closed PaintTarget.");
         }
 
-        if (openJsonTags.size() > 0) {
+        if (!openJsonTags.isEmpty()) {
             final JsonTag parent = openJsonTags.pop();
 
             String lastTag = "";
@@ -206,7 +207,7 @@ public class JsonPaintTarget implements PaintTarget {
      * @return A new string instance where all occurrences of XML sensitive
      *         characters are substituted with entities.
      */
-    static public String escapeXML(String xml) {
+    public static String escapeXML(String xml) {
         if (xml == null || xml.length() <= 0) {
             return "";
         }
@@ -224,7 +225,7 @@ public class JsonPaintTarget implements PaintTarget {
      */
     static StringBuilder escapeXML(StringBuilder xml) {
         if (xml == null || xml.length() <= 0) {
-            return new StringBuilder("");
+            return new StringBuilder();
         }
 
         final StringBuilder result = new StringBuilder(xml.length() * 2);
@@ -248,7 +249,7 @@ public class JsonPaintTarget implements PaintTarget {
      *            The string to escape
      * @return Escaped version of the string
      */
-    static public String escapeJSON(String s) {
+    public static String escapeJSON(String s) {
         // FIXME: Move this method to another class as other classes use it
         // also.
         if (s == null) {
@@ -289,7 +290,7 @@ public class JsonPaintTarget implements PaintTarget {
                     for (int k = 0; k < 4 - ss.length(); k++) {
                         sb.append('0');
                     }
-                    sb.append(ss.toUpperCase());
+                    sb.append(ss.toUpperCase(Locale.ROOT));
                 } else {
                     sb.append(ch);
                 }
@@ -408,7 +409,7 @@ public class JsonPaintTarget implements PaintTarget {
         sb.append("\"");
         sb.append(name);
         sb.append("\":");
-        sb.append("{");
+        sb.append('{');
         for (Iterator<?> it = value.keySet().iterator(); it.hasNext();) {
             Object key = it.next();
             Object mapValue = value.get(key);
@@ -429,10 +430,10 @@ public class JsonPaintTarget implements PaintTarget {
                 sb.append("\"");
             }
             if (it.hasNext()) {
-                sb.append(",");
+                sb.append(',');
             }
         }
-        sb.append("}");
+        sb.append('}');
 
         tag.addAttribute(sb.toString());
     }
@@ -448,13 +449,13 @@ public class JsonPaintTarget implements PaintTarget {
         buf.append("\"").append(name).append("\":[");
         for (int i = 0; i < values.length; i++) {
             if (i > 0) {
-                buf.append(",");
+                buf.append(',');
             }
             buf.append("\"");
             buf.append(escapeJSON(values[i].toString()));
             buf.append("\"");
         }
-        buf.append("]");
+        buf.append(']');
         tag.addAttribute(buf.toString());
     }
 
@@ -753,7 +754,7 @@ public class JsonPaintTarget implements PaintTarget {
                 data.append(attributesAsJsonObject());
                 data.append(getData());
                 // Writes the end (closing) tag
-                data.append("]");
+                data.append(']');
                 tagClosed = true;
             }
         }
@@ -774,7 +775,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
 
         public void closeChildrenArray() {
-            // append("]");
+            // append(']');
             // firstField = false;
         }
 
@@ -821,17 +822,17 @@ public class JsonPaintTarget implements PaintTarget {
         private String attributesAsJsonObject() {
             final StringBuilder buf = new StringBuilder();
             buf.append(startField());
-            buf.append("{");
+            buf.append('{');
             for (final Iterator<Object> iter = attr.iterator(); iter
                     .hasNext();) {
                 final String element = (String) iter.next();
                 buf.append(element);
                 if (iter.hasNext()) {
-                    buf.append(",");
+                    buf.append(',');
                 }
             }
             buf.append(tag.variablesAsJsonObject());
-            buf.append("}");
+            buf.append('}');
             return buf.toString();
         }
 
@@ -851,10 +852,10 @@ public class JsonPaintTarget implements PaintTarget {
                 final Variable element = (Variable) iter.next();
                 buf.append(element.getJsonPresentation());
                 if (iter.hasNext()) {
-                    buf.append(",");
+                    buf.append(',');
                 }
             }
-            buf.append("}");
+            buf.append('}');
             return buf.toString();
         }
     }
@@ -866,7 +867,7 @@ public class JsonPaintTarget implements PaintTarget {
         public abstract String getJsonPresentation();
     }
 
-    class BooleanVariable extends Variable implements Serializable {
+    class BooleanVariable extends Variable {
         boolean value;
 
         public BooleanVariable(VariableOwner owner, String name, boolean v) {
@@ -876,12 +877,12 @@ public class JsonPaintTarget implements PaintTarget {
 
         @Override
         public String getJsonPresentation() {
-            return "\"" + name + "\":" + (value == true ? "true" : "false");
+            return "\"" + name + "\":" + (value ? "true" : "false");
         }
 
     }
 
-    class StringVariable extends Variable implements Serializable {
+    class StringVariable extends Variable {
         String value;
 
         public StringVariable(VariableOwner owner, String name, String v) {
@@ -896,7 +897,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     }
 
-    class IntVariable extends Variable implements Serializable {
+    class IntVariable extends Variable {
         int value;
 
         public IntVariable(VariableOwner owner, String name, int v) {
@@ -910,7 +911,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
     }
 
-    class LongVariable extends Variable implements Serializable {
+    class LongVariable extends Variable {
         long value;
 
         public LongVariable(VariableOwner owner, String name, long v) {
@@ -924,7 +925,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
     }
 
-    class FloatVariable extends Variable implements Serializable {
+    class FloatVariable extends Variable {
         float value;
 
         public FloatVariable(VariableOwner owner, String name, float v) {
@@ -938,7 +939,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
     }
 
-    class DoubleVariable extends Variable implements Serializable {
+    class DoubleVariable extends Variable {
         double value;
 
         public DoubleVariable(VariableOwner owner, String name, double v) {
@@ -952,7 +953,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
     }
 
-    class ArrayVariable extends Variable implements Serializable {
+    class ArrayVariable extends Variable {
         String[] value;
 
         public ArrayVariable(VariableOwner owner, String name, String[] v) {
@@ -972,10 +973,10 @@ public class JsonPaintTarget implements PaintTarget {
                 sb.append("\"");
                 i++;
                 if (i < value.length) {
-                    sb.append(",");
+                    sb.append(',');
                 }
             }
-            sb.append("]");
+            sb.append(']');
             return sb.toString();
         }
     }

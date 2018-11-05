@@ -1,0 +1,141 @@
+---
+title: Enabling Server Push
+order: 10
+layout: page
+---
+
+[[enabling-server-push]]
+= Enabling server push
+
+The traditional way of communication between client and server in Vaadin
+has been through XHR, i.e. AJAX requests. The client does a request to
+the server with information about RPC method invocations, which are
+executed on the server. As a result the state of one or several
+components is updated and the changes are sent back as a response to the
+client. Vaadin 7.1 introduces a new way of doing communications using
+server push, which enables the server to push state changes to the
+client without a request initiated by the client.
+
+To create a push enabled application you start by creating a normal
+Vaadin 7 project using Eclipse or Maven. First you need to add the
+vaadin-push package to your project, so open pom.xml or ivy.xml and add
+a vaadin-push dependency, e.g. in Ivy
+
+[source,xml]
+....
+<dependency org="com.vaadin" name="vaadin-push" rev="&vaadin.version;" conf="default->default" />
+....
+
+and in Maven
+
+[source,xml]
+....
+<dependency>
+    <groupId>com.vaadin</groupId>
+    <artifactId>vaadin-push</artifactId>
+    <version>${vaadin.version}</version>
+</dependency>
+....
+
+Open your UI class and add a @Push annotation to enable push for the ui
+
+[source,java]
+....
+@Push
+public class PushTestUI extends UI {
+...
+}
+....
+
+If you are using a servlet 3.0 compatible server, open *web.xml* and
+enable asynchronous processing by adding a
+`<async-supported>true</async-supported>` tag.
+
+Your servlet definition should look something like this:
+
+[source,xml]
+....
+<servlet>
+    <servlet-name>MyServlet</servlet-name>
+    <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
+    <init-param>
+        <param-name>ui</param-name>
+        <param-value>org.vaadin.example.MyUI</param-value>
+    </init-param>
+    <async-supported>true</async-supported>
+</servlet>
+....
+
+Your application is now setup for push and will automatically push
+changes to the browser when needed. You can test it out using e.g. the
+following UI which only adds a Label and starts a thread which does the
+real initialization:
+
+[source,java]
+....
+@Push
+public class PushTestUI extends UI {
+
+    private VerticalLayout mainLayout;
+
+    @Override
+    protected void init(VaadinRequest request) {
+        mainLayout = new VerticalLayout();
+        mainLayout.setSizeFull();
+        mainLayout.setMargin(true);
+        setContent(mainLayout);
+
+        mainLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+        Label loadingText = new Label("Loading UI, please wait...");
+        loadingText.setSizeUndefined();
+        mainLayout.addComponent(loadingText);
+        new InitializerThread().start();
+    }
+
+    class InitializerThread extends Thread {
+        @Override
+        public void run() {
+            // Do initialization which takes some time.
+            // Here represented by a 1s sleep
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+
+            // Init done, update the UI after doing locking
+            access(new Runnable() {
+                @Override
+                public void run() {
+                    // Here the UI is locked and can be updated
+                    mainLayout.removeAllComponents();
+                    mainLayout
+                            .addComponent(new TextArea("This is the real UI"));
+                }
+            });
+        }
+    }
+}
+....
+
+`InitializerThread` is a `Thread` which simulates some work using a
+sleep and then updates the UI with the real content. The UI update takes
+place inside an _access_ call, which ensures the UI (actually the
+`VaadinSession`) is locked to prevent synchronizations problems.
+
+Now deploy the application to your server and open the UI in a browser.
+You will see the "Loading..." text for roughly a second and when
+the initialization is complete, the Label will be replaced by a
+`TextArea`.
+
+The changes were automatically pushed to the browser when the
+_access_-block was done running. If you want full control on when
+changes are pushed to the client, add `@Push(PushMode.MANUAL)` instead and
+call `UI.push()` to push the changes (`UI.push()` needs to be called when
+the session is locked, so run that inside the _access_ block too).
+
+You can also configure push mode for the whole application using the
+`pushmode` servlet init parameter. Possible values are `automatic`, `manual`
+and `disabled`.
+
+It is also possible to switch the push mode on the fly using
+`UI.getPushConfiguration().setPushMode()`.

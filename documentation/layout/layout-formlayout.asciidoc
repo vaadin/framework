@@ -27,16 +27,16 @@ The following example shows typical use of [classname]#FormLayout# in a form:
 ----
 FormLayout form = new FormLayout();
 TextField tf1 = new TextField("Name");
-tf1.setIcon(FontAwesome.USER);
+tf1.setIcon(VaadinIcons.USER);
 tf1.setRequiredIndicatorVisible(true);
 form.addComponent(tf1);
 
 TextField tf2 = new TextField("Street address");
-tf2.setIcon(FontAwesome.ROAD);
+tf2.setIcon(VaadinIcons.ROAD);
 form.addComponent(tf2);
 
 TextField tf3 = new TextField("Postal code");
-tf3.setIcon(FontAwesome.ENVELOPE);
+tf3.setIcon(VaadinIcons.ENVELOPE);
 form.addComponent(tf3);
 // normally comes from validation by Binder
 tf3.setComponentError(new UserError("Doh!"));

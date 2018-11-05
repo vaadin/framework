@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.user.client.Command;
 import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.RequestStartingEvent;
@@ -140,8 +139,8 @@ public class MessageSender {
      *
      * @param reqInvocations
      *            Data containing RPC invocations and all related information.
-     * @param extraParams
-     *            Parameters that are added to the payload
+     * @param extraJson
+     *            The JsonObject whose parameters are added to the payload
      */
     protected void send(final JsonArray reqInvocations,
             final JsonObject extraJson) {
@@ -173,8 +172,6 @@ public class MessageSender {
      * Sends an asynchronous or synchronous UIDL request to the server using the
      * given URI.
      *
-     * @param uri
-     *            The URI to use for the request. May includes GET parameters
      * @param payload
      *            The contents of the request to send
      */
@@ -201,26 +198,23 @@ public class MessageSender {
             push = GWT.create(PushConnection.class);
             push.init(connection, pushState);
         } else if (!enabled && push != null && push.isActive()) {
-            push.disconnect(new Command() {
-                @Override
-                public void execute() {
-                    push = null;
-                    /*
-                     * If push has been enabled again while we were waiting for
-                     * the old connection to disconnect, now is the right time
-                     * to open a new connection
-                     */
-                    if (pushState.mode.isEnabled()) {
-                        setPushEnabled(true);
-                    }
+            push.disconnect(() -> {
+                push = null;
+                /*
+                 * If push has been enabled again while we were waiting for the
+                 * old connection to disconnect, now is the right time to open a
+                 * new connection
+                 */
+                if (pushState.mode.isEnabled()) {
+                    setPushEnabled(true);
+                }
 
-                    /*
-                     * Send anything that was enqueued while we waited for the
-                     * connection to close
-                     */
-                    if (getServerRpcQueue().isFlushPending()) {
-                        getServerRpcQueue().flush();
-                    }
+                /*
+                 * Send anything that was enqueued while we waited for the
+                 * connection to close
+                 */
+                if (getServerRpcQueue().isFlushPending()) {
+                    getServerRpcQueue().flush();
                 }
             });
         }
@@ -252,21 +246,18 @@ public class MessageSender {
         }
 
         // deferring to avoid flickering
-        Scheduler.get().scheduleDeferred(new Command() {
-            @Override
-            public void execute() {
-                if (!connection.isApplicationRunning() || !(hasActiveRequest()
-                        || getServerRpcQueue().isFlushPending())) {
-                    getLoadingIndicator().hide();
+        Scheduler.get().scheduleDeferred(() -> {
+            if (!connection.isApplicationRunning() || !(hasActiveRequest()
+                    || getServerRpcQueue().isFlushPending())) {
+                getLoadingIndicator().hide();
 
-                    // If on Liferay and session expiration management is in
-                    // use, extend session duration on each request.
-                    // Doing it here rather than before the request to improve
-                    // responsiveness.
-                    // Postponed until the end of the next request if other
-                    // requests still pending.
-                    extendLiferaySession();
-                }
+                // If on Liferay and session expiration management is in
+                // use, extend session duration on each request.
+                // Doing it here rather than before the request to improve
+                // responsiveness.
+                // Postponed until the end of the next request if other
+                // requests still pending.
+                extendLiferaySession();
             }
         });
         connection.fireEvent(new ResponseHandlingEndedEvent(connection));
@@ -365,9 +356,9 @@ public class MessageSender {
     }
 
     /**
-     * Used internally to update what the server expects
+     * Used internally to update what the server expects.
      *
-     * @param clientToServerMessageId
+     * @param nextExpectedId
      *            the new client id to set
      * @param force
      *            true if the id must be updated, false otherwise

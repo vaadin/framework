@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -109,6 +109,7 @@ public abstract class AbstractExtension extends AbstractClientConnector
      *            The parent to set
      */
     private void internalSetParent(ClientConnector parent) {
+        ClientConnector oldParent = getParent();
 
         // Send a detach event if the component is currently attached
         if (isAttached()) {
@@ -123,6 +124,9 @@ public abstract class AbstractExtension extends AbstractClientConnector
             attach();
         }
 
+        if (oldParent != null) {
+            oldParent.markAsDirty();
+        }
     }
 
     @Override

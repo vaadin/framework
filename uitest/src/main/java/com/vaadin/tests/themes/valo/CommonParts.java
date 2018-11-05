@@ -1,34 +1,19 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.themes.valo;
+
+import java.util.Locale;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.AbstractErrorMessage;
-import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.server.Page;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.Position;
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -41,14 +26,10 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
-import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.CloseEvent;
-import com.vaadin.ui.Window.CloseListener;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class CommonParts extends VerticalLayout implements View {
@@ -83,37 +64,28 @@ public class CommonParts extends VerticalLayout implements View {
         group.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
         content.addComponent(group);
         Button loading = new Button("0.8");
-        loading.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                try {
-                    Thread.sleep(800);
-                } catch (InterruptedException e) {
-                }
+        loading.addClickListener(event -> {
+            try {
+                Thread.sleep(800);
+            } catch (InterruptedException e) {
             }
         });
         group.addComponent(loading);
 
         Button delay = new Button("3");
-        delay.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                }
+        delay.addClickListener(event -> {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
             }
         });
         group.addComponent(delay);
 
         Button wait = new Button("15");
-        wait.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                try {
-                    Thread.sleep(15000);
-                } catch (InterruptedException e) {
-                }
+        wait.addClickListener(event -> {
+            try {
+                Thread.sleep(15000);
+            } catch (InterruptedException e) {
             }
         });
         wait.addStyleName("last");
@@ -153,7 +125,7 @@ public class CommonParts extends VerticalLayout implements View {
                 title.setPlaceholder("Title for the notification");
                 title.addValueChangeListener(event -> {
                     if (title.getValue() == null
-                            || title.getValue().length() == 0) {
+                            || title.getValue().isEmpty()) {
                         notification.setCaption(null);
                     } else {
                         notification.setCaption(title.getValue());
@@ -167,7 +139,7 @@ public class CommonParts extends VerticalLayout implements View {
                 description.addStyleName(ValoTheme.TEXTAREA_SMALL);
                 description.addValueChangeListener(listener -> {
                     if (description.getValue() == null
-                            || description.getValue().length() == 0) {
+                            || description.getValue().isEmpty()) {
                         notification.setDescription(null);
                     } else {
                         notification.setDescription(description.getValue());
@@ -178,23 +150,20 @@ public class CommonParts extends VerticalLayout implements View {
                 description.setWidth("100%");
                 addComponent(description);
 
-                Command typeCommand = new Command() {
-                    @Override
-                    public void menuSelected(MenuItem selectedItem) {
-                        if (selectedItem.getText().equals("Humanized")) {
-                            typeString = "";
-                            notification.setStyleName(styleString.trim());
-                        } else {
-                            typeString = selectedItem.getText().toLowerCase();
-                            notification.setStyleName(
-                                    (typeString + " " + styleString.trim())
-                                            .trim());
-                        }
-                        for (MenuItem item : type.getItems()) {
-                            item.setChecked(false);
-                        }
-                        selectedItem.setChecked(true);
+                Command typeCommand = selectedItem -> {
+                    if (selectedItem.getText().equals("Humanized")) {
+                        typeString = "";
+                        notification.setStyleName(styleString.trim());
+                    } else {
+                        typeString = selectedItem.getText()
+                                .toLowerCase(Locale.ROOT);
+                        notification.setStyleName(
+                                (typeString + " " + styleString.trim()).trim());
                     }
+                    for (MenuItem item : type.getItems()) {
+                        item.setChecked(false);
+                    }
+                    selectedItem.setChecked(true);
                 };
 
                 type.setCaption("Type");
@@ -208,25 +177,21 @@ public class CommonParts extends VerticalLayout implements View {
                 addComponent(type);
                 type.addStyleName(ValoTheme.MENUBAR_SMALL);
 
-                Command styleCommand = new Command() {
-                    @Override
-                    public void menuSelected(MenuItem selectedItem) {
-                        styleString = "";
-                        for (MenuItem item : style.getItems()) {
-                            if (item.isChecked()) {
-                                styleString += " "
-                                        + item.getText().toLowerCase();
-                            }
+                Command styleCommand = selectedItem -> {
+                    styleString = "";
+                    for (MenuItem item : style.getItems()) {
+                        if (item.isChecked()) {
+                            styleString += " "
+                                    + item.getText().toLowerCase(Locale.ROOT);
                         }
-                        if (styleString.trim().length() > 0) {
-                            notification.setStyleName(
-                                    (typeString + " " + styleString.trim())
-                                            .trim());
-                        } else if (typeString.length() > 0) {
-                            notification.setStyleName(typeString.trim());
-                        } else {
-                            notification.setStyleName(null);
-                        }
+                    }
+                    if (!styleString.trim().isEmpty()) {
+                        notification.setStyleName(
+                                (typeString + " " + styleString.trim()).trim());
+                    } else if (!typeString.isEmpty()) {
+                        notification.setStyleName(typeString.trim());
+                    } else {
+                        notification.setStyleName(null);
                     }
                 };
 
@@ -261,12 +226,7 @@ public class CommonParts extends VerticalLayout implements View {
                 delay.setValue("1000");
                 group.addComponent(delay);
 
-                Button clear = new Button(null, new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        delay.setValue("");
-                    }
-                });
+                Button clear = new Button("", event -> delay.setValue(""));
                 clear.setIcon(VaadinIcons.CLOSE_CIRCLE);
                 clear.addStyleName("last");
                 clear.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -279,96 +239,68 @@ public class CommonParts extends VerticalLayout implements View {
                 addComponent(grid);
                 grid.setSpacing(true);
 
-                Button pos = new Button("", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        notification.setPosition(Position.TOP_LEFT);
-                        notification.show(Page.getCurrent());
-                    }
+                Button pos = new Button("", event -> {
+                    notification.setPosition(Position.TOP_LEFT);
+                    notification.show(Page.getCurrent());
                 });
                 pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
-                pos = new Button("", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        notification.setPosition(Position.TOP_CENTER);
-                        notification.show(Page.getCurrent());
-                    }
+                pos = new Button("", event -> {
+                    notification.setPosition(Position.TOP_CENTER);
+                    notification.show(Page.getCurrent());
                 });
                 pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
-                pos = new Button("", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        notification.setPosition(Position.TOP_RIGHT);
-                        notification.show(Page.getCurrent());
-                    }
+                pos = new Button("", event -> {
+                    notification.setPosition(Position.TOP_RIGHT);
+                    notification.show(Page.getCurrent());
                 });
                 pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
-                pos = new Button("", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        notification.setPosition(Position.MIDDLE_LEFT);
-                        notification.show(Page.getCurrent());
-                    }
+                pos = new Button("", event -> {
+                    notification.setPosition(Position.MIDDLE_LEFT);
+                    notification.show(Page.getCurrent());
                 });
                 pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
-                pos = new Button("", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        notification.setPosition(Position.MIDDLE_CENTER);
-                        notification.show(Page.getCurrent());
-                    }
+                pos = new Button("", event -> {
+                    notification.setPosition(Position.MIDDLE_CENTER);
+                    notification.show(Page.getCurrent());
                 });
                 pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
-                pos = new Button("", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        notification.setPosition(Position.MIDDLE_RIGHT);
-                        notification.show(Page.getCurrent());
-                    }
+                pos = new Button("", event -> {
+                    notification.setPosition(Position.MIDDLE_RIGHT);
+                    notification.show(Page.getCurrent());
                 });
                 pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
-                pos = new Button("", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        notification.setPosition(Position.BOTTOM_LEFT);
-                        notification.show(Page.getCurrent());
-                    }
+                pos = new Button("", event -> {
+                    notification.setPosition(Position.BOTTOM_LEFT);
+                    notification.show(Page.getCurrent());
                 });
                 pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
-                pos = new Button("", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        notification.setPosition(Position.BOTTOM_CENTER);
-                        notification.show(Page.getCurrent());
-                    }
+                pos = new Button("", event -> {
+                    notification.setPosition(Position.BOTTOM_CENTER);
+                    notification.show(Page.getCurrent());
                 });
                 pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
-                pos = new Button("", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        notification.setPosition(Position.BOTTOM_RIGHT);
-                        notification.show(Page.getCurrent());
-                    }
+                pos = new Button("", event -> {
+                    notification.setPosition(Position.BOTTOM_RIGHT);
+                    notification.show(Page.getCurrent());
                 });
                 pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
-
             }
         };
         p.setContent(content);
@@ -485,18 +417,13 @@ public class CommonParts extends VerticalLayout implements View {
                     tabs.addTab(new Label("&nbsp;", ContentMode.HTML),
                             "One more");
                     tabs.addStyleName(ValoTheme.TABSHEET_PADDED_TABBAR);
-                    tabs.addSelectedTabChangeListener(
-                            new SelectedTabChangeListener() {
-                                @Override
-                                public void selectedTabChange(
-                                        SelectedTabChangeEvent event) {
-                                    try {
-                                        Thread.sleep(600);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
+                    tabs.addSelectedTabChangeListener(event -> {
+                        try {
+                            Thread.sleep(600);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    });
                     content = tabs;
                 } else if (!autoHeight) {
                     Panel p = new Panel();
@@ -567,47 +494,43 @@ public class CommonParts extends VerticalLayout implements View {
                 win.setContent(windowContent());
                 win.setCloseShortcut(KeyCode.ESCAPE, null);
 
-                Command optionsCommand = new Command() {
-                    @Override
-                    public void menuSelected(MenuItem selectedItem) {
-                        if (selectedItem.getText().equals("Footer")) {
-                            footerVisible = selectedItem.isChecked();
-                        }
-                        if (selectedItem.getText().equals("Auto Height")) {
-                            autoHeight = selectedItem.isChecked();
-                            if (!autoHeight) {
-                                win.setHeight(prevHeight);
-                            } else {
-                                prevHeight = win.getHeight()
-                                        + win.getHeightUnits().toString();
-                                win.setHeight(null);
-                            }
-                        }
-                        if (selectedItem.getText().equals("Tabs")) {
-                            tabsVisible = selectedItem.isChecked();
-                        }
-
-                        if (selectedItem.getText().equals("Top Toolbar")) {
-                            toolbarVisible = selectedItem.isChecked();
-                        }
-
-                        if (selectedItem.getText().equals("Footer Toolbar")) {
-                            footerToolbar = selectedItem.isChecked();
-                        }
-
-                        if (selectedItem.getText()
-                                .equals("Top Toolbar layout")) {
-                            toolbarLayout = selectedItem.isChecked();
-                        }
-
-                        if (selectedItem.getText()
-                                .equals("Borderless Toolbars")) {
-                            toolbarStyle = selectedItem.isChecked()
-                                    ? ValoTheme.MENUBAR_BORDERLESS : null;
-                        }
-
-                        win.setContent(windowContent());
+                Command optionsCommand = selectedItem -> {
+                    if (selectedItem.getText().equals("Footer")) {
+                        footerVisible = selectedItem.isChecked();
                     }
+                    if (selectedItem.getText().equals("Auto Height")) {
+                        autoHeight = selectedItem.isChecked();
+                        if (!autoHeight) {
+                            win.setHeight(prevHeight);
+                        } else {
+                            prevHeight = win.getHeight()
+                                    + win.getHeightUnits().toString();
+                            win.setHeight(null);
+                        }
+                    }
+                    if (selectedItem.getText().equals("Tabs")) {
+                        tabsVisible = selectedItem.isChecked();
+                    }
+
+                    if (selectedItem.getText().equals("Top Toolbar")) {
+                        toolbarVisible = selectedItem.isChecked();
+                    }
+
+                    if (selectedItem.getText().equals("Footer Toolbar")) {
+                        footerToolbar = selectedItem.isChecked();
+                    }
+
+                    if (selectedItem.getText().equals("Top Toolbar layout")) {
+                        toolbarLayout = selectedItem.isChecked();
+                    }
+
+                    if (selectedItem.getText().equals("Borderless Toolbars")) {
+                        toolbarStyle = selectedItem.isChecked()
+                                ? ValoTheme.MENUBAR_BORDERLESS
+                                : null;
+                    }
+
+                    win.setContent(windowContent());
                 };
 
                 MenuBar options = new MenuBar();
@@ -634,19 +557,17 @@ public class CommonParts extends VerticalLayout implements View {
                 options.addStyleName(ValoTheme.MENUBAR_SMALL);
                 addComponent(options);
 
-                Command optionsCommand2 = new Command() {
-                    @Override
-                    public void menuSelected(MenuItem selectedItem) {
-                        if (selectedItem.getText().equals("Caption")) {
-                            win.setCaption(selectedItem.isChecked()
-                                    ? "Window Caption" : null);
-                        } else if (selectedItem.getText().equals("Closable")) {
-                            win.setClosable(selectedItem.isChecked());
-                        } else if (selectedItem.getText().equals("Resizable")) {
-                            win.setResizable(selectedItem.isChecked());
-                        } else if (selectedItem.getText().equals("Modal")) {
-                            win.setModal(selectedItem.isChecked());
-                        }
+                Command optionsCommand2 = selectedItem -> {
+                    if (selectedItem.getText().equals("Caption")) {
+                        win.setCaption(
+                                selectedItem.isChecked() ? "Window Caption"
+                                        : null);
+                    } else if (selectedItem.getText().equals("Closable")) {
+                        win.setClosable(selectedItem.isChecked());
+                    } else if (selectedItem.getText().equals("Resizable")) {
+                        win.setResizable(selectedItem.isChecked());
+                    } else if (selectedItem.getText().equals("Modal")) {
+                        win.setModal(selectedItem.isChecked());
                     }
                 };
 
@@ -662,16 +583,12 @@ public class CommonParts extends VerticalLayout implements View {
                 options.addStyleName(ValoTheme.MENUBAR_SMALL);
                 addComponent(options);
 
-                final Button show = new Button("Open Window",
-                        new ClickListener() {
-                            @Override
-                            public void buttonClick(ClickEvent event) {
-                                getUI().addWindow(win);
-                                win.center();
-                                win.focus();
-                                event.getButton().setEnabled(false);
-                            }
-                        });
+                final Button show = new Button("Open Window", event -> {
+                    getUI().addWindow(win);
+                    win.center();
+                    win.focus();
+                    event.getButton().setEnabled(false);
+                });
                 show.addStyleName(ValoTheme.BUTTON_PRIMARY);
                 addComponent(show);
 
@@ -680,17 +597,11 @@ public class CommonParts extends VerticalLayout implements View {
                         event -> win.setVisible(!hidden.getValue()));
                 addComponent(hidden);
 
-                win.addCloseListener(new CloseListener() {
-                    @Override
-                    public void windowClose(CloseEvent e) {
-                        show.setEnabled(true);
-                    }
-                });
+                win.addCloseListener(event -> show.setEnabled(true));
             }
         };
         p.setContent(content);
         return p;
-
     }
 
     @Override

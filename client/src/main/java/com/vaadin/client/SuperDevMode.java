@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,8 +25,6 @@ import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.vaadin.client.ui.VNotification;
-import com.vaadin.client.ui.VNotification.EventListener;
-import com.vaadin.client.ui.VNotification.HideEvent;
 
 /**
  * Class that enables SuperDevMode using a ?superdevmode parameter in the url.
@@ -99,13 +97,9 @@ public class SuperDevMode {
 
                     private void failed() {
                         VNotification n = new VNotification();
-                        n.addEventListener(new EventListener() {
-
-                            @Override
-                            public void notificationHidden(HideEvent event) {
-                                recompileWidgetsetAndStartInDevMode(serverUrl);
-                            }
-                        });
+                        n.addEventListener(
+                                event -> recompileWidgetsetAndStartInDevMode(
+                                        serverUrl));
                         n.show("Recompilation failed.<br/>"
                                 + "Make sure CodeServer is running, "
                                 + "check its output and click to retry",
@@ -122,16 +116,16 @@ public class SuperDevMode {
                 + ".nocache.js";
     }
 
-    private native static String getRecompileParameters(String moduleName)
+    private static native String getRecompileParameters(String moduleName)
     /*-{
         var prop_map = $wnd.__gwt_activeModules[moduleName].bindings();
-    
+
         // convert map to URL parameter string
         var props = [];
         for (var key in prop_map) {
            props.push(encodeURIComponent(key) + '=' + encodeURIComponent(prop_map[key]))
         }
-    
+
         return props.join('&') + '&';
     }-*/;
 
@@ -184,7 +178,7 @@ public class SuperDevMode {
      *         SuperDevMode
      */
     protected static boolean recompileIfNeeded(String serverUrl) {
-        if (serverUrl == null || "".equals(serverUrl)) {
+        if (serverUrl == null || serverUrl.isEmpty()) {
             serverUrl = "http://localhost:9876/";
         } else {
             if (serverUrl.contains(":")) {
@@ -217,7 +211,7 @@ public class SuperDevMode {
         return isSuperDevModeEnabledInModule(moduleName);
     }
 
-    protected native static boolean isSuperDevModeEnabledInModule(
+    protected static native boolean isSuperDevModeEnabledInModule(
             String moduleName)
     /*-{
         if (!$wnd.__gwt_activeModules)
@@ -225,12 +219,12 @@ public class SuperDevMode {
         var mod = $wnd.__gwt_activeModules[moduleName];
         if (!mod)
             return false;
-    
+
         if (mod.superdevmode) {
            // Running in super dev mode already, it is supported
            return true;
         }
-    
+
         return !!mod.canRedirect;
     }-*/;
 

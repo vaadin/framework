@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,7 @@
 
 package com.vaadin.ui;
 
-import java.io.Serializable;
+import java.util.Collections;
 import java.util.Iterator;
 
 import com.vaadin.data.HasValue;
@@ -130,30 +130,16 @@ public abstract class CustomField<T> extends AbstractField<T>
 
     // ComponentContainer methods
 
-    private class ComponentIterator
-            implements Iterator<Component>, Serializable {
-        boolean first = (root != null);
-
-        @Override
-        public boolean hasNext() {
-            return first;
-        }
-
-        @Override
-        public Component next() {
-            first = false;
-            return getContent();
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-    }
-
     @Override
     public Iterator<Component> iterator() {
-        return new ComponentIterator();
+        // Can't use getContent() here as this will cause an infinite loop if
+        // initContent happens to all iterator(). This happens if you do
+        // setWidth...
+        if (root != null) {
+            return Collections.singletonList(root).iterator();
+        } else {
+            return Collections.<Component> emptyList().iterator();
+        }
     }
 
     /**

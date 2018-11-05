@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class VisibilityChangeEvent extends GwtEvent<VisibilityChangeHandler> {
 
-    private static Type<VisibilityChangeHandler> TYPE;
+    private static Type<VisibilityChangeHandler> type;
 
     private boolean visible;
 
@@ -37,10 +37,10 @@ public class VisibilityChangeEvent extends GwtEvent<VisibilityChangeHandler> {
     }
 
     public static Type<VisibilityChangeHandler> getType() {
-        if (TYPE == null) {
-            TYPE = new Type<>();
+        if (type == null) {
+            type = new Type<>();
         }
-        return TYPE;
+        return type;
     }
 
     @Override

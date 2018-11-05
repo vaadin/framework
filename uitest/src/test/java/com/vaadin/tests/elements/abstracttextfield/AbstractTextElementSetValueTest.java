@@ -1,23 +1,6 @@
-/*
- * Copyright 2000-2014 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.elements.abstracttextfield;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import com.vaadin.testbench.elements.AbstractTextFieldElement;
 import com.vaadin.testbench.elements.DateFieldElement;
@@ -25,15 +8,14 @@ import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.PasswordFieldElement;
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.testbench.elements.RichTextAreaElement;
+import org.junit.Before;
+import org.junit.Test;
+
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- *
- * @since
- * @author Vaadin Ltd
- */
 public class AbstractTextElementSetValueTest extends MultiBrowserTest {
-    private final static String TYPED_STRING = "this is typed string";
+    private static final String TYPED_STRING = "this is typed string";
 
     @Before
     public void init() {
@@ -64,9 +46,16 @@ public class AbstractTextElementSetValueTest extends MultiBrowserTest {
         LabelElement eventCount = $(LabelElement.class).get(4);
         // we can type any string in date field element
         elem.setValue(TYPED_STRING);
-        // invalid values are cleared from the field
-        Assert.assertEquals("", elem.getValue());
-        Assert.assertEquals("1", eventCount.getText());
+        // invalid values should stay unchanged
+        assertEquals(TYPED_STRING, elem.getValue());
+    }
+
+    @Test
+    public void richTextAreaSetValue() {
+        RichTextAreaElement elem = $(RichTextAreaElement.class).get(0);
+        elem.setValue(TYPED_STRING);
+        String actual = elem.getValue();
+        assertEquals(TYPED_STRING, actual);
     }
 
     // helper methods
@@ -74,15 +63,15 @@ public class AbstractTextElementSetValueTest extends MultiBrowserTest {
     private void checkType(AbstractTextFieldElement elem,
             LabelElement eventCount) {
         // check first that the initial value is set
-        Assert.assertEquals(AbstractTextElementSetValue.INITIAL_VALUE,
+        assertEquals(AbstractTextElementSetValue.INITIAL_VALUE,
                 elem.getValue());
         elem.setValue(TYPED_STRING);
 
         // check that typed value is the same
-        Assert.assertEquals(TYPED_STRING, elem.getValue());
+        assertEquals(TYPED_STRING, elem.getValue());
 
         // checks that there was only one change value event
-        Assert.assertEquals("1", eventCount.getText());
+        assertEquals("1", eventCount.getText());
 
     }
 }

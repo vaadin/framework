@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,8 @@
  */
 
 package com.vaadin.server;
+
+import com.vaadin.shared.ui.ErrorLevel;
 
 /**
  * <code>SystemError</code> is an error message for a problem caused by error in
@@ -39,7 +41,7 @@ public class SystemError extends AbstractErrorMessage {
      */
     public SystemError(String message) {
         super(message);
-        setErrorLevel(ErrorLevel.SYSTEMERROR);
+        setErrorLevel(ErrorLevel.SYSTEM);
         setMode(ContentMode.HTML);
         setMessage(getHtmlMessage());
     }

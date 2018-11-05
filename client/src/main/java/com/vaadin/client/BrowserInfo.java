@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -97,7 +97,7 @@ public class BrowserInfo {
 
     private native boolean detectTouchDevice()
     /*-{
-        try { document.createEvent("TouchEvent");return true;} catch(e){return false;};
+        try { document.createEvent("TouchEvent");return true;} catch(e) {return false;};
     }-*/;
 
     private native boolean detectChromeTouchDevice()
@@ -112,10 +112,10 @@ public class BrowserInfo {
 
     private native int getIEDocumentMode()
     /*-{
-    	var mode = $wnd.document.documentMode;
-    	if (!mode)
-    		 return -1;
-    	return mode;
+        var mode = $wnd.document.documentMode;
+        if (!mode)
+             return -1;
+        return mode;
     }-*/;
 
     /**
@@ -197,13 +197,13 @@ public class BrowserInfo {
             }
 
             cssClass = prefix + browserIdentifier;
-            if (!"".equals(majorVersionClass)) {
+            if (!majorVersionClass.isEmpty()) {
                 cssClass = cssClass + " " + prefix + majorVersionClass;
             }
-            if (!"".equals(minorVersionClass)) {
+            if (!minorVersionClass.isEmpty()) {
                 cssClass = cssClass + " " + prefix + minorVersionClass;
             }
-            if (!"".equals(browserEngineClass)) {
+            if (!browserEngineClass.isEmpty()) {
                 cssClass = cssClass + " " + prefix + browserEngineClass;
             }
             String osClass = getOperatingSystemClass();
@@ -251,6 +251,17 @@ public class BrowserInfo {
 
     public boolean isSafari() {
         return browserDetails.isSafari();
+    }
+
+    /**
+     * Returns true if the browser is Safari or is a browser that is running on
+     * iOS and using the Safari rendering engine.
+     *
+     * @return true if the browser is using the Safari rendering engine
+     * @since 8.1
+     */
+    public boolean isSafariOrIOS() {
+        return browserDetails.isSafariOrIOS();
     }
 
     @Deprecated
@@ -340,19 +351,19 @@ public class BrowserInfo {
         return browserDetails.isOpera() && getBrowserMajorVersion() == 11;
     }
 
-    public native static String getBrowserString()
+    public static native String getBrowserString()
     /*-{
-    	return $wnd.navigator.userAgent;
+        return $wnd.navigator.userAgent;
     }-*/;
 
     public native int getScreenWidth()
     /*-{
-    	return $wnd.screen.width;
+        return $wnd.screen.width;
     }-*/;
 
     public native int getScreenHeight()
     /*-{
-    	return $wnd.screen.height;
+        return $wnd.screen.height;
     }-*/;
 
     /**
@@ -393,7 +404,7 @@ public class BrowserInfo {
     }
 
     /**
-     * Checks if the browser is run on iOS
+     * Checks if the browser is run on iOS.
      *
      * @return true if the browser is run on iOS, false otherwise
      */
@@ -412,7 +423,7 @@ public class BrowserInfo {
     }
 
     /**
-     * Checks if the browser is run on Android
+     * Checks if the browser is run on Android.
      *
      * @return true if the browser is run on Android, false otherwise
      */
@@ -450,7 +461,7 @@ public class BrowserInfo {
 
     /**
      * Tests if this is an Android devices with a broken scrollTop
-     * implementation
+     * implementation.
      *
      * @return true if scrollTop cannot be trusted on this device, false
      *         otherwise
@@ -496,6 +507,19 @@ public class BrowserInfo {
      */
     public int getBrowserMinorVersion() {
         return browserDetails.getBrowserMinorVersion();
+    }
+
+    /**
+     * Gets the complete browser version in form of a string. The version is
+     * given by the browser through the user agent string and usually consists
+     * of dot-separated numbers. Note that the string may contain characters
+     * other than dots and digits.
+     *
+     * @return the complete browser version or {@code null} if unknown
+     * @since 8.4
+     */
+    public String getBrowserVersion() {
+        return browserDetails.getBrowserVersion();
     }
 
     /**

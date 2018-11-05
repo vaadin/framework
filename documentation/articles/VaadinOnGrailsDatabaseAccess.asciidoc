@@ -1,0 +1,158 @@
+---
+title: Vaadin On Grails Database Access
+order: 36
+layout: page
+---
+
+[[vaadin-on-grails-database-access]]
+= Vaadin on grails - Database access
+
+_Versions used in this tutorial: Grails 2.3.x, Vaadin 7.1.x. News and
+updates about Vaadin on Grails are available on
+https://twitter.com/VaadinOnGrails[VaadinOnGrails]. This is continuation
+of link:VaadinOnGrailsCreateProjectInIntelliJIDEA.asciidoc[Vaadin
+on Grails - Create project in IntelliJ IDEA]_
+
+We are going to create persistence a domain class that is automatically
+mapped into a database through Hibernate. GORM from Grails framework
+will do most of the automatic stuff there.
+
+[[create-persistent-layer]]
+Create persistent layer
++++++++++++++++++++++++
+
+1.  Right click on the domain folder and select Create Domain
+image:http://vaadinongrails.com/img/idea-new-domain.png[IDEA create domain class]
+2.  Fill in the full class name. If we put there only `Author` then the
+package name will be automatically added based on the name of the
+project.
+image:http://vaadinongrails.com/img/idea-domain-name.png[IDEA domain name]
+3.  Add some fields to the Author domain class. Without fields, it is
+not considered as a domain object and therefore it is not mapped to the
+database. Each field represents a database table column.
+
+....
+package com.app
+
+class Author {
+  String name
+  static constraints = {}
+}
+....
+
+[[service-layer]]
+Service layer
++++++++++++++
+
+1.  Create a new service in the same way as the domain object.
+image:http://vaadinongrails.com/img/idea-service-new.png[IDEA new Grails Service]
+2.  Create `getAuthors` method that returns list of authors from the
+database.
+
+....
+package com.app
+import grails.transaction.Transactional
+
+@Transactional
+class AuthorService {
+  List<Author> getAuthors() {
+    return Author.list()
+  }
+}
+....
+
+[[data-for-development-in-application-bootstrap]]
+Data for development in application bootstrap
++++++++++++++++++++++++++++++++++++++++++++++
+
+When the application starts, we want to create few authors in the
+database. So we get some initial data for easy development. Open
+`BootStrap.groovy` and save few authors into the database.
+
+The code will be executed only in development environment. That means no
+database records will be created when running application on test,
+production or any other environment.
+
+....
+import com.app.Author
+import grails.util.Environment
+
+class BootStrap {
+
+  def init = {
+    servletContext -> if (Environment.current ==
+        Environment.DEVELOPMENT) {
+      Author raymond = new Author(name: 'Raymond')
+      raymond.save(failOnError: true)
+
+      Author pug = new Author(name: 'Pug')
+      pug.save(failOnError: true)
+    }
+  }
+
+  def destroy = { }
+}
+....
+
+[[using-service-in-vaadin-code]]
+Using service in Vaadin code
+++++++++++++++++++++++++++++
+
+Now we are ready to get bean of `AuthorService` in Vaadin code and get
+the list of authors from the database. Open `MyUI.groovy` and put there
+the following code.
+
+....
+package app
+
+import com.app.Author
+import com.app.AuthorService
+import com.vaadin.ui.UI
+import com.vaadin.ui.VerticalLayout
+import com.vaadin.server.VaadinRequest
+import com.vaadin.ui.Label
+import com.vaadin.grails.Grails
+
+class MyUI extends UI {
+  @Override
+  protected void init(VaadinRequest request) {
+    VerticalLayout layout = new VerticalLayout()
+    layout.setMargin(true)
+    AuthorService authorService = Grails.get(AuthorService)
+
+    List<Author> authors = authorService.getAuthors()
+
+    for (Author author : authors) {
+      Label label = new Label(author.name)
+      layout.addComponent(label)
+    }
+
+    setContent(layout)
+  }
+}
+....
+
+Run the application and see the results fetched from the database. We
+have created domain object `Author` which is mapped to automatically
+created database table. Then we have created `AuthorService` that we
+have got from Spring application context. We have loaded authors from
+the database and displayed them in Vaadin application as labels.
+image:http://vaadinongrails.com/img/data-from-service.png[Data from service]
+
+[[database-connection]]
+Database connection
++++++++++++++++++++
+
+As we have covered big part of normal work when developing an
+application, created the persistence layer, maybe next questions are
+coming. Where are the data stored? What database is used and how to
+change it?
+
+Grails is using H2 in memory database by default and you can change it
+to any other database that is supported by Hibernate. In order to update
+database connection setup, open `DataSource.groovy`. Just add there the
+proper parameters and add the dependency to, for example, MySql driver
+in `BuildConfig.groovy`.
+image:http://vaadinongrails.com/img/idea-datasource.png[IDEA data source]
+
+You can continue with link:VaadinOnGrailsMultipleUIs.asciidoc[Vaadin on Grails - Multiple UIs]

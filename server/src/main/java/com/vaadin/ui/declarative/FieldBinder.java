@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -91,7 +91,7 @@ public class FieldBinder implements Serializable {
                 throw new FieldBindingException("Could not get field value", e);
             }
         }
-        if (unboundFields.size() > 0) {
+        if (!unboundFields.isEmpty()) {
             getLogger().severe(
                     "Found unbound fields in component root :" + unboundFields);
         }
@@ -104,7 +104,7 @@ public class FieldBinder implements Serializable {
     private void resolveFields(Class<?> classWithFields) {
         for (Field memberField : getFields(classWithFields)) {
             if (Component.class.isAssignableFrom(memberField.getType())) {
-                fieldMap.put(memberField.getName().toLowerCase(Locale.ENGLISH),
+                fieldMap.put(memberField.getName().toLowerCase(Locale.ROOT),
                         memberField);
             }
         }
@@ -176,11 +176,11 @@ public class FieldBinder implements Serializable {
         try {
             // create and validate field name
             String fieldName = asFieldName(identifier);
-            if (fieldName.length() == 0) {
+            if (fieldName.isEmpty()) {
                 return false;
             }
             // validate that the field can be found
-            Field field = fieldMap.get(fieldName.toLowerCase(Locale.ENGLISH));
+            Field field = fieldMap.get(fieldName.toLowerCase(Locale.ROOT));
             if (field == null) {
                 getLogger()
                         .fine("No field was found by identifier " + identifier);
@@ -231,7 +231,7 @@ public class FieldBinder implements Serializable {
             }
         }
         // lowercase first letter
-        if (result.length() > 0 && Character.isLetter(result.charAt(0))) {
+        if (result.length() != 0 && Character.isLetter(result.charAt(0))) {
             result.setCharAt(0, Character.toLowerCase(result.charAt(0)));
         }
         return result.toString();
@@ -248,7 +248,7 @@ public class FieldBinder implements Serializable {
      */
     protected static List<java.lang.reflect.Field> getFields(
             Class<?> searchClass) {
-        ArrayList<java.lang.reflect.Field> memberFields = new ArrayList<>();
+        List<java.lang.reflect.Field> memberFields = new ArrayList<>();
 
         memberFields.addAll(Arrays.asList(searchClass.getDeclaredFields()));
         return memberFields;

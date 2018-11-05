@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -204,7 +204,7 @@ public interface SelectionModel<T> extends Serializable {
          * If all the added items were already selected and the removed items
          * were not selected, this is a NO-OP.
          * <p>
-         * Duplicate items (in both add & remove sets) are ignored.
+         * Duplicate items (in both add &amp; remove sets) are ignored.
          *
          * @param addedItems
          *            the items to add, not {@code null}

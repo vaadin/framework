@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -155,7 +155,7 @@ public class Slider extends AbstractField<Double> {
     }
 
     /**
-     * Gets the maximum slider value
+     * Gets the maximum slider value.
      *
      * @return the largest value the slider can have
      */
@@ -184,7 +184,7 @@ public class Slider extends AbstractField<Double> {
     }
 
     /**
-     * Gets the minimum slider value
+     * Gets the minimum slider value.
      *
      * @return the smallest value the slider can have
      */

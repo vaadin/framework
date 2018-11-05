@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,27 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-/**
- *
- */
 package com.vaadin.client.ui.dd;
 
 import com.vaadin.client.UIDL;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
+/**
+ *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with {@link DropTargetExtension}
+ */
+@Deprecated
 @AcceptCriterion(ServerSideCriterion.class)
-final public class VServerAccept extends VAcceptCriterion {
+public final class VServerAccept extends VAcceptCriterion {
     @Override
     public void accept(final VDragEvent drag, UIDL configuration,
             final VAcceptCallback callback) {
 
-        VDragEventServerCallback acceptCallback = new VDragEventServerCallback() {
-            @Override
-            public void handleResponse(boolean accepted, UIDL response) {
-                if (accepted) {
-                    callback.accepted(drag);
-                }
+        VDragEventServerCallback acceptCallback = (accepted, response) -> {
+            if (accepted) {
+                callback.accepted(drag);
             }
         };
         VDragAndDropManager.get().visitServer(acceptCallback);

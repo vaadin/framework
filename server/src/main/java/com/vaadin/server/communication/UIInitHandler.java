@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,8 @@
  */
 
 package com.vaadin.server.communication;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -107,11 +109,11 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         // The response was produced without errors so write it to the client
         response.setContentType(JsonConstants.JSON_CONTENT_TYPE);
 
-        // Ensure that the browser does not cache UIDL responses.
-        // iOS 6 Safari requires this (#9732)
-        response.setHeader("Cache-Control", "no-cache");
+        // Response might contain sensitive information, so prevent all forms of
+        // caching
+        response.setNoCacheHeaders();
 
-        byte[] b = json.getBytes("UTF-8");
+        byte[] b = json.getBytes(UTF_8);
         response.setContentLength(b.length);
 
         OutputStream outputStream = response.getOutputStream();
@@ -287,6 +289,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             if (session.getConfiguration().isXsrfProtectionEnabled()) {
                 writer.write(getSecurityKeyUIDL(session));
             }
+            writer.write(getPushIdUIDL(session));
             new UidlWriter().write(uI, writer, false);
             writer.write("}");
 
@@ -308,6 +311,18 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
 
         return "\"" + ApplicationConstants.UIDL_SECURITY_TOKEN_ID + "\":\""
                 + seckey + "\",";
+    }
+
+    /**
+     * Gets the push connection identifier as UIDL.
+     *
+     * @param session
+     *            the vaadin session to which the security key belongs
+     * @return the push identifier UIDL
+     */
+    private static String getPushIdUIDL(VaadinSession session) {
+        return "\"" + ApplicationConstants.UIDL_PUSH_ID + "\":\""
+                + session.getPushId() + "\",";
     }
 
     private static final Logger getLogger() {

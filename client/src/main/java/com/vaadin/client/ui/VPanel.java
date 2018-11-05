@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -24,11 +24,12 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Focusable;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 
-public class VPanel extends SimplePanel
-        implements ShortcutActionHandlerOwner, Focusable {
+public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
+        Focusable, HasErrorIndicatorElement {
 
     public static final String CLASSNAME = "v-panel";
 
@@ -79,7 +80,7 @@ public class VPanel extends SimplePanel
 
         /*
          * Make contentNode focusable only by using the setFocus() method. This
-         * behaviour can be changed by invoking setTabIndex() in the serverside
+         * behavior can be changed by invoking setTabIndex() in the serverside
          * implementation
          */
         contentNode.setTabIndex(-1);
@@ -98,7 +99,7 @@ public class VPanel extends SimplePanel
     }
 
     /**
-     * Sets the keyboard focus on the Panel
+     * Sets the keyboard focus on the Panel.
      *
      * @param focus
      *            Should the panel have focus or not.
@@ -131,23 +132,6 @@ public class VPanel extends SimplePanel
     /** For internal use only. May be removed or replaced in the future. */
     public void setCaption(String text) {
         DOM.setInnerHTML(captionText, text);
-    }
-
-    /** For internal use only. May be removed or replaced in the future. */
-    public void setErrorIndicatorVisible(boolean showError) {
-        if (showError) {
-            if (errorIndicatorElement == null) {
-                errorIndicatorElement = DOM.createSpan();
-                DOM.setElementProperty(errorIndicatorElement, "className",
-                        "v-errorindicator");
-                DOM.sinkEvents(errorIndicatorElement, Event.MOUSEEVENTS);
-                sinkEvents(Event.MOUSEEVENTS);
-            }
-            DOM.insertBefore(captionNode, errorIndicatorElement, captionText);
-        } else if (errorIndicatorElement != null) {
-            DOM.removeChild(captionNode, errorIndicatorElement);
-            errorIndicatorElement = null;
-        }
     }
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -191,7 +175,7 @@ public class VPanel extends SimplePanel
     }
 
     /**
-     * Ensures the panel is scrollable eg. after style name changes.
+     * Ensures the panel is scrollable e.g. after style name changes.
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */
@@ -200,5 +184,25 @@ public class VPanel extends SimplePanel
             touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
         }
         touchScrollHandler.addElement(contentNode);
+    }
+
+    @Override
+    public Element getErrorIndicatorElement() {
+        return errorIndicatorElement;
+    }
+
+    @Override
+    public void setErrorIndicatorElementVisible(boolean visible) {
+        if (visible) {
+            if (errorIndicatorElement == null) {
+                errorIndicatorElement = ErrorUtil.createErrorIndicatorElement();
+                DOM.sinkEvents(errorIndicatorElement, Event.MOUSEEVENTS);
+                sinkEvents(Event.MOUSEEVENTS);
+                captionNode.insertBefore(errorIndicatorElement, captionText);
+            }
+        } else if (errorIndicatorElement != null) {
+            captionNode.removeChild(errorIndicatorElement);
+            errorIndicatorElement = null;
+        }
     }
 }

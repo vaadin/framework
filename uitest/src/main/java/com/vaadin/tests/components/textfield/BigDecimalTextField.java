@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.textfield;
 
 import java.io.Serializable;
@@ -22,8 +7,6 @@ import java.util.Locale;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.fieldgroup.FieldGroup;
@@ -54,25 +37,19 @@ public class BigDecimalTextField extends AbstractTestUIWithLog {
         final FieldGroup fieldGroup = new FieldGroup(beanItem);
         fieldGroup.bind(textField, "decimal");
 
-        Button setValue = new Button("Set value to 15,2", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                ((TextField) fieldGroup.getField("decimal")).setValue("15,2");
-            }
-        });
+        Button setValue = new Button("Set value to 15,2",
+                event -> ((TextField) fieldGroup.getField("decimal"))
+                        .setValue("15,2"));
 
         Button button = new Button("Commit");
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                try {
-                    fieldGroup.commit();
-                    log("Commit ok. Property value: "
-                            + fieldGroup.getItemDataSource()
-                                    .getItemProperty("decimal").getValue());
-                } catch (FieldGroup.CommitException e) {
-                    log("Commit failed: " + e.getMessage());
-                }
+        button.addClickListener(event -> {
+            try {
+                fieldGroup.commit();
+                log("Commit ok. Property value: "
+                        + fieldGroup.getItemDataSource()
+                                .getItemProperty("decimal").getValue());
+            } catch (FieldGroup.CommitException e) {
+                log("Commit failed: " + e.getMessage());
             }
         });
 

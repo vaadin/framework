@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -225,7 +225,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
     /**
      * Gets the type of the Property.
      *
-     * @see com.vaadin.v7.data.Property#getType()
+     * @see Property#getType()
      */
     @Override
     public Class<String> getType() {
@@ -236,7 +236,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
      * Gets the viewing data-source property.
      *
      * @return the data source property.
-     * @see com.vaadin.v7.data.Property.Viewer#getPropertyDataSource()
+     * @see Property.Viewer#getPropertyDataSource()
      */
     @Override
     public Property getPropertyDataSource() {
@@ -249,7 +249,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
      *
      * @param newDataSource
      *            the new data source Property
-     * @see com.vaadin.v7.data.Property.Viewer#setPropertyDataSource(com.vaadin.v7.data.Property)
+     * @see Property.Viewer#setPropertyDataSource(Property)
      */
     @Override
     public void setPropertyDataSource(Property newDataSource) {
@@ -321,15 +321,15 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
             VALUE_CHANGE_METHOD = Property.ValueChangeListener.class
                     .getDeclaredMethod("valueChange",
                             new Class[] { Property.ValueChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in Label");
         }
     }
 
     /**
-     * Value change event
+     * Value change event.
      *
      * @author Vaadin Ltd.
      * @since 3.0
@@ -339,7 +339,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
             implements Property.ValueChangeEvent {
 
         /**
-         * New instance of text change event
+         * New instance of text change event.
          *
          * @param source
          *            the Source of the event.
@@ -351,7 +351,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
         /**
          * Gets the Property that has been modified.
          *
-         * @see com.vaadin.v7.data.Property.ValueChangeEvent#getProperty()
+         * @see Property.ValueChangeEvent#getProperty()
          */
         @Override
         public Property getProperty() {
@@ -364,7 +364,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
      *
      * @param listener
      *            the Listener to be added.
-     * @see com.vaadin.v7.data.Property.ValueChangeNotifier#addListener(com.vaadin.v7.data.Property.ValueChangeListener)
+     * @see Property.ValueChangeNotifier#addListener(Property.ValueChangeListener)
      */
     @Override
     public void addValueChangeListener(Property.ValueChangeListener listener) {
@@ -374,8 +374,8 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #addValueChangeListener(com.vaadin.v7.data.Property.ValueChangeListener)}
-     **/
+     *             {@link #addValueChangeListener(Property.ValueChangeListener)}
+     */
     @Override
     @Deprecated
     public void addListener(Property.ValueChangeListener listener) {
@@ -387,7 +387,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
      *
      * @param listener
      *            the Listener to be removed.
-     * @see com.vaadin.v7.data.Property.ValueChangeNotifier#removeListener(com.vaadin.v7.data.Property.ValueChangeListener)
+     * @see Property.ValueChangeNotifier#removeListener(Property.ValueChangeListener)
      */
     @Override
     public void removeValueChangeListener(
@@ -398,8 +398,8 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removeValueChangeListener(com.vaadin.v7.data.Property.ValueChangeListener)}
-     **/
+     *             {@link #removeValueChangeListener(Property.ValueChangeListener)}
+     */
     @Override
     @Deprecated
     public void removeListener(Property.ValueChangeListener listener) {
@@ -417,7 +417,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
     /**
      * Listens the value change events from data source.
      *
-     * @see com.vaadin.v7.data.Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
+     * @see Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
      */
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
@@ -505,7 +505,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
      */
     private String stripTags(String xml) {
 
-        final StringBuffer res = new StringBuffer();
+        final StringBuilder res = new StringBuilder();
 
         int processed = 0;
         final int xmlLen = xml.length();
@@ -548,6 +548,8 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
         this.converter = (Converter<String, Object>) converter;
         markAsDirty();
     }
+
+    // LegacyPropertyHelper has been removed in Vaadin 8
 
     /*
      * (non-Javadoc)

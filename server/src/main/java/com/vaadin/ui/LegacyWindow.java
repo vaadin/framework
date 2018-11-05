@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,7 +19,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.vaadin.server.LegacyApplication;
-import com.vaadin.server.Page.BrowserWindowResizeEvent;
 import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinRequest;
@@ -36,7 +35,7 @@ public class LegacyWindow extends UI {
     private LegacyApplication application;
 
     /**
-     * Create a new legacy window
+     * Create a new legacy window.
      */
     public LegacyWindow() {
         super(new VerticalLayout());
@@ -44,7 +43,7 @@ public class LegacyWindow extends UI {
     }
 
     /**
-     * Creates a new legacy window with the given caption
+     * Creates a new legacy window with the given caption.
      *
      * @param caption
      *            the caption of the window
@@ -55,7 +54,7 @@ public class LegacyWindow extends UI {
     }
 
     /**
-     * Creates a legacy window with the given caption and content layout
+     * Creates a legacy window with the given caption and content layout.
      *
      * @param caption
      * @param content
@@ -321,7 +320,8 @@ public class LegacyWindow extends UI {
      * @param resizeListener
      *            the listener to add
      *
-     * @see BrowserWindowResizeListener#browserWindowResized(BrowserWindowResizeEvent)
+     * @see BrowserWindowResizeListener#browserWindowResized(com.vaadin.server.Page.BrowserWindowResizeEvent)
+     *      BrowserWindowResizeListener#browserWindowResized(BrowserWindowResizeEvent)
      * @see #setResizeLazy(boolean)
      *
      * @deprecated As of 7.0, use the similarly named api in Page instead

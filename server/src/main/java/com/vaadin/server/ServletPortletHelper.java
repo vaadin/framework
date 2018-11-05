@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,7 @@ import java.util.Properties;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Contains helper methods shared by {@link VaadinServlet} and
@@ -176,17 +177,13 @@ public class ServletPortletHelper implements Serializable {
             Class<?> providerClass = classLoader.loadClass(uiProviderProperty);
             Class<? extends UIProvider> subclass = providerClass
                     .asSubclass(UIProvider.class);
-            return subclass.newInstance();
+            return ReflectTools.createInstance(subclass);
         } catch (ClassNotFoundException e) {
             throw new ServiceException(
                     "Could not load UIProvider class " + uiProviderProperty, e);
         } catch (ClassCastException e) {
             throw new ServiceException("UIProvider class " + uiProviderProperty
                     + " does not extend UIProvider", e);
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new ServiceException(
-                    "Could not instantiate UIProvider " + uiProviderProperty,
-                    e);
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,12 +20,19 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.data.BeanValidationBinder;
+import com.vaadin.data.Binder;
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.data.validator.BeanValidator;
 import com.vaadin.v7.ui.Field;
 
+/**
+ *
+ * @deprecated As of 8.0, replaced by {@link Binder} and
+ *             {@link BeanValidationBinder}
+ */
 @Deprecated
 public class BeanFieldGroup<T> extends FieldGroup {
 
@@ -36,7 +43,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
 
     public BeanFieldGroup(Class<T> beanType) {
         this.beanType = beanType;
-        this.defaultValidators = new HashMap<>();
+        this.defaultValidators = new HashMap<Field<?>, BeanValidator>();
     }
 
     @Override
@@ -117,7 +124,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
         if (bean == null) {
             setItemDataSource((Item) null);
         } else {
-            setItemDataSource(new BeanItem<>(bean, beanType));
+            setItemDataSource(new BeanItem<T>(bean, beanType));
         }
     }
 
@@ -260,7 +267,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
     private static <T> BeanFieldGroup<T> createAndBindFields(T bean,
             Object objectWithMemberFields, boolean buffered) {
         @SuppressWarnings("unchecked")
-        BeanFieldGroup<T> beanFieldGroup = new BeanFieldGroup<>(
+        BeanFieldGroup<T> beanFieldGroup = new BeanFieldGroup<T>(
                 (Class<T>) bean.getClass());
         beanFieldGroup.setItemDataSource(bean);
         beanFieldGroup.setBuffered(buffered);

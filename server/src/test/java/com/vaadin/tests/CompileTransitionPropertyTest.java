@@ -1,21 +1,7 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,8 +17,11 @@ public class CompileTransitionPropertyTest {
 
     @Test
     public void testCompilation() throws Exception {
-        ScssStylesheet ss = ScssStylesheet
-                .get(getClass().getResource("styles.scss").getFile());
+        String file = getClass().getResource("styles.scss").getFile();
+        if (file.contains("%20")) {
+            fail("path contains spaces, please move the project");
+        }
+        ScssStylesheet ss = ScssStylesheet.get(file);
         ss.compile();
         // extract the style rules for .my-label
         String compiled = ss.printState();
@@ -64,6 +53,6 @@ public class CompileTransitionPropertyTest {
         // Only whitespace should remain after removing the style rules
         modifiedStyle = modifiedStyle.replaceAll("(\\s)", "");
         assertTrue("Unexpected style rules for .my-label: " + modifiedStyle,
-                modifiedStyle.length() == 0);
+                modifiedStyle.isEmpty());
     }
 }

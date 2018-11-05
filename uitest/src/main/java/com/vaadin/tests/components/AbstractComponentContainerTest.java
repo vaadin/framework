@@ -313,8 +313,8 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         // addCommands.put("HorizontalLayout", addHorizontalLayoutCommand);
         // addCommands.put("VerticalLayout", addVerticalLayoutCommand);
 
-        ComponentSize[] sizes = new ComponentSize[] {
-                new ComponentSize(null, null), new ComponentSize("200px", null),
+        ComponentSize[] sizes = { new ComponentSize(null, null),
+                new ComponentSize("200px", null),
                 new ComponentSize("100%", null),
                 new ComponentSize(null, "200px"),
                 new ComponentSize(null, "100%"),
@@ -344,7 +344,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
         String heightCategory = "Change component height";
         createCategory(heightCategory, category);
 
-        String[] options = new String[] { "100px", "200px", "50%", "100%" };
+        String[] options = { "100px", "200px", "50%", "100%" };
         for (int i = 0; i < 20; i++) {
             String componentWidthCategory = "Component " + i + " width";
             String componentHeightCategory = "Component " + i + " height";

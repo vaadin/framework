@@ -1,31 +1,10 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.table;
 
 import java.util.Map;
 
-import com.vaadin.event.FieldEvents.BlurEvent;
-import com.vaadin.event.FieldEvents.BlurListener;
-import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.v7.ui.Table;
@@ -50,29 +29,12 @@ public class TableBlurFocus extends AbstractReindeerTestUIWithLog {
         System.out
                 .println("TableBlurFocus/TableInIframeRowClickScrollJumpTest");
         Button button = new Button("click to focus");
-        button.addFocusListener(new FocusListener() {
-
-            @Override
-            public void focus(FocusEvent event) {
-                log("focus");
-            }
-        });
-        button.addBlurListener(new BlurListener() {
-
-            @Override
-            public void blur(BlurEvent event) {
-                log("blur");
-            }
-        });
+        button.addFocusListener(event -> log("focus"));
+        button.addBlurListener(event -> log("blur"));
         final Button scrollButton = new Button(
                 "focus lowest button to scroll down");
         scrollButton.setId("scroll-button");
-        scrollButton.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                focusButton.focus();
-            }
-        });
+        scrollButton.addClickListener(event -> focusButton.focus());
 
         Label spacerLabel = new Label("spacer");
         spacerLabel.setHeight("300px");
@@ -83,12 +45,8 @@ public class TableBlurFocus extends AbstractReindeerTestUIWithLog {
         addComponent(spacerLabel);
         addComponent(focusButton = new Button("for focus"));
         focusButton.setId("focus-button");
-        focusButton.addFocusListener(new FocusListener() {
-            @Override
-            public void focus(FocusEvent event) {
-                focusButton.setCaption("focused");
-            }
-        });
+        focusButton
+                .addFocusListener(event -> focusButton.setCaption("focused"));
     }
 
     private Table createTable() {
@@ -125,14 +83,10 @@ public class TableBlurFocus extends AbstractReindeerTestUIWithLog {
         table.setColumnHeader(Columns.COLUMN1, "Column");
         for (int x = 0; x < 120; x++) {
             final Label buttonLabel = new Label("Not clicked");
-            Button button = new Button("Click me?", new Button.ClickListener() {
-
-                @Override
-                public void buttonClick(Button.ClickEvent event) {
-                    ++count;
-                    buttonLabel.setValue("Clicked " + count + " times");
-                    Notification.show("Clicked!");
-                }
+            Button button = new Button("Click me?", event -> {
+                ++count;
+                buttonLabel.setValue("Clicked " + count + " times");
+                Notification.show("Clicked!");
             });
             table.addItem(new Object[] { "entryString" + x, buttonLabel, button,
                     " " }, "entryID" + x);

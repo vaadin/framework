@@ -8,7 +8,6 @@ import java.io.IOException;
 import com.vaadin.server.FileResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class DownloadLargeFileResource extends TestBase {
 
@@ -19,13 +18,7 @@ public class DownloadLargeFileResource extends TestBase {
     protected void setup() {
         Button b = new Button("Download a "
                 + String.format("%.1f", fileSize / 1024.0 / 1024.0) + "MB file",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        download();
-                    }
-                });
+                event -> download());
         addComponent(b);
     }
 
@@ -35,7 +28,6 @@ public class DownloadLargeFileResource extends TestBase {
         }
 
         getMainWindow().open(hugeFileResource);
-
     }
 
     private void createFile() {
@@ -52,10 +44,8 @@ public class DownloadLargeFileResource extends TestBase {
             os.close();
             hugeFileResource = new FileResource(hugeFile);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
     }
 
     @Override

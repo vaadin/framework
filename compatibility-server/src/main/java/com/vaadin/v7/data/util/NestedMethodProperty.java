@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,12 +18,17 @@ package com.vaadin.v7.data.util;
 import static com.vaadin.util.ReflectTools.convertPrimitiveType;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.ValueProvider;
+import com.vaadin.server.Setter;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.util.MethodProperty.MethodException;
@@ -41,6 +46,9 @@ import com.vaadin.v7.data.util.MethodProperty.MethodException;
  * @see MethodProperty
  *
  * @since 6.6
+ *
+ * @deprecated As of 8.0, replaced by {@link ValueProvider}, {@link Setter}, see
+ *             {@link Binder}
  */
 @Deprecated
 public class NestedMethodProperty<T> extends AbstractProperty<T> {
@@ -63,15 +71,14 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
     private Class<? extends T> type;
 
     /* Special serialization to handle method references */
-    private void writeObject(java.io.ObjectOutputStream out)
-            throws IOException {
+    private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         // getMethods and setMethod are reconstructed on read based on
         // propertyName
     }
 
     /* Special serialization to handle method references */
-    private void readObject(java.io.ObjectInputStream in)
+    private void readObject(ObjectInputStream in)
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 
@@ -125,7 +132,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
     private void initialize(Class<?> beanClass, String propertyName)
             throws IllegalArgumentException {
 
-        List<Method> getMethods = new ArrayList<>();
+        List<Method> getMethods = new ArrayList<Method>();
 
         String lastSimplePropertyName = propertyName;
         Class<?> lastClass = beanClass;
@@ -137,9 +144,9 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
             throw new IllegalArgumentException(
                     "Invalid property name '" + propertyName + "'");
         }
-        for (int i = 0; i < simplePropertyNames.length; i++) {
-            String simplePropertyName = simplePropertyNames[i].trim();
-            if (simplePropertyName.length() > 0) {
+        for (String simplePropertyName : simplePropertyNames) {
+            simplePropertyName = simplePropertyName.trim();
+            if (!simplePropertyName.isEmpty()) {
                 lastSimplePropertyName = simplePropertyName;
                 lastClass = propertyClass;
                 try {
@@ -147,7 +154,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
                             simplePropertyName, propertyClass);
                     propertyClass = getter.getReturnType();
                     getMethods.add(getter);
-                } catch (final java.lang.NoSuchMethodException e) {
+                } catch (final NoSuchMethodException e) {
                     throw new IllegalArgumentException("Bean property '"
                             + simplePropertyName + "' not found", e);
                 }
@@ -246,6 +253,9 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
             Object object = instance;
             for (int i = 0; i < getMethods.size() - 1; i++) {
                 object = getMethods.get(i).invoke(object);
+                if (object == null) {
+                    return;
+                }
             }
             setMethod.invoke(object, new Object[] { value });
         } catch (final InvocationTargetException e) {
@@ -269,9 +279,10 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
     }
 
     /**
-     * The instance used by this property
-     * 
+     * The instance used by this property.
+     *
      * @return the instance used for fetching the property value
+     * @since 7.7.7
      */
     public Object getInstance() {
         return instance;
@@ -284,9 +295,10 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
      * <p>
      * To be consistent with {@link #setValue(Object)}, this method will fire a
      * value change event even if the value stays the same
-     * 
+     *
      * @param instance
      *            the instance to use
+     * @since 7.7.7
      */
     public void setInstance(Object instance) {
         if (this.instance.getClass() != instance.getClass()) {
