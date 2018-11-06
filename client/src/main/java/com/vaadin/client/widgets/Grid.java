@@ -4772,33 +4772,65 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private Grid<T> grid;
 
         /**
-         * Width of column in pixels as {@link #setWidth(double)} has been
-         * called
+         * Width of column in pixels as {@link #setWidth(double)} has been called.
          */
-        private double widthUser = GridConstants.DEFAULT_COLUMN_WIDTH_PX;
+        protected double widthUser = GridConstants.DEFAULT_COLUMN_WIDTH_PX;
 
         /**
          * Renderer for rendering a value into the cell
          */
         private Renderer<? super C> bodyRenderer;
 
-        private boolean sortable = false;
+        /**
+         * The sortable state of this column.
+         */
+        protected boolean sortable = false;
 
-        private boolean editable = true;
+        /**
+         * The editable state of this column.
+         */
+        protected boolean editable = true;
 
-        private boolean resizable = true;
+        /**
+         * The resizable state of this column.
+         */
+        protected boolean resizable = true;
 
-        private boolean hidden = false;
+        /**
+         * The hidden state of this column.
+         */
+        protected boolean hidden = false;
 
-        private boolean hidable = false;
+        /**
+         * The hidable state of this column.
+         */
+        protected boolean hidable = false;
 
-        private String headerCaption = "";
+        /**
+         * The header-caption of this column.
+         */
+        protected String headerCaption = "";
 
-        private String hidingToggleCaption = null;
+        /**
+         * The hiding-toggle-caption of this column.
+         */
+        protected String hidingToggleCaption = null;
 
-        private double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
-        private double maximumWidthPx = GridConstants.DEFAULT_MAX_WIDTH;
-        private int expandRatio = GridConstants.DEFAULT_EXPAND_RATIO;
+        /**
+         * The minimum width in pixels of this column.
+         */
+        protected double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
+
+        /**
+         * The maximum width in pixels of this column.
+         */
+        protected double maximumWidthPx = GridConstants.DEFAULT_MAX_WIDTH;
+
+        /**
+         * The expand ratio of this column.
+         */
+        protected int expandRatio = GridConstants.DEFAULT_EXPAND_RATIO;
+
 
         /**
          * Constructs a new column with a simple TextRenderer.
@@ -6419,9 +6451,24 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *            the columns to add
      */
     public void addColumns(Column<?, T>... columns) {
-        int count = getColumnCount();
+        final int count = getColumnCount();
         for (Column<?, T> column : columns) {
-            addColumn(column, count++);
+            checkColumnIsValidToAdd(column, count);
+        }
+        addColumnsSkipSelectionColumnCheck(Arrays.asList(columns), count);
+    }
+
+
+    /**
+     * Checks the given column is valid to add at the given index.
+     */
+    private void checkColumnIsValidToAdd(Column<?, T> column, int index) {
+        if (column == this.selectionColumn) {
+            throw new IllegalArgumentException(
+                    "The selection column many " + "not be added manually");
+        } else if (this.selectionColumn != null && index == 0) {
+            throw new IllegalStateException("A column cannot be inserted "
+                    + "before the selection column");
         }
     }
 
@@ -6451,53 +6498,56 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *             and {@code index} is 0.
      */
     public <C extends Column<?, T>> C addColumn(C column, int index) {
-        if (column == selectionColumn) {
-            throw new IllegalArgumentException(
-                    "The selection column many " + "not be added manually");
-        } else if (selectionColumn != null && index == 0) {
-            throw new IllegalStateException("A column cannot be inserted "
-                    + "before the selection column");
-        }
-
-        addColumnSkipSelectionColumnCheck(column, index);
+        checkColumnIsValidToAdd(column, index);
+        addColumnsSkipSelectionColumnCheck(Collections.singleton(column), index);
         return column;
     }
 
-    private void addColumnSkipSelectionColumnCheck(Column<?, T> column,
-            int index) {
-        // Register column with grid
-        columns.add(index, column);
 
-        header.addColumn(column);
-        footer.addColumn(column);
+    private <C extends Column<?, T>> void addColumnsSkipSelectionColumnCheck(Collection<C> columnCollection, int index) {
+        int visibleNewColumns = 0;
+        int currentIndex = index;
 
-        // Register this grid instance with the column
-        ((Column<?, T>) column).setGrid(this);
+        //prevent updates of hiding toggles.
+        //it will be updated finally all at once.
+        this.columnHider.hidingColumn = true;
 
-        // Grid knows about hidden columns, Escalator only knows about what is
-        // visible so column indexes do not match
-        if (!column.isHidden()) {
-            int escalatorIndex = index;
-            for (int existingColumn = 0; existingColumn < index; existingColumn++) {
-                if (getColumn(existingColumn).isHidden()) {
-                    escalatorIndex--;
-                }
+        for (final Column<?, T> column : columnCollection) {
+            // Register column with grid
+            this.columns.add(currentIndex++, column);
+            this.footer.addColumn(column);
+            this.header.addColumn(column);
+
+            // Register this grid instance with the column
+            column.setGrid(this);
+
+            if (!column.isHidden()) {
+                visibleNewColumns++;
             }
-            escalator.getColumnConfiguration().insertColumns(escalatorIndex, 1);
+        }
+        if (visibleNewColumns > 0) {
+            final ColumnConfiguration columnConfiguration = this.escalator.getColumnConfiguration();
+            columnConfiguration.insertColumns(index, visibleNewColumns);
         }
 
-        // Reapply column width
-        column.reapplyWidth();
+        for (final Column<?, T> column : columnCollection) {
+            // Reapply column width
+            column.reapplyWidth();
+            // Sink all renderer events
+            final Set<String> events = new HashSet<String>();
+            events.addAll(getConsumedEventsForRenderer(column.getRenderer()));
 
-        // Sink all renderer events
-        Set<String> events = new HashSet<String>();
-        events.addAll(getConsumedEventsForRenderer(column.getRenderer()));
-
-        if (column.isHidable()) {
-            columnHider.updateColumnHidable(column);
+            if (column.isHidable()) {
+                this.columnHider.updateColumnHidable(column);
+            }
+            sinkEvents(events);
         }
-
-        sinkEvents(events);
+        //now we do the update of the hiding toggles.
+        this.columnHider.hidingColumn = false;
+        this.columnHider.updateTogglesOrder();
+        refreshHeader();
+        this.header.updateColSpans();
+        this.footer.updateColSpans();
     }
 
     private void sinkEvents(Collection<String> events) {
@@ -7891,7 +7941,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             cellFocusHandler.offsetRangeBy(1);
             selectionColumn = new SelectionColumn(selectColumnRenderer);
 
-            addColumnSkipSelectionColumnCheck(selectionColumn, 0);
+            addColumnsSkipSelectionColumnCheck(Collections.singleton(selectionColumn), 0);
 
             selectionColumn.setEnabled(isEnabled());
             selectionColumn.initDone();

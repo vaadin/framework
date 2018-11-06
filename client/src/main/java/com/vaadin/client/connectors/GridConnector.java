@@ -179,6 +179,28 @@ public class GridConnector extends AbstractHasComponentsConnector
         }
 
         /**
+         * Creates and initializes a custom grid column with attributes of given state.
+         *
+         * @param state with attributes to initialize the column.
+         */
+        @SuppressWarnings("unchecked")
+        private CustomGridColumn(GridColumnState state) {
+            this(state.id, (AbstractRendererConnector<Object>) state.rendererConnector);
+            this.hidingToggleCaption = state.hidingToggleCaption;
+            this.hidden = state.hidden;
+            this.hidable = state.hidable;
+            this.resizable = state.resizable;
+            this.sortable = state.sortable;
+            this.headerCaption = state.headerCaption == null ? "" : state.headerCaption;
+            this.widthUser = state.width;
+            this.minimumWidthPx = state.minWidth;
+            this.maximumWidthPx = state.maxWidth;
+            this.expandRatio = state.expandRatio;
+            this.editable = state.editable;
+            setEditorConnector((AbstractComponentConnector) state.editorConnector);
+        }
+
+        /**
          * Sets a new renderer for this column object
          *
          * @param rendererConnector
@@ -909,7 +931,7 @@ public class GridConnector extends AbstractHasComponentsConnector
         super.onStateChanged(stateChangeEvent);
 
         initialChange = stateChangeEvent.isInitialStateChange();
-        
+
         if (initialChange) {
             Scheduler.get().scheduleFinally(new ScheduledCommand() {
                 @Override
@@ -931,15 +953,10 @@ public class GridConnector extends AbstractHasComponentsConnector
             // Remove old columns
             purgeRemovedColumns();
 
-            // Add new columns
-            for (GridColumnState state : getState().columns) {
-                if (!columnIdToColumn.containsKey(state.id)) {
-                    addColumnFromStateChangeEvent(state);
-                }
-                updateColumnFromStateChangeEvent(state);
-            }
+            // Update all columns
+            updateColumnsFromState();
         }
-        
+
         if (stateChangeEvent.hasPropertyChanged("columnOrder")) {
             if (orderNeedsUpdate(getState().columnOrder)) {
                 updateColumnOrderFromState(getState().columnOrder);
@@ -1138,37 +1155,33 @@ public class GridConnector extends AbstractHasComponentsConnector
         cell.setStyleName(cellState.styleName);
     }
 
-    /**
-     * Updates a column from a state change event.
-     *
-     * @param columnIndex
-     *            The index of the column to update
-     */
-    private void updateColumnFromStateChangeEvent(GridColumnState columnState) {
-        CustomGridColumn column = columnIdToColumn.get(columnState.id);
-
-        columnsUpdatedFromState = true;
-        updateColumnFromState(column, columnState);
-        columnsUpdatedFromState = false;
-    }
 
     /**
-     * Adds a new column to the grid widget from a state change event
+     * Update columns from the current state.
      *
-     * @param columnIndex
-     *            The index of the column, according to how it
      */
-    private void addColumnFromStateChangeEvent(GridColumnState state) {
+    private void updateColumnsFromState() {
+        this.columnsUpdatedFromState = true;
+        final List<Column<?, JsonObject>> columns = new ArrayList<Column<?, JsonObject>>(getState().columns.size());
+        for (String columnId : getState().columnOrder) {
+            for (GridColumnState state : getState().columns) {
+                if (state.id.equals(columnId)) {
+                    CustomGridColumn column = this.columnIdToColumn.get(state.id);
+                    if (column == null) {
+                        column = new CustomGridColumn(state);
+                        this.columnIdToColumn.put(state.id, column);
+                        this.columnOrder.add(state.id);
+                        columns.add(column);
+                    } else {
+                        updateColumnFromState(column, state);
+                    }
+                }
+            }
+        }
         @SuppressWarnings("unchecked")
-        CustomGridColumn column = new CustomGridColumn(state.id,
-                ((AbstractRendererConnector<Object>) state.rendererConnector));
-        columnIdToColumn.put(state.id, column);
-
-        /*
-         * Add column to grid. Reordering is handled as a separate problem.
-         */
-        getWidget().addColumn(column);
-        columnOrder.add(state.id);
+        final Column<?, JsonObject>[] columnArray = columns.toArray(new Column[0]);
+        getWidget().addColumns(columnArray);
+        this.columnsUpdatedFromState = false;
     }
 
     /**
