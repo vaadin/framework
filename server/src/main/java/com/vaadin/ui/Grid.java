@@ -3314,8 +3314,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * in this grid. Returning null from the generator results in no custom
      * style name being set.
      *
-     * Note: The style generator is applied only to the body cells, not to
-     * the Editor.
+     * Note: The style generator is applied only to the body cells, not to the
+     * Editor.
      *
      * @see StyleGenerator
      *
