@@ -7,6 +7,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class FocusShortcutsTest extends SingleBrowserTest {
@@ -17,26 +18,26 @@ public class FocusShortcutsTest extends SingleBrowserTest {
 
         WebElement body = findElement(By.xpath("//body"));
         Actions actions = new Actions(getDriver());
-        actions.keyDown(body, Keys.LEFT_ALT).sendKeys("A").keyUp(Keys.LEFT_ALT)
+        actions.keyDown(body, Keys.LEFT_ALT).sendKeys("a").keyUp(Keys.LEFT_ALT)
                 .build().perform();
 
-        Assert.assertEquals("Alt+A", getLogRow(0));
+        Assert.assertEquals("1. Alt+A", getLogRow(0));
 
         body.click();
 
         actions = new Actions(getDriver());
-        actions.keyDown(body, Keys.LEFT_ALT).sendKeys("N").keyUp(Keys.LEFT_ALT)
+        actions.keyDown(body, Keys.LEFT_ALT).sendKeys("n").keyUp(Keys.LEFT_ALT)
                 .build().perform();
 
-        Assert.assertEquals("Alt+N", getLogRow(0));
+        Assert.assertEquals("2. Alt+N", getLogRow(0));
 
         body.click();
 
         actions = new Actions(getDriver());
         actions.keyDown(body, Keys.LEFT_CONTROL).keyDown(body, Keys.LEFT_SHIFT)
-                .sendKeys("D").keyUp(Keys.LEFT_ALT).build().perform();
+                .sendKeys("d").keyUp(Keys.LEFT_ALT).build().perform();
 
-        Assert.assertEquals("Ctrl+Shift+D", getLogRow(0));
+        Assert.assertEquals("3. Ctrl+Shift+D", getLogRow(0));
     }
 
 }
