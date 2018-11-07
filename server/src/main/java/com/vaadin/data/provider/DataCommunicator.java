@@ -462,7 +462,9 @@ public class DataCommunicator<T> extends AbstractExtension {
 
         rpc.setData(firstIndex, dataArray);
         handler.addActiveData(data.stream());
-        handler.cleanUp(data.stream());
+        //Removing data from active, if it's still saved on client
+        // removes needed mapping
+        //handler.cleanUp(data.stream());
     }
 
     /**
