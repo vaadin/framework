@@ -5,15 +5,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.LabelElement;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 import static org.junit.Assert.assertEquals;
 
-@RunLocally(Browser.CHROME)
 public class DateFieldBinderCrossValidationTest extends SingleBrowserTest {
 
     private final static String EXPECTED_ERROR = "from field is Date is out of allowed range. To field is Date is out of allowed range";
@@ -39,7 +36,5 @@ public class DateFieldBinderCrossValidationTest extends SingleBrowserTest {
         fromFieldText.sendKeys("2018/01/01", Keys.ENTER);
         assertEquals("Error message should be null", EXPECTED_NULL_ERROR,
                 label.getText());
-
     }
-
 }
