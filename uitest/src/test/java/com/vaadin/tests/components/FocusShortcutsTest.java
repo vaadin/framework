@@ -35,7 +35,7 @@ public class FocusShortcutsTest extends SingleBrowserTest {
 
         actions = new Actions(getDriver());
         actions.keyDown(body, Keys.LEFT_CONTROL).keyDown(body, Keys.LEFT_SHIFT)
-                .sendKeys("d").keyUp(Keys.LEFT_ALT).build().perform();
+                .sendKeys("d").keyUp(Keys.LEFT_CONTROL).keyUp(Keys.LEFT_SHIFT).build().perform();
 
         Assert.assertEquals("3. Ctrl+Shift+D", getLogRow(0));
     }
