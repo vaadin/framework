@@ -553,9 +553,6 @@ public class DataCommunicator<T> extends AbstractExtension {
 
         if (activeData.containsKey(id)) {
             // Item is currently available at the client-side
-                if(data.equals(activeData.get(id))){
-                        return;
-                }
             if (updatedData.isEmpty()) {
                 markAsDirty();
             }

@@ -342,15 +342,11 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         // Update selection
         T oldValue = selectedItem;
         selectedItem = value;
-
-        // Re-generate selected item data
-        if (oldValue != null) {
-            getDataCommunicator().refresh(oldValue);
-        }
-        if (value != null) {
-            getDataCommunicator().refresh(value);
-        }
-
+        /*
+         * // Re-generate selected item data if (oldValue != null) {
+         * getDataCommunicator().refresh(oldValue); } if (value != null) {
+         * getDataCommunicator().refresh(value); }
+         */
         // Deselection can be handled immediately
         updateSelectedItemState(value);
 
