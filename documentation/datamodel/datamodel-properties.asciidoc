@@ -299,7 +299,7 @@ class MyConverterFactory extends DefaultConverterFactory {
 }
 
 // Use the factory globally in the application
-Application.getCurrentApplication().setConverterFactory(
+UI.getCurrent().getSession().setConverterFactory(
         new MyConverterFactory());
 ----
 
