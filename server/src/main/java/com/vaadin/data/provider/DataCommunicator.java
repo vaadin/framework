@@ -358,6 +358,15 @@ public class DataCommunicator<T> extends AbstractExtension {
             rpc.reset(getDataProviderSize());
         }
 
+        if (!updatedData.isEmpty()) {
+            JsonArray dataArray = Json.createArray();
+            int i = 0;
+            for (T data : updatedData) {
+                dataArray.set(i++, getDataObject(data));
+            }
+            rpc.updateData(dataArray);
+        }
+
         Range requestedRows = getPushRows();
         boolean triggerReset = false;
         if (!requestedRows.isEmpty()) {
@@ -371,15 +380,6 @@ public class DataCommunicator<T> extends AbstractExtension {
             }
 
             pushData(offset, rowsToPush);
-        }
-
-        if (!updatedData.isEmpty()) {
-            JsonArray dataArray = Json.createArray();
-            int i = 0;
-            for (T data : updatedData) {
-                dataArray.set(i++, getDataObject(data));
-            }
-            rpc.updateData(dataArray);
         }
 
         setPushRows(Range.withLength(0, 0));
@@ -462,7 +462,7 @@ public class DataCommunicator<T> extends AbstractExtension {
 
         rpc.setData(firstIndex, dataArray);
         handler.addActiveData(data.stream());
-        //Removing data from active, if it's still saved on client
+        // Removing data from active, if it's still saved on client
         // removes needed mapping
         handler.cleanUp(data.stream());
     }
