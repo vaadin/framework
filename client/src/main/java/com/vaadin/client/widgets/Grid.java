@@ -9147,7 +9147,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 recalculateColumnWidths();
             }
 
-
             if (getEscalatorInnerHeight() != autoColumnWidthsRecalculator.lastCalculatedInnerHeight) {
                 Scheduler.get().scheduleFinally(() -> {
                     // Trigger re-calculation of all row positions.
