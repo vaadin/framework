@@ -464,7 +464,7 @@ public class DataCommunicator<T> extends AbstractExtension {
         handler.addActiveData(data.stream());
         //Removing data from active, if it's still saved on client
         // removes needed mapping
-        //handler.cleanUp(data.stream());
+        handler.cleanUp(data.stream());
     }
 
     /**
@@ -553,6 +553,9 @@ public class DataCommunicator<T> extends AbstractExtension {
 
         if (activeData.containsKey(id)) {
             // Item is currently available at the client-side
+                if(data.equals(activeData.get(id))){
+                        return;
+                }
             if (updatedData.isEmpty()) {
                 markAsDirty();
             }
