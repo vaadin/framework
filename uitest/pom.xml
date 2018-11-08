@@ -314,6 +314,9 @@
                         <categories.exclude>needs-ssh,communication</categories.exclude>
                         <browserstack.identifier>${browserstack.identifier}</browserstack.identifier>
                     </systemPropertyVariables>
+                    <includes>
+                        <include>**/AllTB3Tests.java</include>
+                    </includes>
                 </configuration>
                 <executions>
                     <execution>
