@@ -20,14 +20,13 @@ need to register in the website to obtain a key.
 
 You can get license keys from link:https://vaadin.com/pro/licenses[vaadin.com/pro/licenses].
 
-. Select in the Vaadin website "My Account > Licenses" or directly
-[menuchoice]#Licenses# if you are a Pro Tools subscriber.
+. On the Vaadin website, click on your profile in the top right, then select "My Services > Licenses".
 +
-image::img/cval-pro-licenses-3.png[width=80%, scaledwidth=100%]
+image::img/cval-pro-licenses-4.png[width=80%, scaledwidth=100%]
 
 . Click on a license key to obtain the purchased or trial key.
 +
-image::img/cval-pro-licenses-code.png[width=80%, scaledwidth=100%]
+image::img/cval-pro-licenses-code-2.png[width=80%, scaledwidth=100%]
 
 
 [[addons.cval.installing]]
