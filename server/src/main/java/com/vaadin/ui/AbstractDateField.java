@@ -797,6 +797,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         setComponentError(errorMessage);
 
         updateResolutions();
+
+        currentParseErrorMessage = null;
     }
 
     /**
@@ -876,13 +878,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         return new Validator<T>() {
             @Override
             public ValidationResult apply(T value, ValueContext context) {
-                // Fixes #11276, range validator will handle the
-                // dateOutOfRangeMessage instead of passing it to the result
-                // directly which will cause the range error hasn't been
-                // updated.
-                if (currentParseErrorMessage != null
-                        && !currentParseErrorMessage
-                                .equals(dateOutOfRangeMessage)) {
+                if (currentParseErrorMessage != null) {
                     return ValidationResult.error(currentParseErrorMessage);
                 }
                 // Pass to range validator.
