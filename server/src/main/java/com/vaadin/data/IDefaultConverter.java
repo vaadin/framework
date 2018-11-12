@@ -7,6 +7,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
+/**
+ * Interface for converting values in a Vaadin 8 binder.
+ */
 public interface IDefaultConverter {
 
 	/**
