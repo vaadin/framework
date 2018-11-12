@@ -41,6 +41,7 @@ import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.annotations.PropertyId;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
+import com.vaadin.data.converter.IDefaultConverter;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.event.EventRouter;
@@ -2657,7 +2658,7 @@ public class Binder<BEAN> implements Serializable {
             }
             BindingBuilder builder = forField(field);
 			if (defaultConverter != null)
-				builder = defaultConverter.build(builder, propertyType);
+				builder = defaultConverter.build(builder, fieldClass, propertyType);
 			builder.bind(property);
             return true;
         } else {
