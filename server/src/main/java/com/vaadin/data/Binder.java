@@ -99,6 +99,8 @@ import com.vaadin.util.ReflectTools;
  */
 public class Binder<BEAN> implements Serializable {
 
+    private IDefaultConverter defaultConverter;
+    
     /**
      * Represents the binding between a field and a data property.
      *
@@ -2636,7 +2638,8 @@ public class Binder<BEAN> implements Serializable {
                     memberField.getName(),
                     objectWithMemberFields.getClass().getName()));
         }
-        if (propertyType.equals(GenericTypeReflector.erase(valueType))) {
+        Class<?> fieldClass = GenericTypeReflector.erase(valueType);
+		if (propertyType.equals(fieldClass) || (defaultConverter != null && defaultConverter.isSupported(fieldClass, propertyType))) {
             HasValue<?> field;
             // Get the field from the object
             try {
@@ -2652,7 +2655,10 @@ public class Binder<BEAN> implements Serializable {
                         (Class<? extends HasValue<?>>) memberField.getType());
                 initializeField(objectWithMemberFields, memberField, field);
             }
-            forField(field).bind(property);
+            BindingBuilder builder = forField(field);
+			if (defaultConverter != null)
+				builder = defaultConverter.build(builder, propertyType);
+			builder.bind(property);
             return true;
         } else {
             throw new IllegalStateException(String.format(
@@ -2662,6 +2668,24 @@ public class Binder<BEAN> implements Serializable {
                     propertyType.getName(), valueType.getTypeName()));
         }
     }
+    
+    /**
+	 * @return the current default binding converter
+	 */
+	public IDefaultConverter getDefaultConverter() {
+		return defaultConverter;
+	}
+
+	/**
+	 * Set at default binding converter. If this is set, it is used when {@link #bindInstanceFields(Object)} is called.
+	 * The default converter is able to convert a set of input classes to a given range of output classes.
+	 * This is typically used for automatically binding Integer, Double, Long or Float to a TextField (which use String as a return value).
+	 * It may also be used to convert {@link java.time.LocalDateTime} (or LocalDate) to the old {@link java.util.Date}
+	 * @param defaultConverter an interface for converting values
+	 */
+	public void setDefaultConverter(IDefaultConverter defaultConverter) {
+		this.defaultConverter = defaultConverter;
+	}
 
     /**
      * Makes an instance of the field type {@code fieldClass}.
