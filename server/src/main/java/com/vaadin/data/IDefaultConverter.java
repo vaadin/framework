@@ -25,7 +25,7 @@ import java.util.*;
 /**
  * Interface for converting values in a Vaadin 8 binder.
  */
-public interface IDefaultConverter {
+public interface IDefaultConverter extends Serializable {
 
 	/**
 	 * Converts a {@link Binder.BindingBuilder} to a given class for an entity property
