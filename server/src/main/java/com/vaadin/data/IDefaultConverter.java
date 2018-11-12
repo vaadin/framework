@@ -17,6 +17,7 @@ package com.vaadin.data.converter;
 
 import com.vaadin.data.Binder;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
