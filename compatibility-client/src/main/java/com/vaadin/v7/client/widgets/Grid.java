@@ -6463,7 +6463,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     private void checkColumnIsValidToAdd(Column<?, T> column, int index) {
         if (column == this.selectionColumn) {
             throw new IllegalArgumentException(
-                "The selection column many " + "not be added manually");
+                "The selection column may not be added manually");
         } else if (this.selectionColumn != null && index == 0) {
             throw new IllegalStateException("A column cannot be inserted "
                 + "before the selection column");
