@@ -95,14 +95,10 @@ public class NativeSelectConnector
         ListBox listBox = getWidget().getListBox();
         boolean hasEmptyItem = listBox.getItemCount() > 0
                 && listBox.getValue(0).isEmpty();
-        getWidget().setEmptySelectionAllowed(getState().emptySelectionAllowed);
         if (hasEmptyItem && getState().emptySelectionAllowed) {
             listBox.setItemText(0, getState().emptySelectionCaption);
         } else if (hasEmptyItem && !getState().emptySelectionAllowed) {
             listBox.removeItem(0);
-            if (getWidget().getListBox().getSelectedIndex() == 0) {
-                getWidget().setSelectedItem(null);
-            }
         } else if (!hasEmptyItem && getState().emptySelectionAllowed) {
             listBox.insertItem(getState().emptySelectionCaption, 0);
             listBox.setValue(0, "");
