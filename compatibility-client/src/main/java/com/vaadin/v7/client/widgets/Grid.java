@@ -1770,10 +1770,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *             if the editor handler is not set
          */
         public void setEnabled(boolean enabled) {
-            if (enabled == false && state != State.INACTIVE) {
+            if (!enabled && state != State.INACTIVE) {
                 throw new IllegalStateException(
                         "Cannot disable: editor is in edit mode");
-            } else if (enabled == true && getHandler() == null) {
+            } else if (enabled && getHandler() == null) {
                 throw new IllegalStateException(
                         "Cannot enable: EditorHandler not set");
             }
@@ -4491,8 +4491,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     reordered.addAll(columns.subList(
                             draggedColumnIndex + colspan, columns.size()));
                 }
-                reordered.remove(selectionColumn); // since setColumnOrder will
-                // add it anyway!
+                // since setColumnOrder will // add it anyway!
+                reordered.remove(selectionColumn);
 
                 // capture focused cell column before reorder
                 Cell focusedCell = cellFocusHandler.getFocusedCell();
@@ -4646,9 +4646,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                             rightBound = cellColumnRightIndex;
                         }
                         cellColumnIndex = cellColumnRightIndex - 1;
-                    }
-
-                    else { // can't drop inside a spanned cell, or this is the
+                    } else {
+                        // can't drop inside a spanned cell, or this is the
                         // dragged cell
                         while (colspan > 1) {
                             cellColumnIndex++;
