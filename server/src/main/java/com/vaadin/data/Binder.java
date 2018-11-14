@@ -41,7 +41,6 @@ import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.annotations.PropertyId;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
-import com.vaadin.data.converter.IDefaultConverter;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.event.EventRouter;
@@ -101,7 +100,7 @@ import com.vaadin.util.ReflectTools;
 public class Binder<BEAN> implements Serializable {
 
     private IDefaultConverter defaultConverter;
-    
+
     /**
      * Represents the binding between a field and a data property.
      *
@@ -2640,7 +2639,8 @@ public class Binder<BEAN> implements Serializable {
                     objectWithMemberFields.getClass().getName()));
         }
         Class<?> fieldClass = GenericTypeReflector.erase(valueType);
-		if (propertyType.equals(fieldClass) || (defaultConverter != null && defaultConverter.isSupported(fieldClass, propertyType))) {
+        if (propertyType.equals(fieldClass) || (defaultConverter != null
+                && defaultConverter.isSupported(fieldClass, propertyType))) {
             HasValue<?> field;
             // Get the field from the object
             try {
@@ -2657,9 +2657,10 @@ public class Binder<BEAN> implements Serializable {
                 initializeField(objectWithMemberFields, memberField, field);
             }
             BindingBuilder builder = forField(field);
-			if (defaultConverter != null)
-				builder = defaultConverter.build(builder, fieldClass, propertyType);
-			builder.bind(property);
+            if (defaultConverter != null)
+                builder = defaultConverter.build(builder, fieldClass,
+                        propertyType);
+            builder.bind(property);
             return true;
         } else {
             throw new IllegalStateException(String.format(
@@ -2669,24 +2670,29 @@ public class Binder<BEAN> implements Serializable {
                     propertyType.getName(), valueType.getTypeName()));
         }
     }
-    
-    /**
-	 * @return the current default binding converter
-	 */
-	public IDefaultConverter getDefaultConverter() {
-		return defaultConverter;
-	}
 
-	/**
-	 * Set at default binding converter. If this is set, it is used when {@link #bindInstanceFields(Object)} is called.
-	 * The default converter is able to convert a set of input classes to a given range of output classes.
-	 * This is typically used for automatically binding Integer, Double, Long or Float to a TextField (which use String as a return value).
-	 * It may also be used to convert {@link java.time.LocalDateTime} (or LocalDate) to the old {@link java.util.Date}
-	 * @param defaultConverter an interface for converting values
-	 */
-	public void setDefaultConverter(IDefaultConverter defaultConverter) {
-		this.defaultConverter = defaultConverter;
-	}
+    /**
+     * @return the current default binding converter
+     */
+    public IDefaultConverter getDefaultConverter() {
+        return defaultConverter;
+    }
+
+    /**
+     * Set at default binding converter. If this is set, it is used when
+     * {@link #bindInstanceFields(Object)} is called. The default converter is
+     * able to convert a set of input classes to a given range of output
+     * classes. This is typically used for automatically binding Integer,
+     * Double, Long or Float to a TextField (which use String as a return
+     * value). It may also be used to convert {@link java.time.LocalDateTime}
+     * (or LocalDate) to the old {@link java.util.Date}
+     *
+     * @param defaultConverter
+     *            an interface for converting values
+     */
+    public void setDefaultConverter(IDefaultConverter defaultConverter) {
+        this.defaultConverter = defaultConverter;
+    }
 
     /**
      * Makes an instance of the field type {@code fieldClass}.
