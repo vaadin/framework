@@ -4046,7 +4046,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     private final class ColumnHider {
 
         /** Map from columns to their hiding toggles, component might change */
-        private HashMap<Column<?, T>, MenuItem> columnToHidingToggleMap = new HashMap<Column<?, T>, MenuItem>();
+        private Map<Column<?, T>, MenuItem> columnToHidingToggleMap = new HashMap<Column<?, T>, MenuItem>();
 
         /**
          * When column is being hidden with a toggle, do not refresh toggles for
@@ -4491,7 +4491,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     reordered.addAll(columns.subList(
                             draggedColumnIndex + colspan, columns.size()));
                 }
-                // since setColumnOrder will // add it anyway!
+                // since setColumnOrder will add it anyway!
                 reordered.remove(selectionColumn);
 
                 // capture focused cell column before reorder
@@ -6649,7 +6649,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * @return A unmodifiable list of the currently visible columns in the grid
      */
     public List<Column<?, T>> getVisibleColumns() {
-        ArrayList<Column<?, T>> visible = new ArrayList<Column<?, T>>();
+        List<Column<?, T>> visible = new ArrayList<Column<?, T>>();
         for (Column<?, T> c : columns) {
             if (!c.isHidden()) {
                 visible.add(c);
@@ -9179,9 +9179,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         if (visible && !isVisible) {
             escalator.getBody().setSpacer(rowIndex, DETAILS_ROW_INITIAL_HEIGHT);
             visibleDetails.add(rowIndexInteger);
-        }
-
-        else if (!visible && isVisible) {
+        } else if (!visible && isVisible) {
             escalator.getBody().setSpacer(rowIndex, -1);
             visibleDetails.remove(rowIndexInteger);
         }
