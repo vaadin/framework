@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<features name="org.ops4j.pax.cdi-1.0.0" xmlns="http://karaf.apache.org/xmlns/features/v1.4.0">
+
+    <feature name="pax-cdi" description="Provide CDI support" version="1.0.0">
+        <feature version="1.0.0" dependency="true">pax-cdi-weld</feature>
+        <requirement>
+            pax.cdi.provider
+        </requirement>
+    </feature>
+
+    <feature name="pax-cdi-core" hidden="true" version="1.0.0">
+        <bundle dependency="true">mvn:javax.interceptor/javax.interceptor-api/1.2</bundle>
+        <bundle dependency="true">mvn:javax.annotation/javax.annotation-api/1.2</bundle>
+        <bundle dependency="true">mvn:javax.enterprise/cdi-api/1.2</bundle>
+        <bundle dependency="true">mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.javax-inject/1_2</bundle>
+        <bundle dependency="true">mvn:javax.el/javax.el-api/3.0.0</bundle>
+        <bundle>mvn:org.ops4j.pax.cdi/pax-cdi-api/1.0.0</bundle>
+        <bundle>mvn:org.ops4j.pax.cdi/pax-cdi-spi/1.0.0</bundle>
+        <bundle>mvn:org.ops4j.pax.cdi/pax-cdi-extension/1.0.0</bundle>
+        <bundle>mvn:org.ops4j.pax.cdi/pax-cdi-extender/1.0.0</bundle>
+    </feature>
+
+    <feature name="pax-cdi-weld" description="Weld CDI 1.2 support" version="1.0.0">
+        <feature version="1.0.0">pax-cdi</feature>
+        <feature version="1.0.0">pax-cdi-core</feature>
+        <bundle dependency="true">mvn:org.apache.xbean/xbean-bundleutils/4.6</bundle>
+        <bundle dependency="true">mvn:org.apache.xbean/xbean-asm6-shaded/4.6</bundle>
+        <bundle dependency="true">mvn:org.apache.xbean/xbean-finder-shaded/4.6</bundle>
+        <bundle dependency="true">mvn:org.jboss.weld/weld-osgi-bundle/2.4.5.Final</bundle>
+        <bundle dependency="true">mvn:org.jboss.logging/jboss-logging/3.3.0.Final</bundle>
+        <!--<bundle dependency="true">mvn:com.google.guava/guava/18.0</bundle>-->
+        <bundle dependency="true">mvn:org.jboss.classfilewriter/jboss-classfilewriter/1.1.2.Final</bundle>
+        <bundle>mvn:org.ops4j.pax.cdi/pax-cdi-weld/1.0.0</bundle>
+        <capability>
+            pax.cdi.provider;provider:=weld
+        </capability>
+    </feature>
+
+    <feature name="pax-cdi-openwebbeans" description="OpenWebBeans CDI support" version="1.0.0">
+        <feature version="1.0.0">pax-cdi</feature>
+        <feature version="1.0.0">pax-cdi-core</feature>
+        <bundle dependency="true">mvn:org.apache.xbean/xbean-bundleutils/4.4</bundle>
+        <bundle dependency="true">mvn:org.apache.xbean/xbean-asm5-shaded/4.4</bundle>
+        <bundle dependency="true">mvn:org.apache.xbean/xbean-finder-shaded/4.4</bundle>
+        <bundle dependency="true">mvn:javax.validation/validation-api/1.1.0.Final</bundle>
+        <bundle dependency="true">mvn:javax.transaction/javax.transaction-api/1.2</bundle>
+        <bundle dependency="true">mvn:javax.servlet/javax.servlet-api/3.1.0</bundle>
+        <bundle dependency="true">mvn:org.apache.xbean/xbean-asm5-shaded/4.4</bundle>
+        <bundle>mvn:org.apache.openwebbeans/openwebbeans-spi/1.6.3</bundle>
+        <bundle>mvn:org.apache.openwebbeans/openwebbeans-impl/1.6.3</bundle>
+        <bundle>mvn:org.apache.openwebbeans/openwebbeans-el22/1.6.3</bundle>
+        <bundle>mvn:org.ops4j.pax.cdi/pax-cdi-openwebbeans/1.0.0</bundle>
+        <capability>
+            pax.cdi.provider;provider:=openwebbeans
+        </capability>
+    </feature>
+
+    <feature name="pax-cdi-web" description="Web CDI support" version="1.0.0">
+        <feature dependency="true" version="1.0.0">pax-cdi</feature>
+        <feature dependency="true">pax-web-core</feature>
+        <bundle dependency="true">mvn:javax.servlet/javax.servlet-api/3.1.0</bundle>
+        <bundle>mvn:org.ops4j.pax.cdi/pax-cdi-web/1.0.0</bundle>
+    </feature>
+
+    <feature name="pax-cdi-web-weld" description="Weld Web CDI support" version="1.0.0">
+        <feature version="1.0.0">pax-cdi-web</feature>
+        <feature version="1.0.0">pax-cdi-weld</feature>
+    </feature>
+
+    <feature name="pax-cdi-web-weld-undertow" description="Weld Web CDI / Undertow support" version="1.0.0">
+        <feature  version="1.0.0">pax-cdi-web-weld</feature>
+        <bundle>mvn:org.ops4j.pax.cdi/pax-cdi-undertow-weld/1.0.0</bundle>
+    </feature>
+
+    <feature name="pax-cdi-web-weld-jetty" description="Weld Web CDI / Jetty support" version="1.0.0">
+        <feature version="1.0.0">pax-cdi-web-weld</feature>
+        <bundle>mvn:org.ops4j.pax.cdi/pax-cdi-jetty-weld/1.0.0</bundle>
+    </feature>
+
+    <feature name="pax-cdi-web-openwebbeans" description="OpenWebBeans Web CDI support" version="1.0.0">
+        <feature dependency="true" version="1.0.0">pax-cdi-web</feature>
+        <feature version="1.0.0">pax-cdi-openwebbeans</feature>
+        <conditional>
+            <condition>pax-http-jetty</condition>
+            <bundle>mvn:org.apache.openwebbeans/openwebbeans-web/1.6.3</bundle>
+            <bundle>mvn:org.ops4j.pax.cdi/pax-cdi-jetty-openwebbeans/1.0.0</bundle>
+        </conditional>
+        <conditional>
+            <condition>pax-http-undertow</condition>
+            <bundle>mvn:org.apache.openwebbeans/openwebbeans-web/1.6.3</bundle>
+            <bundle>mvn:org.ops4j.pax.cdi/pax-cdi-undertow-openwebbeans/1.0.0</bundle>
+        </conditional>
+    </feature>
+
+    <feature name="deltaspike-core" description="Apache Deltaspike core support" version="1.8.1">
+        <feature version="1.0.0">pax-cdi</feature>
+        <bundle>mvn:org.apache.deltaspike.core/deltaspike-core-api/1.8.1</bundle>
+        <bundle>mvn:org.apache.deltaspike.core/deltaspike-core-impl/1.8.1</bundle>
+    </feature>
+
+    <feature name="deltaspike-jpa" description="Apache Deltaspike jpa support" version="1.8.1">
+        <feature version="1.8.1">deltaspike-core</feature>
+        <bundle dependency="true">mvn:org.ops4j.base/ops4j-base/1.5.0</bundle>
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jta_1.1_spec/1.1.1</bundle>
+        <bundle dependency="true">mvn:org.apache.geronimo.specs/geronimo-jpa_2.0_spec/1.1</bundle>
+        <bundle dependency="true">mvn:org.ops4j.pax.jpa/pax-jpa/0.3.0</bundle>
+        <bundle dependency="true">mvn:org.ops4j.pax.jdbc/pax-jdbc/0.5.0</bundle>
+        <bundle>mvn:org.apache.deltaspike.modules/deltaspike-jpa-module-api/1.8.1</bundle>
+        <bundle>mvn:org.apache.deltaspike.modules/deltaspike-jpa-module-impl/1.8.1</bundle>
+    </feature>
+
+    <feature name="deltaspike-proxy" description="Apache Deltaspike proxy support" version="1.8.1">
+        <feature version="1.8.1">deltaspike-core</feature>
+        <bundle>mvn:org.apache.deltaspike.modules/deltaspike-proxy-module-api/1.8.1</bundle>
+        <bundle>mvn:org.apache.deltaspike.modules/deltaspike-proxy-module-impl-asm5/1.8.1</bundle>
+    </feature>
+
+    <feature name="deltaspike-partial-bean" description="Apache Deltaspike partial bean support" version="1.8.1">
+        <feature version="1.8.1">deltaspike-proxy</feature>
+        <bundle>mvn:org.apache.deltaspike.modules/deltaspike-partial-bean-module-api/1.8.1</bundle>
+        <bundle>mvn:org.apache.deltaspike.modules/deltaspike-partial-bean-module-impl/1.8.1</bundle>
+    </feature>
+
+    <feature name="deltaspike-data" description="Apache Deltaspike data support" version="1.8.1">
+        <feature version="1.8.1">deltaspike-jpa</feature>
+        <feature version="1.8.1">deltaspike-partial-bean</feature>
+        <bundle>mvn:org.apache.deltaspike.modules/deltaspike-data-module-api/1.8.1</bundle>
+        <bundle>mvn:org.apache.deltaspike.modules/deltaspike-data-module-impl/1.8.1</bundle>
+    </feature>
+
+</features>

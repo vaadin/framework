@@ -47,11 +47,8 @@
 
         <!-- Dependency unpack directory -->
         <dependency.unpack.directory>${project.build.directory}/dependency-unpack</dependency.unpack.directory>
-
-        <!-- Cannot use 9.3 or 9.4 because they sometimes reset the connection
-            too early in case of errors -->
-        <!-- See e.g. https://issues.apache.org/jira/browse/SOLR-8453 -->
-        <jetty.version>9.2.9.v20150224</jetty.version>
+ 
+        <jetty.version>9.4.12.v20180830</jetty.version>
 
         <!-- Sonar properties -->
         <sonar.java.source>8</sonar.java.source>
@@ -59,7 +56,7 @@
         <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
         <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
 
-        <vaadin.icons.version>3.0.1</vaadin.icons.version>
+        <vaadin.icons.version>3.0.2</vaadin.icons.version>
         <vaadin.testbench.version>5.2.0</vaadin.testbench.version>
     </properties>
 

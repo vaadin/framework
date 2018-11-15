@@ -1,9 +1,10 @@
 package com.vaadin.tests.components.upload;
 
-import com.vaadin.testbench.elements.LabelElement;
-import com.vaadin.testbench.elements.WindowElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.util.LoremIpsum;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -12,10 +13,10 @@ import org.openqa.selenium.internal.WrapsElement;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebElement;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.testbench.elements.WindowElement;
+import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.util.LoremIpsum;
 
 import static org.junit.Assert.assertTrue;
 

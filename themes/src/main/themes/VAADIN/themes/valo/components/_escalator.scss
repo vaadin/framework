@@ -85,6 +85,10 @@
       top: 0;
       left: 0;
     }
+
+    .#{$primaryStyleName}-header > .#{$primaryStyleName}-row {
+      position: relative;
+    }
   }
 
   .#{$primaryStyleName}-row {

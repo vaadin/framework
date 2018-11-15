@@ -900,7 +900,7 @@ delete.addClickListener(e -> this.delete());
 ----
 
 TIP: For a truly re-usable form component in a real life project, you'd want to
-introduce an interface to replace the myUI field or, event better, use an event
+introduce an interface to replace the myUI field or, even better, use an event
 system like https://vaadin.com/wiki/-/wiki/main/Events+and+contexts[CDI events]
 to completely decouple the components. We'll leave that out of this tutorial for
 simplicity.

@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
-import com.vaadin.client.ServerConnector;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.WidgetRenderer;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -50,12 +49,6 @@ public class ComponentRendererConnector
     private HandlerRegistration handlerRegistration;
 
     @Override
-    public void setParent(ServerConnector parent) {
-        super.setParent(parent);
-        createConnectorHierarchyChangeHandler();
-    }
-
-    @Override
     protected Renderer<String> createRenderer() {
         return new WidgetRenderer<String, SimplePanel>() {
 
@@ -69,7 +62,7 @@ public class ComponentRendererConnector
             @Override
             public void render(RendererCellReference cell, String connectorId,
                     SimplePanel widget) {
-                assert handlerRegistration != null : "HirarchyChangeHandler should not be null when rendering.";
+                createConnectorHierarchyChangeHandler();
                 Widget connectorWidget = null;
                 if (connectorId != null) {
                     ComponentConnector connector = (ComponentConnector) ConnectorMap
@@ -107,21 +100,22 @@ public class ComponentRendererConnector
      * invoked otherwise an error message is logged.
      */
     private void createConnectorHierarchyChangeHandler() {
-        assert handlerRegistration == null : "Trying to re-initialize HierarchyChangeHandler";
-        handlerRegistration = getGridConnector()
-                .addConnectorHierarchyChangeHandler(event -> {
-                    Iterator<String> iterator = knownConnectors.iterator();
-                    while (iterator.hasNext()) {
-                        ComponentConnector connector = (ComponentConnector) ConnectorMap
-                                .get(getConnection())
-                                .getConnector(iterator.next());
-                        if (connector != null
-                                && connector.getParent() == null) {
-                            connector.getWidget().removeFromParent();
-                            iterator.remove();
+        if (handlerRegistration == null) {
+            handlerRegistration = getGridConnector()
+                    .addConnectorHierarchyChangeHandler(event -> {
+                        Iterator<String> iterator = knownConnectors.iterator();
+                        while (iterator.hasNext()) {
+                            ComponentConnector connector = (ComponentConnector) ConnectorMap
+                                    .get(getConnection())
+                                    .getConnector(iterator.next());
+                            if (connector != null
+                                    && connector.getParent() == null) {
+                                connector.getWidget().removeFromParent();
+                                iterator.remove();
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 
     private void unregisterHierarchyHandler() {

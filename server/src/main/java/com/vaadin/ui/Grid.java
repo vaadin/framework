@@ -1398,6 +1398,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * cells in this column. Returning null from the generator results in no
          * custom style name being set.
          *
+         * Note: The style generator is applied only to the body cells, not to
+         * the Editor.
+         *
          * @param cellStyleGenerator
          *            the cell style generator to set, not null
          * @return this column
@@ -3010,8 +3013,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Gets a {@link Column} of this grid by its identifying string.
      *
-     * When you use the Grid constructor with bean class, the columns are 
-     * initialised with columnId being the property name. 
+     * When you use the Grid constructor with bean class, the columns are
+     * initialised with columnId being the property name.
      *
      * @see Column#setId(String)
      *
@@ -3310,6 +3313,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Sets the style generator that is used for generating class names for rows
      * in this grid. Returning null from the generator results in no custom
      * style name being set.
+     *
+     * Note: The style generator is applied only to the body cells, not to the
+     * Editor.
      *
      * @see StyleGenerator
      *
