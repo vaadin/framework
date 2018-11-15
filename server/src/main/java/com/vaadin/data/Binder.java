@@ -140,11 +140,12 @@ public class Binder<BEAN> implements Serializable {
          * instance representing the outcome of the validation.
          *
          * <strong>Note:</strong> Calling this method will not trigger the value
-         * update in the target automatically. As this method will attempt to
-         * temporarily apply all current changes to the target and run full
-         * validation for it. The changes are reverted after target validation.
+         * update in the bean automatically. This method will attempt to
+         * temporarily apply all current changes to the bean and run full bean
+         * validation for it. The changes are reverted after bean validation.
          *
          * @see #validate()
+         * @see Binder#validate()
          *
          * @param fireEvent
          *            {@code true} to fire status event; {@code false} to not
