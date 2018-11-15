@@ -139,6 +139,11 @@ public class Binder<BEAN> implements Serializable {
          * Validates the field value and returns a {@code ValidationStatus}
          * instance representing the outcome of the validation.
          *
+         * <strong>Note:</strong> Calling this method will not trigger the value
+         * update in the target automatically. As this method will attempt to
+         * temporarily apply all current changes to the target and run full
+         * validation for it. The changes are reverted after target validation.
+         *
          * @see #validate()
          *
          * @param fireEvent
