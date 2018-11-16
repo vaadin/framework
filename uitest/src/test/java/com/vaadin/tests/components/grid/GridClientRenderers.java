@@ -155,8 +155,7 @@ public class GridClientRenderers extends MultiBrowserTest {
         // Test initial renderering with contentVisible = False
         TestBenchElement cell = getGrid().getCell(51, 1);
         String backgroundColor = cell.getCssValue("backgroundColor");
-        assertEquals("Background color was not red.", colorRed,
-                backgroundColor);
+        assertTrue("Background color was not red.", colorRed.equals(backgroundColor) || "red".equals(backgroundColor));
 
         // data arrives...
         sleep((int) (latency * SLEEP_MULTIPLIER));
