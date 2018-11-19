@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.combobox;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -69,6 +70,7 @@ public class ComboBoxConnector extends AbstractListingConnector
         registerRpc(ComboBoxClientRpc.class, new ComboBoxClientRpc() {
             @Override
             public void newItemNotAdded(String itemValue) {
+
                 if (itemValue != null && itemValue.equals(pendingNewItemValue)
                         && isNewItemStillPending()) {
                     // handled but not added, perform (de-)selection handling
@@ -335,7 +337,6 @@ public class ComboBoxConnector extends AbstractListingConnector
 
     private void refreshData() {
         updateCurrentPage();
-
         int start = getWidget().currentPage * getWidget().pageLength;
         int end = getWidget().pageLength > 0 ? start + getWidget().pageLength
                 : getDataSource().size();
@@ -360,6 +361,7 @@ public class ComboBoxConnector extends AbstractListingConnector
         updateSuggestions(start, end);
         getWidget().setTotalSuggestions(getDataSource().size());
 
+        getWidget().lastNewItemString = null;
         getDataReceivedHandler().dataReceived();
     }
 
