@@ -190,6 +190,7 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
     }
 
     private void assertValueChange(int count) {
+        sleep(100);
         assertEquals(String.format(
                 "Value change count: %s Selection change count: %s user originated: true",
                 count, count), changeLabelElement.getText());
@@ -201,6 +202,7 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
     }
 
     private void assertItemCount(int count) {
+        sleep(100);
         assertEquals(String.format("adding new item... count: %s", count),
                 changeLabelElement.getText());
     }
