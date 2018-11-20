@@ -143,7 +143,7 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
             break;
         case TAB:
             sendKeysToInput(Keys.TAB);
-            sleep(100);
+            sleep(3000);
             break;
         case CLICK_OUT:
             new Actions(getDriver()).moveToElement(comboBoxElement, 10, 10)
@@ -191,7 +191,7 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
     }
 
     private void assertValueChange(int count) {
-        sleep(100);
+        sleep(3000);
         assertEquals(String.format(
                 "Value change count: %s Selection change count: %s user originated: true",
                 count, count), changeLabelElement.getText());
@@ -203,7 +203,7 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
     }
 
     private void assertItemCount(int count) {
-        sleep(100);
+        sleep(3000);
         assertEquals(String.format("adding new item... count: %s", count),
                 changeLabelElement.getText());
     }
