@@ -3,10 +3,12 @@ package com.vaadin.tests.components.grid;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.components.grid.GridDragSource;
 import com.vaadin.ui.components.grid.GridDropTarget;
 
@@ -39,6 +41,18 @@ public class GridDropCriteriaScript extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         getUI().setMobileHtml5DndEnabled(true);
 
+        final Label label = new Label("<h1>Test for existance of targetElement "
+                + "and dropLocation in criteriaScript</h1>"
+                + "<p>Drag one of the grid items.</p>"
+                + "<p>While dragging, hints in form of lines show "
+                + "where the item is allowed to be dropped.</p>"
+                + "<p>Test passed:" + "<ul>"
+                + "<li>ABOVE: Only a line above the item is displayed while dragging over the item</li>"
+                + "<li>BELOW: Only a line below the item is displayed while dragging over the item</li>"
+                + "<li>ON_TOP: Only a border around the item is displayed while dragging over the item</li>"
+                + "</ul>" + "</p>" + "<p>Test failed:" + "<ul>"
+                + "<li>otherwise</li>" + "</ul>" + "</p>", ContentMode.HTML);
+
         final Grid<GridItem> grid = new Grid<>();
         grid.addColumn(GridItem::getCaption);
         grid.setStyleGenerator(
@@ -53,7 +67,7 @@ public class GridDropCriteriaScript extends AbstractTestUI {
 
         grid.setItems(createItems());
 
-        addComponent(grid);
+        addComponents(label, grid);
     }
 
     private List<GridItem> createItems() {
