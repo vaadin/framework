@@ -143,6 +143,7 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
             break;
         case TAB:
             sendKeysToInput(Keys.TAB);
+            sleep(100);
             break;
         case CLICK_OUT:
             new Actions(getDriver()).moveToElement(comboBoxElement, 10, 10)
