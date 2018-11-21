@@ -25,6 +25,7 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
     private ComboBoxElement comboBoxElement;
     private LabelElement valueLabelElement;
     private LabelElement changeLabelElement;
+    private LabelElement valueStateElement;
     private String[] defaultInputs = new String[] { "foo", "bar", "baz",
             "fie" };
     private String[] shortInputs = new String[] { "a", "b", "c", "d" };
@@ -37,6 +38,7 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
         waitForElementPresent(By.className("v-filterselect"));
         comboBoxElement = $(ComboBoxElement.class).first();
         valueLabelElement = $(LabelElement.class).id("value");
+        valueStateElement = $(LabelElement.class).id("state");
         changeLabelElement = $(LabelElement.class).id("change");
     }
 
@@ -143,7 +145,6 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
             break;
         case TAB:
             sendKeysToInput(Keys.TAB);
-            sleep(3000);
             break;
         case CLICK_OUT:
             new Actions(getDriver()).moveToElement(comboBoxElement, 10, 10)
@@ -191,7 +192,7 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
     }
 
     private void assertValueChange(int count) {
-        sleep(3000);
+
         assertEquals(String.format(
                 "Value change count: %s Selection change count: %s user originated: true",
                 count, count), changeLabelElement.getText());
@@ -199,13 +200,12 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
 
     private void assertRejected(String value) {
         assertEquals(String.format("item %s discarded", value),
-                changeLabelElement.getText());
+                valueStateElement.getText());
     }
 
     private void assertItemCount(int count) {
-        sleep(3000);
         assertEquals(String.format("adding new item... count: %s", count),
-                changeLabelElement.getText());
+                valueStateElement.getText());
     }
 
     private void reject(boolean reject) {

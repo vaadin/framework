@@ -31,6 +31,7 @@ public class ComboBoxSelectingNewItemValueChange extends ComboBoxSelecting {
     int valueChangeEventCount = 0;
     int selectionChangeEventCount = 0;
     Label valueLabel = new Label();
+    Label valueStateLabel = new Label(null, ContentMode.HTML);
     Label valueChangeLabel = new Label(null, ContentMode.HTML);
     CheckBox delay = new CheckBox("Slow adding process", false);
     CheckBox reject = new CheckBox("Reject new values", false);
@@ -73,20 +74,21 @@ public class ComboBoxSelectingNewItemValueChange extends ComboBoxSelecting {
             initItems();
             comboBox.getDataProvider().refreshAll();
             valueLabel.setValue("");
-            valueChangeLabel.setValue("Reset");
+            valueStateLabel.setValue("Reset");
             valueChangeEventCount = 0;
             selectionChangeEventCount = 0;
         });
 
         valueLabel.setId("value");
+        valueStateLabel.setId("state");
         valueChangeLabel.setId("change");
         delay.setId("delay");
         reject.setId("reject");
         noSelection.setId("noSelection");
         resetButton.setId("reset");
 
-        addComponents(comboBox, valueLabel, valueChangeLabel, checkButton,
-                resetButton, delay, reject, noSelection);
+        addComponents(comboBox, valueLabel, valueStateLabel, valueChangeLabel,
+                checkButton, resetButton, delay, reject, noSelection);
     }
 
     @SuppressWarnings("deprecation")
@@ -100,12 +102,12 @@ public class ComboBoxSelectingNewItemValueChange extends ComboBoxSelecting {
                 }
             }
             if (Boolean.TRUE.equals(reject.getValue())) {
-                valueChangeLabel.setValue("item " + text + " discarded");
+                valueStateLabel.setValue("item " + text + " discarded");
                 comboBox.getComboBoxClientRpc().newItemNotAdded(text);
             } else {
                 items.add(text);
                 Collections.sort(items);
-                valueChangeLabel
+                valueStateLabel
                         .setValue("adding new item... count: " + items.size());
                 if (Boolean.TRUE.equals(noSelection.getValue())) {
                     comboBox.getComboBoxClientRpc().newItemNotAdded(text);
@@ -125,9 +127,10 @@ public class ComboBoxSelectingNewItemValueChange extends ComboBoxSelecting {
     }
 
     private void updateLabel(boolean userOriginated) {
-        valueChangeLabel.setValue("Value change count: " + valueChangeEventCount
-                + "\nSelection change count: " + selectionChangeEventCount
-                + "\nuser originated: " + userOriginated);
+        valueChangeLabel.setValue("Value change count: "
+                + valueChangeEventCount + "\nSelection change count: "
+                + selectionChangeEventCount + "\nuser originated: "
+                + userOriginated);
     }
 
     @Override

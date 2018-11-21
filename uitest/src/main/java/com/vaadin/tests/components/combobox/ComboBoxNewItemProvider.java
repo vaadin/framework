@@ -17,12 +17,12 @@ public class ComboBoxNewItemProvider
                 }
             }
             if (Boolean.TRUE.equals(reject.getValue())) {
-                valueChangeLabel.setValue("item " + text + " discarded");
+                valueStateLabel.setValue("item " + text + " discarded");
                 return Optional.empty();
             } else {
                 items.add(text);
                 Collections.sort(items);
-                valueChangeLabel
+                valueStateLabel
                         .setValue("adding new item... count: " + items.size());
                 comboBox.getDataProvider().refreshAll();
                 if (noSelection.getValue()) {

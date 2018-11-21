@@ -31,18 +31,18 @@ public class ComboBoxNewItemAdd2ndTimeTest extends SingleBrowserTest {
 
         sendKeysToInput(sample);
         value.click();
-        sleep(1000);
+        sleep(100);
         assertEquals(sample, value.getCaption());
 
         comboBox.clear();
         value.click();
-        sleep(1000);
+        sleep(100);
         assertEquals("", value.getCaption());
 
         reloadButton.click();
         sendKeysToInput(sample);
         value.click();
-        sleep(1000);
+        sleep(100);
         assertEquals(sample, value.getCaption());
     }
 
