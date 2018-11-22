@@ -617,6 +617,7 @@ public class FileUploadHandler implements RequestHandler {
             } finally {
                 session.unlock();
             }
+            return true;
             // Note, we are not throwing interrupted exception forward as it is
             // not a terminal level error like all other exception.
         } catch (final Exception e) {
