@@ -3936,11 +3936,7 @@ public class Escalator extends Widget
                 setRowPosition(tr, 0,
                         logicalIndex * getDefaultRowHeight() + spacerHeights);
 
-                com.vaadin.client.widgets.Escalator.SpacerContainer.SpacerImpl spacer = body.spacerContainer
-                        .getSpacer(i);
-                if (spacer != null && spacer.getHeight() > 0) {
-                    spacerHeights += spacer.getHeight();
-                }
+                spacerHeights += spacerContainer.getSpacerHeight(logicalIndex);
             }
 
             /*
