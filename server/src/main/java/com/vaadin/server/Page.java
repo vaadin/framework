@@ -564,6 +564,16 @@ public class Page implements Serializable {
     public Page(UI uI, PageState state) {
         this.uI = uI;
         this.state = state;
+
+        // In MPR, there are cases when before the initialization of the UI, we
+        // need to access location indirectly and since it is not yet
+        // initialized we get an NPE. To resolve it, the location is set to an
+        // empty string.
+        try {
+            this.location = new URI("");
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Registration addListener(Class<?> eventType, Object target,
