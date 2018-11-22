@@ -16,6 +16,16 @@
 
 package com.vaadin.client.ui;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.UUID;
+import java.util.logging.Logger;
+
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -74,15 +84,6 @@ import com.vaadin.client.ui.menubar.MenuItem;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.util.SharedUtil;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * Client side implementation of the ComboBox component.
@@ -1635,26 +1636,11 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             performSelection(selectedKey, oldSuggestionTextMatchTheOldSelection,
                     !isWaitingForFilteringResponse() || popupOpenerClicked);
 
-            // currentSuggestion should be set to match the value of the
-            // ComboBox, especially when a new item is added.
-            resetCurrentSuggestionIfNecessary(selectedKey, selectedCaption,
-                    selectedIconUri);
-
             cancelPendingPostFiltering();
 
             setSelectedCaption(selectedCaption);
 
             setSelectedItemIcon(selectedIconUri);
-        }
-
-        private void resetCurrentSuggestionIfNecessary(String selectedKey,
-                String selectedCaption, String selectedIconUri) {
-            if (currentSuggestion == null
-                    && (selectedKey != null || selectedCaption != null))
-                currentSuggestion = new ComboBoxSuggestion(selectedKey,
-                        selectedCaption, "", selectedIconUri);
-            else if (selectedKey == null && selectedCaption == null)
-                currentSuggestion = null;
         }
 
     }
@@ -2124,7 +2110,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             currentSuggestion = null; // #13217
             selectedOptionKey = null;
             setText(getEmptySelectionCaption());
-            return;
         }
         // some item selected
         for (ComboBoxSuggestion suggestion : currentSuggestions) {

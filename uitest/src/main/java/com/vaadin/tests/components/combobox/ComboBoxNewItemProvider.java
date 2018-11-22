@@ -9,7 +9,7 @@ public class ComboBoxNewItemProvider
     @Override
     protected void configureNewItemHandling() {
         comboBox.setNewItemProvider(text -> {
-            if (delay.getValue()) {
+            if (Boolean.TRUE.equals(delay.getValue())) {
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e1) {
@@ -25,7 +25,7 @@ public class ComboBoxNewItemProvider
                 valueChangeLabel
                         .setValue("adding new item... count: " + items.size());
                 comboBox.getDataProvider().refreshAll();
-                if (noSelection.getValue()) {
+                if (Boolean.TRUE.equals(noSelection.getValue())) {
                     return Optional.empty();
                 }
             }
