@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.combobox;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -18,7 +19,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
 
-    private enum SelectionType {
+    protected enum SelectionType {
         ENTER, TAB, CLICK_OUT;
     }
 
@@ -134,7 +135,8 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
         assertItemCount(2602);
     }
 
-    private void typeInputAndSelect(String input, SelectionType selectionType) {
+    protected void typeInputAndSelect(String input,
+            SelectionType selectionType) {
         comboBoxElement.clear();
         sendKeysToInput(input);
         switch (selectionType) {
@@ -166,7 +168,7 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
         }
     }
 
-    private void assertThatSelectedValueIs(final String value) {
+    protected void assertThatSelectedValueIs(final String value) {
         waitUntil(new ExpectedCondition<Boolean>() {
             private String actualComboBoxValue;
             private String actualLabelValue;
@@ -189,20 +191,20 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
         });
     }
 
-    private void assertValueChange(int count) {
-        assertTrue(changeLabelElement.getText().equals(String.format(
+    protected void assertValueChange(int count) {
+        assertEquals(String.format(
                 "Value change count: %s Selection change count: %s user originated: true",
-                count, count)));
+                count, count), changeLabelElement.getText());
     }
 
     private void assertRejected(String value) {
-        assertTrue(changeLabelElement.getText()
-                .equals(String.format("item %s discarded", value)));
+        assertEquals(String.format("item %s discarded", value),
+                changeLabelElement.getText());
     }
 
     private void assertItemCount(int count) {
-        assertTrue(changeLabelElement.getText()
-                .equals(String.format("adding new item... count: %s", count)));
+        assertEquals(String.format("adding new item... count: %s", count),
+                changeLabelElement.getText());
     }
 
     private void reject(boolean reject) {
@@ -226,7 +228,7 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
         }
     }
 
-    private void reset() {
+    protected void reset() {
         $(ButtonElement.class).id("reset").click();
     }
 
