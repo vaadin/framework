@@ -3925,13 +3925,18 @@ public class Escalator extends Widget
             Profiler.enter(
                     "Escalator.BodyRowContainer.reapplyDefaultRowHeights");
 
+            double spacerHeights = 0;
+
             /* step 1: resize and reposition rows */
             for (int i = 0; i < visualRowOrder.size(); i++) {
                 TableRowElement tr = visualRowOrder.get(i);
                 reapplyRowHeight(tr, getDefaultRowHeight());
 
                 final int logicalIndex = getTopRowLogicalIndex() + i;
-                setRowPosition(tr, 0, logicalIndex * getDefaultRowHeight());
+                setRowPosition(tr, 0,
+                        logicalIndex * getDefaultRowHeight() + spacerHeights);
+
+                spacerHeights += spacerContainer.getSpacerHeight(logicalIndex);
             }
 
             /*
