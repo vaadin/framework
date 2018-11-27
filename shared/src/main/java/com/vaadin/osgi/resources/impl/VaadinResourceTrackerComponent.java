@@ -229,7 +229,8 @@ public class VaadinResourceTrackerComponent {
     }
 
     private void registerTheme(VaadinResourceService resourceService,
-            Bundle bundle, Long serviceId, OsgiVaadinTheme theme) throws NamespaceException {
+            Bundle bundle, Long serviceId, OsgiVaadinTheme theme)
+            throws NamespaceException {
         String pathPrefix = resourceService.getResourcePathPrefix();
 
         String alias = PathFormatHelper.getThemeAlias(theme.getName(),
@@ -240,7 +241,8 @@ public class VaadinResourceTrackerComponent {
     }
 
     private void registerWidget(VaadinResourceService resourceService,
-            Bundle bundle, Long serviceId, OsgiVaadinWidgetset widgetset) throws NamespaceException {
+            Bundle bundle, Long serviceId, OsgiVaadinWidgetset widgetset)
+            throws NamespaceException {
         String pathPrefix = resourceService.getResourcePathPrefix();
 
         String alias = PathFormatHelper.getWidgetsetAlias(widgetset.getName(),
@@ -251,7 +253,8 @@ public class VaadinResourceTrackerComponent {
     }
 
     private void registerResource(VaadinResourceService resourceService,
-            Bundle bundle, Long serviceId, OsgiVaadinResource resource) throws NamespaceException {
+            Bundle bundle, Long serviceId, OsgiVaadinResource resource)
+            throws NamespaceException {
         String pathPrefix = resourceService.getResourcePathPrefix();
 
         String alias = PathFormatHelper.getRootResourceAlias(resource.getName(),
@@ -268,11 +271,12 @@ public class VaadinResourceTrackerComponent {
         registerResource(registration);
     }
 
-    private void registerResource(Delegate registration) throws NamespaceException {
+    private void registerResource(Delegate registration)
+            throws NamespaceException {
         if (this.httpService != null && !registration.isInitialized()) {
             registration.init(httpService);
-            httpService.registerResources(registration.alias,
-                        registration.path, registration);
+            httpService.registerResources(registration.alias, registration.path,
+                    registration);
         }
     }
 
