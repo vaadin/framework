@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.Servlet;
 import javax.servlet.annotation.WebServlet;
@@ -26,6 +27,7 @@ import javax.servlet.annotation.WebServlet;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -33,7 +35,6 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 import org.osgi.service.log.LogService;
 
-import com.vaadin.osgi.resources.OsgiVaadinResources;
 import com.vaadin.osgi.resources.OsgiVaadinResources.ResourceBundleInactiveException;
 import com.vaadin.osgi.resources.VaadinResourceService;
 import com.vaadin.server.Constants;
@@ -50,9 +51,6 @@ import com.vaadin.server.VaadinServlet;
  */
 @Component
 public class VaadinServletRegistration {
-    private final Map<ServiceReference<VaadinServlet>, ServiceRegistration<Servlet>> registeredServlets = Collections
-            .synchronizedMap(new LinkedHashMap<>());
-
     private static final String MISSING_ANNOTATION_MESSAGE_FORMAT = "The property '%s' must be set in a '%s' without the '%s' annotation!";
     private static final String URL_PATTERNS_NOT_SET_MESSAGE_FORMAT = "The property '%s' must be set when the 'urlPatterns' attribute is not set!";
 
@@ -61,10 +59,22 @@ public class VaadinServletRegistration {
     private static final String VAADIN_RESOURCES_PARAM = HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_INIT_PARAM_PREFIX
             + Constants.PARAMETER_VAADIN_RESOURCES;
 
+    private final Map<ServiceReference<VaadinServlet>, ServletRegistration> registeredServlets = Collections
+            .synchronizedMap(new LinkedHashMap<>());
+    private VaadinResourceService vaadinService;
     private LogService logService;
 
+    @Activate
+    void activate(BundleContext bundleContext) throws Exception {
+        //see if we have registrations already which are not initialized
+        for(ServletRegistration registration : registeredServlets.values()) {
+            registration.register(vaadinService);
+        }
+    }
+
     @Reference(cardinality = ReferenceCardinality.MULTIPLE, service = VaadinServlet.class, policy = ReferencePolicy.DYNAMIC)
-    void bindVaadinServlet(VaadinServlet servlet, ServiceReference<VaadinServlet> reference)
+    void bindVaadinServlet(VaadinServlet servlet,
+            ServiceReference<VaadinServlet> reference)
             throws ResourceBundleInactiveException {
         log(LogService.LOG_INFO, "VaadinServlet Registration");
 
@@ -77,20 +87,17 @@ public class VaadinServletRegistration {
             return;
         }
 
-        properties.put(VAADIN_RESOURCES_PARAM, getResourcePath());
         if (annotation != null) {
             properties.put(
                     HttpWhiteboardConstants.HTTP_WHITEBOARD_SERVLET_ASYNC_SUPPORTED,
                     Boolean.toString(annotation.asyncSupported()));
         }
 
-        // We register the Http Whiteboard servlet using the context of
-        // the bundle which registered the Vaadin Servlet, not our own
-        BundleContext bundleContext = reference.getBundle().getBundleContext();
-        ServiceRegistration<Servlet> servletRegistration = bundleContext
-                .registerService(Servlet.class, servlet, properties);
-
-        registeredServlets.put(reference, servletRegistration);
+        ServletRegistration registration = new ServletRegistration(servlet,
+                reference, properties);
+        registeredServlets.put(reference, registration);
+        //try to register with the vaadin service - the service could be null at this point but we handle that in the register method
+        registration.register(this.vaadinService);
     }
 
     private boolean validateSettings(WebServlet annotation,
@@ -112,11 +119,6 @@ public class VaadinServletRegistration {
         return true;
     }
 
-    private String getResourcePath() throws ResourceBundleInactiveException {
-        VaadinResourceService service = OsgiVaadinResources.getService();
-        return String.format("/%s", service.getResourcePathPrefix());
-    }
-
     private void log(int level, String message) {
         if (logService != null) {
             logService.log(level, message);
@@ -124,17 +126,21 @@ public class VaadinServletRegistration {
     }
 
     void unbindVaadinServlet(ServiceReference<VaadinServlet> reference) {
-        ServiceRegistration<?> servletRegistration = registeredServlets
+        ServletRegistration servletRegistration = registeredServlets
                 .remove(reference);
         if (servletRegistration != null) {
-            try {
-                servletRegistration.unregister();
-            } catch (IllegalStateException ise) {
-                // This service may have already been unregistered
-                // automatically by the OSGi framework if the
-                // application bundle is being stopped. This is
-                // obviously not a problem for us.
-            }
+            servletRegistration.unregister();
+        }
+    }
+
+    @Reference
+    void setVaadinResourceService(VaadinResourceService vaadinService) {
+        this.vaadinService = vaadinService;
+    }
+
+    void unsetVaadinResourceService(VaadinResourceService vaadinService) {
+        if (this.vaadinService == vaadinService) {
+            this.vaadinService = null;
         }
     }
 
@@ -144,7 +150,9 @@ public class VaadinServletRegistration {
     }
 
     void unsetLogService(LogService logService) {
-        this.logService = null;
+        if (this.logService == logService) {
+            this.logService = null;
+        }
     }
 
     private Hashtable<String, Object> getProperties(
@@ -154,5 +162,53 @@ public class VaadinServletRegistration {
             properties.put(key, reference.getProperty(key));
         }
         return properties;
+    }
+
+    private static class ServletRegistration {
+        private final VaadinServlet servlet;
+        private final ServiceReference<VaadinServlet> servletRef;
+        private final Hashtable<String, Object> properties;
+        
+        private volatile ServiceRegistration<Servlet> registration;
+
+        public ServletRegistration(VaadinServlet servlet,
+                ServiceReference<VaadinServlet> servletRef,
+                Hashtable<String, Object> properties) {
+            this.servlet = Objects.requireNonNull(servlet);
+            this.servletRef = Objects.requireNonNull(servletRef);
+            this.properties = properties;
+        }
+
+        public void register(VaadinResourceService vaadinService) {
+            //we are already registered
+            if (this.registration != null)
+                return;
+            //only register if the vaadin service is not null
+            if(vaadinService == null)
+                return;
+            final String resourcePath = String.format("/%s", vaadinService.getResourcePathPrefix());
+            this.properties.put(VAADIN_RESOURCES_PARAM, resourcePath);
+            // We register the Http Whiteboard servlet using the context of
+            // the bundle which registered the Vaadin Servlet, not our own
+            BundleContext bundleContext = this.servletRef.getBundle()
+                    .getBundleContext();
+            this.registration = bundleContext.registerService(Servlet.class,
+                    servlet, properties);
+        }
+
+        public void unregister() {
+            //we are already deregistered
+            if (this.registration == null)
+                return;
+            try {
+                this.registration.unregister();
+            } catch (IllegalStateException ise) {
+                // This service may have already been unregistered
+                // automatically by the OSGi framework if the
+                // application bundle is being stopped. This is
+                // obviously not a problem for us.
+            }
+            this.registration = null;
+        }
     }
 }

@@ -17,9 +17,8 @@ package com.vaadin.osgi.resources;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.Version;
-
-import com.vaadin.osgi.resources.impl.VaadinResourceServiceImpl;
+import org.osgi.framework.ServiceReference;
+import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * {@link BundleActivator} used to provide access to the
@@ -29,6 +28,7 @@ import com.vaadin.osgi.resources.impl.VaadinResourceServiceImpl;
  * @author Vaadin Ltd.
  *
  * @since 8.1
+ * @deprecated use OSGi DS services to bind a instance of {@link VaadinResourceService}
  */
 public class OsgiVaadinResources implements BundleActivator {
 
@@ -48,8 +48,8 @@ public class OsgiVaadinResources implements BundleActivator {
 
     private static OsgiVaadinResources instance;
 
-    private VaadinResourceServiceImpl service;
-    private Version version;
+    private ServiceTracker<VaadinResourceService, VaadinResourceService> vaadinResourceTracker;
+    private VaadinResourceService service;
 
     /**
      * Returns the {@link VaadinResourceService} instance. Always returns
@@ -71,16 +71,36 @@ public class OsgiVaadinResources implements BundleActivator {
 
     @Override
     public void start(BundleContext context) throws Exception {
-        version = context.getBundle().getVersion();
-        service = new VaadinResourceServiceImpl();
-        service.setBundleVersion(version.toString());
+        vaadinResourceTracker = new ServiceTracker<VaadinResourceService, VaadinResourceService>(context, VaadinResourceService.class, null) {
+            @Override
+            public VaadinResourceService addingService(
+                    ServiceReference<VaadinResourceService> reference) {
+                VaadinResourceService vaadinService = super.addingService(reference);
+                service = vaadinService;
+                return vaadinService;
+            }
+            
+            @Override
+            public void removedService(
+                    ServiceReference<VaadinResourceService> reference,
+                    VaadinResourceService service) {
+                super.removedService(reference, service);
+                if(OsgiVaadinResources.this.service == service) {
+                    OsgiVaadinResources.this.service = null;
+                }
+            }
+        };
+        vaadinResourceTracker.open();
         instance = this;
     }
 
     @Override
     public void stop(BundleContext context) throws Exception {
+        if(vaadinResourceTracker != null) {
+            vaadinResourceTracker.close();
+        }
+        vaadinResourceTracker = null;
         instance = null;
         service = null;
-        version = null;
     }
 }

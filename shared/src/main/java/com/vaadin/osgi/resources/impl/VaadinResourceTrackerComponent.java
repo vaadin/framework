@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,8 +44,6 @@ import org.osgi.service.http.NamespaceException;
 
 import com.vaadin.osgi.resources.OsgiVaadinContributor;
 import com.vaadin.osgi.resources.OsgiVaadinResource;
-import com.vaadin.osgi.resources.OsgiVaadinResources;
-import com.vaadin.osgi.resources.OsgiVaadinResources.ResourceBundleInactiveException;
 import com.vaadin.osgi.resources.OsgiVaadinTheme;
 import com.vaadin.osgi.resources.OsgiVaadinWidgetset;
 import com.vaadin.osgi.resources.VaadinResourceService;
@@ -63,89 +62,39 @@ public class VaadinResourceTrackerComponent {
             .synchronizedMap(new LinkedHashMap<>());
     private final Map<Long, List<ServiceRegistration<? extends OsgiVaadinResource>>> contributorToRegistrations = Collections
             .synchronizedMap(new LinkedHashMap<>());
+    
+    private VaadinResourceService vaadinService;
     private HttpService httpService;
 
     @Reference(cardinality = ReferenceCardinality.MULTIPLE, service = OsgiVaadinTheme.class, policy = ReferencePolicy.DYNAMIC)
-    void bindTheme(ServiceReference<OsgiVaadinTheme> themeRef)
-            throws ResourceBundleInactiveException {
-
-        Bundle bundle = themeRef.getBundle();
-        BundleContext context = bundle.getBundleContext();
-
-        OsgiVaadinTheme theme = context.getService(themeRef);
-        if (theme == null) {
-            return;
-        }
-
-        VaadinResourceService resourceService = OsgiVaadinResources
-                .getService();
-        Long serviceId = (Long) themeRef.getProperty(Constants.SERVICE_ID);
-        try {
-            registerTheme(resourceService, bundle, serviceId, theme);
-        } finally {
-            context.ungetService(themeRef);
-        }
+    void bindTheme(ServiceReference<OsgiVaadinTheme> themeRef) throws NamespaceException {
+        registerResource(themeRef);
     }
 
     void unbindTheme(ServiceReference<OsgiVaadinTheme> themeRef) {
-        Long serviceId = (Long) themeRef.getProperty(Constants.SERVICE_ID);
-        unregisterResource(serviceId);
+        unregisterResource(themeRef);
     }
 
     @Reference(cardinality = ReferenceCardinality.MULTIPLE, service = OsgiVaadinWidgetset.class, policy = ReferencePolicy.DYNAMIC)
-    void bindWidgetset(ServiceReference<OsgiVaadinWidgetset> widgetsetRef)
-            throws ResourceBundleInactiveException {
-        Bundle bundle = widgetsetRef.getBundle();
-        BundleContext context = bundle.getBundleContext();
-
-        OsgiVaadinWidgetset widgetset = context.getService(widgetsetRef);
-        if (widgetset == null) {
-            return;
-        }
-
-        VaadinResourceService service = OsgiVaadinResources.getService();
-        Long serviceId = (Long) widgetsetRef.getProperty(Constants.SERVICE_ID);
-        try {
-            registerWidget(service, bundle, serviceId, widgetset);
-        } finally {
-            context.ungetService(widgetsetRef);
-        }
-
+    void bindWidgetset(ServiceReference<OsgiVaadinWidgetset> widgetsetRef) throws NamespaceException {
+        registerResource(widgetsetRef);
     }
 
     void unbindWidgetset(ServiceReference<OsgiVaadinWidgetset> widgetsetRef) {
-        Long serviceId = (Long) widgetsetRef.getProperty(Constants.SERVICE_ID);
-        unregisterResource(serviceId);
+        unregisterResource(widgetsetRef);
     }
 
     @Reference(cardinality = ReferenceCardinality.MULTIPLE, service = OsgiVaadinResource.class, policy = ReferencePolicy.DYNAMIC)
-    void bindResource(ServiceReference<OsgiVaadinResource> resourceRef)
-            throws ResourceBundleInactiveException {
-        Bundle bundle = resourceRef.getBundle();
-        BundleContext context = bundle.getBundleContext();
-
-        OsgiVaadinResource resource = context.getService(resourceRef);
-        if (resource == null) {
-            return;
-        }
-
-        VaadinResourceService service = OsgiVaadinResources.getService();
-        Long serviceId = (Long) resourceRef.getProperty(Constants.SERVICE_ID);
-        try {
-            registerResource(service, bundle, serviceId, resource);
-        } finally {
-            context.ungetService(resourceRef);
-        }
+    void bindResource(ServiceReference<OsgiVaadinResource> resourceRef) throws NamespaceException {
+        registerResource(resourceRef);
     }
 
     void unbindResource(ServiceReference<OsgiVaadinResource> resourceRef) {
-        Long serviceId = (Long) resourceRef.getProperty(Constants.SERVICE_ID);
-        unregisterResource(serviceId);
+        unregisterResource(resourceRef);
     }
 
     @Reference(cardinality = ReferenceCardinality.MULTIPLE, service = OsgiVaadinContributor.class, policy = ReferencePolicy.DYNAMIC)
-    void bindContributor(ServiceReference<OsgiVaadinContributor> contributorRef)
-            throws ResourceBundleInactiveException {
+    void bindContributor(ServiceReference<OsgiVaadinContributor> contributorRef) {
         Bundle bundle = contributorRef.getBundle();
         BundleContext context = bundle.getBundleContext();
 
@@ -180,21 +129,34 @@ public class VaadinResourceTrackerComponent {
         Long serviceId = (Long) contributorRef
                 .getProperty(Constants.SERVICE_ID);
         List<ServiceRegistration<? extends OsgiVaadinResource>> registrations = contributorToRegistrations
-                .get(serviceId);
+                .remove(serviceId);
         if (registrations != null) {
             for (ServiceRegistration<? extends OsgiVaadinResource> reg : registrations) {
                 reg.unregister();
             }
         }
     }
+    
+    @Reference
+    void bindVaadinResourceService(VaadinResourceService vaadinService) {
+        this.vaadinService = vaadinService;
+    }
+    
+    void unbindVaadinResourceService(VaadinResourceService vaadinService) {
+        if(this.vaadinService == vaadinService) {
+            this.vaadinService = null;
+        }
+    }
 
     @Reference
-    void setHttpService(HttpService service) {
+    void bindHttpService(HttpService service) {
         this.httpService = service;
     }
 
-    void unsetHttpService(HttpService service) {
-        this.httpService = null;
+    void unbindtHttpService(HttpService service) {
+        if(this.httpService == service) {
+            this.httpService = null;
+        }
     }
 
     /**
@@ -203,11 +165,9 @@ public class VaadinResourceTrackerComponent {
      * @since 8.6.0
      */
     @Activate
-    protected void activate() throws NamespaceException {
+    protected void activate(BundleContext context) throws NamespaceException {
         for (Delegate registration : resourceToRegistration.values()) {
-            registration.init(httpService);
-            httpService.registerResources(registration.alias, registration.path,
-                    registration);
+            registration.register(context, httpService, vaadinService);
         }
     }
 
@@ -230,87 +190,121 @@ public class VaadinResourceTrackerComponent {
         httpService = null;
     }
 
-    private void registerTheme(VaadinResourceService resourceService,
-            Bundle bundle, Long serviceId, OsgiVaadinTheme theme) {
-        String pathPrefix = resourceService.getResourcePathPrefix();
-
-        String alias = PathFormatHelper.getThemeAlias(theme.getName(),
-                pathPrefix);
-        String path = PathFormatHelper.getThemePath(theme.getName());
-
-        registerResource(alias, path, bundle, serviceId);
+    private void registerResource(ServiceReference<? extends OsgiVaadinResource> resourceRef) throws NamespaceException {
+        BundleContext context = resourceRef.getBundle().getBundleContext();
+        OsgiVaadinResource resource = context.getService(resourceRef);
+        //service got is unregistered if we get null here
+        if(resource == null)
+            return;
+        Long serviceId = (Long) resourceRef.getProperty(Constants.SERVICE_ID);
+        Delegate registration = new Delegate(resource, resourceRef);
+        resourceToRegistration.put(serviceId, registration);
+        registration.register(context, httpService, vaadinService);
     }
 
-    private void registerWidget(VaadinResourceService resourceService,
-            Bundle bundle, Long serviceId, OsgiVaadinWidgetset widgetset) {
-        String pathPrefix = resourceService.getResourcePathPrefix();
-
-        String alias = PathFormatHelper.getWidgetsetAlias(widgetset.getName(),
-                pathPrefix);
-        String path = PathFormatHelper.getWidgetsetPath(widgetset.getName());
-
-        registerResource(alias, path, bundle, serviceId);
-    }
-
-    private void registerResource(VaadinResourceService resourceService,
-            Bundle bundle, Long serviceId, OsgiVaadinResource resource) {
-        String pathPrefix = resourceService.getResourcePathPrefix();
-
-        String alias = PathFormatHelper.getRootResourceAlias(resource.getName(),
-                pathPrefix);
-        String path = PathFormatHelper.getRootResourcePath(resource.getName());
-
-        registerResource(alias, path, bundle, serviceId);
-    }
-
-    private void registerResource(String alias, String path, Bundle bundle,
-            Long serviceId) {
-        resourceToRegistration.put(serviceId,
-                new Delegate(alias, path, bundle));
+    private void unregisterResource(ServiceReference<? extends OsgiVaadinResource> resourceRef) {
+        Long serviceId = (Long) resourceRef.getProperty(Constants.SERVICE_ID);
+        unregisterResource(serviceId);
     }
 
     private void unregisterResource(Long serviceId) {
+        if(serviceId == null)
+            return;
         Delegate registration = resourceToRegistration.remove(serviceId);
         unregisterResource(registration);
     }
 
     private void unregisterResource(Delegate registration) {
-        if (registration != null && httpService != null) {
-            httpService.unregister(registration.alias);
+        if (registration != null) {
+            registration.unregister();
         }
     }
 
     static final class Delegate implements HttpContext {
-        private final String alias;
-        private final String path;
-        private final Bundle bundle;
+        private final OsgiVaadinResource resource;
+        private final ServiceReference<? extends OsgiVaadinResource> resourceRef;
 
-        private volatile HttpContext context;
+        private volatile String alias;
+        private volatile String path;
+        private volatile BundleContext bundleContext;
+        private volatile HttpService httpService;
+        private volatile HttpContext httpContext;
+        private volatile VaadinResourceService vaadinService;
 
-        public Delegate(String alias, String path, Bundle bundle) {
-            this.alias = alias;
-            this.path = path;
-            this.bundle = bundle;
+        public Delegate(OsgiVaadinResource resource, ServiceReference<? extends OsgiVaadinResource> resourceRef) {
+            this.resource = Objects.requireNonNull(resource);
+            this.resourceRef = Objects.requireNonNull(resourceRef);
         }
 
-        public void init(HttpService service) {
-            context = service.createDefaultHttpContext();
+        public void register(BundleContext bundleContext, HttpService httpService, VaadinResourceService vaadinService) throws NamespaceException {
+            if(bundleContext != null) {
+                this.bundleContext = bundleContext;
+            }
+            if(httpService != null) {
+                this.httpService = httpService;
+                this.httpContext = this.httpService.createDefaultHttpContext();
+            }
+            if(vaadinService != null) {
+                this.vaadinService = vaadinService;
+            }
+            //if all dependencies are satisfied we can finally register on the HttpService
+            if(this.bundleContext != null && this.httpService != null && this.vaadinService != null) {
+                this.registerImpl();
+            }
+        }
+
+        public void unregister() {
+            if (httpService != null) {
+                httpService.unregister(alias);
+            }
+            if(bundleContext != null) {
+                //unget the service reference
+                bundleContext.ungetService(resourceRef);
+            }
+            alias = null;
+            path = null;
+            bundleContext = null;
+            httpService = null;
+            httpContext = null;
+            vaadinService = null;
         }
 
         @Override
         public boolean handleSecurity(HttpServletRequest request,
                 HttpServletResponse response) throws IOException {
-            return context.handleSecurity(request, response);
+            return httpContext.handleSecurity(request, response);
         }
 
         @Override
         public URL getResource(String name) {
-            return bundle.getResource(name);
+            return resourceRef.getBundle().getResource(name);
         }
 
         @Override
         public String getMimeType(String name) {
-            return context.getMimeType(name);
+            return httpContext.getMimeType(name);
+        }
+
+        private void registerImpl() throws NamespaceException {
+            //we have already registered if alias is set
+            if(alias != null)
+                return;
+            
+            String pathPrefix = vaadinService.getResourcePathPrefix();
+            if(resource instanceof OsgiVaadinWidgetset) {
+                alias = PathFormatHelper.getRootResourceAlias(resource.getName(),
+                        pathPrefix);
+                path = PathFormatHelper.getRootResourcePath(resource.getName());
+            } else if(resource instanceof OsgiVaadinTheme){
+                alias = PathFormatHelper.getThemeAlias(resource.getName(),
+                        pathPrefix);
+                path = PathFormatHelper.getThemePath(resource.getName());
+            } else {
+                alias = PathFormatHelper.getRootResourceAlias(resource.getName(), pathPrefix);
+                path = PathFormatHelper.getRootResourcePath(resource.getName());
+            }
+            httpService.registerResources(alias, path,
+                    this);
         }
     }
 }

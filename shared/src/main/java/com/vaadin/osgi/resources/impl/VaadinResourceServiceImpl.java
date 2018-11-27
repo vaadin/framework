@@ -15,6 +15,10 @@
  */
 package com.vaadin.osgi.resources.impl;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.Version;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 
@@ -28,26 +32,16 @@ import com.vaadin.osgi.resources.VaadinResourceService;
  *
  * @since 8.1
  */
+@Component
 public class VaadinResourceServiceImpl implements VaadinResourceService {
     private static final String NAMESPACE_PREFIX = "vaadin-%s";
 
-    private String bundleVersion;
-
     private String pathPrefix;
 
-    /**
-     * Sets the version of the bundle managing this service.
-     *
-     * <p>
-     * This needs to be called before any other method after the service is
-     * created.
-     *
-     * @param bundleVersion
-     *            the version of the bundle managing this service
-     */
-    public void setBundleVersion(String bundleVersion) {
-        this.bundleVersion = bundleVersion;
-        pathPrefix = String.format(NAMESPACE_PREFIX, bundleVersion);
+    @Activate
+    public void start(BundleContext context) throws Exception {
+        Version version = context.getBundle().getVersion();
+        this.setBundleVersion(version.toString());
     }
 
     @Override
@@ -79,6 +73,20 @@ public class VaadinResourceServiceImpl implements VaadinResourceService {
 
     @Override
     public String getResourcePathPrefix() {
-        return String.format(NAMESPACE_PREFIX, bundleVersion);
+        return this.pathPrefix;
+    }
+
+    /**
+     * Sets the version of the bundle managing this service.
+     *
+     * <p>
+     * This needs to be called before any other method after the service is
+     * created.
+     *
+     * @param bundleVersion
+     *            the version of the bundle managing this service
+     */
+    private void setBundleVersion(String bundleVersion) {
+        this.pathPrefix = String.format(NAMESPACE_PREFIX, bundleVersion);
     }
 }
