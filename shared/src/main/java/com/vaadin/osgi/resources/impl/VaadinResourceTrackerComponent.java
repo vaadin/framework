@@ -303,7 +303,7 @@ public class VaadinResourceTrackerComponent {
         public void init(HttpService service) {
             context = service.createDefaultHttpContext();
         }
-        
+
         public boolean isInitialized() {
             return context != null;
         }
