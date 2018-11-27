@@ -28,7 +28,8 @@ import org.osgi.util.tracker.ServiceTracker;
  * @author Vaadin Ltd.
  *
  * @since 8.1
- * @deprecated use OSGi DS services to bind a instance of {@link VaadinResourceService}
+ * @deprecated use OSGi DS services to bind a instance of
+ *             {@link VaadinResourceService}
  */
 public class OsgiVaadinResources implements BundleActivator {
 
@@ -71,21 +72,23 @@ public class OsgiVaadinResources implements BundleActivator {
 
     @Override
     public void start(BundleContext context) throws Exception {
-        vaadinResourceTracker = new ServiceTracker<VaadinResourceService, VaadinResourceService>(context, VaadinResourceService.class, null) {
+        vaadinResourceTracker = new ServiceTracker<VaadinResourceService, VaadinResourceService>(
+                context, VaadinResourceService.class, null) {
             @Override
             public VaadinResourceService addingService(
                     ServiceReference<VaadinResourceService> reference) {
-                VaadinResourceService vaadinService = super.addingService(reference);
+                VaadinResourceService vaadinService = super.addingService(
+                        reference);
                 service = vaadinService;
                 return vaadinService;
             }
-            
+
             @Override
             public void removedService(
                     ServiceReference<VaadinResourceService> reference,
                     VaadinResourceService service) {
                 super.removedService(reference, service);
-                if(OsgiVaadinResources.this.service == service) {
+                if (OsgiVaadinResources.this.service == service) {
                     OsgiVaadinResources.this.service = null;
                 }
             }
@@ -96,7 +99,7 @@ public class OsgiVaadinResources implements BundleActivator {
 
     @Override
     public void stop(BundleContext context) throws Exception {
-        if(vaadinResourceTracker != null) {
+        if (vaadinResourceTracker != null) {
             vaadinResourceTracker.close();
         }
         vaadinResourceTracker = null;
