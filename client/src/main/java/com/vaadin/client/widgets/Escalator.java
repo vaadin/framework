@@ -5602,10 +5602,19 @@ public class Escalator extends Widget
          */
         public void shiftSpacersByRows(int index, int numberOfRows) {
             final double pxDiff = numberOfRows * body.getDefaultRowHeight();
-            for (SpacerContainer.SpacerImpl spacer : getSpacersForRowAndAfter(
-                    index)) {
-                spacer.setPositionDiff(0, pxDiff);
-                spacer.setRowIndex(spacer.getRow() + numberOfRows);
+            List<SpacerContainer.SpacerImpl> spacers = new ArrayList<>(
+                    getSpacersForRowAndAfter(index));
+            if (numberOfRows < 0) {
+                for (SpacerContainer.SpacerImpl spacer : spacers) {
+                    spacer.setPositionDiff(0, pxDiff);
+                    spacer.setRowIndex(spacer.getRow() + numberOfRows);
+                }
+            } else {
+                for (int i = spacers.size() - 1; i >= 0; --i) {
+                    SpacerContainer.SpacerImpl spacer = spacers.get(i);
+                    spacer.setPositionDiff(0, pxDiff);
+                    spacer.setRowIndex(spacer.getRow() + numberOfRows);
+                }
             }
         }
 
