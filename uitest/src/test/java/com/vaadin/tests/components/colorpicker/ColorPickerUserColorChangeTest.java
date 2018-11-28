@@ -14,7 +14,7 @@ public class ColorPickerUserColorChangeTest extends MultiBrowserTest {
         openTestURL();
         // Open colorPicker
         findElement(By.className("v-button-v-colorpicker ")).click();
-        sleep(500);
+        sleep(2000);
         // click somewhere inside the gradient layer
         findElement(By.className("v-colorpicker-gradient-clicklayer")).click();
         // confirm selection by clicking "OK" button
