@@ -76,7 +76,11 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.*;
+import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.ComputedStyle;
+import com.vaadin.client.DeferredWorker;
+import com.vaadin.client.Focusable;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.WidgetUtil.Reference;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
@@ -102,6 +106,8 @@ import com.vaadin.client.widget.escalator.Spacer;
 import com.vaadin.client.widget.escalator.SpacerUpdater;
 import com.vaadin.client.widget.escalator.events.RowHeightChangedEvent;
 import com.vaadin.client.widget.escalator.events.RowHeightChangedHandler;
+import com.vaadin.client.widget.escalator.events.SpacerIndexChangedEvent;
+import com.vaadin.client.widget.escalator.events.SpacerIndexChangedHandler;
 import com.vaadin.client.widget.escalator.events.SpacerVisibilityChangedEvent;
 import com.vaadin.client.widget.escalator.events.SpacerVisibilityChangedHandler;
 import com.vaadin.client.widget.grid.AutoScroller;
@@ -6356,6 +6362,15 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
         });
 
+        addSpacerIndexChangedHandler(new SpacerIndexChangedHandler() {
+            @Override
+            public void onSpacerIndexChanged(SpacerIndexChangedEvent event) {
+                // remove old index and add new index
+                visibleDetails.remove(event.getOldIndex());
+                visibleDetails.add(event.getNewIndex());
+            }
+        });
+
         // Sink header events and key events
         sinkEvents(getHeader().getConsumedEvents());
         sinkEvents(Arrays.asList(BrowserEvents.KEYDOWN, BrowserEvents.KEYUP,
@@ -8749,6 +8764,19 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
+     * Adds a spacer index changed handler to the underlying escalator.
+     *
+     * @param handler
+     *            the handler to be called when a spacer's index changes
+     * @return the registration object with which the handler can be removed
+     * @since
+     */
+    public HandlerRegistration addSpacerIndexChangedHandler(
+            SpacerIndexChangedHandler handler) {
+        return escalator.addHandler(handler, SpacerIndexChangedEvent.TYPE);
+    }
+
+    /**
      * Adds a low-level DOM event handler to this Grid. The handler is inserted
      * into the given position in the list of handlers. The handlers are invoked
      * in order. If the
@@ -9413,12 +9441,23 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          */
 
         boolean isVisible = isDetailsVisible(rowIndex);
-        if (visible && !isVisible) {
-            escalator.getBody().setSpacer(rowIndex, DETAILS_ROW_INITIAL_HEIGHT);
-            visibleDetails.add(rowIndexInteger);
-        } else if (!visible && isVisible) {
-            escalator.getBody().setSpacer(rowIndex, -1);
-            visibleDetails.remove(rowIndexInteger);
+        boolean isVisibleInEscalator = escalator.getBody()
+                .spacerExists(rowIndex);
+        if (visible) {
+            if (!isVisibleInEscalator) {
+                escalator.getBody().setSpacer(rowIndex,
+                        DETAILS_ROW_INITIAL_HEIGHT);
+            }
+            if (!isVisible) {
+                visibleDetails.add(rowIndexInteger);
+            }
+        } else if (!visible) {
+            if (isVisibleInEscalator) {
+                escalator.getBody().setSpacer(rowIndex, -1);
+            }
+            if (isVisible) {
+                visibleDetails.remove(rowIndexInteger);
+            }
         }
     }
 
