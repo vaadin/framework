@@ -59,6 +59,12 @@ The [methodname]#setRows()# method sets the height of the component by the
 number of visible items in the selection boxes. Setting the height with
 [methodname]#setHeight()# to a defined value overrides the rows setting.
 
+[WARNING]
+The [classname]#TwinColSelect# does not provide any lazy load mechanism.
+Hence it will slow down significantly if used with large itemsets.
+This lazy load feature could be implemented creating a server-side custom component that
+uses two single column Grids instead.
+
 Common selection component features are described in
 <<dummy/../../../framework/components/components-selection#components.selection,"Selection
 Components">>.
