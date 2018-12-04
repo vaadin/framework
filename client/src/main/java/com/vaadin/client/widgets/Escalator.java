@@ -2907,10 +2907,14 @@ public class Escalator extends Widget
              */
             scroller.recalculateScrollbarsForVirtualViewport();
 
+            double spacerHeightsSumUntilIndex = spacerContainer
+                    .getSpacerHeightsSumUntilIndex(index);
             final boolean addedRowsAboveCurrentViewport = index
-                    * getDefaultRowHeight() < getScrollTop();
+                    * getDefaultRowHeight()
+                    + spacerHeightsSumUntilIndex < getScrollTop();
             final boolean addedRowsBelowCurrentViewport = index
-                    * getDefaultRowHeight() > getScrollTop()
+                    * getDefaultRowHeight()
+                    + spacerHeightsSumUntilIndex > getScrollTop()
                             + getHeightOfSection();
 
             if (addedRowsAboveCurrentViewport) {
