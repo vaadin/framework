@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.components.grid.basicfeatures.server;
 
 import static org.junit.Assert.assertEquals;
@@ -38,20 +23,20 @@ public class GridDetailsServerTest extends GridBasicFeaturesTest {
      * awkward with two scroll commands back to back.
      */
     private static final int ALMOST_LAST_INDEX = 995;
-    private static final String[] OPEN_ALMOST_LAST_ITEM_DETAILS = {
-            "Component", "Details", "Open " + ALMOST_LAST_INDEX };
-    private static final String[] OPEN_FIRST_ITEM_DETAILS = {
-            "Component", "Details", "Open firstItemId" };
-    private static final String[] TOGGLE_FIRST_ITEM_DETAILS = {
-            "Component", "Details", "Toggle firstItemId" };
-    private static final String[] DETAILS_GENERATOR_NULL = {
-            "Component", "Details", "Generators", "NULL" };
-    private static final String[] DETAILS_GENERATOR_WATCHING = {
-            "Component", "Details", "Generators", "\"Watching\"" };
-    private static final String[] DETAILS_GENERATOR_PERSISTING = {
-            "Component", "Details", "Generators", "Persisting" };
-    private static final String[] CHANGE_HIERARCHY = { "Component",
-            "Details", "Generators", "- Change Component" };
+    private static final String[] OPEN_ALMOST_LAST_ITEM_DETAILS = { "Component",
+            "Details", "Open " + ALMOST_LAST_INDEX };
+    private static final String[] OPEN_FIRST_ITEM_DETAILS = { "Component",
+            "Details", "Open firstItemId" };
+    private static final String[] TOGGLE_FIRST_ITEM_DETAILS = { "Component",
+            "Details", "Toggle firstItemId" };
+    private static final String[] DETAILS_GENERATOR_NULL = { "Component",
+            "Details", "Generators", "NULL" };
+    private static final String[] DETAILS_GENERATOR_WATCHING = { "Component",
+            "Details", "Generators", "\"Watching\"" };
+    private static final String[] DETAILS_GENERATOR_PERSISTING = { "Component",
+            "Details", "Generators", "Persisting" };
+    private static final String[] CHANGE_HIERARCHY = { "Component", "Details",
+            "Generators", "- Change Component" };
 
     @Before
     public void setUp() {

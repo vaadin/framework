@@ -30,9 +30,13 @@ public class AbstractListingTest {
 
         /**
          * Used to execute data generation
+         *
+         * @param initial
+         *            {@code true} to mock initial data request; {@code false}
+         *            for follow-up request.
          */
-        public void runDataGeneration() {
-            super.getDataCommunicator().beforeClientResponse(true);
+        public void runDataGeneration(boolean initial) {
+            super.getDataCommunicator().beforeClientResponse(initial);
         }
 
         @Override
@@ -129,7 +133,7 @@ public class AbstractListingTest {
         CountGenerator generator = new CountGenerator();
         generator.extend(listing);
         listing.setItems("Foo");
-        listing.runDataGeneration();
+        listing.runDataGeneration(true);
         assertEquals("Generator should have been called once", 1,
                 generator.callCount);
     }
@@ -139,7 +143,7 @@ public class AbstractListingTest {
         CountGenerator generator = new CountGenerator();
         listing.setItems("Foo");
         generator.extend(listing);
-        listing.runDataGeneration();
+        listing.runDataGeneration(true);
         assertEquals("Generator should have been called once", 1,
                 generator.callCount);
     }
@@ -149,10 +153,10 @@ public class AbstractListingTest {
         listing.setItems("Foo");
         CountGenerator generator = new CountGenerator();
         generator.extend(listing);
-        listing.runDataGeneration();
+        listing.runDataGeneration(true);
         assertEquals("Generator should have been called once", 1,
                 generator.callCount);
-        listing.runDataGeneration();
+        listing.runDataGeneration(false);
         assertEquals("Generator should not have been called again", 1,
                 generator.callCount);
     }
@@ -163,7 +167,7 @@ public class AbstractListingTest {
         CountGenerator generator = new CountGenerator();
         generator.extend(listing);
         generator.remove();
-        listing.runDataGeneration();
+        listing.runDataGeneration(true);
         assertEquals("Generator should not have been called", 0,
                 generator.callCount);
     }
@@ -173,11 +177,11 @@ public class AbstractListingTest {
         listing.setItems("Foo");
         CountGenerator generator = new CountGenerator();
         generator.extend(listing);
-        listing.runDataGeneration();
+        listing.runDataGeneration(true);
         assertEquals("Generator should have been called once", 1,
                 generator.callCount);
         generator.refresh("Foo");
-        listing.runDataGeneration();
+        listing.runDataGeneration(false);
         assertEquals("Generator should have been called again", 2,
                 generator.callCount);
     }

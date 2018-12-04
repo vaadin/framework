@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2013 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.themes.valo;
 
 import java.time.LocalDate;
@@ -49,7 +34,8 @@ public class DateFields extends VerticalLayout implements View {
         row.addStyleName(ValoTheme.LAYOUT_HORIZONTAL_WRAPPING);
         addComponent(row);
 
-        AbstractDateField<LocalDate, DateResolution> date = new TestDateField("Default resolution");
+        AbstractDateField<LocalDate, DateResolution> date = new TestDateField(
+                "Default resolution");
         setDate(date);
         row.addComponent(date);
 
@@ -182,7 +168,8 @@ public class DateFields extends VerticalLayout implements View {
         row.addComponent(form);
     }
 
-    private void setDateRange(AbstractDateField<LocalDate, DateResolution> date) {
+    private void setDateRange(
+            AbstractDateField<LocalDate, DateResolution> date) {
         date.setRangeStart(getDefaultDate());
 
         LocalDate endDate = getDefaultDate();

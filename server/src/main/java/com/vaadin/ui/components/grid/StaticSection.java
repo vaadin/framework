@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -623,7 +623,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          * The tooltip is shown in the mode returned by
          * {@link #getDescriptionContentMode()}.
          *
-         * @since
+         * @since 8.4
          */
         public String getDescription() {
             return cellState.description;
@@ -638,7 +638,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          *
          * @param description
          *            the tooltip to show when hovering the cell
-         * @since
+         * @since 8.4
          */
         public void setDescription(String description) {
             cellState.description = description;
@@ -654,7 +654,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          * @param descriptionContentMode
          *            the content mode to use for the tooltip (HTML or plain
          *            text)
-         * @since
+         * @since 8.4
          */
         public void setDescription(String description,
                 ContentMode descriptionContentMode) {
@@ -667,7 +667,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          *
          * @see ContentMode
          * @return the content mode for the tooltip
-         * @since
+         * @since 8.4
          */
         public ContentMode getDescriptionContentMode() {
             return cellState.descriptionContentMode;
@@ -679,7 +679,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
          * @see ContentMode
          * @param descriptionContentMode
          *            the content mode for the tooltip
-         * @since
+         * @since 8.4
          */
         public void setDescriptionContentMode(
                 ContentMode descriptionContentMode) {

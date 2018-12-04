@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[valo-examples]]
-Valo examples
--------------
+= Valo examples
 
 These are some sample looks for the Valo theme. You can use these as-is,
 as a starting point, or while learning Valo.

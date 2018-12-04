@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[dynamically-injecting-css]]
-Dynamically injecting CSS
--------------------------
+= Dynamically injecting CSS
 
 In most cases you will style your components using SASS or CSS and
 create a theme for the application which you include with the `@Theme`

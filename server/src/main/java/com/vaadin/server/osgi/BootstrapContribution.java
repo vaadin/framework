@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,15 +15,13 @@
  */
 package com.vaadin.server.osgi;
 
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.http.HttpService;
-import org.osgi.service.http.NamespaceException;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.vaadin.osgi.resources.OsgiVaadinResources;
-import com.vaadin.osgi.resources.OsgiVaadinResources.ResourceBundleInactiveException;
-import com.vaadin.osgi.resources.VaadinResourceService;
+import org.osgi.service.component.annotations.Component;
+
+import com.vaadin.osgi.resources.OsgiVaadinContributor;
+import com.vaadin.osgi.resources.OsgiVaadinResource;
 
 /**
  * OSGi service component registering bootstrap JS as published resources in
@@ -32,26 +30,18 @@ import com.vaadin.osgi.resources.VaadinResourceService;
  * @author Vaadin Ltd
  * @since 8.1
  */
-@Component(immediate = true)
-public class BootstrapContribution {
+@Component
+public class BootstrapContribution implements OsgiVaadinContributor {
     private static final String[] RESOURCES = { "vaadinBootstrap.js",
             "vaadinBootstrap.js.gz" };
-    private HttpService httpService;
 
-    @Activate
-    void startup() throws NamespaceException, ResourceBundleInactiveException {
-        VaadinResourceService service = OsgiVaadinResources.getService();
-        for (String resourceName : RESOURCES) {
-            service.publishResource(resourceName, httpService);
+    @Override
+    public List<OsgiVaadinResource> getContributions() {
+        final List<OsgiVaadinResource> contributions = new ArrayList<>(
+                RESOURCES.length);
+        for (final String theme : RESOURCES) {
+            contributions.add(OsgiVaadinResource.create(theme));
         }
-    }
-
-    @Reference
-    void setHttpService(HttpService service) {
-        httpService = service;
-    }
-
-    void unsetHttpService(HttpService service) {
-        httpService = null;
+        return contributions;
     }
 }

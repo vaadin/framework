@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -46,11 +46,11 @@ public class HierarchicalDataCommunicatorConnector
          */
         JsonObject hierarchyData = newRowData.getObject(
                 HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION);
-        if (!hierarchyData.hasKey(HierarchicalDataCommunicatorConstants.ROW_DEPTH)) {
+        if (!hierarchyData
+                .hasKey(HierarchicalDataCommunicatorConstants.ROW_DEPTH)) {
             hierarchyData.put(HierarchicalDataCommunicatorConstants.ROW_DEPTH,
-                    oldRowData
-                            .getObject(
-                                    HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION)
+                    oldRowData.getObject(
+                            HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION)
                             .getNumber(
                                     HierarchicalDataCommunicatorConstants.ROW_DEPTH));
         }

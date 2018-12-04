@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,7 +39,7 @@ import com.vaadin.ui.dnd.event.DragStartListener;
  * functionality.
  *
  * @param <T>
- *         Type of the component to be extended.
+ *            Type of the component to be extended.
  * @author Vaadin Ltd
  * @since 8.1
  */
@@ -59,7 +59,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * Extends {@code target} component and makes it a drag source.
      *
      * @param target
-     *         Component to be extended.
+     *            Component to be extended.
      */
     public DragSourceExtension(T target) {
         super.extend(target);
@@ -126,7 +126,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * side. Fires the {@link DragEndEvent}.
      *
      * @param dropEffect
-     *         the drop effect on the dragend
+     *            the drop effect on the dragend
      */
     protected void onDragEnd(DropEffect dropEffect) {
         DragEndEvent<T> event = new DragEndEvent<>(getParent(), dropEffect);
@@ -151,7 +151,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * equivalent to {@link EffectAllowed#ALL}.
      *
      * @param effect
-     *         Effects to allow for this draggable element. Cannot be {@code
+     *            Effects to allow for this draggable element. Cannot be {@code
      *         null}.
      */
     public void setEffectAllowed(EffectAllowed effect) {
@@ -170,11 +170,12 @@ public class DragSourceExtension<T extends AbstractComponent>
      * <p>
      * You can use different types of data to support dragging to different
      * targets. Accepted types depend on the drop target and those can be
-     * platform specific. See https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Recommended_drag_types
+     * platform specific. See
+     * https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Recommended_drag_types
      * for examples on different types.
      * <p>
-     * <em>NOTE: IE11 only supports type ' text', which can be set using {@link
-     * #setDataTransferText(String data)}</em>
+     * <em>NOTE: IE11 only supports type ' text', which can be set using
+     * {@link #setDataTransferText(String data)}</em>
      *
      * @return Effects that are allowed for this draggable element.
      */
@@ -192,11 +193,11 @@ public class DragSourceExtension<T extends AbstractComponent>
      * application supports IE11.
      *
      * @param type
-     *         Type of the data to be set for the client side draggable element,
-     *         e.g. {@code text/plain}. Cannot be {@code null}.
+     *            Type of the data to be set for the client side draggable
+     *            element, e.g. {@code text/plain}. Cannot be {@code null}.
      * @param data
-     *         Data to be set for the client side draggable element. Cannot be
-     *         {@code null}.
+     *            Data to be set for the client side draggable element. Cannot
+     *            be {@code null}.
      */
     public void setDataTransferData(String type, String data) {
         if (type == null) {
@@ -218,7 +219,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * element.
      *
      * @param type
-     *         Type of the requested data, e.g. {@code text/plain}.
+     *            Type of the requested data, e.g. {@code text/plain}.
      * @return Data of type {@code type} stored in this drag source element.
      */
     public String getDataTransferData(String type) {
@@ -230,7 +231,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * map preserves the order of storage and is unmodifiable.
      *
      * @return Unmodifiable copy of the map of data in the order the data was
-     * stored.
+     *         stored.
      */
     public Map<String, String> getDataTransferData() {
         Map<String, String> data = getState(false).data;
@@ -253,7 +254,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * Use this method if your application supports IE11.
      *
      * @param data
-     *         Data to be set for the client side draggable element.
+     *            Data to be set for the client side draggable element.
      * @see #setDataTransferData(String, String)
      */
     public void setDataTransferText(String data) {
@@ -275,7 +276,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * present.
      *
      * @param type
-     *         Type of data to be cleared. Cannot be {@code null}.
+     *            Type of data to be cleared. Cannot be {@code null}.
      */
     public void clearDataTransferData(String type) {
         if (type == null) {
@@ -305,9 +306,9 @@ public class DragSourceExtension<T extends AbstractComponent>
      * the browser's limitations.
      *
      * @param key
-     *         key of the payload to be transferred
+     *            key of the payload to be transferred
      * @param value
-     *         value of the payload to be transferred
+     *            value of the payload to be transferred
      * @see DropTargetExtension#setDropCriterion(String, String)
      */
     public void setPayload(String key, String value) {
@@ -325,12 +326,13 @@ public class DragSourceExtension<T extends AbstractComponent>
      * the browser's limitations.
      *
      * @param key
-     *         key of the payload to be transferred
+     *            key of the payload to be transferred
      * @param value
-     *         value of the payload to be transferred
-     * @see DropTargetExtension#setDropCriterion(String, com.vaadin.shared.ui.dnd.criteria.ComparisonOperator,
-     * int)
-     *      DropTargetExtension#setDropCriterion(String, ComparisonOperator, int)
+     *            value of the payload to be transferred
+     * @see DropTargetExtension#setDropCriterion(String,
+     *      com.vaadin.shared.ui.dnd.criteria.ComparisonOperator, int)
+     *      DropTargetExtension#setDropCriterion(String, ComparisonOperator,
+     *      int)
      */
     public void setPayload(String key, int value) {
         setPayload(key, String.valueOf(value), Payload.ValueType.INTEGER);
@@ -347,12 +349,13 @@ public class DragSourceExtension<T extends AbstractComponent>
      * the browser's limitations.
      *
      * @param key
-     *         key of the payload to be transferred
+     *            key of the payload to be transferred
      * @param value
-     *         value of the payload to be transferred
-     * @see DropTargetExtension#setDropCriterion(String, com.vaadin.shared.ui.dnd.criteria.ComparisonOperator,
-     * double)
-     *      DropTargetExtension#setDropCriterion(String, ComparisonOperator, double)
+     *            value of the payload to be transferred
+     * @see DropTargetExtension#setDropCriterion(String,
+     *      com.vaadin.shared.ui.dnd.criteria.ComparisonOperator, double)
+     *      DropTargetExtension#setDropCriterion(String, ComparisonOperator,
+     *      double)
      */
     public void setPayload(String key, double value) {
         setPayload(key, String.valueOf(value), Payload.ValueType.DOUBLE);
@@ -392,7 +395,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * dragstart event happens on the client side.
      *
      * @param listener
-     *         Listener to handle dragstart event.
+     *            Listener to handle dragstart event.
      * @return Handle to be used to remove this listener.
      */
     public Registration addDragStartListener(DragStartListener<T> listener) {
@@ -407,7 +410,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * event happens on the client side.
      *
      * @param listener
-     *         Listener to handle dragend event.
+     *            Listener to handle dragend event.
      * @return Handle to be used to remove this listener.
      */
     public Registration addDragEndListener(DragEndListener<T> listener) {
@@ -419,7 +422,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * Set a custom drag image for the current drag source.
      *
      * @param imageResource
-     *         Resource of the image to be displayed as drag image.
+     *            Resource of the image to be displayed as drag image.
      */
     public void setDragImage(Resource imageResource) {
         setResource(DragSourceState.RESOURCE_DRAG_IMAGE, imageResource);

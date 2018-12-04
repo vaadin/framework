@@ -33,34 +33,30 @@ public class OrderedLayoutCases extends AbstractReindeerTestUI {
                             event.getProperty().getValue().toString()),
                     dimensionValues));
             addComponent(createSimpleSelector("Child height",
-                    event ->setHeight(
-                            event.getProperty().getValue().toString())
-                    , dimensionValues));
-            addComponent(
-                    createSimpleSelector("Caption", event -> {
-                        String value = event.getProperty().getValue()
-                                .toString();
-                        if (value.isEmpty()) {
-                            setCaption(null);
-                        } else if (value.equals("Long")) {
-                            setCaption(
-                                    "A rather long caption just to see what happens");
-                        } else {
-                            setCaption(value);
-                        }
-                    }, "", "Short", "Long"));
+                    event -> setHeight(
+                            event.getProperty().getValue().toString()),
+                    dimensionValues));
+            addComponent(createSimpleSelector("Caption", event -> {
+                String value = event.getProperty().getValue().toString();
+                if (value.isEmpty()) {
+                    setCaption(null);
+                } else if (value.equals("Long")) {
+                    setCaption(
+                            "A rather long caption just to see what happens");
+                } else {
+                    setCaption(value);
+                }
+            }, "", "Short", "Long"));
 
-            addComponent(createSimpleSelector("Expand ratio",
-                    event -> {
-                        AbstractOrderedLayout parent = (AbstractOrderedLayout) getParent();
-                        if (parent == null) {
-                            return;
-                        }
-                        String value = event.getProperty().getValue()
-                                .toString();
-                        parent.setExpandRatio(SampleChild.this,
-                                Float.parseFloat(value));
-                    }, "0", "1", "2"));
+            addComponent(createSimpleSelector("Expand ratio", event -> {
+                AbstractOrderedLayout parent = (AbstractOrderedLayout) getParent();
+                if (parent == null) {
+                    return;
+                }
+                String value = event.getProperty().getValue().toString();
+                parent.setExpandRatio(SampleChild.this,
+                        Float.parseFloat(value));
+            }, "0", "1", "2"));
 
             // Why is Alignment not an enum? Now we have to use reflection just
             // to get the different values as hardcoding is never an option! ;)
@@ -71,25 +67,20 @@ public class OrderedLayoutCases extends AbstractReindeerTestUI {
                     alignmentValues.add(field.getName());
                 }
             }
-            addComponent(createSimpleSelector("Alignment",
-                    event -> {
-                        String value = event.getProperty().getValue()
-                                .toString();
-                        AlignmentHandler parent = (AlignmentHandler) getParent();
-                        if (parent == null) {
-                            return;
-                        }
-                        try {
-                            Field field = Alignment.class
-                                    .getDeclaredField(value);
-                            Alignment alignment = (Alignment) field
-                                    .get(null);
-                            parent.setComponentAlignment(SampleChild.this,
-                                    alignment);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    }, alignmentValues, "TOP_LEFT")); // Sorry for not using
+            addComponent(createSimpleSelector("Alignment", event -> {
+                String value = event.getProperty().getValue().toString();
+                AlignmentHandler parent = (AlignmentHandler) getParent();
+                if (parent == null) {
+                    return;
+                }
+                try {
+                    Field field = Alignment.class.getDeclaredField(value);
+                    Alignment alignment = (Alignment) field.get(null);
+                    parent.setComponentAlignment(SampleChild.this, alignment);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }, alignmentValues, "TOP_LEFT")); // Sorry for not using
             // more reflection magic
             // just to find the
             // default value...
@@ -116,151 +107,140 @@ public class OrderedLayoutCases extends AbstractReindeerTestUI {
         sizeBar = new HorizontalLayout();
         sizeBar.setSpacing(true);
 
-        sizeBar.addComponent(
-                createSimpleSelector("Layout width",
-                        event -> currentLayout.setWidth(
-                                event.getProperty().getValue().toString()),
-                        dimensionValues));
+        sizeBar.addComponent(createSimpleSelector("Layout width",
+                event -> currentLayout
+                        .setWidth(event.getProperty().getValue().toString()),
+                dimensionValues));
         sizeBar.addComponent(createSimpleSelector("Layout height",
                 event -> currentLayout
                         .setHeight(event.getProperty().getValue().toString()),
                 dimensionValues));
-        sizeBar.addComponent(
-                createSimpleSelector("Spacing", event ->
-                        currentLayout.setSpacing(Boolean.parseBoolean(
-                        event.getProperty().getValue().toString())), "false",
-                        "true"));
-        sizeBar.addComponent(
-                createSimpleSelector("Margin", event ->
-                        currentLayout.setMargin(Boolean.parseBoolean(
-                        event.getProperty().getValue().toString())), "false",
-                        "true"));
-        sizeBar.addComponent(
-                createSimpleSelector("Direction", event -> {
-                    Object value = event.getProperty().getValue();
+        sizeBar.addComponent(createSimpleSelector("Spacing",
+                event -> currentLayout.setSpacing(Boolean.parseBoolean(
+                        event.getProperty().getValue().toString())),
+                "false", "true"));
+        sizeBar.addComponent(createSimpleSelector("Margin",
+                event -> currentLayout.setMargin(Boolean.parseBoolean(
+                        event.getProperty().getValue().toString())),
+                "false", "true"));
+        sizeBar.addComponent(createSimpleSelector("Direction", event -> {
+            Object value = event.getProperty().getValue();
 
-                    AbstractOrderedLayout newLayout;
-                    if (value.equals("Horizontal")) {
-                        newLayout = new HorizontalLayout();
-                    } else {
-                        newLayout = new VerticalLayout();
-                    }
+            AbstractOrderedLayout newLayout;
+            if (value.equals("Horizontal")) {
+                newLayout = new HorizontalLayout();
+            } else {
+                newLayout = new VerticalLayout();
+            }
 
-                    while (currentLayout.getComponentCount() > 0) {
-                        Component child = currentLayout.getComponent(0);
-                        Alignment alignment = currentLayout
-                                .getComponentAlignment(child);
-                        float expRatio = currentLayout.getExpandRatio(child);
-                        newLayout.addComponent(child);
-                        newLayout.setExpandRatio(child, expRatio);
-                        newLayout.setComponentAlignment(child, alignment);
+            while (currentLayout.getComponentCount() > 0) {
+                Component child = currentLayout.getComponent(0);
+                Alignment alignment = currentLayout
+                        .getComponentAlignment(child);
+                float expRatio = currentLayout.getExpandRatio(child);
+                newLayout.addComponent(child);
+                newLayout.setExpandRatio(child, expRatio);
+                newLayout.setComponentAlignment(child, alignment);
 
-                    }
-                    newLayout.setStyleName("theLayout");
+            }
+            newLayout.setStyleName("theLayout");
 
-                    newLayout.setHeight(currentLayout.getHeight(),
-                            currentLayout.getHeightUnits());
-                    newLayout.setWidth(currentLayout.getWidth(),
-                            currentLayout.getWidthUnits());
+            newLayout.setHeight(currentLayout.getHeight(),
+                    currentLayout.getHeightUnits());
+            newLayout.setWidth(currentLayout.getWidth(),
+                    currentLayout.getWidthUnits());
 
-                    newLayout.setMargin(currentLayout.getMargin());
-                    newLayout.setSpacing(currentLayout.isSpacing());
+            newLayout.setMargin(currentLayout.getMargin());
+            newLayout.setSpacing(currentLayout.isSpacing());
 
-                    getLayout().replaceComponent(currentLayout, newLayout);
-                    getLayout().setExpandRatio(newLayout, 1);
-                    currentLayout = newLayout;
-                }, "Horizontal", "Vertical"));
+            getLayout().replaceComponent(currentLayout, newLayout);
+            getLayout().setExpandRatio(newLayout, 1);
+            currentLayout = newLayout;
+        }, "Horizontal", "Vertical"));
 
         HorizontalLayout caseBar = new HorizontalLayout();
-        caseBar.addComponent(
-                new Button("Undefined without relative", event -> {
-                    resetState();
-                    setState(sizeBar, 2, 1);
-                    // width: 350px to middle child
-                    setChildState(1, 0, 2);
-                    // middle center allign to middle child
-                    setChildState(1, 4, 5);
-                    // long captions to right child
-                    setChildState(2, 2, 2);
-                }));
-        caseBar.addComponent(
-                new Button("Undefined with relative", event -> {
-                    resetState();
-                    // width: 100% to middle child
-                    setChildState(1, 0, 4);
-                }));
-        caseBar.addComponent(
-                new Button("Fixed with overflow", event -> {
-                    resetState();
-                    // layout width: 350px
-                    setState(sizeBar, 0, 2);
-                    // layout margin enabled
-                    setState(sizeBar, 3, 1);
-                }));
-        caseBar.addComponent(
-                new Button("Fixed with extra space", event -> {
-                    resetState();
-                    // Layout width: 800px
-                    setState(sizeBar, 0, 3);
-                    // layout margin enabled
-                    setState(sizeBar, 3, 1);
-                    // width: 350px to middle child
-                    setChildState(1, 0, 2);
-                    // short caption for middle child
-                    setChildState(1, 2, 1);
-                    // top center align for middle child
-                    setChildState(1, 4, 2);
-                }));
+        caseBar.addComponent(new Button("Undefined without relative", event -> {
+            resetState();
+            setState(sizeBar, 2, 1);
+            // width: 350px to middle child
+            setChildState(1, 0, 2);
+            // middle center allign to middle child
+            setChildState(1, 4, 5);
+            // long captions to right child
+            setChildState(2, 2, 2);
+        }));
+        caseBar.addComponent(new Button("Undefined with relative", event -> {
+            resetState();
+            // width: 100% to middle child
+            setChildState(1, 0, 4);
+        }));
+        caseBar.addComponent(new Button("Fixed with overflow", event -> {
+            resetState();
+            // layout width: 350px
+            setState(sizeBar, 0, 2);
+            // layout margin enabled
+            setState(sizeBar, 3, 1);
+        }));
+        caseBar.addComponent(new Button("Fixed with extra space", event -> {
+            resetState();
+            // Layout width: 800px
+            setState(sizeBar, 0, 3);
+            // layout margin enabled
+            setState(sizeBar, 3, 1);
+            // width: 350px to middle child
+            setChildState(1, 0, 2);
+            // short caption for middle child
+            setChildState(1, 2, 1);
+            // top center align for middle child
+            setChildState(1, 4, 2);
+        }));
 
-        caseBar.addComponent(
-                new Button("Expand with alignment", event -> {
-                    resetState();
-                    // Layout width: 800px
-                    setState(sizeBar, 0, 3);
-                    // Layout height: 350px
-                    setState(sizeBar, 1, 2);
-                    // Expand: 1 to middle child
-                    setChildState(1, 3, 1);
-                    // Align bottom left to middle child
-                    setChildState(1, 4, 6);
-                    // Long caption to middle child
-                    setChildState(1, 2, 2);
-                }));
+        caseBar.addComponent(new Button("Expand with alignment", event -> {
+            resetState();
+            // Layout width: 800px
+            setState(sizeBar, 0, 3);
+            // Layout height: 350px
+            setState(sizeBar, 1, 2);
+            // Expand: 1 to middle child
+            setChildState(1, 3, 1);
+            // Align bottom left to middle child
+            setChildState(1, 4, 6);
+            // Long caption to middle child
+            setChildState(1, 2, 2);
+        }));
 
-        caseBar.addComponent(
-                new Button("Multiple expands", event -> {
-                    resetState();
-                    // Layout width: 800px
-                    setState(sizeBar, 0, 3);
-                    // Layout height: 350px
-                    setState(sizeBar, 1, 2);
-                    // Long caption to left child
-                    setChildState(0, 2, 2);
-                    // Width 350px to middle child
-                    setChildState(1, 0, 2);
-                    // Apply to left and middle child
-                    for (int i = 0; i < 2; i++) {
-                        // Expand: 1
-                        setChildState(i, 3, 1);
-                        // Align: middle center
-                        setChildState(i, 4, 5);
-                    }
-                }));
+        caseBar.addComponent(new Button("Multiple expands", event -> {
+            resetState();
+            // Layout width: 800px
+            setState(sizeBar, 0, 3);
+            // Layout height: 350px
+            setState(sizeBar, 1, 2);
+            // Long caption to left child
+            setChildState(0, 2, 2);
+            // Width 350px to middle child
+            setChildState(1, 0, 2);
+            // Apply to left and middle child
+            for (int i = 0; i < 2; i++) {
+                // Expand: 1
+                setChildState(i, 3, 1);
+                // Align: middle center
+                setChildState(i, 4, 5);
+            }
+        }));
 
-        caseBar.addComponent(
-                new Button("Fixed + relative height", event -> {
-                    resetState();
-                    // Layout height: 100%
-                    setState(sizeBar, 1, 4);
-                    // Height: 350px to left child
-                    setChildState(0, 1, 2);
-                    // Height: 100% to middle child
-                    setChildState(1, 1, 4);
-                    // Short caption to middle child
-                    setChildState(1, 2, 1);
-                    // Alignment: bottom left to right child
-                    setChildState(2, 4, 7);
-                }));
+        caseBar.addComponent(new Button("Fixed + relative height", event -> {
+            resetState();
+            // Layout height: 100%
+            setState(sizeBar, 1, 4);
+            // Height: 350px to left child
+            setChildState(0, 1, 2);
+            // Height: 100% to middle child
+            setChildState(1, 1, 4);
+            // Short caption to middle child
+            setChildState(1, 2, 1);
+            // Alignment: bottom left to right child
+            setChildState(2, 4, 7);
+        }));
 
         caseBar.addComponent(
                 new Button("Undefined + relative height", event -> {
@@ -273,18 +253,17 @@ public class OrderedLayoutCases extends AbstractReindeerTestUI {
                     setChildState(1, 1, 4);
                 }));
 
+        caseBar.addComponent(new Button("Undefined + alignments", event -> {
+            resetState();
+            // Height: 350px to left child
+            setChildState(0, 1, 2);
+            // Short caption to left child
+            setChildState(0, 2, 1);
+            // Alignment: bottom left to right child
+            setChildState(2, 4, 7);
+        }));
         caseBar.addComponent(
-                new Button("Undefined + alignments", event -> {
-                    resetState();
-                    // Height: 350px to left child
-                    setChildState(0, 1, 2);
-                    // Short caption to left child
-                    setChildState(0, 2, 1);
-                    // Alignment: bottom left to right child
-                    setChildState(2, 4, 7);
-                }));
-        caseBar.addComponent(new Button("Relative child without expand",
-                event -> {
+                new Button("Relative child without expand", event -> {
                     resetState();
                     // Width 800px
                     setState(sizeBar, 0, 3);

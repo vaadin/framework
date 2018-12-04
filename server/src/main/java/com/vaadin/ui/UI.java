@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -121,8 +121,7 @@ import com.vaadin.util.ReflectTools;
  * @since 7.0
  */
 public abstract class UI extends AbstractSingleComponentContainer
-        implements Action.Notifier, PollNotifier,
-        LegacyComponent, Focusable {
+        implements Action.Notifier, PollNotifier, LegacyComponent, Focusable {
 
     /**
      * The application to which this UI belongs
@@ -1568,16 +1567,44 @@ public abstract class UI extends AbstractSingleComponentContainer
             @Override
             public void handleError(Exception exception) {
                 try {
-                    if (runnable instanceof ErrorHandlingRunnable) {
-                        ErrorHandlingRunnable errorHandlingRunnable = (ErrorHandlingRunnable) runnable;
+                    exception = ErrorHandlingRunnable.processException(runnable,
+                            exception);
 
-                        errorHandlingRunnable.handleError(exception);
-                    } else {
+                    if (exception instanceof UIDetachedException) {
+                        assert session != null;
+                        /*
+                         * UI was detached after access was run, but before
+                         * accessSynchronously. Furthermore, there wasn't an
+                         * ErrorHandlingRunnable that handled the exception.
+                         */
+                        getLogger().log(Level.WARNING,
+                                "access() task ignored because UI got detached after the task was enqueued."
+                                        + " To suppress this message, change the task to implement {} and make it handle {}."
+                                        + " Affected task: {}",
+                                new Object[] {
+                                        ErrorHandlingRunnable.class.getName(),
+                                        UIDetachedException.class.getName(),
+                                        runnable });
+                    } else if (exception != null) {
+                        /*
+                         * If no ErrorHandlingRunnable, or if it threw an
+                         * exception of its own.
+                         */
                         ConnectorErrorEvent errorEvent = new ConnectorErrorEvent(
                                 UI.this, exception);
 
                         ErrorHandler errorHandler = com.vaadin.server.ErrorEvent
                                 .findErrorHandler(UI.this);
+
+                        if (errorHandler == null && getSession() == null) {
+                            /*
+                             * Special case where findErrorHandler(UI) cannot
+                             * find the session handler because the UI has
+                             * recently been detached.
+                             */
+                            errorHandler = com.vaadin.server.ErrorEvent
+                                    .findErrorHandler(session);
+                        }
 
                         if (errorHandler == null) {
                             errorHandler = new DefaultErrorHandler();

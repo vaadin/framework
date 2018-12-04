@@ -32,15 +32,14 @@ public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
         // Should navigate to "Granddad 1" and expand it
         new Actions(getDriver()).sendKeys(Keys.DOWN, Keys.RIGHT).perform();
         assertEquals(6, grid.getRowCount());
-        assertCellTexts(0, 0, "Granddad 0", "Granddad 1",
-                "Dad 1/0", "Dad 1/1", "Dad 1/2", "Granddad 2");
+        assertCellTexts(0, 0, "Granddad 0", "Granddad 1", "Dad 1/0", "Dad 1/1",
+                "Dad 1/2", "Granddad 2");
         checkRowFocused(1);
 
         // Should navigate to and expand "Dad 1/1"
         new Actions(getDriver()).sendKeys(Keys.DOWN, Keys.DOWN, Keys.RIGHT)
                 .perform();
-        assertCellTexts(0, 0,
-                "Granddad 0", "Granddad 1", "Dad 1/0", "Dad 1/1",
+        assertCellTexts(0, 0, "Granddad 0", "Granddad 1", "Dad 1/0", "Dad 1/1",
                 "Son 1/1/0", "Son 1/1/1", "Son 1/1/2", "Son 1/1/3");
         checkRowFocused(3);
 
@@ -62,14 +61,14 @@ public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
 
         // Should collapse "Dad 1/1"
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
-        assertCellTexts(0, 0, "Granddad 0", "Granddad 1",
-                "Dad 1/0", "Dad 1/1", "Dad 1/2", "Granddad 2");
+        assertCellTexts(0, 0, "Granddad 0", "Granddad 1", "Dad 1/0", "Dad 1/1",
+                "Dad 1/2", "Granddad 2");
         checkRowFocused(3);
 
         // Should navigate to "Granddad 1"
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
-        assertCellTexts(0, 0, "Granddad 0", "Granddad 1",
-                "Dad 1/0", "Dad 1/1", "Dad 1/2", "Granddad 2");
+        assertCellTexts(0, 0, "Granddad 0", "Granddad 1", "Dad 1/0", "Dad 1/1",
+                "Dad 1/2", "Granddad 2");
         checkRowFocused(1);
 
         // Should collapse "Granddad 1"
@@ -102,18 +101,21 @@ public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
     @Test
     public void uncollapsible_item() {
         grid.getRow(0).getCell(0).click();
-        new Actions(getDriver()).sendKeys(Keys.DOWN, Keys.DOWN, Keys.RIGHT).perform();
+        new Actions(getDriver()).sendKeys(Keys.DOWN, Keys.DOWN, Keys.RIGHT)
+                .perform();
         grid.waitForVaadin();
-        //expand Dad 2/1
-        new Actions(getDriver()).sendKeys(Keys.DOWN, Keys.DOWN, Keys.RIGHT).perform();
+        // expand Dad 2/1
+        new Actions(getDriver()).sendKeys(Keys.DOWN, Keys.DOWN, Keys.RIGHT)
+                .perform();
         grid.waitForVaadin();
         assertNoErrorNotifications();
-        assertCellTexts(5,0,"Son 2/1/0");
+        assertCellTexts(5, 0, "Son 2/1/0");
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
         grid.waitForVaadin();
         assertNoErrorNotifications();
-        assertCellTexts(5,0,"Son 2/1/0");
+        assertCellTexts(5, 0, "Son 2/1/0");
     }
+
     @Test
     public void can_toggle_collapse_on_row_that_is_no_longer_in_cache() {
         grid.getRow(0).getCell(0).click();
@@ -125,10 +127,10 @@ public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
         grid.waitForVaadin();
         grid.scrollToRow(200);
         grid.waitForVaadin();
-        //Jump into view
+        // Jump into view
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
         grid.waitForVaadin();
-        //Collapse
+        // Collapse
         new Actions(getDriver()).sendKeys(Keys.LEFT).perform();
         grid.waitForVaadin();
         assertEquals(6, grid.getRowCount());
@@ -150,11 +152,10 @@ public class TreeGridHugeTreeNavigationTest extends MultiBrowserTest {
         if (index > 0) {
             assertFalse(grid.getRow(index - 1)
                     .hasClassName("v-treegrid-row-focused"));
-    }
-        assertTrue(grid.getRow(index)
-                .hasClassName("v-treegrid-row-focused"));
-        assertFalse(grid.getRow(index + 1)
-                .hasClassName("v-treegrid-row-focused"));
+        }
+        assertTrue(grid.getRow(index).hasClassName("v-treegrid-row-focused"));
+        assertFalse(
+                grid.getRow(index + 1).hasClassName("v-treegrid-row-focused"));
     }
 
     private void assertCellTexts(int startRowIndex, int cellIndex,

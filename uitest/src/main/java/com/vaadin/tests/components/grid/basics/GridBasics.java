@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -259,7 +260,8 @@ public class GridBasics extends AbstractTestUIWithLog {
     private void onSingleSelect(SingleSelectionEvent<DataObject> event) {
         log("SingleSelectionEvent: Selected: "
                 + (event.getSelectedItem().isPresent()
-                        ? event.getSelectedItem().get().toString() : "none"));
+                        ? event.getSelectedItem().get().toString()
+                        : "none"));
     }
 
     private void onMultiSelect(MultiSelectionEvent<DataObject> event) {
@@ -270,7 +272,8 @@ public class GridBasics extends AbstractTestUIWithLog {
         String addedRow = firstAdded.isPresent() ? firstAdded.get().toString()
                 : "none";
         String removedRow = firstRemoved.isPresent()
-                ? firstRemoved.get().toString() : "none";
+                ? firstRemoved.get().toString()
+                : "none";
         log("SelectionEvent: Added " + addedRow + ", Removed " + removedRow);
     }
 
@@ -364,18 +367,19 @@ public class GridBasics extends AbstractTestUIWithLog {
         }
         columnsMenu.addItem("Clear sort", item -> grid.clearSortOrder());
 
-        columnsMenu.addItem("Simple resize mode",
-                item -> grid.setColumnResizeMode(item.isChecked()
-                        ? ColumnResizeMode.SIMPLE : ColumnResizeMode.ANIMATED))
+        columnsMenu
+                .addItem("Simple resize mode",
+                        item -> grid.setColumnResizeMode(
+                                item.isChecked() ? ColumnResizeMode.SIMPLE
+                                        : ColumnResizeMode.ANIMATED))
                 .setCheckable(true);
 
         columnsMenu.addItem("Add resize listener", item -> {
             if (item.isChecked()) {
                 columnResizeListenerRegistration = grid.addColumnResizeListener(
-                        event -> log(
-                                "Column resized: caption=" + event.getColumn()
-                                        .getCaption() + ", width=" + event
-                                        .getColumn().getWidth()));
+                        event -> log("Column resized: caption="
+                                + event.getColumn().getCaption() + ", width="
+                                + event.getColumn().getWidth()));
             } else {
                 if (columnResizeListenerRegistration != null) {
                     columnResizeListenerRegistration.remove();
@@ -435,7 +439,8 @@ public class GridBasics extends AbstractTestUIWithLog {
                                 !grid.isDetailsVisible(event.getItem()));
                         log("Item click on row "
                                 + event.getItem().getRowNumber() + ", Column '"
-                                + event.getColumn().getCaption() + "' Index " + event.getRowIndex());
+                                + event.getColumn().getCaption() + "' Index "
+                                + event.getRowIndex());
                     });
                     log("Registered an item click listener.");
                 }
@@ -799,6 +804,14 @@ public class GridBasics extends AbstractTestUIWithLog {
                 menuItem -> grid.getEditor().editRow(i)));
         editorMenu.addItem("Edit last row", menuItem -> grid.getEditor()
                 .editRow(grid.getDataCommunicator().getDataProviderSize() - 1));
+
+        editorMenu.addItem("Cancel next edit", menuItem -> {
+            AtomicReference<Registration> reference = new AtomicReference<>();
+            reference.set(grid.getEditor().addOpenListener(e -> {
+                e.getGrid().getEditor().cancel();
+                reference.get().remove();
+            }));
+        });
 
         editorMenu.addItem("Change save caption",
                 event -> grid.getEditor().setSaveCaption("ǝʌɐS"));

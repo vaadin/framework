@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -326,8 +326,8 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
         DataProvider<T, ?> dataProvider = internalGetDataProvider();
         addedItems.removeIf(item -> {
             Object addedId = dataProvider.getId(item);
-            return removedItems.stream().map(dataProvider::getId)
-                    .anyMatch(addedId::equals)? removedItems.remove(item):false;
+            return removedItems.stream().map(dataProvider::getId).anyMatch(
+                    addedId::equals) ? removedItems.remove(item) : false;
         });
 
         if (isAllSelected(addedItems) && isNoneSelected(removedItems)) {

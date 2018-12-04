@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -25,6 +25,7 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FormElement;
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -318,7 +319,8 @@ public class VUpload extends SimplePanel {
     /** For internal use only. May be removed or replaced in the future. */
     public void submit() {
         if (submitted || !enabled) {
-            getLogger().info("Submit cancelled (disabled or already submitted)");
+            getLogger()
+                    .info("Submit cancelled (disabled or already submitted)");
             return;
         }
         if (fu.getFilename().isEmpty()) {
@@ -403,5 +405,13 @@ public class VUpload extends SimplePanel {
 
     private static Logger getLogger() {
         return Logger.getLogger(VUpload.class.getName());
+    }
+
+    public void setAcceptMimeTypes(String acceptMimeTypes) {
+        if (acceptMimeTypes == null || acceptMimeTypes.isEmpty()) {
+            InputElement.as(fu.getElement()).setAccept(null);
+        } else {
+            InputElement.as(fu.getElement()).setAccept(acceptMimeTypes);
+        }
     }
 }

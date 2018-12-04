@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,6 +30,7 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.animation.client.AnimationScheduler;
@@ -53,9 +54,11 @@ import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Touch;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -64,7 +67,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.DeferredWorker;
-import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.SubPartAware;
@@ -1147,8 +1149,8 @@ public class Escalator extends Widget
      * The following WAI-ARIA attributes are added through this class:
      *
      * <ul>
-     *     <li>aria-rowcount (since 8.2)</li>
-     *     <li>roles provided by {@link AriaGridRole} (since 8.2)</li>
+     * <li>aria-rowcount (since 8.2)</li>
+     * <li>roles provided by {@link AriaGridRole} (since 8.2)</li>
      * </ul>
      *
      * @since 8.2
@@ -1210,8 +1212,10 @@ public class Escalator extends Widget
         /**
          * Sets the {@code role} attribute to the given element.
          *
-         * @param element     element that should get the role attribute
-         * @param role        role to be added
+         * @param element
+         *            element that should get the role attribute
+         * @param role
+         *            role to be added
          *
          * @since 8.2
          */
@@ -1227,14 +1231,10 @@ public class Escalator extends Widget
      */
     public enum AriaGridRole {
 
-        ROW("row"),
-        ROWHEADER("rowheader"),
-        ROWGROUP("rowgroup"),
-        GRIDCELL("gridcell"),
-        COLUMNHEADER("columnheader");
+        ROW("row"), ROWHEADER("rowheader"), ROWGROUP("rowgroup"), GRIDCELL(
+                "gridcell"), COLUMNHEADER("columnheader");
 
         private final String name;
-
 
         AriaGridRole(String name) {
             this.name = name;
@@ -1274,6 +1274,8 @@ public class Escalator extends Widget
 
         private boolean initialColumnSizesCalculated = false;
 
+        private boolean autodetectingRowHeightLater = false;
+
         public AbstractRowContainer(
                 final TableSectionElement rowContainerElement) {
             root = rowContainerElement;
@@ -1301,8 +1303,8 @@ public class Escalator extends Widget
         /**
          * Gets the role attribute of an element to represent a cell in a row.
          * <p>
-         * Usually {@link AriaGridRole#GRIDCELL} except for a cell in
-         * the header.
+         * Usually {@link AriaGridRole#GRIDCELL} except for a cell in the
+         * header.
          *
          * @return the role attribute for the element to represent cells
          *
@@ -1315,8 +1317,7 @@ public class Escalator extends Widget
         /**
          * Gets the role attribute of an element to represent a row in a grid.
          * <p>
-         * Usually {@link AriaGridRole#ROW} except for a row in
-         * the header.
+         * Usually {@link AriaGridRole#ROW} except for a row in the header.
          *
          * @return the role attribute for the element to represent rows
          *
@@ -1570,7 +1571,8 @@ public class Escalator extends Widget
                         .getColumnCount(); col++) {
                     final double colWidth = columnConfiguration
                             .getColumnWidthActual(col);
-                    final TableCellElement cellElem = createCellElement(colWidth);
+                    final TableCellElement cellElem = createCellElement(
+                            colWidth);
                     tr.appendChild(cellElem);
                     // Set stylename and position if new cell is frozen
                     if (col < columnConfiguration.frozenColumns) {
@@ -2053,6 +2055,7 @@ public class Escalator extends Widget
             defaultRowHeightShouldBeAutodetected = false;
             defaultRowHeight = px;
             reapplyDefaultRowHeights();
+            applyHeightByRows();
         }
 
         @Override
@@ -2114,12 +2117,19 @@ public class Escalator extends Widget
         }
 
         public void autodetectRowHeightLater() {
+            autodetectingRowHeightLater = true;
             Scheduler.get().scheduleFinally(() -> {
                 if (defaultRowHeightShouldBeAutodetected && isAttached()) {
                     autodetectRowHeightNow();
                     defaultRowHeightShouldBeAutodetected = false;
                 }
+                autodetectingRowHeightLater = false;
             });
+        }
+
+        @Override
+        public boolean isAutodetectingRowHeightLater() {
+            return autodetectingRowHeightLater;
         }
 
         private void fireRowHeightChangedEventFinally() {
@@ -3894,6 +3904,7 @@ public class Escalator extends Widget
                                 visualRowOrder.getLast()) + 1;
                         moveAndUpdateEscalatorRows(Range.withOnly(0),
                                 visualRowOrder.size(), newLogicalIndex);
+                        updateTopRowLogicalIndex(1);
                     }
                 }
             }
@@ -3914,13 +3925,18 @@ public class Escalator extends Widget
             Profiler.enter(
                     "Escalator.BodyRowContainer.reapplyDefaultRowHeights");
 
+            double spacerHeights = 0;
+
             /* step 1: resize and reposition rows */
             for (int i = 0; i < visualRowOrder.size(); i++) {
                 TableRowElement tr = visualRowOrder.get(i);
                 reapplyRowHeight(tr, getDefaultRowHeight());
 
                 final int logicalIndex = getTopRowLogicalIndex() + i;
-                setRowPosition(tr, 0, logicalIndex * getDefaultRowHeight());
+                setRowPosition(tr, 0,
+                        logicalIndex * getDefaultRowHeight() + spacerHeights);
+
+                spacerHeights += spacerContainer.getSpacerHeight(logicalIndex);
             }
 
             /*
@@ -5822,6 +5838,38 @@ public class Escalator extends Widget
         setupScrollbars(root);
 
         tableWrapper = DivElement.as(DOM.createDiv());
+
+        Event.sinkEvents(tableWrapper, Event.ONSCROLL | Event.KEYEVENTS);
+
+        Event.setEventListener(tableWrapper, event -> {
+            if (event.getKeyCode() != KeyCodes.KEY_TAB) {
+                return;
+            }
+
+            boolean browserScroll = tableWrapper.getScrollLeft() != 0
+                    || tableWrapper.getScrollTop() != 0;
+            boolean keyEvent = event.getType().startsWith("key");
+
+            if (browserScroll || keyEvent) {
+
+                // Browser is scrolling our div automatically, reset
+                tableWrapper.setScrollLeft(0);
+                tableWrapper.setScrollTop(0);
+
+                Element focused = WidgetUtil.getFocusedElement();
+                Stream.of(header, body, footer).forEach(container -> {
+                    Cell cell = container.getCell(focused);
+                    if (cell == null) {
+                        return;
+                    }
+
+                    scrollToColumn(cell.getColumn(), ScrollDestination.ANY, 0);
+                    if (container == body) {
+                        scrollToRow(cell.getRow(), ScrollDestination.ANY, 0);
+                    }
+                });
+            }
+        });
 
         root.appendChild(tableWrapper);
 

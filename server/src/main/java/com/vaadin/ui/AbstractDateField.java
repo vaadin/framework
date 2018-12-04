@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,9 +38,9 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.googlecode.gentyref.GenericTypeReflector;
 import org.jsoup.nodes.Element;
 
-import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValidationResult;
 import com.vaadin.data.Validator;
@@ -63,6 +63,8 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.util.TimeZoneUtil;
 
+import elemental.json.Json;
+
 /**
  * A date editor component with {@link LocalDate} as an input value.
  *
@@ -79,7 +81,8 @@ import com.vaadin.util.TimeZoneUtil;
 public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & Serializable & Comparable<? super T>, R extends Enum<R>>
         extends AbstractField<T> implements FocusNotifier, BlurNotifier {
 
-    private static final DateTimeFormatter RANGE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd[ HH:mm:ss]", Locale.ENGLISH);
+    private static final DateTimeFormatter RANGE_FORMATTER = DateTimeFormatter
+            .ofPattern("yyyy-MM-dd[ HH:mm:ss]", Locale.ENGLISH);
     private AbstractDateFieldServerRpc rpc = new AbstractDateFieldServerRpc() {
 
         @Override
@@ -105,24 +108,39 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                     newDate = reconstructDateFromFields(resolutions, oldDate);
                 }
 
+                boolean parseErrorWasSet = currentErrorMessage != null;
                 hasChanges |= !Objects.equals(dateString, newDateString)
-                        || !Objects.equals(oldDate, newDate);
+                        || !Objects.equals(oldDate, newDate)
+                        || parseErrorWasSet;
 
                 if (hasChanges) {
                     dateString = newDateString;
-                    currentParseErrorMessage = null;
+                    currentErrorMessage = null;
                     if (newDateString == null || newDateString.isEmpty()) {
-                        setValue(newDate, true);
+                        boolean valueChanged = setValue(newDate, true);
+                        if (!valueChanged && parseErrorWasSet) {
+                            doSetValue(newDate);
+                        }
                     } else {
                         // invalid date string
                         if (resolutions.isEmpty()) {
                             Result<T> parsedDate = handleUnparsableDateString(
                                     dateString);
-                            parsedDate.ifOk(v -> setValue(v, true));
+                            // If handleUnparsableDateString returns the same
+                            // date as current, force update state to display
+                            // correct representation
+                            parsedDate.ifOk(v -> {
+                                if (!setValue(v, true)
+                                        && !isDifferentValue(v)) {
+                                    updateDiffstate("resolutions",
+                                            Json.createObject());
+                                    doSetValue(v);
+                                }
+                            });
                             if (parsedDate.isError()) {
                                 dateString = null;
-                                currentParseErrorMessage = parsedDate
-                                        .getMessage().orElse("Parsing error");
+                                currentErrorMessage = parsedDate.getMessage()
+                                        .orElse("Parsing error");
 
                                 if (!isDifferentValue(null)) {
                                     doSetValue(null);
@@ -170,7 +188,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
     private String dateString = "";
 
-    private String currentParseErrorMessage;
+    private String currentErrorMessage;
 
     private String defaultParseErrorMessage = "Date format not recognized";
 
@@ -272,7 +290,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *            - the allowed range's start date
      */
     public void setRangeStart(T startDate) {
-        if (afterDate(startDate,convertFromDateString(getState().rangeEnd))) {
+        if (afterDate(startDate, convertFromDateString(getState().rangeEnd))) {
             throw new IllegalStateException(
                     "startDate cannot be later than endDate");
         }
@@ -343,7 +361,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         getState().rangeEnd = date;
     }
 
-
     /**
      * Returns the precise rangeStart used.
      *
@@ -356,11 +373,12 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     /**
      * Parses string representaion of date range limit into date type
      *
-     * @param temporalStr the string representation
+     * @param temporalStr
+     *            the string representation
      * @return parsed value
      * @see AbstractDateFieldState#rangeStart
      * @see AbstractDateFieldState#rangeEnd
-     * @since
+     * @since 8.4
      */
     protected T convertFromDateString(String temporalStr) {
         if (temporalStr == null) {
@@ -371,20 +389,23 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
     /**
      * Converts a temporal value into field-specific data type.
-     * @param temporalAccessor - source value
+     *
+     * @param temporalAccessor
+     *            - source value
      * @return conversion result.
-     * @since
+     * @since 8.4
      */
     protected abstract T toType(TemporalAccessor temporalAccessor);
 
     /**
-     * Converts date range limit itno string representaion
+     * Converts date range limit into string representation.
      *
-     * @param temporal the value
+     * @param temporal
+     *            the value
      * @return textual representation
      * @see AbstractDateFieldState#rangeStart
      * @see AbstractDateFieldState#rangeEnd
-     * @since
+     * @since 8.4
      */
     protected String convertToDateString(T temporal) {
         if (temporal == null) {
@@ -394,10 +415,14 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     }
 
     /**
-     * Checks if {@code value} is after {@code base} or not
-     * @param value temporal value
-     * @param base  temporal value to compare to
-     * @return {@code true} if {@code value} is after {@code base}, {@code false} otherwise
+     * Checks if {@code value} is after {@code base} or not.
+     *
+     * @param value
+     *            temporal value
+     * @param base
+     *            temporal value to compare to
+     * @return {@code true} if {@code value} is after {@code base},
+     *         {@code false} otherwise
      */
     protected boolean afterDate(T value, T base) {
         if (value == null || base == null) {
@@ -496,6 +521,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             Integer defaultValuePart = getValuePart(defaultValue, resolution);
             resolutions.put("default-" + resolutionName, defaultValuePart);
         }
+        updateDiffstate("resolutions", Json.createObject());
     }
 
     private Integer getValuePart(T date, R resolution) {
@@ -582,7 +608,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      */
     @Override
     public void setValue(T value) {
-        currentParseErrorMessage = null;
+        currentErrorMessage = null;
         /*
          * First handle special case when the client side component have a date
          * string but value is null (e.g. unparsable date string typed in by the
@@ -758,16 +784,16 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                 new ValueContext(this, this));
 
         if (result.isError()) {
-            currentParseErrorMessage = getDateOutOfRangeMessage();
+            currentErrorMessage = getDateOutOfRangeMessage();
         }
 
-        getState().parsable = currentParseErrorMessage == null;
+        getState().parsable = currentErrorMessage == null;
 
         ErrorMessage errorMessage;
-        if (currentParseErrorMessage == null) {
+        if (currentErrorMessage == null) {
             errorMessage = null;
         } else {
-            errorMessage = new UserError(currentParseErrorMessage);
+            errorMessage = new UserError(currentErrorMessage);
         }
         setComponentError(errorMessage);
 
@@ -851,9 +877,27 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         return new Validator<T>() {
             @Override
             public ValidationResult apply(T value, ValueContext context) {
-                if (currentParseErrorMessage != null) {
-                    return ValidationResult.error(currentParseErrorMessage);
+
+                // currentErrorMessage contains two type of messages, one is
+                // DateOutOfRangeMessage and the other one is the ParseError
+                if (currentErrorMessage != null) {
+                    if (currentErrorMessage
+                            .equals(getDateOutOfRangeMessage())) {
+                        // if the currentErrorMessage is DateOutOfRangeMessage,
+                        // then need to double check whether the error message
+                        // has been updated, that is because of #11276.
+                        ValidationResult validationResult = getRangeValidator()
+                                .apply(value, context);
+                        if (validationResult.isError()) {
+                            return ValidationResult.error(currentErrorMessage);
+                        }
+                    } else {
+                        // if the current Error is parsing error, pass it to the
+                        // ValidationResult
+                        return ValidationResult.error(currentErrorMessage);
+                    }
                 }
+
                 // Pass to range validator.
                 return getRangeValidator().apply(value, context);
             }
@@ -937,10 +981,10 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * reading software.
      *
      * @param element
-     *         the element for which to set the label. Not {@code null}.
+     *            the element for which to set the label. Not {@code null}.
      * @param label
-     *         the assistive label to set
-     * @since
+     *            the assistive label to set
+     * @since 8.4
      */
     public void setAssistiveLabel(AccessibleElement element, String label) {
         Objects.requireNonNull(element, "Element cannot be null");
@@ -951,8 +995,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * Gets the assistive label of a calendar navigation element.
      *
      * @param element
-     *         the element of which to get the assistive label
-     * @since
+     *            the element of which to get the assistive label
+     * @since 8.4
      */
     public void getAssistiveLabel(AccessibleElement element) {
         getState(false).assistiveLabels.get(element);

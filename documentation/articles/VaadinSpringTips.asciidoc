@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[vaadin-spring-tips]]
-Vaadin Spring tips
-------------------
+= Vaadin Spring tips
 
 [[vaadin-spring-boot-configuration-properties]]
 Vaadin Spring (Boot) configuration properties
@@ -23,4 +22,4 @@ example which can be configured:
 * `vaadin.servlet.closeIdleSessions=true`
 
 For full list of available properties, see
-https://github.com/vaadin/spring/blob/master/vaadin-spring-boot/src/main/java/com/vaadin/spring/boot/internal/VaadinServletConfigurationProperties.java[VaadinServletConfigurationProperties].
+https://github.com/vaadin/spring/blob/3.0/vaadin-spring-boot/src/main/java/com/vaadin/spring/boot/internal/VaadinServletConfigurationProperties.java[VaadinServletConfigurationProperties].

@@ -14,12 +14,12 @@ public class TreeGridExpandCollapseRecursivelyTest extends SingleBrowserTest {
 
     private static final int rowCount0 = 5;
     private static final int rowCount1 = rowCount0 + rowCount0 * 5;
-    private static final int rowCount2 =
-            rowCount1 + (rowCount1 - rowCount0) * 5;
-    private static final int rowCount3 =
-            rowCount2 + (rowCount2 - rowCount1) * 5;
-    private static final int rowCount4 =
-            rowCount3 + (rowCount3 - rowCount2) * 5;
+    private static final int rowCount2 = rowCount1
+            + (rowCount1 - rowCount0) * 5;
+    private static final int rowCount3 = rowCount2
+            + (rowCount2 - rowCount1) * 5;
+    private static final int rowCount4 = rowCount3
+            + (rowCount3 - rowCount2) * 5;
 
     private TreeGridElement grid;
     private RadioButtonGroupElement depthSelector;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,6 +40,7 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -2047,8 +2048,13 @@ public abstract class VaadinService implements Serializable {
 
                     try {
                         pendingAccess.get();
-
                     } catch (Exception exception) {
+                        if (exception instanceof ExecutionException) {
+                            Throwable cause = exception.getCause();
+                            if (cause instanceof Exception) {
+                                exception = (Exception) cause;
+                            }
+                        }
                         pendingAccess.handleError(exception);
                     }
                 }

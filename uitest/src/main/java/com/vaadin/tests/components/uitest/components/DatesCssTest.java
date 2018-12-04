@@ -29,7 +29,8 @@ public class DatesCssTest extends GridLayout {
         createDateFieldWith("Small", ChameleonTheme.DATEFIELD_SMALL, null);
         createDateFieldWith("Big", ChameleonTheme.DATEFIELD_BIG, null);
 
-        AbstractDateField<LocalDate, DateResolution> df = new DateField("Popup date field");
+        AbstractDateField<LocalDate, DateResolution> df = new DateField(
+                "Popup date field");
         df.setId("datefield" + debugIdCounter++);
         df.setValue(date);
         addComponent(df);
@@ -48,7 +49,8 @@ public class DatesCssTest extends GridLayout {
 
     private void createDateFieldWith(String caption, String primaryStyleName,
             String width) {
-        AbstractDateField<LocalDate, DateResolution> df = new TestDateField("Date field");
+        AbstractDateField<LocalDate, DateResolution> df = new TestDateField(
+                "Date field");
         df.setId("datefield" + debugIdCounter++);
         df.setValue(date);
 

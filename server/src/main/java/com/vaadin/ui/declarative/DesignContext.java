@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -728,6 +728,17 @@ public class DesignContext implements Serializable {
          */
         public Component getComponent() {
             return component;
+        }
+
+        /**
+         * Returns the new component context.
+         *
+         * @return the context
+         *
+         * @since 8.5
+         */
+        public DesignContext getContext() {
+            return context;
         }
     }
 

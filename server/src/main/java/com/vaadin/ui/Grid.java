@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -103,7 +103,9 @@ import com.vaadin.ui.components.grid.Editor;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
 import com.vaadin.ui.components.grid.FooterRow;
+import com.vaadin.ui.components.grid.GridMultiSelect;
 import com.vaadin.ui.components.grid.GridSelectionModel;
+import com.vaadin.ui.components.grid.GridSingleSelect;
 import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.components.grid.Header.Row;
 import com.vaadin.ui.components.grid.HeaderCell;
@@ -404,6 +406,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * Returns the clicked rowIndex.
          *
          * @return the clicked rowIndex
+         * @since 8.4
          */
         public int getRowIndex() {
             return rowIndex;
@@ -639,7 +642,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 MouseEventDetails details, int rowIndex) {
             Column<T, ?> column = getColumnByInternalId(columnInternalId);
             T item = getDataCommunicator().getKeyMapper().get(rowKey);
-            fireEvent(new ItemClick<>(Grid.this, column, item, details, rowIndex));
+            fireEvent(new ItemClick<>(Grid.this, column, item, details,
+                    rowIndex));
         }
 
         @Override
@@ -1345,9 +1349,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          */
         public Column<T, V> setSortProperty(String... properties) {
             Objects.requireNonNull(properties, "Sort properties can't be null");
-            sortOrderProvider = dir -> Arrays.stream(properties)
-                    .map(s -> new QuerySortOrder(s, dir));
-            return this;
+            return setSortOrderProvider(dir -> Arrays.stream(properties)
+                    .map(s -> new QuerySortOrder(s, dir)));
         }
 
         /**
@@ -1367,6 +1370,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             Objects.requireNonNull(provider,
                     "Sort order provider can't be null");
             sortOrderProvider = provider;
+
+            // Update state
+            updateSortable();
+
             return this;
         }
 
@@ -1390,6 +1397,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * Sets the style generator that is used for generating class names for
          * cells in this column. Returning null from the generator results in no
          * custom style name being set.
+         *
+         * Note: The style generator is applied only to the body cells, not to
+         * the Editor.
          *
          * @param cellStyleGenerator
          *            the cell style generator to set, not null
@@ -2095,7 +2105,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * a row when a component is clicked. For example in the case of a
          * {@link ComboBox} or {@link TextField} it might be problematic as the
          * component gets re-rendered and might lose focus.
-         * 
+         *
          * @param handleWidgetEvents
          *            {@code true} to handle events; {@code false} to not
          * @return this column
@@ -2109,9 +2119,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         /**
          * Gets whether Grid is handling the events in this Column from
          * Component and Widgets.
-         * 
+         *
          * @see #setHandleWidgetEvents(boolean)
-         * 
+         *
          * @return {@code true} if handling events; {@code false} if not
          * @since 8.3
          */
@@ -2224,7 +2234,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 setSortable(false);
             }
             if (design.hasAttr("editable")) {
-                /*
+                /**
                  * This is a fake editor just to have something (otherwise
                  * "setEditable" throws an exception.
                  *
@@ -2502,6 +2512,16 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 .forEach(this::addColumn);
     }
 
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
+
+        if (initial && editor.isOpen()) {
+            // Re-attaching grid. Any old editor should be closed.
+            editor.cancel();
+        }
+    }
+
     /**
      * Sets the property set to use for this grid. Does not create or update
      * columns in any way but will delete and re-create the editor.
@@ -2531,9 +2551,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Returns the property set used by this grid.
      *
-     * @return propertySet
-     *             the property set to return
-     * @since
+     * @return propertySet the property set to return
+     * @since 8.4
      */
     protected PropertySet<T> getPropertySet() {
         return propertySet;
@@ -2644,7 +2663,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * <p>
      * You can add columns for nested properties with dot notation, eg.
      * <code>"property.nestedProperty"</code>
-     * 
+     *
      * @param propertyName
      *            the property name of the new column, not <code>null</code>
      * @return the newly added column, not <code>null</code>
@@ -2665,7 +2684,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * You can add columns for nested properties with dot notation, eg.
      * <code>"property.nestedProperty"</code>
      *
-     * 
+     *
      * @param propertyName
      *            the property name of the new column, not <code>null</code>
      * @param renderer
@@ -2890,6 +2909,14 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             getFooter().removeColumn(columnId);
             getState(true).columnOrder.remove(columnId);
 
+            // Remove column from sorted columns.
+            List<GridSortOrder<T>> filteredSortOrder = sortOrder.stream()
+                    .filter(order -> !order.getSorted().equals(column))
+                    .collect(Collectors.toList());
+            if (filteredSortOrder.size() < sortOrder.size()) {
+                setSortOrder(filteredSortOrder);
+            }
+
             if (displayIndex < getFrozenColumnCount()) {
                 setFrozenColumnCount(getFrozenColumnCount() - 1);
             }
@@ -2985,6 +3012,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Gets a {@link Column} of this grid by its identifying string.
+     *
+     * When you use the Grid constructor with bean class, the columns are
+     * initialised with columnId being the property name.
      *
      * @see Column#setId(String)
      *
@@ -3145,7 +3175,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *            the mode in to which Grid should be set
      */
     public void setHeightMode(HeightMode heightMode) {
-        /*
+        /**
          * This method is a workaround for the fact that Vaadin re-applies
          * widget dimensions (height/width) on each state change event. The
          * original design was to have setHeight and setHeightByRow be equals,
@@ -3283,6 +3313,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Sets the style generator that is used for generating class names for rows
      * in this grid. Returning null from the generator results in no custom
      * style name being set.
+     *
+     * Note: The style generator is applied only to the body cells, not to the
+     * Editor.
      *
      * @see StyleGenerator
      *
@@ -3882,14 +3915,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @throws IllegalStateException
      *             if not using a single selection model
      */
-    public SingleSelect<T> asSingleSelect() {
-        GridSelectionModel<T> model = getSelectionModel();
-        if (!(model instanceof SingleSelectionModel)) {
-            throw new IllegalStateException(
-                    "Grid is not in single select mode, it needs to be explicitly set to such with setSelectionModel(SingleSelectionModel) before being able to use single selection features.");
-        }
-
-        return ((SingleSelectionModel<T>) model).asSingleSelect();
+    public GridSingleSelect<T> asSingleSelect() {
+        return new GridSingleSelect<>(this);
     }
 
     public Editor<T> getEditor() {
@@ -3906,13 +3933,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @throws IllegalStateException
      *             if not using a multiselection model
      */
-    public MultiSelect<T> asMultiSelect() {
-        GridSelectionModel<T> model = getSelectionModel();
-        if (!(model instanceof MultiSelectionModel)) {
-            throw new IllegalStateException(
-                    "Grid is not in multiselect mode, it needs to be explicitly set to such with setSelectionModel(MultiSelectionModel) before being able to use multiselection features.");
-        }
-        return ((MultiSelectionModel<T>) model).asMultiSelect();
+    public GridMultiSelect<T> asMultiSelect() {
+        return new GridMultiSelect<>(this);
     }
 
     /**
@@ -4107,8 +4129,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Clear the current sort order, and re-sort the grid.
      */
     public void clearSortOrder() {
-        sortOrder.clear();
-        sort(false);
+        setSortOrder(Collections.emptyList());
     }
 
     /**
@@ -4717,14 +4738,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         getState().sortDirs = directions.toArray(new SortDirection[0]);
 
         sortOrder.clear();
-        if (order.isEmpty()) {
-            // Grid is not sorted anymore.
-            getDataCommunicator().setBackEndSorting(Collections.emptyList());
-            getDataCommunicator().setInMemorySorting(null);
-            fireEvent(new SortEvent<>(this, new ArrayList<>(sortOrder),
-                    userOriginated));
-            return;
-        }
         sortOrder.addAll(order);
         sort(userOriginated);
     }
@@ -4772,21 +4785,5 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         for (Column<T, ?> column : getColumns()) {
             column.updateSortable();
         }
-    }
-
-    @Override
-    public void setVisible(boolean visible) {
-        if (getEditor().isOpen() && !visible) {
-            getEditor().cancel();
-        }
-        super.setVisible(visible);
-    }
-
-    @Override
-    public void detach() {
-        if (getEditor().isOpen()) {
-            getEditor().cancel();
-        }
-        super.detach();
     }
 }

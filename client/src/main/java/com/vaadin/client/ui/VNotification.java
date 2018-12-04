@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -294,13 +294,12 @@ public class VNotification extends VOverlay {
             // in some browsers)
             if (getStyleName()
                     .contains(VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
-                AnimationUtil.addAnimationEndListener(getElement(),
-                        event -> {
-                            if (AnimationUtil.getAnimationName(event).contains(
-                                    VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
-                                VNotification.this.hide();
-                            }
-                        });
+                AnimationUtil.addAnimationEndListener(getElement(), event -> {
+                    if (AnimationUtil.getAnimationName(event).contains(
+                            VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                        VNotification.this.hide();
+                    }
+                });
             } else {
                 VNotification.super.hide();
                 fireEvent(new HideEvent(this));
@@ -481,8 +480,8 @@ public class VNotification extends VOverlay {
      * @param description
      *            The Notification description, can be {@code null}.
      * @param htmlContentAllowed
-     *            Whether {@code caption} and {@code description}
-     *            are interpreted as HTML or not.
+     *            Whether {@code caption} and {@code description} are
+     *            interpreted as HTML or not.
      * @param iconUri
      *            The icon URI, can be {@code null}.
      * @param styleName
@@ -496,7 +495,8 @@ public class VNotification extends VOverlay {
      */
     public static VNotification showNotification(ApplicationConnection client,
             String caption, String description, boolean htmlContentAllowed,
-            String iconUri, String styleName, Position position, int delayMsec) {
+            String iconUri, String styleName, Position position,
+            int delayMsec) {
         String html = "";
         if (iconUri != null) {
             html += client.getIcon(iconUri).getElement().getString();

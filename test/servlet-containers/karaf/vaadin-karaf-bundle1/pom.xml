@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-test-karaf</artifactId>
-        <version>8.4-SNAPSHOT</version>
+        <version>8.7-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-karaf-bundle1</artifactId>
     <packaging>jar</packaging>
@@ -110,6 +110,14 @@
                     <archive>
                         <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.klieber</groupId>
+                <artifactId>phantomjs-maven-plugin</artifactId>
+                <version>0.7</version>
+                <configuration>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>

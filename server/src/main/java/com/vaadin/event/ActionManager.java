@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,8 +41,7 @@ import com.vaadin.ui.Component;
  *
  *
  */
-public class ActionManager
-        implements Action.Handler, Action.Notifier {
+public class ActionManager implements Action.Handler, Action.Notifier {
 
     private static final long serialVersionUID = 1641868163608066491L;
 
@@ -57,7 +56,7 @@ public class ActionManager
     protected HashSet<Handler> actionHandlers = null;
 
     /** Action mapper. */
-    protected KeyMapper<Action> actionMapper = null;
+    protected KeyMapper<Action> actionMapper;
 
     protected Component viewer;
 
@@ -158,16 +157,19 @@ public class ActionManager
     public void paintActions(Object actionTarget, PaintTarget paintTarget)
             throws PaintException {
 
-        actionMapper = null;
-
         LinkedHashSet<Action> actions = getActionSet(actionTarget, viewer);
+
+        if (actionMapper == null) {
+            actionMapper = new KeyMapper<>();
+        }
+
+        actionMapper.merge(actions);
 
         /*
          * Must repaint whenever there are actions OR if all actions have been
          * removed but still exist on client side
          */
         if (!actions.isEmpty() || clientHasActions) {
-            actionMapper = new ActionKeyMapper();
 
             paintTarget.addVariable((VariableOwner) viewer, "action", "");
             paintTarget.startTag("actions");
@@ -216,6 +218,7 @@ public class ActionManager
             final String key = (String) variables.get("action");
             final Action action = actionMapper.get(key);
             final Object target = variables.get("actiontarget");
+
             if (action != null) {
                 handleAction(action, sender, target);
             }
@@ -258,20 +261,4 @@ public class ActionManager
         }
         return actions;
     }
-
-    /**
-     * Extension of KeyMapper that avoids reusing keys even across different
-     * instances.
-     *
-     * @since 8.1.2
-     */
-    private static class ActionKeyMapper extends KeyMapper<Action> {
-        private static AtomicInteger lastKey = new AtomicInteger(0);
-
-        @Override
-        protected String createKey() {
-            return String.valueOf(lastKey.incrementAndGet());
-        }
-    }
-
 }

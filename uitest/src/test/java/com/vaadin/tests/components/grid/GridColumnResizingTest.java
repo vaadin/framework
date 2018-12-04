@@ -130,8 +130,9 @@ public class GridColumnResizingTest extends MultiBrowserTest {
         GridCellElement headerCell = getGrid().getHeaderCell(0, columnIndex);
         Dimension size = headerCell.getSize();
         new Actions(getDriver())
-                .moveToElement(headerCell, size.getWidth() + posX,
-                        size.getHeight() / 2)
+                .moveToElement(headerCell,
+                        getXOffset(headerCell, size.getWidth() + posX),
+                        getYOffset(headerCell, size.getHeight() / 2))
                 .clickAndHold().moveByOffset(offset, 0).release().perform();
     }
 

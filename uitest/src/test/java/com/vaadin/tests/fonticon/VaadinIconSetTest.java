@@ -16,12 +16,15 @@ public class VaadinIconSetTest extends MultiBrowserTest {
     @Test
     public void checkScreenshot_initial() throws IOException {
         openTestURL();
+        waitUntilLoadingIndicatorNotVisible();
+
         compareScreen("allVaadinIcons");
     }
 
     @Test
     public void checkScreenshot_changeIcon() throws IOException {
         openTestURL();
+        waitUntilLoadingIndicatorNotVisible();
 
         $(ButtonElement.class).first().click();
 
@@ -31,6 +34,8 @@ public class VaadinIconSetTest extends MultiBrowserTest {
     @Test
     public void comboBoxItemIconsOnKeyboardNavigation() throws Exception {
         openTestURL();
+        waitUntilLoadingIndicatorNotVisible();
+
         ComboBoxElement comboBox = $(ComboBoxElement.class).first();
 
         // No initial value.

@@ -24,8 +24,8 @@ public class TableShouldNotEatValueChanges extends TestBase {
 
         final TextField tf = new TextField();
         tf.setTabIndex(1);
-        ItemClickListener l = event ->
-                Notification.show("TF Value on the server:" + tf.getValue(),
+        ItemClickListener l = event -> Notification.show(
+                "TF Value on the server:" + tf.getValue(),
                 Notification.TYPE_WARNING_MESSAGE);
         t.addListener(l);
         addComponent(tf);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -90,6 +90,8 @@ public class ChildFocusAwareFlowPanel extends FocusableFlowPanel
     public ChildFocusAwareFlowPanel() {
         eventBus = new HandlerManager(this);
         getElement().getStyle().setOutlineStyle(OutlineStyle.NONE);
+        // The panel itself should not be focused.
+        getElement().setTabIndex(-1);
         super.addFocusHandler(handler);
         super.addBlurHandler(handler);
     }

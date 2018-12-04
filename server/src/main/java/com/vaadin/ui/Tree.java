@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -58,6 +58,7 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.tree.TreeMultiSelectionModelState;
 import com.vaadin.shared.ui.tree.TreeRendererState;
+import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.components.grid.NoSelectionModel;
@@ -80,7 +81,7 @@ import elemental.json.JsonObject;
  *            the data type
  */
 public class Tree<T> extends Composite
-        implements HasHierarchicalDataProvider<T> {
+        implements HasHierarchicalDataProvider<T>, Focusable {
 
     @Deprecated
     private static final Method ITEM_CLICK_METHOD = ReflectTools
@@ -454,7 +455,7 @@ public class Tree<T> extends Composite
      *            the items to expand recursively
      * @param depth
      *            the maximum depth of recursion
-     * @since
+     * @since 8.4
      */
     public void expandRecursively(Collection<T> items, int depth) {
         treeGrid.expandRecursively(items, depth);
@@ -497,7 +498,7 @@ public class Tree<T> extends Composite
      *            the items to expand recursively
      * @param depth
      *            the maximum depth of recursion
-     * @since
+     * @since 8.4
      */
     public void collapseRecursively(Collection<T> items, int depth) {
         treeGrid.collapseRecursively(items, depth);
@@ -682,7 +683,7 @@ public class Tree<T> extends Composite
      * @param contentMode
      *            how client should interpret textual values
      *
-     * @since
+     * @since 8.4
      */
     public void setItemDescriptionGenerator(
             DescriptionGenerator<T> descriptionGenerator,
@@ -1263,4 +1264,18 @@ public class Tree<T> extends Composite
         treeGrid.scrollToEnd();
     }
 
+    @Override
+    public int getTabIndex() {
+        return treeGrid.getTabIndex();
+    }
+
+    @Override
+    public void setTabIndex(int tabIndex) {
+        treeGrid.setTabIndex(tabIndex);
+    }
+
+    @Override
+    public void focus() {
+        treeGrid.focus();
+    }
 }

@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[sending-email-from-java-applications]]
-Sending email from Java Applications
-------------------------------------
+= Sending email from Java Applications
 
 [[introduction]]
 Introduction
@@ -135,7 +134,7 @@ follows:
 HtmlEmail email = new HtmlEmail();
 email.setHostName("localhost");
 email.setSmtpPort(9090);
-email.setAuthentication()"sender@test.com", "password");
+email.setAuthentication("sender@test.com", "password");
 ....
  
 Or if you want to use Gmail:

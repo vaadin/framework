@@ -1,10 +1,7 @@
 package com.vaadin.tests.components.table;
 
-import java.util.List;
-
 import org.junit.Test;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.TableElement;
@@ -14,11 +11,6 @@ public class TableContextMenuAndIconsTest extends MultiBrowserTest {
     @Override
     protected Class<?> getUIClass() {
         return com.vaadin.tests.components.table.Tables.class;
-    }
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsersSupportingContextMenu();
     }
 
     @Test

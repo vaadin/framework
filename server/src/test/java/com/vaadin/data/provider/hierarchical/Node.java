@@ -4,18 +4,16 @@ import java.io.Serializable;
 
 public class Node implements Serializable {
 
-    private static int counter = 0;
-
     private final Node parent;
     private final int number;
 
-    public Node() {
-        this(null);
+    public Node(int number) {
+        this(null, number);
     }
 
-    public Node(Node parent) {
+    public Node(Node parent, int number) {
         this.parent = parent;
-        this.number = counter++;
+        this.number = number;
     }
 
     public Node getParent() {

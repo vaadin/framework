@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[optimizing-the-widget-set]]
-Optimizing the widget set
--------------------------
+= Optimizing the widget set
 
 Vaadin contains a lot of components and most of those components
 contains a client side part which is executed in the browser. Together

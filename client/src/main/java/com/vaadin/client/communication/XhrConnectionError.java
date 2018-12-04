@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,8 +21,8 @@ import com.google.gwt.http.client.Response;
 import elemental.json.JsonObject;
 
 /**
- * XhrConnectionError provides detail about an error which occurred during
- * an XHR request to the server.
+ * XhrConnectionError provides detail about an error which occurred during an
+ * XHR request to the server.
  *
  * @since 7.6
  * @author Vaadin Ltd

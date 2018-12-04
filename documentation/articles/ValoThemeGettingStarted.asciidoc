@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[valo-theme-getting-started]]
-Valo theme - Getting started
-----------------------------
+= Valo theme - Getting started
 
 To create your own variation of the Valo theme, start by creating a new
 custom theme for your project. See

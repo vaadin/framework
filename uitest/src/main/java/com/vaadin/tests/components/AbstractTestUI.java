@@ -99,11 +99,10 @@ public abstract class AbstractTestUI extends UI {
         long currentWidgetsetTimestamp = currentWidgetsetFolder.lastModified();
         int halfHour = 30 * 60 * 1000;
         if (currentWidgetsetTimestamp + halfHour < newestWidgetsetTimestamp) {
-            Notification.show(
-                    "The currently used widgetset (" + usedWidgetset
-                            + ") was compiled long before the most recently compiled one ("
-                            + newestWidgetsetName
-                            + "). Are you sure you have compiled the right widgetset?",
+            Notification.show("The currently used widgetset (" + usedWidgetset
+                    + ") was compiled long before the most recently compiled one ("
+                    + newestWidgetsetName
+                    + "). Are you sure you have compiled the right widgetset?",
                     Type.WARNING_MESSAGE);
         }
     }
@@ -176,6 +175,11 @@ public abstract class AbstractTestUI extends UI {
 
     public void addComponent(Component c) {
         getLayout().addComponent(c);
+    }
+
+    public void addComponent(Component c, String id) {
+        c.setId(id);
+        addComponent(c);
     }
 
     public void addComponents(Component... c) {

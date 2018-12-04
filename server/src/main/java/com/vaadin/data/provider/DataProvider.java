@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -161,8 +161,8 @@ public interface DataProvider<T, F> extends Serializable {
      * // ComboBox uses String as the filter type
      * DataProvider&lt;Person, String&gt; wrappedProvider = dataProvider
      *         .withConvertedFilter(filterText -&gt; {
-     *             SerializablePredicate&lt;Person&gt; predicate = person -&gt; person.getName()
-     *                     .startsWith(filterText);
+     *             SerializablePredicate&lt;Person&gt; predicate = person -&gt; person
+     *                     .getName().startsWith(filterText);
      *             return predicate;
      *         });
      * comboBox.setDataProvider(wrappedProvider);

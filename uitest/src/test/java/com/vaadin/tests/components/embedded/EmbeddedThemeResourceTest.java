@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.embedded;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -23,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -34,6 +20,7 @@ import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.EmbeddedElement;
 import com.vaadin.testbench.elements.ImageElement;
 import com.vaadin.testbench.parallel.Browser;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Image;
@@ -47,17 +34,12 @@ import com.vaadin.ui.Image;
  */
 public class EmbeddedThemeResourceTest extends SingleBrowserTest {
 
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        // Seems like stylesheet onload is not fired on PhantomJS
-        // https://github.com/ariya/phantomjs/issues/12332
-        return Collections
-                .singletonList(Browser.FIREFOX.getDesiredCapabilities());
-    }
-
     @Before
     @Override
     public void setup() throws Exception {
+        Assume.assumeFalse("PhantomJS does not send onload events for styles",
+                BrowserUtil.isPhantomJS(getDesiredCapabilities()));
+
         super.setup();
         openTestURL();
         waitForElementPresent(By.className("v-embedded"));

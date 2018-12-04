@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,33 +15,16 @@
  */
 package com.vaadin.osgi.widgetset;
 
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.http.HttpService;
 
-import com.vaadin.osgi.resources.OsgiVaadinResources;
-import com.vaadin.osgi.resources.VaadinResourceService;
+import com.vaadin.osgi.resources.OsgiVaadinWidgetset;
 
-@Component(immediate = true)
-public class DefaultWidgetsetContribution {
-    private HttpService httpService;
-
+@Component
+public class DefaultWidgetsetContribution implements OsgiVaadinWidgetset {
     private static final String WIDGETSET_NAME = "com.vaadin.DefaultWidgetSet";
 
-    @Activate
-    void startup(ComponentContext context) throws Exception {
-        VaadinResourceService service = OsgiVaadinResources.getService();
-        service.publishWidgetset(WIDGETSET_NAME, httpService);
-    }
-
-    @Reference
-    void setHttpService(HttpService httpService) {
-        this.httpService = httpService;
-    }
-
-    void unsetHttpService(HttpService httpService) {
-        this.httpService = null;
+    @Override
+    public String getName() {
+        return WIDGETSET_NAME;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,7 +31,7 @@ public interface FileDropTargetClientRpc extends ClientRpc {
      * Sends the of upload URLs mapped to the generated file ID.
      *
      * @param urls
-     *         File IDs and URLs for uploading files to the server.
+     *            File IDs and URLs for uploading files to the server.
      */
     void sendUploadUrl(Map<String, String> urls);
 }

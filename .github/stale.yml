@@ -3,6 +3,7 @@ daysUntilClose: 900
 exemptLabels:
  - BFP
  - Pinned
+ - enhancement
 staleLabel: Stale
 only: issues
 # Comment to post when closing a stale Issue or Pull Request.
@@ -12,7 +13,7 @@ closeComment: >
 markComment: |
   Hello there!
   
-  It looks like this issue hasn't progressed lately. There are so many issues that we just can't deal them all within a reasonable timeframe.
+  We are sorry that this issue hasn't progressed lately. We are prioritizing issues by severity and the number of customers we expect are experiencing this and haven't gotten around to fix this issue yet.
   
   There are a couple of things you could help to get things rolling on this issue (this is an automated message, so expect that some of these are already in use):
   

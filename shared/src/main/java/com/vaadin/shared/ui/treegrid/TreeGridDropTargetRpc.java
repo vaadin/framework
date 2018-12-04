@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,23 +35,24 @@ public interface TreeGridDropTargetRpc extends ServerRpc {
      * Called when drop event happens on client side.
      *
      * @param types
-     *         list of data types from {@code DataTransfer.types} object
+     *            list of data types from {@code DataTransfer.types} object
      * @param data
-     *         map containing all types and corresponding data from the {@code
+     *            map containing all types and corresponding data from the
+     *            {@code
      *         DataTransfer} object
      * @param dropEffect
-     *         the desired drop effect
+     *            the desired drop effect
      * @param rowKey
-     *         key of the row on which the drop event occurred
+     *            key of the row on which the drop event occurred
      * @param depth
-     *         depth of the row in the hierarchy
+     *            depth of the row in the hierarchy
      * @param collapsed
-     *         whether the target row is collapsed
+     *            whether the target row is collapsed
      * @param dropLocation
-     *         location of the drop within the row
+     *            location of the drop within the row
      * @param mouseEventDetails
-     *         Mouse event details object containing information about the drop
-     *         event
+     *            Mouse event details object containing information about the
+     *            drop event
      */
     public void drop(List<String> types, Map<String, String> data,
             String dropEffect, String rowKey, Integer depth, Boolean collapsed,

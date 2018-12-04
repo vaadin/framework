@@ -146,7 +146,7 @@ public class DDTest6 extends TestBase {
         };
         tree1.addActionHandler(actionHandler);
 
-        tree1.addValueChangeListener(event->{
+        tree1.addValueChangeListener(event -> {
             Object value = event.getProperty().getValue();
             if (value != null && !(value instanceof Folder)) {
                 value = tree1.getParent(value);

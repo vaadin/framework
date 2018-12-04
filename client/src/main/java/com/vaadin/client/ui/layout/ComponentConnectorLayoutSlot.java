@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -40,14 +40,16 @@ public class ComponentConnectorLayoutSlot extends VLayoutSlot {
     protected int getCaptionHeight() {
         VCaption caption = getCaption();
         return caption != null
-                ? getLayoutManager().getOuterHeight(caption.getElement()) : 0;
+                ? getLayoutManager().getOuterHeight(caption.getElement())
+                : 0;
     }
 
     @Override
     protected int getCaptionWidth() {
         VCaption caption = getCaption();
         return caption != null
-                ? getLayoutManager().getOuterWidth(caption.getElement()) : 0;
+                ? getLayoutManager().getOuterWidth(caption.getElement())
+                : 0;
     }
 
     public LayoutManager getLayoutManager() {

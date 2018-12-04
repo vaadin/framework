@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -105,17 +105,16 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     @OnStateChange("registeredEventListeners")
     void handleContextClickListenerChange() {
         if (contextHandler == null && hasEventListener(EventId.CONTEXT_CLICK)) {
-            contextHandler = getWidget()
-                    .addDomHandler(event -> {
-                        final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
-                                .buildMouseEventDetails(event.getNativeEvent(),
-                                        getWidget().getElement());
+            contextHandler = getWidget().addDomHandler(event -> {
+                final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
+                        .buildMouseEventDetails(event.getNativeEvent(),
+                                getWidget().getElement());
 
-                        event.preventDefault();
-                        event.stopPropagation();
-                        sendContextClickEvent(mouseEventDetails,
-                                event.getNativeEvent().getEventTarget());
-                    }, ContextMenuEvent.getType());
+                event.preventDefault();
+                event.stopPropagation();
+                sendContextClickEvent(mouseEventDetails,
+                        event.getNativeEvent().getEventTarget());
+            }, ContextMenuEvent.getType());
 
             // if the widget has a contextclick listener, add touch support as
             // well.
@@ -178,8 +177,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             }
 
             // Prevent selection for the element while pending long tap.
-            WidgetUtil.setTextSelectionEnabled(widget.getElement(),
-                    false);
+            WidgetUtil.setTextSelectionEnabled(widget.getElement(), false);
 
             if (BrowserInfo.get().isAndroid()) {
                 // Android fires ContextMenu events automatically.
@@ -187,9 +185,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             }
 
             /*
-             * we need to build mouseEventDetails eagerly - the event won't
-             * be guaranteed to be around when the timer executes. At least
-             * this was the case with iOS devices.
+             * we need to build mouseEventDetails eagerly - the event won't be
+             * guaranteed to be around when the timer executes. At least this
+             * was the case with iOS devices.
              */
 
             final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
@@ -487,7 +485,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             HasErrorIndicatorElement hasErrorIndicatorElement = (HasErrorIndicatorElement) widget;
             if (getState().errorMessage != null) {
                 hasErrorIndicatorElement.setErrorIndicatorElementVisible(true);
-                ErrorUtil.setErrorLevelStyle(hasErrorIndicatorElement.getErrorIndicatorElement(),
+                ErrorUtil.setErrorLevelStyle(
+                        hasErrorIndicatorElement.getErrorIndicatorElement(),
                         StyleConstants.STYLE_NAME_ERROR_INDICATOR,
                         getState().errorLevel);
             } else {

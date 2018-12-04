@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -110,7 +110,8 @@ public interface HeaderCell extends Serializable {
      * The tooltip is shown in the mode returned by
      * {@link #getDescriptionContentMode()}.
      *
-     * @since
+     * @return the tooltip text for this cell
+     * @since 8.4
      */
     public String getDescription();
 
@@ -123,7 +124,7 @@ public interface HeaderCell extends Serializable {
      *
      * @param description
      *            the tooltip to show when hovering the cell
-     * @since
+     * @since 8.4
      */
     public void setDescription(String description);
 
@@ -135,7 +136,7 @@ public interface HeaderCell extends Serializable {
      *            the tooltip to show when hovering the cell
      * @param descriptionContentMode
      *            the content mode to use for the tooltip (HTML or plain text)
-     * @since
+     * @since 8.4
      */
     public void setDescription(String description,
             ContentMode descriptionContentMode);
@@ -146,7 +147,7 @@ public interface HeaderCell extends Serializable {
      *
      * @see ContentMode
      * @return the content mode for the tooltip
-     * @since
+     * @since 8.4
      */
     public ContentMode getDescriptionContentMode();
 
@@ -156,7 +157,7 @@ public interface HeaderCell extends Serializable {
      * @see ContentMode
      * @param descriptionContentMode
      *            the content mode for the tooltip
-     * @since
+     * @since 8.4
      */
     public void setDescriptionContentMode(ContentMode descriptionContentMode);
 }

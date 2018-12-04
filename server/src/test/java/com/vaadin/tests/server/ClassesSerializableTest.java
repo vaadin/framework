@@ -54,6 +54,7 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.ui\\.themes\\..*", //
             // exact class level filtering
             "com\\.vaadin\\.event\\.FieldEvents", //
+            "com\\.vaadin\\.util\\.FileTypeResolver",
             "com\\.vaadin\\.event\\.LayoutEvents", //
             "com\\.vaadin\\.event\\.MouseEvents", //
             "com\\.vaadin\\.event\\.UIEvents", //
@@ -68,8 +69,9 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.server\\.communication\\.PushHandler.*", // PushHandler
             "com\\.vaadin\\.server\\.communication\\.DateSerializer", //
             "com\\.vaadin\\.server\\.communication\\.JSONSerializer", //
+            "com\\.vaadin\\.ui\\.declarative\\.DesignContext", //
             // and its inner classes do not need to be serializable
-            "com\\.vaadin\\.util\\.SerializerHelper", // fully static
+            "com\\.vaadin\\.v7\\.util\\.SerializerHelper", // fully static
             // class level filtering, also affecting nested classes and
             // interfaces
             "com\\.vaadin\\.server\\.LegacyCommunicationManager.*", //
@@ -80,10 +82,7 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.data\\.provider\\.HierarchyMapper\\$TreeLevelQuery",
             "com\\.vaadin\\.data\\.util\\.ReflectTools.*", //
             "com\\.vaadin\\.data\\.util\\.JsonUtil.*", //
-            "com\\.vaadin\\.data\\.util.BeanItemContainerGenerator.*",
-            "com\\.vaadin\\.data\\.util\\.sqlcontainer\\.connection\\.MockInitialContextFactory",
-            "com\\.vaadin\\.data\\.util\\.sqlcontainer\\.DataGenerator",
-            "com\\.vaadin\\.data\\.util\\.sqlcontainer\\.FreeformQueryUtil",
+            "com\\.vaadin\\.data\\.util\\.BeanUtil.*",
             // the JSR-303 constraint interpolation context
             "com\\.vaadin\\.data\\.validator\\.BeanValidator\\$1", //
             "com\\.vaadin\\.sass.*", //
@@ -94,6 +93,7 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.server\\.JsonCodec\\$1", //
             "com\\.vaadin\\.server\\.communication\\.PushConnection", //
             "com\\.vaadin\\.server\\.communication\\.AtmospherePushConnection.*", //
+            "com\\.vaadin\\.ui\\.components\\.colorpicker\\.ColorUtil", //
             "com\\.vaadin\\.util\\.ConnectorHelper", //
             "com\\.vaadin\\.server\\.VaadinSession\\$FutureAccess", //
             "com\\.vaadin\\.external\\..*", //
@@ -102,7 +102,18 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.server\\.communication\\.JSR356WebsocketInitializer.*", //
             "com\\.vaadin\\.screenshotbrowser\\.ScreenshotBrowser.*", //
             "com\\.vaadin\\.osgi.*", //
-            "com\\.vaadin\\.server\\.osgi.*" };
+            "com\\.vaadin\\.server\\.osgi.*",
+            // V7
+            "com\\.vaadin\\.v7\\.ui\\.themes\\.BaseTheme",
+            "com\\.vaadin\\.v7\\.ui\\.themes\\.ChameleonTheme",
+            "com\\.vaadin\\.v7\\.ui\\.themes\\.Reindeer",
+            "com\\.vaadin\\.v7\\.ui\\.themes\\.Runo",
+            "com\\.vaadin\\.v7\\.tests\\.VaadinClasses",
+            "com\\.vaadin\\.v7\\.event\\.FieldEvents", //
+            "com\\.vaadin\\.v7\\.data\\.util.BeanItemContainerGenerator.*",
+            "com\\.vaadin\\.v7\\.data\\.util\\.sqlcontainer\\.connection\\.MockInitialContextFactory",
+            "com\\.vaadin\\.v7\\.data\\.util\\.sqlcontainer\\.DataGenerator",
+            "com\\.vaadin\\.v7\\.data\\.util\\.sqlcontainer\\.FreeformQueryUtil", };
 
     /**
      * Tests that all the relevant classes and interfaces under
@@ -140,7 +151,7 @@ public class ClassesSerializableTest {
                 continue;
             }
 
-            if (Component.class.isAssignableFrom(cls) && !cls.isInterface()
+            if (!cls.isInterface()
                     && !Modifier.isAbstract(cls.getModifiers())) {
                 serializeAndDeserialize(cls);
             }

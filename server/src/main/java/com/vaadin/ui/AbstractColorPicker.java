@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -88,8 +88,6 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
         }
     }
 
-    private ColorPickerServerRpc rpc = this::showPopup;
-
     protected static final String STYLENAME_DEFAULT = "v-colorpicker";
     protected static final String STYLENAME_BUTTON = "v-button";
     protected static final String STYLENAME_AREA = "v-colorpicker-area";
@@ -112,6 +110,22 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
     protected boolean swatchesVisible = true;
     protected boolean historyVisible = true;
     protected boolean textfieldVisible = true;
+    private boolean modal;
+
+    private ColorPickerServerRpc rpc = new ColorPickerServerRpc() {
+        @Override
+        public void openPopup(boolean openPopup) {
+            showPopup(openPopup);
+        }
+
+        @Override
+        public void changeColor(String col) {
+            Color valueC = new Color(
+                    Integer.parseInt(col.substring(1, col.length()), 16));
+            color = valueC;
+            setValue(color, true);
+        }
+    };
 
     /**
      * Instantiates a new color picker.
@@ -170,6 +184,9 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
     public void setValue(Color color) {
         Objects.requireNonNull(color, "color cannot be null");
         super.setValue(color);
+        if (window != null) {
+            window.setValue(color);
+        }
     }
 
     /**
@@ -446,13 +463,16 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
 
                 window.addCloseListener(
                         event -> getState().popupVisible = false);
-                window.addValueChangeListener(
-                        event -> setValue(event.getValue()));
-
+                window.addValueChangeListener(event -> {
+                    window.setValue(color);
+                    setValue(event.getValue(), true);
+                });
                 window.getHistory().setValue(color);
                 window.setPositionX(positionX);
                 window.setPositionY(positionY);
                 window.setVisible(true);
+                window.setValue(color);
+                window.setModal(modal);
 
                 parent.addWindow(window);
                 window.focus();
@@ -468,10 +488,11 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
                 window.setValue(color);
                 window.getHistory().setValue(color);
                 window.setVisible(true);
-
+                window.setModal(modal);
                 parent.addWindow(window);
                 window.focus();
             }
+            window.setValue(color);
 
         } else if (window != null) {
             window.setVisible(false);
@@ -537,5 +558,33 @@ public abstract class AbstractColorPicker extends AbstractField<Color> {
     @Override
     public Color getEmptyValue() {
         return Color.WHITE;
+    }
+
+    /**
+     * Sets ColorPicker modality. When a modal ColorPicker is open, components
+     * outside that ColorPicker cannot be accessed.
+     * <p>
+     * Note: It must be set to {@code true} if ColorPicker is a child of modal
+     * {@link Window}
+     * </p>
+     *
+     * @see Window#setModal
+     * @since 8.4.1
+     * @param modal
+     *            true if modality is to be turned on
+     */
+    public void setModal(boolean modal) {
+        this.modal = modal;
+    }
+
+    /**
+     * Checks the modality of the dialog.
+     *
+     * @see #setModal(boolean)
+     * @since 8.4.1
+     * @return true if the dialog is modal, false otherwise
+     */
+    public boolean isModal() {
+        return this.modal;
     }
 }

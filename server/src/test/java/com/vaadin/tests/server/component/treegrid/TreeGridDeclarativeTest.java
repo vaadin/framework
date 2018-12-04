@@ -77,7 +77,6 @@ public class TreeGridDeclarativeTest
         testWrite(design, grid, true);
     }
 
-
     @Override
     public void valueSerialization() throws InstantiationException,
             IllegalAccessException, InvocationTargetException {

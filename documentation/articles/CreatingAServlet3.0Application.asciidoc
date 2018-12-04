@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-a-servlet-3.0-application]]
-Creating a servlet 3.0 application
-----------------------------------
+= Creating a servlet 3.0 application
 
 Servlet 3.0 introduces a `@WebServlet` annotation which can be used to
 replace the traditional web.xml. The straightforward approach to create

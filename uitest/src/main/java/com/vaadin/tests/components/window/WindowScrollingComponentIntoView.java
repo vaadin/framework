@@ -58,12 +58,10 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
         window.setPositionX(200);
         window.setPositionY(200);
 
-        layout.addComponent(
-                new Button("Scroll mainwin to X9",
-                        event -> getMainWindow().scrollIntoView(x9)));
-        layout.addComponent(
-                new Button("Scroll mainwin to Y9",
-                        event -> getMainWindow().scrollIntoView(y9)));
+        layout.addComponent(new Button("Scroll mainwin to X9",
+                event -> getMainWindow().scrollIntoView(x9)));
+        layout.addComponent(new Button("Scroll mainwin to Y9",
+                event -> getMainWindow().scrollIntoView(y9)));
 
         VerticalLayout panelLayout = new VerticalLayout();
         panelLayout.setMargin(true);
@@ -92,13 +90,13 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
         panelLayout.addComponent(horizontalLayout);
         final Component y29 = l;
 
-        ((VerticalLayout) getMainWindow().getContent()).addComponent(
-                new Button("Scroll win to X9", event -> {
+        ((VerticalLayout) getMainWindow().getContent())
+                .addComponent(new Button("Scroll win to X9", event -> {
                     throw new RuntimeException("Currently not implemented");
                     // window.scrollIntoView(x29);
                 }), 0);
-        ((VerticalLayout) getMainWindow().getContent()).addComponent(
-                new Button("Scroll win to Y9", event -> {
+        ((VerticalLayout) getMainWindow().getContent())
+                .addComponent(new Button("Scroll win to Y9", event -> {
                     throw new RuntimeException("Currently not implemented");
                     // window.scrollIntoView(y29);
                 }), 0);

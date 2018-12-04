@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -132,6 +132,34 @@ public interface Component extends ClientConnector, Sizeable {
      * @see #removeStyleName(String)
      */
     public void setStyleName(String style);
+
+    /**
+     * Adds or removes a style name. Multiple styles can be specified as a
+     * space-separated list of style names.
+     *
+     * If the {@code add} parameter is true, the style name is added to the
+     * component. If the {@code add} parameter is false, the style name is
+     * removed from the component.
+     * <p>
+     * Functionally this is equivalent to using {@link #addStyleName(String)} or
+     * {@link #removeStyleName(String)}
+     *
+     * @since 8.5
+     * @param style
+     *            the style name to be added or removed
+     * @param add
+     *            <code>true</code> to add the given style, <code>false</code>
+     *            to remove it
+     * @see #addStyleName(String)
+     * @see #removeStyleName(String)
+     */
+    public default void setStyleName(String style, boolean add) {
+        if (add) {
+            addStyleName(style);
+        } else {
+            removeStyleName(style);
+        }
+    }
 
     /**
      * Adds one or more style names to this component. Multiple styles can be

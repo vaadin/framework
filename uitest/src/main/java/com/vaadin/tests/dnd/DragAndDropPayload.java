@@ -38,13 +38,11 @@ public class DragAndDropPayload extends AbstractTestUIWithLog {
 
         DropTargetExtension<Label> dropTarget = new DropTargetExtension<>(
                 targetLabel);
-        dropTarget.addDropListener(event ->
-                event.getDataTransferData().entrySet().stream()
-                        .filter(entry -> entry.getKey()
-                                .startsWith(Payload.ITEM_PREFIX)).forEach(
-                        entry -> log.log(entry.getKey() + " -> " + entry
-                                .getValue()))
-        );
+        dropTarget.addDropListener(event -> event.getDataTransferData()
+                .entrySet().stream()
+                .filter(entry -> entry.getKey().startsWith(Payload.ITEM_PREFIX))
+                .forEach(entry -> log
+                        .log(entry.getKey() + " -> " + entry.getValue())));
 
         VerticalLayout dragSources = new VerticalLayout(stringLabel,
                 integerLabel, doubleLabel);

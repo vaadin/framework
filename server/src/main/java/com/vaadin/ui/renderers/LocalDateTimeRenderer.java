@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -20,9 +20,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 
+import com.vaadin.server.SerializableSupplier;
 import com.vaadin.shared.ui.grid.renderers.LocalDateTimeRendererState;
 
 import elemental.json.JsonValue;
+import static com.vaadin.data.util.BeanUtil.checkSerialization;
 
 /**
  * A renderer for presenting {@code LocalDateTime} objects.
@@ -33,7 +35,7 @@ import elemental.json.JsonValue;
 public class LocalDateTimeRenderer
         extends AbstractRenderer<Object, LocalDateTime> {
 
-    private DateTimeFormatter formatter;
+    private SerializableSupplier<DateTimeFormatter> formatterSupplier;
     private boolean getLocaleFromGrid;
 
     /**
@@ -52,7 +54,7 @@ public class LocalDateTimeRenderer
      *      FormatStyle.SHORT</a>
      */
     public LocalDateTimeRenderer() {
-        this(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG,
+        this(() -> DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG,
                 FormatStyle.SHORT), "");
         getLocaleFromGrid = true;
     }
@@ -63,12 +65,21 @@ public class LocalDateTimeRenderer
      * The renderer is configured to render with the given formatter, with the
      * empty string as its null representation.
      *
+     * <p>
+     * <b>Note</b> the {@code DateTimeFormatter} is not a serializable class, so
+     * using this method in an environment which requires session persistence
+     * may produce {@link java.io.NotSerializableException}.
+     *
      * @param formatter
      *            the formatter to use, not {@code null}
      *
      * @throws IllegalArgumentException
      *             if formatter is null
+     * @deprecated the method is unsafe for serialization, may produce troubles
+     *             in a cluster environment
+     * @see #LocalDateTimeRenderer(SerializableSupplier)
      */
+    @Deprecated
     public LocalDateTimeRenderer(DateTimeFormatter formatter) {
         this(formatter, "");
     }
@@ -78,6 +89,12 @@ public class LocalDateTimeRenderer
      * <p>
      * The renderer is configured to render with the given formatter.
      *
+     * <p>
+     * <b>Note</b> the {@code DateTimeFormatter} is not a serializable class, so
+     * using this method in an environment which requires session persistence
+     * may produce {@link java.io.NotSerializableException}.
+     *
+     *
      * @param formatter
      *            the formatter to use, not {@code null}
      * @param nullRepresentation
@@ -85,15 +102,20 @@ public class LocalDateTimeRenderer
      *
      * @throws IllegalArgumentException
      *             if formatter is null
+     * @deprecated the method is unsafe for serialization, may produce troubles
+     *             in acluster environment
+     * @see #LocalDateTimeRenderer(SerializableSupplier, String)
      */
-    public LocalDateTimeRenderer(DateTimeFormatter formatter, String nullRepresentation) {
+    @Deprecated
+    public LocalDateTimeRenderer(DateTimeFormatter formatter,
+            String nullRepresentation) {
         super(LocalDateTime.class, nullRepresentation);
 
         if (formatter == null) {
             throw new IllegalArgumentException("formatter may not be null");
         }
 
-        this.formatter = formatter;
+        this.formatterSupplier = () -> formatter;
     }
 
     /**
@@ -178,7 +200,51 @@ public class LocalDateTimeRenderer
             throw new IllegalArgumentException("locale may not be null");
         }
 
-        formatter = DateTimeFormatter.ofPattern(formatPattern, locale);
+        formatterSupplier = () -> DateTimeFormatter.ofPattern(formatPattern,
+                locale);
+    }
+
+    /**
+     * Creates a new LocalDateTimeRenderer.
+     * <p>
+     * The renderer is configured to render with the given formatterSupplier.
+     *
+     * @param formatterSupplier
+     *            the formatterSupplier supplier to use, not {@code null}, it
+     *            should not supply {@code null} either
+     * @throws IllegalArgumentException
+     *             if formatterSupplier is null
+     */
+    public LocalDateTimeRenderer(
+            SerializableSupplier<DateTimeFormatter> formatterSupplier) {
+        this(formatterSupplier, "");
+    }
+
+    /**
+     * Creates a new LocalDateTimeRenderer.
+     * <p>
+     * The renderer is configured to render with the given formatterSupplier.
+     *
+     * @param formatterSupplier
+     *            the formatterSupplier supplier to use, not {@code null}, it
+     *            should not supply {@code null} either
+     * @param nullRepresentation
+     *            the textual representation of the {@code null} value
+     *
+     * @throws IllegalArgumentException
+     *             if formatterSupplier is null
+     */
+    public LocalDateTimeRenderer(
+            SerializableSupplier<DateTimeFormatter> formatterSupplier,
+            String nullRepresentation) {
+        super(LocalDateTime.class, nullRepresentation);
+
+        if (formatterSupplier == null) {
+            throw new IllegalArgumentException(
+                    "formatterSupplier may not be null");
+        }
+        this.formatterSupplier = formatterSupplier;
+        assert checkSerialization(formatterSupplier);
     }
 
     @Override
@@ -193,10 +259,10 @@ public class LocalDateTimeRenderer
                                 + "this renderer should either be attached to a grid "
                                 + "or constructed with locale information");
             }
-            dateString = value
-                    .format(formatter.withLocale(getParentGrid().getLocale()));
+            dateString = value.format(formatterSupplier.get()
+                    .withLocale(getParentGrid().getLocale()));
         } else {
-            dateString = value.format(formatter);
+            dateString = value.format(formatterSupplier.get());
         }
         return encode(dateString, String.class);
     }

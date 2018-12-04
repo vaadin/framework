@@ -27,11 +27,10 @@ public class TabsheetScrollIntoView extends AbstractReindeerTestUI {
 
         Layout buttonLayout = new VerticalLayout();
 
-        buttonLayout
-                .addComponent(new Button("Hide TabSheet", event -> {
-                    panel.setSplitPosition(100, Unit.PERCENTAGE);
-                    panel.removeComponent(tabSheetInSplitPanel);
-                }));
+        buttonLayout.addComponent(new Button("Hide TabSheet", event -> {
+            panel.setSplitPosition(100, Unit.PERCENTAGE);
+            panel.removeComponent(tabSheetInSplitPanel);
+        }));
 
         Button showLast = new Button("Show TabSheet and select last tab",
                 event -> {
@@ -43,8 +42,8 @@ public class TabsheetScrollIntoView extends AbstractReindeerTestUI {
         showLast.setId(BTN_SELECT_LAST_TAB);
         buttonLayout.addComponent(showLast);
 
-        buttonLayout.addComponent(new Button(
-                "Show TabSheet and select first tab", event -> {
+        buttonLayout.addComponent(
+                new Button("Show TabSheet and select first tab", event -> {
                     panel.setSecondComponent(tabSheetInSplitPanel);
                     panel.setSplitPosition(250, Unit.PIXELS);
                     tabSheetInSplitPanel.setSelectedTab(0);

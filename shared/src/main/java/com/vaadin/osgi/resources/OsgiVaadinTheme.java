@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -30,11 +30,21 @@ package com.vaadin.osgi.resources;
  *
  * @since 8.1
  */
-public interface OsgiVaadinTheme {
+public interface OsgiVaadinTheme extends OsgiVaadinResource {
     /**
      * Return the theme name to publish for OSGi.
      *
      * @return theme name, not null
      */
+    @Override
     public String getName();
+
+    public static OsgiVaadinTheme create(final String name) {
+        return new OsgiVaadinTheme() {
+            @Override
+            public String getName() {
+                return name;
+            }
+        };
+    }
 }

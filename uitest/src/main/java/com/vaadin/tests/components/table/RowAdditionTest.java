@@ -35,16 +35,14 @@ public class RowAdditionTest extends TestBase {
             Item item = container.addItemAt(0, new Object());
             item.getItemProperty("column1").setValue("0");
         }));
-        hl.addComponent(
-                new Button("Add at position 50", event -> {
-                    Item item = container.addItemAt(50, new Object());
-                    item.getItemProperty("column1").setValue("50");
-                }));
-        hl.addComponent(
-                new Button("Add at position 100", event -> {
-                    Item item = container.addItemAt(100, new Object());
-                    item.getItemProperty("column1").setValue("100");
-                }));
+        hl.addComponent(new Button("Add at position 50", event -> {
+            Item item = container.addItemAt(50, new Object());
+            item.getItemProperty("column1").setValue("50");
+        }));
+        hl.addComponent(new Button("Add at position 100", event -> {
+            Item item = container.addItemAt(100, new Object());
+            item.getItemProperty("column1").setValue("100");
+        }));
 
         getLayout().addComponent(table);
         getLayout().addComponent(hl);

@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.design;
 
 import static org.junit.Assert.assertEquals;
@@ -39,7 +24,6 @@ import com.vaadin.ui.declarative.DesignContext;
 /**
  * Tests the handling of the locale property in parsing and html generation.
  *
- * @since
  * @author Vaadin Ltd
  */
 public class LocaleTest {
@@ -93,19 +77,19 @@ public class LocaleTest {
         assertTrue(
                 "The element should not have a locale specification, found locale "
                         + eb1.attr("locale"),
-                        eb1.attr("locale").isEmpty());
+                eb1.attr("locale").isEmpty());
         Element eb2 = ehLayout.child(1);
         assertEquals("Wrong locale information.", "en_US", eb2.attr("locale"));
         Element ehLayout2 = evLayout.child(1);
         assertTrue(
                 "The element should not have a locale specification, found locale "
                         + ehLayout2.attr("locale"),
-                        ehLayout2.attr("locale").isEmpty());
+                ehLayout2.attr("locale").isEmpty());
         Element el1 = ehLayout2.child(0);
         assertTrue(
                 "The element should not have a locale specification, found locale "
                         + el1.attr("locale"),
-                        el1.attr("locale").isEmpty());
+                el1.attr("locale").isEmpty());
         Element el2 = ehLayout2.child(1);
         assertEquals("Wrong locale information.", "en_CA", el2.attr("locale"));
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,6 +35,7 @@ import com.vaadin.data.HasValue;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataCommunicator;
+import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataKeyMapper;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
@@ -44,6 +45,7 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.server.ConnectorResource;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
@@ -184,23 +186,21 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         @Override
         public void createNewItem(String itemValue) {
             // New option entered
+            boolean added = false;
             if (itemValue != null && !itemValue.isEmpty()) {
                 if (getNewItemProvider() != null) {
                     Optional<T> item = getNewItemProvider().apply(itemValue);
-                    if (!item.isPresent()) {
-                        // ensure the client resets the value to previous
-                        // selection
-                        getRpcProxy(ComboBoxClientRpc.class)
-                                .newItemNotAdded(itemValue);
-                    }
+                    added = item.isPresent();
                 } else if (getNewItemHandler() != null) {
                     getNewItemHandler().accept(itemValue);
-                } else {
-                    // selection handling is needed at the client even if
-                    // NewItemHandler is missing
-                    getRpcProxy(ComboBoxClientRpc.class)
-                            .newItemNotAdded(itemValue);
+                    // Up to the user to tell if no item was added.
+                    added = true;
                 }
+            }
+
+            if (!added) {
+                // New item was not handled.
+                getRpcProxy(ComboBoxClientRpc.class).newItemNotAdded(itemValue);
             }
         }
 
@@ -234,7 +234,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * {@link #setItems(Collection)}
      */
     public ComboBox() {
-        super(new DataCommunicator<T>() {
+        this(new DataCommunicator<T>() {
             @Override
             protected DataKeyMapper<T> createKeyMapper(
                     ValueProvider<T, Object> identifierGetter) {
@@ -247,8 +247,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                 };
             }
         });
-
-        init();
     }
 
     /**
@@ -281,6 +279,18 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     /**
+     * Constructs and initializes an empty combo box.
+     *
+     * @param dataCommunicator
+     *            the data comnunicator to use with this ComboBox
+     * @since 8.5
+     */
+    protected ComboBox(DataCommunicator<T> dataCommunicator) {
+        super(dataCommunicator);
+        init();
+    }
+
+    /**
      * Initialize the ComboBox with default settings and register client to
      * server RPC implementation.
      */
@@ -288,21 +298,56 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         registerRpc(rpc);
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
 
-        addDataGenerator((T data, JsonObject jsonObject) -> {
-            String caption = getItemCaptionGenerator().apply(data);
-            if (caption == null) {
-                caption = "";
+        addDataGenerator(new DataGenerator<T>() {
+
+            /**
+             * Map for storing names for icons.
+             */
+            private Map<Object, String> resourceKeyMap = new HashMap<>();
+            private int counter = 0;
+
+            @Override
+            public void generateData(T item, JsonObject jsonObject) {
+                String caption = getItemCaptionGenerator().apply(item);
+                if (caption == null) {
+                    caption = "";
+                }
+                jsonObject.put(DataCommunicatorConstants.NAME, caption);
+                String style = itemStyleGenerator.apply(item);
+                if (style != null) {
+                    jsonObject.put(ComboBoxConstants.STYLE, style);
+                }
+                Resource icon = getItemIcon(item);
+                if (icon != null) {
+                    String iconKey = resourceKeyMap
+                            .get(getDataProvider().getId(item));
+                    String iconUrl = ResourceReference
+                            .create(icon, ComboBox.this, iconKey).getURL();
+                    jsonObject.put(ComboBoxConstants.ICON, iconUrl);
+                }
             }
-            jsonObject.put(DataCommunicatorConstants.NAME, caption);
-            String style = itemStyleGenerator.apply(data);
-            if (style != null) {
-                jsonObject.put(ComboBoxConstants.STYLE, style);
+
+            @Override
+            public void destroyData(T item) {
+                Object itemId = getDataProvider().getId(item);
+                if (resourceKeyMap.containsKey(itemId)) {
+                    setResource(resourceKeyMap.get(itemId), null);
+                    resourceKeyMap.remove(itemId);
+                }
             }
-            Resource icon = getItemIconGenerator().apply(data);
-            if (icon != null) {
-                String iconUrl = ResourceReference
-                        .create(icon, ComboBox.this, null).getURL();
-                jsonObject.put(ComboBoxConstants.ICON, iconUrl);
+
+            private Resource getItemIcon(T item) {
+                Resource icon = getItemIconGenerator().apply(item);
+                if (icon == null || !(icon instanceof ConnectorResource)) {
+                    return icon;
+                }
+
+                Object itemId = getDataProvider().getId(item);
+                if (!resourceKeyMap.containsKey(itemId)) {
+                    resourceKeyMap.put(itemId, "icon" + (counter++));
+                }
+                setResource(resourceKeyMap.get(itemId), icon);
+                return icon;
             }
         });
     }
@@ -643,9 +688,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     public void setItemCaptionGenerator(
             ItemCaptionGenerator<T> itemCaptionGenerator) {
         super.setItemCaptionGenerator(itemCaptionGenerator);
-        if (getSelectedItem().isPresent()) {
-            updateSelectedItemCaption();
-        }
     }
 
     /**
@@ -687,10 +729,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     @Override
     public void setItemIconGenerator(IconGenerator<T> itemIconGenerator) {
         super.setItemIconGenerator(itemIconGenerator);
-
-        if (getSelectedItem().isPresent()) {
-            updateSelectedItemIcon();
-        }
     }
 
     @Override
@@ -782,33 +820,46 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     @Override
-    protected void doSetSelectedKey(String key) {
-        super.doSetSelectedKey(key);
+    protected void updateSelectedItemState(T value) {
+        super.updateSelectedItemState(value);
 
-        updateSelectedItemCaption();
-        updateSelectedItemIcon();
+        updateSelectedItemCaption(value);
+        updateSelectedItemIcon(value);
     }
 
-    private void updateSelectedItemCaption() {
+    private void updateSelectedItemCaption(T value) {
         String selectedCaption = null;
-        T value = keyToItem(getSelectedKey());
         if (value != null) {
             selectedCaption = getItemCaptionGenerator().apply(value);
         }
         getState().selectedItemCaption = selectedCaption;
     }
 
-    private void updateSelectedItemIcon() {
+    private void updateSelectedItemIcon(T value) {
         String selectedItemIcon = null;
-        T value = keyToItem(getSelectedKey());
         if (value != null) {
             Resource icon = getItemIconGenerator().apply(value);
             if (icon != null) {
+                if (icon instanceof ConnectorResource) {
+                    if (!isAttached()) {
+                        // Deferred resource generation.
+                        return;
+                    }
+                    setResource("selected", icon);
+                }
                 selectedItemIcon = ResourceReference
-                        .create(icon, ComboBox.this, null).getURL();
+                        .create(icon, ComboBox.this, "selected").getURL();
             }
         }
         getState().selectedItemIcon = selectedItemIcon;
+    }
+
+    @Override
+    public void attach() {
+        super.attach();
+
+        // Update icon for ConnectorResource
+        updateSelectedItemIcon(getValue());
     }
 
     @Override

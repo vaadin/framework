@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-root</artifactId>
-        <version>8.4-SNAPSHOT</version>
+        <version>8.7-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-testbench-api</artifactId>
     <name>vaadin-testbench-api</name>
@@ -35,6 +35,10 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>net.revelc.code.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>

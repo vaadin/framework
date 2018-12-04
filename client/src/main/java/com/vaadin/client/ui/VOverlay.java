@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -64,15 +64,6 @@ public class VOverlay extends Overlay {
     public VOverlay(boolean autoHide, boolean modal) {
         super(autoHide, modal);
     }
-
-    /*
-     * A "thread local" of sorts, set temporarily so that VOverlayImpl knows
-     * which VOverlay is using it, so that it can be attached to the correct
-     * overlay container.
-     *
-     * TODO this is a strange pattern that we should get rid of when possible.
-     */
-    protected static VOverlay current;
 
     /**
      * Get the {@link ApplicationConnection} that this overlay belongs to. If
@@ -162,4 +153,15 @@ public class VOverlay extends Overlay {
                 overlayContainerLabel);
     }
 
+    /**
+     * Sets the {@link ApplicationConnection} that this overlay belongs to.
+     *
+     * @see #getApplicationConnection()
+     *
+     * @param ac
+     *            the connection
+     */
+    public void setApplicationConnection(ApplicationConnection ac) {
+        this.ac = ac;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -117,7 +117,7 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         String oldLocale = getWidget().getCurrentLocale();
-
+        boolean isReadOnly = getWidget().isReadonly();
         getWidget().parsable = getState().parsable;
 
         super.onStateChanged(stateChangeEvent);
@@ -159,6 +159,10 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
         } else {
             getWidget().calendarToggle.removeStyleName(
                     VAbstractPopupCalendar.CLASSNAME + "-button-readonly");
+            if (getState().readOnly != isReadOnly
+                    && getWidget().calendar.isInitialRenderDone()) {
+                getWidget().calendar.renderCalendar();
+            }
         }
 
         getWidget().setDescriptionForAssistiveDevices(

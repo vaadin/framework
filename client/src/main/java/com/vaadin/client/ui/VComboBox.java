@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import com.google.gwt.animation.client.AnimationScheduler;
@@ -257,12 +258,12 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-        
+
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-        
+
                 @com.vaadin.client.ui.VComboBox.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e, e.deltaMode);
             });
         }-*/;
@@ -1371,7 +1372,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
              * way, and they might be useful in a combo box where new items are
              * allowed.
              */
-            getElement().setAttribute("autocomplete", "nope");
+            getElement().setAttribute("autocomplete", Math.random() + "");
         }
 
         /**
@@ -2360,9 +2361,13 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             case KeyCodes.KEY_ALT:
             case KeyCodes.KEY_DOWN:
             case KeyCodes.KEY_UP:
+            case KeyCodes.KEY_RIGHT:
+            case KeyCodes.KEY_LEFT:
             case KeyCodes.KEY_PAGEDOWN:
             case KeyCodes.KEY_PAGEUP:
             case KeyCodes.KEY_ESCAPE:
+            case KeyCodes.KEY_HOME:
+            case KeyCodes.KEY_END:
                 // NOP
                 break;
             default:

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,8 +35,8 @@ public interface HasErrorIndicatorElement {
      * Sets the visibility of the error indicator element.
      *
      * @param visible
-     *         {@code true} to show the error indicator element, {@code false}
-     *         to hide it
+     *            {@code true} to show the error indicator element,
+     *            {@code false} to hide it
      */
     void setErrorIndicatorElementVisible(boolean visible);
 }

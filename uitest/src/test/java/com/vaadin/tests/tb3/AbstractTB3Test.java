@@ -1,19 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests.tb3;
 
 import static org.junit.Assert.assertEquals;
@@ -32,6 +16,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.logging.Level;
 
 import org.apache.commons.io.IOUtils;
@@ -40,31 +25,32 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.rules.TestName;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
-import org.openqa.selenium.interactions.internal.Coordinates;
-import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.internal.WrapsElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UIProvider;
+import com.vaadin.testbench.ScreenshotOnFailureRule;
 import com.vaadin.testbench.TestBenchDriverProxy;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.annotations.BrowserConfiguration;
@@ -103,8 +89,16 @@ public abstract class AbstractTB3Test extends ParallelTest {
     @Rule
     public TestName testName = new TestName();
 
-    @Rule
-    public RetryOnFail retry = new RetryOnFail();
+    {
+        // Override default screenshotOnFailureRule to close application
+        screenshotOnFailure = new ScreenshotOnFailureRule(this, true) {
+            @Override
+            protected void finished(Description description) {
+                closeApplication();
+                super.finished(description);
+            }
+        };
+    }
 
     /**
      * Height of the screenshots we want to capture
@@ -120,15 +114,6 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Timeout used by the TB grid
      */
     private static final int BROWSER_TIMEOUT_IN_MS = 30 * 1000;
-
-    protected static DesiredCapabilities PHANTOMJS2() {
-        DesiredCapabilities phantomjs2 = new VaadinBrowserFactory()
-                .create(Browser.PHANTOMJS, "2");
-        // Hack for the test cluster
-        phantomjs2.setCapability("phantomjs.binary.path",
-                "/usr/bin/phantomjs2");
-        return phantomjs2;
-    }
 
     private boolean debug = false;
 
@@ -163,7 +148,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Method for closing the tested application.
      */
     protected void closeApplication() {
-        if (driver != null) {
+        if (getDriver() != null) {
             try {
                 openTestURL("closeApplication");
             } catch (Exception e) {
@@ -183,10 +168,6 @@ public abstract class AbstractTB3Test extends ParallelTest {
                 com.vaadin.testbench.By.className("v-tooltip-text"));
     }
 
-    protected Coordinates getCoordinates(TestBenchElement element) {
-        return ((Locatable) element.getWrappedElement()).getCoordinates();
-    }
-
     private boolean hasDebugMessage(String message) {
         return getDebugMessage(message) != null;
     }
@@ -195,6 +176,22 @@ public abstract class AbstractTB3Test extends ParallelTest {
         return driver.findElement(By.xpath(String.format(
                 "//span[@class='v-debugwindow-message' and text()='%s']",
                 message)));
+    }
+
+    protected void minimizeDebugWindow() {
+        if (findElement(By.className("v-debugwindow-tabs")).isDisplayed()) {
+            findElements(By.className("v-debugwindow-button")).stream()
+                    .filter(e -> e.getAttribute("title").equals("Minimize"))
+                    .findFirst().ifPresent(WebElement::click);
+        }
+    }
+
+    protected void showDebugWindow() {
+        if (!findElement(By.className("v-debugwindow-tabs")).isDisplayed()) {
+            findElements(By.className("v-debugwindow-button")).stream()
+                    .filter(e -> e.getAttribute("title").equals("Minimize"))
+                    .findFirst().ifPresent(WebElement::click);
+        }
     }
 
     protected void waitForDebugMessage(final String expectedMessage) {
@@ -804,8 +801,12 @@ public abstract class AbstractTB3Test extends ParallelTest {
     protected void openDebugLogTab() {
 
         waitUntil(input -> {
-            WebElement element = getDebugLogButton();
-            return element != null;
+            try {
+                WebElement element = getDebugLogButton();
+                return element != null;
+            } catch (NoSuchElementException e) {
+                return false;
+            }
         }, 15);
         getDebugLogButton().click();
     }
@@ -1023,10 +1024,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      */
     protected void selectMenu(String menuCaption, boolean click) {
         WebElement menuElement = getMenuElement(menuCaption);
-        Dimension size = menuElement.getSize();
-        new Actions(getDriver())
-                .moveToElement(menuElement, size.width - 10, size.height / 2)
-                .perform();
+        new Actions(getDriver()).moveToElement(menuElement).perform();
         if (click) {
             new Actions(getDriver()).click().perform();
         }
@@ -1058,6 +1056,10 @@ public abstract class AbstractTB3Test extends ParallelTest {
     protected void selectMenuPath(String... menuCaptions) {
         selectMenu(menuCaptions[0], true);
 
+        // Make sure menu popup is opened.
+        waitUntil(e -> isElementPresent(By.className("gwt-MenuBarPopup"))
+                || isElementPresent(By.className("v-menubar-popup")));
+
         // Move to the menu item opened below the menu bar.
         new Actions(getDriver())
                 .moveByOffset(0,
@@ -1066,7 +1068,9 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
         for (int i = 1; i < menuCaptions.length - 1; i++) {
             selectMenu(menuCaptions[i]);
-            new Actions(getDriver()).moveByOffset(40, 0).build().perform();
+            new Actions(getDriver()).moveByOffset(
+                    getMenuElement(menuCaptions[i]).getSize().getWidth(), 0)
+                    .build().perform();
         }
         selectMenu(menuCaptions[menuCaptions.length - 1], true);
     }
@@ -1183,6 +1187,53 @@ public abstract class AbstractTB3Test extends ParallelTest {
                 element)).intValue();
     }
 
+    protected int getScrollTop(WebElement element) {
+        return ((Number) executeScript("return arguments[0].scrollTop;",
+                element)).intValue();
+    }
+
+    /**
+     * Gets the X offset for
+     * {@link Actions#moveToElement(WebElement, int, int)}. This method takes
+     * into account the W3C specification in browsers that properly implement
+     * it.
+     *
+     * @param element
+     *            the element
+     * @param targetX
+     *            the X coordinate where the move is wanted to go to
+     * @return the correct X offset
+     */
+    protected int getXOffset(WebElement element, int targetX) {
+        if (BrowserUtil.isFirefox(getDesiredCapabilities())) {
+            // Firefox follow W3C spec and moveToElement is relative to center
+            final int width = element.getSize().getWidth();
+            return targetX - ((width + width % 2) / 2);
+        }
+        return targetX;
+    }
+
+    /**
+     * Gets the Y offset for
+     * {@link Actions#moveToElement(WebElement, int, int)}. This method takes
+     * into account the W3C specification in browsers that properly implement
+     * it.
+     *
+     * @param element
+     *            the element
+     * @param targetY
+     *            the Y coordinate where the move is wanted to go to
+     * @return the correct Y offset
+     */
+    protected int getYOffset(WebElement element, int targetY) {
+        if (BrowserUtil.isFirefox(getDesiredCapabilities())) {
+            // Firefox follow W3C spec and moveToElement is relative to center
+            final int height = element.getSize().getHeight();
+            return targetY - ((height + height % 2) / 2);
+        }
+        return targetY;
+    }
+
     /**
      * Returns client height rounded up instead of as double because of IE9
      * issues: https://dev.vaadin.com/ticket/18469
@@ -1203,6 +1254,19 @@ public abstract class AbstractTB3Test extends ParallelTest {
                 + "return Math.ceil(h);";
 
         return ((Number) executeScript(script, e)).intValue();
+    }
+
+    protected TimeZone getBrowserTimeZone() {
+        Assume.assumeFalse(
+                "Internet Explorer 11 does not support resolvedOptions timeZone",
+                BrowserUtil.isIE(getDesiredCapabilities(), 11));
+
+        // Ask TimeZone from browser
+        String browserTimeZone = ((JavascriptExecutor) getDriver())
+                .executeScript(
+                        "return Intl.DateTimeFormat().resolvedOptions().timeZone;")
+                .toString();
+        return TimeZone.getTimeZone(browserTimeZone);
     }
 
     protected void assertElementsEquals(WebElement expectedElement,

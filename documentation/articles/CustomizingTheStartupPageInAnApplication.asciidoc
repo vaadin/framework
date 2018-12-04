@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[customizing-the-startup-page-in-an-application]]
-Customizing the startup page in an application
-----------------------------------------------
+= Customizing the startup page in an application
 
 In Vaadin 6, the startup page - used to bootstrap a new Vaadin UI
 instance in the browser - was generated as a monolithic chunk of HTML

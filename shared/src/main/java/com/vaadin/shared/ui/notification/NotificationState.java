@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -39,7 +39,8 @@ public class NotificationState extends SharedState {
     public String description;
 
     /**
-     * Whether texts are interpreted as HTML ({@code true}) or not ({@code false}).
+     * Whether texts are interpreted as HTML ({@code true}) or not
+     * ({@code false}).
      */
     public boolean htmlContentAllowed;
 
@@ -49,8 +50,8 @@ public class NotificationState extends SharedState {
     public String styleName;
 
     /**
-     * The {@link Position} of the {@link com.vaadin.ui.Notification},
-     *            can not be {@code null}.
+     * The {@link Position} of the {@link com.vaadin.ui.Notification}, can not
+     * be {@code null}.
      */
     public Position position = Position.MIDDLE_CENTER;
 

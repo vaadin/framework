@@ -51,11 +51,10 @@ public class FieldBinderWithBeanValidation extends TestBase {
             Notification.show(msg);
             log.log(msg);
         });
-        Button discardButton = new Button("Discard",
-                event -> {
-                    fieldGroup.discard();
-                    log.log("Discarded changes");
-                });
+        Button discardButton = new Button("Discard", event -> {
+            fieldGroup.discard();
+            log.log("Discarded changes");
+        });
         Button showBean = new Button("Show bean values",
                 event -> log.log(getPerson(fieldGroup).toString()));
         addComponent(commitButton);

@@ -5,13 +5,14 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-test</artifactId>
-        <version>8.4-SNAPSHOT</version>
+        <version>8.7-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-test-cdi</artifactId>
     <packaging>war</packaging>
 
     <properties>
         <jetty.skip>true</jetty.skip>
+        <wildfly.version>12.0.0.Final</wildfly.version>
     </properties>
 
     <dependencies>
@@ -38,7 +39,7 @@
             <plugin>
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-maven-plugin</artifactId>
-                <version>1.2.0.Final</version>
+                <version>1.2.2.Final</version>
                 <executions>
                     <execution>
                         <id>start-wildfly</id>

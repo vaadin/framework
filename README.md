@@ -65,7 +65,7 @@ The following preferences need to be set to keep the project consistent. You nee
 
 ## Setting up IntelliJ IDEA to Develop Vaadin Framework 8
 
-1. Intall and run IDEA. Ultimate Edition is better but Community Edition should also work.
+1. Install and run IDEA. Ultimate Edition is better but Community Edition should also work.
 1. Ensure if Git and Maven plugins are installed, properly configured and enabled.
 1. Clone the repository, using menu VCS -> Checkout from Version Control -> Git -> Git Repository URL -> https://github.com/vaadin/framework.git.
   When the repository is cloned, do **NOT** open it as a project.

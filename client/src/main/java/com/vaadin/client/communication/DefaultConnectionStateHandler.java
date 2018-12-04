@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -92,16 +92,14 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
     public void setConnection(ApplicationConnection connection) {
         this.connection = connection;
 
-        connection.addHandler(ApplicationStoppedEvent.TYPE,
-                event -> {
-                    if (isReconnecting()) {
-                        giveUp();
-                    }
-                    if (scheduledReconnect != null
-                            && scheduledReconnect.isRunning()) {
-                        scheduledReconnect.cancel();
-                    }
-                });
+        connection.addHandler(ApplicationStoppedEvent.TYPE, event -> {
+            if (isReconnecting()) {
+                giveUp();
+            }
+            if (scheduledReconnect != null && scheduledReconnect.isRunning()) {
+                scheduledReconnect.cancel();
+            }
+        });
 
         // Allow dialog to cache needed resources to make them available when we
         // are offline

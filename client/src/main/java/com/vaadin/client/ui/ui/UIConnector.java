@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,16 +14,6 @@
  * the License.
  */
 package com.vaadin.client.ui.ui;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
@@ -44,6 +34,8 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -99,8 +91,17 @@ import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.UI;
-
 import elemental.client.Browser;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 @Connect(value = UI.class, loadStyle = LoadStyle.EAGER)
 public class UIConnector extends AbstractSingleComponentContainerConnector
@@ -215,7 +216,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             getRpcProxy(UIServerRpc.class).resize(event.getWidth(),
                     event.getHeight(), Window.getClientWidth(),
                     Window.getClientHeight());
-            if(!firstSizeReported) {
+            if (!firstSizeReported) {
                 firstSizeReported = true;
                 getConnection().getServerRpcQueue().flush();
             } else {
@@ -373,34 +374,18 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         if (uidl.hasAttribute("focused")) {
             // set focused component when render phase is finished
             Scheduler.get().scheduleDeferred(() -> {
-                ComponentConnector connector = (ComponentConnector) uidl
-                        .getPaintableAttribute("focused", getConnection());
+                Timer timer = new Timer() {
+                    @Override
+                    public void run() {
+                        ComponentConnector connector = (ComponentConnector) uidl
+                                .getPaintableAttribute("focused",
+                                        getConnection());
 
-                if (connector == null) {
-                    // Do not try to focus invisible components which not
-                    // present in UIDL
-                    return;
-                }
+                        focus(connector);
+                    }
+                };
 
-                final Widget toBeFocused = connector.getWidget();
-                /*
-                 * Two types of Widgets can be focused, either implementing GWT
-                 * Focusable of a thinner Vaadin specific Focusable interface.
-                 */
-                if (toBeFocused instanceof com.google.gwt.user.client.ui.Focusable) {
-                    final com.google.gwt.user.client.ui.Focusable toBeFocusedWidget = (com.google.gwt.user.client.ui.Focusable) toBeFocused;
-                    toBeFocusedWidget.setFocus(true);
-                } else if (toBeFocused instanceof Focusable) {
-                    ((Focusable) toBeFocused).focus();
-                } else {
-                    getLogger().severe(
-                            "Server is trying to set focus to the widget of connector "
-                                    + Util.getConnectorString(connector)
-                                    + " but it is not focusable. The widget should implement either "
-                                    + com.google.gwt.user.client.ui.Focusable.class
-                                            .getName()
-                                    + " or " + Focusable.class.getName());
-                }
+                timer.schedule(0);
             });
         }
 
@@ -432,6 +417,34 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             // Queue the initial window size to be sent with the following
             // request.
             Scheduler.get().scheduleDeferred(() -> ui.sendClientResized());
+        }
+    }
+
+    private void focus(ComponentConnector connector) {
+        if (connector == null) {
+            // Do not try to focus invisible components which not
+            // present in UIDL
+            return;
+        }
+
+        final Widget toBeFocused = connector.getWidget();
+        /*
+         * Two types of Widgets can be focused, either implementing GWT
+         * Focusable of a thinner Vaadin specific Focusable interface.
+         */
+        if (toBeFocused instanceof com.google.gwt.user.client.ui.Focusable) {
+            final com.google.gwt.user.client.ui.Focusable toBeFocusedWidget = (com.google.gwt.user.client.ui.Focusable) toBeFocused;
+            toBeFocusedWidget.setFocus(true);
+        } else if (toBeFocused instanceof Focusable) {
+            ((Focusable) toBeFocused).focus();
+        } else {
+            getLogger().severe(
+                    "Server is trying to set focus to the widget of connector "
+                            + Util.getConnectorString(connector)
+                            + " but it is not focusable. The widget should implement either "
+                            + com.google.gwt.user.client.ui.Focusable.class
+                                    .getName()
+                            + " or " + Focusable.class.getName());
         }
     }
 
@@ -505,7 +518,41 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
     }
 
+    /**
+     * Initialize UIConnector and attach UI to the rootPanelElement.
+     *
+     * @param rootPanelElement
+     *            element to attach ui into
+     * @param applicationConnection
+     *            application connection
+     * @since 8.4
+     */
+    public void init(Element rootPanelElement,
+            ApplicationConnection applicationConnection) {
+        Panel root = new AbsolutePanel(rootPanelElement) {
+            {
+                onAttach();
+            }
+        };
+
+        initConnector(root, applicationConnection);
+    }
+
+    /**
+     * Initialize UIConnector and attach UI to RootPanel for rootPanelId
+     * element.
+     *
+     * @param rootPanelId
+     *            root panel element id
+     * @param applicationConnection
+     *            application connection
+     */
     public void init(String rootPanelId,
+            ApplicationConnection applicationConnection) {
+        initConnector(RootPanel.get(rootPanelId), applicationConnection);
+    }
+
+    private void initConnector(Panel root,
             ApplicationConnection applicationConnection) {
         VUI ui = getWidget();
         Widget shortcutContextWidget = ui;
@@ -531,8 +578,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }, KeyDownEvent.getType());
 
         DOM.sinkEvents(ui.getElement(), Event.ONSCROLL);
-
-        RootPanel root = RootPanel.get(rootPanelId);
 
         // Remove the v-app-loading or any splash screen added inside the div by
         // the user

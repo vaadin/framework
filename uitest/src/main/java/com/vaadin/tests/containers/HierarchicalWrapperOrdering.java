@@ -88,19 +88,18 @@ public class HierarchicalWrapperOrdering extends TestBase {
         l.addComponent(tree1);
 
         // This contains a bug, changes not reflected back to client
-        Button modify = new Button("Modify and sort (has a bug)",
-                event -> {
-                    // Get first item
-                    Object itemId = indexedContainer.getIdByIndex(0);
-                    Item item = indexedContainer.getItem(itemId);
-                    Property<String> property = item.getItemProperty("name");
-                    // Prepend with Z so item should get sorted later
-                    property.setValue("Z " + property.getValue());
-                    // this does not work alone, requires extraneous
-                    // setContainerDataSource for server-side changes to be
-                    // reflected back to client-side
-                    sort(indexedContainer);
-                });
+        Button modify = new Button("Modify and sort (has a bug)", event -> {
+            // Get first item
+            Object itemId = indexedContainer.getIdByIndex(0);
+            Item item = indexedContainer.getItem(itemId);
+            Property<String> property = item.getItemProperty("name");
+            // Prepend with Z so item should get sorted later
+            property.setValue("Z " + property.getValue());
+            // this does not work alone, requires extraneous
+            // setContainerDataSource for server-side changes to be
+            // reflected back to client-side
+            sort(indexedContainer);
+        });
         l.addComponent(modify);
 
         Table t = new Table("Table with indexed container", indexedContainer);

@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.components.grid.basicfeatures;
 
 import static org.junit.Assert.assertEquals;
@@ -124,17 +109,17 @@ public class GridDescriptionGeneratorTest extends GridBasicFeaturesTest {
     }
 
     private void assertPreTooltipShown() {
-        assertTrue("Tooltip should contain <b> as text", getTooltipText()
-                .contains("<b>"));
-        assertTrue("Tooltip should contain a newline", getTooltipText()
-                .contains("\n"));
+        assertTrue("Tooltip should contain <b> as text",
+                getTooltipText().contains("<b>"));
+        assertTrue("Tooltip should contain a newline",
+                getTooltipText().contains("\n"));
     }
 
     private void assertPlainTooltipShown() {
-        assertTrue("Tooltip should contain <b> as text", getTooltipText()
-                .contains("<b>"));
-        assertFalse("Tooltip should not contain a newline", getTooltipText()
-                .contains("\n"));
+        assertTrue("Tooltip should contain <b> as text",
+                getTooltipText().contains("<b>"));
+        assertFalse("Tooltip should not contain a newline",
+                getTooltipText().contains("\n"));
     }
 
     private void assertHtmlTooltipShown() {
@@ -147,7 +132,8 @@ public class GridDescriptionGeneratorTest extends GridBasicFeaturesTest {
     }
 
     private void selectCellGenerator(String name) {
-        selectMenuPath("Component", "State", "Cell description generator", name);
+        selectMenuPath("Component", "State", "Cell description generator",
+                name);
     }
 
     private void selectRowGenerator(String name) {

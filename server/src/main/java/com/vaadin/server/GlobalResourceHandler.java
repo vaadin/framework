@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,6 +16,7 @@
 
 package com.vaadin.server;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,8 +26,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.LegacyComponent;
@@ -96,7 +95,7 @@ public class GlobalResourceHandler implements RequestHandler {
             oldInstances = CurrentInstance.setCurrent(ui);
             ConnectorResource resource;
             if (LEGACY_TYPE.equals(type)) {
-                resource = legacyResources.get(key);
+                resource = legacyResources.get(urlEncodedKey(key));
             } else {
                 return error(request, response, "Unknown global resource type "
                         + type + " in requested path " + pathInfo);
@@ -123,6 +122,11 @@ public class GlobalResourceHandler implements RequestHandler {
         return true;
     }
 
+    private String urlEncodedKey(String key) {
+        // getPathInfo return path decoded but without decoding plus as spaces
+        return ResourceReference.encodeFileName(key.replace("+", " "));
+    }
+
     /**
      * Registers a resource to be served with a global URL.
      * <p>
@@ -147,7 +151,7 @@ public class GlobalResourceHandler implements RequestHandler {
                         + Integer.toString(nextLegacyId++);
                 String filename = connectorResource.getFilename();
                 if (filename != null && !filename.isEmpty()) {
-                    uri += '/' + filename;
+                    uri += '/' + ResourceReference.encodeFileName(filename);
                 }
                 legacyResourceKeys.put(connectorResource, uri);
                 legacyResources.put(uri, connectorResource);

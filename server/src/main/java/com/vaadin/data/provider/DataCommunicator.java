@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -140,6 +140,15 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
 
         /**
+         * Marks all currently active data objects to be dropped.
+         *
+         * @since 8.6.0
+         */
+        public void dropAllActiveData() {
+            activeData.forEach(this::dropActiveData);
+        }
+
+        /**
          * Marks a data object identified by given key string to be dropped.
          *
          * @param key
@@ -149,6 +158,19 @@ public class DataCommunicator<T> extends AbstractExtension {
             if (activeData.contains(key)) {
                 droppedData.add(key);
             }
+        }
+
+        /**
+         * Returns all dropped data mapped by their id from DataProvider.
+         *
+         * @return map of ids to dropped data objects
+         *
+         * @since 8.6.0
+         */
+        protected Map<Object, T> getDroppedData() {
+            Function<T, Object> getId = getDataProvider()::getId;
+            return droppedData.stream().map(getKeyMapper()::get)
+                    .collect(Collectors.toMap(getId, i -> i));
         }
 
         /**
@@ -308,6 +330,11 @@ public class DataCommunicator<T> extends AbstractExtension {
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
 
+        if (initial && getPushRows().isEmpty()) {
+            // Make sure rows are pushed when component is attached.
+            setPushRows(Range.withLength(0, getMinPushSize()));
+        }
+
         sendDataToClient(initial);
     }
 
@@ -324,7 +351,20 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
 
         if (initial || reset) {
+            if (reset) {
+                handler.dropAllActiveData();
+            }
+
             rpc.reset(getDataProviderSize());
+        }
+
+        if (!updatedData.isEmpty()) {
+            JsonArray dataArray = Json.createArray();
+            int i = 0;
+            for (T data : updatedData) {
+                dataArray.set(i++, getDataObject(data));
+            }
+            rpc.updateData(dataArray);
         }
 
         Range requestedRows = getPushRows();
@@ -340,15 +380,6 @@ public class DataCommunicator<T> extends AbstractExtension {
             }
 
             pushData(offset, rowsToPush);
-        }
-
-        if (!updatedData.isEmpty()) {
-            JsonArray dataArray = Json.createArray();
-            int i = 0;
-            for (T data : updatedData) {
-                dataArray.set(i++, getDataObject(data));
-            }
-            rpc.updateData(dataArray);
         }
 
         setPushRows(Range.withLength(0, 0));
@@ -660,7 +691,8 @@ public class DataCommunicator<T> extends AbstractExtension {
         if (isAttached()) {
             attachDataProviderListener();
         }
-        hardReset();
+        reset = true;
+        markAsDirty();
 
         return filter -> {
             if (this.dataProvider != dataProvider) {
@@ -671,6 +703,9 @@ public class DataCommunicator<T> extends AbstractExtension {
             if (!Objects.equals(this.filter, filter)) {
                 setFilter(filter);
                 reset();
+
+                // Make sure filter change causes data to be sent again.
+                markAsDirty();
             }
         };
     }
@@ -759,14 +794,10 @@ public class DataCommunicator<T> extends AbstractExtension {
                         generators.forEach(g -> g.refreshData(item));
                         getUI().access(() -> refresh(item));
                     } else {
-                        getUI().access(this::hardReset);
+                        reset = true;
+                        getUI().access(() -> markAsDirty());
                     }
                 });
-    }
-
-    private void hardReset() {
-        reset = true;
-        markAsDirty();
     }
 
     private void detachDataProviderListener() {

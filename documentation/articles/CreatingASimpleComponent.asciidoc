@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[creating-a-simple-component]]
-Creating a simple component
----------------------------
+= Creating a simple component
 
 To make a component with a new client-side widget (as opposed to making
 a server-side composite), you will need to make three things: the

@@ -76,7 +76,15 @@ public class GridComponents extends AbstractTestUIWithLog {
         resetData.click();
         addComponent(resetData);
 
-        grid.appendHeaderRow().join("label", "textField", "button").setComponent(new TextField());
-        grid.appendFooterRow().join("label", "textField", "button").setComponent(new TextField());
+        TextField headerField = new TextField();
+        TextField footerField = new TextField();
+
+        headerField.setId("headerField");
+        footerField.setId("footerField");
+
+        grid.appendHeaderRow().join("label", "textField", "button")
+                .setComponent(headerField);
+        grid.appendFooterRow().join("label", "textField", "button")
+                .setComponent(footerField);
     }
 }

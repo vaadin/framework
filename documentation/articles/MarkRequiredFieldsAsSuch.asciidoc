@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[mark-required-fields-as-such]]
-Mark required fields as such
-----------------------------
+= Mark required fields as such
 
 Don’t make your users guess which fields in your form are required. Mark
 them as such:

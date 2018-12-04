@@ -214,6 +214,8 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
     &.frozen {
       @include box-shadow(1px 0 2px rgba(0,0,0,.1));
       border-right: $v-grid-cell-vertical-border;
+      position:relative;
+      z-index: 11;
 
       @if $v-grid-cell-vertical-border and $v-grid-cell-vertical-border != none {
         + th,

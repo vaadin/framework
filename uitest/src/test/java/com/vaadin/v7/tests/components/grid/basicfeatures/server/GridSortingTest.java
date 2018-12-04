@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.v7.tests.components.grid.basicfeatures.server;
 
 import static org.junit.Assert.assertEquals;
@@ -58,12 +43,13 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         }
     }
 
-    private static SortInfo getSortInfo(int sortOrder, SortDirection sortDirection) {
+    private static SortInfo getSortInfo(int sortOrder,
+            SortDirection sortDirection) {
         return new SortInfo(sortOrder, sortDirection);
     }
 
-    private static SortInfoWithColumn getSortInfo(int columnIndex, int sortOrder,
-            SortDirection sortDirection) {
+    private static SortInfoWithColumn getSortInfo(int columnIndex,
+            int sortOrder, SortDirection sortDirection) {
         return new SortInfoWithColumn(columnIndex, sortOrder, sortDirection);
     }
 
@@ -277,7 +263,8 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         sendKey(Keys.ENTER);
         releaseKey(Keys.SHIFT);
         assertColumnsAreSortedAs(getSortInfo(1, SortDirection.ASCENDING),
-                getSortInfo(2, SortDirection.ASCENDING), getSortInfo(3, SortDirection.ASCENDING));
+                getSortInfo(2, SortDirection.ASCENDING),
+                getSortInfo(3, SortDirection.ASCENDING));
 
         // Move back to the second column
         sendKey(Keys.LEFT);
@@ -287,7 +274,8 @@ public class GridSortingTest extends GridBasicFeaturesTest {
         sendKey(Keys.ENTER);
         releaseKey(Keys.SHIFT);
         assertColumnsAreSortedAs(getSortInfo(1, SortDirection.ASCENDING),
-                getSortInfo(2, SortDirection.DESCENDING), getSortInfo(3, SortDirection.ASCENDING));
+                getSortInfo(2, SortDirection.DESCENDING),
+                getSortInfo(3, SortDirection.ASCENDING));
 
         // Move back to the third column
         sendKey(Keys.RIGHT);

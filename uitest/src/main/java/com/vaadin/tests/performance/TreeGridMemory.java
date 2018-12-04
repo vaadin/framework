@@ -55,8 +55,7 @@ public class TreeGridMemory extends AbstractBeansMemoryTest<TreeGrid<Person>> {
     protected void setInMemoryContainer(TreeGrid<Person> treeGrid,
             List<Person> data) {
         TreeData<Person> treeData = new TreeData<>();
-        treeGrid.setDataProvider(
-                new TreeDataProvider<>(treeData));
+        treeGrid.setDataProvider(new TreeDataProvider<>(treeData));
         List<Person> toExpand = new ArrayList<>();
         if (data.size() != 0 && data.size() % 2 == 0) {
             // treat list as if it were a balanced binary tree

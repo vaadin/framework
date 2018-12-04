@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -144,9 +144,9 @@ public class FileDropTargetConnector extends DropTargetExtensionConnector {
      * Returns the files parameter of the dataTransfer object.
      *
      * @param dataTransfer
-     *         DataTransfer object to retrieve files from.
+     *            DataTransfer object to retrieve files from.
      * @return {@code DataTransfer.files} parameter of the given dataTransfer
-     * object.
+     *         object.
      */
     private native FileList getFiles(DataTransfer dataTransfer)
     /*-{
@@ -157,13 +157,13 @@ public class FileDropTargetConnector extends DropTargetExtensionConnector {
      * Checks whether the file on the given index is indeed a file or a folder.
      *
      * @param file
-     *         File object to prove it is not a folder.
+     *            File object to prove it is not a folder.
      * @param fileIndex
-     *         Index of the file object.
+     *            Index of the file object.
      * @param dataTransfer
-     *         DataTransfer object that contains the list of files.
+     *            DataTransfer object that contains the list of files.
      * @return {@code true} if the given file at the given index is not a
-     * folder, {@code false} otherwise.
+     *         folder, {@code false} otherwise.
      */
     private native boolean isFile(File file, int fileIndex,
             DataTransfer dataTransfer)
@@ -199,8 +199,9 @@ public class FileDropTargetConnector extends DropTargetExtensionConnector {
 
         public final native void postFile(File file)
         /*-{
-            this.setRequestHeader('Content-Type', 'multipart/form-data');
-            this.send(file);
+            var formData = new $wnd.FormData();
+            formData.append("File", file);
+            this.send(formData);
         }-*/;
 
     }

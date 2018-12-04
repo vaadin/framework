@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -51,4 +51,25 @@ public class ComponentRootSetter implements Serializable {
         }
     }
 
+    /**
+     * Checks if the given custom component or composite may accept a root
+     * component.
+     * <p>
+     * For internal use only.
+     *
+     * @param customComponent
+     *            the custom component or composite
+     * @return
+     * @since 8.4
+     *
+     */
+    public static boolean canSetRoot(Component customComponent) {
+        if (customComponent instanceof CustomComponent) {
+            return true;
+        }
+        if (customComponent instanceof Composite) {
+            return ((Composite) customComponent).getCompositionRoot() == null;
+        }
+        return false;
+    }
 }

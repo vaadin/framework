@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,11 +16,17 @@
 
 package com.vaadin.server;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
 
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataKeyMapper;
+import com.vaadin.event.Action;
 
 /**
  * <code>KeyMapper</code> is the simple two-way map for generating textual keys
@@ -90,7 +96,7 @@ public class KeyMapper<V> implements DataKeyMapper<V> {
 
     /**
      * Creates a key for a new item.
-     *
+     * <p>
      * This method can be overridden to customize the keys used.
      *
      * @return new key
@@ -139,6 +145,33 @@ public class KeyMapper<V> implements DataKeyMapper<V> {
     public void removeAll() {
         objectIdKeyMap.clear();
         keyObjectMap.clear();
+    }
+
+    /**
+     * Merge Objects into the mapper.
+     * <p>
+     * This method will add the new objects to the mapper and remove inactive
+     * objects from it.
+     *
+     * @param objects
+     *            new objects set needs to be merged.
+     * @since
+     */
+    public void merge(Set<V> objects) {
+        final Set<String> keys = new HashSet<>(keyObjectMap.size());
+
+        for (V object : objects) {
+            if (object == null) {
+                continue;
+            }
+            String key = key(object);
+            keys.add(key);
+        }
+
+        keyObjectMap.entrySet()
+                .removeIf(entry -> !keys.contains(entry.getKey()));
+        objectIdKeyMap.entrySet()
+                .removeIf(entry -> !keys.contains(entry.getValue()));
     }
 
     /**

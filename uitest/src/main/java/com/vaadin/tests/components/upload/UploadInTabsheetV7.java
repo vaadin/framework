@@ -19,12 +19,12 @@ public class UploadInTabsheetV7 extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         TabSheet t = new TabSheet();
-        Upload upload = new Upload("Upload", (filename, mimeType) -> new
-            ByteArrayOutputStream());
+        Upload upload = new Upload("Upload",
+                (filename, mimeType) -> new ByteArrayOutputStream());
         upload.setImmediate(false);
-        upload.addSucceededListener(event -> upload.getUI().access(()->{
-                t.setSelectedTab(1);
-            }));
+        upload.addSucceededListener(event -> upload.getUI().access(() -> {
+            t.setSelectedTab(1);
+        }));
         upload.setWidthUndefined();
 
         t.addComponent(upload);

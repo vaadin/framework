@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.contextclick;
 
 import static org.junit.Assert.assertEquals;
@@ -61,20 +46,19 @@ public class GridContextClickTest extends AbstractContextClickTest {
     }
 
     @Test
-    @Ignore("Footer is not currently implemented in grid")
     public void testFooterContextClickWithTypedListener() {
         addOrRemoveTypedListener();
 
         contextClick($(GridElement.class).first().getFooterCell(0, 0));
 
         assertEquals(
-                "1. ContextClickEvent value: , column: Address, section: FOOTER",
+                "1. ContextClickEvent value: Address, column: Address, section: FOOTER",
                 getLogRow(0));
 
         contextClick($(GridElement.class).first().getFooterCell(0, 3));
 
         assertEquals(
-                "2. ContextClickEvent value: , column: Last Name, section: FOOTER",
+                "2. ContextClickEvent value: Last Name, column: Last Name, section: FOOTER",
                 getLogRow(0));
     }
 

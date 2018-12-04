@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -76,10 +76,7 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.DeferredWorker;
-import com.vaadin.client.Focusable;
-import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.*;
 import com.vaadin.client.WidgetUtil.Reference;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
@@ -445,7 +442,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              * The tooltip is shown in the mode returned by
              * {@link #getDescriptionContentMode()}.
              *
-             * @since
+             * @return the tooltip text for this cell
+             * @since 8.4
              */
             public String getDescription() {
                 return description;
@@ -460,7 +458,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              *
              * @param description
              *            the tooltip to show when hovering the cell
-             * @since
+             * @since 8.4
              */
             public void setDescription(String description) {
                 this.description = description;
@@ -476,7 +474,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              * @param descriptionContentMode
              *            the content mode to use for the tooltip (HTML or plain
              *            text)
-             * @since
+             * @since 8.4
              */
             public void setDescription(String description,
                     ContentMode descriptionContentMode) {
@@ -491,7 +489,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              *
              * @see ContentMode
              * @return the content mode for the tooltip
-             * @since
+             * @since 8.4
              */
             public ContentMode getDescriptionContentMode() {
                 return descriptionContentMode;
@@ -503,7 +501,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              * @see ContentMode
              * @param descriptionContentMode
              *            the content mode for the tooltip
-             * @since
+             * @since 8.4
              */
             public void setDescriptionContentMode(
                     ContentMode descriptionContentMode) {
@@ -3341,6 +3339,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      */
     private class AutoColumnWidthsRecalculator {
         private double lastCalculatedInnerWidth = -1;
+        private double lastCalculatedInnerHeight = -1;
 
         private final ScheduledCommand calculateCommand = new ScheduledCommand() {
 
@@ -3412,6 +3411,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             // Make SelectAllCheckbox visible
             getSelectionColumn().ifPresent(col -> {
+                if (getDefaultHeaderRow() == null)
+                    return;
                 HeaderCell headerCell = getDefaultHeaderRow().getCell(col);
                 if (headerCell.getType().equals(GridStaticCellType.WIDGET)) {
                     // SelectAllCheckbox is present already
@@ -3433,6 +3434,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             // Update latest width to prevent recalculate on height change.
             lastCalculatedInnerWidth = escalator.getInnerWidth();
+            lastCalculatedInnerHeight = getEscalatorInnerHeight();
         }
 
         private boolean columnsAreGuaranteedToBeWiderThanGrid() {
@@ -4596,7 +4598,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         private void transferCellFocusOnDrop() {
             final Cell focusedCell = cellFocusHandler.getFocusedCell();
-            if (focusedCell != null) {
+            if (focusedCell != null && focusedCell.getElement() != null) {
                 final int focusedColumnIndexDOM = focusedCell.getColumn();
                 final int focusedRowIndex = focusedCell.getRow();
                 final int draggedColumnIndex = eventCell.getColumnIndex();
@@ -5623,7 +5625,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /**
          * Returns whether Grid should handle events from Widgets in this
          * Column.
-         * 
+         *
          * @return {@code true} to handle events from widgets; {@code false} to
          *         not
          * @since 8.3
@@ -7376,14 +7378,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Helper method for making sure desired row is visible and it is properly
      * rendered.
-     * 
+     *
      * @param rowIndex
      *            the row to look for
      * @param destination
      *            the desired scroll destination
      * @param callback
      *            the callback command to execute when row is available
-     * @since
+     * @since 8.4
      */
     public void scrollToRow(int rowIndex, ScrollDestination destination,
             Runnable callback) {
@@ -7401,12 +7403,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Helper method for making sure desired row is visible and it is properly
      * rendered.
-     * 
+     *
      * @param rowIndex
      *            the row to look for
      * @param whenRendered
      *            the callback command to execute when row is available
-     * @since
+     * @since 8.4
      */
     public void scrollToRow(int rowIndex, Runnable whenRendered) {
         scrollToRow(rowIndex, ScrollDestination.ANY, whenRendered);
@@ -7451,7 +7453,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Helper method for scrolling and making sure row is visible.
-     * 
+     *
      * @param rowIndex
      *            the row index to make visible
      * @param destination
@@ -7467,8 +7469,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     .getRowElement(rowIndex);
             long bottomBorder = Math.round(WidgetUtil.getBorderBottomThickness(
                     rowElement.getFirstChildElement()) + 0.5d);
-            if (rowElement.getAbsoluteTop() >= escalator.getHeader()
-                    .getElement().getAbsoluteBottom()
+            if (rowElement.getAbsoluteTop() + bottomBorder >= escalator
+                    .getHeader().getElement().getAbsoluteBottom()
                     && rowElement.getAbsoluteBottom() <= escalator.getFooter()
                             .getElement().getAbsoluteTop() + bottomBorder) {
                 whenVisible.run();
@@ -9145,6 +9147,17 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 recalculateColumnWidths();
             }
 
+            if (getEscalatorInnerHeight() != autoColumnWidthsRecalculator.lastCalculatedInnerHeight) {
+                Scheduler.get().scheduleFinally(() -> {
+                    // Trigger re-calculation of all row positions.
+                    RowContainer.BodyRowContainer body = getEscalator()
+                            .getBody();
+                    if (!body.isAutodetectingRowHeightLater()) {
+                        body.setDefaultRowHeight(body.getDefaultRowHeight());
+                    }
+                });
+            }
+
             // Vertical resizing could make editor positioning invalid so it
             // needs to be recalculated on resize
             if (isEditorActive()) {
@@ -9156,6 +9169,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             // way to the bottom.
             refreshBody();
         });
+    }
+
+    private double getEscalatorInnerHeight() {
+        return new ComputedStyle(getEscalator().getTableWrapper())
+                .getHeightIncludingBorderPadding();
     }
 
     /**

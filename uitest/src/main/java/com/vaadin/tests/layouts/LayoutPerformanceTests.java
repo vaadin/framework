@@ -82,7 +82,8 @@ public class LayoutPerformanceTests extends TestBase {
         protected AbstractOrderedLayout createOrderedLayout(int depth,
                 boolean fullHeight) {
             AbstractOrderedLayout layout = (depth % 2) == 0
-                    ? new VerticalLayout() : new HorizontalLayout();
+                    ? new VerticalLayout()
+                    : new HorizontalLayout();
             layout.setWidth("100%");
             if (fullHeight) {
                 layout.setHeight("100%");

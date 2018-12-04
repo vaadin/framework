@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -38,7 +38,7 @@ import com.vaadin.server.ThemeResource;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class FileTypeResolver implements Serializable {
+public class FileTypeResolver {
 
     /**
      * Default icon given if no icon is specified for a mime-type.
@@ -213,16 +213,11 @@ public class FileTypeResolver implements Serializable {
      */
     private static final Map<String, String> EXT_TO_MIME_MAP = new ConcurrentHashMap<>();
 
-    /**
-     * MIME type to Icon mapping.
-     */
-    private static final Map<String, Resource> MIME_TO_ICON_MAP = new ConcurrentHashMap<>();
-
     static {
 
         // Initialize extension to MIME map
-        final StringTokenizer lines = new StringTokenizer(INITIAL_EXT_TO_MIME_MAP,
-                ",");
+        final StringTokenizer lines = new StringTokenizer(
+                INITIAL_EXT_TO_MIME_MAP, ",");
         while (lines.hasMoreTokens()) {
             final String line = lines.nextToken();
             final StringTokenizer exts = new StringTokenizer(line);
@@ -233,10 +228,6 @@ public class FileTypeResolver implements Serializable {
             }
         }
 
-        // Initialize Icons
-        ThemeResource folder = new ThemeResource("../runo/icons/16/folder.png");
-        addIcon("inode/drive", folder);
-        addIcon("inode/directory", folder);
     }
 
     /**
@@ -279,45 +270,6 @@ public class FileTypeResolver implements Serializable {
         }
 
         return DEFAULT_MIME_TYPE;
-    }
-
-    /**
-     * Gets the descriptive icon representing file, based on the filename. First
-     * the mime-type for the given filename is resolved, and then the
-     * corresponding icon is fetched from the internal icon storage. If it is
-     * not found the default icon is returned.
-     *
-     * @param fileName
-     *            the name of the file whose icon is requested.
-     * @return the icon corresponding to the given file
-     */
-    public static Resource getIcon(String fileName) {
-        return getIconByMimeType(getMIMEType(fileName));
-    }
-
-    private static Resource getIconByMimeType(String mimeType) {
-        final Resource icon = MIME_TO_ICON_MAP.get(mimeType);
-        if (icon != null) {
-            return icon;
-        }
-
-        // If nothing is known about the file-type, general file
-        // icon is used
-        return DEFAULT_ICON;
-    }
-
-    /**
-     * Gets the descriptive icon representing a file. First the mime-type for
-     * the given file name is resolved, and then the corresponding icon is
-     * fetched from the internal icon storage. If it is not found the default
-     * icon is returned.
-     *
-     * @param file
-     *            the file whose icon is requested.
-     * @return the icon corresponding to the given file
-     */
-    public static Resource getIcon(File file) {
-        return getIconByMimeType(getMIMEType(file));
     }
 
     /**
@@ -364,19 +316,6 @@ public class FileTypeResolver implements Serializable {
     }
 
     /**
-     * Adds a icon for the given mime-type. If the mime-type also has a
-     * corresponding icon, it is replaced with the new icon.
-     *
-     * @param mimeType
-     *            the mime-type whose icon is to be changed.
-     * @param icon
-     *            the new icon to be associated with <code>MIMEType</code>.
-     */
-    public static void addIcon(String mimeType, Resource icon) {
-        MIME_TO_ICON_MAP.put(mimeType, icon);
-    }
-
-    /**
      * Gets the internal file extension to mime-type mapping.
      *
      * @return unmodifiable map containing the current file extension to
@@ -386,15 +325,6 @@ public class FileTypeResolver implements Serializable {
         return Collections.unmodifiableMap(EXT_TO_MIME_MAP);
     }
 
-    /**
-     * Gets the internal mime-type to icon mapping.
-     *
-     * @return unmodifiable map containing the current mime-type to icon mapping
-     */
-    public static Map<String, Resource> getMIMETypeToIconMapping() {
-        return Collections.unmodifiableMap(MIME_TO_ICON_MAP);
-    }
-
-    private FileTypeResolver() {
+    protected FileTypeResolver() {
     }
 }

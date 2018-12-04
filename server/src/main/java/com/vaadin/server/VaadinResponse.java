@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -194,8 +194,7 @@ public interface VaadinResponse extends Serializable {
     public default void setNoCacheHeaders() {
         // no-store to disallow storing even if cache would be revalidated
         // must-revalidate to not use stored value even if someone asks for it
-        setHeader("Cache-Control",
-                "no-cache, no-store, must-revalidate");
+        setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 
         // Also set legacy values in case of old proxies in between
         setHeader("Pragma", "no-cache");

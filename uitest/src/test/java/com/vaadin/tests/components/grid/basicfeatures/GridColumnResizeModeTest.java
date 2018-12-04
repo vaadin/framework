@@ -1,18 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.components.grid.basicfeatures;
 
 import static org.junit.Assert.assertTrue;
@@ -118,28 +103,28 @@ public class GridColumnResizeModeTest extends GridBasicsTest {
 
         // ANIMATED resize mode
         drag(handle, 100);
-        assertTrue(getLogRow(0).contains(
-                "Column resized: caption=Column 1, width=" + cell.getSize()
-                        .getWidth()));
+        assertTrue(
+                getLogRow(0).contains("Column resized: caption=Column 1, width="
+                        + cell.getSize().getWidth()));
 
         drag(handle, -100);
-        assertTrue(getLogRow(0).contains(
-                "Column resized: caption=Column 1, width=" + cell.getSize()
-                        .getWidth()));
+        assertTrue(
+                getLogRow(0).contains("Column resized: caption=Column 1, width="
+                        + cell.getSize().getWidth()));
 
         // SIMPLE resize mode
         selectMenuPath("Component", "Columns", "Simple resize mode");
         sleep(250);
 
         drag(handle, 100);
-        assertTrue(getLogRow(0).contains(
-                "Column resized: caption=Column 1, width=" + cell.getSize()
-                        .getWidth()));
+        assertTrue(
+                getLogRow(0).contains("Column resized: caption=Column 1, width="
+                        + cell.getSize().getWidth()));
 
         drag(handle, -100);
-        assertTrue(getLogRow(0).contains(
-                "Column resized: caption=Column 1, width=" + cell.getSize()
-                        .getWidth()));
+        assertTrue(
+                getLogRow(0).contains("Column resized: caption=Column 1, width="
+                        + cell.getSize().getWidth()));
     }
 
     private void drag(WebElement handle, int xOffset) {

@@ -35,9 +35,8 @@ public class TableSetUndefinedSize extends AbstractReindeerTestUI {
                 new Button("width 500px", event -> table.setWidth("500px")));
         layout.addComponent(
                 new Button("width 100%", event -> table.setWidth("100%")));
-        layout.addComponent(
-                new Button("undefined width",
-                        event -> table.setWidthUndefined()));
+        layout.addComponent(new Button("undefined width",
+                event -> table.setWidthUndefined()));
 
         return layout;
     }
@@ -51,9 +50,8 @@ public class TableSetUndefinedSize extends AbstractReindeerTestUI {
                 new Button("height 300px", event -> table.setHeight("300px")));
         layout.addComponent(
                 new Button("height 100%", event -> table.setHeight("100%")));
-        layout.addComponent(
-                new Button("undefined height",
-                        event -> table.setHeightUndefined()));
+        layout.addComponent(new Button("undefined height",
+                event -> table.setHeightUndefined()));
 
         return layout;
     }

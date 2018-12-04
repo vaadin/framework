@@ -5,8 +5,7 @@ layout: page
 ---
 
 [[mvc-basics-in-itmill-toolkit]]
-MVC Basics in IT Mill Toolkit
------------------------------
+= MVC Basics in IT Mill Toolkit
 
 The Goal
 ^^^^^^^^

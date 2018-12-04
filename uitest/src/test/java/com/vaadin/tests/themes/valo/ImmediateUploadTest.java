@@ -1,20 +1,6 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
 package com.vaadin.tests.themes.valo;
 
+import static com.vaadin.tests.themes.valo.ImmediateUpload.TEST_MIME_TYPE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -88,5 +74,11 @@ public class ImmediateUploadTest extends MultiBrowserTest {
         // would be better but couldn't figure a way to do that. screenshots
         // don't show the upload window, not at least in firefox.
         assertThat(input.getCssValue("z-index"), is("-1"));
+    }
+
+    @Test
+    public void testAcceptAttribute() {
+        WebElement input = getUploadFileInput("immediateupload");
+        assertThat(input.getAttribute("accept"), is(TEST_MIME_TYPE));
     }
 }

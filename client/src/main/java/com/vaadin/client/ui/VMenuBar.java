@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,8 +16,10 @@
 package com.vaadin.client.ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 import com.google.gwt.core.client.GWT;
@@ -46,6 +48,7 @@ import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.LayoutManager;
@@ -53,12 +56,13 @@ import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.extensions.EventTrigger;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
 
-public class VMenuBar extends FocusableFlowPanel
-implements CloseHandler<PopupPanel>, KeyPressHandler, KeyDownHandler,
-FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
+public class VMenuBar extends FocusableFlowPanel implements
+        CloseHandler<PopupPanel>, KeyPressHandler, KeyDownHandler, FocusHandler,
+        SubPartAware, MouseOutHandler, MouseOverHandler, EventTrigger {
 
     // The hierarchy of VMenuBar is a bit weird as VMenuBar is the Paintable,
     // used for the root menu but also used for the sub menus.
@@ -116,6 +120,8 @@ FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean htmlContentAllowed;
+
+    private Map<String, List<Command>> triggers = new HashMap<>();
 
     public VMenuBar() {
         // Create an empty horizontal menubar
@@ -219,13 +225,35 @@ FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
      * For internal use only. May be removed or replaced in the future.
      */
     public String buildItemHTML(UIDL item) {
+        return buildItemHTML(item.hasAttribute("separator"),
+                item.getChildCount() > 0, item.getStringAttribute("icon"),
+                item.getStringAttribute("text"));
+
+    }
+
+    /**
+     * Build the HTML content for a menu item.
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param separator
+     *            the menu item is separator
+     * @param subMenu
+     *            the menu item contains submenu
+     * @param iconUrl
+     *            the menu item icon URL or {@code null}
+     * @param text
+     *            the menu item text. May not be {@code null}
+     */
+    public String buildItemHTML(boolean separator, boolean subMenu,
+            String iconUrl, String text) {
         // Construct html from the text and the optional icon
         StringBuilder itemHTML = new StringBuilder();
-        if (item.hasAttribute("separator")) {
+        if (separator) {
             itemHTML.append("<span>---</span>");
         } else {
             // Add submenu indicator
-            if (item.getChildCount() > 0) {
+            if (subMenu) {
                 String bgStyle = "";
                 itemHTML.append("<span class=\"" + getStylePrimaryName()
                         + "-submenu-indicator\"" + bgStyle
@@ -234,11 +262,11 @@ FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
 
             itemHTML.append("<span class=\"" + getStylePrimaryName()
                     + "-menuitem-caption\">");
-            Icon icon = client.getIcon(item.getStringAttribute("icon"));
+            Icon icon = client.getIcon(iconUrl);
             if (icon != null) {
                 itemHTML.append(icon.getElement().getString());
             }
-            String itemText = item.getStringAttribute("text");
+            String itemText = text;
             if (!htmlContentAllowed) {
                 itemText = WidgetUtil.escapeHTML(itemText);
             }
@@ -414,9 +442,12 @@ FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
      * @param item
      */
     public void itemClick(CustomMenuItem item) {
-        if (item.getCommand() != null) {
+        boolean triggered = triggerEventIfNeeded(item);
+        if (item.getCommand() != null || triggered) {
             try {
-                item.getCommand().execute();
+                if (item.getCommand() != null) {
+                    item.getCommand().execute();
+                }
             } finally {
                 setSelected(null);
                 if (visibleChildMenu != null) {
@@ -692,9 +723,13 @@ FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
      */
     @Override
     public void onClose(CloseEvent<PopupPanel> event) {
-        hideChildren();
+        close(event, true);
+    }
+
+    protected void close(CloseEvent<PopupPanel> event, boolean animated) {
+        hideChildren(animated, animated);
         if (event.isAutoClosed()) {
-            hideParents(true);
+            hideParents(true, animated);
             menuVisible = false;
         }
         visibleChildMenu = null;
@@ -720,6 +755,7 @@ FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
      */
     public void hideChildren(boolean animateIn, boolean animateOut) {
         if (visibleChildMenu != null) {
+            visibleChildMenu.menuVisible = false;
             visibleChildMenu.hideChildren(animateIn, animateOut);
             popup.hide(false, animateIn, animateOut);
         }
@@ -729,14 +765,18 @@ FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
      * Recursively hide all parent menus.
      */
     public void hideParents(boolean autoClosed) {
+        hideParents(autoClosed, true);
+    }
+
+    public void hideParents(boolean autoClosed, boolean animated) {
         if (visibleChildMenu != null) {
-            popup.hide();
+            popup.hide(false, animated, animated);
             setSelected(null);
-            menuVisible = !autoClosed;
+            menuVisible = false;
         }
 
         if (getParentMenu() != null) {
-            getParentMenu().hideParents(autoClosed);
+            getParentMenu().hideParents(autoClosed, animated);
         }
     }
 
@@ -793,7 +833,7 @@ FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
      *
      */
     public static class CustomMenuItem extends Widget
-    implements HasHTML, SubPartAware {
+            implements HasHTML, SubPartAware {
 
         protected String html = null;
         protected Command command = null;
@@ -808,6 +848,7 @@ FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
         protected ContentMode descriptionContentMode = null;
 
         private String styleName;
+        private String id;
 
         /**
          * Default menu item {@link Widget} constructor for GWT.create().
@@ -938,7 +979,7 @@ FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
             updateStyleNames();
         }
 
-        protected void updateStyleNames() {
+        public void updateStyleNames() {
             if (parentMenu == null) {
                 // Style names depend on the parent menu's primary style name so
                 // don't do updates until the item has a parent
@@ -1077,7 +1118,7 @@ FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
             return enabled;
         }
 
-        private void setSeparator(boolean separator) {
+        public void setSeparator(boolean separator) {
             isSeparator = separator;
             updateStyleNames();
             if (!separator) {
@@ -1166,6 +1207,22 @@ FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
             return null;
         }
 
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public void setDescriptionContentMode(
+                ContentMode descriptionContentMode) {
+            this.descriptionContentMode = descriptionContentMode;
+        }
     }
 
     /**
@@ -1642,6 +1699,7 @@ FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
                 openMenuAndFocusFirstIfPossible(getSelected());
             } else {
                 try {
+                    triggerEventIfNeeded(getSelected());
                     final Command command = getSelected().getCommand();
                     if (command != null) {
                         command.execute();
@@ -1654,10 +1712,7 @@ FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
                     // not leave menu to visible ("hover open") mode
                     menuVisible = false;
 
-                    VMenuBar root = this;
-                    while (root.getParentMenu() != null) {
-                        root = root.getParentMenu();
-                    }
+                    VMenuBar root = getRoot();
                     root.ignoreFocus = true;
                     root.getElement().focus();
                     root.ignoreFocus = false;
@@ -1666,6 +1721,17 @@ FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
             return true;
         }
 
+        return false;
+    }
+
+    private boolean triggerEventIfNeeded(CustomMenuItem item) {
+        List<Command> commands = getTriggers().get(item.getId());
+        if (commands != null) {
+            for (Command command : commands) {
+                command.execute();
+            }
+            return true;
+        }
         return false;
     }
 
@@ -1877,4 +1943,37 @@ FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
     public void onMouseOut(MouseOutEvent event) {
         LazyCloser.schedule();
     }
+
+    protected VMenuBar getRoot() {
+        VMenuBar root = this;
+
+        while (root.getParentMenu() != null) {
+            root = root.getParentMenu();
+        }
+
+        return root;
+    }
+
+    @Override
+    public HandlerRegistration addTrigger(Command command,
+            String partInformation) {
+        if (partInformation == null || partInformation.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "The 'partInformation' parameter must contain the menu item id");
+        }
+
+        getTriggers().computeIfAbsent(partInformation, s -> new ArrayList<>())
+                .add(command);
+        return () -> {
+            List<Command> commands = getTriggers().get(partInformation);
+            if (commands != null) {
+                commands.remove(command);
+            }
+        };
+    }
+
+    private Map<String, List<Command>> getTriggers() {
+        return getRoot().triggers;
+    }
+
 }

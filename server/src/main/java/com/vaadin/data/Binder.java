@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -139,7 +139,13 @@ public class Binder<BEAN> implements Serializable {
          * Validates the field value and returns a {@code ValidationStatus}
          * instance representing the outcome of the validation.
          *
+         * <strong>Note:</strong> Calling this method will not trigger the value
+         * update in the bean automatically. This method will attempt to
+         * temporarily apply all current changes to the bean and run full bean
+         * validation for it. The changes are reverted after bean validation.
+         *
          * @see #validate()
+         * @see Binder#validate()
          *
          * @param fireEvent
          *            {@code true} to fire status event; {@code false} to not
@@ -188,7 +194,7 @@ public class Binder<BEAN> implements Serializable {
          * @param readOnly
          *            {@code true} to set binding read-only; {@code false} to
          *            enable writes
-         * @since
+         * @since 8.4
          * @throws IllegalStateException
          *             if trying to make binding read-write and the setter is
          *             {@code null}
@@ -197,11 +203,11 @@ public class Binder<BEAN> implements Serializable {
 
         /**
          * Gets the current read-only status for this Binding.
-         * 
+         *
          * @see #setReadOnly(boolean)
-         * 
+         *
          * @return {@code true} if read-only; {@code false} if not
-         * @since
+         * @since 8.4
          */
         public boolean isReadOnly();
 
@@ -209,7 +215,7 @@ public class Binder<BEAN> implements Serializable {
          * Gets the getter associated with this Binding.
          *
          * @return the getter
-         * @since
+         * @since 8.4
          */
         public ValueProvider<BEAN, TARGET> getGetter();
 
@@ -217,7 +223,7 @@ public class Binder<BEAN> implements Serializable {
          * Gets the setter associated with this Binding.
          *
          * @return the setter
-         * @since
+         * @since 8.4
          */
         public Setter<BEAN, TARGET> getSetter();
     }
@@ -730,21 +736,21 @@ public class Binder<BEAN> implements Serializable {
                 ErrorMessageProvider errorMessageProvider);
 
         /**
-         * Sets the field to be required and delegates the required check to a custom validator.
-         * This means two things:
+         * Sets the field to be required and delegates the required check to a
+         * custom validator. This means two things:
          * <ol>
          * <li>the required indicator will be displayed for this field</li>
-         * <li>the field value is validated by customRequiredValidator</li>
+         * <li>the field value is validated by {@code requiredValidator}</li>
          * </ol>
          *
          * @see HasValue#setRequiredIndicatorVisible(boolean)
-         * @param customRequiredValidator
+         * @param requiredValidator
          *            validator responsible for the required check
          * @return this binding, for chaining
-         * @since
+         * @since 8.4
          */
         public BindingBuilder<BEAN, TARGET> asRequired(
-                Validator<TARGET> customRequiredValidator);
+                Validator<TARGET> requiredValidator);
     }
 
     /**
@@ -902,10 +908,9 @@ public class Binder<BEAN> implements Serializable {
         @Override
         public BindingBuilder<BEAN, TARGET> asRequired(
                 ErrorMessageProvider errorMessageProvider) {
-            return asRequired(
-                    Validator.from(
-                            value -> !Objects.equals(value, field.getEmptyValue()),
-                            errorMessageProvider));
+            return asRequired(Validator.from(
+                    value -> !Objects.equals(value, field.getEmptyValue()),
+                    errorMessageProvider));
         }
 
         @Override
@@ -1006,7 +1011,7 @@ public class Binder<BEAN> implements Serializable {
 
         private boolean readOnly;
 
-        private final Registration onValueChange;
+        private Registration onValueChange;
         private boolean valueInit = false;
 
         /**
@@ -1072,7 +1077,8 @@ public class Binder<BEAN> implements Serializable {
 
         /**
          * Removes this binding from its binder and unregisters the
-         * {@code ValueChangeListener} from any bound {@code HasValue}.
+         * {@code ValueChangeListener} from any bound {@code HasValue}. It does
+         * nothing if it is called for an already unbound binding.
          *
          * @since 8.2
          */
@@ -1080,9 +1086,14 @@ public class Binder<BEAN> implements Serializable {
         public void unbind() {
             if (onValueChange != null) {
                 onValueChange.remove();
+                onValueChange = null;
             }
-            binder.removeBindingInternal(this);
-            binder = null;
+
+            if (binder != null) {
+                binder.removeBindingInternal(this);
+                binder = null;
+            }
+
             field = null;
         }
 
@@ -1688,7 +1699,15 @@ public class Binder<BEAN> implements Serializable {
             clearFields();
         } else {
             changedBindings.clear();
-            getBindings().forEach(binding -> binding.initFieldValue(bean));
+            getBindings().forEach(binding -> {
+                // Some bindings may have been removed from binder
+                // during readBean. We should skip those bindings to
+                // avoid NPE inside initFieldValue. It happens e.g. when
+                // we unbind a binding in valueChangeListener of another
+                // field.
+                if (binding.getField() != null)
+                    binding.initFieldValue(bean);
+            });
             getValidationStatusHandler().statusChange(
                     BinderValidationStatus.createUnresolvedStatus(this));
             fireStatusChangeEvent(false);
@@ -2189,7 +2208,9 @@ public class Binder<BEAN> implements Serializable {
      * Adds field value change listener to all the fields in the binder.
      * <p>
      * Added listener is notified every time whenever any bound field value is
-     * changed. The same functionality can be achieved by adding a
+     * changed, i.e. the UI component value was changed, passed all the
+     * conversions and validations then propagated to the bound bean field. The
+     * same functionality can be achieved by adding a
      * {@link ValueChangeListener} to all fields in the {@link Binder}.
      * <p>
      * The listener is added to all fields regardless of whether the method is
@@ -2786,7 +2807,16 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Finds and removes all Bindings for the given field.
+     * Finds and removes all Bindings for the given field. Note that this method
+     * and other overloads of removeBinding method do not reset component errors
+     * that might have been added to the field and do not remove required
+     * indicator of the field no matter if it was set by Binder or not. To reset
+     * component errors, {@code field.setComponentError(null)} should be called
+     * and to remove required indicator,
+     * {@code field.setRequiredIndicatorVisible(false)} should be called.
+     *
+     * @see com.vaadin.ui.AbstractComponent#setComponentError
+     * @see com.vaadin.ui.AbstractComponent#setRequiredIndicatorVisible
      *
      * @param field
      *            the field to remove from bindings
@@ -2803,6 +2833,10 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Removes the given Binding from this Binder.
+     *
+     * @see Binder#removeBinding(HasValue)
+     * @see com.vaadin.ui.AbstractComponent#setComponentError
+     * @see com.vaadin.ui.AbstractComponent#setRequiredIndicatorVisible
      *
      * @param binding
      *            the binding to remove
@@ -2847,6 +2881,10 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Finds and removes the Binding for the given property name.
+     *
+     * @see Binder#removeBinding(HasValue)
+     * @see com.vaadin.ui.AbstractComponent#setComponentError
+     * @see com.vaadin.ui.AbstractComponent#setRequiredIndicatorVisible
      *
      * @param propertyName
      *            the propertyName to remove from bindings

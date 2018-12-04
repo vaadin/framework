@@ -1,19 +1,3 @@
-/*
- * Copyright 2000-2016 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 package com.vaadin.tests;
 
 import java.io.File;
@@ -126,68 +110,67 @@ public class TestBench extends com.vaadin.server.LegacyApplication
         VerticalLayout lo = new VerticalLayout();
         lo.addComponent(menu);
 
-        mainWindow.getPage().addUriFragmentChangedListener(
-                event -> {
-                    String fragment = event.getUriFragment();
-                    if (fragment != null && !fragment.isEmpty()) {
-                        // try to find a proper test class
+        mainWindow.getPage().addUriFragmentChangedListener(event -> {
+            String fragment = event.getUriFragment();
+            if (fragment != null && !fragment.isEmpty()) {
+                // try to find a proper test class
 
-                        // exact match
-                        for (Object next : menu.getItemIds()) {
-                            if (next instanceof Class) {
-                                Class<?> c = (Class<?>) next;
-                                String string = c.getName();
-                                if (string.equals(fragment)) {
-                                    menu.setValue(c);
-                                    mainLayout.setSplitPosition(0);
-                                    return;
-                                }
-                            }
+                // exact match
+                for (Object next : menu.getItemIds()) {
+                    if (next instanceof Class) {
+                        Class<?> c = (Class<?>) next;
+                        String string = c.getName();
+                        if (string.equals(fragment)) {
+                            menu.setValue(c);
+                            mainLayout.setSplitPosition(0);
+                            return;
                         }
-
-                        // simple name match
-                        for (Object next : menu.getItemIds()) {
-                            if (next instanceof Class) {
-                                Class<?> c = (Class<?>) next;
-                                String string = c.getSimpleName();
-                                if (string.equals(fragment)) {
-                                    menu.setValue(c);
-                                    mainLayout.setSplitPosition(0);
-                                    return;
-                                }
-                            }
-                        }
-                        // ticket match
-                        for (Object next : menu.getItemIds()) {
-                            if (next instanceof Class) {
-                                Class<?> c = (Class<?>) next;
-                                String string = c.getSimpleName();
-                                if (string.startsWith("Ticket" + fragment)) {
-                                    menu.setValue(c);
-                                    mainLayout.setSplitPosition(0);
-                                    return;
-                                }
-                            }
-                        }
-
-                        // just partly match lowercase
-                        for (Object next : menu.getItemIds()) {
-                            if (next instanceof Class) {
-                                Class<?> c = (Class<?>) next;
-                                String string = c.getSimpleName();
-                                if (string.toLowerCase(Locale.ROOT).contains(
-                                        fragment.toLowerCase(Locale.ROOT))) {
-                                    menu.setValue(c);
-                                    mainLayout.setSplitPosition(0);
-                                    return;
-                                }
-                            }
-                        }
-
-                        getMainWindow().showNotification(
-                                "No potential matc for #" + fragment);
                     }
-                });
+                }
+
+                // simple name match
+                for (Object next : menu.getItemIds()) {
+                    if (next instanceof Class) {
+                        Class<?> c = (Class<?>) next;
+                        String string = c.getSimpleName();
+                        if (string.equals(fragment)) {
+                            menu.setValue(c);
+                            mainLayout.setSplitPosition(0);
+                            return;
+                        }
+                    }
+                }
+                // ticket match
+                for (Object next : menu.getItemIds()) {
+                    if (next instanceof Class) {
+                        Class<?> c = (Class<?>) next;
+                        String string = c.getSimpleName();
+                        if (string.startsWith("Ticket" + fragment)) {
+                            menu.setValue(c);
+                            mainLayout.setSplitPosition(0);
+                            return;
+                        }
+                    }
+                }
+
+                // just partly match lowercase
+                for (Object next : menu.getItemIds()) {
+                    if (next instanceof Class) {
+                        Class<?> c = (Class<?>) next;
+                        String string = c.getSimpleName();
+                        if (string.toLowerCase(Locale.ROOT)
+                                .contains(fragment.toLowerCase(Locale.ROOT))) {
+                            menu.setValue(c);
+                            mainLayout.setSplitPosition(0);
+                            return;
+                        }
+                    }
+                }
+
+                getMainWindow()
+                        .showNotification("No potential matc for #" + fragment);
+            }
+        });
 
         mainLayout.addComponent(lo);
 

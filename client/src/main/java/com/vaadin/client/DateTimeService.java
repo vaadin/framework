@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 Vaadin Ltd.
+ * Copyright 2000-2018 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -61,11 +61,12 @@ public class DateTimeService {
     }
 
     /**
-     * Utility method to format positive int as zero-padded two-digits number
+     * Utility method to format positive int as zero-padded two-digits number.
      *
-     * @param i the value
+     * @param i
+     *            the value
      * @return "00".."99"
-     * @since
+     * @since 8.4
      */
     public static String asTwoDigits(int i) {
         return (i < 10 ? "0" : "") + i;
