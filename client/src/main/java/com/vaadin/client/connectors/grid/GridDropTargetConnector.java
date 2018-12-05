@@ -100,6 +100,25 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
         super.extend(target);
     }
 
+    @Override
+    protected boolean isDropAllowedByCriteriaScript(NativeEvent event) {
+        final String criteriaScript = getState().criteriaScript;
+        if (criteriaScript == null) {
+            return true;
+        }
+        return executeScript(event,
+                getTargetElement(event.getEventTarget().cast()),
+                getDropLocation(getTargetElement(event.getEventTarget().cast()),
+                        event).name(),
+                criteriaScript);
+    }
+
+    private native boolean executeScript(NativeEvent event,
+            Element targetElement, String dropLocation, String script)
+    /*-{
+       return new Function('event', 'targetElement', 'dropLocation', script)(event, targetElement, dropLocation);
+    }-*/;
+
     /**
      * Inspects whether the current drop would happen on the whole grid instead
      * of specific row as the drop target. This is based on used drop mode,
