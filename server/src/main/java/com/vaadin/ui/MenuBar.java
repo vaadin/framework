@@ -451,7 +451,7 @@ public class MenuBar extends AbstractComponent
     }
 
     public int getDelayMs() {
-        return getState().delayMs;
+        return getState(false).delayMs;
     }
 
     public void setDelayMs(int delayMs) {
