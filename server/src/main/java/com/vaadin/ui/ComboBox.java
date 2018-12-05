@@ -191,6 +191,10 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                 if (getNewItemProvider() != null) {
                     Optional<T> item = getNewItemProvider().apply(itemValue);
                     added = item.isPresent();
+                    item.ifPresent(value -> {
+                        setSelectedItem(value, true);
+                        getDataCommunicator().reset();
+                    });
                 } else if (getNewItemHandler() != null) {
                     getNewItemHandler().accept(itemValue);
                     // Up to the user to tell if no item was added.

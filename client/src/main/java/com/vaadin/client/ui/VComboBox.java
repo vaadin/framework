@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import com.google.gwt.animation.client.AnimationScheduler;
@@ -1645,6 +1644,16 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
     }
 
+    private void resetCurrentSuggestionIfNecessary(String selectedKey,
+            String selectedCaption, String selectedIconUri) {
+        if (currentSuggestion == null
+                && (selectedKey != null || selectedCaption != null))
+            currentSuggestion = new ComboBoxSuggestion(selectedKey,
+                    selectedCaption, "", selectedIconUri);
+        else if (selectedKey == null && selectedCaption == null)
+            currentSuggestion = null;
+    }
+
     // TODO decide whether this should change - affects themes and v7
     public static final String CLASSNAME = "v-filterselect";
     private static final String STYLE_NO_INPUT = "no-input";
@@ -2110,6 +2119,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             currentSuggestion = null; // #13217
             selectedOptionKey = null;
             setText(getEmptySelectionCaption());
+            return;
         }
         // some item selected
         for (ComboBoxSuggestion suggestion : currentSuggestions) {
@@ -2404,6 +2414,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         }
 
         suggestionPopup.hide();
+
     }
 
     /**
