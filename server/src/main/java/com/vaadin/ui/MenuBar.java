@@ -450,6 +450,14 @@ public class MenuBar extends AbstractComponent
         getState().tabIndex = tabIndex;
     }
 
+    public int getDelayMs() {
+        return getState().delayMs;
+    }
+
+    public void setDelayMs(int delayMs) {
+        getState().delayMs = delayMs;
+    }
+
     @Override
     public void focus() {
         // Overridden only to make public
