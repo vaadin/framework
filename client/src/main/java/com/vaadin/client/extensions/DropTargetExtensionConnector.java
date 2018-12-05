@@ -326,13 +326,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         // Currently Safari, Edge and IE don't follow the spec by allowing drop
         // if those don't match
 
-        // Allow by default when criteria not set
-        boolean allowed = true;
-
         // Execute criteria script
-        if (getState().criteriaScript != null) {
-            allowed = executeScript(event, getState().criteriaScript);
-        }
+        boolean allowed = isDropAllowedByCriteriaScript(event);
 
         // Execute criterion defined via API
         if (allowed && getState().criteria != null
@@ -363,6 +358,25 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         }
 
         return allowed;
+    }
+
+    /**
+     * Checks if a criteria script exists and, if yes, executes it. This method
+     * is protected, so subclasses as e.g. GridDropTargetConnector can override
+     * it to add additional script parameters.
+     *
+     * @param event
+     *            browser event (dragEnter, dragOver, drop) that should be
+     *            evaluated by the criteria script
+     * @return {@code true} if no script was given or if the script returned
+     *         true, {@code false} otherwise.
+     */
+    protected boolean isDropAllowedByCriteriaScript(NativeEvent event) {
+        final String criteriaScript = getState().criteriaScript;
+        if (criteriaScript == null) {
+            return true;
+        }
+        return executeScript(event, criteriaScript);
     }
 
     /**
