@@ -36,21 +36,6 @@ public class MenuBarChangeFromEventListener extends AbstractTestUIWithLog {
                 } else {
                     mb.setDescription("");
                 }
-
-                // mb.setComponentError(null);
-                /*
-                 * if (mb.getComponentError() != null) {
-                 * System.out.println("Error is null");
-                 * mb.setComponentError(null); } else {
-                 * System.out.println("Error is NOT null");
-                 * mb.setComponentError(new ErrorMessage() {
-                 *
-                 * @Override public ErrorLevel getErrorLevel() { return
-                 * ErrorLevel.CRITICAL; }
-                 *
-                 * @Override public String getFormattedHtmlMessage() { return
-                 * "Error"; } }); } // needed to reproduce the issue
-                 */
                 log(MENU_CLICKED_BLUR);
             }
 
