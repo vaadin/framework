@@ -15,12 +15,19 @@
  */
 package com.vaadin.osgi.resources.impl;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
+
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.framework.Version;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
+import org.osgi.service.http.context.ServletContextHelper;
+import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
 import com.vaadin.osgi.resources.VaadinResourceService;
 
@@ -35,13 +42,33 @@ import com.vaadin.osgi.resources.VaadinResourceService;
 @Component
 public class VaadinResourceServiceImpl implements VaadinResourceService {
     private static final String NAMESPACE_PREFIX = "vaadin-%s";
+    // it's best practice to select a own context "namespace"
+    private static final String CONTEXT_NAME = "com.vaadin";
 
     private String pathPrefix;
+    private ServiceRegistration<ServletContextHelper> servletContextReg;
 
     @Activate
     public void start(BundleContext context) throws Exception {
         Version version = context.getBundle().getVersion();
         this.setBundleVersion(version.toString());
+
+        // register the vaadin servlet context helper
+        Dictionary<String, String> contextProps = new Hashtable<>();
+        contextProps.put(HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME,
+                this.getContextName());
+        contextProps.put(HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_PATH,
+                "/" + this.getResourcePathPrefix());
+        servletContextReg = context.registerService(ServletContextHelper.class,
+                new VaadinServletContextFactory(), contextProps);
+    }
+
+    @Deactivate
+    public void stop() {
+        if (servletContextReg != null) {
+            servletContextReg.unregister();
+            servletContextReg = null;
+        }
     }
 
     @Override
@@ -74,6 +101,11 @@ public class VaadinResourceServiceImpl implements VaadinResourceService {
     @Override
     public String getResourcePathPrefix() {
         return this.pathPrefix;
+    }
+
+    @Override
+    public String getContextName() {
+        return CONTEXT_NAME;
     }
 
     /**

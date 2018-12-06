@@ -15,17 +15,14 @@
  */
 package com.vaadin.osgi.resources.impl;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -38,9 +35,8 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
-import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
-import org.osgi.service.http.NamespaceException;
+import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 
 import com.vaadin.osgi.resources.OsgiVaadinContributor;
 import com.vaadin.osgi.resources.OsgiVaadinResource;
@@ -58,17 +54,16 @@ import com.vaadin.osgi.resources.VaadinResourceService;
  */
 @Component(immediate = true)
 public class VaadinResourceTrackerComponent {
-    private final Map<Long, Delegate> resourceToRegistration = Collections
+    private final Map<Long, Delegate<?>> resourceToRegistration = Collections
             .synchronizedMap(new LinkedHashMap<>());
     private final Map<Long, List<ServiceRegistration<? extends OsgiVaadinResource>>> contributorToRegistrations = Collections
             .synchronizedMap(new LinkedHashMap<>());
 
+    private BundleContext vaadinSharedContext;
     private VaadinResourceService vaadinService;
-    private HttpService httpService;
 
     @Reference(cardinality = ReferenceCardinality.MULTIPLE, service = OsgiVaadinTheme.class, policy = ReferencePolicy.DYNAMIC)
-    void bindTheme(ServiceReference<OsgiVaadinTheme> themeRef)
-            throws NamespaceException {
+    void bindTheme(ServiceReference<OsgiVaadinTheme> themeRef) {
         registerResource(themeRef);
     }
 
@@ -77,8 +72,7 @@ public class VaadinResourceTrackerComponent {
     }
 
     @Reference(cardinality = ReferenceCardinality.MULTIPLE, service = OsgiVaadinWidgetset.class, policy = ReferencePolicy.DYNAMIC)
-    void bindWidgetset(ServiceReference<OsgiVaadinWidgetset> widgetsetRef)
-            throws NamespaceException {
+    void bindWidgetset(ServiceReference<OsgiVaadinWidgetset> widgetsetRef) {
         registerResource(widgetsetRef);
     }
 
@@ -87,8 +81,7 @@ public class VaadinResourceTrackerComponent {
     }
 
     @Reference(cardinality = ReferenceCardinality.MULTIPLE, service = OsgiVaadinResource.class, policy = ReferencePolicy.DYNAMIC)
-    void bindResource(ServiceReference<OsgiVaadinResource> resourceRef)
-            throws NamespaceException {
+    void bindResource(ServiceReference<OsgiVaadinResource> resourceRef) {
         registerResource(resourceRef);
     }
 
@@ -152,26 +145,15 @@ public class VaadinResourceTrackerComponent {
         }
     }
 
-    @Reference
-    void bindHttpService(HttpService service) {
-        this.httpService = service;
-    }
-
-    void unbindtHttpService(HttpService service) {
-        if (this.httpService == service) {
-            this.httpService = null;
-        }
-    }
-
     /**
      *
-     * @throws NamespaceException
      * @since 8.6.0
      */
     @Activate
-    protected void activate(BundleContext context) throws NamespaceException {
-        for (Delegate registration : resourceToRegistration.values()) {
-            registration.register(context, httpService, vaadinService);
+    protected void activate(BundleContext context) {
+        vaadinSharedContext = context;
+        for (Delegate<?> registration : resourceToRegistration.values()) {
+            registration.register(vaadinSharedContext, vaadinService);
         }
     }
 
@@ -180,7 +162,7 @@ public class VaadinResourceTrackerComponent {
      */
     @Deactivate
     protected void deactivate() {
-        for (final Delegate registration : resourceToRegistration.values()) {
+        for (final Delegate<?> registration : resourceToRegistration.values()) {
             unregisterResource(registration);
         }
         for (List<ServiceRegistration<? extends OsgiVaadinResource>> registrations : contributorToRegistrations
@@ -191,21 +173,24 @@ public class VaadinResourceTrackerComponent {
         }
         resourceToRegistration.clear();
         contributorToRegistrations.clear();
-        httpService = null;
+        vaadinSharedContext = null;
+        vaadinService = null;
     }
 
-    private void registerResource(
-            ServiceReference<? extends OsgiVaadinResource> resourceRef)
-            throws NamespaceException {
-        BundleContext context = resourceRef.getBundle().getBundleContext();
-        OsgiVaadinResource resource = context.getService(resourceRef);
-        // service got is unregistered if we get null here
-        if (resource == null)
+    private <T extends OsgiVaadinResource> void registerResource(
+            ServiceReference<T> resourceRef) {
+        String pattern = (String) resourceRef.getProperty(
+                HttpWhiteboardConstants.HTTP_WHITEBOARD_RESOURCE_PATTERN);
+        // if this resource contains a http whiteboard property we are done here
+        // because we are registering the same service with whiteboard
+        // properties we have to filter them here
+        if (pattern != null)
             return;
+        BundleContext context = resourceRef.getBundle().getBundleContext();
         Long serviceId = (Long) resourceRef.getProperty(Constants.SERVICE_ID);
-        Delegate registration = new Delegate(resource, resourceRef);
+        Delegate<T> registration = new Delegate<>(resourceRef, context);
         resourceToRegistration.put(serviceId, registration);
-        registration.register(context, httpService, vaadinService);
+        registration.register(vaadinSharedContext, vaadinService);
     }
 
     private void unregisterResource(
@@ -217,106 +202,117 @@ public class VaadinResourceTrackerComponent {
     private void unregisterResource(Long serviceId) {
         if (serviceId == null)
             return;
-        Delegate registration = resourceToRegistration.remove(serviceId);
+        Delegate<?> registration = resourceToRegistration.remove(serviceId);
         unregisterResource(registration);
     }
 
-    private void unregisterResource(Delegate registration) {
+    private void unregisterResource(Delegate<?> registration) {
         if (registration != null) {
             registration.unregister();
         }
     }
 
-    static final class Delegate implements HttpContext {
-        private final OsgiVaadinResource resource;
-        private final ServiceReference<? extends OsgiVaadinResource> resourceRef;
+    static final class Delegate<T extends OsgiVaadinResource> {
+        private final ServiceReference<T> resourceRef;
+        // the bundle context who contributed the resource - we reuse that so we
+        // can register the http whiteboard resource in the name of the
+        // contributing bundle
+        private final BundleContext bundleContext;
 
-        private volatile String alias;
-        private volatile String path;
-        private volatile BundleContext bundleContext;
-        private volatile HttpService httpService;
-        private volatile HttpContext httpContext;
+        private volatile BundleContext vaadinSharedContext;
         private volatile VaadinResourceService vaadinService;
+        private volatile ServiceRegistration<? super T> resourceRegistration;
 
-        public Delegate(OsgiVaadinResource resource,
-                ServiceReference<? extends OsgiVaadinResource> resourceRef) {
-            this.resource = Objects.requireNonNull(resource);
+        public Delegate(ServiceReference<T> resourceRef,
+                BundleContext bundleContext) {
             this.resourceRef = Objects.requireNonNull(resourceRef);
+            this.bundleContext = Objects.requireNonNull(bundleContext);
         }
 
-        public void register(BundleContext bundleContext,
-                HttpService httpService, VaadinResourceService vaadinService)
-                throws NamespaceException {
-            if (bundleContext != null) {
-                this.bundleContext = bundleContext;
-            }
-            if (httpService != null) {
-                this.httpService = httpService;
-                this.httpContext = this.httpService.createDefaultHttpContext();
-            }
+        public void register(BundleContext vaadinSharedContext,
+                VaadinResourceService vaadinService) {
             if (vaadinService != null) {
                 this.vaadinService = vaadinService;
             }
-            // if all dependencies are satisfied we can finally register on the
-            // HttpService
-            if (this.bundleContext != null && this.httpService != null
-                    && this.vaadinService != null) {
+            if (vaadinSharedContext != null) {
+                this.vaadinSharedContext = vaadinSharedContext;
+            }
+            // if all dependencies are satisfied we can finally register the
+            // http resource
+            if (this.vaadinService != null
+                    && this.vaadinSharedContext != null) {
                 this.registerImpl();
             }
         }
 
         public void unregister() {
-            if (httpService != null) {
-                httpService.unregister(alias);
+            if (resourceRegistration != null) {
+                resourceRegistration.unregister();
             }
-            if (bundleContext != null) {
+            if (vaadinSharedContext != null) {
                 // unget the service reference
-                bundleContext.ungetService(resourceRef);
+                vaadinSharedContext.ungetService(resourceRef);
             }
-            alias = null;
-            path = null;
-            bundleContext = null;
-            httpService = null;
-            httpContext = null;
             vaadinService = null;
+            vaadinSharedContext = null;
+            resourceRegistration = null;
         }
 
-        @Override
-        public boolean handleSecurity(HttpServletRequest request,
-                HttpServletResponse response) throws IOException {
-            return httpContext.handleSecurity(request, response);
-        }
-
-        @Override
-        public URL getResource(String name) {
-            return resourceRef.getBundle().getResource(name);
-        }
-
-        @Override
-        public String getMimeType(String name) {
-            return httpContext.getMimeType(name);
-        }
-
-        private void registerImpl() throws NamespaceException {
-            // we have already registered if alias is set
-            if (alias != null)
+        @SuppressWarnings("unchecked")
+        private void registerImpl() {
+            // we have already registered if resourceRegistration is set
+            if (resourceRegistration != null)
                 return;
 
-            String pathPrefix = vaadinService.getResourcePathPrefix();
+            T resource = vaadinSharedContext.getService(this.resourceRef);
+            // we don't need a path prefix because we register at the vaadin
+            // context which handles the prefixing
+            String pathPrefix = "";
+            Class<? super T> interfaceType;
+            String alias;
+            String path;
             if (resource instanceof OsgiVaadinWidgetset) {
-                alias = PathFormatHelper
-                        .getRootResourceAlias(resource.getName(), pathPrefix);
-                path = PathFormatHelper.getRootResourcePath(resource.getName());
+                alias = PathFormatHelper.getWidgetsetAlias(resource.getName(),
+                        pathPrefix);
+                // OsgiVaadinWidgetset provides folders so we have to add a
+                // wildcard
+                alias = alias + "/*";
+                path = PathFormatHelper.getWidgetsetPath(resource.getName());
+                // save cast because OsgiVaadinWidgetset is a super class of T
+                interfaceType = (Class<? super T>) OsgiVaadinWidgetset.class;
             } else if (resource instanceof OsgiVaadinTheme) {
                 alias = PathFormatHelper.getThemeAlias(resource.getName(),
                         pathPrefix);
+                // OsgiVaadinTheme provides folders so we have to add a wildcard
+                alias = alias + "/*";
                 path = PathFormatHelper.getThemePath(resource.getName());
+                // save cast because OsgiVaadinTheme is a super class of T
+                interfaceType = (Class<? super T>) OsgiVaadinTheme.class;
             } else {
                 alias = PathFormatHelper
                         .getRootResourceAlias(resource.getName(), pathPrefix);
                 path = PathFormatHelper.getRootResourcePath(resource.getName());
+                interfaceType = OsgiVaadinResource.class;
             }
-            httpService.registerResources(alias, path, this);
+            // remove the empty prefixed slash
+            alias = alias.substring(1);
+
+            final String contextFilter = "("
+                    + HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME + "="
+                    + vaadinService.getContextName() + ")";
+            // register a OSGi http resource based on the whiteboard pattern
+            final Dictionary<String, String> properties = new Hashtable<>();
+            properties.put(
+                    HttpWhiteboardConstants.HTTP_WHITEBOARD_RESOURCE_PATTERN,
+                    alias);
+            properties.put(
+                    HttpWhiteboardConstants.HTTP_WHITEBOARD_RESOURCE_PREFIX,
+                    path);
+            properties.put(
+                    HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_SELECT,
+                    contextFilter);
+            resourceRegistration = bundleContext.registerService(interfaceType,
+                    resource, properties);
         }
     }
 }

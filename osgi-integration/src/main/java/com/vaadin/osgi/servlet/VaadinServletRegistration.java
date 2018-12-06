@@ -35,7 +35,6 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
 import org.osgi.service.log.LogService;
 
-import com.vaadin.osgi.resources.OsgiVaadinResources.ResourceBundleInactiveException;
 import com.vaadin.osgi.resources.VaadinResourceService;
 import com.vaadin.server.Constants;
 import com.vaadin.server.VaadinServlet;
@@ -74,8 +73,7 @@ public class VaadinServletRegistration {
 
     @Reference(cardinality = ReferenceCardinality.MULTIPLE, service = VaadinServlet.class, policy = ReferencePolicy.DYNAMIC)
     void bindVaadinServlet(VaadinServlet servlet,
-            ServiceReference<VaadinServlet> reference)
-            throws ResourceBundleInactiveException {
+            ServiceReference<VaadinServlet> reference) {
         log(LogService.LOG_INFO, "VaadinServlet Registration");
 
         Hashtable<String, Object> properties = getProperties(reference);
@@ -186,6 +184,7 @@ public class VaadinServletRegistration {
             //only register if the vaadin service is not null
             if(vaadinService == null)
                 return;
+
             final String resourcePath = String.format("/%s", vaadinService.getResourcePathPrefix());
             this.properties.put(VAADIN_RESOURCES_PARAM, resourcePath);
             // We register the Http Whiteboard servlet using the context of
