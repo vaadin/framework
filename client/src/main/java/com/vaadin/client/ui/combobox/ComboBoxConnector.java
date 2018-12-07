@@ -507,9 +507,7 @@ public class ComboBoxConnector extends AbstractListingConnector
         @Override
         public void resetDataAndSize(int estimatedNewDataSize) {
             if (getState().pageLength == 0) {
-                if (getWidget().suggestionPopup.isShowing()) {
-                    dataSource.ensureAvailability(0, estimatedNewDataSize);
-                }
+                dataSource.ensureAvailability(0, estimatedNewDataSize);
             } else {
                 // reset data: clear any current options, set page to 0
                 getWidget().currentPage = 0;

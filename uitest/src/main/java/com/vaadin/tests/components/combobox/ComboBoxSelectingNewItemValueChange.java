@@ -69,11 +69,10 @@ public class ComboBoxSelectingNewItemValueChange extends ComboBoxSelecting {
         });
 
         Button resetButton = new Button("Reset options", e -> {
-
+            comboBox.setValue(null);
             initItems();
             comboBox.getDataProvider().refreshAll();
             valueLabel.setValue("");
-            comboBox.setValue(null);
             valueChangeLabel.setValue("Reset");
             valueChangeEventCount = 0;
             selectionChangeEventCount = 0;
