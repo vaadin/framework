@@ -65,7 +65,7 @@ public class VaadinServletRegistration {
 
     @Activate
     void activate(BundleContext bundleContext) throws Exception {
-        //see if we have registrations already which are not initialized
+        // see if we have registrations already which are not initialized
         for(ServletRegistration registration : registeredServlets.values()) {
             registration.register(vaadinService);
         }
@@ -94,7 +94,7 @@ public class VaadinServletRegistration {
         ServletRegistration registration = new ServletRegistration(servlet,
                 reference, properties);
         registeredServlets.put(reference, registration);
-        //try to register with the vaadin service - the service could be null at this point but we handle that in the register method
+        // try to register with the vaadin service - the service could be null at this point but we handle that in the register method
         registration.register(this.vaadinService);
     }
 
@@ -178,10 +178,10 @@ public class VaadinServletRegistration {
         }
 
         public void register(VaadinResourceService vaadinService) {
-            //we are already registered
+            // we are already registered
             if (this.registration != null)
                 return;
-            //only register if the vaadin service is not null
+            // only register if the vaadin service is not null
             if(vaadinService == null)
                 return;
 
