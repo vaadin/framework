@@ -114,6 +114,8 @@ public class VMenuBar extends SimpleFocusablePanel
     /** For internal use only. May be removed or replaced in the future. */
     public boolean openRootOnHover;
 
+    public boolean mouseDownPressed;
+
     /** For internal use only. May be removed or replaced in the future. */
     public boolean htmlContentAllowed;
 
@@ -384,8 +386,17 @@ public class VMenuBar extends SimpleFocusablePanel
         if (targetItem != null) {
             switch (DOM.eventGetType(e)) {
 
+            case Event.ONMOUSEDOWN:
+                if (e.getButton() == Event.BUTTON_LEFT) {
+                    if (isEnabled() && targetItem.isEnabled()) {
+                        // Button is clicked, but not yet released
+                        mouseDownPressed = true;
+                    }
+                }
+                break;
             case Event.ONCLICK:
                 if (isEnabled() && targetItem.isEnabled()) {
+                    mouseDownPressed = false;
                     itemClick(targetItem);
                 }
                 if (subMenu) {

@@ -1089,4 +1089,27 @@ public class MenuBar extends AbstractComponent
         result.add("html-content-allowed");
         return result;
     }
+
+    /**
+     * Returns the delay before executing update logic inside
+     * {@link com.vaadin.client.ui.menubar.MenuBarConnector#updateFromUIDL(UIDL, ApplicationConnection)}
+     * after mouseDownEvent
+     *
+     * @since
+     */
+    public int getDelayMs() {
+        return getState(false).delayMs;
+    }
+
+    /**
+     * Set the delay before executing update logic inside
+     * {@link com.vaadin.client.ui.menubar.MenuBarConnector#updateFromUIDL(UIDL, ApplicationConnection)}
+     * after mouseDownEvent
+     *
+     * @since
+     */
+    public void setDelayMs(int delayMs) {
+        getState().delayMs = delayMs;
+    }
+
 }// class MenuBar
