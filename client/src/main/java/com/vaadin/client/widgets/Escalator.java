@@ -2907,10 +2907,14 @@ public class Escalator extends Widget
              */
             scroller.recalculateScrollbarsForVirtualViewport();
 
+            double spacerHeightsSumUntilIndex = spacerContainer
+                    .getSpacerHeightsSumUntilIndex(index);
             final boolean addedRowsAboveCurrentViewport = index
-                    * getDefaultRowHeight() < getScrollTop();
+                    * getDefaultRowHeight()
+                    + spacerHeightsSumUntilIndex < getScrollTop();
             final boolean addedRowsBelowCurrentViewport = index
-                    * getDefaultRowHeight() > getScrollTop()
+                    * getDefaultRowHeight()
+                    + spacerHeightsSumUntilIndex > getScrollTop()
                             + getHeightOfSection();
 
             if (addedRowsAboveCurrentViewport) {
@@ -3925,13 +3929,18 @@ public class Escalator extends Widget
             Profiler.enter(
                     "Escalator.BodyRowContainer.reapplyDefaultRowHeights");
 
+            double spacerHeights = 0;
+
             /* step 1: resize and reposition rows */
             for (int i = 0; i < visualRowOrder.size(); i++) {
                 TableRowElement tr = visualRowOrder.get(i);
                 reapplyRowHeight(tr, getDefaultRowHeight());
 
                 final int logicalIndex = getTopRowLogicalIndex() + i;
-                setRowPosition(tr, 0, logicalIndex * getDefaultRowHeight());
+                setRowPosition(tr, 0,
+                        logicalIndex * getDefaultRowHeight() + spacerHeights);
+
+                spacerHeights += spacerContainer.getSpacerHeight(logicalIndex);
             }
 
             /*
@@ -5597,10 +5606,19 @@ public class Escalator extends Widget
          */
         public void shiftSpacersByRows(int index, int numberOfRows) {
             final double pxDiff = numberOfRows * body.getDefaultRowHeight();
-            for (SpacerContainer.SpacerImpl spacer : getSpacersForRowAndAfter(
-                    index)) {
-                spacer.setPositionDiff(0, pxDiff);
-                spacer.setRowIndex(spacer.getRow() + numberOfRows);
+            List<SpacerContainer.SpacerImpl> spacers = new ArrayList<>(
+                    getSpacersForRowAndAfter(index));
+            if (numberOfRows < 0) {
+                for (SpacerContainer.SpacerImpl spacer : spacers) {
+                    spacer.setPositionDiff(0, pxDiff);
+                    spacer.setRowIndex(spacer.getRow() + numberOfRows);
+                }
+            } else {
+                for (int i = spacers.size() - 1; i >= 0; --i) {
+                    SpacerContainer.SpacerImpl spacer = spacers.get(i);
+                    spacer.setPositionDiff(0, pxDiff);
+                    spacer.setRowIndex(spacer.getRow() + numberOfRows);
+                }
             }
         }
 
