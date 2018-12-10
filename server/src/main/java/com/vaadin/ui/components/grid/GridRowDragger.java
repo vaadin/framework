@@ -40,7 +40,8 @@ import com.vaadin.ui.Grid.Column;
  * {@link #getGridDragSource()} and {@link #getGridDropTarget()}.The drop target
  * grid has been set to not allow drops for a target row when the grid has been
  * sorted, since the visual drop target location would not match where the item
- * would actually be dropped into.
+ * would actually be dropped into. Additionally, a grid MUST NOT be the target
+ * of more than one GridRowDragger.
  * <p>
  * <em>NOTE: this helper works only with {@link ListDataProvider} on both grids.
  * If you have another data provider, you should customize data provider
