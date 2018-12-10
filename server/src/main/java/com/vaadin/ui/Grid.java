@@ -3082,7 +3082,21 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                     "count must be between -1 and the current number of columns ("
                             + columnSet.size() + "): " + numberOfColumns);
         }
-
+        int currentFrozenColumnState = getState(false).frozenColumnCount;
+        /*
+         * we remove the current value from the state so that setting frozen
+         * columns will always happen after this call. This is so that the value
+         * will be set also in the widget even if it happens to seem to be the
+         * same as this current value we're setting.
+         */
+        if (currentFrozenColumnState != numberOfColumns) {
+            final String diffStateKey = "frozenColumnCount";
+            UI ui = getUI();
+            if (ui != null) {
+                ui.getConnectorTracker().getDiffState(Grid.this)
+                        .remove(diffStateKey);
+            }
+        }
         getState().frozenColumnCount = numberOfColumns;
     }
 
