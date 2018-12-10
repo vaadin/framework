@@ -450,10 +450,24 @@ public class MenuBar extends AbstractComponent
         getState().tabIndex = tabIndex;
     }
 
+    /**
+     * Returns the delay before executing update logic inside
+     * {@link com.vaadin.client.ui.menubar.MenuBarConnector#updateFromUIDL(UIDL, ApplicationConnection)}
+     * after mouseDownEvent
+     *
+     * @since
+     */
     public int getDelayMs() {
         return getState(false).delayMs;
     }
 
+    /**
+     * Set the delay before executing update logic inside
+     * {@link com.vaadin.client.ui.menubar.MenuBarConnector#updateFromUIDL(UIDL, ApplicationConnection)}
+     * after mouseDownEvent
+     *
+     * @since
+     */
     public void setDelayMs(int delayMs) {
         getState().delayMs = delayMs;
     }
