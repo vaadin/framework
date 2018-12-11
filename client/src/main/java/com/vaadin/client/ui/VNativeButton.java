@@ -59,7 +59,7 @@ public class VNativeButton extends Button
      * mouse while clicking it. In this case mouse leaves the button without
      * moving.
      */
-    private boolean clickPending;
+    public boolean clickPending;
 
     private boolean cancelNextClick = false;
 
@@ -145,20 +145,6 @@ public class VNativeButton extends Button
             // (#11854)
             setFocus(true);
         }
-        if (disableOnClick) {
-            setEnabled(false);
-            // FIXME: This should be moved to NativeButtonConnector along with
-            // buttonRpcProxy
-            addStyleName(StyleConstants.DISABLED);
-            buttonRpcProxy.disableOnClick();
-        }
-
-        // Add mouse details
-        MouseEventDetails details = MouseEventDetailsBuilder
-                .buildMouseEventDetails(event.getNativeEvent(), getElement());
-        buttonRpcProxy.click(details);
-
-        clickPending = false;
     }
 
     @Override

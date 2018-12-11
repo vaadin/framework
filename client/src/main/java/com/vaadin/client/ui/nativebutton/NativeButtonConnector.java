@@ -15,19 +15,24 @@
  */
 package com.vaadin.client.ui.nativebutton;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.VNativeButton;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.button.ButtonServerRpc;
 import com.vaadin.shared.ui.button.NativeButtonState;
 import com.vaadin.ui.NativeButton;
 
 @Connect(NativeButton.class)
-public class NativeButtonConnector extends AbstractComponentConnector {
+public class NativeButtonConnector extends AbstractComponentConnector
+        implements ClickHandler {
 
     @Override
     public void init() {
@@ -37,6 +42,7 @@ public class NativeButtonConnector extends AbstractComponentConnector {
         getWidget().client = getConnection();
         getWidget().paintableId = getConnectorId();
 
+        getWidget().addClickHandler(this);
         ConnectorFocusAndBlurHandler.addHandlers(this);
     }
 
@@ -76,5 +82,23 @@ public class NativeButtonConnector extends AbstractComponentConnector {
     @Override
     public NativeButtonState getState() {
         return (NativeButtonState) super.getState();
+    }
+
+    @Override
+    public void onClick(ClickEvent event) {
+        if (getState().disableOnClick) {
+            getWidget().setEnabled(false);
+            getState().enabled = false;
+            super.updateEnabledState(false);
+            getRpcProxy(ButtonServerRpc.class).disableOnClick();
+        }
+
+        // Add mouse details
+        MouseEventDetails details = MouseEventDetailsBuilder
+                .buildMouseEventDetails(event.getNativeEvent(),
+                        getWidget().getElement());
+        getRpcProxy(ButtonServerRpc.class).click(details);
+
+        getWidget().clickPending = false;
     }
 }
