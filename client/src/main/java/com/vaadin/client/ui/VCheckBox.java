@@ -84,9 +84,22 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
      *
      * @return Element of the CheckBox itself
      */
-    private Element getCheckBoxElement() {
+    public Element getCheckBoxElement() {
+        // public to allow CheckBoxState to access it.
         // FIXME: Would love to use a better way to access the checkbox element
         return getElement().getFirstChildElement();
+    }
+
+    /**
+     * Gives access to the label element.
+     *
+     * @return Element of the Label itself
+     * @since
+     */
+    public Element getLabelElement() {
+        // public to allow CheckBoxState to access it.
+        // FIXME: Would love to use a better way to access the label element
+        return getCheckBoxElement().getNextSiblingElement();
     }
 
     @Override
