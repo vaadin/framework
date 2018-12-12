@@ -1,9 +1,5 @@
 package com.vaadin.data.provider;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.Future;
@@ -25,6 +21,9 @@ import com.vaadin.ui.UI;
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Vaadin Ltd
@@ -303,7 +302,7 @@ public class DataCommunicatorTest {
         // Mark communicator clean
         ui.getConnectorTracker().markClean(communicator);
 
-        assertTrue("Communicator should be marked for hard reset",
+        assertFalse("Communicator should not be marked for hard reset",
                 communicator.reset);
         assertFalse("DataCommunicator should not be marked as dirty",
                 ui.getConnectorTracker().isDirty(communicator));
