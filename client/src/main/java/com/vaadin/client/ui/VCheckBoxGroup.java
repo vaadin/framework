@@ -137,7 +137,7 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
         widget.setValue(
                 item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
         setOptionEnabled(widget, item);
-        setOptionReadOnly(widget);
+        setOptionReadOnly(widget, item);
         widget.setStyleName(CLASSNAME_OPTION_SELECTED, widget.getValue());
 
         if (requireInitialization) {
@@ -198,13 +198,15 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
                 !isEnabled() || !optionEnabled);
     }
 
-    protected void setOptionReadOnly(VCheckBox checkBox) {
+    protected void setOptionReadOnly(VCheckBox checkBox, JsonObject item) {
         if (isReadonly()) {
             checkBox.addStyleName("v-readonly");
             checkBox.setEnabled(false);
         } else {
             checkBox.removeStyleName("v-readonly");
-            checkBox.setEnabled(isEnabled());
+            boolean optionEnabled = !item
+                    .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
+            checkBox.setEnabled(isEnabled() && optionEnabled);
         }
     }
 
@@ -228,7 +230,7 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
     public void setReadonly(boolean readonly) {
         if (this.readonly != readonly) {
             this.readonly = readonly;
-            optionsToItems.keySet().forEach(this::setOptionReadOnly);
+            optionsToItems.forEach(this::setOptionReadOnly);
         }
     }
 
