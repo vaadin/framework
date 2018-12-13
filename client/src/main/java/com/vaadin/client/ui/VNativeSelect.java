@@ -140,7 +140,7 @@ public class VNativeSelect extends FocusableFlowPanelComposite {
     /**
      * Returns true if empty selection is allowed.
      *
-     * @since
+     * @since 8.7
      * @return empty selection is allowed
      */
     public boolean isEmptySelectionAllowed() {
@@ -150,7 +150,7 @@ public class VNativeSelect extends FocusableFlowPanelComposite {
     /**
      * Sets true if empty selection is allowed.
      *
-     * @since
+     * @since 8.7
      * @param emptySelectionAllowed
      */
     public void setEmptySelectionAllowed(boolean emptySelectionAllowed) {

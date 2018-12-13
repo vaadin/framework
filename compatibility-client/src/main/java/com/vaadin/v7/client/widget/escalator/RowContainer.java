@@ -230,7 +230,7 @@ public interface RowContainer {
      * Any extra content, such as spacers for the body, should not be included
      * in this count.
      *
-     * @since
+     * @since 8.7
      *
      * @return the actual DOM count of rows
      */
