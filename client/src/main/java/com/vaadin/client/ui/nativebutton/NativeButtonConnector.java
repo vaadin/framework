@@ -55,8 +55,6 @@ public class NativeButtonConnector extends AbstractComponentConnector
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        getWidget().disableOnClick = getState().disableOnClick;
-
         // Set text
         VCaption.setCaptionText(getWidget(), getState());
 
@@ -87,7 +85,6 @@ public class NativeButtonConnector extends AbstractComponentConnector
     @Override
     public void onClick(ClickEvent event) {
         if (getState().disableOnClick) {
-            getWidget().setEnabled(false);
             getState().enabled = false;
             super.updateEnabledState(false);
             getRpcProxy(ButtonServerRpc.class).disableOnClick();

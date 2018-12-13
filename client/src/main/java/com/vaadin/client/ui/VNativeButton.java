@@ -24,11 +24,8 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.client.StyleConstants;
 import com.vaadin.client.Util;
 import com.vaadin.client.WidgetUtil.ErrorUtil;
-import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.button.ButtonServerRpc;
 
 public class VNativeButton extends Button
@@ -62,9 +59,6 @@ public class VNativeButton extends Button
     public boolean clickPending;
 
     private boolean cancelNextClick = false;
-
-    /** For internal use only. May be removed or replaced in the future. */
-    public boolean disableOnClick = false;
 
     public VNativeButton() {
         setStyleName(CLASSNAME);
