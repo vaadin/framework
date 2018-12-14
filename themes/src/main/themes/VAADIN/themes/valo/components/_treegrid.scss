@@ -55,7 +55,7 @@ $v-treegrid-class-depth: depth !default;
 
   // Hierarchy depth styling
   .#{$primary-stylename}-node {
-    @for $i from 0 through 15 {
+    @for $i from 0 through 31 {
       &.#{$v-treegrid-class-depth}-#{$i} {
         padding-left: $v-treegrid-indent * $i;
       }
