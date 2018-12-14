@@ -23,7 +23,7 @@ import com.vaadin.ui.Component.Focusable;
  * invoked.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.7
  */
 public class FocusShortcut extends ShortcutListener {
     protected Focusable focusable;
