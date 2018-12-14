@@ -358,6 +358,15 @@ public class DataCommunicator<T> extends AbstractExtension {
             rpc.reset(getDataProviderSize());
         }
 
+        if (!updatedData.isEmpty()) {
+            JsonArray dataArray = Json.createArray();
+            int i = 0;
+            for (T data : updatedData) {
+                dataArray.set(i++, getDataObject(data));
+            }
+            rpc.updateData(dataArray);
+        }
+
         Range requestedRows = getPushRows();
         boolean triggerReset = false;
         if (!requestedRows.isEmpty()) {
@@ -371,15 +380,6 @@ public class DataCommunicator<T> extends AbstractExtension {
             }
 
             pushData(offset, rowsToPush);
-        }
-
-        if (!updatedData.isEmpty()) {
-            JsonArray dataArray = Json.createArray();
-            int i = 0;
-            for (T data : updatedData) {
-                dataArray.set(i++, getDataObject(data));
-            }
-            rpc.updateData(dataArray);
         }
 
         setPushRows(Range.withLength(0, 0));
@@ -530,6 +530,7 @@ public class DataCommunicator<T> extends AbstractExtension {
     public void reset() {
         // Only needed if a full reset is not pending.
         if (!reset) {
+            beforeClientResponse(true);
             // Soft reset through client-side re-request.
             getClientRpc().reset(getDataProviderSize());
         }
