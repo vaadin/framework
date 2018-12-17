@@ -4,6 +4,7 @@ import com.vaadin.event.FocusShortcut;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.TextField;
 
 public class FocusShortcuts extends AbstractTestUIWithLog {
@@ -14,6 +15,9 @@ public class FocusShortcuts extends AbstractTestUIWithLog {
         name.addShortcutListener(
                 new FocusShortcut(name, KeyCode.N, ModifierKey.ALT));
         name.addFocusListener(event -> log("Alt+N"));
+
+        CheckBox checkBox = new CheckBox("hello");
+        checkBox.add
 
         TextField address = new TextField("Address (Alt+A)");
         address.addShortcutListener(new FocusShortcut(address, "&Address"));

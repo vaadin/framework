@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.parallel.Browser;
 
 /**
@@ -23,6 +24,7 @@ import com.vaadin.testbench.parallel.Browser;
  *
  * @author Vaadin Ltd
  */
+@RunLocally(Browser.IE11)
 public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
     protected List<DesiredCapabilities> getBrowsersExcludingChrome() {
