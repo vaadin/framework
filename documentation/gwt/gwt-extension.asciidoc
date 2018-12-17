@@ -34,7 +34,7 @@ extended component or UI as a parameter and passes it to __super.extend()__.
 For example, let us have a trivial example with an extension that takes no
 special parameters, and illustrates the three alternative APIs:
 
-
+[source,java]
 ----
 public class CapsLockWarning extends AbstractExtension {
     // You could pass it in the constructor
@@ -56,7 +56,7 @@ public class CapsLockWarning extends AbstractExtension {
 
 The extension could then be added to a component as follows:
 
-
+[source,java]
 ----
 PasswordField password = new PasswordField("Give it");
 
@@ -96,7 +96,7 @@ In the following example, we implement a "Caps Lock warning" extension. It
 listens for changes in Caps Lock state and displays a floating warning element
 over the extended component if the Caps Lock is on.
 
-
+[source,java]
 ----
 @Connect(CapsLockWarning.class)
 public class CapsLockWarningConnector
