@@ -24,7 +24,7 @@ There are a couple of helper UI super classes which you can use for the test. Yo
   * Base classes for generic component tests. Generates test which have a menu on the top containing options for configuring the component. Classes follow the same component hierarchy as Vaadin component classes and this way automatically gets menu items for setting features the parent class supports.
     * Gotcha: If you add a new feature to a menu you need to run and possibly (probably) fix all TB tests which use the class as they will click on the wrong item (fixable by implementing [http://dev.vaadin.com/ticket/11307](http://dev.vaadin.com/ticket/11307))
 
-[Note] `AbstractTestCase`, `TestBase` are old base classes for tests. Don use for any new tests. Extends LagacyApplication.
+[Note] `AbstractTestCase`, `TestBase` are old base classes for tests. Don't use for any new tests. Extends LagacyApplication.
 
 ## Creating a TestBench test for a UI
 All new test for the projects must be created as TestBench3+ tests
