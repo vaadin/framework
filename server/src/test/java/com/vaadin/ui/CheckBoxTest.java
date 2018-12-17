@@ -106,16 +106,16 @@ public class CheckBoxTest {
         hasStyleNames.removeStyleName("second");
         assertEquals("first", hasStyleNames.getStyleName());
 
-        hasStyleNames.addStyleName("second third forth");
-        assertEquals("first second third forth", hasStyleNames.getStyleName());
+        hasStyleNames.addStyleName("second third fourth");
+        assertEquals("first second third fourth", hasStyleNames.getStyleName());
 
-        hasStyleNames.removeStyleName("third forth");
+        hasStyleNames.removeStyleName("third fourth");
         assertEquals("first second", hasStyleNames.getStyleName());
 
-        hasStyleNames.addStyleNames("third", "forth");
-        assertEquals("first second third forth", hasStyleNames.getStyleName());
+        hasStyleNames.addStyleNames("third", "fourth");
+        assertEquals("first second third fourth", hasStyleNames.getStyleName());
 
-        hasStyleNames.removeStyleNames("second",  "forth");
+        hasStyleNames.removeStyleNames("second",  "fourth");
         assertEquals("first third", hasStyleNames.getStyleName());
 
         hasStyleNames.setStyleName(null);
