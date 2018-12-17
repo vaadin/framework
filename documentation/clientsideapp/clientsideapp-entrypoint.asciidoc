@@ -51,7 +51,7 @@ configuration, in a client-side module descriptor, described in
 Module Descriptor">>. The descriptor is an XML file with suffix
 [filename]#.gwt.xml#.
 
-[source, java]
+[source, xml]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module PUBLIC
