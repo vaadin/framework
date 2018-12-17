@@ -21,11 +21,13 @@ Vaadin application for OSGi should be a valid bundle, i.e. it should be packaged
 The easiest way to convert regular maven-based Vaadin application into a valid OSGi bundle consists of five steps:
 
 * Change packaging type to `jar` in your `pom.xml`:
+
 [source, xml]
 ----
     <packaging>jar</packaging>
 ----
 * Change the scope for all vaadin dependencies from default to `provided`, like this:
+
 [source, xml]
 ----
         <dependency>
@@ -35,6 +37,7 @@ The easiest way to convert regular maven-based Vaadin application into a valid O
         </dependency>
 ----
 * Add OSGi-related dependencies to the project
+
 [source, xml]
 ----
         <groupId>com.vaadin</groupId>
@@ -62,6 +65,7 @@ The easiest way to convert regular maven-based Vaadin application into a valid O
         </dependency>
 ----
 * Setup necessary plugins for building the project:
+
 [source, xml]
 ----
  <build>
@@ -93,6 +97,7 @@ The easiest way to convert regular maven-based Vaadin application into a valid O
     </build>
 ----
 * Add bundle script (`bnd.bnd`) into the project root folder:
+
 [source, text]
 ----
 Bundle-Name: ${project.name}
