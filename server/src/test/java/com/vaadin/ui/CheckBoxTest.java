@@ -71,15 +71,15 @@ public class CheckBoxTest {
     @Test
     public void getComboBoxInput() {
         CheckBox cb = new CheckBox();
-        assertNotNull("getCheckBoxInput should always return a element", cb.getCheckBoxInput());
-        assertHasStyleNames(cb.getCheckBoxInput());
+        assertNotNull("getInputElement should always return a element", cb.getInputElement());
+        assertHasStyleNames(cb.getInputElement());
     }
 
     @Test
     public void getCheckBoxLabel() {
         CheckBox cb = new CheckBox();
-        assertNotNull("getCheckBoxInput should always return a element", cb.getCheckBoxLabel());
-        assertHasStyleNames(cb.getCheckBoxLabel());
+        assertNotNull("getInputElement should always return a element", cb.getLabelElement());
+        assertHasStyleNames(cb.getLabelElement());
     }
 
     private void assertHasStyleNames(HasStyleNames hasStyleNames) {

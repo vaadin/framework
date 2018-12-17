@@ -69,17 +69,17 @@ public class CheckBox extends AbstractField<Boolean>
         }
     };
 
-    private CheckBoxInput checkBoxInput = null;
-    private CheckBoxLabel checkBoxLabel = null;
+    private CheckBoxInputElement checkBoxInputElement = null;
+    private CheckBoxLabelElement checkBoxLabelElement = null;
 
     /**
      * The inner input element of the CheckBox.
      */
-    public static class CheckBoxInput implements HasStyleNames {
+    public static class CheckBoxInputElement implements HasStyleNames {
 
         private final CheckBox checkBox;
 
-        private CheckBoxInput(CheckBox checkBox){
+        private CheckBoxInputElement(CheckBox checkBox){
             this.checkBox = checkBox;
         }
 
@@ -158,11 +158,11 @@ public class CheckBox extends AbstractField<Boolean>
     /**
      * The inner label element of the CheckBox.
      */
-    public static class CheckBoxLabel implements HasStyleNames {
+    public static class CheckBoxLabelElement implements HasStyleNames {
 
         private final CheckBox checkBox;
 
-        private CheckBoxLabel(CheckBox checkBox){
+        private CheckBoxLabelElement(CheckBox checkBox){
             this.checkBox = checkBox;
         }
 
@@ -386,30 +386,30 @@ public class CheckBox extends AbstractField<Boolean>
     }
 
     /**
-     * Returns the {@link CheckBoxInput} element to manipulate
+     * Returns the {@link CheckBoxInputElement} element to manipulate
      * the style name of the {@code input} element of the {@link CheckBox}.
      *
      * @since
-     * @return the current {@link CheckBoxInput}, not {@code null}.
+     * @return the current {@link CheckBoxInputElement}, not {@code null}.
      */
-    public CheckBoxInput getCheckBoxInput() {
-        if(checkBoxInput == null) {
-            checkBoxInput = new CheckBoxInput(this);
+    public CheckBoxInputElement getInputElement() {
+        if(checkBoxInputElement == null) {
+            checkBoxInputElement = new CheckBoxInputElement(this);
         }
-        return checkBoxInput;
+        return checkBoxInputElement;
     }
 
     /**
-     * Returns the {@link CheckBoxLabel} element to manipulate
+     * Returns the {@link CheckBoxLabelElement} element to manipulate
      * the style name of the {@code label} element of the {@link CheckBox}.
      *
      * @since
-     * @return the current {@link CheckBoxLabel}, not {@code null}.
+     * @return the current {@link CheckBoxLabelElement}, not {@code null}.
      */
-    public CheckBoxLabel getCheckBoxLabel() {
-        if(checkBoxLabel == null) {
-            checkBoxLabel = new CheckBoxLabel(this);
+    public CheckBoxLabelElement getLabelElement() {
+        if(checkBoxLabelElement == null) {
+            checkBoxLabelElement = new CheckBoxLabelElement(this);
         }
-        return checkBoxLabel;
+        return checkBoxLabelElement;
     }
 }
