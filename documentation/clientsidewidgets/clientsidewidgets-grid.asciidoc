@@ -29,7 +29,7 @@ modify the element as needed.
 
 For example, [classname]#TextRenderer# is implemented simply as follows:
 
-
+[source, java] 
 ----
 public class TextRenderer implements Renderer<String> {
     @Override
@@ -44,7 +44,7 @@ The server-side renderer API should extend [classname]#AbstractRenderer# or
 [classname]#ClickableRenderer# with the data type accepted by the renderer. The
 data type also must be given for the superclass constructor.
 
-
+[source, java] 
 ----
 public class TextRenderer extends AbstractRenderer<String> {
     public TextRenderer() {
@@ -56,7 +56,7 @@ public class TextRenderer extends AbstractRenderer<String> {
 The client-side and server-side renderer need to be connected with a connector
 extending from [classname]#AbstractRendererConnector#.
 
-
+[source, java] 
 ----
 @Connect(com.vaadin.ui.renderer.TextRenderer.class)
 public class TextRendererConnector
