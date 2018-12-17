@@ -42,7 +42,7 @@ and other classes needed by shared-state or RPC communication.
 For example, you could have the following definitions in the
 [filename]#.gwt.xml# descriptor:
 
-[source, java]
+[source, xml]
 ----
     <source path="client" />
     <source path="shared" />
