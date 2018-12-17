@@ -12,7 +12,7 @@ starts, much like the [methodname]#init()# method in server-side Vaadin UIs.
 
 Consider the following application:
 
-
+[source, java]
 ----
 package com.example.myapp.client;
 
@@ -51,7 +51,7 @@ configuration, in a client-side module descriptor, described in
 Module Descriptor">>. The descriptor is an XML file with suffix
 [filename]#.gwt.xml#.
 
-
+[source, java]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module PUBLIC
