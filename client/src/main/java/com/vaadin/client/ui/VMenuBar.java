@@ -910,6 +910,7 @@ public class VMenuBar extends FocusableFlowPanel implements
             super.onLoad();
             if (getParentMenu() != null
                     && getParentMenu().getParentMenu() == null
+                    && getParentMenu().getItems().size() >= 1
                     && getParentMenu().getItems().get(0).equals(this)) {
                 getElement().setAttribute("tabindex", "0");
             } else {
