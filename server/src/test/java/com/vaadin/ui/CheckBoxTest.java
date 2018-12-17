@@ -78,7 +78,7 @@ public class CheckBoxTest {
     @Test
     public void getCheckBoxLabel() {
         CheckBox cb = new CheckBox();
-        assertNotNull("getInputElement should always return a element", cb.getLabelElement());
+        assertNotNull("getLabelElement should always return a element", cb.getLabelElement());
         assertHasStyleNames(cb.getLabelElement());
     }
 
