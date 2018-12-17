@@ -1,5 +1,7 @@
 package com.vaadin.tests.components.combobox;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
@@ -8,8 +10,6 @@ import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-
-import static org.junit.Assert.assertEquals;
 
 public class ComboBoxMixedUpdateTest extends MultiBrowserTest {
 
@@ -29,7 +29,7 @@ public class ComboBoxMixedUpdateTest extends MultiBrowserTest {
     }
 
     private void sendKeysToInput(CharSequence... keys) {
-        comboBox.clear();       
+        comboBox.clear();
         // ensure mouse is located over the ComboBox to avoid hover issues
         new Actions(getDriver()).moveToElement(comboBox).perform();
         comboBox.sendKeys(keys);

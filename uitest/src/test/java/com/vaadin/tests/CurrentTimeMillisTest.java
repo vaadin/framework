@@ -1,5 +1,9 @@
 package com.vaadin.tests;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import org.junit.Test;
@@ -10,10 +14,6 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Test to check high resolution time availability in browser (depending on
@@ -27,7 +27,6 @@ public class CurrentTimeMillisTest extends MultiBrowserTest {
     public void testJsonParsing() {
         setDebug(true);
         openTestURL();
-        assertNoErrorNotifications();
 
         boolean phantomJs1 = BrowserUtil.isPhantomJS(getDesiredCapabilities())
                 && "1".equals(getDesiredCapabilities().getVersion());
