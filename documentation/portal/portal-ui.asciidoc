@@ -10,7 +10,7 @@ layout: page
 A portlet UI is just like in a regular Vaadin application, a class that extends
 [classname]#com.vaadin.ui.UI#.
 
-
+[source, java]
 ----
 @Theme("myportlet")
 public class MyportletUI extends UI {
@@ -72,6 +72,7 @@ the Project">>.
 
 Otherwise, the following snippet can be used.
 
+[source, java]
 ----
     @WebServlet(value = "/*", asyncSupported = true)
     @VaadinServletConfiguration(productionMode = false,
