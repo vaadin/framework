@@ -24,7 +24,7 @@ There are a couple of helper UI super classes which you can use for the test. Yo
   * Base classes for generic component tests. Generates test which have a menu on the top containing options for configuring the component. Classes follow the same component hierarchy as Vaadin component classes and this way automatically gets menu items for setting features the parent class supports.
     * Gotcha: If you add a new feature to a menu you need to run and possibly (probably) fix all TB tests which use the class as they will click on the wrong item (fixable by implementing [http://dev.vaadin.com/ticket/11307](http://dev.vaadin.com/ticket/11307))
 
-[Note] `AbstractTestCase`, `TestBase` are old base classes for tests. Don't use for any new tests. Extends LagacyApplication.
+[Note] `AbstractTestCase` and `TestBase` are old base classes for tests. Don't use them for any new tests. They extend `LegacyApplication` which is a deprecated class..
 
 ## Creating a TestBench test for a UI
 All new test for the projects must be created as TestBench3+ tests
@@ -118,17 +118,17 @@ Running remotely on a single browser (as described above) can be used to debug i
 #### Debugging locally
 A better option is to run the test on a local browser instance. To do this you need to add a `@RunLocally` annotation to the test class. `@RunLocally` uses Firefox by default but also supports other browsers using `@RunLocally(CHROME)`, `@RunLocally(SAFARI)`, `@RunLocally(Browser.IE11)` and `@RunLocally(PHANTOMJS)`.
 
-By default using `@RunLocally` annotation in Framework tests is not allowed. You need to uncomment the line `com.vaadin.testbench.allowRunLocally=true` in `work/eclipse-run-selected-test.properties`.
+By default using `@RunLocally` annotation in Framework tests is not allowed. In order to run a test locally, you need to uncomment the line `com.vaadin.testbench.allowRunLocally=true` in `work/eclipse-run-selected-test.properties`.
 
 Besides, some local configurations are needed for certain browsers, especially if you did not install them in the “standard” locations.
 
 **PhantomJS**: PhantomJS is a headless browser, good especially for fast validation. Download it from the [PhantomJS site](http://phantomjs.org/download.html) and add the binary to your PATH. 
 
-**Firefox**: If you have Firefox in your PATH, this is everything you need. If Firefox cannot be started, add a **firefox.path** property to `/work/eclipse-run-selected-test.properties`, pointing to your Firefox binary (e.g.`firefox.path=/Applications/Firefox 17 ESR.app/Contents/MacOS/firefox`)
+**Firefox**: If you have Firefox in your PATH, this is everything you need. If Firefox cannot be started, add a **firefox.path** property to `/work/eclipse-run-selected-test.properties`, pointing to your Firefox binary (e.g.`firefox.path=/Applications/Firefox 17 ESR.app/Contents/MacOS/firefox`).
 
-**Chrome**: You need to [download ChromeDriver](http://chromedriver.storage.googleapis.com/index.html) and add a chrome.driver.path property to `/work/eclipse-run-selected-test.properties`, pointing to the ChromeDriver binary (NOT the Chrome binary)
+**Chrome**: You need to [download ChromeDriver](http://chromedriver.storage.googleapis.com/index.html) and add a chrome.driver.path property to `/work/eclipse-run-selected-test.properties`, pointing to the ChromeDriver binary (NOT the Chrome binary).
 
-**IE11**: You need to [download IEDriverServer according to the selenium version](http://selenium-release.storage.googleapis.com/index.html) and add a webdriver.ie.driver property to `/work/eclipse-run-selected-test.properties`, point to the IEDriveServer binary
+**IE11**: You need to [download IEDriverServer according to the selenium version](http://selenium-release.storage.googleapis.com/index.html) and add a webdriver.ie.driver property to `/work/eclipse-run-selected-test.properties`, point to the IEDriveServer binary.
 
 **Safari**: At least on Mac, no configuration should be needed.
 
