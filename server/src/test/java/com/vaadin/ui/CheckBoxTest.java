@@ -1,16 +1,16 @@
 package com.vaadin.ui;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 
 import com.vaadin.server.ServerRpcManager;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.tests.util.MockUI;
+
+import static org.junit.Assert.*;
 
 public class CheckBoxTest {
     @Test
@@ -66,6 +66,72 @@ public class CheckBoxTest {
     public void setValue_nullValue_throwsNPE() {
         CheckBox cb = new CheckBox();
         cb.setValue(null);
+    }
+
+    @Test
+    public void getComboBoxInput() {
+        CheckBox cb = new CheckBox();
+        assertNotNull("getCheckBoxInput should always return a element", cb.getCheckBoxInput());
+        assertHasStyleNames(cb.getCheckBoxInput());
+    }
+
+    @Test
+    public void getCheckBoxLabel() {
+        CheckBox cb = new CheckBox();
+        assertNotNull("getCheckBoxInput should always return a element", cb.getCheckBoxLabel());
+        assertHasStyleNames(cb.getCheckBoxLabel());
+    }
+
+    private void assertHasStyleNames(HasStyleNames hasStyleNames) {
+        assertEquals(StringUtils.EMPTY, hasStyleNames.getStyleName());
+
+        hasStyleNames.addStyleName("first");
+        assertEquals("first", hasStyleNames.getStyleName());
+
+        hasStyleNames.addStyleName("first");
+        assertEquals("Adding two times the same style should be ignored",
+                "first", hasStyleNames.getStyleName());
+
+        hasStyleNames.addStyleName(null);
+        assertEquals("Adding null as style should be ignored",
+                "first", hasStyleNames.getStyleName());
+
+        hasStyleNames.addStyleName(StringUtils.EMPTY);
+        assertEquals("Adding an empty string as style should be ignored",
+                "first", hasStyleNames.getStyleName());
+
+        hasStyleNames.addStyleName("second");
+        assertEquals("first second", hasStyleNames.getStyleName());
+
+        hasStyleNames.removeStyleName("second");
+        assertEquals("first", hasStyleNames.getStyleName());
+
+        hasStyleNames.addStyleName("second third forth");
+        assertEquals("first second third forth", hasStyleNames.getStyleName());
+
+        hasStyleNames.removeStyleName("third forth");
+        assertEquals("first second", hasStyleNames.getStyleName());
+
+        hasStyleNames.addStyleNames("third", "forth");
+        assertEquals("first second third forth", hasStyleNames.getStyleName());
+
+        hasStyleNames.removeStyleNames("second",  "forth");
+        assertEquals("first third", hasStyleNames.getStyleName());
+
+        hasStyleNames.setStyleName(null);
+        assertEquals("Setting null as style should reset them",
+                StringUtils.EMPTY, hasStyleNames.getStyleName());
+
+        hasStyleNames.setStyleName("set-style");
+        assertEquals("set-style", hasStyleNames.getStyleName());
+
+        hasStyleNames.setStyleName(StringUtils.EMPTY);
+        assertEquals("Setting an empty string as style should reset them",
+                StringUtils.EMPTY, hasStyleNames.getStyleName());
+
+        hasStyleNames.setStyleName("set-style multiple values");
+        assertEquals("set-style multiple values", hasStyleNames.getStyleName());
+
     }
 
 }
