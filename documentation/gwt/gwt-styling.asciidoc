@@ -22,7 +22,7 @@ sub-elements as it desires.
 For example, you could style a composite widget with an overall style and with
 separate styles for the sub-widgets as follows:
 
-
+[source, java]
 ----
 public class MyPickerWidget extends ComplexPanel {
     public static final String CLASSNAME = "mypicker";
