@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui.checkbox;
 
+import java.util.List;
+
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -38,8 +40,6 @@ import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.shared.ui.checkbox.CheckBoxState;
 import com.vaadin.ui.CheckBox;
 
-import java.util.List;
-
 /**
  * The client-side connector for the {@code CheckBoxGroup} component.
  *
@@ -54,7 +54,7 @@ public class CheckBoxConnector extends AbstractFieldConnector
      * The style names from getState().inputStyles which are currently applied
      * to the checkbox.
      *
-     * @since
+     * @since 8.7
      */
     private JsArrayString inputStyleNames = JsArrayString.createArray().cast();
 
@@ -62,7 +62,7 @@ public class CheckBoxConnector extends AbstractFieldConnector
      * The style names from getState().labelStyles which are currently applied
      * to the checkbox.
      *
-     * @since
+     * @since 8.7
      */
     private JsArrayString labelStyleNames = JsArrayString.createArray().cast();
 

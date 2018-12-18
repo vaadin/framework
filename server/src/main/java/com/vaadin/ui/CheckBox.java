@@ -389,7 +389,7 @@ public class CheckBox extends AbstractField<Boolean>
      * Returns the {@link CheckBoxInputElement} element to manipulate
      * the style name of the {@code input} element of the {@link CheckBox}.
      *
-     * @since
+     * @since 8.7
      * @return the current {@link CheckBoxInputElement}, not {@code null}.
      */
     public CheckBoxInputElement getInputElement() {
@@ -403,7 +403,7 @@ public class CheckBox extends AbstractField<Boolean>
      * Returns the {@link CheckBoxLabelElement} element to manipulate
      * the style name of the {@code label} element of the {@link CheckBox}.
      *
-     * @since
+     * @since 8.7
      * @return the current {@link CheckBoxLabelElement}, not {@code null}.
      */
     public CheckBoxLabelElement getLabelElement() {

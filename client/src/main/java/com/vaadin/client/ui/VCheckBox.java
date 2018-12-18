@@ -83,6 +83,7 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
      * Gives access to the input element.
      *
      * @return Element of the CheckBox itself
+     * @since 8.7
      */
     public Element getInputElement() {
         // public to allow CheckBoxState to access it.
@@ -94,7 +95,7 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
      * Gives access to the label element.
      *
      * @return Element of the Label itself
-     * @since
+     * @since 8.7
      */
     public Element getLabelElement() {
         // public to allow CheckBoxState to access it.
