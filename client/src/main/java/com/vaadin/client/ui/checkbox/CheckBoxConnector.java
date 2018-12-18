@@ -170,7 +170,6 @@ public class CheckBoxConnector extends AbstractFieldConnector
         if (ComponentStateUtil.hasStyles(serverSideStyes)) {
             // add new style names
             for (String newStyle : serverSideStyes) {
-                setWidgetStyleName(newStyle, true);
                 clientElement.addClassName(newStyle);
                 clientSideStyles.push(newStyle);
             }
