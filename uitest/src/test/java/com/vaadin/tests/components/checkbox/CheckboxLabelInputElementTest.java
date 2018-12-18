@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -30,5 +31,10 @@ public class CheckboxLabelInputElementTest extends MultiBrowserTest {
 
         assertEquals("later-applied-label-class", labelElem.getAttribute("class"));
         assertEquals("later-applied-input-class", inputElem.getAttribute("class"));
+
+        $(ButtonElement.class).caption("remove-style-2").first().click();
+
+        assertEquals(StringUtils.EMPTY, labelElem.getAttribute("class"));
+        assertEquals(StringUtils.EMPTY, inputElem.getAttribute("class"));
     }
 }

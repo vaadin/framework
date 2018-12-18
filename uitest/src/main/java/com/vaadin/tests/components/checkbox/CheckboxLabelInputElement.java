@@ -23,6 +23,11 @@ public class CheckboxLabelInputElement extends AbstractTestUIWithLog {
             cb.getInputElement().removeStyleName("my-input-class");
             cb.getLabelElement().removeStyleName("my-label-class");
         });
+
+        addButton("remove-style-2", e -> {
+            cb.getInputElement().removeStyleName("later-applied-input-class");
+            cb.getLabelElement().removeStyleName("later-applied-label-class");
+        });
     }
 
 }
