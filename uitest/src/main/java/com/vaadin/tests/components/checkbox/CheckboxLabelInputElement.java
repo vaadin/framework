@@ -4,7 +4,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.CheckBox;
 
-public class CheckboxInputValueElement extends AbstractTestUIWithLog {
+public class CheckboxLabelInputElement extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {

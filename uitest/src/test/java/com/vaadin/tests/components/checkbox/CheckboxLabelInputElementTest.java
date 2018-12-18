@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-public class CheckboxInputValueElementTest extends MultiBrowserTest {
+public class CheckboxLabelInputElementTest extends MultiBrowserTest {
 
     @Test
     public void contextClickCheckboxAndText() {
