@@ -111,7 +111,7 @@ public class CheckBoxConnector extends AbstractFieldConnector
         getWidget().setValue(getState().checked);
 
         // Set styles for input and label
-        updateStyles(getWidget().getCheckBoxElement(), inputStyleNames, getState().inputStyles);
+        updateStyles(getWidget().getInputElement(), inputStyleNames, getState().inputStyles);
         updateStyles(getWidget().getLabelElement(), labelStyleNames, getState().labelStyles);
     }
 
