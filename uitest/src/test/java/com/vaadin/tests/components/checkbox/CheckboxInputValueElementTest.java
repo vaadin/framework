@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.checkbox;
 
+import static org.junit.Assert.assertEquals;
+
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-
-import static org.junit.Assert.assertEquals;
 
 public class CheckboxInputValueElementTest extends MultiBrowserTest {
 
