@@ -135,6 +135,35 @@ public class CheckBoxTest {
         hasStyleNames.setStyleName("set-style multiple values");
         assertEquals("set-style multiple values", hasStyleNames.getStyleName());
 
+        hasStyleNames.setStyleName("set-style", false);
+        assertEquals("multiple values", hasStyleNames.getStyleName());
+
+        hasStyleNames.setStyleName(StringUtils.EMPTY, false);
+        assertEquals("Removing an empty style should be ignored",
+                "multiple values", hasStyleNames.getStyleName());
+
+        // FIXME? - should a null style be ignored? Currently it throws a NPE like the implemenation in Component
+        //hasStyleNames.setStyleName(null, false);
+        //assertEquals("Removing a null style should be ignored",
+        //        "multiple values", hasStyleNames.getStyleName());
+
+        hasStyleNames.setStyleName(StringUtils.EMPTY, true);
+        assertEquals("Adding an empty style should be ignored",
+                "multiple values", hasStyleNames.getStyleName());
+
+        hasStyleNames.setStyleName(null, true);
+        assertEquals("Adding a null style should be ignored",
+                "multiple values", hasStyleNames.getStyleName());
+
+        hasStyleNames.setStyleName("multiple values", false);
+        assertEquals(StringUtils.EMPTY, hasStyleNames.getStyleName());
+
+        hasStyleNames.setStyleName("set-style", true);
+        assertEquals("set-style", hasStyleNames.getStyleName());
+
+        hasStyleNames.setStyleName("multiple values", true);
+        assertEquals("set-style multiple values", hasStyleNames.getStyleName());
+
     }
 
 }
