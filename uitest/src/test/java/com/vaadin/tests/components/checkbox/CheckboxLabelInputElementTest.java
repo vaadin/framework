@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -32,9 +31,9 @@ public class CheckboxLabelInputElementTest extends MultiBrowserTest {
         assertEquals("my-label-class later-applied-label-class", labelElem.getAttribute("class"));
         assertEquals("my-input-class later-applied-input-class", inputElem.getAttribute("class"));
         assertTrue("The Checkbox Widget should not contain the classes that are " +
-                        "defined as style names for the input or label.",
+                "defined as style names for the input or label.",
                 !checkBoxElement.getAttribute("class").contains("later-applied-label-class") &&
-                        !checkBoxElement.getAttribute("class").contains("later-applied-input-class"));
+                !checkBoxElement.getAttribute("class").contains("later-applied-input-class"));
 
         $(ButtonElement.class).caption("remove-style").first().click();
 
@@ -43,7 +42,7 @@ public class CheckboxLabelInputElementTest extends MultiBrowserTest {
 
         $(ButtonElement.class).caption("remove-style-2").first().click();
 
-        assertEquals(StringUtils.EMPTY, labelElem.getAttribute("class"));
-        assertEquals(StringUtils.EMPTY, inputElem.getAttribute("class"));
+        assertTrue(labelElem.getAttribute("class").isEmpty());
+        assertTrue(inputElem.getAttribute("class").isEmpty());
     }
 }

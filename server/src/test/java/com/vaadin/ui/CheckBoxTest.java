@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.commons.lang.StringUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.vaadin.server.ServerRpcManager;
@@ -85,8 +85,21 @@ public class CheckBoxTest {
         assertHasStyleNames(cb.getLabelElement());
     }
 
+    @Test
+    @Ignore("Component#setStyleName(null, false) should not throw a NPE")
+    public void setStyleName_null_false_throws_NPE() {
+        // FIXME? - Currently it throws a NPE like the implementation in Component.java
+        // waiting for other ticket that fixes the behaviour in Component.java before
+        CheckBox cb = new CheckBox();
+        cb.getLabelElement().addStyleName("first");
+        cb.getLabelElement().setStyleName(null, false);
+        assertEquals("Removing a null style should be ignored",
+                "first", cb.getLabelElement().getStyleName());
+    }
+
     private void assertHasStyleNames(HasStyleNames hasStyleNames) {
-        assertEquals(StringUtils.EMPTY, hasStyleNames.getStyleName());
+        assertEquals("Given element should not have a default style name",
+                "", hasStyleNames.getStyleName());
 
         hasStyleNames.addStyleName("first");
         assertEquals("first", hasStyleNames.getStyleName());
@@ -99,7 +112,7 @@ public class CheckBoxTest {
         assertEquals("Adding null as style should be ignored",
                 "first", hasStyleNames.getStyleName());
 
-        hasStyleNames.addStyleName(StringUtils.EMPTY);
+        hasStyleNames.addStyleName("");
         assertEquals("Adding an empty string as style should be ignored",
                 "first", hasStyleNames.getStyleName());
 
@@ -123,14 +136,14 @@ public class CheckBoxTest {
 
         hasStyleNames.setStyleName(null);
         assertEquals("Setting null as style should reset them",
-                StringUtils.EMPTY, hasStyleNames.getStyleName());
+                "", hasStyleNames.getStyleName());
 
         hasStyleNames.setStyleName("set-style");
         assertEquals("set-style", hasStyleNames.getStyleName());
 
-        hasStyleNames.setStyleName(StringUtils.EMPTY);
+        hasStyleNames.setStyleName("");
         assertEquals("Setting an empty string as style should reset them",
-                StringUtils.EMPTY, hasStyleNames.getStyleName());
+                "", hasStyleNames.getStyleName());
 
         hasStyleNames.setStyleName("set-style multiple values");
         assertEquals("set-style multiple values", hasStyleNames.getStyleName());
@@ -138,16 +151,11 @@ public class CheckBoxTest {
         hasStyleNames.setStyleName("set-style", false);
         assertEquals("multiple values", hasStyleNames.getStyleName());
 
-        hasStyleNames.setStyleName(StringUtils.EMPTY, false);
+        hasStyleNames.setStyleName("", false);
         assertEquals("Removing an empty style should be ignored",
                 "multiple values", hasStyleNames.getStyleName());
 
-        // FIXME? - should a null style be ignored? Currently it throws a NPE like the implemenation in Component
-        //hasStyleNames.setStyleName(null, false);
-        //assertEquals("Removing a null style should be ignored",
-        //        "multiple values", hasStyleNames.getStyleName());
-
-        hasStyleNames.setStyleName(StringUtils.EMPTY, true);
+        hasStyleNames.setStyleName("", true);
         assertEquals("Adding an empty style should be ignored",
                 "multiple values", hasStyleNames.getStyleName());
 
@@ -156,7 +164,8 @@ public class CheckBoxTest {
                 "multiple values", hasStyleNames.getStyleName());
 
         hasStyleNames.setStyleName("multiple values", false);
-        assertEquals(StringUtils.EMPTY, hasStyleNames.getStyleName());
+        assertEquals("Removing all set style names should result in an empty style name",
+                "", hasStyleNames.getStyleName());
 
         hasStyleNames.setStyleName("set-style", true);
         assertEquals("set-style", hasStyleNames.getStyleName());
