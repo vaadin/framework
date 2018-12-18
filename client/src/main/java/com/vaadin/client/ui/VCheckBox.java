@@ -84,19 +84,32 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
      *
      * @return Element of the CheckBox itself
      */
-    private Element getCheckBoxElement() {
+    public Element getInputElement() {
+        // public to allow CheckBoxState to access it.
         // FIXME: Would love to use a better way to access the checkbox element
         return getElement().getFirstChildElement();
     }
 
+    /**
+     * Gives access to the label element.
+     *
+     * @return Element of the Label itself
+     * @since
+     */
+    public Element getLabelElement() {
+        // public to allow CheckBoxState to access it.
+        // FIXME: Would love to use a better way to access the label element
+        return getInputElement().getNextSiblingElement();
+    }
+
     @Override
     public void setAriaRequired(boolean required) {
-        AriaHelper.handleInputRequired(getCheckBoxElement(), required);
+        AriaHelper.handleInputRequired(getInputElement(), required);
     }
 
     @Override
     public void setAriaInvalid(boolean invalid) {
-        AriaHelper.handleInputInvalid(getCheckBoxElement(), invalid);
+        AriaHelper.handleInputInvalid(getInputElement(), invalid);
     }
 
     @Override

@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui.checkbox;
 
+import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -30,10 +32,13 @@ import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.VCheckBox;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.shared.ui.checkbox.CheckBoxState;
 import com.vaadin.ui.CheckBox;
+
+import java.util.List;
 
 /**
  * The client-side connector for the {@code CheckBoxGroup} component.
@@ -44,6 +49,22 @@ import com.vaadin.ui.CheckBox;
 @Connect(CheckBox.class)
 public class CheckBoxConnector extends AbstractFieldConnector
         implements ClickHandler {
+
+    /**
+     * The style names from getState().inputStyles which are currently applied
+     * to the checkbox.
+     *
+     * @since
+     */
+    private JsArrayString inputStyleNames = JsArrayString.createArray().cast();
+
+    /**
+     * The style names from getState().labelStyles which are currently applied
+     * to the checkbox.
+     *
+     * @since
+     */
+    private JsArrayString labelStyleNames = JsArrayString.createArray().cast();
 
     @Override
     public boolean delegateCaptionHandling() {
@@ -88,6 +109,10 @@ public class CheckBoxConnector extends AbstractFieldConnector
         VCaption.setCaptionText(getWidget(), getState());
 
         getWidget().setValue(getState().checked);
+
+        // Set styles for input and label
+        updateStyles(getWidget().getInputElement(), inputStyleNames, getState().inputStyles);
+        updateStyles(getWidget().getLabelElement(), labelStyleNames, getState().labelStyles);
     }
 
     @Override
@@ -132,6 +157,23 @@ public class CheckBoxConnector extends AbstractFieldConnector
             // its wrapper"
             DOM.sinkEvents(getWidget().getElement(), Event.ONCONTEXTMENU);
             contextEventSunk = true;
+        }
+    }
+
+    private void updateStyles(Element clientElement, JsArrayString clientSideStyles, List<String> serverSideStyes) {
+        // Remove all old stylenames
+        for (int i = 0; i < clientSideStyles.length(); i++) {
+            clientElement.removeClassName(clientSideStyles.get(i));
+        }
+        clientSideStyles.setLength(0);
+
+        if (ComponentStateUtil.hasStyles(serverSideStyes)) {
+            // add new style names
+            for (String newStyle : serverSideStyes) {
+                clientElement.addClassName(newStyle);
+                clientSideStyles.push(newStyle);
+            }
+
         }
     }
 }
