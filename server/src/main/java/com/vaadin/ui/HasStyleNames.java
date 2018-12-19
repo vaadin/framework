@@ -21,8 +21,8 @@ import java.io.Serializable;
  * Implemented by components which support style names.
  *
  * <p>
- * Each style name will occur only once as specified and it is not
- * prefixed with the style name of the component.
+ * Each style name will occur only once as specified and it is not prefixed with
+ * the style name of the component.
  * </p>
  *
  * @since 8.7

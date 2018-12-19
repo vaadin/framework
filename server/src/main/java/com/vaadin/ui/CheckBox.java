@@ -79,7 +79,7 @@ public class CheckBox extends AbstractField<Boolean>
 
         private final CheckBox checkBox;
 
-        private CheckBoxInputElement(CheckBox checkBox){
+        private CheckBoxInputElement(CheckBox checkBox) {
             this.checkBox = checkBox;
         }
 
@@ -88,9 +88,11 @@ public class CheckBox extends AbstractField<Boolean>
         public String getStyleName() {
             // replaced String with StringBuilder
             StringBuilder s = new StringBuilder();
-            if (ComponentStateUtil.hasStyles(checkBox.getState(false).inputStyles)) {
-                for (final Iterator<String> it = checkBox.getState(false).inputStyles
-                        .iterator(); it.hasNext();) {
+            if (ComponentStateUtil
+                    .hasStyles(checkBox.getState(false).inputStyles)) {
+                for (final Iterator<String> it = checkBox
+                        .getState(false).inputStyles.iterator(); it
+                                .hasNext();) {
                     s.append(it.next());
                     if (it.hasNext()) {
                         s.append(" ");
@@ -124,7 +126,8 @@ public class CheckBox extends AbstractField<Boolean>
             if (style == null || style.isEmpty()) {
                 return;
             }
-            if (checkBox.getState().inputStyles != null && checkBox.getState().inputStyles.contains(style)) {
+            if (checkBox.getState().inputStyles != null
+                    && checkBox.getState().inputStyles.contains(style)) {
                 return;
             }
             if (style.contains(" ")) {
@@ -149,7 +152,8 @@ public class CheckBox extends AbstractField<Boolean>
             if (ComponentStateUtil.hasStyles(checkBox.getState().inputStyles)) {
                 StringTokenizer tokenizer = new StringTokenizer(style, " ");
                 while (tokenizer.hasMoreTokens()) {
-                    checkBox.getState().inputStyles.remove(tokenizer.nextToken());
+                    checkBox.getState().inputStyles
+                            .remove(tokenizer.nextToken());
                 }
             }
         }
@@ -162,7 +166,7 @@ public class CheckBox extends AbstractField<Boolean>
 
         private final CheckBox checkBox;
 
-        private CheckBoxLabelElement(CheckBox checkBox){
+        private CheckBoxLabelElement(CheckBox checkBox) {
             this.checkBox = checkBox;
         }
 
@@ -171,9 +175,11 @@ public class CheckBox extends AbstractField<Boolean>
         public String getStyleName() {
             // replaced String with StringBuilder
             StringBuilder s = new StringBuilder();
-            if (ComponentStateUtil.hasStyles(checkBox.getState(false).labelStyles)) {
-                for (final Iterator<String> it = checkBox.getState(false).labelStyles
-                        .iterator(); it.hasNext();) {
+            if (ComponentStateUtil
+                    .hasStyles(checkBox.getState(false).labelStyles)) {
+                for (final Iterator<String> it = checkBox
+                        .getState(false).labelStyles.iterator(); it
+                                .hasNext();) {
                     s.append(it.next());
                     if (it.hasNext()) {
                         s.append(" ");
@@ -207,7 +213,8 @@ public class CheckBox extends AbstractField<Boolean>
             if (style == null || style.isEmpty()) {
                 return;
             }
-            if (checkBox.getState().labelStyles != null && checkBox.getState().labelStyles.contains(style)) {
+            if (checkBox.getState().labelStyles != null
+                    && checkBox.getState().labelStyles.contains(style)) {
                 return;
             }
             if (style.contains(" ")) {
@@ -232,7 +239,8 @@ public class CheckBox extends AbstractField<Boolean>
             if (ComponentStateUtil.hasStyles(checkBox.getState().labelStyles)) {
                 StringTokenizer tokenizer = new StringTokenizer(style, " ");
                 while (tokenizer.hasMoreTokens()) {
-                    checkBox.getState().labelStyles.remove(tokenizer.nextToken());
+                    checkBox.getState().labelStyles
+                            .remove(tokenizer.nextToken());
                 }
             }
         }
@@ -386,28 +394,28 @@ public class CheckBox extends AbstractField<Boolean>
     }
 
     /**
-     * Returns the {@link CheckBoxInputElement} element to manipulate
-     * the style name of the {@code input} element of the {@link CheckBox}.
+     * Returns the {@link CheckBoxInputElement} element to manipulate the style
+     * name of the {@code input} element of the {@link CheckBox}.
      *
      * @since 8.7
      * @return the current {@link CheckBoxInputElement}, not {@code null}.
      */
     public CheckBoxInputElement getInputElement() {
-        if(checkBoxInputElement == null) {
+        if (checkBoxInputElement == null) {
             checkBoxInputElement = new CheckBoxInputElement(this);
         }
         return checkBoxInputElement;
     }
 
     /**
-     * Returns the {@link CheckBoxLabelElement} element to manipulate
-     * the style name of the {@code label} element of the {@link CheckBox}.
+     * Returns the {@link CheckBoxLabelElement} element to manipulate the style
+     * name of the {@code label} element of the {@link CheckBox}.
      *
      * @since 8.7
      * @return the current {@link CheckBoxLabelElement}, not {@code null}.
      */
     public CheckBoxLabelElement getLabelElement() {
-        if(checkBoxLabelElement == null) {
+        if (checkBoxLabelElement == null) {
             checkBoxLabelElement = new CheckBoxLabelElement(this);
         }
         return checkBoxLabelElement;

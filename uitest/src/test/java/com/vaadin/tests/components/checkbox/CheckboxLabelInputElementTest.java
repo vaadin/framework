@@ -1,14 +1,15 @@
 package com.vaadin.tests.components.checkbox;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CheckboxLabelInputElementTest extends MultiBrowserTest {
 
@@ -21,24 +22,34 @@ public class CheckboxLabelInputElementTest extends MultiBrowserTest {
 
         assertEquals("my-label-class", labelElem.getAttribute("class"));
         assertEquals("my-input-class", inputElem.getAttribute("class"));
-        assertTrue("The Checkbox Widget should not contain the classes that are " +
-                "defined as style names for the input or label.",
-                !checkBoxElement.getAttribute("class").contains("my-label-class") &&
-                !checkBoxElement.getAttribute("class").contains("my-input-class"));
+        assertTrue(
+                "The Checkbox Widget should not contain the classes that are "
+                        + "defined as style names for the input or label.",
+                !checkBoxElement.getAttribute("class")
+                        .contains("my-label-class")
+                        && !checkBoxElement.getAttribute("class")
+                                .contains("my-input-class"));
 
         $(ButtonElement.class).caption("add-style").first().click();
 
-        assertEquals("my-label-class later-applied-label-class", labelElem.getAttribute("class"));
-        assertEquals("my-input-class later-applied-input-class", inputElem.getAttribute("class"));
-        assertTrue("The Checkbox Widget should not contain the classes that are " +
-                "defined as style names for the input or label.",
-                !checkBoxElement.getAttribute("class").contains("later-applied-label-class") &&
-                !checkBoxElement.getAttribute("class").contains("later-applied-input-class"));
+        assertEquals("my-label-class later-applied-label-class",
+                labelElem.getAttribute("class"));
+        assertEquals("my-input-class later-applied-input-class",
+                inputElem.getAttribute("class"));
+        assertTrue(
+                "The Checkbox Widget should not contain the classes that are "
+                        + "defined as style names for the input or label.",
+                !checkBoxElement.getAttribute("class")
+                        .contains("later-applied-label-class")
+                        && !checkBoxElement.getAttribute("class")
+                                .contains("later-applied-input-class"));
 
         $(ButtonElement.class).caption("remove-style").first().click();
 
-        assertEquals("later-applied-label-class", labelElem.getAttribute("class"));
-        assertEquals("later-applied-input-class", inputElem.getAttribute("class"));
+        assertEquals("later-applied-label-class",
+                labelElem.getAttribute("class"));
+        assertEquals("later-applied-input-class",
+                inputElem.getAttribute("class"));
 
         $(ButtonElement.class).caption("remove-style-2").first().click();
 

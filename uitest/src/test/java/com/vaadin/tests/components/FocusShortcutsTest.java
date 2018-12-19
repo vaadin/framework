@@ -7,7 +7,6 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class FocusShortcutsTest extends SingleBrowserTest {
@@ -35,7 +34,8 @@ public class FocusShortcutsTest extends SingleBrowserTest {
 
         actions = new Actions(getDriver());
         actions.keyDown(body, Keys.LEFT_CONTROL).keyDown(body, Keys.LEFT_SHIFT)
-                .sendKeys("d").keyUp(Keys.LEFT_CONTROL).keyUp(Keys.LEFT_SHIFT).build().perform();
+                .sendKeys("d").keyUp(Keys.LEFT_CONTROL).keyUp(Keys.LEFT_SHIFT)
+                .build().perform();
 
         Assert.assertEquals("3. Ctrl+Shift+D", getLogRow(0));
     }

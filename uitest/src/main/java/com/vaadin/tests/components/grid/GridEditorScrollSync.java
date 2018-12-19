@@ -1,7 +1,9 @@
 package com.vaadin.tests.components.grid;
+
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.v7.ui.Grid;
+
 public class GridEditorScrollSync extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
@@ -23,13 +25,13 @@ public class GridEditorScrollSync extends AbstractTestUI {
         grid.setWidth("450px");
         // Add some data rows
         grid.addRow("Nicolaus Copernicus", 1543, "Nicolaus Copernicus", 1543,
-            "Nicolaus Copernicus", 1543, "Nicolaus Copernicus", 1543,
-            "Nicolaus Copernicus", 1543);
+                "Nicolaus Copernicus", 1543, "Nicolaus Copernicus", 1543,
+                "Nicolaus Copernicus", 1543);
         grid.addRow("Galileo Galilei", 1564, "Galileo Galilei", 1564,
-            "Galileo Galilei", 1564, "s", 55, "Nicolaus Copernicus", 1543);
+                "Galileo Galilei", 1564, "s", 55, "Nicolaus Copernicus", 1543);
         grid.addRow("Johannes Kepler", 1571, "Johannes Kepler", 1571,
-            "Johannes Kepler", 1571, "Nicolaus Copernicus", 1543,
-            "Nicolaus Copernicus", 1543);
+                "Johannes Kepler", 1571, "Nicolaus Copernicus", 1543,
+                "Nicolaus Copernicus", 1543);
         getLayout().addComponent(grid);
     }
 }

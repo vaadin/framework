@@ -8,7 +8,8 @@ public class CheckboxLabelInputElement extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final CheckBox cb = new CheckBox("Test custom style names for inner elements", true);
+        final CheckBox cb = new CheckBox(
+                "Test custom style names for inner elements", true);
         cb.getInputElement().addStyleName("my-input-class");
         cb.getLabelElement().addStyleName("my-label-class");
 
