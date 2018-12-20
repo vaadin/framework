@@ -21,11 +21,11 @@ import java.io.Serializable;
  * Implemented by components which support style names.
  *
  * <p>
- * Each style name will occur only once as specified and it is not
- * prefixed with the style name of the component.
+ * Each style name will occur only once as specified and it is not prefixed with
+ * the style name of the component.
  * </p>
  *
- * @since
+ * @since 8.7
  */
 public interface HasStyleNames extends Serializable {
 
@@ -40,7 +40,7 @@ public interface HasStyleNames extends Serializable {
      * added.
      * </p>
      *
-     * @since
+     * @since 8.7
      * @return the style name or a space-separated list of user-defined style
      *         names of the component
      * @see #setStyleName(String)
@@ -62,7 +62,7 @@ public interface HasStyleNames extends Serializable {
      * removing those defined in other layers.
      * </p>
      *
-     * @since
+     * @since 8.7
      * @param style
      *            the new style or styles of the component as a space-separated
      *            list
@@ -83,7 +83,7 @@ public interface HasStyleNames extends Serializable {
      * Functionally this is equivalent to using {@link #addStyleName(String)} or
      * {@link #removeStyleName(String)}
      *
-     * @since
+     * @since 8.7
      * @param style
      *            the style name to be added or removed
      * @param add
@@ -106,7 +106,7 @@ public interface HasStyleNames extends Serializable {
      * be rendered as a HTML class name, which can be used in a CSS definition.
      *
      *
-     * @since
+     * @since 8.7
      * @param style
      *            the new style to be added to the component
      * @see #getStyleName()
@@ -119,7 +119,7 @@ public interface HasStyleNames extends Serializable {
      * Adds one or more style names to this component by using one or multiple
      * parameters.
      *
-     * @since
+     * @since 8.7
      * @param styles
      *            the style name or style names to be added to the component
      * @see #addStyleName(String)
@@ -143,7 +143,7 @@ public interface HasStyleNames extends Serializable {
      * style names defined in Vaadin or GWT can not be removed.
      * </p>
      *
-     * @since
+     * @since 8.7
      * @param style
      *            the style name or style names to be removed
      * @see #getStyleName()
@@ -163,7 +163,7 @@ public interface HasStyleNames extends Serializable {
      * style names defined in Vaadin or GWT can not be removed.
      * </p>
      *
-     * @since
+     * @since 8.7
      * @param styles
      *            the style name or style names to be removed
      * @see #removeStyleName(String)
