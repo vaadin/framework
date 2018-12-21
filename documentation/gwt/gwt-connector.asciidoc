@@ -23,7 +23,7 @@ The basic tasks of a connector is to hook up to the widget and handle events
 from user interaction and changes received from the server. A connector also has
 a number of routine infrastructure methods which need to be implemented.
 
-
+[source,java]
 ----
 @Connect(MyComponent.class)
 public class MyComponentConnector
