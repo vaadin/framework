@@ -845,8 +845,21 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public static class Column<T, V> extends AbstractExtension {
 
+        /**
+         * behavior when parsing nested properties which may contain
+         * <code>null</code> values in the property chain
+         */
         public enum NestedNullBehavior {
-            THROW, ALLOW_NULLS
+            /**
+             * throw a NullPointerException if there is a nested
+             * <code>null</code> value
+             */
+            THROW,
+            /**
+             * silently ignore any exceptions caused by nested <code>null</code>
+             * values
+             */
+            ALLOW_NULLS
         }
 
         private final ValueProvider<T, V> valueProvider;
@@ -928,7 +941,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *            the value renderer, not <code>null</code>
          */
         protected Column(ValueProvider<T, V> valueProvider,
-                         Renderer<? super V> renderer) {
+                Renderer<? super V> renderer) {
             this(valueProvider, ValueProvider.identity(), renderer);
         }
 
@@ -1020,9 +1033,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @since
          */
         protected <P> Column(ValueProvider<T, V> valueProvider,
-                             ValueProvider<V, P> presentationProvider,
-                             Renderer<? super P> renderer,
-                             NestedNullBehavior nestedNullBehavior) {
+                ValueProvider<V, P> presentationProvider,
+                Renderer<? super P> renderer,
+                NestedNullBehavior nestedNullBehavior) {
             this(valueProvider, presentationProvider, renderer);
             this.nestedNullBehavior = nestedNullBehavior;
         }
@@ -1933,9 +1946,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         public Column<T, V> setEditable(boolean editable) {
             Objects.requireNonNull(editorBinding,
                     "Column has no editor binding or component defined");
-            if (nestedNullBehavior == NestedNullBehavior.ALLOW_NULLS) {
-                throw new IllegalStateException("Column can't be editable if nested null values are allowed");
-            }
             getState().editable = editable;
             return this;
         }
@@ -2771,6 +2781,59 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
+     * Adds a new column with the given property name and renderer. The property
+     * name will be used as the {@link Column#getId() column id} and the
+     * {@link Column#getCaption() column caption} will be set based on the
+     * property definition.
+     * <p>
+     * This method can only be used for a <code>Grid</code> created using
+     * {@link Grid#Grid(Class)} or {@link #withPropertySet(PropertySet)}.
+     * <p>
+     * You can add columns for nested properties with dot notation, eg.
+     * <code>"property.nestedProperty"</code>
+     *
+     * @param propertyName
+     *            the property name of the new column, not <code>null</code>
+     * @param renderer
+     *            the renderer to use, not <code>null</code>
+     * @param nestedNullBehavior
+     *            the behavior when
+     * @return the newly added column, not <code>null</code>
+     */
+    public Column<T, ?> addColumn(String propertyName,
+            AbstractRenderer<? super T, ?> renderer,
+            Column.NestedNullBehavior nestedNullBehavior) {
+        Objects.requireNonNull(propertyName, "Property name cannot be null");
+        Objects.requireNonNull(renderer, "Renderer cannot be null");
+
+        if (getColumn(propertyName) != null) {
+            throw new IllegalStateException(
+                    "There is already a column for " + propertyName);
+        }
+
+        PropertyDefinition<T, ?> definition = propertySet
+                .getProperty(propertyName)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Could not resolve property name " + propertyName
+                                + " from " + propertySet));
+
+        if (!renderer.getPresentationType()
+                .isAssignableFrom(definition.getType())) {
+            throw new IllegalArgumentException(
+                    renderer + " cannot be used with a property of type "
+                            + definition.getType().getName());
+        }
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        Column<T, ?> column = createColumn(definition.getGetter(),
+                ValueProvider.identity(), (AbstractRenderer) renderer,
+                nestedNullBehavior);
+        String generatedIdentifier = getGeneratedIdentifier();
+        addColumn(generatedIdentifier, column);
+        column.setId(definition.getName()).setCaption(definition.getCaption());
+        return column;
+    }
+
+    /**
      * Adds a new text column to this {@link Grid} with a value provider. The
      * column will use a {@link TextRenderer}. The value is converted to a
      * String using {@link Object#toString()}. In-memory sorting will use the
@@ -2910,7 +2973,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             ValueProvider<T, V> valueProvider,
             ValueProvider<V, P> presentationProvider,
             AbstractRenderer<? super T, ? super P> renderer) {
-        return new Column<T, V>(valueProvider, presentationProvider, renderer);
+        return new Column<>(valueProvider, presentationProvider, renderer);
     }
 
     /**
@@ -2933,12 +2996,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @since
      */
-    private <V, P> Column<T, V> createColumn(
-            ValueProvider<T, V> valueProvider,
+    private <V, P> Column<T, V> createColumn(ValueProvider<T, V> valueProvider,
             ValueProvider<V, P> presentationProvider,
             AbstractRenderer<? super T, ? super P> renderer,
             Column.NestedNullBehavior nestedNullBehavior) {
-        return new Column<T, V>(valueProvider, presentationProvider, renderer, nestedNullBehavior);
+        return new Column<>(valueProvider, presentationProvider, renderer,
+                nestedNullBehavior);
     }
 
     private void addColumn(String identifier, Column<T, ?> column) {
