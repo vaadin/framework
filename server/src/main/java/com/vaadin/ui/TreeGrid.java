@@ -55,6 +55,9 @@ import com.vaadin.ui.declarative.DesignFormatter;
 /**
  * A grid component for displaying hierarchical tabular data.
  *
+ * Visual hierarchy depth positioning of rows is done via styles, see
+ * <code>_treegrid.scss</code> from Valo theme.
+ *
  * @author Vaadin Ltd
  * @since 8.1
  *
