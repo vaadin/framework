@@ -221,26 +221,6 @@ public class TreeGrid<T> extends Grid<T>
     }
 
     /**
-     * This method is inherited from Grid but should never be called directly
-     * with a TreeGrid
-     */
-    @Deprecated
-    @Override
-    public void scrollToEnd() {
-        super.scrollToEnd();
-    }
-
-    /**
-     * This method is inherited from Grid but should never be called directly
-     * with a TreeGrid
-     */
-    @Deprecated
-    @Override
-    public void scrollToStart() {
-        super.scrollToStart();
-    }
-
-    /**
      * Adds an ExpandListener to this TreeGrid.
      *
      * @see ExpandEvent
