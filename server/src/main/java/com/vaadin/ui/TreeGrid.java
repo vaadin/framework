@@ -43,6 +43,7 @@ import com.vaadin.event.CollapseEvent.CollapseListener;
 import com.vaadin.event.ExpandEvent;
 import com.vaadin.event.ExpandEvent.ExpandListener;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.treegrid.FocusParentRpc;
 import com.vaadin.shared.ui.treegrid.FocusRpc;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
@@ -197,6 +198,46 @@ public class TreeGrid<T> extends Grid<T>
                 getRpcProxy(FocusRpc.class).focusCell(parentIndex, cellIndex);
             }
         });
+    }
+
+    /**
+     * This method is inherited from Grid but should never be called directly
+     * with a TreeGrid
+     */
+    @Override
+    @Deprecated
+    public void scrollTo(int row) throws IllegalArgumentException {
+        super.scrollTo(row);
+    }
+
+    /**
+     * This method is inherited from Grid but should never be called directly
+     * with a TreeGrid
+     */
+    @Deprecated
+    @Override
+    public void scrollTo(int row, ScrollDestination destination) {
+        super.scrollTo(row, destination);
+    }
+
+    /**
+     * This method is inherited from Grid but should never be called directly
+     * with a TreeGrid
+     */
+    @Deprecated
+    @Override
+    public void scrollToEnd() {
+        super.scrollToEnd();
+    }
+
+    /**
+     * This method is inherited from Grid but should never be called directly
+     * with a TreeGrid
+     */
+    @Deprecated
+    @Override
+    public void scrollToStart() {
+        super.scrollToStart();
     }
 
     /**
