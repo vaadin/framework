@@ -1,0 +1,271 @@
+//
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+//
+// This script is run each time a shell is created.
+// You can define here closures or variables that will be available
+// in each session.
+//
+
+__option_not_present = {
+  res = true
+  opts = $argv
+  each $opts {
+      arg = $it
+      each ($.commandLine words) {
+          if { ($it toString) equals ($arg toString) } {
+              res = false
+          }
+      }
+  }
+  $res
+}
+
+__set_unset_arguments = {
+  is_setopt = (($.commandLine words) get 0) equals "setopt"
+  enums = ((__load_class 'org.jline.reader.LineReader$Option') enumConstants)
+  candidates = new ArrayList
+  each $enums {
+      name = ${(GL)it/_/-}
+      is_set = ($.reader isSet $it)
+      neg = %(( if(is_setopt, is_set, not(is_set)) ))
+      if { $neg } {
+          name = "no-${name}"
+      }
+      if { not  { (($.commandLine words) subList 1 ($.commandLine wordIndex)) contains $name } } {
+          $candidates add (new org.jline.reader.Candidate $name $name (if { $neg } { "unset" } { "set" }) null null null true)
+      }
+  }
+  $candidates
+}
+
+jlineReader = $.reader
+if { %(jlineReader != null) } {
+
+  complete -c shell:complete -e
+  complete -c shell:complete -d "Edit command specific completions"
+  complete -c shell:complete -s c -l command --description "Command to add completion to" -n '__option_not_present -c --command' -a '$.commands'
+  complete -c shell:complete -s s -l short-option --description "Posix-style option to complete" -n '__option_not_present -s --short-option'
+  complete -c shell:complete -s l -l long-option --description "GNU-style option to complete" -n '__option_not_present -l --long-option'
+  complete -c shell:complete -s a -l arguments --description "A list of possible arguments" -n '__option_not_present -a --argument'
+  complete -c shell:complete -s d -l description --description "Description of this completions" -n '__option_not_present -d --description'
+  complete -c shell:complete -s h -l help --description "Display help and exit" -n '__option_not_present -h --help'
+  complete -c shell:complete -s n -l condition --description "The completion should only be used if the specified command has a zero exit status"  -n '__option_not_present -n --condition'
+  complete -c shell:complete -s e -l erase --description "Remove completion"  -n '__option_not_present -e --erase'
+
+  complete -c shell:history -e
+  complete -c shell:history -d "Show and manipulate command history"
+  complete -c shell:history -l clear --description "Clear history" -n '__option_not_present --clear'
+  complete -c shell:history -l save --description "Save history" -n '__option_not_present --save'
+
+  complete -c shell:setopt -e
+  complete -c shell:setopt -d "Set or view set shell options"
+  complete -c shell:setopt -a '__set_unset_arguments'
+
+  complete -c shell:unsetopt -e
+  complete -c shell:unsetopt -d "Unset or view unset shell options"
+  complete -c shell:unsetopt -a '__set_unset_arguments'
+
+  complete -c shell:cat -e
+  complete -c shell:cat -d "Concatenate and print files"
+  complete -c shell:cat -s n "Number the output lines, starting at 1"
+  complete -c shell:cat -a '__files'
+
+  complete -c shell:pwd -e
+  complete -c shell:pwd -d "Get current directory"
+
+  complete -c shell:ls -e
+  complete -c shell:ls -d "List files"
+
+  complete -c shell:cd -e
+  complete -c shell:cd -d "Change current directory"
+  complete -c shell:cd -a 'wi = ($.commandLine wordIndex); if { %(wi==1) } { __directories } { [ ] }'
+
+  complete -c shell:sleep -e
+  complete -c shell:sleep -d "Pause execution for the specified amount of time"
+
+  complete -c shell:echo -e
+  complete -c shell:echo -d "Write arguments to the standard output"
+  complete -c shell:echo -s n -d "No trailing new line"
+
+  complete -c shell:grep -e
+  complete -c shell:grep -d "File pattern searcher"
+  # TODO
+
+  complete -c shell:sort -e
+  complete -c shell:sort -d "Sort lines of text files"
+  # TODO
+
+  complete -c shell:gosh -e
+  complete -c shell:gosh -d "Execute script with arguments in a new session"
+  # TODO
+
+  complete -c shell:sh -e
+  complete -c shell:sh -d "Execute script with arguments in a new session"
+  # TODO
+
+  complete -c shell:source -e
+  complete -c shell:source -d "Execute script with arguments"
+  # TODO
+
+  # TODO: format getopt new set tac type addcommand removeCommand eval
+
+  complete -c shell:break -e
+  complete -c shell:break -d "Break from a loop"
+
+  complete -c shell:continue -e
+  complete -c shell:continue -d "Continue to next iteration in a loop"
+
+  complete -c shell:each -e
+  complete -c shell:each -d "Loop and execute script on the specified elements"
+
+  complete -c shell:if -e
+  complete -c shell:if -d "Conditionaly execute a script"
+
+  complete -c shell:new -e
+  complete -c shell:new -d "Creates new instance of the given java class"
+
+  complete -c shell:not -e
+  complete -c shell:not -d "Negates the result of a script"
+
+  complete -c shell:throw -e
+  complete -c shell:throw -d "Throws an exception"
+
+  complete -c shell:try -e
+  complete -c shell:try -d "Try executing a script and catch any exception"
+
+  complete -c shell:until -e
+  complete -c shell:until -d "Loop and execute script until a condition is satisfied"
+
+  complete -c shell:while -e
+  complete -c shell:while -d "Loop and execute script while a condition is satisfied"
+
+  complete -c shell:less -e
+  complete -c shell:less -d "File pager"
+  complete -c shell:less -s e -l quit-at-eof --description "Exit on second EOF"
+  complete -c shell:less -s E -l QUIT-AT-EOF --description "Exit on EOF"
+  complete -c shell:less -s q -l quiet -l silent --description "Silent mode"
+  complete -c shell:less -s Q -l QUIET -l SILENT --description "Completely  silent"
+  complete -c shell:less -s S -l chop-long-lines --description "Do not fold long lines"
+  complete -c shell:less -s i -l ignore-case --description "Search ignores lowercase case"
+  complete -c shell:less -s I -l IGNORE-CASE --description "Search ignores all case"
+  complete -c shell:less -s x -l tabs --description "Set tab stops"
+  complete -c shell:less -s N -l LINE-NUMBERS --description "Display line number for each line"
+  complete -c shell:less -a '__files'
+
+  complete -c shell:nano -e
+  complete -c shell:nano -d "File editor"
+  complete -c shell:nano -a '__files'
+
+  complete -c shell:keymap -e
+  complete -c shell:keymap -d "Manipulate keymaps"
+  complete -c shell:keymap -s N --description "Create a new keymap" -n '__option_not_present -N -d -D -l -r -s -A'
+  complete -c shell:keymap -s d --description "Delete existing keymaps and reset to default state" -n '__option_not_present -N -d -D -l -r -s -A'
+  complete -c shell:keymap -s D --description "Delete named keymaps" -n '__option_not_present -N -d -D -l -r -s -A'
+  complete -c shell:keymap -s l --description "List existing keymap names" -n '__option_not_present -N -d -D -l -r -s -A'
+  complete -c shell:keymap -s r --description "Unbind specified in-strings" -n '__option_not_present -N -d -D -l -r -s -A'
+  complete -c shell:keymap -s s --description "Bind each in-string to each out-string" -n '__option_not_present -N -d -D -l -r -s -A'
+  complete -c shell:keymap -s A --description "Create alias to keymap" -n '__option_not_present -N -d -D -l -r -s -A'
+  complete -c shell:keymap -s e --description "Select emacs keymap and bind it to main" -n '__option_not_present -e -a -v -M'
+  complete -c shell:keymap -s v --description "Select viins keymap and bind it to main" -n '__option_not_present -e -a -v -M'
+  complete -c shell:keymap -s a --description "Select vicmd keymap" -n '__option_not_present -e -a -v -M'
+  complete -c shell:keymap -s M --description "Specify keymap to select" -n '__option_not_present -e -a -v -M' -a '(keymap -l | tac) split " "'
+  complete -c shell:keymap -s R --description "Interpret in-strings as ranges"
+  complete -c shell:keymap -s p --description "List bindings which have given key sequence as a a prefix"
+  complete -c shell:keymap -s L --description "Output in form of keymap commands"
+
+  complete -c shell:widget -e
+  complete -c shell:widget -d "Manipulate widgets"
+  complete -c shell:widget -s N --description "Create a new widget" -n '__option_not_present -N -A -D -U -l'
+  complete -c shell:widget -s A --description "Create alias to widget" -n '__option_not_present -N -A -D -U -l'
+  complete -c shell:widget -s D --description "Delete widgets" -n '__option_not_present -N -A -D -U -l'
+  complete -c shell:widget -s U --description "Push characters to the stack" -n '__option_not_present -N -A -D -U -l'
+  complete -c shell:widget -s l --description "List user-defined widgets" -n '__option_not_present -N -A -D -U -l'
+  complete -c shell:widget -s a --description "With -l, list all widgets" -n '__option_not_present -l'
+
+  complete -c shell:bg -e
+  complete -c shell:bg -d "Put job in background"
+
+  complete -c shell:fg -e
+  complete -c shell:fg -d "Put job in foreground"
+
+  complete -c shell:jobs -e
+  complete -c shell:jobs -d "List jobs"
+
+  complete -c shell:clear -e
+  complete -c shell:clear -d "Clear screen"
+
+  complete -c shell:head -e
+  complete -c shell:head -d "Displays first lines of file"
+  complete -c shell:head -s n -l lines --description "Print line counts"
+  complete -c shell:head -s c -l bytes --description "Print byte counts"
+  complete -c shell:head -a '__files'
+
+  complete -c shell:tail -e
+  complete -c shell:tail -d "Displays last lines of file"
+  complete -c shell:tail -s q -l quiet --description "Suppress headers when printing multiple sources"
+  complete -c shell:tail -s f -l follow --description "Do not stop at end of file"
+  complete -c shell:tail -s F -l FOLLOW --description "Follow and check for file renaming or rotation"
+  complete -c shell:tail -s n -l lines --description "Number of lines to print"
+  complete -c shell:tail -s c -l bytes --description "Number of bytes to print"
+  complete -c shell:tail -a '__files'
+
+  complete -c shell:date -e
+  complete -c shell:date -d "Display date and time"
+  complete -c shell:date -s u --description "Use UTC"
+  complete -c shell:date -s r --description "Print the date represented by 'seconds' since January 1, 1970"
+  complete -c shell:date -s v --description "Adjust date"
+  complete -c shell:date -s f --description "Use 'input_fmt' to parse 'new_date'"
+
+  complete -c shell:wc -e
+  complete -c shell:wc -d "Word, line, character, and byte count"
+  complete -c shell:wc -s n -l lines --description "Print line count"
+  complete -c shell:wc -s c -l bytes --description "Print byte count"
+  complete -c shell:wc -s m -l chars --description "Print character count"
+  complete -c shell:wc -s w -l words --description "Print word count"
+  complete -c shell:wc -a '__files'
+
+  __get_scr_components = {
+	list = [ ]
+    scrref = ($.context getServiceReference org.osgi.service.component.runtime.ServiceComponentRuntime)
+    scr = ($.context getService $scrref)
+	each ($scr getComponentDescriptionDTOs ($.context bundles)) {
+		$list add ((($it getClass) getField "name") get $it)
+	}
+	$.context ungetService $scrref
+	$list
+  }
+
+  complete -c scr:config -e
+  complete -c scr:config -d "Show the current SCR configuration"
+
+  complete -c scr:disable -e
+  complete -c scr:disable -d "Disable an enabled component"
+  complete -c scr:disable -a '__get_scr_components'
+
+  complete -c scr:enable -e
+  complete -c scr:enable -d "Enable an disabled component"
+  complete -c scr:enable -a '__get_scr_components'
+
+  complete -c scr:info -e
+  complete -c scr:info -d "Dump information of a component or component configuration"
+  complete -c scr:info -a '__get_scr_components'
+
+  complete -c scr:list -e
+  complete -c scr:list -d "List component configurations of a specific bundle"
+
+}

@@ -148,8 +148,8 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
                     return;
                 }
                 doClose();
-                doEdit(getData(key));
                 rpc.confirmBind(true);
+                doEdit(getData(key));
             }
         });
 

@@ -10,15 +10,12 @@ import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class FrontendLaterLoadedResourceUITest extends MultiBrowserTest {
-
     @Test
     public void correctEs5Es6FileImportedThroughFrontend() {
         openTestURL();
         $(ButtonElement.class).first().click();
         String es;
-        if (BrowserUtil.isIE(getDesiredCapabilities())
-                || BrowserUtil.isPhantomJS(getDesiredCapabilities())
-                || BrowserUtil.isFirefox(getDesiredCapabilities())) {
+        if (BrowserUtil.isIE(getDesiredCapabilities())) {
             es = "es5";
         } else {
             es = "es6";

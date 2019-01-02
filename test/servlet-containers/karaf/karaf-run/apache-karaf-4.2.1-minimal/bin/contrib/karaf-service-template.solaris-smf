@@ -1,0 +1,94 @@
+<?xml version="1.0" ?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<!DOCTYPE service_bundle
+  SYSTEM '/usr/share/lib/xml/dtd/service_bundle.dtd.1'>
+
+<service_bundle type="manifest" name="application/${KARAF_SERVICE_NAME}">
+    <service version="1" type="service" name="application/${KARAF_SERVICE_NAME}">
+
+        <create_default_instance enabled='false' />
+        <single_instance />
+
+        <dependency
+            restart_on="none"
+            type="service"
+            name="multi_user_dependency"
+            grouping="require_all">
+
+            <service_fmri value="svc:/milestone/multi-user"/>
+        </dependency>
+
+        <method_context>
+            <method_credential user='${KARAF_SERVICE_USER}' group='${KARAF_SERVICE_GROUP}'/>
+            <method_environment>
+                <envvar name="JAVA_HOME" value="${JAVA_HOME}"/>
+            </method_environment>
+        </method_context>
+
+        <!-- *************************************************************** -->
+        <!-- STOP/START                                                      -->
+        <!-- *************************************************************** -->
+
+        <exec_method
+            timeout_seconds="60"
+            type="method"
+            name="start"
+            exec="${KARAF_SERVICE_PATH}/bin/${KARAF_SERVICE_EXECUTABLE} daemon &amp;">
+        </exec_method>
+
+        <exec_method
+            timeout_seconds="60"
+            type="method"
+            name="stop"
+            exec="${KARAF_SERVICE_PATH}/bin/${KARAF_SERVICE_EXECUTABLE} stop">
+        </exec_method>
+
+        <!-- *************************************************************** -->
+        <!--                                                                 -->
+        <!-- *************************************************************** -->
+
+        <!-- do not restart the service in case of errors -->
+        <property_group name='startd' type='framework'>
+            <propval name='duration'
+                     type='astring'
+                     value='transient'/>
+            <propval name='ignore_error'
+                     type='astring'
+                     value='core,signal'/>
+        </property_group>
+
+        <stability value='Evolving' />
+
+        <template>
+            <common_name>
+                <loctext xml:lang="C">
+                    ${KARAF_SERVICE_NAME}
+                </loctext>
+            </common_name>
+            <description>
+                <loctext xml:lang="C">
+                    ${KARAF_SERVICE_NAME}
+                </loctext>
+            </description>
+        </template>
+
+    </service>
+</service_bundle>
+

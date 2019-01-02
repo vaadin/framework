@@ -72,8 +72,11 @@ public class EditorConnector extends AbstractExtensionConnector {
 
                 @Override
                 public void cancel() {
-                    serverInitiated = true;
-                    getParent().getWidget().cancelEditor();
+                    // Canceling an editor that is not open is a no-op.
+                    if (getParent().getWidget().isEditorActive()) {
+                        serverInitiated = true;
+                        getParent().getWidget().cancelEditor();
+                    }
                 }
 
                 @Override
@@ -194,7 +197,17 @@ public class EditorConnector extends AbstractExtensionConnector {
 
     @OnStateChange("enabled")
     void updateEnabled() {
-        getParent().getWidget().getEditor().setEnabled(getState().enabled);
+        boolean enabled = getState().enabled;
+
+        Scheduler.ScheduledCommand setEnabledCommand = () -> {
+            getParent().getWidget().getEditor().setEnabled(enabled);
+        };
+
+        if (!enabled) {
+            Scheduler.get().scheduleFinally(setEnabledCommand);
+        } else {
+            setEnabledCommand.execute();
+        }
     }
 
     @OnStateChange("saveCaption")

@@ -46,7 +46,8 @@ public class ModalWindowRefocusTest extends ModalWindowFocusTest {
         waitForElementPresent(By.id("focusfield"));
         WebElement curtain = findElement(
                 org.openqa.selenium.By.className("v-window-modalitycurtain"));
-        curtain.click();
+        testBenchElement(curtain).click(getXOffset(curtain, 20),
+                getYOffset(curtain, 20));
 
         pressKeyAndWait(Keys.TAB);
         pressKeyAndWait(Keys.TAB);

@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-root</artifactId>
-        <version>8.5-SNAPSHOT</version>
+        <version>8.8-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-uitest</artifactId>
     <name>vaadin-uitest</name>
@@ -29,11 +29,6 @@
             <url>http://maven.vaadin.com/vaadin-addons</url>
         </repository>
     </repositories>
-
-    <prerequisites>
-        <!-- phantomjs-maven-plugin required maven 3.1 or newer -->
-        <maven>3.1</maven>
-    </prerequisites>
 
     <dependencies>
 
@@ -185,10 +180,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-        </dependency>
-        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
         </dependency>
@@ -321,7 +312,6 @@
                         <browsers.exclude>${browsers.exclude}</browsers.exclude>
                         <categories.include>${categories.include}</categories.include>
                         <categories.exclude>${categories.exclude}</categories.exclude>
-                        <useLocalWebDriver>${useLocalWebDriver}</useLocalWebDriver>
                         <browserstack.identifier>${browserstack.identifier}</browserstack.identifier>
                     </systemPropertyVariables>
                     <includes>

@@ -20,14 +20,13 @@ need to register in the website to obtain a key.
 
 You can get license keys from link:https://vaadin.com/pro/licenses[vaadin.com/pro/licenses].
 
-. Select in the Vaadin website "My Account > Licenses" or directly
-[menuchoice]#Licenses# if you are a Pro Tools subscriber.
+. On the Vaadin website, click on your profile in the top right, then select "My Services > Licenses".
 +
-image::img/cval-pro-licenses-3.png[width=80%, scaledwidth=100%]
+image::img/cval-pro-licenses-4.png[width=80%, scaledwidth=100%]
 
 . Click on a license key to obtain the purchased or trial key.
 +
-image::img/cval-pro-licenses-code.png[width=80%, scaledwidth=100%]
+image::img/cval-pro-licenses-code-2.png[width=80%, scaledwidth=100%]
 
 
 [[addons.cval.installing]]
@@ -62,7 +61,7 @@ usually with a [literal]#++-D++# option. For example, on the command-line:
 [prompt]#$# [command]#java# -Dvaadin.[replaceable]##<product>##.developer.license=[replaceable]#L1cen5e-c0de# ...
 ----
 
-where the [literal]`<product>` is the product ID, such as `charts`, `spreadsheet`, `designer`, or `testbench`.
+where the [literal]`<product>` is the product ID, such as `charts`, `spreadsheet`, or `testbench`.
 
 [[addons.cval.systemproperty.environments]]
 === Passing License Key in Different Environments
@@ -105,7 +104,7 @@ Apache Maven:: If building the project with Apache Maven, you can pass the licen
 [prompt]#$# [command]#mvn# -Dvaadin.[replaceable]##&lt;product&gt;##.developer.license=[replaceable]##L1cen5e-c0de## package
 ----
 +
-where the [literal]`<product>` is the product ID, such as `charts`, `spreadsheet`, `designer`, or `testbench`.
+where the [literal]`<product>` is the product ID, such as `charts`, `spreadsheet`, or `testbench`.
 
 Continuous Integration Systems:: In CIS systems, you can pass the license key to build runners as a system
 property in the build configuration. However, this only passes it to a runner.

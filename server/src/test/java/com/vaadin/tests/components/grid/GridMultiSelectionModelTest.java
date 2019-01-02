@@ -17,8 +17,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
+import com.vaadin.data.provider.CallbackDataProvider;
 import org.easymock.Capture;
 import org.junit.Before;
 import org.junit.Test;
@@ -703,6 +706,5 @@ public class GridMultiSelectionModelTest {
         assertFalse(model.isSelectAllCheckBoxVisible());
         assertEquals(SelectAllCheckBoxVisibility.DEFAULT,
                 model.getSelectAllCheckBoxVisibility());
-
     }
 }

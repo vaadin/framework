@@ -17,6 +17,6 @@ public class UploadImmediateButtonWidthChameleonTest
 
     @Test
     public void immediateButtonWithUndefinedWidth() {
-        assertThat(getButtonWidth("upload3"), closeTo(69, 4));
+        assertThat(getButtonWidth("upload3"), closeTo(69, 5));
     }
 }

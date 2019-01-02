@@ -21,11 +21,12 @@ import com.vaadin.tests.tb3.SingleBrowserTest;
 public class PushVersionInfoTest extends SingleBrowserTest {
 
     @Test
-    public void testDisabledPush() {
+    public void testDisabledPush() throws InterruptedException {
         setDebug(true);
         openTestURL();
 
         selectInfoTab();
+        Thread.sleep(500);
         assertNull("Found push info server string for disabled Push",
                 getPushRowValue("Push server version"));
         assertNull("Found push info client string for disabled Push",
@@ -33,11 +34,12 @@ public class PushVersionInfoTest extends SingleBrowserTest {
     }
 
     @Test
-    public void testEnabledPush() {
+    public void testEnabledPush() throws InterruptedException {
         setDebug(true);
         openTestURL("enablePush=true");
 
         selectInfoTab();
+        Thread.sleep(500);
         WebElement pushRow = getPushRowValue("Push server version");
         String atmVersion = findElement(By.className("atmosphere-version"))
                 .getText();

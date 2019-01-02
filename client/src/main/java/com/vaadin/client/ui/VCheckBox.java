@@ -16,7 +16,9 @@
 
 package com.vaadin.client.ui;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.ApplicationConnection;
@@ -81,20 +83,34 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
      * Gives access to the input element.
      *
      * @return Element of the CheckBox itself
+     * @since 8.7
      */
-    private Element getCheckBoxElement() {
+    public Element getInputElement() {
+        // public to allow CheckBoxState to access it.
         // FIXME: Would love to use a better way to access the checkbox element
         return getElement().getFirstChildElement();
     }
 
+    /**
+     * Gives access to the label element.
+     *
+     * @return Element of the Label itself
+     * @since 8.7
+     */
+    public Element getLabelElement() {
+        // public to allow CheckBoxState to access it.
+        // FIXME: Would love to use a better way to access the label element
+        return getInputElement().getNextSiblingElement();
+    }
+
     @Override
     public void setAriaRequired(boolean required) {
-        AriaHelper.handleInputRequired(getCheckBoxElement(), required);
+        AriaHelper.handleInputRequired(getInputElement(), required);
     }
 
     @Override
     public void setAriaInvalid(boolean invalid) {
-        AriaHelper.handleInputInvalid(getCheckBoxElement(), invalid);
+        AriaHelper.handleInputInvalid(getInputElement(), invalid);
     }
 
     @Override
@@ -114,6 +130,23 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
         } else if (errorIndicatorElement != null) {
             getElement().removeChild(errorIndicatorElement);
             errorIndicatorElement = null;
+        }
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+
+        if (BrowserInfo.get().isSafari()) {
+            /*
+             * Sometimes Safari does not render checkbox correctly when
+             * attaching. Setting the visibility to hidden and a bit later
+             * restoring will make everything just fine.
+             */
+            getElement().getStyle().setVisibility(Visibility.HIDDEN);
+            Scheduler.get().scheduleFinally(() -> {
+                getElement().getStyle().setVisibility(Visibility.VISIBLE);
+            });
         }
     }
 }

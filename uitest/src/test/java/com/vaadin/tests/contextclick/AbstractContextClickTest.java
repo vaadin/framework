@@ -3,7 +3,6 @@ package com.vaadin.tests.contextclick;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +11,6 @@ import org.junit.Test;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.AbstractComponentElement;
 import com.vaadin.testbench.elements.ButtonElement;
@@ -25,11 +23,6 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
 
     private Pattern defaultLog = Pattern
             .compile("[0-9]+. ContextClickEvent: [(]([0-9]+), ([0-9]+)[)]");
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsersSupportingContextMenu();
-    }
 
     @Before
     public void setUp() {
@@ -133,7 +126,9 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
                     "var ev = document.createEvent('MouseEvents'); ev.initMouseEvent('click', true, true, document.defaultView, 1, arguments[1]-5, arguments[2]-5, arguments[1]-5, arguments[2]-5, false, false, false, false, 1, null); arguments[0].dispatchEvent(ev);",
                     e, x, y);
         } else {
-            new Actions(getDriver()).moveToElement(e, xCoord, yCoord)
+            new Actions(getDriver())
+                    .moveToElement(e, getXOffset(e, xCoord),
+                            getYOffset(e, yCoord))
                     .contextClick().moveByOffset(-5, -5).click().perform();
         }
     }

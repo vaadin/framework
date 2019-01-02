@@ -80,6 +80,9 @@ public class TestDataGenerator {
         c.set(Calendar.YEAR, r.nextInt(100) + 1900);
         c.set(Calendar.MONTH, r.nextInt(12));
         c.set(Calendar.DAY_OF_MONTH, r.nextInt(31));
+        c.set(Calendar.HOUR_OF_DAY, 11);
+        c.set(Calendar.HOUR, 11);
+        c.set(Calendar.AM_PM, Calendar.AM);
 
         return c.getTime();
     }

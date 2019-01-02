@@ -114,6 +114,8 @@ import com.vaadin.v7.client.widget.escalator.Spacer;
 import com.vaadin.v7.client.widget.escalator.SpacerUpdater;
 import com.vaadin.v7.client.widget.escalator.events.RowHeightChangedEvent;
 import com.vaadin.v7.client.widget.escalator.events.RowHeightChangedHandler;
+import com.vaadin.v7.client.widget.escalator.events.SpacerVisibilityChangedEvent;
+import com.vaadin.v7.client.widget.escalator.events.SpacerVisibilityChangedHandler;
 import com.vaadin.v7.client.widget.grid.AutoScroller;
 import com.vaadin.v7.client.widget.grid.AutoScroller.AutoScrollerCallback;
 import com.vaadin.v7.client.widget.grid.AutoScroller.ScrollAxis;
@@ -1316,6 +1318,23 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private static final String ERROR_CLASS_NAME = "error";
         private static final String NOT_EDITABLE_CLASS_NAME = "not-editable";
 
+        ScheduledCommand fieldFocusCommand = new ScheduledCommand() {
+            private int count = 0;
+
+            @Override
+            public void execute() {
+                Element focusedElement = WidgetUtil.getFocusedElement();
+                if (focusedElement == grid.getElement()
+                    || focusedElement == Document.get().getBody()
+                    || count > 2) {
+                    focusColumn(focusedColumnIndexDOM);
+                } else {
+                    ++count;
+                    Scheduler.get().scheduleDeferred(this);
+                }
+            }
+        };
+
         /**
          * A handler for events related to the Grid editor. Responsible for
          * opening, moving or closing the editor based on the received event.
@@ -1875,7 +1894,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     }
 
                     if (i == focusedColumnIndexDOM) {
-                        focusColumn(focusedColumnIndexDOM);
+                        if (BrowserInfo.get().isIE8()) {
+                            Scheduler.get().scheduleDeferred(fieldFocusCommand);
+                        } else {
+                            focusColumn(focusedColumnIndexDOM);
+                        }
                     }
                 } else {
                     cell.addClassName(NOT_EDITABLE_CLASS_NAME);
@@ -2116,8 +2139,20 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         private void updateHorizontalScrollPosition() {
             double scrollLeft = grid.getScrollLeft();
-            cellWrapper.getStyle().setLeft(
-                    frozenCellWrapper.getOffsetWidth() - scrollLeft, Unit.PX);
+            int frozenWidth = frozenCellWrapper.getOffsetWidth();
+            double newLeft = frozenWidth - scrollLeft;
+            cellWrapper.getStyle().setLeft(newLeft, Unit.PX);
+
+            // sometimes focus handling twists the editor row out of alignment
+            // with the grid itself and the position needs to be compensated for
+            TableRowElement rowElement = grid.getEscalator().getBody()
+                .getRowElement(grid.getEditor().getRow());
+            int rowLeft = rowElement.getAbsoluteLeft();
+            int editorLeft = cellWrapper.getAbsoluteLeft();
+            if (editorLeft != rowLeft + frozenWidth) {
+                cellWrapper.getStyle().setLeft(newLeft + rowLeft - editorLeft,
+                    Unit.PX);
+            }
         }
 
         /**
@@ -2326,7 +2361,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (!Element.is(target)) {
                 return null;
             }
-            return WidgetUtil.findWidget(Element.as(target), Grid.class);
+            return WidgetUtil.findWidget(Element.as(target), Grid.class, false);
         }
 
         /**
@@ -2354,6 +2389,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 } else if (container == getGrid().escalator.getBody()) {
                     section = Section.BODY;
                 }
+
                 doDispatch(handler, section);
             }
         }
@@ -2392,7 +2428,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (!Element.is(target)) {
                 return null;
             }
-            return WidgetUtil.findWidget(Element.as(target), Grid.class);
+            return WidgetUtil.findWidget(Element.as(target), Grid.class, false);
         }
 
         /**
@@ -3148,7 +3184,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             if (!columns.contains(column)) {
                 throw new IllegalArgumentException(
-                        "Given column is not a column in this grid. " + column);
+                    "Given column is not a column in this grid. "
+                        + column.toString());
             }
 
             if (!column.isSortable()) {
@@ -3475,7 +3512,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              */
             final double widthPerRatio;
             int leftOver = 0;
-            if (BrowserInfo.getBrowserString().contains("PhantomJS")) {
+            if (BrowserInfo.get().isIE8() || BrowserInfo.get().isIE9()
+                || BrowserInfo.getBrowserString().contains("PhantomJS")) {
                 // These browsers report subpixels as integers. this usually
                 // results into issues..
                 widthPerRatio = (int) (pixelsToDistribute / totalRatios);
@@ -4047,7 +4085,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         private String createHTML(Column<?, T> column) {
-            final StringBuilder buf = new StringBuilder();
+            final StringBuffer buf = new StringBuffer();
             buf.append("<span class=\"");
             if (column.isHidden()) {
                 buf.append("v-off");
@@ -4114,7 +4152,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * on initialization, but not after that.
      */
     private DataSource<T> dataSource;
-    private Registration changeHandler;
 
     /**
      * Currently available row range in DataSource.
@@ -4330,10 +4367,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     && rightBoundaryForDrag < dropMarkerLeft
                     && dropMarkerLeft <= escalator.getInnerWidth()) {
                 dropMarkerLeft = rightBoundaryForDrag - dropMarkerWidthOffset;
-            } else if (
+            }
+
             // Check if the drop marker shouldn't be shown at all
-            dropMarkerLeft < frozenColumnsWidth || dropMarkerLeft > Math
-                    .min(rightBoundaryForDrag, escalator.getInnerWidth())
+            else if (dropMarkerLeft < frozenColumnsWidth
+                || dropMarkerLeft > Math.min(rightBoundaryForDrag,
+                escalator.getInnerWidth())
                     || dropMarkerLeft < 0) {
                 dropMarkerLeft = -10000000;
             }
@@ -4482,8 +4521,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 if (focusedColumnIndex == draggedColumnIndex) {
                     // move with the dragged column
                     int adjustedDropIndex = latestColumnDropIndex > draggedColumnIndex
-                            ? latestColumnDropIndex - 1
-                            : latestColumnDropIndex;
+                        ? latestColumnDropIndex - 1 : latestColumnDropIndex;
                     // remove hidden columns from indexing
                     adjustedDropIndex = getVisibleColumns()
                             .indexOf(getColumn(adjustedDropIndex));
@@ -4714,8 +4752,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             @Override
             public void render(RendererCellReference cell, Object data) {
                 if (!warned && !(data instanceof String)) {
-                    getLogger().warning(
-                            Column.this + ": " + DEFAULT_RENDERER_WARNING);
+                    getLogger().warning(Column.this.toString() + ": "
+                        + DEFAULT_RENDERER_WARNING);
                     warned = true;
                 }
 
@@ -4736,33 +4774,65 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private Grid<T> grid;
 
         /**
-         * Width of column in pixels as {@link #setWidth(double)} has been
-         * called
+         * Width of column in pixels as {@link #setWidth(double)} has been called.
          */
-        private double widthUser = GridConstants.DEFAULT_COLUMN_WIDTH_PX;
+        protected double widthUser = GridConstants.DEFAULT_COLUMN_WIDTH_PX;
 
         /**
          * Renderer for rendering a value into the cell
          */
         private Renderer<? super C> bodyRenderer;
 
-        private boolean sortable = false;
+        /**
+         * The sortable state of this column.
+         */
+        protected boolean sortable = false;
 
-        private boolean editable = true;
+        /**
+         * The editable state of this column.
+         */
+        protected boolean editable = true;
 
-        private boolean resizable = true;
+        /**
+         * The resizable state of this column.
+         */
+        protected boolean resizable = true;
 
-        private boolean hidden = false;
+        /**
+         * The hidden state of this column.
+         */
+        protected boolean hidden = false;
 
-        private boolean hidable = false;
+        /**
+         * The hidable state of this column.
+         */
+        protected boolean hidable = false;
 
-        private String headerCaption = "";
+        /**
+         * The header-caption of this column.
+         */
+        protected String headerCaption = "";
 
-        private String hidingToggleCaption = null;
+        /**
+         * The hiding-toggle-caption of this column.
+         */
+        protected String hidingToggleCaption = null;
 
-        private double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
-        private double maximumWidthPx = GridConstants.DEFAULT_MAX_WIDTH;
-        private int expandRatio = GridConstants.DEFAULT_EXPAND_RATIO;
+        /**
+         * The minimum width in pixels of this column.
+         */
+        protected double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
+
+        /**
+         * The maximum width in pixels of this column.
+         */
+        protected double maximumWidthPx = GridConstants.DEFAULT_MAX_WIDTH;
+
+        /**
+         * The expand ratio of this column.
+         */
+        protected int expandRatio = GridConstants.DEFAULT_EXPAND_RATIO;
+
 
         /**
          * Constructs a new column with a simple TextRenderer.
@@ -5644,7 +5714,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 if (renderer instanceof WidgetRenderer) {
                     try {
                         Widget w = WidgetUtil.findWidget(
-                                cell.getElement().getFirstChildElement(), null);
+                            cell.getElement().getFirstChildElement());
                         if (w != null) {
 
                             // Logical detach
@@ -5863,7 +5933,16 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                             dragEnded();
 
                             col.setWidth(width);
-                            fireEvent(new ColumnResizeEvent<T>(col));
+
+                            // Need to wait for column width recalculation
+                            // scheduled by setWidth() before firing the event
+                            Scheduler.get().scheduleDeferred(
+                                new ScheduledCommand() {
+                                    @Override
+                                    public void execute() {
+                                        fireEvent(new ColumnResizeEvent<T>(col));
+                                    }
+                                });
                         }
                     };
 
@@ -6201,6 +6280,30 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         fireEvent(new GridEnabledEvent(enabled));
     }
 
+    /**
+     * Sets the column resize mode to use. The default mode is
+     * {@link ColumnResizeMode.ANIMATED}.
+     *
+     * @param mode
+     *            a ColumnResizeMode value
+     * @since 7.7.5
+     */
+    public void setColumnResizeMode(ColumnResizeMode mode) {
+        columnResizeMode = mode;
+    }
+
+    /**
+     * Returns the current column resize mode. The default mode is
+     * {@link ColumnResizeMode.ANIMATED}.
+     *
+     * @return a ColumnResizeMode value
+     *
+     * @since 7.7.5
+     */
+    public ColumnResizeMode getColumnResizeMode() {
+        return columnResizeMode;
+    }
+
     @Override
     public void setStylePrimaryName(String style) {
         super.setStylePrimaryName(style);
@@ -6222,29 +6325,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             refreshBody();
             refreshFooter();
         }
-    }
-
-    /**
-     * Sets the column resize mode to use. The default mode is
-     * {@link ColumnResizeMode.ANIMATED}.
-     *
-     * @param mode
-     *            a ColumnResizeMode value
-     * @since 7.7.5
-     */
-    public void setColumnResizeMode(ColumnResizeMode mode) {
-        columnResizeMode = mode;
-    }
-
-    /**
-     * Returns the current column resize mode. The default mode is
-     * {@link ColumnResizeMode.ANIMATED}.
-     *
-     * @return a ColumnResizeMode value
-     * @since 7.7.5
-     */
-    public ColumnResizeMode getColumnResizeMode() {
-        return columnResizeMode;
     }
 
     /**
@@ -6369,9 +6449,24 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *            the columns to add
      */
     public void addColumns(Column<?, T>... columns) {
-        int count = getColumnCount();
+        final int count = getColumnCount();
         for (Column<?, T> column : columns) {
-            addColumn(column, count++);
+            checkColumnIsValidToAdd(column, count);
+        }
+        addColumnsSkipSelectionColumnCheck(Arrays.asList(columns), count);
+    }
+
+
+    /**
+     * Checks the given column is valid to add at the given index.
+     */
+    private void checkColumnIsValidToAdd(Column<?, T> column, int index) {
+        if (column == this.selectionColumn) {
+            throw new IllegalArgumentException(
+                "The selection column may not be added manually");
+        } else if (this.selectionColumn != null && index == 0) {
+            throw new IllegalStateException("A column cannot be inserted "
+                + "before the selection column");
         }
     }
 
@@ -6401,53 +6496,56 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *             and {@code index} is 0.
      */
     public <C extends Column<?, T>> C addColumn(C column, int index) {
-        if (column == selectionColumn) {
-            throw new IllegalArgumentException(
-                    "The selection column many " + "not be added manually");
-        } else if (selectionColumn != null && index == 0) {
-            throw new IllegalStateException("A column cannot be inserted "
-                    + "before the selection column");
-        }
-
-        addColumnSkipSelectionColumnCheck(column, index);
+        checkColumnIsValidToAdd(column, index);
+        addColumnsSkipSelectionColumnCheck(Collections.singleton(column), index);
         return column;
     }
 
-    private void addColumnSkipSelectionColumnCheck(Column<?, T> column,
-            int index) {
-        // Register column with grid
-        columns.add(index, column);
 
-        header.addColumn(column);
-        footer.addColumn(column);
+    private <C extends Column<?, T>> void addColumnsSkipSelectionColumnCheck(Collection<C> columnCollection, int index) {
+        int visibleNewColumns = 0;
+        int currentIndex = index;
 
-        // Register this grid instance with the column
-        ((Column<?, T>) column).setGrid(this);
+        //prevent updates of hiding toggles.
+        //it will be updated finally all at once.
+        this.columnHider.hidingColumn = true;
 
-        // Grid knows about hidden columns, Escalator only knows about what is
-        // visible so column indexes do not match
-        if (!column.isHidden()) {
-            int escalatorIndex = index;
-            for (int existingColumn = 0; existingColumn < index; existingColumn++) {
-                if (getColumn(existingColumn).isHidden()) {
-                    escalatorIndex--;
-                }
+        for (final Column<?, T> column : columnCollection) {
+            // Register column with grid
+            this.columns.add(currentIndex++, column);
+            this.footer.addColumn(column);
+            this.header.addColumn(column);
+
+            // Register this grid instance with the column
+            column.setGrid(this);
+
+            if (!column.isHidden()) {
+                visibleNewColumns++;
             }
-            escalator.getColumnConfiguration().insertColumns(escalatorIndex, 1);
+        }
+        if (visibleNewColumns > 0) {
+            final ColumnConfiguration columnConfiguration = this.escalator.getColumnConfiguration();
+            columnConfiguration.insertColumns(index, visibleNewColumns);
         }
 
-        // Reapply column width
-        column.reapplyWidth();
+        for (final Column<?, T> column : columnCollection) {
+            // Reapply column width
+            column.reapplyWidth();
+            // Sink all renderer events
+            final Set<String> events = new HashSet<String>();
+            events.addAll(getConsumedEventsForRenderer(column.getRenderer()));
 
-        // Sink all renderer events
-        Set<String> events = new HashSet<String>();
-        events.addAll(getConsumedEventsForRenderer(column.getRenderer()));
-
-        if (column.isHidable()) {
-            columnHider.updateColumnHidable(column);
+            if (column.isHidable()) {
+                this.columnHider.updateColumnHidable(column);
+            }
+            sinkEvents(events);
         }
-
-        sinkEvents(events);
+        //now we do the update of the hiding toggles.
+        this.columnHider.hidingColumn = false;
+        this.columnHider.updateTogglesOrder();
+        refreshHeader();
+        this.header.updateColSpans();
+        this.footer.updateColSpans();
     }
 
     private void sinkEvents(Collection<String> events) {
@@ -6925,41 +7023,33 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         selectionModel.reset();
 
-        if (changeHandler != null) {
-            changeHandler.remove();
-            changeHandler = null;
+        if (this.dataSource != null) {
+            this.dataSource.addDataChangeHandler((DataChangeHandler) null);
         }
 
         this.dataSource = dataSource;
-        changeHandler = dataSource
-                .addDataChangeHandler(new DataChangeHandler() {
+        dataSource.addDataChangeHandler(new DataChangeHandler() {
                     @Override
                     public void dataUpdated(int firstIndex, int numberOfItems) {
-                        escalator.getBody().refreshRows(firstIndex,
-                                numberOfItems);
+                        escalator.getBody().refreshRows(firstIndex, numberOfItems);
                     }
 
                     @Override
                     public void dataRemoved(int firstIndex, int numberOfItems) {
-                        escalator.getBody().removeRows(firstIndex,
-                                numberOfItems);
-                        Range removed = Range.withLength(firstIndex,
-                                numberOfItems);
+                        escalator.getBody().removeRows(firstIndex, numberOfItems);
+                        Range removed = Range.withLength(firstIndex, numberOfItems);
                         cellFocusHandler.rowsRemovedFromBody(removed);
                     }
 
                     @Override
                     public void dataAdded(int firstIndex, int numberOfItems) {
-                        escalator.getBody().insertRows(firstIndex,
-                                numberOfItems);
-                        Range added = Range.withLength(firstIndex,
-                                numberOfItems);
+                        escalator.getBody().insertRows(firstIndex, numberOfItems);
+                        Range added = Range.withLength(firstIndex, numberOfItems);
                         cellFocusHandler.rowsAddedToBody(added);
                     }
 
                     @Override
-                    public void dataAvailable(int firstIndex,
-                            int numberOfItems) {
+                    public void dataAvailable(int firstIndex, int numberOfItems) {
                         currentDataAvailable = Range.withLength(firstIndex,
                                 numberOfItems);
                         fireEvent(new DataAvailableEvent(currentDataAvailable));
@@ -6971,31 +7061,27 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         int oldSize = body.getRowCount();
 
                         // Hide all details.
-                        Set<Integer> oldDetails = new HashSet<Integer>(
-                                visibleDetails);
+                        Set<Integer> oldDetails = new HashSet<Integer>(visibleDetails);
                         for (int i : oldDetails) {
                             setDetailsVisible(i, false);
                         }
 
                         if (newSize > oldSize) {
                             body.insertRows(oldSize, newSize - oldSize);
-                            cellFocusHandler.rowsAddedToBody(Range
-                                    .withLength(oldSize, newSize - oldSize));
+                            cellFocusHandler.rowsAddedToBody(
+                                Range.withLength(oldSize, newSize - oldSize));
                         } else if (newSize < oldSize) {
                             body.removeRows(newSize, oldSize - newSize);
-                            cellFocusHandler.rowsRemovedFromBody(Range
-                                    .withLength(newSize, oldSize - newSize));
+                            cellFocusHandler.rowsRemovedFromBody(
+                                Range.withLength(newSize, oldSize - newSize));
                         }
 
                         if (newSize > 0) {
-                            Range visibleRowRange = escalator
-                                    .getVisibleRowRange();
-                            dataSource.ensureAvailability(
-                                    visibleRowRange.getStart(),
+                            Range visibleRowRange = escalator.getVisibleRowRange();
+                            dataSource.ensureAvailability(visibleRowRange.getStart(),
                                     visibleRowRange.length());
                         } else {
-                            // We won't expect any data more data updates, so
-                            // just make
+                            // We won't expect any data more data updates, so just make
                             // the bookkeeping happy
                             dataAvailable(0, 0);
                         }
@@ -7466,7 +7552,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     private boolean isElementInChildWidget(Element e) {
-        Widget w = WidgetUtil.findWidget(e, null);
+        Widget w = WidgetUtil.findWidget(e);
 
         if (w == this) {
             return false;
@@ -7853,7 +7939,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             cellFocusHandler.offsetRangeBy(1);
             selectionColumn = new SelectionColumn(selectColumnRenderer);
 
-            addColumnSkipSelectionColumnCheck(selectionColumn, 0);
+            addColumnsSkipSelectionColumnCheck(Collections.singleton(selectionColumn), 0);
 
             selectionColumn.setEnabled(isEnabled());
             selectionColumn.initDone();
@@ -8440,6 +8526,19 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
+     * Adds a spacer visibility changed handler to the underlying escalator.
+     *
+     * @param handler
+     *         the handler to be called when a spacer's visibility changes
+     * @return the registration object with which the handler can be removed
+     * @since 7.7.13
+     */
+    public HandlerRegistration addSpacerVisibilityChangedHandler(
+        SpacerVisibilityChangedHandler handler) {
+        return escalator.addHandler(handler, SpacerVisibilityChangedEvent.TYPE);
+    }
+
+    /**
      * Adds a low-level DOM event handler to this Grid. The handler is inserted
      * into the given position in the list of handlers. The handlers are invoked
      * in order. If the
@@ -8830,7 +8929,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         for (int row : details) {
             setDetailsVisible(row, false);
         }
-
         super.onDetach();
     }
 
@@ -8948,17 +9046,17 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * @param parent
      *            The parent to set
      */
-    private static final native void setParent(Widget widget, Grid<?> parent)
+    private static native final void setParent(Widget widget, Grid<?> parent)
     /*-{
         widget.@com.google.gwt.user.client.ui.Widget::setParent(Lcom/google/gwt/user/client/ui/Widget;)(parent);
     }-*/;
 
-    private static final native void onAttach(Widget widget)
+    private static native final void onAttach(Widget widget)
     /*-{
         widget.@Widget::onAttach()();
     }-*/;
 
-    private static final native void onDetach(Widget widget)
+    private static native final void onDetach(Widget widget)
     /*-{
         widget.@Widget::onDetach()();
     }-*/;

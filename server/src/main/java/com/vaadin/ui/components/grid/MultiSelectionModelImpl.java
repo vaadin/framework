@@ -15,29 +15,18 @@
  */
 package com.vaadin.ui.components.grid;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.vaadin.data.provider.DataCommunicator;
-import com.vaadin.data.provider.DataProvider;
-import com.vaadin.data.provider.HierarchicalDataProvider;
-import com.vaadin.data.provider.HierarchicalQuery;
-import com.vaadin.data.provider.Query;
+import com.vaadin.data.provider.*;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.GridMultiSelectServerRpc;
 import com.vaadin.shared.ui.grid.MultiSelectionModelState;
 import com.vaadin.ui.MultiSelect;
+
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Multiselection model for grid.
@@ -429,12 +418,20 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
                     + " although user selection is disallowed");
         }
 
-        // if there are duplicates, some item is both added & removed, just
-        // discard that and leave things as was before
-        addedItems.removeIf(item -> removedItems.remove(item));
+        DataProvider<T, ?> dataProvider = getGrid().getDataProvider();
 
-        if (selection.containsAll(addedItems)
-                && Collections.disjoint(selection, removedItems)) {
+        addedItems.removeIf(item -> {
+            Object id = dataProvider.getId(item);
+            Optional<T> toRemove = removedItems.stream()
+                    .filter(i -> dataProvider.getId(i).equals(id)).findFirst();
+            toRemove.ifPresent(i -> removedItems.remove(i));
+            return toRemove.isPresent();
+        });
+
+        if (addedItems.stream().map(dataProvider::getId)
+                .allMatch(this::selectionContainsId)
+                && removedItems.stream().map(dataProvider::getId)
+                        .noneMatch(this::selectionContainsId)) {
             return;
         }
 
@@ -446,8 +443,13 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
         doUpdateSelection(set -> {
             // order of add / remove does not matter since no duplicates
-            set.removeAll(removedItems);
-            set.addAll(addedItems);
+            Set<Object> removedItemIds = removedItems.stream()
+                    .map(dataProvider::getId).collect(Collectors.toSet());
+            set.removeIf(
+                    item -> removedItemIds.contains(dataProvider.getId(item)));
+            addedItems.stream().filter(
+                    item -> !selectionContainsId(dataProvider.getId(item)))
+                    .forEach(set::add);
 
             // refresh method is NOOP for items that are not present client side
             DataCommunicator<T> dataCommunicator = getGrid()

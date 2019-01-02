@@ -88,6 +88,7 @@ import com.vaadin.v7.client.widget.escalator.ScrollbarBundle.VerticalScrollbarBu
 import com.vaadin.v7.client.widget.escalator.Spacer;
 import com.vaadin.v7.client.widget.escalator.SpacerUpdater;
 import com.vaadin.v7.client.widget.escalator.events.RowHeightChangedEvent;
+import com.vaadin.v7.client.widget.escalator.events.SpacerVisibilityChangedEvent;
 import com.vaadin.v7.client.widget.grid.events.ScrollEvent;
 import com.vaadin.v7.client.widget.grid.events.ScrollHandler;
 import com.vaadin.v7.client.widgets.Escalator.JsniUtil.TouchHandlerBundle;
@@ -1289,22 +1290,6 @@ public class Escalator extends Widget
         public int getRowCount() {
             return rows;
         }
-
-        /**
-         * This method calculates the current row count directly from the DOM.
-         * <p>
-         * While Escalator is stable, this value should equal to
-         * {@link #getRowCount()}, but while row counts are being updated, these
-         * two values might differ for a short while.
-         * <p>
-         * Any extra content, such as spacers for the body, should not be
-         * included in this count.
-         *
-         * @since 7.5.0
-         *
-         * @return the actual DOM count of rows
-         */
-        public abstract int getDomRowCount();
 
         /**
          * {@inheritDoc}
@@ -4786,11 +4771,15 @@ public class Escalator extends Widget
             public void show() {
                 getRootElement().getStyle().clearDisplay();
                 getDecoElement().getStyle().clearDisplay();
+                Escalator.this.fireEvent(
+                    new SpacerVisibilityChangedEvent(getRow(), true));
             }
 
             public void hide() {
                 getRootElement().getStyle().setDisplay(Display.NONE);
                 getDecoElement().getStyle().setDisplay(Display.NONE);
+                Escalator.this.fireEvent(
+                    new SpacerVisibilityChangedEvent(getRow(), false));
             }
 
             /**

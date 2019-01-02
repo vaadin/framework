@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-servlet-containers-test</artifactId>
-        <version>8.5-SNAPSHOT</version>
+        <version>8.8-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-test-karaf</artifactId>
     <packaging>pom</packaging>
@@ -18,7 +18,8 @@
     </modules>
 
     <properties>
-        <karaf.plugin.version>4.0.8</karaf.plugin.version>
+        <karaf.version>4.2.1</karaf.version>
+        <karaf.plugin.version>${karaf.version}</karaf.plugin.version>
         <vaadin.widgetset.mode>local</vaadin.widgetset.mode>
     </properties>
     <build>

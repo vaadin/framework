@@ -42,7 +42,7 @@ public class TestLayoutClickListenersTest extends MultiBrowserTest {
                 "2. GridLayout: left click on This is tf5");
 
         // click on the layout body (not any component inside the layout)
-        layout.click(130, 41);
+        layout.click(getXOffset(layout, 130), getYOffset(layout, 41));
         assertLogText("GridLayout body clicked",
                 "3. GridLayout: left click on <none>");
     }
@@ -99,17 +99,22 @@ public class TestLayoutClickListenersTest extends MultiBrowserTest {
         GridLayoutElement layout = $(GridLayoutElement.class).first();
 
         // Drag inside the first label in this layout
+        LabelElement label = layout.$(LabelElement.class).first();
         new Actions(getDriver())
-                .moveToElement(layout.$(LabelElement.class).first(), 40, 8)
+                .moveToElement(label, getXOffset(label, 40),
+                        getYOffset(label, 8))
                 .clickAndHold().moveByOffset(-20, 0).release().perform();
         assertLogText("Mouse dragged in GridLayout",
                 "1. GridLayout: left click on This is label 1");
 
         // Drag from the third label to a text field in this layout
+        label = layout.$(LabelElement.class).get(2);
+        TextFieldElement textField = layout.$(TextFieldElement.class).get(3);
         new Actions(getDriver())
-                .moveToElement(layout.$(LabelElement.class).get(2), 40, 8)
-                .clickAndHold()
-                .moveToElement(layout.$(TextFieldElement.class).get(3), 46, 33)
+                .moveToElement(label, getXOffset(label, 40),
+                        getYOffset(label, 8))
+                .clickAndHold().moveToElement(textField,
+                        getXOffset(textField, 46), getYOffset(textField, 33))
                 .release().perform();
         assertLogText("Expected the drag to be ignored between elements",
                 "1. GridLayout: left click on This is label 1");
@@ -120,17 +125,21 @@ public class TestLayoutClickListenersTest extends MultiBrowserTest {
         VerticalLayoutElement layout = $(VerticalLayoutElement.class).get(4);
 
         // Drag inside the first text field
+        TextFieldElement textField = layout.$(TextFieldElement.class).first();
         new Actions(getDriver())
-                .moveToElement(layout.$(TextFieldElement.class).first(), 25, 9)
+                .moveToElement(textField, getXOffset(textField, 25),
+                        getYOffset(textField, 9))
                 .clickAndHold().moveByOffset(-20, 0).release().perform();
         assertLogText("Mouse dragged in VerticalLayout",
                 "1. VerticalLayout: left click on This is tf5");
 
         // Drag from a caption to its text field
+        textField = layout.$(TextFieldElement.class).get(4);
         new Actions(getDriver())
-                .moveToElement(layout.$(TextFieldElement.class).get(4), 28, 11)
-                .clickAndHold()
-                .moveToElement(layout.$(TextFieldElement.class).get(4), 39, 30)
+                .moveToElement(textField, getXOffset(textField, 28),
+                        getYOffset(textField, 11))
+                .clickAndHold().moveToElement(textField,
+                        getXOffset(textField, 39), getYOffset(textField, 30))
                 .release().perform();
         assertLogText("Expected the drag to be ignored between elements",
                 "1. VerticalLayout: left click on This is tf5");
@@ -141,17 +150,24 @@ public class TestLayoutClickListenersTest extends MultiBrowserTest {
         AbsoluteLayoutElement layout = $(AbsoluteLayoutElement.class).first();
 
         // Drag inside the first text field's caption
+        TextFieldElement firstTextField = layout.$(TextFieldElement.class)
+                .first();
         new Actions(getDriver())
-                .moveToElement(layout.$(TextFieldElement.class).first(), 21, 9)
+                .moveToElement(firstTextField, getXOffset(firstTextField, 21),
+                        getYOffset(firstTextField, 9))
                 .clickAndHold().moveByOffset(-10, 0).release().perform();
         assertLogText("Mouse dragged in AbsoluteLayout",
                 "1. AbsoluteLayout: left click on This is its caption");
 
         // Drag from a text field to another text field
+        TextFieldElement otherTextField = layout.$(TextFieldElement.class)
+                .get(1);
         new Actions(getDriver())
-                .moveToElement(layout.$(TextFieldElement.class).get(1), 54, 7)
+                .moveToElement(otherTextField, getXOffset(otherTextField, 54),
+                        getYOffset(otherTextField, 7))
                 .clickAndHold()
-                .moveToElement(layout.$(TextFieldElement.class).first(), 52, 10)
+                .moveToElement(firstTextField, getXOffset(firstTextField, 52),
+                        getYOffset(firstTextField, 10))
                 .release().perform();
         assertLogText("Expected the drag to be ignored between elements",
                 "1. AbsoluteLayout: left click on This is its caption");
@@ -162,17 +178,24 @@ public class TestLayoutClickListenersTest extends MultiBrowserTest {
         CssLayoutElement layout = $(CssLayoutElement.class).first();
 
         // Drag inside the first text field's caption
+        TextFieldElement firstTextField = layout.$(TextFieldElement.class)
+                .first();
         new Actions(getDriver())
-                .moveToElement(layout.$(TextFieldElement.class).first(), 51, 7)
+                .moveToElement(firstTextField, getXOffset(firstTextField, 51),
+                        getYOffset(firstTextField, 7))
                 .clickAndHold().moveByOffset(-20, 0).release().perform();
         assertLogText("Mouse dragged in CSSLayout",
                 "1. CSSLayout: left click on This is its caption");
 
         // Drag from the first text field to the second text field
+        TextFieldElement otherTextField = layout.$(TextFieldElement.class)
+                .get(1);
         new Actions(getDriver())
-                .moveToElement(layout.$(TextFieldElement.class).first(), 51, 27)
+                .moveToElement(firstTextField, getXOffset(firstTextField, 51),
+                        getYOffset(firstTextField, 27))
                 .clickAndHold()
-                .moveToElement(layout.$(TextFieldElement.class).get(1), 51, 27)
+                .moveToElement(otherTextField, getXOffset(otherTextField, 51),
+                        getYOffset(otherTextField, 27))
                 .release().perform();
         assertLogText("Expected the drag to be ignored between elements",
                 "1. CSSLayout: left click on This is its caption");

@@ -15,35 +15,27 @@
  */
 package com.vaadin.osgi.compatibility.themes;
 
-import org.osgi.service.component.annotations.Activate;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.http.HttpService;
 
-import com.vaadin.osgi.resources.OsgiVaadinResources;
-import com.vaadin.osgi.resources.VaadinResourceService;
+import com.vaadin.osgi.resources.OsgiVaadinContributor;
+import com.vaadin.osgi.resources.OsgiVaadinResource;
+import com.vaadin.osgi.resources.OsgiVaadinTheme;
 
-@Component(immediate = true)
-public class LegacyThemeContributions {
+@Component
+public class LegacyThemeContributions implements OsgiVaadinContributor {
     private static final String[] LEGACY_THEMES = { "base", "chameleon",
             "reindeer", "runo" };
 
-    private HttpService httpService;
-
-    @Activate
-    void startup() throws Exception {
-        VaadinResourceService service = OsgiVaadinResources.getService();
-        for (String themeName : LEGACY_THEMES) {
-            service.publishTheme(themeName, httpService);
+    @Override
+    public List<OsgiVaadinResource> getContributions() {
+        final List<OsgiVaadinResource> contributions = new ArrayList<>(
+                LEGACY_THEMES.length);
+        for (final String theme : LEGACY_THEMES) {
+            contributions.add(OsgiVaadinTheme.create(theme));
         }
-    }
-
-    @Reference
-    void setHttpService(HttpService httpService) {
-        this.httpService = httpService;
-    }
-
-    void unsetHttpService(HttpService httpService) {
-        this.httpService = null;
+        return contributions;
     }
 }

@@ -16,8 +16,12 @@
 
 package com.vaadin.ui;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
+import java.util.StringTokenizer;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -30,6 +34,7 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.shared.ui.checkbox.CheckBoxState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
@@ -63,6 +68,183 @@ public class CheckBox extends AbstractField<Boolean>
             setValue(newValue, true);
         }
     };
+
+    private CheckBoxInputElement checkBoxInputElement = null;
+    private CheckBoxLabelElement checkBoxLabelElement = null;
+
+    /**
+     * The inner input element of the CheckBox.
+     */
+    public static class CheckBoxInputElement implements HasStyleNames {
+
+        private final CheckBox checkBox;
+
+        private CheckBoxInputElement(CheckBox checkBox) {
+            this.checkBox = checkBox;
+        }
+
+        @Override
+        // Implementation copied from AbstractComponent
+        public String getStyleName() {
+            // replaced String with StringBuilder
+            StringBuilder s = new StringBuilder();
+            if (ComponentStateUtil
+                    .hasStyles(checkBox.getState(false).inputStyles)) {
+                for (final Iterator<String> it = checkBox
+                        .getState(false).inputStyles.iterator(); it
+                                .hasNext();) {
+                    s.append(it.next());
+                    if (it.hasNext()) {
+                        s.append(" ");
+                    }
+                }
+            }
+            return s.toString();
+        }
+
+        @Override
+        // Implementation copied from AbstractComponent
+        public void setStyleName(String style) {
+            if (style == null || style.isEmpty()) {
+                checkBox.getState().inputStyles = null;
+                return;
+            }
+            if (checkBox.getState().inputStyles == null) {
+                checkBox.getState().inputStyles = new ArrayList<>();
+            }
+            List<String> styles = checkBox.getState().inputStyles;
+            styles.clear();
+            StringTokenizer tokenizer = new StringTokenizer(style, " ");
+            while (tokenizer.hasMoreTokens()) {
+                styles.add(tokenizer.nextToken());
+            }
+        }
+
+        @Override
+        // Implementation copied from AbstractComponent
+        public void addStyleName(String style) {
+            if (style == null || style.isEmpty()) {
+                return;
+            }
+            if (checkBox.getState().inputStyles != null
+                    && checkBox.getState().inputStyles.contains(style)) {
+                return;
+            }
+            if (style.contains(" ")) {
+                // Split space separated style names and add them one by one.
+                StringTokenizer tokenizer = new StringTokenizer(style, " ");
+                while (tokenizer.hasMoreTokens()) {
+                    addStyleName(tokenizer.nextToken());
+                }
+                return;
+            }
+
+            if (checkBox.getState().inputStyles == null) {
+                checkBox.getState().inputStyles = new ArrayList<>();
+            }
+            List<String> styles = checkBox.getState().inputStyles;
+            styles.add(style);
+        }
+
+        @Override
+        // Implementation copied from AbstractComponent
+        public void removeStyleName(String style) {
+            if (ComponentStateUtil.hasStyles(checkBox.getState().inputStyles)) {
+                StringTokenizer tokenizer = new StringTokenizer(style, " ");
+                while (tokenizer.hasMoreTokens()) {
+                    checkBox.getState().inputStyles
+                            .remove(tokenizer.nextToken());
+                }
+            }
+        }
+    }
+
+    /**
+     * The inner label element of the CheckBox.
+     */
+    public static class CheckBoxLabelElement implements HasStyleNames {
+
+        private final CheckBox checkBox;
+
+        private CheckBoxLabelElement(CheckBox checkBox) {
+            this.checkBox = checkBox;
+        }
+
+        @Override
+        // Implementation copied from AbstractComponent
+        public String getStyleName() {
+            // replaced String with StringBuilder
+            StringBuilder s = new StringBuilder();
+            if (ComponentStateUtil
+                    .hasStyles(checkBox.getState(false).labelStyles)) {
+                for (final Iterator<String> it = checkBox
+                        .getState(false).labelStyles.iterator(); it
+                                .hasNext();) {
+                    s.append(it.next());
+                    if (it.hasNext()) {
+                        s.append(" ");
+                    }
+                }
+            }
+            return s.toString();
+        }
+
+        @Override
+        // Implementation copied from AbstractComponent
+        public void setStyleName(String style) {
+            if (style == null || style.isEmpty()) {
+                checkBox.getState().labelStyles = null;
+                return;
+            }
+            if (checkBox.getState().labelStyles == null) {
+                checkBox.getState().labelStyles = new ArrayList<>();
+            }
+            List<String> styles = checkBox.getState().labelStyles;
+            styles.clear();
+            StringTokenizer tokenizer = new StringTokenizer(style, " ");
+            while (tokenizer.hasMoreTokens()) {
+                styles.add(tokenizer.nextToken());
+            }
+        }
+
+        @Override
+        // Implementation copied from AbstractComponent
+        public void addStyleName(String style) {
+            if (style == null || style.isEmpty()) {
+                return;
+            }
+            if (checkBox.getState().labelStyles != null
+                    && checkBox.getState().labelStyles.contains(style)) {
+                return;
+            }
+            if (style.contains(" ")) {
+                // Split space separated style names and add them one by one.
+                StringTokenizer tokenizer = new StringTokenizer(style, " ");
+                while (tokenizer.hasMoreTokens()) {
+                    addStyleName(tokenizer.nextToken());
+                }
+                return;
+            }
+
+            if (checkBox.getState().labelStyles == null) {
+                checkBox.getState().labelStyles = new ArrayList<>();
+            }
+            List<String> styles = checkBox.getState().labelStyles;
+            styles.add(style);
+        }
+
+        @Override
+        // Implementation copied from AbstractComponent
+        public void removeStyleName(String style) {
+            if (ComponentStateUtil.hasStyles(checkBox.getState().labelStyles)) {
+                StringTokenizer tokenizer = new StringTokenizer(style, " ");
+                while (tokenizer.hasMoreTokens()) {
+                    checkBox.getState().labelStyles
+                            .remove(tokenizer.nextToken());
+                }
+            }
+        }
+    }
 
     /**
      * Creates a new checkbox.
@@ -211,4 +393,31 @@ public class CheckBox extends AbstractField<Boolean>
                 def.getValue(), Boolean.class, designContext);
     }
 
+    /**
+     * Returns the {@link CheckBoxInputElement} element to manipulate the style
+     * name of the {@code input} element of the {@link CheckBox}.
+     *
+     * @since 8.7
+     * @return the current {@link CheckBoxInputElement}, not {@code null}.
+     */
+    public CheckBoxInputElement getInputElement() {
+        if (checkBoxInputElement == null) {
+            checkBoxInputElement = new CheckBoxInputElement(this);
+        }
+        return checkBoxInputElement;
+    }
+
+    /**
+     * Returns the {@link CheckBoxLabelElement} element to manipulate the style
+     * name of the {@code label} element of the {@link CheckBox}.
+     *
+     * @since 8.7
+     * @return the current {@link CheckBoxLabelElement}, not {@code null}.
+     */
+    public CheckBoxLabelElement getLabelElement() {
+        if (checkBoxLabelElement == null) {
+            checkBoxLabelElement = new CheckBoxLabelElement(this);
+        }
+        return checkBoxLabelElement;
+    }
 }

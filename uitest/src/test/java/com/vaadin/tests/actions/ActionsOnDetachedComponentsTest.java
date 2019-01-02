@@ -4,13 +4,10 @@ import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.TableElement;
@@ -29,11 +26,6 @@ public class ActionsOnDetachedComponentsTest extends MultiBrowserTest {
             // focus the page to make shortcuts go to the right place
             getDriver().findElement(By.className("v-app")).click();
         }
-    }
-
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsersSupportingContextMenu();
     }
 
     @Test

@@ -11,8 +11,11 @@ import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TableRowElement;
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.data.bean.Sex;
+import com.vaadin.tests.tb3.AbstractTB3Test;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.PrivateTB3Configuration;
 
 public abstract class BasicPersonFormTest extends MultiBrowserTest {
 
@@ -24,6 +27,11 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
         super.setup();
 
         logCounter = 0;
+
+        if (BrowserUtil.isFirefox(getDesiredCapabilities())) {
+            // Use larger view port to make sure everything is visible.
+            testBench().resizeViewPortTo(1500, 1500);
+        }
     }
 
     @Override

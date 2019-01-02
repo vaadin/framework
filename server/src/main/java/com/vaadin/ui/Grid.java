@@ -103,7 +103,9 @@ import com.vaadin.ui.components.grid.Editor;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.ui.components.grid.Footer;
 import com.vaadin.ui.components.grid.FooterRow;
+import com.vaadin.ui.components.grid.GridMultiSelect;
 import com.vaadin.ui.components.grid.GridSelectionModel;
+import com.vaadin.ui.components.grid.GridSingleSelect;
 import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.components.grid.Header.Row;
 import com.vaadin.ui.components.grid.HeaderCell;
@@ -843,6 +845,23 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public static class Column<T, V> extends AbstractExtension {
 
+        /**
+         * behavior when parsing nested properties which may contain
+         * <code>null</code> values in the property chain
+         */
+        public enum NestedNullBehavior {
+            /**
+             * throw a NullPointerException if there is a nested
+             * <code>null</code> value
+             */
+            THROW,
+            /**
+             * silently ignore any exceptions caused by nested <code>null</code>
+             * values
+             */
+            ALLOW_NULLS
+        }
+
         private final ValueProvider<T, V> valueProvider;
         private ValueProvider<V, ?> presentationProvider;
 
@@ -854,6 +873,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             return Stream.of(new QuerySortOrder(id, direction));
         };
 
+        private NestedNullBehavior nestedNullBehavior = NestedNullBehavior.THROW;
         private boolean sortable = true;
         private SerializableComparator<T> comparator;
         private StyleGenerator<T> styleGenerator = item -> null;
@@ -988,6 +1008,38 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             }
         }
 
+        /**
+         * Constructs a new Column configuration with given renderer and value
+         * provider.
+         * <p>
+         * For a more complete explanation on presentation provider, see
+         * {@link #setRenderer(ValueProvider, Renderer)}.
+         *
+         * @param valueProvider
+         *            the function to get values from items, not
+         *            <code>null</code>
+         * @param presentationProvider
+         *            the function to get presentations from the value of this
+         *            column, not <code>null</code>. For more details, see
+         *            {@link #setRenderer(ValueProvider, Renderer)}
+         * @param nestedNullBehavior
+         *            behavior on encountering nested <code>null</code> values
+         *            when reading the value from the bean
+         * @param renderer
+         *            the presentation renderer, not <code>null</code>
+         * @param <P>
+         *            the presentation type
+         *
+         * @since
+         */
+        protected <P> Column(ValueProvider<T, V> valueProvider,
+                ValueProvider<V, P> presentationProvider,
+                Renderer<? super P> renderer,
+                NestedNullBehavior nestedNullBehavior) {
+            this(valueProvider, presentationProvider, renderer);
+            this.nestedNullBehavior = nestedNullBehavior;
+        }
+
         private static int compareMaybeComparables(Object a, Object b) {
             if (hasCommonComparableBaseType(a, b)) {
                 return compareComparables(a, b);
@@ -1051,8 +1103,16 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         @SuppressWarnings("unchecked")
         private <P> JsonValue generateRendererValue(T item,
                 ValueProvider<V, P> presentationProvider, Connector renderer) {
-            P presentationValue = presentationProvider
-                    .apply(valueProvider.apply(item));
+            V value;
+            try {
+                value = valueProvider.apply(item);
+            } catch (NullPointerException npe) {
+                value = null;
+                if (NestedNullBehavior.THROW == nestedNullBehavior) {
+                    throw npe;
+                }
+            }
+            P presentationValue = presentationProvider.apply(value);
 
             // Make Grid track components.
             if (renderer instanceof ComponentRenderer
@@ -1395,6 +1455,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * Sets the style generator that is used for generating class names for
          * cells in this column. Returning null from the generator results in no
          * custom style name being set.
+         *
+         * Note: The style generator is applied only to the body cells, not to
+         * the Editor.
          *
          * @param cellStyleGenerator
          *            the cell style generator to set, not null
@@ -2507,6 +2570,16 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 .forEach(this::addColumn);
     }
 
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
+
+        if (initial && editor.isOpen()) {
+            // Re-attaching grid. Any old editor should be closed.
+            editor.cancel();
+        }
+    }
+
     /**
      * Sets the property set to use for this grid. Does not create or update
      * columns in any way but will delete and re-create the editor.
@@ -2708,6 +2781,59 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
+     * Adds a new column with the given property name and renderer. The property
+     * name will be used as the {@link Column#getId() column id} and the
+     * {@link Column#getCaption() column caption} will be set based on the
+     * property definition.
+     * <p>
+     * This method can only be used for a <code>Grid</code> created using
+     * {@link Grid#Grid(Class)} or {@link #withPropertySet(PropertySet)}.
+     * <p>
+     * You can add columns for nested properties with dot notation, eg.
+     * <code>"property.nestedProperty"</code>
+     *
+     * @param propertyName
+     *            the property name of the new column, not <code>null</code>
+     * @param renderer
+     *            the renderer to use, not <code>null</code>
+     * @param nestedNullBehavior
+     *            the behavior when
+     * @return the newly added column, not <code>null</code>
+     */
+    public Column<T, ?> addColumn(String propertyName,
+            AbstractRenderer<? super T, ?> renderer,
+            Column.NestedNullBehavior nestedNullBehavior) {
+        Objects.requireNonNull(propertyName, "Property name cannot be null");
+        Objects.requireNonNull(renderer, "Renderer cannot be null");
+
+        if (getColumn(propertyName) != null) {
+            throw new IllegalStateException(
+                    "There is already a column for " + propertyName);
+        }
+
+        PropertyDefinition<T, ?> definition = propertySet
+                .getProperty(propertyName)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Could not resolve property name " + propertyName
+                                + " from " + propertySet));
+
+        if (!renderer.getPresentationType()
+                .isAssignableFrom(definition.getType())) {
+            throw new IllegalArgumentException(
+                    renderer + " cannot be used with a property of type "
+                            + definition.getType().getName());
+        }
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        Column<T, ?> column = createColumn(definition.getGetter(),
+                ValueProvider.identity(), (AbstractRenderer) renderer,
+                nestedNullBehavior);
+        String generatedIdentifier = getGeneratedIdentifier();
+        addColumn(generatedIdentifier, column);
+        column.setId(definition.getName()).setCaption(definition.getCaption());
+        return column;
+    }
+
+    /**
      * Adds a new text column to this {@link Grid} with a value provider. The
      * column will use a {@link TextRenderer}. The value is converted to a
      * String using {@link Object#toString()}. In-memory sorting will use the
@@ -2809,7 +2935,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Adds a column that shows components.
      * <p>
-     * This is a shorthand for {@link #addColum()} with a
+     * This is a shorthand for {@link #addColumn()} with a
      * {@link ComponentRenderer}.
      *
      * @param componentProvider
@@ -2848,6 +2974,34 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             ValueProvider<V, P> presentationProvider,
             AbstractRenderer<? super T, ? super P> renderer) {
         return new Column<>(valueProvider, presentationProvider, renderer);
+    }
+
+    /**
+     * Creates a column instance from a value provider, presentation provider
+     * and a renderer.
+     *
+     * @param valueProvider
+     *            the value provider
+     * @param presentationProvider
+     *            the presentation provider
+     * @param renderer
+     *            the renderer
+     * @param nestedNullBehavior
+     *            the behavior when facing nested <code>null</code> values
+     * @return a new column instance
+     * @param <V>
+     *            the column value type
+     * @param <P>
+     *            the column presentation type
+     *
+     * @since
+     */
+    private <V, P> Column<T, V> createColumn(ValueProvider<T, V> valueProvider,
+            ValueProvider<V, P> presentationProvider,
+            AbstractRenderer<? super T, ? super P> renderer,
+            Column.NestedNullBehavior nestedNullBehavior) {
+        return new Column<>(valueProvider, presentationProvider, renderer,
+                nestedNullBehavior);
     }
 
     private void addColumn(String identifier, Column<T, ?> column) {
@@ -2998,6 +3152,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Gets a {@link Column} of this grid by its identifying string.
      *
+     * When you use the Grid constructor with bean class, the columns are
+     * initialised with columnId being the property name.
+     *
      * @see Column#setId(String)
      *
      * @param columnId
@@ -3064,7 +3221,21 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                     "count must be between -1 and the current number of columns ("
                             + columnSet.size() + "): " + numberOfColumns);
         }
-
+        int currentFrozenColumnState = getState(false).frozenColumnCount;
+        /*
+         * we remove the current value from the state so that setting frozen
+         * columns will always happen after this call. This is so that the value
+         * will be set also in the widget even if it happens to seem to be the
+         * same as this current value we're setting.
+         */
+        if (currentFrozenColumnState != numberOfColumns) {
+            final String diffStateKey = "frozenColumnCount";
+            UI ui = getUI();
+            if (ui != null) {
+                ui.getConnectorTracker().getDiffState(Grid.this)
+                        .remove(diffStateKey);
+            }
+        }
         getState().frozenColumnCount = numberOfColumns;
     }
 
@@ -3295,6 +3466,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Sets the style generator that is used for generating class names for rows
      * in this grid. Returning null from the generator results in no custom
      * style name being set.
+     *
+     * Note: The style generator is applied only to the body cells, not to the
+     * Editor.
      *
      * @see StyleGenerator
      *
@@ -3894,14 +4068,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @throws IllegalStateException
      *             if not using a single selection model
      */
-    public SingleSelect<T> asSingleSelect() {
-        GridSelectionModel<T> model = getSelectionModel();
-        if (!(model instanceof SingleSelectionModel)) {
-            throw new IllegalStateException(
-                    "Grid is not in single select mode, it needs to be explicitly set to such with setSelectionModel(SingleSelectionModel) before being able to use single selection features.");
-        }
-
-        return ((SingleSelectionModel<T>) model).asSingleSelect();
+    public GridSingleSelect<T> asSingleSelect() {
+        return new GridSingleSelect<>(this);
     }
 
     public Editor<T> getEditor() {
@@ -3918,13 +4086,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @throws IllegalStateException
      *             if not using a multiselection model
      */
-    public MultiSelect<T> asMultiSelect() {
-        GridSelectionModel<T> model = getSelectionModel();
-        if (!(model instanceof MultiSelectionModel)) {
-            throw new IllegalStateException(
-                    "Grid is not in multiselect mode, it needs to be explicitly set to such with setSelectionModel(MultiSelectionModel) before being able to use multiselection features.");
-        }
-        return ((MultiSelectionModel<T>) model).asMultiSelect();
+    public GridMultiSelect<T> asMultiSelect() {
+        return new GridMultiSelect<>(this);
     }
 
     /**
@@ -4775,21 +4938,5 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         for (Column<T, ?> column : getColumns()) {
             column.updateSortable();
         }
-    }
-
-    @Override
-    public void setVisible(boolean visible) {
-        if (getEditor().isOpen() && !visible) {
-            getEditor().cancel();
-        }
-        super.setVisible(visible);
-    }
-
-    @Override
-    public void detach() {
-        if (getEditor().isOpen()) {
-            getEditor().cancel();
-        }
-        super.detach();
     }
 }

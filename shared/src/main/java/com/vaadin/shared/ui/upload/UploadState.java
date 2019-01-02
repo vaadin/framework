@@ -16,6 +16,8 @@
 package com.vaadin.shared.ui.upload;
 
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.annotations.DelegateToWidget;
+import com.vaadin.shared.annotations.NoLayout;
 
 /**
  * Shared state for the Upload component.
@@ -30,4 +32,8 @@ public class UploadState extends AbstractComponentState {
     {
         primaryStyleName = "v-upload";
     }
+
+    @DelegateToWidget
+    @NoLayout
+    public String acceptMimeTypes;
 }

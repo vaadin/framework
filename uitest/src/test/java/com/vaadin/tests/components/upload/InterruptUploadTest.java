@@ -1,63 +1,64 @@
 package com.vaadin.tests.components.upload;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.internal.WrapsElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebElement;
 
-import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.WindowElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.util.LoremIpsum;
 
+import static org.junit.Assert.assertTrue;
+
 public class InterruptUploadTest extends MultiBrowserTest {
 
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        // PhantomJS fails to upload files for unknown reasons
-        return getBrowsersExcludingPhantomJS();
-    }
+    private static final String EXPECTED_COUNTER_TEXT = " (counting interrupted at ";
 
     @Test
     public void testInterruptUpload() throws Exception {
         openTestURL();
 
         File tempFile = createTempFile();
+        scheduleUploadCancel();
+
         fillPathToUploadInput(tempFile.getPath());
 
-        waitForElementPresent(By.className("v-window"));
+        // Wait for 3 seconds until everything is done.
+        Thread.sleep(3000);
 
-        $(ButtonElement.class).caption("Cancel").first().click();
-
-        // Wait for 1 second for server to finish up.
-        Thread.sleep(1000);
-
-        String expected = " (counting interrupted at ";
         String actual = $(LabelElement.class).caption("Line breaks counted")
                 .first().getText();
         assertTrue("Line break count note does not match expected (was: "
-                + actual + ")", actual.contains(expected));
+                + actual + ")", actual.contains(EXPECTED_COUNTER_TEXT));
 
         $(WindowElement.class).first().close();
         waitForElementNotPresent(By.className("v-window"));
 
+        // Check if second upload happens
         tempFile = createTempFile();
+        scheduleUploadCancel();
         fillPathToUploadInput(tempFile.getPath());
 
-        waitForElementPresent(By.className("v-window"));
-        $(ButtonElement.class).caption("Cancel").first().click();
+        actual = $(LabelElement.class).caption("Line breaks counted").first()
+                .getText();
+        assertTrue("Line break count note does not match expected (was: "
+                + actual + ")", actual.contains(EXPECTED_COUNTER_TEXT));
+    }
+
+    private void scheduleUploadCancel() {
+        // Schedule upload cancel in 2 seconds
+        ((JavascriptExecutor) getDriver()).executeScript(
+                "setTimeout( function () {window.document.querySelector(\".v-window .v-button\").click()},2000)");
     }
 
     /**
@@ -82,7 +83,7 @@ public class InterruptUploadTest extends MultiBrowserTest {
         return sb.toString();
     }
 
-    private void fillPathToUploadInput(String tempFileName) throws Exception {
+    private void fillPathToUploadInput(String tempFileName) {
         // create a valid path in upload input element. Instead of selecting a
         // file by some file browsing dialog, we use the local path directly.
         WebElement input = getInput();
@@ -94,7 +95,7 @@ public class InterruptUploadTest extends MultiBrowserTest {
         return getDriver().findElement(By.className("gwt-FileUpload"));
     }
 
-    private void setLocalFileDetector(WebElement element) throws Exception {
+    private void setLocalFileDetector(WebElement element) {
         if (getRunLocallyBrowser() != null) {
             return;
         }

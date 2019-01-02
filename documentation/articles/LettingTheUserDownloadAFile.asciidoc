@@ -62,8 +62,7 @@ along with the file to ensure the browser doesn't try to open the file
 even if it's is a file type that the browser knows how to deal with.
 
 [[lazily-determine-the-content-and-the-name-of-the-file-being-server]]
-Lazily determine the content and the name of the file being server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Lazily determine the content and the name of the file being server
 
 One can lazily determine the content of the file using a
 `StreamResource`. Yet the name of the file that is going to be
@@ -110,3 +109,28 @@ public class OnDemandFileDownloader extends FileDownloader {
   }
 }
 ....
+
+[[lazily-determine-the-content-and-the-name-of-the-file-being-server]]
+==== Cancelled downloads
+
+Since downloadable files may be quite big, and the download process may take time, the user might decide to
+cancel the download process. In this case `IOException` may be thrown by the web server. That
+does not mean something went wrong with the application, but the user pressed `Cancel` button during download. To prevent the exception to be logged, you can catch and ignore it as here:
+
+```java
+public class IgnoreCancelDownloader extends FileDownloader {
+
+    ...
+
+    @Override
+    public boolean handleConnectorRequest(final VaadinRequest request, final VaadinResponse response, final String path) {
+        try {
+            return super.handleConnectorRequest(request, response, path);
+        } catch (final IOException ignored) {
+            return true;
+        }
+    }
+}
+
+```
+Note that the exception is a sublclass of `IOException`, but the particular class depends on the web container.

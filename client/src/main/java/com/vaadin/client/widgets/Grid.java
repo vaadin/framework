@@ -76,10 +76,7 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.DeferredWorker;
-import com.vaadin.client.Focusable;
-import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.*;
 import com.vaadin.client.WidgetUtil.Reference;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
@@ -3342,6 +3339,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      */
     private class AutoColumnWidthsRecalculator {
         private double lastCalculatedInnerWidth = -1;
+        private double lastCalculatedInnerHeight = -1;
 
         private final ScheduledCommand calculateCommand = new ScheduledCommand() {
 
@@ -3413,6 +3411,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             // Make SelectAllCheckbox visible
             getSelectionColumn().ifPresent(col -> {
+                if (getDefaultHeaderRow() == null)
+                    return;
                 HeaderCell headerCell = getDefaultHeaderRow().getCell(col);
                 if (headerCell.getType().equals(GridStaticCellType.WIDGET)) {
                     // SelectAllCheckbox is present already
@@ -3434,6 +3434,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             // Update latest width to prevent recalculate on height change.
             lastCalculatedInnerWidth = escalator.getInnerWidth();
+            lastCalculatedInnerHeight = getEscalatorInnerHeight();
         }
 
         private boolean columnsAreGuaranteedToBeWiderThanGrid() {
@@ -9146,6 +9147,17 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 recalculateColumnWidths();
             }
 
+            if (getEscalatorInnerHeight() != autoColumnWidthsRecalculator.lastCalculatedInnerHeight) {
+                Scheduler.get().scheduleFinally(() -> {
+                    // Trigger re-calculation of all row positions.
+                    RowContainer.BodyRowContainer body = getEscalator()
+                            .getBody();
+                    if (!body.isAutodetectingRowHeightLater()) {
+                        body.setDefaultRowHeight(body.getDefaultRowHeight());
+                    }
+                });
+            }
+
             // Vertical resizing could make editor positioning invalid so it
             // needs to be recalculated on resize
             if (isEditorActive()) {
@@ -9157,6 +9169,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             // way to the bottom.
             refreshBody();
         });
+    }
+
+    private double getEscalatorInnerHeight() {
+        return new ComputedStyle(getEscalator().getTableWrapper())
+                .getHeightIncludingBorderPadding();
     }
 
     /**
