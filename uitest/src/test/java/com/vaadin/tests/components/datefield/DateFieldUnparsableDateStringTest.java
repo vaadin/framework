@@ -1,15 +1,17 @@
 package com.vaadin.tests.components.datefield;
 
-import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.AbstractDateFieldElement;
-import com.vaadin.testbench.parallel.Browser;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import java.time.LocalDate;
+import java.util.List;
+
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import java.util.List;
+import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.AbstractDateFieldElement;
+import com.vaadin.testbench.parallel.Browser;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 import static org.junit.Assert.assertEquals;
 
@@ -23,12 +25,12 @@ public class DateFieldUnparsableDateStringTest extends MultiBrowserTest {
                 .findElement(By.className("v-textfield"));
         dateTextbox.sendKeys("0304", Keys.ENTER);
         findElement(By.tagName("body")).click();
-        assertEquals("03.04.2018", dateTextbox.getAttribute("value"));
+        assertEquals("03.04."+ LocalDate.now().getYear(), dateTextbox.getAttribute("value"));
 
         dateTextbox.clear();
         dateTextbox.sendKeys("0304", Keys.ENTER);
         findElement(By.tagName("body")).click();
-        assertEquals("03.04.2018", dateTextbox.getAttribute("value"));
+        assertEquals("03.04."+ LocalDate.now().getYear(), dateTextbox.getAttribute("value"));
     }
 
     @Override
