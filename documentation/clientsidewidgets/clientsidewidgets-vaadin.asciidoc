@@ -13,7 +13,7 @@ widgets have somewhat different feature set from the GWT widgets and are
 foremost intended for integration with the server-side components, but some may
 prove useful for client-side applications as well.
 
-
+[source, java] 
 ----
 public class MyEntryPoint implements EntryPoint {
     @Override
