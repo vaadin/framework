@@ -25,6 +25,7 @@ import javax.servlet.ServletException;
 
 import org.atmosphere.cache.UUIDBroadcasterCache;
 import org.atmosphere.client.TrackMessageSizeInterceptor;
+import org.atmosphere.cpr.Action
 import org.atmosphere.cpr.ApplicationConfig;
 import org.atmosphere.cpr.AtmosphereFramework;
 import org.atmosphere.cpr.AtmosphereFramework.AtmosphereHandlerWrapper;
@@ -231,11 +232,15 @@ public class PushRequestHandler implements SessionExpiredHandler {
                 return true;
             }
             try {
-                atmosphere.doCometSupport(
+                Action action = atmosphere.doCometSupport(
                         AtmosphereRequestImpl
                                 .wrap((VaadinServletRequest) request),
                         AtmosphereResponseImpl
                                 .wrap((VaadinServletResponse) response));
+                if (action == Action.CANCELLED) {
+                    response.sendError(400,"Cancelled. No push available.");
+                    return true;
+                }
             } catch (ServletException e) {
                 // TODO PUSH decide how to handle
                 throw new RuntimeException(e);
