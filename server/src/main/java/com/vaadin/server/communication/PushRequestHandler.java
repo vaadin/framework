@@ -25,7 +25,7 @@ import javax.servlet.ServletException;
 
 import org.atmosphere.cache.UUIDBroadcasterCache;
 import org.atmosphere.client.TrackMessageSizeInterceptor;
-import org.atmosphere.cpr.Action
+import org.atmosphere.cpr.Action;
 import org.atmosphere.cpr.ApplicationConfig;
 import org.atmosphere.cpr.AtmosphereFramework;
 import org.atmosphere.cpr.AtmosphereFramework.AtmosphereHandlerWrapper;
