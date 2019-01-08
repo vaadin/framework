@@ -339,6 +339,8 @@ public class ComboBoxConnector extends AbstractListingConnector
         int start = getWidget().currentPage * getWidget().pageLength;
         int end = getWidget().pageLength > 0 ? start + getWidget().pageLength
                 : getDataSource().size();
+        
+        getWidget().lastNewItemString = null;
 
         getWidget().currentSuggestions.clear();
 
