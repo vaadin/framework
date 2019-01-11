@@ -188,8 +188,7 @@ public class ComboBoxConnector extends AbstractListingConnector
         if (itemValue != null && !itemValue.equals(pendingNewItemValue)) {
             // clear any previous handling as outdated
             clearNewItemHandling();
-        }
-        if (pendingNewItemValue != itemValue && itemValue != null) {
+
             pendingNewItemValue = itemValue;
             rpc.createNewItem(itemValue);
             getDataReceivedHandler().clearPendingNavigation();
@@ -342,8 +341,6 @@ public class ComboBoxConnector extends AbstractListingConnector
         int end = getWidget().pageLength > 0 ? start + getWidget().pageLength
                 : getDataSource().size();
 
-        getWidget().lastNewItemString = null;
-
         getWidget().currentSuggestions.clear();
 
         if (getWidget().getNullSelectionItemShouldBeVisible()) {
@@ -363,7 +360,7 @@ public class ComboBoxConnector extends AbstractListingConnector
 
         updateSuggestions(start, end);
         getWidget().setTotalSuggestions(getDataSource().size());
-
+        getWidget().lastNewItemString = null;
         getDataReceivedHandler().dataReceived();
     }
 
@@ -455,10 +452,7 @@ public class ComboBoxConnector extends AbstractListingConnector
      * versions.
      */
     private void clearNewItemHandling() {
-        // never clear pending value before it has been handled
-        if (!isNewItemStillPending()) {
             pendingNewItemValue = null;
-        }
     }
 
     /**
