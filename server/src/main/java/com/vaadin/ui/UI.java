@@ -869,6 +869,13 @@ public abstract class UI extends AbstractSingleComponentContainer
 
         page.updateLocation(newLocation.toString(), true, false);
         page.updateBrowserWindowSize(newWidth, newHeight, true);
+
+        // Navigate if there is navigator, this is needed in case of
+        // PushStateNavigation
+        Navigator navigator = getNavigator();
+        if (navigator != null) {
+            navigator.navigateTo(navigator.getState());
+        }
     }
 
     /**
