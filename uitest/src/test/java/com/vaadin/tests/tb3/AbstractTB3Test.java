@@ -1057,6 +1057,15 @@ public abstract class AbstractTB3Test extends ParallelTest {
     protected void selectMenuPath(String... menuCaptions) {
         selectMenu(menuCaptions[0], true);
 
+        // Make sure menu popup is opened.
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver webDriver) {
+                return isElementPresent(By.className("gwt-MenuBarPopup"))
+                        || isElementPresent(By.className("v-menubar-popup"));
+            }
+        });
+        
         // Move to the menu item opened below the menu bar.
         new Actions(getDriver())
                 .moveByOffset(0,
