@@ -2,9 +2,15 @@ package com.vaadin.tests.tb3;
 
 import java.util.logging.Logger;
 
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.Platform;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.safari.SafariOptions;
 
 import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.DefaultBrowserFactory;
@@ -17,26 +23,26 @@ public class BrowserStackBrowserFactory extends DefaultBrowserFactory {
     @Override
     public DesiredCapabilities create(Browser browser, String version,
             Platform platform) {
-        DesiredCapabilities caps;
+        MutableCapabilities caps;
 
         switch (browser) {
         /* Ignored browsers */
         case CHROME:
-            caps = DesiredCapabilities.chrome();
+            caps = new ChromeOptions();
             break;
         case PHANTOMJS:
             caps = DesiredCapabilities.phantomjs();
             break;
         case SAFARI:
-            caps = DesiredCapabilities.safari();
+            caps = new SafariOptions();
             break;
         case FIREFOX:
-            caps = DesiredCapabilities.firefox();
+            caps = new FirefoxOptions();
             break;
         /* Actual browsers */
         case IE11:
-            caps = DesiredCapabilities.internetExplorer();
-            caps.setVersion("11");
+            caps = new InternetExplorerOptions();
+            caps.setCapability(CapabilityType.VERSION, "11");
             caps.setCapability("browser", "IE");
             caps.setCapability("browser_version", "11.0");
             // There are 2 capabilities ie.ensureCleanSession and
@@ -47,7 +53,7 @@ public class BrowserStackBrowserFactory extends DefaultBrowserFactory {
                     true);
             break;
         default:
-            caps = DesiredCapabilities.firefox();
+            caps = new FirefoxOptions();
         }
 
         // BrowserStack specific parts
@@ -55,7 +61,7 @@ public class BrowserStackBrowserFactory extends DefaultBrowserFactory {
         // for now, run all tests on Windows 7
         caps.setCapability("os", "Windows");
         caps.setCapability("os_version", "7");
-        caps.setPlatform(Platform.WINDOWS);
+        caps.setCapability(CapabilityType.PLATFORM, Platform.WINDOWS);
 
         // enable logging on BrowserStack
         caps.setCapability("browserstack.debug", "true");
@@ -80,7 +86,7 @@ public class BrowserStackBrowserFactory extends DefaultBrowserFactory {
 
         getLogger().info("Using BrowserStack capabilities " + caps);
 
-        return caps;
+        return new DesiredCapabilities(caps);
     }
 
     private static final Logger getLogger() {
