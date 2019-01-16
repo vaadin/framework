@@ -17,10 +17,14 @@ package com.vaadin.shared.ui.checkbox;
 
 import com.vaadin.shared.AbstractFieldState;
 
+import java.util.List;
+
 public class CheckBoxState extends AbstractFieldState {
     {
         primaryStyleName = "v-checkbox";
     }
 
     public boolean checked = false;
+    public List<String> inputStyles = null;
+    public List<String> labelStyles = null;
 }

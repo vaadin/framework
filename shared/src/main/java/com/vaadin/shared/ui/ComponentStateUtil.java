@@ -17,6 +17,7 @@ package com.vaadin.shared.ui;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.Registration;
@@ -42,7 +43,11 @@ public final class ComponentStateUtil implements Serializable {
     }
 
     public static final boolean hasStyles(AbstractComponentState state) {
-        return state.styles != null && !state.styles.isEmpty();
+        return hasStyles(state.styles);
+    }
+
+    public static final boolean hasStyles(List<String> styles) {
+        return styles != null && !styles.isEmpty();
     }
 
     public static final boolean isRelativeWidth(AbstractComponentState state) {
