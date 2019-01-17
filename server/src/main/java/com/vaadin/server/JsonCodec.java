@@ -446,31 +446,34 @@ public class JsonCodec implements Serializable {
     }
 
     /**
-     * Add a custom JSONSerializer for a specific Class. Friendly warning: it's
-     * easy to break things with this API, use at your own risk.
+     * Set a custom JSONSerializer for a specific Class. Existence of custom
+     * serializers is checked after basic types (Strings, Booleans, Numbers,
+     * Characters), Collections, Maps and Enums, so setting custom serializers
+     * for these won't have any effect.
+     *
+     * Warning: overriding existing custom serializers may lead into unexpected
+     * behavior in components that expect customized behavior.
      *
      * @throws IllegalArgumentException
-     *             if either parameter is null or clazz is in the package
-     *             java.lang
+     *             Thrown if parameter clazz is null.
      * @param clazz
-     *            Class that should use a custom serializer
+     *            The target class.
      * @param jsonSerializer
-     *            Custom JSONSerializer
+     *            Custom JSONSerializer to add. If @code{null}, remove custom
+     *            serializer from class clazz.
      */
-    public static void addCustomSerializer(Class<?> clazz,
+    public static void setCustomSerializer(Class<?> clazz,
             JSONSerializer<?> jsonSerializer) {
         if (clazz == null) {
             throw new IllegalArgumentException(
                     "Cannot add serializer for null");
         }
-        if (clazz.getPackage().getName().startsWith("java.lang")) {
-            throw new IllegalArgumentException(
-                    "Cannot add a custom serializer for a class in the package java.lang");
-        }
         if (jsonSerializer == null) {
-            throw new IllegalArgumentException("Cannot add a null serializer");
+            CUSTOM_SERIALIZERS.remove(clazz);
+        } else {
+            CUSTOM_SERIALIZERS.put(clazz, jsonSerializer);
         }
-        CUSTOM_SERIALIZERS.put(clazz, jsonSerializer);
+
     }
 
     private static UidlValue decodeUidlValue(JsonArray encodedJsonValue,
