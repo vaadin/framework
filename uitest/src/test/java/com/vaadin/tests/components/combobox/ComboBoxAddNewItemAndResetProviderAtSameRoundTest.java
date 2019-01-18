@@ -2,9 +2,7 @@ package com.vaadin.tests.components.combobox;
 
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
@@ -80,7 +78,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest extends SingleBro
 
         //re-add the same value and select
         sendKeysToInput(input);
-        proformSelect(selectionType);
+        performSelect(selectionType);
 
         assertThatSelectedValueIs(input);
     }
@@ -94,7 +92,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest extends SingleBro
         comboBoxElement.sendKeys(keys);
     }
 
-    private void proformSelect(SelectionType selectionType){
+    private void performSelect(SelectionType selectionType){
         switch (selectionType) {
             case ENTER:
                 sendKeysToInput(Keys.RETURN);
@@ -111,26 +109,11 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest extends SingleBro
     }
 
     protected void assertThatSelectedValueIs(final String value) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-            private String actualComboBoxValue;
-            private String actualLabelValue;
+        String actualComboBoxValue = comboBoxElement.getText();
+        String actualLabelValue = valueLabelElement.getText();
 
-            @Override
-            public Boolean apply(WebDriver input) {
-                actualLabelValue = valueLabelElement.getText();
-                actualComboBoxValue = comboBoxElement.getText();
-                return actualComboBoxValue.equals(value)
-                        && actualLabelValue.equals(value);
-            }
-
-            @Override
-            public String toString() {
-                // Timed out after 10 seconds waiting for ...
-                return String.format(
-                        "combobox and label value to match '%s' (was: '%s' and '%s')",
-                        value, actualComboBoxValue, actualLabelValue);
-            }
-        });
+        assertEquals(value, actualComboBoxValue);
+        assertEquals(value,actualLabelValue);
     }
 
     private void delay(boolean delay) {
