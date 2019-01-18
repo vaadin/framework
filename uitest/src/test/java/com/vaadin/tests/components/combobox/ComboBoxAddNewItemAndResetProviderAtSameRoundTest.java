@@ -1,0 +1,146 @@
+package com.vaadin.tests.components.combobox;
+
+import org.junit.Test;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+
+import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.ComboBoxElement;
+import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.tests.tb3.SingleBrowserTest;
+
+import static org.junit.Assert.assertEquals;
+
+public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest extends SingleBrowserTest {
+
+    protected enum SelectionType {
+        ENTER, TAB, CLICK_OUT;
+    }
+
+    private ComboBoxElement comboBoxElement;
+    private LabelElement valueLabelElement;
+    private LabelElement changeLabelElement;
+    private String inputValue = "000";
+
+    @Override
+    public void setup() throws Exception {
+        super.setup();
+        openTestURL();
+        waitForElementPresent(By.className("v-filterselect"));
+        comboBoxElement = $(ComboBoxElement.class).first();
+        valueLabelElement = $(LabelElement.class).id("value");
+        changeLabelElement = $(LabelElement.class).id("change");
+    }
+
+    @Test
+    public void addNewItemAndReset_reAddWithEnter(){
+        itemHandling(SelectionType.ENTER, inputValue);
+    }
+
+    @Test
+    public void addNewItemAndReset_reAddWithTab(){
+        itemHandling(SelectionType.TAB, inputValue);
+    }
+
+    @Test
+    public void addNewItemAndReset_reAddWithClickOut(){
+        itemHandling(SelectionType.CLICK_OUT, inputValue);
+    }
+
+    @Test
+    public void slowAddNewItemAndReset_reAddWithEnter(){
+        delay(true);
+        itemHandling(SelectionType.ENTER, inputValue);
+    }
+
+    @Test
+    public void slowAddNewItemAndReset_reAddWithTab(){
+        delay(true);
+        itemHandling(SelectionType.TAB, inputValue);
+    }
+
+    @Test
+    public void slowAddNewItemAndReset_reAddWithClickOut(){
+        delay(true);
+        itemHandling(SelectionType.CLICK_OUT, inputValue);
+    }
+
+    private void itemHandling(SelectionType selectionType, String input) {
+        assertThatSelectedValueIs("");
+        sendKeysToInput(input);
+
+        //reset the dataProvider
+        reset();
+        assertThatSelectedValueIs("");
+        assertResetLabelText();
+
+        //re-add the same value and select
+        sendKeysToInput(input);
+        proformSelect(selectionType);
+
+        assertThatSelectedValueIs(input);
+    }
+
+    private void assertResetLabelText() {
+        assertEquals("Reset", changeLabelElement.getText());
+    }
+
+    private void sendKeysToInput(CharSequence... keys) {
+        new Actions(getDriver()).moveToElement(comboBoxElement).perform();
+        comboBoxElement.sendKeys(keys);
+    }
+
+    private void proformSelect(SelectionType selectionType){
+        switch (selectionType) {
+            case ENTER:
+                sendKeysToInput(Keys.RETURN);
+                break;
+            case TAB:
+                sendKeysToInput(Keys.TAB);
+                break;
+            case CLICK_OUT:
+                new Actions(getDriver()).moveToElement(comboBoxElement, 10, 10)
+                        .moveByOffset(comboBoxElement.getSize().getWidth(), 0)
+                        .click().perform();
+                break;
+        }
+    }
+
+    protected void assertThatSelectedValueIs(final String value) {
+        waitUntil(new ExpectedCondition<Boolean>() {
+            private String actualComboBoxValue;
+            private String actualLabelValue;
+
+            @Override
+            public Boolean apply(WebDriver input) {
+                actualLabelValue = valueLabelElement.getText();
+                actualComboBoxValue = comboBoxElement.getText();
+                return actualComboBoxValue.equals(value)
+                        && actualLabelValue.equals(value);
+            }
+
+            @Override
+            public String toString() {
+                // Timed out after 10 seconds waiting for ...
+                return String.format(
+                        "combobox and label value to match '%s' (was: '%s' and '%s')",
+                        value, actualComboBoxValue, actualLabelValue);
+            }
+        });
+    }
+
+    private void delay(boolean delay) {
+        CheckBoxElement checkBox = $(CheckBoxElement.class).id("delay");
+        if (delay != checkBox.isChecked()) {
+            checkBox.click();
+        }
+    }
+
+    protected void reset() {
+        $(ButtonElement.class).id("reset").click();
+    }
+}
