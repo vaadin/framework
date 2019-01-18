@@ -189,12 +189,6 @@ Tutorial] for detailed instructions for using Spring Boot.
 [[advanced.spring.installation]]
 == Installing Vaadin Spring Add-on
 
-Vaadin Spring requires a Java EE 7 compatible servlet container, such as
-Glassfish or Apache TomEE Web Profile, as mentioned for the reference toolchain
-in
-<<dummy/../../../framework/getting-started/getting-started-environment#getting-started.environment,"Setting
-up the Development Environment">>.
-
 To install the Vaadin Spring and/or Vaadin Spring Boot add-ons, either define
 them as an Ivy or Maven dependency or download from the Vaadin Directory add-on
 page at link:https://vaadin.com/directory#addon/vaadin-spring[vaadin.com/directory#addon/vaadin-spring]
