@@ -1649,7 +1649,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         }
 
         private void resetCurrentSuggestionIfNecessary(String selectedKey,
-                                                       String selectedCaption, String selectedIconUri) {
+                String selectedCaption, String selectedIconUri) {
             if (currentSuggestion == null
                     && (selectedKey != null || selectedCaption != null))
                 currentSuggestion = new ComboBoxSuggestion(selectedKey,

@@ -452,7 +452,7 @@ public class ComboBoxConnector extends AbstractListingConnector
      * versions.
      */
     private void clearNewItemHandling() {
-            pendingNewItemValue = null;
+        pendingNewItemValue = null;
     }
 
     /**
