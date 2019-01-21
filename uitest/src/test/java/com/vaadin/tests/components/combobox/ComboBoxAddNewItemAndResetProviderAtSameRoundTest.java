@@ -21,7 +21,6 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     }
 
     private ComboBoxElement comboBoxElement;
-    private LabelElement valueLabelElement;
     private LabelElement changeLabelElement;
     private String inputValue = "000";
 
@@ -31,7 +30,6 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         openTestURL();
         waitForElementPresent(By.className("v-filterselect"));
         comboBoxElement = $(ComboBoxElement.class).first();
-        valueLabelElement = $(LabelElement.class).id("value");
         changeLabelElement = $(LabelElement.class).id("change");
     }
 
@@ -74,6 +72,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
 
         // reset the dataProvider
         reset();
+        assertResetLabelText();
         assertThatSelectedValueIs("");
 
         // re-add the same value and select
@@ -111,10 +110,8 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     private void assertThatSelectedValueIs(final String value) {
         sleep(200);
         String actualComboBoxValue = comboBoxElement.getText();
-        String actualLabelValue = valueLabelElement.getText();
 
         assertEquals(value, actualComboBoxValue);
-        assertEquals(value, actualLabelValue);
     }
 
     private void delay(boolean delay) {
