@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.combobox;
 
+import net.jcip.annotations.NotThreadSafe;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
@@ -13,6 +14,7 @@ import com.vaadin.tests.tb3.SingleBrowserTest;
 
 import static org.junit.Assert.assertEquals;
 
+@NotThreadSafe
 public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         extends SingleBrowserTest {
 
