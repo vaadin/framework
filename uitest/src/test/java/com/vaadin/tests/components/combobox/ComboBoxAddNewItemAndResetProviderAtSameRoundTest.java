@@ -13,7 +13,8 @@ import com.vaadin.tests.tb3.SingleBrowserTest;
 
 import static org.junit.Assert.assertEquals;
 
-public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest extends SingleBrowserTest {
+public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
+        extends SingleBrowserTest {
 
     protected enum SelectionType {
         ENTER, TAB, CLICK_OUT;
@@ -35,34 +36,34 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest extends SingleBro
     }
 
     @Test
-    public void addNewItemAndReset_reAddWithEnter(){
+    public void addNewItemAndReset_reAddWithEnter() {
         itemHandling(SelectionType.ENTER, inputValue);
     }
 
     @Test
-    public void addNewItemAndReset_reAddWithTab(){
+    public void addNewItemAndReset_reAddWithTab() {
         itemHandling(SelectionType.TAB, inputValue);
     }
 
     @Test
-    public void addNewItemAndReset_reAddWithClickOut(){
+    public void addNewItemAndReset_reAddWithClickOut() {
         itemHandling(SelectionType.CLICK_OUT, inputValue);
     }
 
     @Test
-    public void slowAddNewItemAndReset_reAddWithEnter(){
+    public void slowAddNewItemAndReset_reAddWithEnter() {
         delay(true);
         itemHandling(SelectionType.ENTER, inputValue);
     }
 
     @Test
-    public void slowAddNewItemAndReset_reAddWithTab(){
+    public void slowAddNewItemAndReset_reAddWithTab() {
         delay(true);
         itemHandling(SelectionType.TAB, inputValue);
     }
 
     @Test
-    public void slowAddNewItemAndReset_reAddWithClickOut(){
+    public void slowAddNewItemAndReset_reAddWithClickOut() {
         delay(true);
         itemHandling(SelectionType.CLICK_OUT, inputValue);
     }
@@ -71,12 +72,11 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest extends SingleBro
         assertThatSelectedValueIs("");
         sendKeysToInput(input);
 
-        //reset the dataProvider
+        // reset the dataProvider
         reset();
         assertThatSelectedValueIs("");
-        assertResetLabelText();
 
-        //re-add the same value and select
+        // re-add the same value and select
         sendKeysToInput(input);
         performSelect(selectionType);
 
@@ -92,28 +92,29 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest extends SingleBro
         comboBoxElement.sendKeys(keys);
     }
 
-    private void performSelect(SelectionType selectionType){
+    private void performSelect(SelectionType selectionType) {
         switch (selectionType) {
-            case ENTER:
-                sendKeysToInput(Keys.RETURN);
-                break;
-            case TAB:
-                sendKeysToInput(Keys.TAB);
-                break;
-            case CLICK_OUT:
-                new Actions(getDriver()).moveToElement(comboBoxElement, 10, 10)
-                        .moveByOffset(comboBoxElement.getSize().getWidth(), 0)
-                        .click().perform();
-                break;
+        case ENTER:
+            sendKeysToInput(Keys.RETURN);
+            break;
+        case TAB:
+            sendKeysToInput(Keys.TAB);
+            break;
+        case CLICK_OUT:
+            new Actions(getDriver()).moveToElement(comboBoxElement, 10, 10)
+                    .moveByOffset(comboBoxElement.getSize().getWidth(), 0)
+                    .click().perform();
+            break;
         }
     }
 
-    protected void assertThatSelectedValueIs(final String value) {
+    private void assertThatSelectedValueIs(final String value) {
+        sleep(200);
         String actualComboBoxValue = comboBoxElement.getText();
         String actualLabelValue = valueLabelElement.getText();
 
         assertEquals(value, actualComboBoxValue);
-        assertEquals(value,actualLabelValue);
+        assertEquals(value, actualLabelValue);
     }
 
     private void delay(boolean delay) {
