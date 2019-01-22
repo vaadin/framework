@@ -84,7 +84,7 @@ public class ComboBoxElement extends AbstractSingleSelectElement {
 
     private boolean selectSuggestion(String text) {
         for (WebElement suggestion : getPopupSuggestionElements()) {
-            if (text.equalsIgnoreCase(suggestion.getText())) {
+            if (text.equals(suggestion.getText())) {
                 clickElement(suggestion);
                 return true;
             }

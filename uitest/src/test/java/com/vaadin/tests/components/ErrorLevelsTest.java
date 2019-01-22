@@ -148,14 +148,7 @@ public class ErrorLevelsTest extends SingleBrowserTest {
 
     private void selectErrorLevel(ErrorLevel errorLevel) {
         errorLevelSelector
-                .selectByText(errorLevel.toString().toLowerCase(Locale.ROOT));
+                .selectByText(errorLevel.toString().toUpperCase(Locale.ROOT));
     }
 
-    private Keys getReturn() {
-        if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
-            return Keys.ENTER;
-        } else {
-            return Keys.RETURN;
-        }
-    }
 }
