@@ -52,9 +52,8 @@ public class ComboBoxElement extends AbstractSingleSelectElement {
             selectByTextFromPopup(text);
             return;
         }
-        getInputField().clear();
-        getInputField().sendKeys(text);
-
+        clear();
+        sendKeys(text);
         selectSuggestion(text);
     }
 
@@ -85,7 +84,7 @@ public class ComboBoxElement extends AbstractSingleSelectElement {
 
     private boolean selectSuggestion(String text) {
         for (WebElement suggestion : getPopupSuggestionElements()) {
-            if (text.equals(suggestion.getText())) {
+            if (text.equalsIgnoreCase(suggestion.getText())) {
                 clickElement(suggestion);
                 return true;
             }
@@ -231,6 +230,11 @@ public class ComboBoxElement extends AbstractSingleSelectElement {
     @Override
     public void clear() {
         getInputField().clear();
+        String value = getText();
+        if (value != null && !value.isEmpty()) {
+            ((JavascriptExecutor) getDriver())
+                    .executeScript("arguments[0].value = ''", getInputField());
+        }
     }
 
     @Override

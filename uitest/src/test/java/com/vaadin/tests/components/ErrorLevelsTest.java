@@ -147,10 +147,8 @@ public class ErrorLevelsTest extends SingleBrowserTest {
     }
 
     private void selectErrorLevel(ErrorLevel errorLevel) {
-        errorLevelSelector.clear();
         errorLevelSelector
-                .sendKeys(errorLevel.toString().toLowerCase(Locale.ROOT));
-        errorLevelSelector.sendKeys(getReturn());
+                .selectByText(errorLevel.toString().toLowerCase(Locale.ROOT));
     }
 
     private Keys getReturn() {
