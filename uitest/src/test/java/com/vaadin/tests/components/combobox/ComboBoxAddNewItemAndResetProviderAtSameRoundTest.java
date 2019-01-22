@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.combobox;
 
-import net.jcip.annotations.NotThreadSafe;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
@@ -12,9 +11,6 @@ import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
-import static org.junit.Assert.assertEquals;
-
-@NotThreadSafe
 public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         extends SingleBrowserTest {
 
@@ -85,7 +81,8 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     }
 
     private void assertResetLabelText() {
-        assertEquals("Reset", changeLabelElement.getText());
+
+        waitUntil(value -> "Reset".equals(changeLabelElement.getText()), 2);
     }
 
     private void sendKeysToInput(CharSequence... keys) {
@@ -110,10 +107,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     }
 
     private void assertThatSelectedValueIs(final String value) {
-        sleep(200);
-        String actualComboBoxValue = comboBoxElement.getText();
-
-        assertEquals(value, actualComboBoxValue);
+        waitUntil(input -> value.equals(comboBoxElement.getText()),2);
     }
 
     private void delay(boolean delay) {
@@ -123,7 +117,8 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         }
     }
 
-    protected void reset() {
+    private void reset() {
         $(ButtonElement.class).id("reset").click();
+        sleep(200);
     }
 }
