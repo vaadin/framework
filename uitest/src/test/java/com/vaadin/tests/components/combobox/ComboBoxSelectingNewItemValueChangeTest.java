@@ -137,7 +137,9 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
 
     protected void typeInputAndSelect(String input,
             SelectionType selectionType) {
-        comboBoxElement.clear();
+        // clear() would cause an additional value change in chrome 70+
+        // since it always makes blur after clear()
+        comboBoxElement.sendKeys(Keys.BACK_SPACE, Keys.BACK_SPACE, Keys.BACK_SPACE);
         sendKeysToInput(input);
         switch (selectionType) {
         case ENTER:
