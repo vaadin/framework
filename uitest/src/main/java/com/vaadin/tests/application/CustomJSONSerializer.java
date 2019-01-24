@@ -17,7 +17,7 @@ import elemental.json.JsonValue;
 
 public class CustomJSONSerializer extends AbstractTestUI {
 
-    {
+    static {
         JsonCodec.setCustomSerializer(URLReference.class,
                 new JSONSerializer<URLReference>() {
 

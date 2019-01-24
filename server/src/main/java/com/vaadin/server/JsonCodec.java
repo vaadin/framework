@@ -450,7 +450,11 @@ public class JsonCodec implements Serializable {
      * serializers is checked after basic types (Strings, Booleans, Numbers,
      * Characters), Collections and Maps, so setting custom serializers for
      * these won't have any effect.
-     *
+     * <p>
+     * Custom serializers should only be added from static initializers or other
+     * places that are guaranteed to run only once. Trying to add a serializer
+     * to a class that already has one will cause an exception.
+     * <p>
      * Warning: overriding existing custom serializers may lead into unexpected
      * behavior in components that expect customized behavior. The framework's
      * custom serializers are loaded in the static initializer block of this
@@ -459,14 +463,17 @@ public class JsonCodec implements Serializable {
      * @see DateSerializer
      * @throws IllegalArgumentException
      *             Thrown if parameter clazz is null.
+     * @throws IllegalStateException
+     *             Thrown if parameter clazz is already registered and parameter
+     *             jsonSerializer is not null.
      * @param clazz
      *            The target class.
      * @param jsonSerializer
      *            Custom JSONSerializer to add. If @code{null}, remove custom
      *            serializer from class clazz.
      */
-    public static void setCustomSerializer(Class<?> clazz,
-            JSONSerializer<?> jsonSerializer) {
+    public static <TYPE> void setCustomSerializer(Class<TYPE> clazz,
+            JSONSerializer<TYPE> jsonSerializer) {
         if (clazz == null) {
             throw new IllegalArgumentException(
                     "Cannot add serializer for null");
@@ -474,6 +481,15 @@ public class JsonCodec implements Serializable {
         if (jsonSerializer == null) {
             CUSTOM_SERIALIZERS.remove(clazz);
         } else {
+            if (CUSTOM_SERIALIZERS.containsKey(clazz)) {
+                String err = String.format(
+                        "Class %s already has a custom serializer. "
+                                + "This exception can be thrown if you try to "
+                                + "add a serializer from a non-static context. "
+                                + "Try using a static block instead.",
+                        clazz.getName());
+                throw new IllegalStateException(err);
+            }
             CUSTOM_SERIALIZERS.put(clazz, jsonSerializer);
         }
 
