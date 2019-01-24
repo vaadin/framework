@@ -2,13 +2,11 @@ package com.vaadin.tests.application;
 
 import java.lang.reflect.Type;
 
-import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.communication.JSONSerializer;
 import com.vaadin.shared.communication.URLReference;
-import com.vaadin.shared.ui.button.ButtonState;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.LoginForm;
@@ -17,9 +15,9 @@ import elemental.json.Json;
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;
 
-public class CustomJSONSerializer extends AbstractTestUIWithLog {
+public class CustomJSONSerializer extends AbstractTestUI {
 
-    public void addSerializer() {
+    {
         JsonCodec.setCustomSerializer(URLReference.class,
                 new JSONSerializer<URLReference>() {
 
@@ -35,15 +33,16 @@ public class CustomJSONSerializer extends AbstractTestUIWithLog {
                     public JsonValue serialize(URLReference value,
                             ConnectorTracker connectorTracker) {
                         JsonObject result = Json.createObject();
-                        result.put("uRL", "http://www.vaadin.com");
+                        String url = value.getURL();
+                        // change all test.com urls to vaadin.com
+                        if ("http://www.test.com".equals(url)) {
+                            url = "http://www.vaadin.com";
+                        }
+                        result.put("uRL", url);
                         return result;
                     }
 
                 });
-    }
-
-    public void removeSerializer() {
-        JsonCodec.setCustomSerializer(URLReference.class, null);
     }
 
     public static class MyLoginForm extends LoginForm {
@@ -54,20 +53,11 @@ public class CustomJSONSerializer extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        addSerializer();
         MyLoginForm loginForm = new MyLoginForm();
         URLReference url = new URLReference();
-        url.setURL("http://www.google.com");
+        url.setURL("http://www.test.com");
         loginForm.setResource(url);
         addComponent(loginForm);
-        Button remove = new Button("Remove serializer", event -> {
-            removeSerializer();
-            // update resource to change state
-            URLReference url2 = new URLReference();
-            url2.setURL("http://www.google.com");
-            loginForm.setResource(url2);
-        });
-        addComponent(remove);
     }
 
 }
