@@ -325,14 +325,14 @@ public class JsonCodec implements Serializable {
         } else if (JsonValue.class
                 .isAssignableFrom(getClassForType(targetType))) {
             return value;
-        } else if (Enum.class.isAssignableFrom(getClassForType(targetType))) {
-            Class<?> classForType = getClassForType(targetType);
-            return decodeEnum(classForType.asSubclass(Enum.class),
-                    (JsonString) value);
         } else if (CUSTOM_SERIALIZERS
                 .containsKey(getClassForType(targetType))) {
             return CUSTOM_SERIALIZERS.get(getClassForType(targetType))
                     .deserialize(targetType, value, connectorTracker);
+        } else if (Enum.class.isAssignableFrom(getClassForType(targetType))) {
+            Class<?> classForType = getClassForType(targetType);
+            return decodeEnum(classForType.asSubclass(Enum.class),
+                    (JsonString) value);
         } else {
             return decodeObject(targetType, (JsonObject) value,
                     connectorTracker);
@@ -448,12 +448,15 @@ public class JsonCodec implements Serializable {
     /**
      * Set a custom JSONSerializer for a specific Class. Existence of custom
      * serializers is checked after basic types (Strings, Booleans, Numbers,
-     * Characters), Collections, Maps and Enums, so setting custom serializers
-     * for these won't have any effect.
+     * Characters), Collections and Maps, so setting custom serializers for
+     * these won't have any effect.
      *
      * Warning: overriding existing custom serializers may lead into unexpected
-     * behavior in components that expect customized behavior.
+     * behavior in components that expect customized behavior. The framework's
+     * custom serializers are loaded in the static initializer block of this
+     * class.
      *
+     * @see DateSerializer
      * @throws IllegalArgumentException
      *             Thrown if parameter clazz is null.
      * @param clazz
@@ -699,10 +702,10 @@ public class JsonCodec implements Serializable {
             }
             // Connectors are simply serialized as ID.
             toReturn = Json.create(((Connector) value).getConnectorId());
-        } else if (value instanceof Enum) {
-            toReturn = Json.create(((Enum<?>) value).name());
         } else if (CUSTOM_SERIALIZERS.containsKey(value.getClass())) {
             toReturn = serializeJson(value, connectorTracker);
+        } else if (value instanceof Enum) {
+            toReturn = Json.create(((Enum<?>) value).name());
         } else if (valueType instanceof GenericArrayType) {
             toReturn = encodeArrayContents(
                     ((GenericArrayType) valueType).getGenericComponentType(),
