@@ -98,6 +98,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
         HandlesAriaRequired, DeferredWorker, MouseDownHandler {
 
+    private boolean tabPressed = true;
+    private String keyDownElementId;
+
     /**
      * Represents a suggestion in the suggestion popup box.
      */
@@ -903,9 +906,11 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
                 }
             }
-
+            // if (!tabPressed) {
+            // debug("TAB IS NOT PRESSED");
             setPopupPosition(left, top);
             menu.scrollSelectionIntoView();
+            // }
         }
 
         /**
@@ -1451,9 +1456,12 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             }
 
             suggestionPopup.menu.setSuggestions(currentSuggestions);
-            if (!waitingForFilteringResponse && suggestionPopup.isAttached()) {
+            if (!waitingForFilteringResponse && suggestionPopup.isAttached()
+                    && focused && !tabPressed) {
                 showPopup = true;
             }
+            debug("Data Received + is focused" + focused + " TabPressed"
+                    + tabPressed);
             if (showPopup) {
                 suggestionPopup.showSuggestions(currentPage);
             }
@@ -2198,6 +2206,18 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 return;
             }
 
+            debug("Key-down id:" + getWidget().getElement().getInnerHTML());
+            debug("Key-down id:" + getWidget().getElement()
+                    .getElementsByTagName("input").getItem(0).getId());
+            keyDownElementId = getWidget().getElement()
+                    .getElementsByTagName("input").getItem(0).getId();
+            if (keyCode == KeyCodes.KEY_TAB) {
+                // Tab is the last key to be pressed on item before focus is
+                // changed;
+                tabPressed = true;
+            } else {
+                tabPressed = false;
+            }
             if (suggestionPopup.isAttached()) {
                 if (enableDebug) {
                     debug("Keycode " + keyCode + " target is popup");
@@ -2307,7 +2327,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
             // queue this, may be cancelled by selection
             int selectedIndex = suggestionPopup.menu.getSelectedIndex();
-            if (!allowNewItems && selectedIndex != -1) {
+            if (!allowNewItems && selectedIndex != -1
+                    && !currentSuggestions.isEmpty()) {
                 onSuggestionSelected(currentSuggestions.get(selectedIndex));
             } else {
                 dataReceivedHandler.reactOnInputWhenReady(tb.getText());
@@ -2353,9 +2374,25 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             debug("VComboBox: onKeyUp(" + event.getNativeKeyCode() + ")");
         }
         if (enabled && !readonly) {
+            if (textInputEnabled) {
+                // If the first keyEvene happening is Keyup without preceding
+                // keydown for this field, then it originates from anothe
+                // component
+                debug("Key-up id:" + getWidget().getElement()
+                        .getElementsByTagName("input").getItem(0).getId());
+                if (keyDownElementId == null || !keyDownElementId.equals(
+                        getWidget().getElement().getElementsByTagName("input")
+                                .getItem(0).getId())
+                        || tabPressed) {
+                    debug("KEY IS NOT THE SAME ");
+                    return;
+                }
+            }
             switch (event.getNativeKeyCode()) {
-            case KeyCodes.KEY_ENTER:
             case KeyCodes.KEY_TAB:
+                tabPressed = false;
+                break;
+            case KeyCodes.KEY_ENTER:
             case KeyCodes.KEY_SHIFT:
             case KeyCodes.KEY_CTRL:
             case KeyCodes.KEY_ALT:
@@ -2579,6 +2616,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                             currentSuggestion.getReplacementString()))) {
                 dataReceivedHandler.reactOnInputWhenReady(tb.getText());
             } else {
+                debug("Is waiting for filtering responce:"
+                        + dataReceivedHandler.isWaitingForFilteringResponse());
                 reset();
             }
             suggestionPopup.hide();
