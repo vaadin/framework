@@ -452,8 +452,12 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
         // Must do getItemCaptionGenerator() for each operation since it might
         // not be the same as when this method was invoked
+        String caption = getItemCaptionGenerator().apply(item);
+        if (caption == null) {
+            caption = "";
+        }    
         setDataProvider(listDataProvider, filterText -> item -> captionFilter
-                .test(getItemCaptionGenerator().apply(item), filterText));
+                .test(caption, filterText));
     }
 
     /**
