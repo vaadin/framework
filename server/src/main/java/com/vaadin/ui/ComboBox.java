@@ -452,14 +452,19 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
         // Must do getItemCaptionGenerator() for each operation since it might
         // not be the same as when this method was invoked
+        setDataProvider(listDataProvider, filterText -> item -> captionFilter
+                .test(getItemCaptionOfItem(item), filterText));
+    }
+
+    // Helper method for the above to make lambda more readable            
+    private String getItemCaptionOfItem(T item) {
         String caption = getItemCaptionGenerator().apply(item);
         if (caption == null) {
             caption = "";
         }    
-        setDataProvider(listDataProvider, filterText -> item -> captionFilter
-                .test(caption, filterText));
+        return caption;
     }
-
+                
     /**
      * Sets the data items of this listing and a simple string filter with which
      * the item string and the text the user has input are compared.
