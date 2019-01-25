@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.Duration;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.user.client.DOM;
@@ -558,11 +559,24 @@ public class EscalatorBasicClientFeaturesWidget
                     @Override
                     public void init(Spacer spacer) {
                         spacer.getElement().appendChild(DOM.createInputText());
+                        updateRowPositions(spacer);
                     }
 
                     @Override
                     public void destroy(Spacer spacer) {
                         spacer.getElement().removeAllChildren();
+                        updateRowPositions(spacer);
+                    }
+
+                    private void updateRowPositions(Spacer spacer) {
+                        if (spacer.getRow() < escalator.getBody()
+                                .getRowCount()) {
+                            Scheduler.get().scheduleFinally(() -> {
+                                escalator.getBody().updateRowPositions(
+                                        spacer.getRow(),
+                                        escalator.getBody().getRowCount());
+                            });
+                        }
                     }
                 }), menupath);
 
@@ -596,6 +610,9 @@ public class EscalatorBasicClientFeaturesWidget
         } else {
             container.insertRows(offset, number);
         }
+        if (container.getRowCount() > offset + number) {
+            container.refreshRows(offset + number, container.getRowCount());
+        }
     }
 
     private void removeRows(final RowContainer container, int offset,
@@ -605,6 +622,9 @@ public class EscalatorBasicClientFeaturesWidget
             escalator.getBody().removeRows(offset, number);
         } else {
             container.removeRows(offset, number);
+        }
+        if (container.getRowCount() > offset) {
+            container.refreshRows(offset, container.getRowCount());
         }
     }
 

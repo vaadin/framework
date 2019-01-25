@@ -36,6 +36,7 @@ import com.vaadin.client.widget.escalator.events.SpacerIndexChangedEvent;
 import com.vaadin.client.widget.escalator.events.SpacerIndexChangedHandler;
 import com.vaadin.client.widget.grid.HeightAwareDetailsGenerator;
 import com.vaadin.client.widgets.Grid;
+import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.DetailsManagerState;
@@ -82,6 +83,8 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
      * DataChangeHandler for updating the visibility of detail widgets.
      */
     private final class DetailsChangeHandler implements DataChangeHandler {
+        boolean removing = false;
+
         @Override
         public void resetDataAndSize(int estimatedNewDataSize) {
             // Full clean up
@@ -97,20 +100,88 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             if (numberOfRows == 1) {
                 getParent().singleDetailsOpened(firstRowIndex);
             }
-            // Deferred opening of new ones.
-            refreshDetails();
+            Scheduler.get().scheduleFinally(() -> {
+                getWidget().getEscalator().getBody().updateRowPositions(
+                        firstRowIndex,
+                        getWidget().getEscalator().getBody().getRowCount());
+            });
         }
 
         /* The remaining methods will do a full refresh for now */
 
         @Override
         public void dataRemoved(int firstRowIndex, int numberOfRows) {
-            refreshDetails();
+            removing = true;
+            for (int i = 0; i < numberOfRows; ++i) {
+                int rowIndex = firstRowIndex + i;
+                if (indexToDetailConnectorId.containsKey(rowIndex)) {
+                    String id = indexToDetailConnectorId.get(rowIndex);
+
+                    ComponentConnector connector = (ComponentConnector) ConnectorMap
+                            .get(getConnection()).getConnector(id);
+                    if (connector != null) {
+                        Element element = connector.getWidget().getElement();
+                        elementToResizeCommand.remove(element);
+                        getLayoutManager().removeElementResizeListener(element,
+                                detailsRowResizeListener);
+                    }
+                    indexToDetailConnectorId.remove(rowIndex);
+                }
+            }
+            removing = false;
+            // don't refresh the rest of the details, Grid and Escalator take
+            // care of their own cleanup at removal
         }
 
         @Override
         public void dataAvailable(int firstRowIndex, int numberOfRows) {
-            refreshDetails();
+            if (removing) {
+                return;
+            }
+            // NOTE: this relies on Escalator getting updated first
+            Range visibleRowRange = getWidget().getEscalator()
+                    .getVisibleRowRange();
+            boolean detailsShown = false;
+            for (int i = 0; i < numberOfRows; ++i) {
+                int rowIndex = firstRowIndex + i;
+                if (!visibleRowRange.contains(rowIndex)) {
+                    continue;
+                }
+                String id = getDetailsComponentConnectorId(rowIndex);
+                String oldId = indexToDetailConnectorId.get(rowIndex);
+                if ((oldId == null && id == null)
+                        || (oldId != null && oldId.equals(id))) {
+                    // nothing to update, move along
+                    continue;
+                }
+                if (oldId != null) {
+                    // Details have been hidden or updated, listeners attached
+                    // to the old component need to be removed
+                    ComponentConnector connector = (ComponentConnector) ConnectorMap
+                            .get(getConnection()).getConnector(oldId);
+                    if (connector != null) {
+                        Element element = connector.getWidget().getElement();
+                        elementToResizeCommand.remove(element);
+                        getLayoutManager().removeElementResizeListener(element,
+                                detailsRowResizeListener);
+                    }
+                    if (id == null) {
+                        // hidden, clear reference
+                        getWidget().setDetailsVisible(rowIndex, false);
+                        indexToDetailConnectorId.remove(rowIndex);
+                    } else {
+                        // updated, replace reference
+                        indexToDetailConnectorId.put(rowIndex, id);
+                        detailsShown = true;
+                    }
+                } else {
+                    // new Details content
+                    indexToDetailConnectorId.put(rowIndex, id);
+                    detailsShown = true;
+                    getWidget().setDetailsVisible(rowIndex, true);
+                }
+            }
+            getParent().detailsRefreshed(detailsShown);
         }
 
         @Override
@@ -129,8 +200,11 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
         public Widget getDetails(int rowIndex) {
             String id = getDetailsComponentConnectorId(rowIndex);
             if (id == null) {
+                detachIfNeeded(rowIndex, id);
                 return null;
             }
+            indexToDetailConnectorId.put(rowIndex, id);
+            getWidget().setDetailsVisible(rowIndex, true);
 
             Widget widget = getConnector(id).getWidget();
             getLayoutManager().addElementResizeListener(widget.getElement(),
@@ -169,7 +243,10 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             ComponentConnector componentConnector = getConnector(id);
 
             getLayoutManager().setNeedsMeasureRecursively(componentConnector);
-            getLayoutManager().layoutNow();
+            if (!getLayoutManager().isLayoutRunning()
+                    && !getConnection().getMessageHandler().isUpdatingState()) {
+                getLayoutManager().layoutNow();
+            }
 
             Element element = componentConnector.getWidget().getElement();
             if (spacerCellBorderHeights == null) {
@@ -221,6 +298,10 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                                 .setNeedsMeasureRecursively(connector);
                     }
                 });
+
+        getParent().getWidget().addRowVisibilityChangeHandler(event -> {
+            refreshDetailsVisibilityWithRange(event.getVisibleRowRange());
+        });
     }
 
     private void detachIfNeeded(int rowIndex, String id) {
@@ -312,19 +393,38 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     }
 
     private void refreshDetailsVisibility() {
+        refreshDetailsVisibilityWithRange(
+                getWidget().getEscalator().getVisibleRowRange());
+    }
+
+    private void refreshDetailsVisibilityWithRange(Range rangeToRefresh) {
         boolean shownDetails = false;
-        for (int i = 0; i < getWidget().getDataSource().size(); ++i) {
-            String id = getDetailsComponentConnectorId(i);
-
-            detachIfNeeded(i, id);
-
-            if (id == null) {
-                continue;
+        if (!getState().hasDetailsGenerator) {
+            // no details to display, remove all
+            for (Integer index : indexToDetailConnectorId.keySet()) {
+                detachIfNeeded(index, null);
             }
+        } else {
+            Range visibleRowRange = getWidget().getEscalator()
+                    .getVisibleRowRange();
+            Range[] partitions = visibleRowRange.partitionWith(rangeToRefresh);
+            // only inspect the range where visible and refreshed rows overlap
+            Range filteredRange = partitions[1];
 
-            indexToDetailConnectorId.put(i, id);
-            getWidget().setDetailsVisible(i, true);
-            shownDetails = true;
+            for (int i = filteredRange.getStart(); i < filteredRange
+                    .getEnd(); ++i) {
+                String id = getDetailsComponentConnectorId(i);
+
+                detachIfNeeded(i, id);
+
+                if (id == null) {
+                    continue;
+                }
+
+                indexToDetailConnectorId.put(i, id);
+                getWidget().setDetailsVisible(i, true);
+                shownDetails = true;
+            }
         }
         refreshing = false;
         getParent().detailsRefreshed(shownDetails);
