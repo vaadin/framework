@@ -22,4 +22,5 @@ package com.vaadin.shared.ui.grid;
  */
 public class DetailsManagerState extends AbstractGridExtensionState {
 
+    public boolean hasDetailsGenerator = false;
 }
