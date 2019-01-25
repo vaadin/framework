@@ -16,7 +16,7 @@
 
         <!-- Parallel test count -->
         <parallel.tests>12</parallel.tests>
-        <reference.screenshot.dir>${project.parent.basedir}/tests/screenshots/reference</reference.screenshot.dir>
+        <reference.screenshot.dir>${project.parent.basedir}/uitest/reference-screenshots</reference.screenshot.dir>
     </properties>
 
     <url>https://vaadin.com/</url>
