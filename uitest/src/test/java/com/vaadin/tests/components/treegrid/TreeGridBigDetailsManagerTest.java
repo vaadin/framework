@@ -94,9 +94,6 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
                     .getHeight();
             assertThat((double) expectedSpacerHeight, closeTo(27d, 2d));
         }
-        if (expectedRowHeight == 0) {
-            expectedRowHeight = treeGrid.getRow(0).getSize().getHeight();
-        }
     }
 
     private void assertSpacerCount(int expectedSpacerCount) {
@@ -129,10 +126,6 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
                 previousSpacer = spacer;
                 continue;
             }
-            if (spacer.getLocation().y == 0) {
-                // FIXME: find out why there are cases like this out of order
-                continue;
-            }
             // -1 should be enough, but increased tolerance to -3 for FireFox
             // and IE11 since a few pixels' discrepancy isn't relevant for this
             // fix
@@ -148,16 +141,20 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
                 treeGrid.findElements(By.className(CLASSNAME_ERROR)).size());
     }
 
+    private void addGrid() {
+        $(ButtonElement.class).id(ADD_GRID).click();
+        waitForElementPresent(By.className(CLASSNAME_TREEGRID));
+
+        treeGrid = $(TreeGridElement.class).first();
+        expectedRowHeight = treeGrid.getRow(0).getSize().getHeight();
+    }
+
     @Test
     public void expandAllOpenAllInitialDetails_toggleOneTwice_hideAll() {
         openTestURL();
         $(ButtonElement.class).id(EXPAND_ALL).click();
         $(ButtonElement.class).id(SHOW_DETAILS).click();
-        $(ButtonElement.class).id(ADD_GRID).click();
-
-        waitForElementPresent(By.className(CLASSNAME_TREEGRID));
-
-        treeGrid = $(TreeGridElement.class).first();
+        addGrid();
 
         waitUntil(expectedConditionDetails(0, 0, 0));
         ensureExpectedSpacerHeightSet();
@@ -208,11 +205,7 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
         openTestURL();
         $(ButtonElement.class).id(EXPAND_ALL).click();
         $(ButtonElement.class).id(SHOW_DETAILS).click();
-        $(ButtonElement.class).id(ADD_GRID).click();
-
-        waitForElementPresent(By.className(CLASSNAME_TREEGRID));
-
-        treeGrid = $(TreeGridElement.class).first();
+        addGrid();
 
         waitUntil(expectedConditionDetails(0, 0, 0));
         ensureExpectedSpacerHeightSet();
@@ -231,9 +224,9 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
         assertSpacerPositions();
 
         // FIXME: TreeGrid fails to update cache correctly when you expand all
-        // and after a long, long wait you end up with 3321 open details rows
-        // and row 63/8/0 in view instead of 95 and 0/0/0 as expected.
-        // WaitUntil timeouts by then.
+        // and triggers client-side exceptions for rows that fall outside of the
+        // cache because they try to extend the cache with a range that isn't
+        // connected to the cached range
         if (true) {// remove this block after fixed
             return;
         }
@@ -241,7 +234,7 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
         $(ButtonElement.class).id(EXPAND_ALL).click();
 
         // State should have returned to what it was before collapsing.
-        waitUntil(expectedConditionDetails(0, 0, 0));
+        waitUntil(expectedConditionDetails(0, 0, 0), 15);
         assertSpacerCount(spacerCount);
         assertSpacerHeights();
         assertSpacerPositions();
@@ -253,11 +246,7 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
     public void expandAllOpenNoInitialDetails_showSeveral_toggleOneByOne() {
         openTestURL();
         $(ButtonElement.class).id(EXPAND_ALL).click();
-        $(ButtonElement.class).id(ADD_GRID).click();
-
-        waitForElementPresent(By.className(CLASSNAME_TREEGRID));
-
-        treeGrid = $(TreeGridElement.class).first();
+        addGrid();
 
         // open details for several rows, leave one out from the hierarchy that
         // is to be collapsed
@@ -314,12 +303,9 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
         openTestURL();
         $(ButtonElement.class).id(EXPAND_ALL).click();
         $(ButtonElement.class).id(SHOW_DETAILS).click();
-        $(ButtonElement.class).id(ADD_GRID).click();
+        addGrid();
 
-        waitForElementPresent(By.className(CLASSNAME_TREEGRID));
         $(ButtonElement.class).id(SCROLL_TO_55).click();
-
-        treeGrid = $(TreeGridElement.class).first();
 
         waitUntil(expectedConditionDetails(1, 2, 0));
         ensureExpectedSpacerHeightSet();
@@ -333,8 +319,7 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
         waitUntil(ExpectedConditions.not(expectedConditionDetails(1, 2, 0)));
         assertSpacerHeights();
         assertSpacerPositions();
-        // FIXME: gives 128, not 90 as expected
-        // assertSpacerCount(spacerCount);
+        assertSpacerCount(spacerCount);
 
         treeGrid.expandWithClick(50);
 
@@ -342,8 +327,7 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
         waitUntil(expectedConditionDetails(1, 2, 0));
         assertSpacerHeights();
         assertSpacerPositions();
-        // FIXME: gives 131, not 90 as expected
-        // assertSpacerCount(spacerCount);
+        assertSpacerCount(spacerCount);
 
         // test that repeating the toggle still doesn't change anything
 
@@ -352,16 +336,14 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
         waitUntil(ExpectedConditions.not(expectedConditionDetails(1, 2, 0)));
         assertSpacerHeights();
         assertSpacerPositions();
-        // FIXME: gives 128, not 90 as expected
-        // assertSpacerCount(spacerCount);
+        assertSpacerCount(spacerCount);
 
         treeGrid.expandWithClick(50);
 
         waitUntil(expectedConditionDetails(1, 2, 0));
         assertSpacerHeights();
         assertSpacerPositions();
-        // FIXME: gives 131, not 90 as expected
-        // assertSpacerCount(spacerCount);
+        assertSpacerCount(spacerCount);
 
         // test that hiding all still won't break things
 
@@ -376,14 +358,11 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
         openTestURL();
         $(ButtonElement.class).id(EXPAND_ALL).click();
         $(ButtonElement.class).id(SHOW_DETAILS).click();
-        $(ButtonElement.class).id(ADD_GRID).click();
+        addGrid();
 
-        waitForElementPresent(By.className(CLASSNAME_TREEGRID));
         $(ButtonElement.class).id(SCROLL_TO_55).click();
 
-        treeGrid = $(TreeGridElement.class).first();
-
-        waitUntil(expectedConditionDetails(1, 1, 0));
+        waitUntil(expectedConditionDetails(1, 3, 0));
         ensureExpectedSpacerHeightSet();
 
         int spacerCount = treeGrid.findElements(By.className(CLASSNAME_SPACER))
@@ -400,7 +379,8 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
         assertSpacerHeights();
         assertSpacerPositions();
 
-        // FIXME: collapsing too many rows after scrolling still causes a chaos
+        // FIXME: collapsing and expanding too many rows after scrolling still
+        // fails to reset to the same state
         if (true) { // remove this block after fixed
             return;
         }
@@ -408,7 +388,7 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
         $(ButtonElement.class).id(EXPAND_ALL).click();
 
         // State should have returned to what it was before collapsing.
-        waitUntil(expectedConditionDetails(1, 1, 0));
+        waitUntil(expectedConditionDetails(1, 3, 0));
         assertSpacerCount(spacerCount);
         assertSpacerHeights();
         assertSpacerPositions();
@@ -420,25 +400,23 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
     public void expandAllOpenNoInitialDetailsScrolled_showSeveral_toggleOneByOne() {
         openTestURL();
         $(ButtonElement.class).id(EXPAND_ALL).click();
-        $(ButtonElement.class).id(ADD_GRID).click();
+        addGrid();
 
-        waitForElementPresent(By.className(CLASSNAME_TREEGRID));
         $(ButtonElement.class).id(SCROLL_TO_55).click();
 
-        treeGrid = $(TreeGridElement.class).first();
         assertSpacerCount(0);
 
         // open details for several rows, leave one out from the hierarchy that
         // is to be collapsed
-        treeGrid.getCell(50, 0).click();
-        treeGrid.getCell(51, 0).click();
-        treeGrid.getCell(52, 0).click();
-        // no click for cell (53, 0)
-        treeGrid.getCell(54, 0).click();
-        treeGrid.getCell(55, 0).click();
-        treeGrid.getCell(56, 0).click();
-        treeGrid.getCell(57, 0).click();
-        treeGrid.getCell(58, 0).click();
+        treeGrid.getCell(50, 0).click(); // Branch 1/2
+        treeGrid.getCell(51, 0).click(); // Leaf 1/2/0
+        treeGrid.getCell(52, 0).click(); // Leaf 1/2/1
+        // no click for cell (53, 0) // Leaf 1/2/2
+        treeGrid.getCell(54, 0).click(); // Branch 1/3
+        treeGrid.getCell(55, 0).click(); // Leaf 1/3/0
+        treeGrid.getCell(56, 0).click(); // Leaf 1/3/1
+        treeGrid.getCell(57, 0).click(); // Leaf 1/3/2
+        treeGrid.getCell(58, 0).click(); // Branch 1/4
         int spacerCount = 8;
 
         waitUntil(expectedConditionDetails(1, 2, 0));

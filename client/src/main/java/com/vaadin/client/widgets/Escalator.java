@@ -160,6 +160,9 @@ import com.vaadin.shared.util.SharedUtil;
  BodyRowContainerImpl never displays large data sources
  entirely in the DOM, a physical index usually has no
  apparent direct relationship with its logical index.
+ This is the sectionRowIndex in TableRowElements.
+ RowIndex in TableRowElements displays the physical index
+ of all row elements, headers and footers included.
 
  VISUAL INDEX is the index relating to the order that you
  see a row in, in the browser, as it is rendered. The
@@ -182,6 +185,12 @@ import com.vaadin.shared.util.SharedUtil;
  readers to read the contents from the DOM in a natural
  order. See BodyRowContainerImpl.DeferredDomSorter for more
  about that.
+
+ It should be noted that the entire visual range is
+ not necessarily in view at any given time, although it
+ should be optimised to not exceed the maximum amount of
+ rows that can theoretically fit within the viewport when
+ their associated spacers have zero height.
 
  */
 
@@ -2117,10 +2126,16 @@ public class Escalator extends Widget
             positions.remove(tr);
         }
 
+        /**
+         * Triggers delayed auto-detection of default row height if it hasn't
+         * been set by that point and the Escalator is both attached and
+         * displayed.
+         */
         public void autodetectRowHeightLater() {
             autodetectingRowHeightLater = true;
             Scheduler.get().scheduleFinally(() -> {
-                if (defaultRowHeightShouldBeAutodetected && isAttached()) {
+                if (defaultRowHeightShouldBeAutodetected && isAttached()
+                        && WidgetUtil.isDisplayed(getElement())) {
                     autodetectRowHeightNow();
                     defaultRowHeightShouldBeAutodetected = false;
                 }
@@ -2144,8 +2159,8 @@ public class Escalator extends Widget
         }
 
         public void autodetectRowHeightNow() {
-            if (!isAttached()) {
-                // Run again when attached
+            if (!isAttached() || !WidgetUtil.isDisplayed(getElement())) {
+                // Run again when attached and displayed
                 defaultRowHeightShouldBeAutodetected = true;
                 return;
             }
@@ -2317,6 +2332,9 @@ public class Escalator extends Widget
          * @return the logical index of the given element
          */
         public int getLogicalRowIndex(final TableRowElement tr) {
+            // Note: BodyRowContainerImpl overrides this behaviour, since the
+            // physical index and logical index don't match there. For header
+            // and footer there is a match.
             return tr.getSectionRowIndex();
         };
 
@@ -2599,6 +2617,17 @@ public class Escalator extends Widget
          */
         private Consumer<List<TableRowElement>> newEscalatorRowCallback;
 
+        /**
+         * Set the logical index of the first dom row in visual order.
+         * <p>
+         * NOTE: this is not necessarily the first dom row in the dom tree, just
+         * the one positioned to the top with CSS. See maintenance notes at the
+         * top of this class for further information.
+         *
+         * @param topRowLogicalIndex
+         *            logical index of the first dom row in visual order, might
+         *            not match the dom tree order
+         */
         private void setTopRowLogicalIndex(int topRowLogicalIndex) {
             if (LogConfiguration.loggingIsEnabled(Level.INFO)) {
                 Logger.getLogger("Escalator.BodyRowContainer")
@@ -2618,10 +2647,33 @@ public class Escalator extends Widget
             this.topRowLogicalIndex = topRowLogicalIndex;
         }
 
+        /**
+         * Returns the logical index of the first dom row in visual order. This
+         * also gives the offset between the logical and visual indexes.
+         * <p>
+         * NOTE: this is not necessarily the first dom row in the dom tree, just
+         * the one positioned to the top with CSS. See maintenance notes at the
+         * top of this class for further information.
+         *
+         * @return logical index of the first dom row in visual order, might not
+         *         match the dom tree order
+         */
         public int getTopRowLogicalIndex() {
             return topRowLogicalIndex;
         }
 
+        /**
+         * Updates the logical index of the first dom row in visual order with
+         * the given difference.
+         * <p>
+         * NOTE: this is not necessarily the first dom row in the dom tree, just
+         * the one positioned to the top with CSS. See maintenance notes at the
+         * top of this class for further information.
+         *
+         * @param diff
+         *            the amount to increase or decrease the logical index of
+         *            the first dom row in visual order
+         */
         private void updateTopRowLogicalIndex(int diff) {
             setTopRowLogicalIndex(topRowLogicalIndex + diff);
         }
@@ -2690,6 +2742,8 @@ public class Escalator extends Widget
 
         private final SpacerContainer spacerContainer = new SpacerContainer();
 
+        private boolean insertingOrRemoving = false;
+
         public BodyRowContainerImpl(final TableSectionElement bodyElement) {
             super(bodyElement);
         }
@@ -2724,130 +2778,193 @@ public class Escalator extends Widget
 
             // TODO [[mpixscroll]]
             final double scrollTop = tBodyScrollTop;
-            final double viewportOffset = topElementPosition - scrollTop;
 
             /*
-             * TODO [[optimize]] this if-else can most probably be refactored
-             * into a neater block of code
+             * Calculate how the visual range is situated in relation to the
+             * viewport. Negative value means part of visual range is hidden
+             * above or below the viewport, positive value means there is a gap
+             * at the top or the bottom of the viewport, zero means exact match.
+             * If there is a gap, some rows that are out of view may need to be
+             * re-purposed from the opposite end.
              */
+            final double viewportOffsetTop = topElementPosition - scrollTop;
+            final double viewportOffsetBottom = scrollTop + getHeightOfSection()
+                    - getRowTop(
+                            getTopRowLogicalIndex() + visualRowOrder.size());
 
-            if (viewportOffset > 0) {
-                // there's empty room on top
+            /*
+             * You can only scroll far enough to leave a gap if visualRowOrder
+             * contains a maximal amount of rows and there is at least one more
+             * outside of the visual range. Consequently there can only be a gap
+             * in one end of the viewport at a time.
+             */
+            if (viewportOffsetTop > 0) {
+                // There's empty room on top, scrolling up.
 
-                double rowPx = getRowHeightsSumBetweenPx(scrollTop,
-                        topElementPosition);
-                int originalRowsToMove = (int) Math
-                        .ceil(rowPx / getDefaultRowHeight());
-                int rowsToMove = Math.min(originalRowsToMove,
+                /*
+                 * We can ignore spacers here, because maximal amount of rows
+                 * within viewport means that there are enough rows to fill the
+                 * whole viewport even if all spacers are removed. Consequently,
+                 * even if there are spacers, repositioning this many rows won't
+                 * cause us to run out of rows at the bottom, and we can't know
+                 * what height the spacers have before adding them in any case.
+                 *
+                 * The viewportOffsetTop is positive and we round up, and
+                 * visualRowOrder can't be empty, so there is always going to be
+                 * at least one row to move.
+                 */
+                int rowsToFillTheGap = (int) Math
+                        .ceil(viewportOffsetTop / getDefaultRowHeight());
+                // we may have scrolled up past all the rows and beyond, can
+                // only re-purpose as many rows as we have
+                int rowsToRePurpose = Math.min(rowsToFillTheGap,
                         visualRowOrder.size());
 
+                // select the rows to re-purpose from the end of the visual
+                // range
                 final int end = visualRowOrder.size();
-                final int start = end - rowsToMove;
-                final int logicalRowIndex = getLogicalRowIndex(scrollTop);
+                final int start = end - rowsToRePurpose;
 
+                /*
+                 * Calculate the logical index for insertion point based on how
+                 * many rows would be needed to fill the gap. Don't just
+                 * calculate which row belongs to this position or we might end
+                 * up with duplicates or skipping some content if there are any
+                 * issues. A gap at either end is simpler to debug.
+                 */
+                final int logicalRowIndex = getTopRowLogicalIndex()
+                        - rowsToFillTheGap;
+
+                // re-purpose the rows and move them to their new positions
                 moveAndUpdateEscalatorRows(Range.between(start, end), 0,
                         logicalRowIndex);
 
+                // rows were re-purposed to the top so the logical index is also
+                // the new top row logical index
                 setTopRowLogicalIndex(logicalRowIndex);
 
                 rowsWereMoved = true;
-            } else if (viewportOffset + nextRowBottomOffset <= 0) {
+            } else if (viewportOffsetBottom > 0
+                    && (viewportOffsetTop + nextRowBottomOffset <= 0)) {
                 /*
-                 * the viewport has been scrolled more than the topmost visual
-                 * row.
+                 * There's empty room at the bottom and the viewport has been
+                 * scrolled more than the topmost visual row. It's better to
+                 * have any extra rows below than above, so move as many of them
+                 * as possible regardless of how many are needed to fill the
+                 * gap. It should not be possible to scroll down enough to
+                 * create a gap without it being possible to re-purpose rows to
+                 * fill the gap, so viewport itself doesn't need adjusting no
+                 * matter what.
                  */
 
-                double rowPx = getRowHeightsSumBetweenPx(topElementPosition,
-                        scrollTop);
+                // we already have the rows and spacers here and we don't want
+                // to re-purpose rows that are going to stay visible, so the
+                // spacers have to be taken into account
+                double extraRowPxAbove = getRowHeightsSumBetweenPx(
+                        topElementPosition, scrollTop);
 
-                int originalRowsToMove = (int) (rowPx / getDefaultRowHeight());
-                int rowsToMove = Math.min(originalRowsToMove,
-                        visualRowOrder.size());
+                // how many rows fit within that extra space and can be
+                // re-purposed, rounded towards zero to avoid moving any
+                // partially visible rows
+                int rowsToCoverTheExtra = (int) (extraRowPxAbove
+                        / getDefaultRowHeight());
+                /*
+                 * Don't move more rows than there are to move, but also don't
+                 * move more rows than should exist at the bottom. However, it's
+                 * not possible to scroll down beyond available rows, so there
+                 * is always at least one row to re-purpose.
+                 */
+                int rowsToRePurpose = Math.min(
+                        Math.min(rowsToCoverTheExtra, visualRowOrder.size()),
+                        getRowCount() - getTopRowLogicalIndex()
+                                - visualRowOrder.size());
+
+                // are only some of the rows getting re-purposed instead of all
+                // of them
+                boolean partialMove = rowsToRePurpose < visualRowOrder.size();
 
                 int logicalRowIndex;
-                if (rowsToMove < visualRowOrder.size()) {
+                if (partialMove) {
                     /*
                      * We scroll so little that we can just keep adding the rows
-                     * below the current escalator
+                     * immediately below the current escalator.
                      */
-                    logicalRowIndex = getLogicalRowIndex(
-                            visualRowOrder.getLast()) + 1;
+                    logicalRowIndex = getTopRowLogicalIndex()
+                            + visualRowOrder.size();
                 } else {
                     /*
-                     * Since we're moving all escalator rows, we need to
-                     * calculate the first logical row index from the scroll
-                     * position.
+                     * Since all escalator rows are getting re-purposed all
+                     * spacers are going to get removed and the calculations
+                     * have to ignore the spacers again in order to figure out
+                     * which rows are to be displayed. In practice we may end up
+                     * scrolling further down than the scroll position indicated
+                     * initially as the spacers that get removed give room for
+                     * more rows than expected.
+                     *
+                     * We can rely on calculations here because there won't be
+                     * any old rows left to end up mismatched with.
                      */
-                    logicalRowIndex = getLogicalRowIndex(scrollTop);
+                    logicalRowIndex = (int) Math
+                            .floor(scrollTop / getDefaultRowHeight());
+
+                    /*
+                     * Make sure we don't try to move rows below the actual row
+                     * count, even if some of the rows end up hidden at the top
+                     * as a result. This won't leave us with any old rows in any
+                     * case, because we already checked earlier that there is
+                     * room to re-purpose all the rows. It's only a question of
+                     * how the new visual range gets positioned in relation to
+                     * the viewport.
+                     */
+                    if (logicalRowIndex
+                            + visualRowOrder.size() > getRowCount()) {
+                        logicalRowIndex = getRowCount() - visualRowOrder.size();
+                    }
                 }
 
                 /*
-                 * Since we're moving the viewport downwards, the visual index
+                 * Re-purpose the rows and move them to their new positions.
+                 * Since we are moving the viewport downwards, the visual index
                  * is always at the bottom. Note: Due to how
                  * moveAndUpdateEscalatorRows works, this will work out even if
                  * we move all the rows, and try to place them "at the end".
                  */
                 final int targetVisualIndex = visualRowOrder.size();
-
-                // make sure that we don't move rows over the data boundary
-                boolean aRowWasLeftBehind = false;
-                if (logicalRowIndex + rowsToMove > getRowCount()) {
-                    /*
-                     * TODO [[spacer]]: with constant row heights, there's
-                     * always exactly one row that will be moved beyond the data
-                     * source, when viewport is scrolled to the end. This,
-                     * however, isn't guaranteed anymore once row heights start
-                     * varying.
-                     */
-                    rowsToMove--;
-                    aRowWasLeftBehind = true;
-                }
-
-                /*
-                 * Make sure we don't scroll beyond the row content. This can
-                 * happen if we have spacers for the last rows.
-                 */
-                rowsToMove = Math.max(0,
-                        Math.min(rowsToMove, getRowCount() - logicalRowIndex));
-
-                moveAndUpdateEscalatorRows(Range.between(0, rowsToMove),
+                moveAndUpdateEscalatorRows(Range.between(0, rowsToRePurpose),
                         targetVisualIndex, logicalRowIndex);
 
-                if (aRowWasLeftBehind) {
-                    /*
-                     * To keep visualRowOrder as a spatially contiguous block of
-                     * rows, let's make sure that the one row we didn't move
-                     * visually still stays with the pack.
-                     */
-                    final Range strayRow = Range.withOnly(0);
-
-                    /*
-                     * We cannot trust getLogicalRowIndex, because it hasn't yet
-                     * been updated. But since we're leaving rows behind, it
-                     * means we've scrolled to the bottom. So, instead, we
-                     * simply count backwards from the end.
-                     */
-                    final int topLogicalIndex = getRowCount()
-                            - visualRowOrder.size();
-                    moveAndUpdateEscalatorRows(strayRow, 0, topLogicalIndex);
+                // top row logical index needs to be updated differently
+                // depending on which update strategy was used, since the rows
+                // are being moved down
+                if (partialMove) {
+                    // move down by the amount of re-purposed rows
+                    updateTopRowLogicalIndex(rowsToRePurpose);
+                } else {
+                    // the insertion index is the new top row logical index
+                    setTopRowLogicalIndex(logicalRowIndex);
                 }
-
-                final int naiveNewLogicalIndex = getTopRowLogicalIndex()
-                        + originalRowsToMove;
-                final int maxLogicalIndex = getRowCount()
-                        - visualRowOrder.size();
-                setTopRowLogicalIndex(
-                        Math.min(naiveNewLogicalIndex, maxLogicalIndex));
 
                 rowsWereMoved = true;
             }
 
             if (rowsWereMoved) {
                 fireRowVisibilityChangeEvent();
+
+                // schedule updating of the physical indexes
                 domSorter.reschedule();
             }
         }
 
+        /**
+         * Calculates how much of the given range contains only rows with
+         * spacers excluded.
+         *
+         * @param y1
+         *            start position
+         * @param y2
+         *            end position
+         * @return position difference excluding any space taken up by spacers
+         */
         private double getRowHeightsSumBetweenPx(double y1, double y2) {
             assert y1 < y2 : "y1 must be smaller than y2";
 
@@ -2859,14 +2976,11 @@ public class Escalator extends Widget
             return viewportPx - spacerPx;
         }
 
-        private int getLogicalRowIndex(final double px) {
-            double rowPx = px - spacerContainer.getSpacerHeightsSumUntilPx(px);
-            return (int) (rowPx / getDefaultRowHeight());
-        }
-
         @Override
         public void insertRows(int index, int numberOfRows) {
+            insertingOrRemoving = true;
             super.insertRows(index, numberOfRows);
+            insertingOrRemoving = false;
 
             if (heightMode == HeightMode.UNDEFINED) {
                 setHeightByRows(getRowCount());
@@ -2875,7 +2989,9 @@ public class Escalator extends Widget
 
         @Override
         public void removeRows(int index, int numberOfRows) {
+            insertingOrRemoving = true;
             super.removeRows(index, numberOfRows);
+            insertingOrRemoving = false;
 
             if (heightMode == HeightMode.UNDEFINED) {
                 setHeightByRows(getRowCount());
@@ -2885,120 +3001,302 @@ public class Escalator extends Widget
         @Override
         protected void paintInsertRows(final int index,
                 final int numberOfRows) {
-            if (numberOfRows == 0) {
+            if (numberOfRows <= 0) {
                 return;
             }
+            /*
+             * NOTE: this method handles and manipulates logical, visual, and
+             * physical indexes a lot. If you don't remember what those mean and
+             * how they relate to each other, see the top of this class for
+             * Maintenance Notes.
+             *
+             * At the beginning of this method the logical index of the data
+             * provider has already been updated to include the new rows, but
+             * visual and physical indexes have not, nor has the spacer indexing
+             * been updated, and the topRowLogicalIndex may be out of date as
+             * well.
+             */
 
-            spacerContainer.shiftSpacersByRows(index, numberOfRows);
+            // top of visible area before any rows are actually added
+            double scrollTop = getScrollTop();
+
+            // height of a single row
+            double defaultRowHeight = getDefaultRowHeight();
+
+            // logical index of the first row within the visual range before any
+            // rows are actually added
+            int oldTopRowLogicalIndex = getTopRowLogicalIndex();
+
+            // length of the visual range before any rows are actually added
+            int oldVisualRangeLength = visualRowOrder.size();
 
             /*
-             * TODO: this method should probably only add physical rows, and not
-             * populate them - let everything be populated as appropriate by the
-             * logic that follows.
+             * If there is room for more dom rows within the maximum visual
+             * range, add them. Calling this method repositions all the rows and
+             * spacers below the insertion point and updates the spacer indexes
+             * accordingly.
              *
-             * This also would lead to the fact that paintInsertRows wouldn't
-             * need to return anything.
+             * TODO: Details rows should be added and populated here, since they
+             * have variable heights and affect the position calculations.
+             * Currently that's left to be triggered at the end and if any new
+             * spacers exist everything below them is going to be repositioned
+             * again for every spacer addition.
              */
             final List<TableRowElement> addedRows = fillAndPopulateEscalatorRowsIfNeeded(
-                    index, numberOfRows);
+                    index - getTopRowLogicalIndex(), index, numberOfRows);
 
-            /*
-             * insertRows will always change the number of rows - update the
-             * scrollbar sizes.
-             */
-            scroller.recalculateScrollbarsForVirtualViewport();
+            // is the insertion point for new rows below visual range (viewport
+            // is irrelevant)
+            final boolean newRowsInsertedBelowVisualRange = index >= oldVisualRangeLength
+                    + oldTopRowLogicalIndex;
 
-            double spacerHeightsSumUntilIndex = spacerContainer
-                    .getSpacerHeightsSumUntilIndex(index);
-            final boolean addedRowsAboveCurrentViewport = index
-                    * getDefaultRowHeight()
-                    + spacerHeightsSumUntilIndex < getScrollTop();
-            final boolean addedRowsBelowCurrentViewport = index
-                    * getDefaultRowHeight()
-                    + spacerHeightsSumUntilIndex > getScrollTop()
-                            + getHeightOfSection();
+            // is the insertion point for new rows above initial visual range
+            final boolean newRowsInsertedAboveVisualRange = index < oldTopRowLogicalIndex;
 
-            if (addedRowsAboveCurrentViewport) {
+            // is the insertion point for new rows above viewport
+            final boolean newRowsInsertedAboveCurrentViewport = getRowTop(
+                    index) < scrollTop;
+
+            if (newRowsInsertedBelowVisualRange) {
                 /*
-                 * We need to tweak the virtual viewport (scroll handle
-                 * positions, table "scroll position" and row locations), but
-                 * without re-evaluating any rows.
+                 * There is no change to scroll position, and all other changes
+                 * to positioning and indexing are out of visual range or
+                 * already done (if addedRows is not empty).
                  */
+            } else if (newRowsInsertedAboveVisualRange) {
+                /*
+                 * Insertion point is completely above the visual range, no row
+                 * or spacer contents get updated but all rows, spacers, and
+                 * scroll position need to be shifted down accordingly and the
+                 * spacer indexes need updating. New rows can't have been added
+                 * to dom or there would be a gap in the visual range. Adding
+                 * new dom rows to the beginning without a gap would require an
+                 * index that equals oldTopRowLogicalIndex (in which case
+                 * newRowsInsertedAboveVisualRange would not be true), and by
+                 * default if we are scrolled down far enough that there are
+                 * rows above the visual range the whole visual range is already
+                 * in use so adding is unlikely in any case.
+                 */
+                spacerContainer.updateSpacerIndexesForRowAndAfter(index,
+                        getTopRowLogicalIndex() + visualRowOrder.size(),
+                        numberOfRows);
 
-                final double yDelta = numberOfRows * getDefaultRowHeight();
-                moveViewportAndContent(yDelta);
+                // height of new rows, out of visual range so spacers assumed to
+                // have no height
+                double newRowsHeight = numberOfRows * defaultRowHeight;
+
+                // update the positions
+                moveViewportAndContent(index, newRowsHeight, newRowsHeight,
+                        newRowsHeight);
+
+                // top row logical index moves down by the number of new rows
                 updateTopRowLogicalIndex(numberOfRows);
-            } else if (addedRowsBelowCurrentViewport) {
-                // NOOP, we already recalculated scrollbars.
-            } else {
-                // some rows were added inside the current viewport
-                final int unupdatedLogicalStart = index + addedRows.size();
-                final int visualOffset = getLogicalRowIndex(
-                        visualRowOrder.getFirst());
-
+            } else if (newRowsInsertedAboveCurrentViewport) {
                 /*
-                 * At this point, we have added new escalator rows, if so
-                 * needed.
+                 * Rows were inserted within the visual range but above the
+                 * viewport. Even if we don't have any spacers the first row
+                 * might be partially visible, and inserting rows just above it
+                 * would qualify as this situation. If we do have spacers and
+                 * are scrolled to the bottom, there might even be quite a few
+                 * hidden dom rows above the viewport, and they need to be
+                 * correctly filled and positioned so that they will be
+                 * displayed correctly if someone removes a big spacer from the
+                 * bottom and the viewport slides up as a result.
                  *
-                 * If more rows were added than the new escalator rows can
-                 * account for, we need to start to spin the escalator to update
-                 * the remaining rows as well.
+                 * Note that it's not possible to insert content so that it's
+                 * partially visible at the top. A partially visible row at top
+                 * will still be the exact same partially visible row after
+                 * insertion regardless of whether the new content gets inserted
+                 * above or below the row. Even if you are scrolled to the
+                 * bottom and insert a lot of rows within the viewport it only
+                 * makes it necessary to scroll down more if you wish to remain
+                 * at the bottom. Escalator doesn't maintain a position at the
+                 * bottom for you by default.
+                 *
+                 * Because the insertion point is out of view above the viewport
+                 * in this case, the only thing that should change for the end
+                 * user visually is the scroll handle position and possibly size
+                 * if the insertion is large enough to affect the overall
+                 * content height significantly. Behind the scenes this also
+                 * means that any rows that might need to get re-purposed should
+                 * be taken from the BEGINNING of the visual range. Don't try to
+                 * re-purpose rows from the bottom even if there is excess, they
+                 * are more useful where they are. It is even possible that no
+                 * rows get added to dom or re-purposed at all, if the insertion
+                 * point is at the very beginning of the visual range and the
+                 * dom row count is already at maximum.
+                 *
+                 * On a practical level we need to tweak the virtual viewport --
+                 * scroll handle positions, table "scroll position", row and
+                 * spacer positions. Viewport should remain in a fixed position
+                 * in relation to the existing rows and display no new rows. It
+                 * shouldn't be possible to need new dom rows when we are
+                 * scrolled down and inserting new rows instead of adjusting
+                 * default row height, but the possibility has been taken into
+                 * account nevertheless as any shifting related to those would
+                 * have already happened by this point. If any of the
+                 * re-purposed rows have spacers either before or after the
+                 * update the height of those spacers affects the position
+                 * calculations.
+                 *
+                 * Insertion point can be anywhere from just before the previous
+                 * first row of the visual range to just before the first
+                 * actually visible row. The insertion shifts down the content
+                 * below insertion point, which excludes any dom rows that
+                 * remain above the insertion point after re-purposing is
+                 * finished. After the rows below insertion point have been
+                 * moved the viewport needs to be shifted down a similar amount
+                 * to regain its old relative position again.
+                 *
+                 * The visual range only ever contains at most as many rows as
+                 * would fit within the viewport without any spacers with one or
+                 * two rows partially in view, so the amount of rows that needs
+                 * to be checked is always reasonably limited.
                  */
-                final int rowsStillNeeded = numberOfRows - addedRows.size();
 
-                if (rowsStillNeeded > 0) {
-                    final Range unupdatedVisual = convertToVisual(
-                            Range.withLength(unupdatedLogicalStart,
-                                    rowsStillNeeded));
-                    final int end = getDomRowCount();
-                    final int start = end - unupdatedVisual.length();
-                    final int visualTargetIndex = unupdatedLogicalStart
-                            - visualOffset;
-                    moveAndUpdateEscalatorRows(Range.between(start, end),
-                            visualTargetIndex, unupdatedLogicalStart);
+                // insertion index within the visual range
+                int visualIndex = index - oldTopRowLogicalIndex;
 
-                    // move the surrounding rows to their correct places.
-                    double rowTop = (unupdatedLogicalStart + (end - start))
-                            * getDefaultRowHeight();
+                // how many dom rows before insertion point versus how many new
+                // rows didn't get their own dom rows -- smaller amount
+                // determines how many rows can and need to be re-purposed
+                int rowsToUpdate = Math.min(visualIndex,
+                        numberOfRows - addedRows.size());
 
-                    // TODO: Get rid of this try/catch block by fixing the
-                    // underlying issue. The reason for this erroneous behavior
-                    // might be that Escalator actually works 'by mistake', and
-                    // the order of operations is, in fact, wrong.
-                    try {
-                        final ListIterator<TableRowElement> i = visualRowOrder
-                                .listIterator(
-                                        visualTargetIndex + (end - start));
+                boolean rowVisibilityChanged = false;
+                if (rowsToUpdate > 0) {
+                    // re-purpose the rows and update the positions, adjust
+                    // logical index for inserted rows that won't fit within
+                    // visual range
+                    int logicalIndex = index + numberOfRows - rowsToUpdate;
+                    if (visualIndex > 0) {
+                        // move after any added dom rows
+                        moveAndUpdateEscalatorRows(
+                                Range.between(0, rowsToUpdate),
+                                visualIndex + addedRows.size(), logicalIndex);
+                    } else {
+                        // move before any added dom rows
+                        moveAndUpdateEscalatorRows(
+                                Range.between(0, rowsToUpdate), visualIndex,
+                                logicalIndex);
+                    }
 
-                        int logicalRowIndexCursor = unupdatedLogicalStart;
-                        while (i.hasNext()) {
-                            rowTop += spacerContainer
-                                    .getSpacerHeight(logicalRowIndexCursor++);
+                    // adjust viewport down to maintain the initial position
+                    double newRowsHeight = numberOfRows * defaultRowHeight;
+                    double newSpacerHeights = spacerContainer
+                            .getSpacerHeightsSumUntilIndex(
+                                    logicalIndex + rowsToUpdate)
+                            - spacerContainer
+                                    .getSpacerHeightsSumUntilIndex(index);
 
-                            final TableRowElement tr = i.next();
-                            setRowPosition(tr, 0, rowTop);
-                            rowTop += getDefaultRowHeight();
-                        }
-                    } catch (Exception e) {
-                        Logger logger = getLogger();
-                        logger.warning(
-                                "Ignored out-of-bounds row element access");
-                        logger.warning("Escalator state: start=" + start
-                                + ", end=" + end + ", visualTargetIndex="
-                                + visualTargetIndex + ", visualRowOrder.size()="
-                                + visualRowOrder.size());
-                        logger.warning(e.toString());
+                    /*
+                     * FIXME: spacers haven't been added yet and they can cause
+                     * escalator contents to shift after the fact in a way that
+                     * can't be countered for here.
+                     *
+                     * FIXME: verticalScrollbar internal state causes this
+                     * update to fail partially and the next attempt at
+                     * scrolling causes things to jump.
+                     *
+                     * Couldn't find a quick fix to either problem and this use
+                     * case is somewhat marginal so left them here for now.
+                     */
+                    moveViewportAndContent(null, 0, 0,
+                            newSpacerHeights + newRowsHeight);
+
+                    rowVisibilityChanged = true;
+                } else {
+                    // update the spacer indexes
+                    spacerContainer.updateSpacerIndexesForRowAndAfter(index,
+                            index + numberOfRows - addedRows.size(),
+                            numberOfRows - addedRows.size());
+
+                    double newRowsHeight = numberOfRows * defaultRowHeight;
+                    if (addedRows.size() > 0) {
+                        // update the viewport, rows and spacers were
+                        // repositioned already by the method for adding dom
+                        // rows
+                        moveViewportAndContent(null, 0, 0, newRowsHeight);
+
+                        rowVisibilityChanged = true;
+                    } else {
+                        // all changes are actually above the viewport after
+                        // all, update all positions
+                        moveViewportAndContent(index, newRowsHeight,
+                                newRowsHeight, newRowsHeight);
                     }
                 }
 
-                fireRowVisibilityChangeEvent();
-                sortDomElements();
+                if (numberOfRows > addedRows.size()) {
+                    /*
+                     * If there are more new rows than how many new dom rows got
+                     * added, the top row logical index necessarily gets shifted
+                     * down by that difference because re-purposing doesn't
+                     * replace any logical rows, just shifts them off the visual
+                     * range, and the inserted rows that don't fit to the visual
+                     * range also push the other rows down. If every new row got
+                     * new dom rows as well the top row logical index doesn't
+                     * change, because the insertion point was within the visual
+                     * range.
+                     */
+                    updateTopRowLogicalIndex(numberOfRows - addedRows.size());
+                }
+
+                if (rowVisibilityChanged) {
+                    fireRowVisibilityChangeEvent();
+                }
+
+                if (rowsToUpdate > 0) {
+                    // update the physical index
+                    sortDomElements();
+                }
+            } else {
+                /*
+                 * Rows added within visual range and either within or below the
+                 * viewport. Re-purposed rows come from the END of the visual
+                 * range.
+                 */
+
+                // insertion index within the visual range
+                int visualIndex = index - oldTopRowLogicalIndex;
+
+                // how many dom rows after insertion point versus how many new
+                // rows to add -- smaller amount determines how many rows can or
+                // need to be re-purposed, excluding the rows that already got
+                // new dom rows
+                int rowsToUpdate = Math
+                        .max(Math.min(visualRowOrder.size() - visualIndex,
+                                numberOfRows) - addedRows.size(), 0);
+
+                if (rowsToUpdate > 0) {
+                    moveAndUpdateEscalatorRows(
+                            Range.between(visualRowOrder.size() - rowsToUpdate,
+                                    visualRowOrder.size()),
+                            visualIndex + addedRows.size(),
+                            index + addedRows.size());
+
+                    fireRowVisibilityChangeEvent();
+
+                    // update the physical index
+                    sortDomElements();
+                }
             }
+
+            /*
+             * Calling insertRows will always change the number of rows - update
+             * the scrollbar sizes. This calculation isn't affected by actual
+             * dom rows amount or contents except for spacer heights. Spacers
+             * that don't fit the visual range are considered to have no height
+             * and might affect scrollbar calculations aversely, but that can't
+             * be avoided since they have unknown and variable heights.
+             */
+            scroller.recalculateScrollbarsForVirtualViewport();
         }
 
         /**
          * Move escalator rows around, and make sure everything gets
-         * appropriately repositioned and repainted.
+         * appropriately repositioned and repainted. In the case of insertion or
+         * removal, following spacer indexes get updated as well.
          *
          * @param visualSourceRange
          *            the range of rows to move to a new place
@@ -3014,6 +3312,9 @@ public class Escalator extends Widget
             if (visualSourceRange.isEmpty()) {
                 return;
             }
+            int sourceRangeLength = visualSourceRange.length();
+            int domRowCount = getDomRowCount();
+            int rowCount = getRowCount();
 
             assert visualSourceRange.getStart() >= 0 : "Visual source start "
                     + "must be 0 or greater (was "
@@ -3025,18 +3326,18 @@ public class Escalator extends Widget
             assert visualTargetIndex >= 0 : "Visual target must be 0 or greater (was "
                     + visualTargetIndex + ")";
 
-            assert visualTargetIndex <= getDomRowCount() : "Visual target "
+            assert visualTargetIndex <= domRowCount : "Visual target "
                     + "must not be greater than the number of escalator rows (was "
-                    + visualTargetIndex + ", escalator rows " + getDomRowCount()
+                    + visualTargetIndex + ", escalator rows " + domRowCount
                     + ")";
 
             assert logicalTargetIndex
-                    + visualSourceRange.length() <= getRowCount() : "Logical "
+                    + sourceRangeLength <= rowCount : "Logical "
                             + "target leads to rows outside of the data range ("
                             + Range.withLength(logicalTargetIndex,
-                                    visualSourceRange.length())
-                            + " goes beyond "
-                            + Range.withLength(0, getRowCount()) + ")";
+                                    sourceRangeLength)
+                            + " goes beyond " + Range.withLength(0, rowCount)
+                            + ")";
 
             /*
              * Since we move a range into another range, the indices might move
@@ -3050,13 +3351,35 @@ public class Escalator extends Widget
             final int adjustedVisualTargetIndex;
             if (visualSourceRange.getStart() < visualTargetIndex) {
                 adjustedVisualTargetIndex = visualTargetIndex
-                        - visualSourceRange.length();
+                        - sourceRangeLength;
             } else {
                 adjustedVisualTargetIndex = visualTargetIndex;
             }
 
-            if (visualSourceRange.getStart() != adjustedVisualTargetIndex) {
+            // total moved spacer heights with old and new content
+            double spacerHeightsBeforeMoveTotal = 0d;
+            double spacerHeightsAfterMoveTotal = 0d;
 
+            int oldTopRowLogicalIndex = getTopRowLogicalIndex();
+
+            // first moved row's logical index before move
+            int oldSourceRangeLogicalStart = oldTopRowLogicalIndex
+                    + visualSourceRange.getStart();
+
+            // new top row logical index
+            int newTopRowLogicalIndex = logicalTargetIndex
+                    - adjustedVisualTargetIndex;
+
+            // variables for update types that require special handling
+            boolean repurposedToTop = logicalTargetIndex < oldTopRowLogicalIndex;
+            boolean repurposedFromTop = visualSourceRange.getStart() == 0;
+            boolean scrollingUp = repurposedToTop
+                    && visualSourceRange.getEnd() == visualRowOrder.size();
+            boolean scrollingDown = repurposedFromTop
+                    && logicalTargetIndex >= oldTopRowLogicalIndex
+                            + visualRowOrder.size();
+
+            if (visualSourceRange.getStart() != adjustedVisualTargetIndex) {
                 /*
                  * Reorder the rows to their correct places within
                  * visualRowOrder (unless rows are moved back to their original
@@ -3071,8 +3394,8 @@ public class Escalator extends Widget
                  */
 
                 final List<TableRowElement> removedRows = new ArrayList<>(
-                        visualSourceRange.length());
-                for (int i = 0; i < visualSourceRange.length(); i++) {
+                        sourceRangeLength);
+                for (int i = 0; i < sourceRangeLength; i++) {
                     final TableRowElement tr = visualRowOrder
                             .remove(visualSourceRange.getStart());
                     removedRows.add(tr);
@@ -3081,28 +3404,202 @@ public class Escalator extends Widget
             }
 
             { // Refresh the contents of the affected rows
-                final ListIterator<TableRowElement> iter = visualRowOrder
-                        .listIterator(adjustedVisualTargetIndex);
-                for (int logicalIndex = logicalTargetIndex; logicalIndex < logicalTargetIndex
-                        + visualSourceRange.length(); logicalIndex++) {
-                    final TableRowElement tr = iter.next();
+
+                for (int i = 0; i < sourceRangeLength; ++i) {
+                    int visualIndex = adjustedVisualTargetIndex + i;
+                    final TableRowElement tr = visualRowOrder.get(visualIndex);
+                    int logicalIndex = logicalTargetIndex + i;
+
+                    // clear old spacer
+                    SpacerContainer.SpacerImpl spacer = spacerContainer
+                            .getSpacer(oldSourceRangeLogicalStart + i);
+                    if (spacer != null) {
+                        double spacerHeight = spacer.getHeight();
+                        spacerHeightsBeforeMoveTotal += spacerHeight;
+                        spacerContainer
+                                .removeSpacer(oldSourceRangeLogicalStart + i);
+                    }
+
                     refreshRow(tr, logicalIndex);
                 }
             }
 
-            { // Reposition the rows that were moved
-                double newRowTop = getRowTop(logicalTargetIndex);
+            { // Update the spacer indexes
 
-                final ListIterator<TableRowElement> iter = visualRowOrder
-                        .listIterator(adjustedVisualTargetIndex);
-                for (int i = 0; i < visualSourceRange.length(); i++) {
-                    final TableRowElement tr = iter.next();
-                    setRowPosition(tr, 0, newRowTop);
-
-                    newRowTop += getDefaultRowHeight();
-                    newRowTop += spacerContainer
-                            .getSpacerHeight(logicalTargetIndex + i);
+                if (scrollingDown || scrollingUp) {
+                    // rows re-purposed in scrolling, no need to shift indexes
+                    // -- the remaining ones are where they belong and the
+                    // re-purposed ones were already removed
+                } else if (repurposedFromTop) {
+                    // first rows are getting re-purposed thanks to insertion or
+                    // removal, all the indexes below need to be updated
+                    // accordingly
+                    int indexesToShift;
+                    if (newTopRowLogicalIndex != oldTopRowLogicalIndex) {
+                        indexesToShift = newTopRowLogicalIndex
+                                - oldTopRowLogicalIndex;
+                    } else {
+                        indexesToShift = -sourceRangeLength;
+                    }
+                    spacerContainer.updateSpacerIndexesForRowAndAfter(
+                            oldSourceRangeLogicalStart + sourceRangeLength,
+                            oldTopRowLogicalIndex + visualRowOrder.size(),
+                            indexesToShift);
+                } else if (repurposedToTop) {
+                    // rows re-purposed to the top, move the remaining spacer
+                    // indexes up
+                    spacerContainer.updateSpacerIndexesForRowAndAfter(
+                            oldSourceRangeLogicalStart + sourceRangeLength,
+                            getRowCount() + sourceRangeLength,
+                            -sourceRangeLength);
+                } else if (adjustedVisualTargetIndex != visualTargetIndex) {
+                    // move the shifted spacer indexes up to fill the freed
+                    // space
+                    spacerContainer.updateSpacerIndexesForRowAndAfter(
+                            oldSourceRangeLogicalStart + sourceRangeLength,
+                            logicalTargetIndex + sourceRangeLength,
+                            -sourceRangeLength);
+                } else {
+                    // move the shifted spacer indexes down to fill the freed
+                    // space
+                    spacerContainer.updateSpacerIndexesForRowAndAfter(
+                            logicalTargetIndex, oldSourceRangeLogicalStart,
+                            sourceRangeLength);
                 }
+            }
+
+            // TODO: new spacers should be added here already, not only at the
+            // row visibility change event. Currently
+            // spacerHeightsAfterMoveTotal is always zero.
+
+            { // Reposition the rows that were moved
+
+                int start = adjustedVisualTargetIndex;
+                updateRowPositions(newTopRowLogicalIndex + start, start,
+                        sourceRangeLength);
+            }
+
+            { // reposition the rows that were shifted by the move
+
+                if (sourceRangeLength == visualRowOrder.size()
+                        || (scrollingDown && spacerHeightsBeforeMoveTotal <= 0d)
+                        || (scrollingUp && spacerHeightsAfterMoveTotal <= 0d)) {
+                    // scrolling, no spacers got removed from or added above any
+                    // remaining rows so everything is where it belongs, or all
+                    // rows got updated and were repositioned already
+                } else if (adjustedVisualTargetIndex != visualTargetIndex) {
+                    // rows moved down, shifted rows need to be moved up
+
+                    int start = visualSourceRange.getStart();
+                    updateRowPositions(newTopRowLogicalIndex + start, start,
+                            adjustedVisualTargetIndex - start);
+                } else if (!repurposedToTop
+                        || spacerHeightsAfterMoveTotal > 0) {
+                    // rows moved up, shifted rows need to be repositioned
+                    // unless it's just a re-purposing and no spacer heights
+                    // above got updated
+
+                    int start = adjustedVisualTargetIndex + sourceRangeLength;
+                    updateRowPositions(newTopRowLogicalIndex + start, start,
+                            visualSourceRange.getEnd() - start);
+                } else {
+                    // rows re-purposed to the top but spacer heights above
+                    // didn't change, rows below the shift need to be moved up
+                    // but the shifted rows are already where they belong
+                }
+            }
+
+            /*
+             * There is no need to check if any rows preceding the source and
+             * target range need their positions adjusted, but rows below both
+             * may very well need it if spacer heights changed or rows got
+             * inserted or removed instead of just moved around.
+             *
+             * When scrolling to either direction all the rows already got
+             * processed by earlier stages, there are no unprocessed rows left
+             * either above or below.
+             */
+            if (!scrollingDown && !scrollingUp && (repurposedToTop
+                    || repurposedFromTop
+                    || spacerHeightsAfterMoveTotal != spacerHeightsBeforeMoveTotal)) {
+
+                int firstBelow;
+                if (adjustedVisualTargetIndex != visualTargetIndex) {
+                    // rows moved down
+                    firstBelow = adjustedVisualTargetIndex + sourceRangeLength;
+                } else {
+                    // rows moved up
+                    firstBelow = visualSourceRange.getEnd();
+                }
+                updateRowPositions(newTopRowLogicalIndex + firstBelow,
+                        firstBelow, visualRowOrder.size() - firstBelow);
+            }
+        }
+
+        @Override
+        public void updateRowPositions(int index, int numberOfRows) {
+            int visualIndex = index - getTopRowLogicalIndex();
+            if (visualIndex < 0 || visualIndex >= visualRowOrder.size()) {
+                // inconsistent state, ignore the positioning
+                return;
+            }
+            updateRowPositions(index, visualIndex, Math.min(numberOfRows,
+                    visualRowOrder.size() - visualIndex));
+
+            adjustScrollPositionIfNeeded();
+
+            scroller.recalculateScrollbarsForVirtualViewport();
+        }
+
+        /**
+         * Re-calculates and updates the positions of rows and spacers within
+         * the given range. Doesn't touch the scroll positions.
+         *
+         * @param logicalIndex
+         *            logical index of the first row to reposition
+         * @param visualIndex
+         *            visual index of the first row to reposition
+         * @param numberOfRows
+         *            the number of rows to reposition
+         */
+        private void updateRowPositions(int logicalIndex, int visualIndex,
+                int numberOfRows) {
+            double newRowTop = getRowTop(logicalIndex);
+            for (int i = 0; i < numberOfRows; ++i) {
+                TableRowElement tr = visualRowOrder.get(visualIndex + i);
+                setRowPosition(tr, 0, newRowTop);
+                newRowTop += getDefaultRowHeight();
+
+                SpacerContainer.SpacerImpl spacer = spacerContainer
+                        .getSpacer(logicalIndex + i);
+                if (spacer != null) {
+                    spacer.setPosition(0, newRowTop);
+                    newRowTop += spacer.getHeight();
+                }
+            }
+        }
+
+        /**
+         * Checks whether there is an unexpected gap below the visible rows and
+         * adjusts the viewport if necessary.
+         */
+        private void adjustScrollPositionIfNeeded() {
+            double scrollTop = getScrollTop();
+            int firstBelowVisualRange = getTopRowLogicalIndex()
+                    + visualRowOrder.size();
+            double gapBelow = scrollTop + getHeightOfSection()
+                    - getRowTop(firstBelowVisualRange);
+            boolean lastRowInVisualRange = firstBelowVisualRange == getRowCount();
+            if (scrollTop > 0 && gapBelow > 0 && lastRowInVisualRange) {
+                /*
+                 * This situation can be reached e.g. by removing a spacer.
+                 * Scroll position must be adjusted accordingly but no more than
+                 * there is room to scroll up. If the last row isn't in visual
+                 * range yet do nothing, as rendering that/those row(s) might
+                 * remove the gap.
+                 */
+                moveViewportAndContent(null, 0, 0,
+                        -Math.min(gapBelow, scrollTop));
             }
         }
 
@@ -3126,11 +3623,16 @@ public class Escalator extends Widget
          * the row at 20px.</dd>
          * </dl>
          *
+         * @deprecated This method isn't used by Escalator anymore and the
+         *             general row handling logic has been rewritten, so
+         *             attempting to call this method may lead to unexpected
+         *             consequences. This method is likely to get removed soon.
          * @param yDelta
          *            the delta of pixels by which to move the viewport and
          *            content. A positive value moves everything downwards,
          *            while a negative value moves everything upwards
          */
+        @Deprecated
         public void moveViewportAndContent(final double yDelta) {
 
             if (yDelta == 0) {
@@ -3162,23 +3664,90 @@ public class Escalator extends Widget
         }
 
         /**
-         * Adds new physical escalator rows to the DOM at the given index if
-         * there's still a need for more escalator rows.
+         * Move rows, spacers, and/or viewport up or down. For rows and spacers
+         * either everything within visual range is affected (index
+         * {@code null}) or only those from the given row index forward.
+         * <p>
+         * This method does not update spacer indexes.
+         *
+         * @param index
+         *            the logical index from which forward the rows and spacers
+         *            should be updated, or {@code null} if all of them
+         * @param yDeltaRows
+         *            how much rows should be shifted in pixels
+         * @param yDeltaSpacers
+         *            how much spacers should be shifted in pixels
+         * @param yDeltaScroll
+         *            how much scroll position should be shifted in pixels
+         */
+        private void moveViewportAndContent(Integer index,
+                final double yDeltaRows, final double yDeltaSpacers,
+                final double yDeltaScroll) {
+
+            if (!WidgetUtil.pixelValuesEqual(yDeltaScroll, 0)) {
+                double newTop = tBodyScrollTop + yDeltaScroll;
+                verticalScrollbar.setScrollPos(newTop);
+                setBodyScrollPosition(tBodyScrollLeft, newTop);
+            }
+
+            if (!WidgetUtil.pixelValuesEqual(yDeltaSpacers, 0)) {
+                Collection<SpacerContainer.SpacerImpl> spacers;
+                if (index == null) {
+                    spacers = spacerContainer.getSpacersAfterPx(tBodyScrollTop,
+                            SpacerInclusionStrategy.PARTIAL);
+                } else {
+                    spacers = spacerContainer.getSpacersForRowAndAfter(index);
+                }
+                for (SpacerContainer.SpacerImpl spacer : spacers) {
+                    spacer.setPositionDiff(0, yDeltaSpacers);
+                }
+            }
+
+            if (!WidgetUtil.pixelValuesEqual(yDeltaRows, 0)) {
+                if (index == null) {
+                    // move all visible rows to the desired direction
+                    for (TableRowElement tr : visualRowOrder) {
+                        setRowPosition(tr, 0, getRowTop(tr) + yDeltaRows);
+                    }
+                } else {
+                    // move all visible rows, including the index row, to the
+                    // desired direction
+                    shiftRowPositions(index - 1, yDeltaRows);
+                }
+            }
+        }
+
+        /**
+         * Adds new physical escalator rows to the DOM at the given visual index
+         * if there's still a need for more escalator rows.
          * <p>
          * If Escalator already is at (or beyond) max capacity, this method does
          * nothing to the DOM.
+         * <p>
+         * Calling this method repositions all the rows and spacers below the
+         * insertion point.
          *
-         * @param index
-         *            the index at which to add new escalator rows.
-         *            <em>Note:</em>It is assumed that the index is both the
-         *            visual index and the logical index.
+         * @param visualIndex
+         *            the index at which to add new escalator rows to DOM
+         * @param logicalIndex
+         *            the logical index that corresponds with the first new
+         *            escalator row, should usually be the same as visual index
+         *            because there is still need for new rows, but this is not
+         *            always the case e.g. if row height is changed
          * @param numberOfRows
          *            the number of rows to add at <code>index</code>
          * @return a list of the added rows
          */
         private List<TableRowElement> fillAndPopulateEscalatorRowsIfNeeded(
-                final int index, final int numberOfRows) {
+                final int visualIndex, final int logicalIndex,
+                final int numberOfRows) {
 
+            /*
+             * We want to maintain enough rows to fill the entire viewport even
+             * if their spacers have no height. If their spacers do have height
+             * some of these rows may end up outside of the viewport, but that's
+             * ok.
+             */
             final int escalatorRowsStillFit = getMaxVisibleRowCount()
                     - getDomRowCount();
             final int escalatorRowsNeeded = Math.min(numberOfRows,
@@ -3186,28 +3755,66 @@ public class Escalator extends Widget
 
             if (escalatorRowsNeeded > 0) {
 
+                // this is AbstractRowContainer method and not easily overridden
+                // to consider logical indexes separately from visual indexes,
+                // so as a workaround we create the rows as if those two were
+                // the same and then update the contents if needed
                 final List<TableRowElement> addedRows = paintInsertStaticRows(
-                        index, escalatorRowsNeeded);
-                visualRowOrder.addAll(index, addedRows);
+                        visualIndex, escalatorRowsNeeded);
+                visualRowOrder.addAll(visualIndex, addedRows);
 
-                double y = index * getDefaultRowHeight()
-                        + spacerContainer.getSpacerHeightsSumUntilIndex(index);
-                for (int i = index; i < visualRowOrder.size(); i++) {
-
-                    final TableRowElement tr;
-                    if (i - index < addedRows.size()) {
-                        tr = addedRows.get(i - index);
+                if (visualIndex != logicalIndex) {
+                    // row got populated with wrong contents, need to update
+                    int adjustedLogicalIndex = 0;
+                    if (visualIndex == 0) {
+                        // added to the beginning of visual range, use the
+                        // end of insertion range because the beginning might
+                        // not fit completely
+                        adjustedLogicalIndex = logicalIndex + numberOfRows
+                                - addedRows.size();
                     } else {
-                        tr = visualRowOrder.get(i);
+                        // added anywhere else, use the beginning of
+                        // insertion range and the rest of the rows get
+                        // re-purposed below if there is room for them
+                        adjustedLogicalIndex = logicalIndex;
                     }
+                    for (int i = 0; i < addedRows.size(); ++i) {
+                        TableRowElement tr = addedRows.get(i);
+                        refreshRow(tr, adjustedLogicalIndex + i);
+                    }
+                }
 
-                    setRowPosition(tr, 0, y);
-                    y += getDefaultRowHeight();
-                    y += spacerContainer.getSpacerHeight(i);
+                // if something is getting inserted instead of just being
+                // brought to visual range the logical indexes below the
+                // insertion point need updating
+                if (logicalIndex >= getTopRowLogicalIndex()) {
+                    spacerContainer.updateSpacerIndexesForRowAndAfter(
+                            logicalIndex, getRowCount(), addedRows.size());
+                }
+
+                // update the positions of the added rows and below
+                // TODO: this can lead to moving things around twice in case
+                // some rows didn't get new dom rows, consider moving this
+                // update elsewhere
+                double rowTop = getRowTop(logicalIndex);
+                for (int i = visualIndex; i < visualRowOrder.size(); i++) {
+
+                    final TableRowElement tr = visualRowOrder.get(i);
+
+                    setRowPosition(tr, 0, rowTop);
+                    rowTop += getDefaultRowHeight();
+                    SpacerContainer.SpacerImpl spacer = spacerContainer
+                            .getSpacer(logicalIndex - visualIndex + i);
+                    if (spacer != null) {
+                        spacer.setPosition(0, rowTop);
+                        rowTop += spacer.getHeight();
+                    }
                 }
 
                 // Execute the registered callback function for newly created
                 // rows
+                // TODO: should this be modified to allow several so that
+                // DetailsManagerConnector can set one too?
                 Optional.ofNullable(newEscalatorRowCallback)
                         .ifPresent(callback -> callback.accept(addedRows));
 
@@ -3241,398 +3848,237 @@ public class Escalator extends Widget
             if (numberOfRows == 0) {
                 return;
             }
+            /*
+             * NOTE: this method handles and manipulates logical, visual, and
+             * physical indexes a lot. If you don't remember what those mean and
+             * how they relate to each other, see the top of this class for
+             * Maintenance Notes.
+             *
+             * At the beginning of this method the logical index of the data
+             * provider has already been updated to include the new rows, but
+             * visual and physical indexes have not, nor has the spacer indexing
+             * been updated, and the topRowLogicalIndex may be out of date as
+             * well.
+             */
 
-            final Range viewportRange = getVisibleRowRange();
-            final Range removedRowsRange = Range.withLength(index,
+            // logical index of the first old row, also the difference between
+            // logical index and visual index before any rows have been removed
+            final int oldTopRowLogicalIndex = getTopRowLogicalIndex();
+            // length of the visual range before anything gets removed
+            final int oldVisualRangeLength = visualRowOrder.size();
+
+            // logical range of the removed rows
+            final Range removedRowsLogicalRange = Range.withLength(index,
                     numberOfRows);
 
-            /*
-             * Removing spacers as the very first step will correct the
-             * scrollbars and row offsets right away.
-             *
-             * TODO: actually, it kinda sounds like a Grid feature that a spacer
-             * would be associated with a particular row. Maybe it would be
-             * better to have a spacer separate from rows, and simply collapse
-             * them if they happen to end up on top of each other. This would
-             * probably make supporting the -1 row pretty easy, too.
-             */
-            spacerContainer.paintRemoveSpacers(removedRowsRange);
+            // check which parts of the removed range fall within or beyond the
+            // visual range
+            final Range[] partitions = removedRowsLogicalRange
+                    .partitionWith(Range.withLength(oldTopRowLogicalIndex,
+                            oldVisualRangeLength));
+            final Range removedLogicalAbove = partitions[0];
+            final Range removedLogicalBelow = partitions[2];
+            final Range removedLogicalWithin = partitions[1];
+            final Range removedVisualWithin = convertToVisual(
+                    removedLogicalWithin);
+            final int removedVisualRangeRowCount = removedVisualWithin.length();
+            final int remainingVisualRangeRowCount = visualRowOrder.size()
+                    - removedVisualRangeRowCount;
 
-            final Range[] partitions = removedRowsRange
-                    .partitionWith(viewportRange);
-            final Range removedAbove = partitions[0];
-            final Range removedLogicalInside = partitions[1];
-            final Range removedVisualInside = convertToVisual(
-                    removedLogicalInside);
+            // scroll position before any rows or spacers are removed
+            double scrollTop = getScrollTop();
+            // height of viewport
+            double sectionHeight = getHeightOfSection();
+            // default height of a single row
+            final double defaultRowHeight = getDefaultRowHeight();
 
-            /*
-             * TODO: extract the following if-block to a separate method. I'll
-             * leave this be inlined for now, to make linediff-based code
-             * reviewing easier. Probably will be moved in the following patch
-             * set.
-             */
+            if (removedLogicalBelow.length() == numberOfRows) {
+                /*
+                 * Rows were removed entirely from below the visual range. No
+                 * rows to re-purpose or scroll position to adjust, just need to
+                 * recalculate scrollbar height. No need to touch the spacer
+                 * indexing or the physical index.
+                 */
+                scroller.recalculateScrollbarsForVirtualViewport();
 
-            /*
-             * Adjust scroll position in one of two scenarios:
-             *
-             * 1) Rows were removed above. Then we just need to adjust the
-             * scrollbar by the height of the removed rows.
-             *
-             * 2) There are no logical rows above, and at least the first (if
-             * not more) visual row is removed. Then we need to snap the scroll
-             * position to the first visible row (i.e. reset scroll position to
-             * absolute 0)
-             *
-             * The logic is optimized in such a way that the
-             * moveViewportAndContent is called only once, to avoid extra
-             * reflows, and thus the code might seem a bit obscure.
-             */
-            final boolean firstVisualRowIsRemoved = !removedVisualInside
-                    .isEmpty() && removedVisualInside.getStart() == 0;
+                // Visual range contents remain the same, no need to fire a
+                // RowVisibilityChangeEvent.
+                return;
+            } else if (removedLogicalAbove.length() == numberOfRows) {
+                /*
+                 * Rows were removed entirely from above the visual range. No
+                 * rows to re-purpose, just need to update the spacer indexing
+                 * and the scroll position. No need to touch the physical index.
+                 */
 
-            if (!removedAbove.isEmpty() || firstVisualRowIsRemoved) {
-                final double yDelta = removedAbove.length()
-                        * getDefaultRowHeight();
-                final double firstLogicalRowHeight = getDefaultRowHeight();
-                final boolean removalScrollsToShowFirstLogicalRow = verticalScrollbar
-                        .getScrollPos() - yDelta < firstLogicalRowHeight;
+                // update the logical indexes of remaining spacers
+                spacerContainer.updateSpacerIndexesForRowAndAfter(
+                        oldTopRowLogicalIndex,
+                        oldTopRowLogicalIndex + oldVisualRangeLength,
+                        -numberOfRows);
 
-                if (removedVisualInside.isEmpty()
-                        && (!removalScrollsToShowFirstLogicalRow
-                                || !firstVisualRowIsRemoved)) {
-                    /*
-                     * rows were removed from above the viewport, so all we need
-                     * to do is to adjust the scroll position to account for the
-                     * removed rows
-                     */
-                    moveViewportAndContent(-yDelta);
-                } else if (removalScrollsToShowFirstLogicalRow) {
-                    /*
-                     * It seems like we've removed all rows from above, and also
-                     * into the current viewport. This means we'll need to even
-                     * out the scroll position to exactly 0 (i.e. adjust by the
-                     * current negative scrolltop, presto!), so that it isn't
-                     * aligned funnily
-                     */
-                    moveViewportAndContent(-verticalScrollbar.getScrollPos());
-                }
-            }
+                // how much viewport, rows, and spacers should be shifted based
+                // on the removed rows, assume there were no spacers to remove
+                final double yDelta = numberOfRows * defaultRowHeight;
 
-            // ranges evaluated, let's do things.
-            if (!removedVisualInside.isEmpty()) {
-                int escalatorRowCount = body.getDomRowCount();
+                // shift everything up
+                moveViewportAndContent(null, -yDelta, -yDelta, -yDelta);
+
+                // update the top row logical index according to any removed
+                // rows
+                updateTopRowLogicalIndex(-numberOfRows);
+
+                // update scrollbar
+                scroller.recalculateScrollbarsForVirtualViewport();
+
+                // Visual range contents remain the same, no need to fire a
+                // RowVisibilityChangeEvent.
+                return;
+            } else {
+                /*
+                 * Rows are being removed at least partially from within the
+                 * visual range. This is where things get tricky. We might have
+                 * to scroll up or down or nowhere at all, depending on the
+                 * situation.
+                 */
 
                 /*
-                 * remember: the rows have already been subtracted from the row
-                 * count at this point
+                 * Calculating where the visual range should start after the
+                 * removals is not entirely trivial.
+                 *
+                 * Initially, any rows removed from within the visual range
+                 * won't affect the top index, even if they are removed from the
+                 * beginning, as the rows are also removed from the logical
+                 * index. Likewise we don't need to care about rows removed from
+                 * below the visual range. On the other hand, any rows removed
+                 * from above the visual range do shift the index down.
+                 *
+                 * However, in all of these cases, if there aren't enough rows
+                 * below the visual range to replace the content removed from
+                 * within the visual range, more rows need to be brought in from
+                 * above the old visual range in turn. This shifts the index
+                 * down even further.
                  */
-                int rowsLeft = getRowCount();
-                if (rowsLeft < escalatorRowCount) {
-                    /*
-                     * Remove extra DOM rows and refresh contents.
-                     */
-                    for (int i = escalatorRowCount - 1; i >= rowsLeft; i--) {
-                        final TableRowElement tr = visualRowOrder.remove(i);
-                        paintRemoveRow(tr, i);
+                int newTopRowLogicalIndex = oldTopRowLogicalIndex
+                        - removedLogicalAbove.length();
+                int rowsToIncludeFromBelow = Math.min(
+                        getRowCount() - newTopRowLogicalIndex
+                                - remainingVisualRangeRowCount,
+                        removedLogicalWithin.length());
+                int rowsToIncludeFromAbove = removedLogicalWithin.length()
+                        - rowsToIncludeFromBelow;
+                int rowsToRemoveFromDom = 0;
+                if (rowsToIncludeFromAbove > 0) {
+                    // don't try to bring in more rows than exist, it's possible
+                    // to remove enough rows that visual range won't be full
+                    // anymore
+                    rowsToRemoveFromDom = Math.max(
+                            rowsToIncludeFromAbove - newTopRowLogicalIndex, 0);
+                    rowsToIncludeFromAbove -= rowsToRemoveFromDom;
+
+                    newTopRowLogicalIndex -= rowsToIncludeFromAbove;
+                }
+
+                int visualIndexToRemove = Math
+                        .max(index - oldTopRowLogicalIndex, 0);
+
+                // remove extra dom rows and their spacers if any
+                double removedFromDomSpacerHeights = 0d;
+                if (rowsToRemoveFromDom > 0) {
+                    for (int i = 0; i < rowsToRemoveFromDom; ++i) {
+                        TableRowElement tr = visualRowOrder
+                                .remove(visualIndexToRemove);
+
+                        // logical index of this row before anything got removed
+                        int logicalRowIndex = oldTopRowLogicalIndex
+                                + visualIndexToRemove + i;
+                        double spacerHeight = spacerContainer
+                                .getSpacerHeight(logicalRowIndex);
+                        removedFromDomSpacerHeights += spacerHeight;
+                        spacerContainer.removeSpacer(logicalRowIndex);
+
+                        paintRemoveRow(tr, removedVisualWithin.getStart());
                         removeRowPosition(tr);
                     }
 
-                    // Move rest of the rows to the Escalator's top
-                    Range visualRange = Range.withLength(0,
-                            visualRowOrder.size());
-                    moveAndUpdateEscalatorRows(visualRange, 0, 0);
-
-                    sortDomElements();
-                    setTopRowLogicalIndex(0);
-
-                    scroller.recalculateScrollbarsForVirtualViewport();
-
-                    fireRowVisibilityChangeEvent();
-                    return;
-                } else {
-                    // No escalator rows need to be removed.
-
-                    /*
-                     * Two things (or a combination thereof) can happen:
-                     *
-                     * 1) We're scrolled to the bottom, the last rows are
-                     * removed. SOLUTION: moveAndUpdateEscalatorRows the
-                     * bottommost rows, and place them at the top to be
-                     * refreshed.
-                     *
-                     * 2) We're scrolled somewhere in the middle, arbitrary rows
-                     * are removed. SOLUTION: moveAndUpdateEscalatorRows the
-                     * removed rows, and place them at the bottom to be
-                     * refreshed.
-                     *
-                     * Since a combination can also happen, we need to handle
-                     * this in a smart way, all while avoiding
-                     * double-refreshing.
-                     */
-
-                    final double contentBottom = getRowCount()
-                            * getDefaultRowHeight();
-                    final double viewportBottom = tBodyScrollTop
-                            + getHeightOfSection();
-                    if (viewportBottom <= contentBottom) {
-                        /*
-                         * We're in the middle of the row container, everything
-                         * is added to the bottom
-                         */
-                        paintRemoveRowsAtMiddle(removedLogicalInside,
-                                removedVisualInside, 0);
-                    } else if (removedVisualInside.contains(0)
-                            && numberOfRows >= visualRowOrder.size()) {
-                        /*
-                         * We're removing so many rows that the viewport is
-                         * pushed up more than a screenful. This means we can
-                         * simply scroll up and everything will work without a
-                         * sweat.
-                         */
-
-                        double left = horizontalScrollbar.getScrollPos();
-                        double top = contentBottom
-                                - visualRowOrder.size() * getDefaultRowHeight();
-                        setBodyScrollPosition(left, top);
-
-                        Range allEscalatorRows = Range.withLength(0,
-                                visualRowOrder.size());
-                        int logicalTargetIndex = getRowCount()
-                                - allEscalatorRows.length();
-                        moveAndUpdateEscalatorRows(allEscalatorRows, 0,
-                                logicalTargetIndex);
-
-                        /*
-                         * moveAndUpdateEscalatorRows recalculates the rows, but
-                         * logical top row index bookkeeping is handled in this
-                         * method.
-                         *
-                         * TODO: Redesign how to keep it easy to track this.
-                         */
-                        updateTopRowLogicalIndex(
-                                -removedLogicalInside.length());
-
-                        /*
-                         * Scrolling the body to the correct location will be
-                         * fixed automatically. Because the amount of rows is
-                         * decreased, the viewport is pushed up as the scrollbar
-                         * shrinks. So no need to do anything there.
-                         *
-                         * TODO [[optimize]]: This might lead to a double body
-                         * refresh. Needs investigation.
-                         */
-                    } else if (contentBottom
-                            + (numberOfRows * getDefaultRowHeight())
-                            - viewportBottom < getDefaultRowHeight()) {
-                        /*
-                         * We're at the end of the row container, everything is
-                         * added to the top.
-                         */
-
-                        /*
-                         * FIXME [[spacer]]: above if-clause is coded to only
-                         * work with default row heights - will not work with
-                         * variable row heights
-                         */
-
-                        paintRemoveRowsAtBottom(removedLogicalInside,
-                                removedVisualInside);
-                        updateTopRowLogicalIndex(
-                                -removedLogicalInside.length());
-                    } else {
-                        /*
-                         * We're in a combination, where we need to both scroll
-                         * up AND show new rows at the bottom.
-                         *
-                         * Example: Scrolled down to show the second to last
-                         * row. Remove two. Viewport scrolls up, revealing the
-                         * row above row. The last element collapses up and into
-                         * view.
-                         *
-                         * Reminder: this use case handles only the case when
-                         * there are enough escalator rows to still render a
-                         * full view. I.e. all escalator rows will _always_ be
-                         * populated
-                         */
-                        /*-
-                         *  1       1      |1| <- newly rendered
-                         * |2|     |2|     |2|
-                         * |3| ==> |*| ==> |5| <- newly rendered
-                         * |4|     |*|
-                         *  5       5
-                         *
-                         *  1       1      |1| <- newly rendered
-                         * |2|     |*|     |4|
-                         * |3| ==> |*| ==> |5| <- newly rendered
-                         * |4|     |4|
-                         *  5       5
-                         */
-
-                        /*
-                         * STEP 1:
-                         *
-                         * reorganize deprecated escalator rows to bottom, but
-                         * don't re-render anything yet
-                         */
-                        /*-
-                         *  1       1       1
-                         * |2|     |*|     |4|
-                         * |3| ==> |*| ==> |*|
-                         * |4|     |4|     |*|
-                         *  5       5       5
-                         */
-                        double newTop = getRowTop(visualRowOrder
-                                .get(removedVisualInside.getStart()));
-                        for (int i = 0; i < removedVisualInside.length(); i++) {
-                            final TableRowElement tr = visualRowOrder
-                                    .remove(removedVisualInside.getStart());
-                            visualRowOrder.addLast(tr);
-                        }
-
-                        for (int i = removedVisualInside
-                                .getStart(); i < escalatorRowCount; i++) {
-                            final TableRowElement tr = visualRowOrder.get(i);
-                            setRowPosition(tr, 0, (int) newTop);
-                            newTop += getDefaultRowHeight();
-                            newTop += spacerContainer.getSpacerHeight(
-                                    i + removedLogicalInside.getStart());
-                        }
-
-                        /*
-                         * STEP 2:
-                         *
-                         * manually scroll
-                         */
-                        /*-
-                         *  1      |1| <-- newly rendered (by scrolling)
-                         * |4|     |4|
-                         * |*| ==> |*|
-                         * |*|
-                         *  5       5
-                         */
-                        final double newScrollTop = contentBottom
-                                - getHeightOfSection();
-                        setScrollTop(newScrollTop);
-                        /*
-                         * Manually call the scroll handler, so we get immediate
-                         * effects in the escalator.
-                         */
-                        scroller.onScroll();
-
-                        /*
-                         * Move the bottommost (n+1:th) escalator row to top,
-                         * because scrolling up doesn't handle that for us
-                         * automatically
-                         */
-                        moveAndUpdateEscalatorRows(
-                                Range.withOnly(escalatorRowCount - 1), 0,
-                                getLogicalRowIndex(visualRowOrder.getFirst())
-                                        - 1);
-                        updateTopRowLogicalIndex(-1);
-
-                        /*
-                         * STEP 3:
-                         *
-                         * update remaining escalator rows
-                         */
-                        /*-
-                         * |1|     |1|
-                         * |4| ==> |4|
-                         * |*|     |5| <-- newly rendered
-                         *
-                         *  5
-                         */
-
-                        final int rowsScrolled = (int) (Math
-                                .ceil((viewportBottom - contentBottom)
-                                        / getDefaultRowHeight()));
-                        final int start = escalatorRowCount
-                                - (removedVisualInside.length() - rowsScrolled);
-                        final Range visualRefreshRange = Range.between(start,
-                                escalatorRowCount);
-                        final int logicalTargetIndex = getLogicalRowIndex(
-                                visualRowOrder.getFirst()) + start;
-                        // in-place move simply re-renders the rows.
-                        moveAndUpdateEscalatorRows(visualRefreshRange, start,
-                                logicalTargetIndex);
-                    }
+                    // update the associated row indexes for remaining spacers,
+                    // even for those rows that are going to get re-purposed
+                    spacerContainer.updateSpacerIndexesForRowAndAfter(
+                            oldTopRowLogicalIndex + visualIndexToRemove
+                                    + rowsToRemoveFromDom,
+                            oldTopRowLogicalIndex + oldVisualRangeLength,
+                            -rowsToRemoveFromDom);
                 }
 
+                // add new content from below visual range, if there is any
+                if (rowsToIncludeFromBelow > 0) {
+                    // calculate first logical index below the old visual range
+                    // rows after the rows are removed
+                    int firstBelow = newTopRowLogicalIndex
+                            + rowsToIncludeFromAbove
+                            + remainingVisualRangeRowCount;
+
+                    moveAndUpdateEscalatorRows(
+                            Range.withLength(visualIndexToRemove,
+                                    rowsToIncludeFromBelow),
+                            visualRowOrder.size(), firstBelow);
+                }
+
+                // add new content from above visual range, if there is any
+                if (rowsToIncludeFromAbove > 0) {
+                    moveAndUpdateEscalatorRows(
+                            Range.withLength(visualIndexToRemove,
+                                    rowsToIncludeFromAbove),
+                            0, newTopRowLogicalIndex);
+                }
+
+                // re-purposing updates all relevant row and spacer positions
+                // but if none happened, rows from below the removal point need
+                // to be shifted up by the removed amount
+                if (rowsToIncludeFromAbove <= 0
+                        && rowsToIncludeFromBelow <= 0) {
+                    // update the positions for the rows and spacers below the
+                    // removed ones, assume there is no need to update scroll
+                    // position since the final check adjusts that if needed
+                    final double yDelta = numberOfRows * defaultRowHeight
+                            + removedFromDomSpacerHeights;
+                    moveViewportAndContent(
+                            newTopRowLogicalIndex + visualIndexToRemove,
+                            -yDelta, -yDelta, 0);
+                }
+
+                setTopRowLogicalIndex(newTopRowLogicalIndex);
+
+                scroller.recalculateScrollbarsForVirtualViewport();
+
+                // calling this method also triggers adding new spacers to the
+                // re-purposed rows, if any are needed
                 fireRowVisibilityChangeEvent();
+
+                // populating the spacers might take a while, delay calculations
+                // or the viewport might get adjusted too high
+                Scheduler.get().scheduleFinally(() -> {
+                    // make sure there isn't a gap at the bottom after removal
+                    // and adjust the viewport if there is
+
+                    // FIXME: this should be doable with
+                    // adjustScrollPositionIfNeeded() but it uses current
+                    // scrollTop, which may have ended in wrong position and
+                    // results in assuming too big gap and consequently
+                    // scrolling up too much
+                    double extraSpaceAtBottom = scrollTop + sectionHeight
+                            - getRowTop(getTopRowLogicalIndex()
+                                    + visualRowOrder.size());
+                    if (extraSpaceAtBottom > 0 && scrollTop > 0) {
+                        // we need to move the viewport up to adjust, while the
+                        // rows and spacers can remain where they are
+                        moveViewportAndContent(null, 0, 0,
+                                -Math.min(extraSpaceAtBottom, scrollTop));
+                    }
+                });
+
+                // update physical index
                 sortDomElements();
-            }
-
-            updateTopRowLogicalIndex(-removedAbove.length());
-
-            /*
-             * this needs to be done after the escalator has been shrunk down,
-             * or it won't work correctly (due to setScrollTop invocation)
-             */
-            scroller.recalculateScrollbarsForVirtualViewport();
-        }
-
-        private void paintRemoveRowsAtMiddle(final Range removedLogicalInside,
-                final Range removedVisualInside, final int logicalOffset) {
-            /*-
-             *  :       :       :
-             * |2|     |2|     |2|
-             * |3| ==> |*| ==> |4|
-             * |4|     |4|     |6| <- newly rendered
-             *  :       :       :
-             */
-
-            final int escalatorRowCount = visualRowOrder.size();
-
-            final int logicalTargetIndex = getLogicalRowIndex(
-                    visualRowOrder.getLast())
-                    - (removedVisualInside.length() - 1) + logicalOffset;
-            moveAndUpdateEscalatorRows(removedVisualInside, escalatorRowCount,
-                    logicalTargetIndex);
-
-            // move the surrounding rows to their correct places.
-            final ListIterator<TableRowElement> iterator = visualRowOrder
-                    .listIterator(removedVisualInside.getStart());
-
-            double rowTop = getRowTop(
-                    removedLogicalInside.getStart() + logicalOffset);
-            for (int i = removedVisualInside.getStart(); i < escalatorRowCount
-                    - removedVisualInside.length(); i++) {
-                final TableRowElement tr = iterator.next();
-                setRowPosition(tr, 0, rowTop);
-                rowTop += getDefaultRowHeight();
-                rowTop += spacerContainer
-                        .getSpacerHeight(i + removedLogicalInside.getStart());
-            }
-        }
-
-        private void paintRemoveRowsAtBottom(final Range removedLogicalInside,
-                final Range removedVisualInside) {
-            /*-
-             *                  :
-             *  :       :      |4| <- newly rendered
-             * |5|     |5|     |5|
-             * |6| ==> |*| ==> |7|
-             * |7|     |7|
-             */
-
-            final int logicalTargetIndex = getLogicalRowIndex(
-                    visualRowOrder.getFirst()) - removedVisualInside.length();
-            moveAndUpdateEscalatorRows(removedVisualInside, 0,
-                    logicalTargetIndex);
-
-            // move the surrounding rows to their correct places.
-            int firstUpdatedIndex = removedVisualInside.getEnd();
-            final ListIterator<TableRowElement> iterator = visualRowOrder
-                    .listIterator(firstUpdatedIndex);
-
-            double rowTop = getRowTop(removedLogicalInside.getStart());
-            int i = 0;
-            while (iterator.hasNext()) {
-                final TableRowElement tr = iterator.next();
-                setRowPosition(tr, 0, rowTop);
-                rowTop += getDefaultRowHeight();
-                rowTop += spacerContainer
-                        .getSpacerHeight(firstUpdatedIndex + i++);
             }
         }
 
@@ -3680,16 +4126,10 @@ public class Escalator extends Widget
                 return Range.withLength(0, 0);
             }
 
-            /*
-             * TODO [[spacer]]: these assumptions will be totally broken with
-             * spacers.
-             */
-            final int maxVisibleRowCount = getMaxVisibleRowCount();
-            final int currentTopRowIndex = getLogicalRowIndex(
-                    visualRowOrder.getFirst());
+            final int currentTopRowIndex = getTopRowLogicalIndex();
 
-            final Range[] partitions = logicalRange.partitionWith(
-                    Range.withLength(currentTopRowIndex, maxVisibleRowCount));
+            final Range[] partitions = logicalRange
+                    .partitionWith(getVisibleRowRange());
             final Range insideRange = partitions[1];
             return insideRange.offsetBy(-currentTopRowIndex);
         }
@@ -3781,7 +4221,7 @@ public class Escalator extends Widget
              * This method indeed has a smell very similar to paintRemoveRows
              * and paintInsertRows.
              *
-             * Unfortunately, those the code can't trivially be shared, since
+             * Unfortunately, the code of those can't trivially be shared, since
              * there are some slight differences in the respective
              * responsibilities. The "paint" methods fake the addition and
              * removal of rows, and make sure to either push existing data out
@@ -3801,120 +4241,114 @@ public class Escalator extends Widget
                 return;
             }
 
+            int oldTopRowLogicalIndex = getTopRowLogicalIndex();
+            int oldVisualRangeLength = visualRowOrder.size();
+
             final int maxVisibleRowCount = getMaxVisibleRowCount();
             final int neededEscalatorRows = Math.min(maxVisibleRowCount,
                     body.getRowCount());
-            final int neededEscalatorRowsDiff = neededEscalatorRows
-                    - visualRowOrder.size();
 
-            if (neededEscalatorRowsDiff > 0) {
-                // needs more
+            final int rowDiff = neededEscalatorRows - oldVisualRangeLength;
 
-                /*
-                 * This is a workaround for the issue where we might be scrolled
-                 * to the bottom, and the widget expands beyond the content
-                 * range
-                 */
+            if (rowDiff > 0) {
+                // more rows are needed
 
-                final int index = visualRowOrder.size();
-                final int nextLastLogicalIndex;
+                final int visualIndexBottom = oldVisualRangeLength;
+                final int logicalIndexBottom;
                 if (!visualRowOrder.isEmpty()) {
-                    nextLastLogicalIndex = getLogicalRowIndex(
-                            visualRowOrder.getLast()) + 1;
+                    logicalIndexBottom = oldTopRowLogicalIndex
+                            + visualIndexBottom;
                 } else {
-                    nextLastLogicalIndex = 0;
+                    logicalIndexBottom = 0;
                 }
 
-                final boolean contentWillFit = nextLastLogicalIndex < getRowCount()
-                        - neededEscalatorRowsDiff;
-                if (contentWillFit) {
-                    final List<TableRowElement> addedRows = fillAndPopulateEscalatorRowsIfNeeded(
-                            index, neededEscalatorRowsDiff);
+                // prioritise adding to the bottom so that there's less chance
+                // for a gap if a details row is closed
+                final int addToBottom = Math.min(rowDiff,
+                        getRowCount() - logicalIndexBottom);
+                final int addToTop = rowDiff - addToBottom;
 
-                    /*
-                     * Since fillAndPopulateEscalatorRowsIfNeeded operates on
-                     * the assumption that index == visual index == logical
-                     * index, we thank for the added escalator rows, but since
-                     * they're painted in the wrong CSS position, we need to
-                     * move them to their actual locations.
-                     *
-                     * Note: this is the second (see body.paintInsertRows)
-                     * occasion where fillAndPopulateEscalatorRowsIfNeeded would
-                     * behave "more correctly" if it only would add escalator
-                     * rows to the DOM and appropriate bookkeping, and not
-                     * actually populate them :/
-                     */
-                    moveAndUpdateEscalatorRows(
-                            Range.withLength(index, addedRows.size()), index,
-                            nextLastLogicalIndex);
-                } else {
-                    /*
-                     * TODO [[optimize]]
-                     *
-                     * We're scrolled so far down that all rows can't be simply
-                     * appended at the end, since we might start displaying
-                     * escalator rows that don't exist. To avoid the mess that
-                     * is body.paintRemoveRows, this is a dirty hack that dumbs
-                     * the problem down to a more basic and already-solved
-                     * problem:
-                     *
-                     * 1) scroll all the way up 2) add the missing escalator
-                     * rows 3) scroll back to the original position.
-                     *
-                     * Letting the browser scroll back to our original position
-                     * will automatically solve any possible overflow problems,
-                     * since the browser will not allow us to scroll beyond the
-                     * actual content.
-                     */
+                if (addToTop > 0) {
+                    fillAndPopulateEscalatorRowsIfNeeded(0,
+                            oldTopRowLogicalIndex - addToTop, addToTop);
 
-                    final double oldScrollTop = getScrollTop();
-                    setScrollTop(0);
-                    scroller.onScroll();
-                    fillAndPopulateEscalatorRowsIfNeeded(index,
-                            neededEscalatorRowsDiff);
-                    setScrollTop(oldScrollTop);
-                    scroller.onScroll();
+                    updateTopRowLogicalIndex(-addToTop);
                 }
-            } else if (neededEscalatorRowsDiff < 0) {
-                // needs less
+                if (addToBottom > 0) {
+                    fillAndPopulateEscalatorRowsIfNeeded(visualIndexBottom,
+                            logicalIndexBottom, addToBottom);
+                }
+            } else if (rowDiff < 0) {
+                // rows need to be removed
 
-                final ListIterator<TableRowElement> iter = visualRowOrder
-                        .listIterator(visualRowOrder.size());
-                for (int i = 0; i < -neededEscalatorRowsDiff; i++) {
-                    final Element last = iter.previous();
-                    last.removeFromParent();
-                    iter.remove();
+                // prioritise removing rows from above the viewport as they are
+                // less likely to be needed in a hurry -- the rows below are
+                // more likely to slide into view when spacer contents are
+                // updated
+
+                // top of visible area before any rows are actually added
+                double scrollTop = getScrollTop();
+
+                // visual index of the first actually visible row, including
+                // spacer
+                int oldFirstVisibleVisualIndex = -1;
+                for (int i = 0; i < visualRowOrder.size(); ++i) {
+                    if (positions.getTop(visualRowOrder.get(i)) <= scrollTop) {
+                        oldFirstVisibleVisualIndex = i;
+                        continue;
+                    }
+                    break;
                 }
 
-                /*
-                 * If we were scrolled to the bottom so that we didn't have an
-                 * extra escalator row at the bottom, we'll probably end up with
-                 * blank space at the bottom of the escalator, and one extra row
-                 * above the header.
-                 *
-                 * Experimentation idea #1: calculate "scrollbottom" vs content
-                 * bottom and remove one row from top, rest from bottom. This
-                 * FAILED, since setHeight has already happened, thus we never
-                 * will detect ourselves having been scrolled all the way to the
-                 * bottom.
-                 */
+                int removeFromAbove = Math.max(0,
+                        Math.min(-rowDiff, oldFirstVisibleVisualIndex));
 
-                if (!visualRowOrder.isEmpty()) {
-                    final double firstRowTop = getRowTop(
-                            visualRowOrder.getFirst());
-                    final double firstRowMinTop = tBodyScrollTop
-                            - getDefaultRowHeight();
-                    if (firstRowTop < firstRowMinTop) {
-                        final int newLogicalIndex = getLogicalRowIndex(
-                                visualRowOrder.getLast()) + 1;
-                        moveAndUpdateEscalatorRows(Range.withOnly(0),
-                                visualRowOrder.size(), newLogicalIndex);
-                        updateTopRowLogicalIndex(1);
+                boolean spacersRemovedFromAbove = false;
+                if (removeFromAbove > 0) {
+                    double initialSpacerHeightSum = spacerContainer
+                            .getSpacerHeightsSum();
+                    final ListIterator<TableRowElement> iter = visualRowOrder
+                            .listIterator(0);
+                    for (int i = 0; i < removeFromAbove; ++i) {
+                        final Element first = iter.next();
+                        first.removeFromParent();
+                        iter.remove();
+
+                        spacerContainer.removeSpacer(oldTopRowLogicalIndex + i);
+                    }
+                    spacersRemovedFromAbove = initialSpacerHeightSum != spacerContainer
+                            .getSpacerHeightsSum();
+                }
+
+                // if there weren't enough rows above, remove the rest from
+                // below
+                if (removeFromAbove < -rowDiff) {
+                    final ListIterator<TableRowElement> iter = visualRowOrder
+                            .listIterator(visualRowOrder.size());
+                    for (int i = 1; i <= -rowDiff - removeFromAbove; ++i) {
+                        final Element last = iter.previous();
+                        last.removeFromParent();
+                        iter.remove();
+
+                        spacerContainer.removeSpacer(oldTopRowLogicalIndex
+                                + oldVisualRangeLength - i);
                     }
                 }
+
+                updateTopRowLogicalIndex(removeFromAbove);
+
+                if (spacersRemovedFromAbove) {
+                    updateRowPositions(oldTopRowLogicalIndex, 0,
+                            visualRowOrder.size());
+                }
+
+                // removing rows might cause a gap at the bottom
+                adjustScrollPositionIfNeeded();
             }
 
-            if (neededEscalatorRowsDiff != 0) {
+            if (rowDiff != 0) {
+                scroller.recalculateScrollbarsForVirtualViewport();
+
                 fireRowVisibilityChangeEvent();
             }
 
@@ -3930,18 +4364,28 @@ public class Escalator extends Widget
             Profiler.enter(
                     "Escalator.BodyRowContainer.reapplyDefaultRowHeights");
 
-            double spacerHeights = 0;
+            double spacerHeightsAboveViewport = spacerContainer
+                    .getSpacerHeightsSumUntilPx(
+                            verticalScrollbar.getScrollPos());
+            double allSpacerHeights = spacerContainer.getSpacerHeightsSum();
 
             /* step 1: resize and reposition rows */
+
+            // there should be no spacers above the visual range
+            double spacerHeights = 0;
             for (int i = 0; i < visualRowOrder.size(); i++) {
                 TableRowElement tr = visualRowOrder.get(i);
                 reapplyRowHeight(tr, getDefaultRowHeight());
 
                 final int logicalIndex = getTopRowLogicalIndex() + i;
-                setRowPosition(tr, 0,
-                        logicalIndex * getDefaultRowHeight() + spacerHeights);
-
-                spacerHeights += spacerContainer.getSpacerHeight(logicalIndex);
+                double y = logicalIndex * getDefaultRowHeight() + spacerHeights;
+                setRowPosition(tr, 0, y);
+                SpacerContainer.SpacerImpl spacer = spacerContainer
+                        .getSpacer(logicalIndex);
+                if (spacer != null) {
+                    spacer.setPosition(0, y + getDefaultRowHeight());
+                    spacerHeights += spacer.getHeight();
+                }
             }
 
             /*
@@ -3949,16 +4393,16 @@ public class Escalator extends Widget
              * place
              */
 
-            /*
-             * This ratio needs to be calculated with the scrollsize (not max
-             * scroll position) in order to align the top row with the new
-             * scroll position.
-             */
-            double scrollRatio = verticalScrollbar.getScrollPos()
-                    / verticalScrollbar.getScrollSize();
+            // scrollRatio has to be calculated without spacers for it to be
+            // comparable between different row heights
+            double scrollRatio = (verticalScrollbar.getScrollPos()
+                    - spacerHeightsAboveViewport)
+                    / (verticalScrollbar.getScrollSize() - allSpacerHeights);
             scroller.recalculateScrollbarsForVirtualViewport();
-            verticalScrollbar.setScrollPos((int) (getDefaultRowHeight()
-                    * getRowCount() * scrollRatio));
+            // spacer heights have to be added back for setting new scrollPos
+            verticalScrollbar.setScrollPos(
+                    (int) ((getDefaultRowHeight() * getRowCount() * scrollRatio)
+                            + spacerHeightsAboveViewport));
             setBodyScrollPosition(horizontalScrollbar.getScrollPos(),
                     verticalScrollbar.getScrollPos());
             scroller.onScroll();
@@ -3967,10 +4411,6 @@ public class Escalator extends Widget
              * step 3: make sure we have the correct amount of escalator rows.
              */
             verifyEscalatorCount();
-
-            int logicalLogical = (int) (getRowTop(visualRowOrder.getFirst())
-                    / getDefaultRowHeight());
-            setTopRowLogicalIndex(logicalLogical);
 
             Profiler.leave(
                     "Escalator.BodyRowContainer.reapplyDefaultRowHeights");
@@ -4210,6 +4650,8 @@ public class Escalator extends Widget
         }
 
         @Override
+        // TODO: should this be modified to allow several so that
+        // DetailsManagerConnector can set one too?
         public void setNewRowCallback(
                 Consumer<List<TableRowElement>> callback) {
             newEscalatorRowCallback = callback;
@@ -4845,6 +5287,17 @@ public class Escalator extends Widget
                 UIObject.setStylePrimaryName(deco, style + "-spacer-deco");
             }
 
+            /**
+             * Clear spacer height without moving other contents.
+             *
+             * @see #setHeight(double)
+             */
+            private void clearHeight() {
+                height = 0;
+                root.getStyle().setHeight(0, Unit.PX);
+                updateDecoratorGeometry(0);
+            }
+
             public void setHeight(double height) {
 
                 assert height >= 0 : "Height must be more >= 0 (was " + height
@@ -5015,15 +5468,13 @@ public class Escalator extends Widget
             public void show() {
                 getRootElement().getStyle().clearDisplay();
                 getDecoElement().getStyle().clearDisplay();
-                Escalator.this.fireEvent(
-                        new SpacerVisibilityChangedEvent(getRow(), true));
+                fireEvent(new SpacerVisibilityChangedEvent(getRow(), true));
             }
 
             public void hide() {
                 getRootElement().getStyle().setDisplay(Display.NONE);
                 getDecoElement().getStyle().setDisplay(Display.NONE);
-                Escalator.this.fireEvent(
-                        new SpacerVisibilityChangedEvent(getRow(), false));
+                fireEvent(new SpacerVisibilityChangedEvent(getRow(), false));
             }
 
             /**
@@ -5136,14 +5587,16 @@ public class Escalator extends Widget
             assert !destination.equals(ScrollDestination.MIDDLE)
                     || padding != 0 : "destination/padding check should be done before this method";
 
-            if (!rowIndexToSpacer.containsKey(spacerIndex)) {
-                throw new IllegalArgumentException(
-                        "No spacer open at index " + spacerIndex);
-            }
-
             SpacerImpl spacer = rowIndexToSpacer.get(spacerIndex);
-            double targetStartPx = spacer.getTop();
-            double targetEndPx = targetStartPx + spacer.getHeight();
+            double targetStartPx;
+            double targetEndPx;
+            if (spacer == null) {
+                targetStartPx = body.getRowTop(spacerIndex + 1);
+                targetEndPx = targetStartPx;
+            } else {
+                targetStartPx = spacer.getTop();
+                targetEndPx = targetStartPx + spacer.getHeight();
+            }
 
             Range viewportPixels = getViewportPixels();
             double viewportStartPx = viewportPixels.getStart();
@@ -5163,12 +5616,29 @@ public class Escalator extends Widget
             }
         }
 
+        /**
+         * @deprecated This method is no longer used by Escalator and is likely
+         *             to be removed soon.
+         *
+         * @param removedRowsRange
+         */
+        @Deprecated
         public void paintRemoveSpacers(Range removedRowsRange) {
             removeSpacers(removedRowsRange);
             shiftSpacersByRows(removedRowsRange.getStart(),
                     -removedRowsRange.length());
         }
 
+        /**
+         * Removes spacers of the given range without moving other contents.
+         * <p>
+         * NOTE: Changed functionality. Previous incarnation of this method
+         * updated the positions of all the contents below the first removed
+         * spacer.
+         *
+         * @param removedRange
+         *            logical range of spacers to remove
+         */
         @SuppressWarnings("boxing")
         public void removeSpacers(Range removedRange) {
 
@@ -5180,15 +5650,12 @@ public class Escalator extends Widget
                 return;
             }
 
-            for (SpacerImpl spacer : removedSpacers.values()) {
-                /*
-                 * [[optimization]] TODO: Each invocation of the setHeight
-                 * method has a cascading effect in the DOM. if this proves to
-                 * be slow, the DOM offset could be updated as a batch.
-                 */
+            for (Entry<Integer, SpacerImpl> entry : removedSpacers.entrySet()) {
+                SpacerImpl spacer = entry.getValue();
 
+                rowIndexToSpacer.remove(entry.getKey());
                 destroySpacerContent(spacer);
-                spacer.setHeight(0); // resets row offsets
+                spacer.clearHeight();
                 spacer.getRootElement().removeFromParent();
                 spacer.getDecoElement().removeFromParent();
             }
@@ -5427,7 +5894,8 @@ public class Escalator extends Widget
 
         /**
          * Gets the amount of pixels occupied by spacers until a logical row
-         * index.
+         * index. The spacer of the row corresponding with the given index isn't
+         * included.
          *
          * @param logicalIndex
          *            a logical row index
@@ -5500,7 +5968,8 @@ public class Escalator extends Widget
 
             initSpacerContent(spacer);
 
-            body.sortDomElements();
+            // schedule updating of the physical indexes
+            body.domSorter.reschedule();
         }
 
         private void updateExistingSpacer(int rowIndex, double newHeight) {
@@ -5607,10 +6076,11 @@ public class Escalator extends Widget
         }
 
         /**
-         * Shifts spacers at and after a specific row by an amount of rows.
+         * Shifts spacers at and after a specific row by an amount of rows that
+         * don't contain spacers of their own.
          * <p>
-         * This moves both their associated row index and also their visual
-         * placement.
+         * This moves both their associated logical row index and also their
+         * visual placement.
          * <p>
          * <em>Note:</em> This method does not check for the validity of any
          * arguments.
@@ -5634,6 +6104,40 @@ public class Escalator extends Widget
                 for (int i = spacers.size() - 1; i >= 0; --i) {
                     SpacerContainer.SpacerImpl spacer = spacers.get(i);
                     spacer.setPositionDiff(0, pxDiff);
+                    spacer.setRowIndex(spacer.getRow() + numberOfRows);
+                }
+            }
+        }
+
+        /**
+         * Update the associated logical row indexes for spacers without moving
+         * their actual positions.
+         * <p>
+         * <em>Note:</em> This method does not check for the validity of any
+         * arguments.
+         *
+         * @param startIndex
+         *            the previous logical index of first row to update
+         * @param endIndex
+         *            the previous logical index of first row that doesn't need
+         *            updating anymore
+         * @param numberOfRows
+         *            the number of rows to shift the associated logical index
+         *            with. A positive value is downwards, a negative value is
+         *            upwards.
+         */
+        private void updateSpacerIndexesForRowAndAfter(int startIndex,
+                int endIndex, int numberOfRows) {
+            List<SpacerContainer.SpacerImpl> spacers = new ArrayList<>(
+                    getSpacersForRowAndAfter(startIndex));
+            spacers.removeAll(getSpacersForRowAndAfter(endIndex));
+            if (numberOfRows < 0) {
+                for (SpacerContainer.SpacerImpl spacer : spacers) {
+                    spacer.setRowIndex(spacer.getRow() + numberOfRows);
+                }
+            } else {
+                for (int i = spacers.size() - 1; i >= 0; --i) {
+                    SpacerContainer.SpacerImpl spacer = spacers.get(i);
                     spacer.setRowIndex(spacer.getRow() + numberOfRows);
                 }
             }
@@ -5847,6 +6351,11 @@ public class Escalator extends Widget
 
     private boolean layoutIsScheduled = false;
     private ScheduledCommand layoutCommand = () -> {
+        // ensure that row heights have been set or auto-detected
+        header.autodetectRowHeightLater();
+        body.autodetectRowHeightLater();
+        footer.autodetectRowHeightLater();
+
         recalculateElementSizes();
         layoutIsScheduled = false;
     };
@@ -6416,7 +6925,7 @@ public class Escalator extends Widget
 
     /**
      * Scrolls the body vertically so that the spacer at the given row index is
-     * visible and there is at least {@literal padding} pixesl to the given
+     * visible and there is at least {@literal padding} pixels to the given
      * scroll destination.
      *
      * @since 7.5.0
@@ -6608,12 +7117,8 @@ public class Escalator extends Widget
 
     private void fireRowVisibilityChangeEvent() {
         if (!body.visualRowOrder.isEmpty()) {
-            int visibleRangeStart = body
-                    .getLogicalRowIndex(body.visualRowOrder.getFirst());
-            int visibleRangeEnd = body
-                    .getLogicalRowIndex(body.visualRowOrder.getLast()) + 1;
-
-            int visibleRowCount = visibleRangeEnd - visibleRangeStart;
+            int visibleRangeStart = body.getTopRowLogicalIndex();
+            int visibleRowCount = body.visualRowOrder.size();
             fireEvent(new RowVisibilityChangeEvent(visibleRangeStart,
                     visibleRowCount));
         } else {
@@ -6695,6 +7200,11 @@ public class Escalator extends Widget
      * @see #setHeightMode(HeightMode)
      */
     public void setHeightByRows(double rows) throws IllegalArgumentException {
+        if (heightMode == HeightMode.UNDEFINED && body.insertingOrRemoving) {
+            // this will be called again once the operation is finished, ignore
+            // for now
+            return;
+        }
         if (rows < 0) {
             throw new IllegalArgumentException(
                     "The number of rows must be a positive number.");
