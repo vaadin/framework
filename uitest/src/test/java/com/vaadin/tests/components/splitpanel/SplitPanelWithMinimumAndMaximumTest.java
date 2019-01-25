@@ -28,58 +28,6 @@ public class SplitPanelWithMinimumAndMaximumTest extends MultiBrowserTest {
     }
 
     @Test
-    public void testMoveHorizontalSplitsToLimits() {
-        // Amount of pixels to move each splitter (to left)
-        int[] movements = { -250, -350, -320, -100, -200, -100, -170, -400 };
-
-        // Expected final positions of splitters (at left limit)
-        int[] finalPositions = { 60, 60, 100, 100, 478, 478, 550, 550 };
-
-        List<HorizontalSplitPanelElement> splits = $(
-                HorizontalSplitPanelElement.class).all();
-
-        Actions actions = new Actions(driver);
-
-        for (int i = 0; i < splits.size(); i++) {
-            TestBenchElement splitter = splits.get(i).getSplitter();
-            actions.clickAndHold(splitter).moveByOffset(movements[i], 0)
-                    .release().perform();
-
-            double newX = parseHorizontalPosition(splitter, i < 4);
-            int expectedX = finalPositions[i];
-
-            // Due to minor browser differences and sub-pixels we must allow 1px
-            // of play between the expected and measured value
-            assertTrue(
-                    "When moving left, the splitter at index " + i
-                            + " was at position " + newX + " (expected "
-                            + expectedX + ").",
-                    Math.abs(newX - expectedX) <= 1);
-        }
-
-        // Amount of pixels to move each splitter (to right)
-        movements = new int[] { 450, 450, 480, 480, 450, 450, 480, 480 };
-
-        // Expected final positions of splitters (at right limit)
-        finalPositions = new int[] { 478, 478, 550, 550, 60, 60, 100, 100 };
-
-        for (int i = 0; i < splits.size(); i++) {
-            TestBenchElement splitter = splits.get(i).getSplitter();
-            actions.clickAndHold(splitter).moveByOffset(movements[i], 0)
-                    .release().perform();
-
-            double newX = parseHorizontalPosition(splitter, i < 4);
-            int expectedX = finalPositions[i];
-
-            assertTrue(
-                    "When moving right, the splitter at index " + i
-                            + " was at position " + newX + " (expected "
-                            + expectedX + ").",
-                    Math.abs(newX - expectedX) <= 1);
-        }
-    }
-
-    @Test
     public void testMoveVerticalSplitsToLimits() {
         $(TabSheetElement.class).first().openTab(1);
 

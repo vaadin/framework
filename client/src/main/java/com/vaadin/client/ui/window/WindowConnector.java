@@ -339,6 +339,22 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
                 }
                 return newEl;
             }
+            if ("iframe".equalsIgnoreCase(old.getTagName()) && old
+                    .hasAttribute("src") && old.getAttribute("src")
+                    .contains("APP/connector")) {
+                // an iframe reloads when reattached to the DOM, but
+                // unfortunately, when newEl is reattached, server-side
+                // resource (e.g. generated PDF) is already gone, so this will
+                // end up with 404, which might be undesirable.
+                // Instead of the resource that is not available anymore,
+                // let's just use empty iframe.
+                // See
+                // https://github.com/vaadin/framework/issues/11369
+                // for details of the issue this works around
+                Element newEl = old.cloneNode(false).cast();
+                newEl.setAttribute("src", "about:blank");
+                return newEl;
+            }
         }
         Node res = node.cloneNode(false);
         if (node.hasChildNodes()) {
