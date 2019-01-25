@@ -3814,7 +3814,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             } else {
                 Element element = detailsWidget.getElement();
                 spacerElement.appendChild(element);
-                setParent(detailsWidget, Grid.this);
+                if (!detailsWidget.isAttached()) {
+                    setParent(detailsWidget, Grid.this);
+                }
                 Widget previousWidget = elementToWidgetMap.put(element,
                         detailsWidget);
 
@@ -3829,7 +3831,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                  * height, but the spacer cell (td) has the borders, which
                  * should go on top of the previous row and next row.
                  */
-                double contentHeight;
+                final double contentHeight;
                 if (detailsGenerator instanceof HeightAwareDetailsGenerator) {
                     HeightAwareDetailsGenerator sadg = (HeightAwareDetailsGenerator) detailsGenerator;
                     contentHeight = sadg.getDetailsHeight(rowIndex);
@@ -3839,8 +3841,32 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 }
                 double borderTopAndBottomHeight = WidgetUtil
                         .getBorderTopAndBottomThickness(spacerElement);
-                double measuredHeight = contentHeight
-                        + borderTopAndBottomHeight;
+                double measuredHeight = 0d;
+                if (contentHeight > 0) {
+                    measuredHeight = contentHeight + borderTopAndBottomHeight;
+                } else {
+                    Scheduler.get().scheduleFinally(() -> {
+                        // make sure the spacer hasn't got removed
+                        if (getElement().isOrHasChild(spacer.getElement())) {
+                            // re-check the height
+                            double confirmedContentHeight = WidgetUtil
+                                    .getRequiredHeightBoundingClientRectDouble(
+                                            element);
+                            if (confirmedContentHeight != contentHeight) {
+                                double confirmedMeasuredHeight = confirmedContentHeight
+                                        + WidgetUtil
+                                                .getBorderTopAndBottomThickness(
+                                                        spacer.getElement());
+                                escalator.getBody().setSpacer(spacer.getRow(),
+                                        confirmedMeasuredHeight);
+                                if (getHeightMode() == HeightMode.UNDEFINED) {
+                                    setHeightByRows(getEscalator().getBody()
+                                            .getRowCount());
+                                }
+                            }
+                        }
+                    });
+                }
                 assert getElement().isOrHasChild(
                         spacerElement) : "The spacer element wasn't in the DOM during measurement, but was assumed to be.";
                 spacerHeight = measuredHeight;
@@ -7208,6 +7234,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
                     @Override
                     public void dataRemoved(int firstIndex, int numberOfItems) {
+                        for (int i = 0; i < numberOfItems; ++i) {
+                            visibleDetails.remove(firstIndex + i);
+                        }
                         escalator.getBody().removeRows(firstIndex,
                                 numberOfItems);
                         Range removed = Range.withLength(firstIndex,
@@ -9211,17 +9240,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (escalator
                     .getInnerWidth() != autoColumnWidthsRecalculator.lastCalculatedInnerWidth) {
                 recalculateColumnWidths();
-            }
-
-            if (getEscalatorInnerHeight() != autoColumnWidthsRecalculator.lastCalculatedInnerHeight) {
-                Scheduler.get().scheduleFinally(() -> {
-                    // Trigger re-calculation of all row positions.
-                    RowContainer.BodyRowContainer body = getEscalator()
-                            .getBody();
-                    if (!body.isAutodetectingRowHeightLater()) {
-                        body.setDefaultRowHeight(body.getDefaultRowHeight());
-                    }
-                });
             }
 
             // Vertical resizing could make editor positioning invalid so it

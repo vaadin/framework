@@ -737,6 +737,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             if (this.generator != generator) {
                 removeAllComponents();
             }
+            getState().hasDetailsGenerator = generator != null;
             this.generator = generator;
             visibleDetails.forEach(this::refresh);
         }
