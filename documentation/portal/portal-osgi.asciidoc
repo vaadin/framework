@@ -94,3 +94,20 @@ java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-th
 java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-liferay-integration/8.6.3/vaadin-liferay-integration-8.6.3.jar
 java -jar blade.jar sh start file:<path_to_liferay_portlet.jar>
 ----
+
+However if you are using Vaadin 8 with compatibility libraries, the list above does not work, since you need to load compatibility versions of the bundles in addition to base versions in right order, here is example of that
+
+[source, shell]
+----
+blade sh start https://repo1.maven.org/maven2/org/jsoup/jsoup/1.11.3/jsoup-1.11.3.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/external/gentyref/1.2.0.vaadin1/gentyref-1.2.0.vaadin1.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-shared/8.6.4/vaadin-shared-8.6.4.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-compatibility-shared/8.6.4/vaadin-compatibility-shared-8.6.4.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-server/8.6.4/vaadin-server-8.6.4.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-compatibility-server/8.6.4/vaadin-compatibility-server-8.6.4.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-osgi-integration/8.6.4/vaadin-osgi-integration-8.6.4.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-compatibility-client-compiled/8.6.4/vaadin-compatibility-client-compiled-8.6.4.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-compatibility-themes/8.6.4/vaadin-compatibility-themes-8.6.4.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-liferay-integration/8.6.4/vaadin-liferay-integration-8.6.4.jar
+java -jar blade.jar sh start file:<path_to_liferay_portlet.jar>
+----
