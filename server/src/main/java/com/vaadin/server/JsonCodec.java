@@ -451,12 +451,15 @@ public class JsonCodec implements Serializable {
      * Characters), Collections and Maps, so setting custom serializers for
      * these won't have any effect.
      * <p>
+     * To remove a previously set serializer, call this method with the second
+     * parameter set to @code{null}.
+     * <p>
      * Custom serializers should only be added from static initializers or other
      * places that are guaranteed to run only once. Trying to add a serializer
      * to a class that already has one will cause an exception.
      * <p>
-     * Warning: overriding existing custom serializers may lead into unexpected
-     * behavior in components that expect customized behavior. The framework's
+     * Warning: removing existing custom serializers may lead into unexpected
+     * behavior in components that expect the customized data. The framework's
      * custom serializers are loaded in the static initializer block of this
      * class.
      *
@@ -464,8 +467,8 @@ public class JsonCodec implements Serializable {
      * @throws IllegalArgumentException
      *             Thrown if parameter clazz is null.
      * @throws IllegalStateException
-     *             Thrown if parameter clazz is already registered and parameter
-     *             jsonSerializer is not null.
+     *             Thrown if serializer for parameter clazz is already
+     *             registered and parameter jsonSerializer is not null.
      * @param clazz
      *            The target class.
      * @param jsonSerializer
