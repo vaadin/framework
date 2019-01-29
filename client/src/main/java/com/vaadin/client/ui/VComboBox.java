@@ -98,7 +98,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
         HandlesAriaRequired, DeferredWorker, MouseDownHandler {
 
-    private boolean tabPressed = true;
+    // private boolean tabPressed = true;
     private String keyDownElementId;
 
     /**
@@ -1457,12 +1457,12 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
             suggestionPopup.menu.setSuggestions(currentSuggestions);
             if (!waitingForFilteringResponse && suggestionPopup.isAttached()
-                    && focused && !tabPressed) {
+                    && focused) {
                 showPopup = true;
             }
-            debug("Data Received + is focused" + focused + " TabPressed"
-                    + tabPressed);
-            if (showPopup) {
+            debug("Data Received + is focused" + focused);
+            // Don't show popup, if is not focused
+            if (showPopup && focused) {
                 suggestionPopup.showSuggestions(currentPage);
             }
 
@@ -1758,7 +1758,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean focused = false;
-
+    /** For internal use only. May be removed or replaced in the future. */
+    public boolean noKeyDownEvents = true;
     /**
      * If set to false, the component should not allow entering text to the
      * field even for filtering.
@@ -2209,15 +2210,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             debug("Key-down id:" + getWidget().getElement().getInnerHTML());
             debug("Key-down id:" + getWidget().getElement()
                     .getElementsByTagName("input").getItem(0).getId());
-            keyDownElementId = getWidget().getElement()
-                    .getElementsByTagName("input").getItem(0).getId();
-            if (keyCode == KeyCodes.KEY_TAB) {
-                // Tab is the last key to be pressed on item before focus is
-                // changed;
-                tabPressed = true;
-            } else {
-                tabPressed = false;
-            }
+            // keyDownElementId = getWidget().getElement()
+            // .getElementsByTagName("input").getItem(0).getId();
+            noKeyDownEvents = false;
             if (suggestionPopup.isAttached()) {
                 if (enableDebug) {
                     debug("Keycode " + keyCode + " target is popup");
@@ -2380,18 +2375,15 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 // component
                 debug("Key-up id:" + getWidget().getElement()
                         .getElementsByTagName("input").getItem(0).getId());
-                if (keyDownElementId == null || !keyDownElementId.equals(
-                        getWidget().getElement().getElementsByTagName("input")
-                                .getItem(0).getId())
-                        || tabPressed) {
-                    debug("KEY IS NOT THE SAME ");
-                    return;
-                }
+                /*
+                 * if (keyDownElementId == null || !keyDownElementId.equals(
+                 * getWidget().getElement().getElementsByTagName("input")
+                 * .getItem(0).getId())) { debug("KEY IS NOT THE SAME ");
+                 * return; }
+                 */
             }
             switch (event.getNativeKeyCode()) {
             case KeyCodes.KEY_TAB:
-                tabPressed = false;
-                break;
             case KeyCodes.KEY_ENTER:
             case KeyCodes.KEY_SHIFT:
             case KeyCodes.KEY_CTRL:
@@ -2408,9 +2400,11 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 // NOP
                 break;
             default:
-                if (textInputEnabled) {
+                debug("NokeyDownEvents variable: " + noKeyDownEvents);
+                if (textInputEnabled && !noKeyDownEvents) {
                     // when filtering, we always want to see the results on the
                     // first page first.
+                    debug("KeyDown event occured before!");
                     filterOptions(0);
                 }
                 break;
@@ -2551,6 +2545,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             return;
         }
 
+        noKeyDownEvents = true;
         focused = true;
         updatePlaceholder();
         addStyleDependentName("focus");
