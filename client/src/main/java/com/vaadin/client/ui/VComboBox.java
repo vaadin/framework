@@ -98,9 +98,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
         HandlesAriaRequired, DeferredWorker, MouseDownHandler {
 
-    // private boolean tabPressed = true;
-    private String keyDownElementId;
-
     /**
      * Represents a suggestion in the suggestion popup box.
      */
@@ -906,11 +903,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
                 }
             }
-            // if (!tabPressed) {
-            // debug("TAB IS NOT PRESSED");
+
             setPopupPosition(left, top);
             menu.scrollSelectionIntoView();
-            // }
         }
 
         /**
@@ -1456,11 +1451,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             }
 
             suggestionPopup.menu.setSuggestions(currentSuggestions);
-            if (!waitingForFilteringResponse && suggestionPopup.isAttached()
-                    && focused) {
+            if (!waitingForFilteringResponse && suggestionPopup.isAttached()) {
                 showPopup = true;
             }
-            debug("Data Received + is focused" + focused);
             // Don't show popup, if is not focused
             if (showPopup && focused) {
                 suggestionPopup.showSuggestions(currentPage);
@@ -2207,11 +2200,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 return;
             }
 
-            debug("Key-down id:" + getWidget().getElement().getInnerHTML());
-            debug("Key-down id:" + getWidget().getElement()
-                    .getElementsByTagName("input").getItem(0).getId());
-            // keyDownElementId = getWidget().getElement()
-            // .getElementsByTagName("input").getItem(0).getId();
             noKeyDownEvents = false;
             if (suggestionPopup.isAttached()) {
                 if (enableDebug) {
@@ -2369,22 +2357,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             debug("VComboBox: onKeyUp(" + event.getNativeKeyCode() + ")");
         }
         if (enabled && !readonly) {
-            if (textInputEnabled) {
-                // If the first keyEvene happening is Keyup without preceding
-                // keydown for this field, then it originates from anothe
-                // component
-                debug("Key-up id:" + getWidget().getElement()
-                        .getElementsByTagName("input").getItem(0).getId());
-                /*
-                 * if (keyDownElementId == null || !keyDownElementId.equals(
-                 * getWidget().getElement().getElementsByTagName("input")
-                 * .getItem(0).getId())) { debug("KEY IS NOT THE SAME ");
-                 * return; }
-                 */
-            }
             switch (event.getNativeKeyCode()) {
-            case KeyCodes.KEY_TAB:
             case KeyCodes.KEY_ENTER:
+            case KeyCodes.KEY_TAB:
             case KeyCodes.KEY_SHIFT:
             case KeyCodes.KEY_CTRL:
             case KeyCodes.KEY_ALT:
@@ -2400,11 +2375,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 // NOP
                 break;
             default:
-                debug("NokeyDownEvents variable: " + noKeyDownEvents);
                 if (textInputEnabled && !noKeyDownEvents) {
                     // when filtering, we always want to see the results on the
                     // first page first.
-                    debug("KeyDown event occured before!");
                     filterOptions(0);
                 }
                 break;
@@ -2611,8 +2584,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                             currentSuggestion.getReplacementString()))) {
                 dataReceivedHandler.reactOnInputWhenReady(tb.getText());
             } else {
-                debug("Is waiting for filtering responce:"
-                        + dataReceivedHandler.isWaitingForFilteringResponse());
                 reset();
             }
             suggestionPopup.hide();
