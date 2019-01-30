@@ -1030,7 +1030,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param <P>
          *            the presentation type
          *
-         * @since
+         * @since 8.7.0
          */
         protected <P> Column(ValueProvider<T, V> valueProvider,
                 ValueProvider<V, P> presentationProvider,
@@ -2994,7 +2994,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param <P>
      *            the column presentation type
      *
-     * @since
+     * @since 8.7.0
      */
     private <V, P> Column<T, V> createColumn(ValueProvider<T, V> valueProvider,
             ValueProvider<V, P> presentationProvider,
