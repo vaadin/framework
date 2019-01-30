@@ -316,6 +316,15 @@ public class VMenuBar extends FocusableFlowPanel implements
     }
 
     /**
+     * Returns the containing element of the menu.
+     *
+     * @return containerElement
+     */
+    public com.google.gwt.user.client.Element getContainerElement() {
+        return DOM.asOld(containerElement);
+    }
+
+    /**
      * Add a new item to this menu.
      *
      * @param html
