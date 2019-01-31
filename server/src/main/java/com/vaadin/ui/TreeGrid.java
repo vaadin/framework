@@ -43,6 +43,7 @@ import com.vaadin.event.CollapseEvent.CollapseListener;
 import com.vaadin.event.ExpandEvent;
 import com.vaadin.event.ExpandEvent.ExpandListener;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.treegrid.FocusParentRpc;
 import com.vaadin.shared.ui.treegrid.FocusRpc;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
@@ -54,6 +55,9 @@ import com.vaadin.ui.declarative.DesignFormatter;
 
 /**
  * A grid component for displaying hierarchical tabular data.
+ *
+ * Visual hierarchy depth positioning of rows is done via styles, see
+ * <code>_treegrid.scss</code> from Valo theme.
  *
  * @author Vaadin Ltd
  * @since 8.1
@@ -194,6 +198,26 @@ public class TreeGrid<T> extends Grid<T>
                 getRpcProxy(FocusRpc.class).focusCell(parentIndex, cellIndex);
             }
         });
+    }
+
+    /**
+     * This method is inherited from Grid but should never be called directly
+     * with a TreeGrid
+     */
+    @Override
+    @Deprecated
+    public void scrollTo(int row) throws IllegalArgumentException {
+        super.scrollTo(row);
+    }
+
+    /**
+     * This method is inherited from Grid but should never be called directly
+     * with a TreeGrid
+     */
+    @Deprecated
+    @Override
+    public void scrollTo(int row, ScrollDestination destination) {
+        super.scrollTo(row, destination);
     }
 
     /**

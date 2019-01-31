@@ -155,7 +155,7 @@ public class KeyMapper<V> implements DataKeyMapper<V> {
      *
      * @param objects
      *            new objects set needs to be merged.
-     * @since
+     * @since 8.7
      */
     public void merge(Set<V> objects) {
         final Set<String> keys = new HashSet<>(keyObjectMap.size());

@@ -21,4 +21,5 @@ public class MenuBarState extends TabIndexState {
     {
         primaryStyleName = "v-menubar";
     }
+    public int delayMs = 500;
 }

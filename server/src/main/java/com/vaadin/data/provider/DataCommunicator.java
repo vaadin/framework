@@ -530,6 +530,7 @@ public class DataCommunicator<T> extends AbstractExtension {
     public void reset() {
         // Only needed if a full reset is not pending.
         if (!reset) {
+            beforeClientResponse(true);
             // Soft reset through client-side re-request.
             getClientRpc().reset(getDataProviderSize());
         }

@@ -11,7 +11,7 @@ You can load the JavaScript code of a client-side application in an HTML __host
 page__ by including it with a [literal]#++<script>++# tag, for example as
 follows:
 
-
+[source, html] 
 ----
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
