@@ -3232,8 +3232,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             final String diffStateKey = "frozenColumnCount";
             UI ui = getUI();
             if (ui != null) {
-                ui.getConnectorTracker().getDiffState(Grid.this)
-                        .remove(diffStateKey);
+                JsonObject diffState = ui.getConnectorTracker()
+                        .getDiffState(Grid.this);
+                // if diffState is not present, there's nothing for us to clean
+                if (diffState != null) {
+                    diffState.remove(diffStateKey);
+                }
             }
         }
         getState().frozenColumnCount = numberOfColumns;
