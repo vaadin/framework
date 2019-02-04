@@ -9,11 +9,12 @@ import org.junit.Test;
 import com.vaadin.server.JsonCodec;
 import com.vaadin.server.communication.JSONSerializer;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 import com.vaadin.ui.ConnectorTracker;
 
 import elemental.json.JsonValue;
 
-public class CustomJSONSerializerTest extends MultiBrowserTest {
+public class CustomJSONSerializerTest extends SingleBrowserTest {
 
     public static class Foo {
 

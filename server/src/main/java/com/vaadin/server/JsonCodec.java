@@ -452,7 +452,7 @@ public class JsonCodec implements Serializable {
      * these won't have any effect.
      * <p>
      * To remove a previously set serializer, call this method with the second
-     * parameter set to @code{null}.
+     * parameter set to {@code null}.
      * <p>
      * Custom serializers should only be added from static initializers or other
      * places that are guaranteed to run only once. Trying to add a serializer
@@ -472,7 +472,7 @@ public class JsonCodec implements Serializable {
      * @param clazz
      *            The target class.
      * @param jsonSerializer
-     *            Custom JSONSerializer to add. If @code{null}, remove custom
+     *            Custom JSONSerializer to add. If {@code null}, remove custom
      *            serializer from class clazz.
      */
     public static <TYPE> void setCustomSerializer(Class<TYPE> clazz,
