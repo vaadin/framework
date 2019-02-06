@@ -17,6 +17,7 @@ public class ComboboxFastTabbingOut extends AbstractTestUI {
         values.add("AMERICAN SAMOA");
         values.add("ANTIGUA AND BARBUDA");
         values.add("Bali");
+        combobox.setId("firstCombobox");
         combobox.setItems(values);
 
         ComboBox<String> combobox2 = new ComboBox<>(
@@ -24,6 +25,7 @@ public class ComboboxFastTabbingOut extends AbstractTestUI {
 
         combobox2.setItems("AMERICAN SAMOA", "ANTIGUA AND BARBUDA", "Lake 1",
                 "Lake 2");
+        combobox2.setId("secondCombobox");
         addComponent(combobox);
         addComponent(combobox2);
     }
