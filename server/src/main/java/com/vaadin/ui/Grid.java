@@ -1599,7 +1599,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         /**
-         * Returns the width (in pixels). By default a column is 100px wide.
+         * Returns the width (in pixels). By default a column width is -1 (undefined).
          *
          * @return the width in pixels of the column
          * @throws IllegalStateException
@@ -1677,6 +1677,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * <p>
          * This defines the minimum guaranteed pixel width of the column
          * <em>when it is set to expand</em>.
+         *
+         * Note: Value -1 is not accepted, use {@link #setWidthUndefined()}
+         * instead.
          *
          * @param pixels
          *            the minimum width for the column
