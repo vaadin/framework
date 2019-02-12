@@ -1599,7 +1599,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         /**
-         * Returns the width (in pixels). By default a column width is {@value GridConstants#DEFAULT_COLUMN_WIDTH_PX} (undefined).
+         * Returns the width (in pixels). By default a column width is 
+         * {@value com.vaadin.shared.ui.grid.GridConstants#DEFAULT_COLUMN_WIDTH_PX}
+         * (undefined).
          *
          * @return the width in pixels of the column
          * @throws IllegalStateException
