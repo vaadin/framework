@@ -118,7 +118,7 @@ public class GridLayoutTest {
             grid.addComponent(new Label(), 3, 3, 2, 2);
             fail("Should have failed");
         } catch (IllegalArgumentException ex) {
-            assertEquals("Illegal coordinates for the component: 3=<2, 3=<2",
+            assertEquals("Illegal coordinates for the component: 3!<=2, 3!<=2",
                     ex.getMessage());
         }
     }
