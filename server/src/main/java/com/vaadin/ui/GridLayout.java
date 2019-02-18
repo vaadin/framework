@@ -204,7 +204,8 @@ public class GridLayout extends AbstractLayout
         // Checks the validity of the coordinates
         if (column2 < column1 || row2 < row1) {
             throw new IllegalArgumentException(
-                    "Illegal coordinates for the component");
+                    "Illegal coordinates for the component: " + column1 + "=<"
+                            + column2 + ", " + row1 + "=<" + row2);
         }
         if (column1 < 0 || row1 < 0 || column2 >= getColumns()
                 || row2 >= getRows()) {
