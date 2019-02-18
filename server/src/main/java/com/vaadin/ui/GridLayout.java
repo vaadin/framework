@@ -204,7 +204,8 @@ public class GridLayout extends AbstractLayout
         // Checks the validity of the coordinates
         if (column2 < column1 || row2 < row1) {
             throw new IllegalArgumentException(
-                    "Illegal coordinates for the component");
+                    "Illegal coordinates for the component: " + column1 +
+                    "=<" + column2 + ", " + row1 + "=<" + row2);
         }
         if (column1 < 0 || row1 < 0 || column2 >= getColumns()
                 || row2 >= getRows()) {
@@ -611,6 +612,11 @@ public class GridLayout extends AbstractLayout
             return childData.row2;
         }
 
+        @Override
+        public String toString() {
+            return "Area{" + getColumn1() + "," + getRow1() + " - "
+                    + getColumn2() + "," + getRow2() + "}";
+        }
     }
 
     private static boolean componentsOverlap(ChildComponentData a,
@@ -694,6 +700,8 @@ public class GridLayout extends AbstractLayout
          * @param areaOutOfBounds
          */
         public OutOfBoundsException(Area areaOutOfBounds) {
+            super(areaOutOfBounds + ", layout dimension: " + getColumns() + "x"
+                    + getRows());
             this.areaOutOfBounds = areaOutOfBounds;
         }
 
