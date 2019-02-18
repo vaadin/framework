@@ -106,7 +106,8 @@ public class GridLayoutTest {
             grid.addComponent(new Label(), 3, 3);
             fail("Should have failed");
         } catch (GridLayout.OutOfBoundsException ex) {
-            assertEquals("Area{3,3 - 3,3}, layout dimension: 1x1", ex.getMessage());
+            assertEquals("Area{3,3 - 3,3}, layout dimension: 1x1",
+                    ex.getMessage());
         }
     }
 
@@ -117,7 +118,8 @@ public class GridLayoutTest {
             grid.addComponent(new Label(), 3, 3, 2, 2);
             fail("Should have failed");
         } catch (IllegalArgumentException ex) {
-            assertEquals("Illegal coordinates for the component: 3=<2, 3=<2", ex.getMessage());
+            assertEquals("Illegal coordinates for the component: 3=<2, 3=<2",
+                    ex.getMessage());
         }
     }
 
