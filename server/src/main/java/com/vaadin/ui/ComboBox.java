@@ -609,6 +609,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * <p>
      * The empty string {@code ""} is the default empty selection caption.
      *
+     * @return the empty selection caption, not {@code null}
      * @see #setEmptySelectionAllowed(boolean)
      * @see #isEmptySelectionAllowed()
      * @see #setEmptySelectionCaption(String)
