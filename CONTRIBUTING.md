@@ -26,9 +26,9 @@ Getting in touch with us early will also help us coordinate efforts so that not 
 
 # Obtain a current source tree
 
-The Vaadin repository can be cloned using `git clone https://github.com/vaadin/framework.git` or using your favorite Git tool.
+To make contributions you should create a fork of the Vaadin repository and check out the sources to your development environment. If you are not familiar with Git and GitHub, you can refer to [GitHub's forking guide](https://guides.github.com/activities/forking/).
 
-Remember to do `git checkout master` and `git pull` to make sure you are creating your commits on top of a recent enough version.
+We encourige to develop all features in separate branches. This way you can have one feature per pull request. 
 
 https://robots.thoughtbot.com/keeping-a-github-fork-updated has instructions on how to keep your local fork up to date.
 
