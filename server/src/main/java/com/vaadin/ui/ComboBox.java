@@ -191,6 +191,10 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                 if (getNewItemProvider() != null) {
                     Optional<T> item = getNewItemProvider().apply(itemValue);
                     added = item.isPresent();
+                    // let server side knows the new added item,
+                    // otherwise if the user trigger more events at the same
+                    // round with adding the new item, that will cause
+                    // issue https://github.com/vaadin/framework/issues/11343
                     item.ifPresent(value -> {
                         setSelectedItem(value, true);
                         getDataCommunicator().reset();
@@ -450,7 +454,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * @since 8.0
      */
     public void setDataProvider(CaptionFilter captionFilter,
-            ListDataProvider<T> listDataProvider) {
+                                ListDataProvider<T> listDataProvider) {
         Objects.requireNonNull(listDataProvider,
                 "List data provider cannot be null");
 
@@ -609,8 +613,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * @see #isEmptySelectionAllowed()
      * @see #setEmptySelectionCaption(String)
      * @see #isSelected(Object)
-     *
-     * @return the empty selection caption, not {@code null}
      * @since 8.0
      */
     public String getEmptySelectionCaption() {

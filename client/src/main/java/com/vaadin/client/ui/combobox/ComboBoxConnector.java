@@ -360,6 +360,9 @@ public class ComboBoxConnector extends AbstractListingConnector
 
         updateSuggestions(start, end);
         getWidget().setTotalSuggestions(getDataSource().size());
+        // Clean the temp string eagerly in order to re-add the same value again
+        // after data provider got reset.
+        // Fixes issue https://github.com/vaadin/framework/issues/11317
         getWidget().lastNewItemString = null;
         getDataReceivedHandler().dataReceived();
     }
