@@ -1454,7 +1454,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             if (!waitingForFilteringResponse && suggestionPopup.isAttached()) {
                 showPopup = true;
             }
-            if (showPopup) {
+            // Don't show popup, if is not focused
+            if (showPopup && focused) {
                 suggestionPopup.showSuggestions(currentPage);
             }
 
@@ -1750,7 +1751,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean focused = false;
-
+    /** For internal use only. May be removed or replaced in the future. */
+    public boolean noKeyDownEvents = true;
     /**
      * If set to false, the component should not allow entering text to the
      * field even for filtering.
@@ -2198,6 +2200,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 return;
             }
 
+            noKeyDownEvents = false;
             if (suggestionPopup.isAttached()) {
                 if (enableDebug) {
                     debug("Keycode " + keyCode + " target is popup");
@@ -2307,7 +2310,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
             // queue this, may be cancelled by selection
             int selectedIndex = suggestionPopup.menu.getSelectedIndex();
-            if (!allowNewItems && selectedIndex != -1) {
+            if (!allowNewItems && selectedIndex != -1
+                    && !currentSuggestions.isEmpty()) {
                 onSuggestionSelected(currentSuggestions.get(selectedIndex));
             } else {
                 dataReceivedHandler.reactOnInputWhenReady(tb.getText());
@@ -2371,7 +2375,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 // NOP
                 break;
             default:
-                if (textInputEnabled) {
+                if (textInputEnabled && !noKeyDownEvents) {
                     // when filtering, we always want to see the results on the
                     // first page first.
                     filterOptions(0);
@@ -2514,6 +2518,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             return;
         }
 
+        noKeyDownEvents = true;
         focused = true;
         updatePlaceholder();
         addStyleDependentName("focus");
