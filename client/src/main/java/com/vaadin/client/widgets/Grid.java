@@ -2140,15 +2140,21 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             double newLeft = frozenWidth - scrollLeft;
             cellWrapper.getStyle().setLeft(newLeft, Unit.PX);
 
-            // sometimes focus handling twists the editor row out of alignment
-            // with the grid itself and the position needs to be compensated for
-            TableRowElement rowElement = grid.getEscalator().getBody()
+            try {
+                // sometimes focus handling twists the editor row out of alignment
+                // with the grid itself and the position needs to be compensated for
+                TableRowElement rowElement = grid.getEscalator().getBody()
                     .getRowElement(grid.getEditor().getRow());
-            int rowLeft = rowElement.getAbsoluteLeft();
-            int editorLeft = cellWrapper.getAbsoluteLeft();
-            if (editorLeft != rowLeft + frozenWidth) {
-                cellWrapper.getStyle().setLeft(newLeft + rowLeft - editorLeft,
+                int rowLeft = rowElement.getAbsoluteLeft();
+                int editorLeft = cellWrapper.getAbsoluteLeft();
+                if (editorLeft != rowLeft + frozenWidth) {
+                    cellWrapper.getStyle().setLeft(newLeft + rowLeft - editorLeft,
                         Unit.PX);
+                }
+            } catch (IllegalStateException e) {
+                // IllegalStateException may occur if user has scrolled Grid so
+                // that Escalator has updated, and row under Editor is no longer
+                // there
             }
         }
 
