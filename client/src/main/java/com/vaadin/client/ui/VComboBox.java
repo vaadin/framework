@@ -1372,7 +1372,12 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
              * way, and they might be useful in a combo box where new items are
              * allowed.
              */
-            getElement().setAttribute("autocomplete", Math.random() + "");
+            if (BrowserInfo.get().isChrome()) {
+                // Chrome supports "off" and random number does not work with Chrome
+                getElement().setAttribute("autocomplete", "off");        		
+            } else {
+                getElement().setAttribute("autocomplete", Math.random() + "");
+            }
         }
 
         /**
