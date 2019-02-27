@@ -7023,10 +7023,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         selectionModel.reset();
 
-        if (this.dataSource != null) {
-            this.dataSource.addDataChangeHandler((DataChangeHandler) null);
-        }
-
         this.dataSource = dataSource;
         dataSource.addDataChangeHandler(new DataChangeHandler() {
                     @Override
