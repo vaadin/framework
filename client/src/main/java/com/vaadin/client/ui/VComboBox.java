@@ -122,7 +122,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
          *            icon URI or null
          */
         public ComboBoxSuggestion(String key, String caption, String style,
-                String untranslatedIconUri) {
+                                  String untranslatedIconUri) {
             this.key = key;
             this.caption = caption;
             this.style = style;
@@ -1637,9 +1637,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             performSelection(selectedKey, oldSuggestionTextMatchTheOldSelection,
                     !isWaitingForFilteringResponse() || popupOpenerClicked);
 
-            // currentSuggestion should be set to match the value of the
-            // ComboBox, especially when a new item is added.
-            resetCurrentSuggestionIfNecessary(selectedKey, selectedCaption,
+            // currentSuggestion should be set to match the value of the ComboBox
+            resetCurrentSuggestion(selectedKey, selectedCaption,
                     selectedIconUri);
 
             cancelPendingPostFiltering();
@@ -1652,11 +1651,15 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         private void resetCurrentSuggestionIfNecessary(String selectedKey,
                 String selectedCaption, String selectedIconUri) {
             if (currentSuggestion == null
-                    && (selectedKey != null || selectedCaption != null))
+                    && (selectedKey != null || selectedCaption != null)) {
+                // when there are new selected key and item caption given by server,
+                // while no suggestion is selected from the dropdown
                 currentSuggestion = new ComboBoxSuggestion(selectedKey,
                         selectedCaption, "", selectedIconUri);
-            else if (selectedKey == null && selectedCaption == null)
+            } else if (selectedKey == null && selectedCaption == null) {
+                // when there is no new selected key and item caption given by server
                 currentSuggestion = null;
+            }
         }
 
     }
@@ -1717,7 +1720,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public boolean initDone = false;
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     */
     public String lastFilter = "";
 
     /**
@@ -2127,7 +2132,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             currentSuggestion = null; // #13217
             selectedOptionKey = null;
             setText(getEmptySelectionCaption());
-            return;
         }
         // some item selected
         for (ComboBoxSuggestion suggestion : currentSuggestions) {

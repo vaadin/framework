@@ -11,6 +11,7 @@ import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
+@Ignore("Tests are not stable at all, locally pass")
 public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         extends SingleBrowserTest {
 
