@@ -214,16 +214,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         setStyleName(VDateField.CLASSNAME + "-calendarpanel");
         Roles.getGridRole().set(getElement());
 
-        /*
-         * Firefox auto-repeat works correctly only if we use a key press
-         * handler, other browsers handle it correctly when using a key down
-         * handler
-         */
-        if (BrowserInfo.get().isGecko()) {
-            addKeyPressHandler(this);
-        } else {
-            addKeyDownHandler(this);
-        }
+        addKeyDownHandler(this);
         addFocusHandler(this);
         addBlurHandler(this);
     }
