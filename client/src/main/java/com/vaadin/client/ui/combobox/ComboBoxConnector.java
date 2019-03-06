@@ -130,11 +130,9 @@ public class ComboBoxConnector extends AbstractListingConnector
             getWidget().selectedOptionKey = null;
             getWidget().currentSuggestion = null;
         }
-        if (isNewItemStillPending()
-                && pendingNewItemValue == getState().selectedItemCaption) {
-            // no automated selection handling required
-            clearNewItemHandling();
-        }
+
+        clearNewItemHandlingIfMatch(getState().selectedItemCaption);
+
         getDataReceivedHandler().updateSelectionFromServer(
                 getState().selectedItemKey, getState().selectedItemCaption,
                 getState().selectedItemIcon);
@@ -360,11 +358,15 @@ public class ComboBoxConnector extends AbstractListingConnector
 
         updateSuggestions(start, end);
         getWidget().setTotalSuggestions(getDataSource().size());
+        resetLastNewItemString();
+        getDataReceivedHandler().dataReceived();
+    }
+
+    private void resetLastNewItemString() {
         // Clean the temp string eagerly in order to re-add the same value again
         // after data provider got reset.
         // Fixes issue https://github.com/vaadin/framework/issues/11317
         getWidget().lastNewItemString = null;
-        getDataReceivedHandler().dataReceived();
     }
 
     private void updateSuggestions(int start, int end) {
