@@ -1638,7 +1638,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                     !isWaitingForFilteringResponse() || popupOpenerClicked);
 
             // currentSuggestion should be set to match the value of the ComboBox
-            resetCurrentSuggestion(selectedKey, selectedCaption,
+            resetCurrentSuggestionIfNecessary(selectedKey, selectedCaption,
                     selectedIconUri);
 
             cancelPendingPostFiltering();
