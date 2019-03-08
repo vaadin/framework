@@ -191,10 +191,11 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                 if (getNewItemProvider() != null) {
                     Optional<T> item = getNewItemProvider().apply(itemValue);
                     added = item.isPresent();
-                    // let server side knows the new added item,
-                    // otherwise if the user trigger more events at the same
-                    // round with adding the new item, that will cause
-                    // issue https://github.com/vaadin/framework/issues/11343
+                    // Fixes issue https://github.com/vaadin/framework/issues/11343
+                    // Update the internal selection state immediately to avoid
+                    // client side hanging. This is needed for cases that user fires
+                    // multi events (like adding and deleting) on a new item in
+                    // the same round trip.
                     item.ifPresent(value -> {
                         setSelectedItem(value, true);
                         getDataCommunicator().reset();

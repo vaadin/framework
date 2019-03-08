@@ -183,7 +183,7 @@ public class ComboBoxConnector extends AbstractListingConnector
      *            user entered string value for the new item
      */
     public void sendNewItem(String itemValue) {
-        if (itemValue != null && !itemValue.equals(pendingNewItemValue)) {
+        if (itemValue != null && itemValue.length()!= 0 && !itemValue.equals(pendingNewItemValue)) {
             // clear any previous handling as outdated
             clearNewItemHandling();
 
@@ -358,15 +358,8 @@ public class ComboBoxConnector extends AbstractListingConnector
 
         updateSuggestions(start, end);
         getWidget().setTotalSuggestions(getDataSource().size());
-        resetLastNewItemString();
+        getWidget().resetLastNewItemString();
         getDataReceivedHandler().dataReceived();
-    }
-
-    private void resetLastNewItemString() {
-        // Clean the temp string eagerly in order to re-add the same value again
-        // after data provider got reset.
-        // Fixes issue https://github.com/vaadin/framework/issues/11317
-        getWidget().lastNewItemString = null;
     }
 
     private void updateSuggestions(int start, int end) {

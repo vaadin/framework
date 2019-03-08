@@ -1648,8 +1648,13 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             setSelectedItemIcon(selectedIconUri);
         }
 
-        private void resetCurrentSuggestionIfNecessary(String selectedKey,
-                String selectedCaption, String selectedIconUri) {
+        /*
+         * Updates the current suggestion based on values provided by the
+         * server.
+         */
+        private void resetCurrentSuggestionBasedOnServerResponse(
+                String selectedKey, String selectedCaption,
+                String selectedIconUri) {
             if (currentSuggestion == null
                     && (selectedKey != null || selectedCaption != null)) {
                 // when there are new selected key and item caption given by server,
@@ -1815,6 +1820,16 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     private static double getMarginBorderPaddingWidth(Element element) {
         final ComputedStyle s = new ComputedStyle(element);
         return s.getMarginWidth() + s.getBorderWidth() + s.getPaddingWidth();
+    }
+
+    /**
+     * This method will reset the saved item string which is added last time.
+     */
+    public void resetLastNewItemString() {
+        // Clean the temp string eagerly in order to re-add the same value again
+        // after data provider got reset.
+        // Fixes issue https://github.com/vaadin/framework/issues/11317
+        lastNewItemString = null;
     }
 
     /*
