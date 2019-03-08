@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import com.google.gwt.animation.client.AnimationScheduler;
@@ -1637,9 +1636,10 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             performSelection(selectedKey, oldSuggestionTextMatchTheOldSelection,
                     !isWaitingForFilteringResponse() || popupOpenerClicked);
 
-            // currentSuggestion should be set to match the value of the ComboBox
-            resetCurrentSuggestionIfNecessary(selectedKey, selectedCaption,
-                    selectedIconUri);
+            // currentSuggestion should be set to match the value of the
+            // ComboBox
+            resetCurrentSuggestionBasedOnServerResponse(selectedKey,
+                    selectedCaption, selectedIconUri);
 
             cancelPendingPostFiltering();
 
@@ -1657,12 +1657,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 String selectedIconUri) {
             if (currentSuggestion == null
                     && (selectedKey != null || selectedCaption != null)) {
-                // when there are new selected key and item caption given by server,
-                // while no suggestion is selected from the dropdown
                 currentSuggestion = new ComboBoxSuggestion(selectedKey,
                         selectedCaption, "", selectedIconUri);
             } else if (selectedKey == null && selectedCaption == null) {
-                // when there is no new selected key and item caption given by server
                 currentSuggestion = null;
             }
         }
