@@ -971,10 +971,10 @@ property of an item, you can style them as follows:
 
 [source, java]
 ----
-grid.setStyleGenerator(person -> {
+grid.setStyleGenerator(person ->
     // Style based on alive status
     person.isAlive() ? null : "dead";
-});
+);
 ----
 
 You could then style the rows with CSS as follows:
