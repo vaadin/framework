@@ -325,14 +325,14 @@ public class JsonCodec implements Serializable {
         } else if (JsonValue.class
                 .isAssignableFrom(getClassForType(targetType))) {
             return value;
-        } else if (Enum.class.isAssignableFrom(getClassForType(targetType))) {
-            Class<?> classForType = getClassForType(targetType);
-            return decodeEnum(classForType.asSubclass(Enum.class),
-                    (JsonString) value);
         } else if (CUSTOM_SERIALIZERS
                 .containsKey(getClassForType(targetType))) {
             return CUSTOM_SERIALIZERS.get(getClassForType(targetType))
                     .deserialize(targetType, value, connectorTracker);
+        } else if (Enum.class.isAssignableFrom(getClassForType(targetType))) {
+            Class<?> classForType = getClassForType(targetType);
+            return decodeEnum(classForType.asSubclass(Enum.class),
+                    (JsonString) value);
         } else {
             return decodeObject(targetType, (JsonObject) value,
                     connectorTracker);
@@ -443,6 +443,59 @@ public class JsonCodec implements Serializable {
         }
 
         throw new JsonException("Unknown type " + transportType);
+    }
+
+    /**
+     * Set a custom JSONSerializer for a specific Class. Existence of custom
+     * serializers is checked after basic types (Strings, Booleans, Numbers,
+     * Characters), Collections and Maps, so setting custom serializers for
+     * these won't have any effect.
+     * <p>
+     * To remove a previously set serializer, call this method with the second
+     * parameter set to {@code null}.
+     * <p>
+     * Custom serializers should only be added from static initializers or other
+     * places that are guaranteed to run only once. Trying to add a serializer
+     * to a class that already has one will cause an exception.
+     * <p>
+     * Warning: removing existing custom serializers may lead into unexpected
+     * behavior in components that expect the customized data. The framework's
+     * custom serializers are loaded in the static initializer block of this
+     * class.
+     *
+     * @see DateSerializer
+     * @throws IllegalArgumentException
+     *             Thrown if parameter clazz is null.
+     * @throws IllegalStateException
+     *             Thrown if serializer for parameter clazz is already
+     *             registered and parameter jsonSerializer is not null.
+     * @param clazz
+     *            The target class.
+     * @param jsonSerializer
+     *            Custom JSONSerializer to add. If {@code null}, remove custom
+     *            serializer from class clazz.
+     */
+    public static <TYPE> void setCustomSerializer(Class<TYPE> clazz,
+            JSONSerializer<TYPE> jsonSerializer) {
+        if (clazz == null) {
+            throw new IllegalArgumentException(
+                    "Cannot add serializer for null");
+        }
+        if (jsonSerializer == null) {
+            CUSTOM_SERIALIZERS.remove(clazz);
+        } else {
+            if (CUSTOM_SERIALIZERS.containsKey(clazz)) {
+                String err = String.format(
+                        "Class %s already has a custom serializer. "
+                                + "This exception can be thrown if you try to "
+                                + "add a serializer from a non-static context. "
+                                + "Try using a static block instead.",
+                        clazz.getName());
+                throw new IllegalStateException(err);
+            }
+            CUSTOM_SERIALIZERS.put(clazz, jsonSerializer);
+        }
+
     }
 
     private static UidlValue decodeUidlValue(JsonArray encodedJsonValue,
@@ -668,10 +721,10 @@ public class JsonCodec implements Serializable {
             }
             // Connectors are simply serialized as ID.
             toReturn = Json.create(((Connector) value).getConnectorId());
-        } else if (value instanceof Enum) {
-            toReturn = Json.create(((Enum<?>) value).name());
         } else if (CUSTOM_SERIALIZERS.containsKey(value.getClass())) {
             toReturn = serializeJson(value, connectorTracker);
+        } else if (value instanceof Enum) {
+            toReturn = Json.create(((Enum<?>) value).name());
         } else if (valueType instanceof GenericArrayType) {
             toReturn = encodeArrayContents(
                     ((GenericArrayType) valueType).getGenericComponentType(),

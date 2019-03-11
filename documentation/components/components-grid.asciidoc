@@ -586,6 +586,7 @@ the height of all rows in the Grid.
 +
 Use [classname]#Button# in [classname]#Grid#:
 +
+[source, java]
 ----
 grid.addComponentColumn(person -> {
       Button button = new Button("Click me!");
@@ -603,6 +604,7 @@ example on how to achieve this.
 +
 Store a [classname]#TextField# with changed value.
 +
+[source, java]
 ----
 Map<Person, TextField> textFields = new HashMap<>();
 grid.addColumn(person -> {
@@ -969,10 +971,10 @@ property of an item, you can style them as follows:
 
 [source, java]
 ----
-grid.setStyleGenerator(person -> {
+grid.setStyleGenerator(person ->
     // Style based on alive status
-    person.isAlive() ? null : "dead";
-});
+    person.isAlive() ? null : "dead"
+);
 ----
 
 You could then style the rows with CSS as follows:

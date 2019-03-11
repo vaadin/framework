@@ -1030,7 +1030,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param <P>
          *            the presentation type
          *
-         * @since
+         * @since 8.7.0
          */
         protected <P> Column(ValueProvider<T, V> valueProvider,
                 ValueProvider<V, P> presentationProvider,
@@ -1599,7 +1599,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         /**
-         * Returns the width (in pixels). By default a column is 100px wide.
+         * Returns the width (in pixels). By default a column width is 
+         * {@value com.vaadin.shared.ui.grid.GridConstants#DEFAULT_COLUMN_WIDTH_PX}
+         * (undefined).
          *
          * @return the width in pixels of the column
          * @throws IllegalStateException
@@ -1677,6 +1679,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * <p>
          * This defines the minimum guaranteed pixel width of the column
          * <em>when it is set to expand</em>.
+         *
+         * Note: Value -1 is not accepted, use {@link #setWidthUndefined()}
+         * instead.
          *
          * @param pixels
          *            the minimum width for the column
@@ -2994,7 +2999,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param <P>
      *            the column presentation type
      *
-     * @since
+     * @since 8.7.0
      */
     private <V, P> Column<T, V> createColumn(ValueProvider<T, V> valueProvider,
             ValueProvider<V, P> presentationProvider,
@@ -3232,8 +3237,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             final String diffStateKey = "frozenColumnCount";
             UI ui = getUI();
             if (ui != null) {
-                ui.getConnectorTracker().getDiffState(Grid.this)
-                        .remove(diffStateKey);
+                JsonObject diffState = ui.getConnectorTracker()
+                        .getDiffState(Grid.this);
+                // if diffState is not present, there's nothing for us to clean
+                if (diffState != null) {
+                    diffState.remove(diffStateKey);
+                }
             }
         }
         getState().frozenColumnCount = numberOfColumns;

@@ -74,7 +74,7 @@ Over the time we should collect useful helper methods into the parent classes (A
 #### Do a sensible amount of things in one test method
 There is an overhead before and after each test method when the browser instance is started. The tests are therefore not restricted to testing one single thing. Instead a test method should test one logical group of things (TB3 tests are not pure unit tests).
 
-####Use ids in your test class
+#### Use ids in your test class
 
 Use ids in your UI class. Define the IDs as constants in the UI class. Use the constants in your Test class. Use static imports to avoid massive prefixes for the constants.
 

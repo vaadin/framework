@@ -20,7 +20,7 @@ The distribution files can be built by running the standard Maven goal `mvn inst
 1. Run
 <code>git clone https://github.com/vaadin/framework.git</code>
 command or clone the repository your favorite Git tool.
-If using Windows, you might want to add these Git settings: `core.autocrlf=false` and `core.fileMode=false`.
+If using Windows, you might want to add these Git settings: `core.autocrlf=false`, `core.fileMode=false` and `core.longpaths=true`.
 1. Run <code>mvn install</code> in the project root.
 Note that the first compilation takes a while to finish as maven downloads dependencies used in the projects.
 1. Start Eclipse with the workspace you would like to use. It is usually a good idea to use the parent folder of the Git repository as the workspace folder.
