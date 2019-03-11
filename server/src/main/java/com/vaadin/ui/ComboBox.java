@@ -193,9 +193,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                     added = item.isPresent();
                     // Fixes issue https://github.com/vaadin/framework/issues/11343
                     // Update the internal selection state immediately to avoid
-                    // client side hanging. This is needed for cases that user fires
-                    // multi events (like adding and deleting) on a new item in
-                    // the same round trip.
+                    // client side hanging. This is needed for cases that user
+                    // interaction fires multi events (like adding and deleting)
+                    // on a new item during the same round trip.
                     item.ifPresent(value -> {
                         setSelectedItem(value, true);
                         getDataCommunicator().reset();

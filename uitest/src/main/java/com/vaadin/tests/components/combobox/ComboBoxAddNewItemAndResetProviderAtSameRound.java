@@ -51,8 +51,11 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRound
         delay.setId("delay");
         resetButton.setId("reset");
 
-        addComponents(comboBox, valueChangeLabel, checkButton, resetButton,
-                delay);
+        Button button = new Button("Button for clicking only");
+        button.setId("button-for-click");
+
+        HorizontalLayout hl = new HorizontalLayout(checkButton, button);
+        addComponents(comboBox, valueChangeLabel, hl, resetButton, delay);
     }
 
     private void configureNewItemHandling() {
@@ -81,5 +84,10 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRound
                 items.add("" + c + i);
             }
         }
+    }
+
+    @Override
+    protected Integer getTicketNumber() {
+        return 11343;
     }
 }

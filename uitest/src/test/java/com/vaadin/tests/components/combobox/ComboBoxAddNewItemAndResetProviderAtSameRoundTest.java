@@ -6,11 +6,14 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+import com.vaadin.ui.Button;
 
 @Ignore("Tests are not stable at all, locally pass")
 public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
@@ -93,17 +96,15 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
 
     private void performSelect(SelectionType selectionType) {
         switch (selectionType) {
-            case ENTER:
-                sendKeysToInput(Keys.RETURN);
-                break;
-            case TAB:
-                sendKeysToInput(Keys.TAB);
-                break;
-            case CLICK_OUT:
-                new Actions(getDriver()).moveToElement(comboBoxElement, 10, 10)
-                        .moveByOffset(comboBoxElement.getSize().getWidth(), 0)
-                        .click().perform();
-                break;
+        case ENTER:
+            sendKeysToInput(Keys.RETURN);
+            break;
+        case TAB:
+            sendKeysToInput(Keys.TAB);
+            break;
+        case CLICK_OUT:
+            $(ButtonElement.class).id("button-for-click").click();
+            break;
         }
     }
 
