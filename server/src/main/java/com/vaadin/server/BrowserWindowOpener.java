@@ -75,7 +75,7 @@ public class BrowserWindowOpener extends AbstractExtension {
      * Spring). Use {@link BrowserWindowOpener(String)} instead.
      * {@code VaadinServlet.getCurrent().getServletContext().getContextPath()} gives 
      * the current context path.
-     *
+     * <p>
      * @param uiClass
      *            the UI class that should be opened when the extended component
      *            is clicked
@@ -87,7 +87,7 @@ public class BrowserWindowOpener extends AbstractExtension {
     /**
      * Creates a window opener that will open windows containing the provided UI
      * using the provided path.
-     *
+     * <p>
      * Note: The new UI instance will not work with dependency injection (CDI
      * and Spring). Use {@link BrowserWindowOpener(String)} instead.
      * {@code VaadinServlet.getCurrent().getServletContext().getContextPath()} gives 
