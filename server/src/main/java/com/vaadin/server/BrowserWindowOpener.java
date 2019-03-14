@@ -71,8 +71,8 @@ public class BrowserWindowOpener extends AbstractExtension {
      * Creates a window opener that will open windows containing the provided UI
      * class.
      *
-     * Note: The new UI instance will not work with dependency injection (CDI). 
-     * Use {@link BrowserWindowOpener(String)} instead.
+     * Note: The new UI instance will not work with dependency injection (CDI and
+     * Spring). Use {@link BrowserWindowOpener(String)} instead.
      * {@code VaadinServlet.getCurrent().getServletContext().getContextPath()} gives 
      * the current context path.
      *
@@ -88,8 +88,8 @@ public class BrowserWindowOpener extends AbstractExtension {
      * Creates a window opener that will open windows containing the provided UI
      * using the provided path.
      *
-     * Note: The new UI instance will not work with dependency injection (CDI). 
-     * Use {@link BrowserWindowOpener(String)} instead.
+     * Note: The new UI instance will not work with dependency injection (CDI
+     * and Spring). Use {@link BrowserWindowOpener(String)} instead.
      * {@code VaadinServlet.getCurrent().getServletContext().getContextPath()} gives 
      * the current context path.
      *
