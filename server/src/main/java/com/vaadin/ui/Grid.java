@@ -1030,7 +1030,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param <P>
          *            the presentation type
          *
-         * @since 8.7.0
+         * @since 
          */
         protected <P> Column(ValueProvider<T, V> valueProvider,
                 ValueProvider<V, P> presentationProvider,
@@ -2804,6 +2804,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param nestedNullBehavior
      *            the behavior when
      * @return the newly added column, not <code>null</code>
+     * 
+     * @since
      */
     public Column<T, ?> addColumn(String propertyName,
             AbstractRenderer<? super T, ?> renderer,
@@ -2999,7 +3001,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param <P>
      *            the column presentation type
      *
-     * @since 8.7.0
+     * @since 
      */
     private <V, P> Column<T, V> createColumn(ValueProvider<T, V> valueProvider,
             ValueProvider<V, P> presentationProvider,
