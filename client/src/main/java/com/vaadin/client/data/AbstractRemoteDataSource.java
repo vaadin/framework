@@ -202,6 +202,22 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      */
     private Map<Integer, T> invalidatedRows;
 
+    /**
+     * Tracking the invalidated rows inside {{@link #insertRowData(int, int)}}
+     * and then filling cache from those invalidated rows is a feature introduced
+     * to improve caching in hierarchical data in V8, but as this interface is
+     * also shared with V7 compatibility package, this change causes this issue:
+     * issue https://github.com/vaadin/framework/issues/11477
+     *
+     * By having {#AbstractRemoteDataSource} define
+     * whether or not to track and then fill cache with the invalidated rows,
+     * allows different implementation of {#AbstractRemoteDataSource} to
+     * enable/disable this feature, as a consequence it is possible for
+     * V7 compatibility-package of this class to disabled it and fix the above
+     * issue.
+     */
+    private boolean trackInvalidatedRows = true;
+
     private Set<DataChangeHandler> dataChangeHandlers = new LinkedHashSet<>();
 
     private CacheStrategy cacheStrategy = new CacheStrategy.DefaultCacheStrategy();
@@ -526,7 +542,10 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
                 if (!cached.isEmpty()) {
                     cached = cached.combineWith(newUsefulData);
                     // Attempt to restore invalidated items
-                    fillCacheFromInvalidatedRows(maxCacheRange);
+                    if (trackInvalidatedRows) {
+                        fillCacheFromInvalidatedRows(maxCacheRange);
+                    }
+
                 } else {
                     cached = newUsefulData;
                 }
@@ -729,23 +748,29 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
              * If holes were supported, we could shift the higher part of
              * "cached" and leave a hole the size of "count" in the middle.
              */
-            Range[] splitAt = cached.splitAt(firstRowIndex);
-            cached = splitAt[0];
-            Range invalid = splitAt[1];
+            if (trackInvalidatedRows) {
+                Range[] splitAt = cached.splitAt(firstRowIndex);
+                cached = splitAt[0];
+                Range invalid = splitAt[1];
 
-            /*
-             * If we already have a map in invalidatedRows, we're in a state
-             * where multiple row manipulations without data received have
-             * happened and the cache restoration is prevented completely.
-             */
+                /*
+                 * If we already have a map in invalidatedRows, we're in a state
+                 * where multiple row manipulations without data received have
+                 * happened and the cache restoration is prevented completely.
+                 */
 
-            if (!invalid.isEmpty() && invalidatedRows == null) {
-                invalidatedRows = new HashMap<>();
-                // Store all invalidated items to a map. Indices are updated to
-                // match what they should be after the insertion.
-                for (int i = invalid.getStart(); i < invalid.getEnd(); ++i) {
-                    invalidatedRows.put(i + count, indexToRowMap.get(i));
+                if (!invalid.isEmpty() && invalidatedRows == null) {
+                    invalidatedRows = new HashMap<>();
+                    // Store all invalidated items to a map. Indices are updated
+                    // to
+                    // match what they should be after the insertion.
+                    for (int i = invalid.getStart(); i < invalid
+                            .getEnd(); ++i) {
+                        invalidatedRows.put(i + count, indexToRowMap.get(i));
+                    }
                 }
+            } else {
+                cached = cached.splitAt(firstRowIndex)[0];
             }
 
             for (int i = firstRowIndex; i < oldCacheEnd; i++) {
@@ -933,5 +958,18 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      */
     protected boolean canFetchData() {
         return true;
+    }
+
+    /**
+     * Sets whether or not to track invalidated rows inside
+     * {@link #insertRowData(int, int)} and use them to fill cache
+     * when {{@link #setRowData(int, List)}} is called.
+     *
+     * @param track
+     *          a boolean value specifying if to track invalidated rows or not,
+     *          default value <code>true</code>
+     */
+    public void setTrackInvalidatedRows(boolean track) {
+        this.trackInvalidatedRows = track;
     }
 }

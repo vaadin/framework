@@ -70,6 +70,8 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
     public class RpcDataSource extends AbstractRemoteDataSource<JsonObject> {
 
         protected RpcDataSource() {
+            setTrackInvalidatedRows(false);
+
             registerRpc(DataProviderRpc.class, new DataProviderRpc() {
                 @Override
                 public void setRowData(int firstRow, JsonArray rowArray) {
