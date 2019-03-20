@@ -19,6 +19,10 @@ public class GridIndexedContainerInsertSelectTest extends SingleBrowserTest {
         waitForElementPresent(By.className("v-grid"));
     }
 
+    /**
+     * Test asserting that issue https://github.com/vaadin/framework/issues/11477
+     * is fixed.
+     */
     @Test
     public void test_insertRowAfterSelected_newRowIsSelected() {
         openTestURL();
