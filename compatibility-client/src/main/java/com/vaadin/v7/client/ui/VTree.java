@@ -220,7 +220,7 @@ public class VTree extends FocusElementPanel
          * handler, other browsers handle it correctly when using a key down
          * handler
          */
-        if (BrowserInfo.get().isGecko()) {
+        if (BrowserInfo.get().isGecko() && BrowserInfo.get().getGeckoVersion() < 65) {
             addKeyPressHandler(this);
         } else {
             addKeyDownHandler(this);
