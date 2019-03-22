@@ -70,6 +70,11 @@ public class RpcDataSourceConnector extends AbstractExtensionConnector {
     public class RpcDataSource extends AbstractRemoteDataSource<JsonObject> {
 
         protected RpcDataSource() {
+
+            /*Fixes issue https://github.com/vaadin/framework/issues/11477
+            More details in AbstractRemoteDataSource.trackInvalidatedRows private field*/
+            setTrackInvalidatedRows(false);
+
             registerRpc(DataProviderRpc.class, new DataProviderRpc() {
                 @Override
                 public void setRowData(int firstRow, JsonArray rowArray) {
