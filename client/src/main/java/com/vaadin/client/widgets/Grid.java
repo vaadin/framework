@@ -7040,7 +7040,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         this.dataSource = dataSource;
-        dataChangeHandler = dataSource.setDataChangeHandler(new DataChangeHandler() {
+        dataChangeHandler = dataSource.setDataChangeHandler(new DataChangeHandler()) {
             @Override
             public void dataUpdated(int firstIndex, int numberOfItems) {
                 escalator.getBody().refreshRows(firstIndex, numberOfItems);
