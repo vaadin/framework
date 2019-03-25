@@ -4155,7 +4155,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * on initialization, but not after that.
      */
     private DataSource<T> dataSource;
-    private Registration dataChangeHandler;
 
     /**
      * Currently available row range in DataSource.
@@ -7034,13 +7033,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         // Remove change handler gracefully, otherwise NPE would occur during
         // datasource change and rebind
-        if (dataChangeHandler != null) {
-            dataChangeHandler.remove();
-            dataChangeHandler = null;
+        if (this.dataSource != null) {
+            this.dataSource.setDataChangeHandler(null);
         }
 
         this.dataSource = dataSource;
-        dataChangeHandler = dataSource.setDataChangeHandler(new DataChangeHandler()) {
+        dataSource.setDataChangeHandler(new DataChangeHandler() {
             @Override
             public void dataUpdated(int firstIndex, int numberOfItems) {
                 escalator.getBody().refreshRows(firstIndex, numberOfItems);
