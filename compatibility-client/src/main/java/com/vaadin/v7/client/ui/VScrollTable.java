@@ -635,7 +635,7 @@ public class VScrollTable extends FlowPanel
         @Override
         public void onKeyDown(KeyDownEvent keyDownEvent) {
             NativeEvent event = keyDownEvent.getNativeEvent();
-            // This is not used for Firefox prior to v65
+            // This is not used for Firefox after v65
             if (useOldGeckoNavigation()) {
                 return;
             }
