@@ -55,7 +55,7 @@ import com.vaadin.server.ClientConnector;
  * <p>
  * Example:
  * <code>@StyleSheet({"https://host.com/file1.css", "file2.css"})</code> on the
- * class com.example.MyConnector would load the file http://host.com/file1.css
+ * class com.example.MyConnector would load the file https://host.com/file1.css
  * as is and file2.css from /com/example/file2.css on the server's classpath
  * using the ClassLoader that was used to load com.example.MyConnector.
  * <p>
