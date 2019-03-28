@@ -2,9 +2,10 @@ package com.vaadin.tests.components.datefield;
 
 import java.time.LocalDate;
 
-import com.google.common.base.Joiner;
 import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -52,20 +53,21 @@ public class DateFieldValidationErrorTest extends MultiBrowserTest {
     }
 
     private int getCursorPosition(WebElement element) {
-        return (int) ((JavascriptExecutor) driver).executeScript(
-                Joiner.on("\n").join(
-                  "try {",
-                  "  var selectRange = document.selection.createRange().duplicate();",
-                  "  var elementRange = arguments[0].createTextRange();",
-                  "  selectRange.move('character', 0)",
-                  "  elementRange.move('character', 0);",
-                  "  var inRange1 = selectRange.inRange(elementRange);",
-                  "  var inRange2 = elementRange.inRange(selectRange);",
-                  "  elementRange.setEndPoint('EndToEnd', selectRange);",
-                  "} catch (e) {",
-                  "  throw Error('There is no cursor on this page!');",
-                  "}",
-                  "return String(elementRange.text).replace(/\r/g,' ').length;"),
+         String[] commands = {
+                "try {",
+                "  var selectRange = document.selection.createRange().duplicate();",
+                "  var elementRange = arguments[0].createTextRange();",
+                "  selectRange.move('character', 0);",
+                "  elementRange.move('character', 0);",
+                "  var inRange1 = selectRange.inRange(elementRange);",
+                "  var inRange2 = elementRange.inRange(selectRange);",
+                "  elementRange.setEndPoint('EndToEnd', selectRange);",
+                "} catch (e) {",
+                "  throw Error('There is no cursor on this page!');",
+                "}",
+                "return String(elementRange.text).replace(/\r/g,' ').length;"};
+        String script = StringUtils.join(commands,"\n");
+        return (int) ((JavascriptExecutor) driver).executeScript(script,
                 element);        
     }
 
