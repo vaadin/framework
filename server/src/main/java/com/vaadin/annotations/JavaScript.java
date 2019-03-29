@@ -46,10 +46,17 @@ import com.vaadin.server.ClientConnector;
  * file was loaded from a different folder.
  * </ul>
  * <p>
- * Example: <code>@JavaScript({"http://host.com/file1.js", "file2.js"})</code>
+ * Special Vaadin urls are also supported. The most useful is vaadin:// which
+ * maps to the location of the automatically published VAADIN folder located on
+ * your classpath in your resources. Using the VAADIN folder and vaadin:// you
+ * can publish JavaScript files which use images or other files with relative
+ * paths. Another example is the theme:// url which maps to the location of your
+ * current theme.
+ * <p>
+ * Example: <code>@JavaScript({"https://host.com/file1.js", "file2.js"})</code>
  * on the class com.example.MyConnector would load the file
- * http://host.com/file1.js as is and file2.js from /com/example/file2.js on the
- * server's classpath using the ClassLoader that was used to load
+ * https://host.com/file1.js as is and file2.js from /com/example/file2.js on
+ * the server's classpath using the ClassLoader that was used to load
  * com.example.MyConnector.
  * <p>
  * For adding multiple JavaScript files for a single component, you can use this
