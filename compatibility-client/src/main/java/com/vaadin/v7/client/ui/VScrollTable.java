@@ -568,10 +568,10 @@ public class VScrollTable extends FlowPanel
 
         @Override
         public void onKeyPress(KeyPressEvent keyPressEvent) {
-            // This is used for Firefox only, since Firefox auto-repeat
+            // This is used for Firefox (prior to v65) only, since Firefox auto-repeat
             // works correctly only if we use a key press handler, other
             // browsers handle it correctly when using a key down handler
-            if (!BrowserInfo.get().isGecko()) {
+            if (!useOldGeckoNavigation()) {
                 return;
             }
 
@@ -635,8 +635,8 @@ public class VScrollTable extends FlowPanel
         @Override
         public void onKeyDown(KeyDownEvent keyDownEvent) {
             NativeEvent event = keyDownEvent.getNativeEvent();
-            // This is not used for Firefox
-            if (BrowserInfo.get().isGecko()) {
+            // This is not used for Firefox after v65
+            if (useOldGeckoNavigation()) {
                 return;
             }
 
@@ -840,11 +840,11 @@ public class VScrollTable extends FlowPanel
         scrollBodyPanel.addScrollHandler(this);
 
         /*
-         * Firefox auto-repeat works correctly only if we use a key press
+         * Firefox prior to v65 auto-repeat works correctly only if we use a key press
          * handler, other browsers handle it correctly when using a key down
          * handler
          */
-        if (BrowserInfo.get().isGecko()) {
+        if (useOldGeckoNavigation()) {
             scrollBodyPanel.addKeyPressHandler(navKeyPressHandler);
         } else {
             scrollBodyPanel.addKeyDownHandler(navKeyDownHandler);
@@ -860,6 +860,16 @@ public class VScrollTable extends FlowPanel
         add(tFoot);
 
         rowRequestHandler = new RowRequestHandler();
+    }
+
+    /*
+     * Firefox prior to v65 auto-repeat works correctly only if we use a key press
+     * handler, other browsers handle it correctly when using a key down
+     * handler.
+     */
+    private boolean useOldGeckoNavigation() {
+        return BrowserInfo.get().isGecko()
+                && BrowserInfo.get().getGeckoVersion() < 65;
     }
 
     @Override
