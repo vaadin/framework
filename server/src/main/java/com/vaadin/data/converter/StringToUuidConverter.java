@@ -36,10 +36,9 @@ import com.vaadin.data.ValueContext;
  * </p>
  *
  * @author Vaadin Ltd
- * @since 13.0
+ * @since
  */
-public class StringToUuidConverter implements Converter < String, UUID >
-{
+public class StringToUuidConverter implements Converter <String, UUID> {
 
     private ErrorMessageProvider errorMessageProvider;
 
@@ -48,9 +47,8 @@ public class StringToUuidConverter implements Converter < String, UUID >
      *
      * @param errorMessage the error message to use if conversion fails
      */
-    public StringToUuidConverter ( String errorMessage )
-    {
-        this( ctx -> errorMessage );
+    public StringToUuidConverter(String errorMessage) {
+        this(ctx -> errorMessage);
     }
 
     /**
@@ -58,18 +56,14 @@ public class StringToUuidConverter implements Converter < String, UUID >
      * Empty strings are converted to <code>null</code>.
      *
      * @param errorMessageProvider the error message provider to use if conversion fails
-     * @since 8.4
      */
-    public StringToUuidConverter ( ErrorMessageProvider errorMessageProvider )
-    {
+    public StringToUuidConverter(ErrorMessageProvider errorMessageProvider) {
         this.errorMessageProvider = errorMessageProvider;
     }
 
     @Override
-    public Result < UUID > convertToModel ( String value , ValueContext context )
-    {
-        if ( value == null )
-        {
+    public Result <UUID> convertToModel(String value, ValueContext context) {
+        if (value == null) {
             return Result.ok( null );
         }
 
@@ -78,28 +72,22 @@ public class StringToUuidConverter implements Converter < String, UUID >
 
         // Parse string as UUID.
         UUID uuid = null;
-        try
-        {
-            uuid = UUID.fromString( value );
-        } catch ( java.lang.IllegalArgumentException e )
-        {
+        try {
+            uuid = UUID.fromString(value);
+        } catch (java.lang.IllegalArgumentException e) {
             // Faulty input. Let `uuid` default to null. Report error below.
         }
 
-        if ( null != uuid )
-        {
-            return Result.ok( uuid );  // Return the UUID object, converted from String.
-        } else
-        {
-            return Result.error( this.errorMessageProvider.apply( context ) );
+        if (null != uuid) {
+            return Result.ok(uuid);  // Return the UUID object, converted from String.
+        } else {
+            return Result.error( this.errorMessageProvider.apply(context) );
         }
     }
 
     @Override
-    public String convertToPresentation ( UUID value , ValueContext context )
-    {
-        if ( value == null )
-        {
+    public String convertToPresentation (UUID value, ValueContext context) {
+        if ( value == null ) {
             return null;
         }
         // `java.util.UUID::toString` generates a textual representation of a
@@ -108,5 +96,4 @@ public class StringToUuidConverter implements Converter < String, UUID >
         // https://docs.oracle.com/javase/10/docs/api/java/util/UUID.html#toString()
        return value.toString();
     }
-
 }
