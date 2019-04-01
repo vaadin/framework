@@ -16,7 +16,9 @@
 
 package com.vaadin.v7.client.ui;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -105,5 +107,22 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
     @Override
     public void setAriaInvalid(boolean invalid) {
         AriaHelper.handleInputInvalid(getCheckBoxElement(), invalid);
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+
+        if (BrowserInfo.get().isSafari()) {
+            /*
+             * Sometimes Safari does not render checkbox correctly when
+             * attaching. Setting the visibility to hidden and a bit later
+             * restoring will make everything just fine.
+             */
+            getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+            Scheduler.get().scheduleFinally(() -> {
+                getElement().getStyle().setVisibility(Style.Visibility.VISIBLE);
+            });
+        }
     }
 }

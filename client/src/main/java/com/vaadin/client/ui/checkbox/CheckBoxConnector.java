@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui.checkbox;
 
+import java.util.List;
+
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -38,8 +40,6 @@ import com.vaadin.shared.ui.checkbox.CheckBoxServerRpc;
 import com.vaadin.shared.ui.checkbox.CheckBoxState;
 import com.vaadin.ui.CheckBox;
 
-import java.util.List;
-
 /**
  * The client-side connector for the {@code CheckBoxGroup} component.
  *
@@ -54,7 +54,7 @@ public class CheckBoxConnector extends AbstractFieldConnector
      * The style names from getState().inputStyles which are currently applied
      * to the checkbox.
      *
-     * @since
+     * @since 8.7
      */
     private JsArrayString inputStyleNames = JsArrayString.createArray().cast();
 
@@ -62,7 +62,7 @@ public class CheckBoxConnector extends AbstractFieldConnector
      * The style names from getState().labelStyles which are currently applied
      * to the checkbox.
      *
-     * @since
+     * @since 8.7
      */
     private JsArrayString labelStyleNames = JsArrayString.createArray().cast();
 
@@ -111,8 +111,10 @@ public class CheckBoxConnector extends AbstractFieldConnector
         getWidget().setValue(getState().checked);
 
         // Set styles for input and label
-        updateStyles(getWidget().getInputElement(), inputStyleNames, getState().inputStyles);
-        updateStyles(getWidget().getLabelElement(), labelStyleNames, getState().labelStyles);
+        updateStyles(getWidget().getInputElement(), inputStyleNames,
+                getState().inputStyles);
+        updateStyles(getWidget().getLabelElement(), labelStyleNames,
+                getState().labelStyles);
     }
 
     @Override
@@ -160,7 +162,8 @@ public class CheckBoxConnector extends AbstractFieldConnector
         }
     }
 
-    private void updateStyles(Element clientElement, JsArrayString clientSideStyles, List<String> serverSideStyes) {
+    private void updateStyles(Element clientElement,
+            JsArrayString clientSideStyles, List<String> serverSideStyes) {
         // Remove all old stylenames
         for (int i = 0; i < clientSideStyles.length(); i++) {
             clientElement.removeClassName(clientSideStyles.get(i));
