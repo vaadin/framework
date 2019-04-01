@@ -57,10 +57,8 @@ to log the actual messages using Log4j. For more info on this, please visit the
 SLF4J site.
 
 In order to get the [package]#java.util.logging# to SLF4J bridge installed, you
-need to add the following snippet of code to your [classname]#UI# class at the
+need to add the following snippet of code to your [classname]#VaadinServlet# class at the
 very top:
-
-//TODO: Sure it's UI class and not the servlet?
 
 [source, java]
 ----
@@ -70,8 +68,9 @@ very top:
 ----
 
 This will make sure that the bridge handler is installed and working before
-Vaadin starts to process any logging calls.
-
+Vaadin starts to process any logging calls. If your app consists of multiple servlets,
+you should initialize the SLF4J logging in a [classname]#ServletContextListener# instead,
+so that the servlets' initialization methods uses the proper logger.
 
 [WARNING]
 .Please note!
