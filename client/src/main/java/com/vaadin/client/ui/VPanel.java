@@ -130,8 +130,12 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
     }
 
     /** For internal use only. May be removed or replaced in the future. */
-    public void setCaption(String text) {
-        DOM.setInnerHTML(captionText, text);
+    public void setCaption(String text, boolean captionAsHtml) {
+        if (captionAsHtml) {
+            captionText.setInnerHTML(text);
+        } else {
+            captionText.setInnerText(text);
+        }
     }
 
     /** For internal use only. May be removed or replaced in the future. */
