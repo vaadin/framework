@@ -256,6 +256,23 @@ public class GridHeaderTest extends GridStaticSectionTest {
         assertEquals("clicked", button.getText().toLowerCase());
     }
 
+    @Test
+    public void testSortAfterMultiSelect() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Columns", "Column 0", "Sortable");
+        selectMenuPath("Component", "Header", "Append row");
+        selectMenuPath("Component", "Header", "Row 2", "Set widget");
+        selectMenuPath("Component", "State", "Selection mode", "multi");
+        selectMenuPath("Component", "State", "Selection mode", "single");
+
+        GridCellElement headerCell = getGridElement().getHeaderCell(0, 0);
+
+        headerCell.click();
+
+        assertTrue(hasClassName(headerCell, "sort-asc"));
+    }
+
     private void assertHeaderCount(int count) {
         assertEquals("header count", count, getGridElement().getHeaderCount());
     }
