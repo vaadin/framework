@@ -91,18 +91,17 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
             // Affects size calculations
 
             // Restore default stylenames
+
             getWidget().contentNode.setClassName(VPanel.CLASSNAME + "-content");
             getWidget().bottomDecoration
                     .setClassName(VPanel.CLASSNAME + "-deco");
             getWidget().captionNode.setClassName(VPanel.CLASSNAME + "-caption");
-            boolean hasCaption = false;
-            if (getState().caption != null && !"".equals(getState().caption)) {
-                getWidget().setCaption(getState().caption);
-                hasCaption = true;
+            boolean hasCaption = hasCaption();
+            if (hasCaption) {
+                getWidget().setCaption(getState().caption,getState().captionAsHtml);
             } else {
-                getWidget().setCaption("");
-                getWidget().captionNode
-                        .setClassName(VPanel.CLASSNAME + "-nocaption");
+                getWidget().setCaption("",false);
+                getWidget().captionNode.setClassName(VPanel.CLASSNAME + "-nocaption");
             }
 
             // Add proper stylenames for all elements. This way we can prevent
@@ -175,6 +174,15 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
 
         // And apply tab index
         getWidget().contentNode.setTabIndex(getState().tabIndex);
+    }
+
+    /**
+     * Detects if caption div should be visible.
+     *
+     * @return {@code true} if caption div should be shown
+     */
+    protected boolean hasCaption() {
+        return getState().caption != null && !getState().caption.isEmpty();
     }
 
     @Override

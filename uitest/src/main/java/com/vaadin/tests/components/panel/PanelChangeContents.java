@@ -50,6 +50,7 @@ public class PanelChangeContents extends AbstractTestUI
         buttons.addComponent(companiesButton);
         buttons.addComponent(settingsButton);
         panel = new Panel();
+        panel.setCaption("<div class=\"caption-with-html\">Caption</div>");
         panel.setSizeFull();
         panel.setContent(stats);
         content.addComponent(buttons);
