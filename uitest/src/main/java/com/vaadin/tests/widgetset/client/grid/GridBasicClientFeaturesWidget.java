@@ -1138,6 +1138,13 @@ public class GridBasicClientFeaturesWidget
 
             }
         }, menuPath);
+
+        addMenuCommand("Set widget", new ScheduledCommand() {
+            @Override
+            public void execute() {
+                row.getCell(grid.getColumn(0)).setWidget(new TextBox());
+            }
+        }, menuPath);
     }
 
     private void createFooterMenu() {
