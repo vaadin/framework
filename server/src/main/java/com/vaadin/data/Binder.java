@@ -99,7 +99,8 @@ import com.vaadin.util.ReflectTools;
  */
 public class Binder<BEAN> implements Serializable {
 
-    private IDefaultConverter defaultConverter;
+    // TODO get default factory from session / ui like in V7 ?
+    private BindingConverterFactory defaultConverter;
 
     /**
      * Represents the binding between a field and a data property.
@@ -2658,7 +2659,7 @@ public class Binder<BEAN> implements Serializable {
             }
             BindingBuilder builder = forField(field);
             if (defaultConverter != null)
-                builder = defaultConverter.build(builder, fieldClass,
+                builder = defaultConverter.buildBindingConverter(builder, fieldClass,
                         propertyType);
             builder.bind(property);
             return true;
@@ -2674,7 +2675,7 @@ public class Binder<BEAN> implements Serializable {
     /**
      * @return the current default binding converter
      */
-    public IDefaultConverter getDefaultConverter() {
+    public BindingConverterFactory getDefaultConverter() {
         return defaultConverter;
     }
 
@@ -2690,7 +2691,7 @@ public class Binder<BEAN> implements Serializable {
      * @param defaultConverter
      *            an interface for converting values
      */
-    public void setDefaultConverter(IDefaultConverter defaultConverter) {
+    public void setDefaultConverter(DefaultBindingConverterFactory defaultConverter) {
         this.defaultConverter = defaultConverter;
     }
 
