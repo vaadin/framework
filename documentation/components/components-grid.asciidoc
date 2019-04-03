@@ -32,6 +32,8 @@ is loaded lazily from the server, so that only the visible data is loaded. The
 smart lazy loading functionality gives excellent user experience even with low
 bandwidth, such as mobile devices.
 
+TIP: Watch the https://vaadin.com/training/course/view/data-providers-and-grid[Vaadin 8: Data Providers and Grid] free training video to learn more about the DataProvider API, Grid, sorting and filtering.
+
 The grid data can be edited with a row-based editor after double-clicking a row.
 The fields are set explicitly, and bound to data.
 

@@ -287,10 +287,7 @@ public class VSlider extends SimpleFocusablePanel
             increaseValue(true);
         } else if (DOM.eventGetType(event) == Event.MOUSEEVENTS) {
             processBaseEvent(event);
-        } else if (BrowserInfo.get().isGecko()
-                && DOM.eventGetType(event) == Event.ONKEYPRESS
-                || !BrowserInfo.get().isGecko()
-                        && DOM.eventGetType(event) == Event.ONKEYDOWN) {
+        } else if (isNavigationEvent(event)) {
 
             if (handleNavigation(event.getKeyCode(), event.getCtrlKey(),
                     event.getShiftKey())) {
@@ -314,6 +311,14 @@ public class VSlider extends SimpleFocusablePanel
         if (WidgetUtil.isTouchEvent(event)) {
             event.preventDefault(); // avoid simulated events
             event.stopPropagation();
+        }
+    }
+
+    private boolean isNavigationEvent(Event event) {
+        if (BrowserInfo.get().isGecko() && BrowserInfo.get().getGeckoVersion() < 65) {
+            return DOM.eventGetType(event) == Event.ONKEYPRESS;
+        } else {
+            return DOM.eventGetType(event) == Event.ONKEYDOWN;
         }
     }
 
