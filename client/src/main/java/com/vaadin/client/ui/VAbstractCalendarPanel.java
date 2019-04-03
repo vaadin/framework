@@ -49,6 +49,7 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -591,6 +592,14 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 "<span class=\"" + parent.getStylePrimaryName()
                         + "-calendarpanel-month\">" + monthName + " " + year
                         + "</span>");
+        Event.sinkEvents(monthYearElement, Event.ONCLICK);
+        Event.setEventListener(monthYearElement, e -> {
+            if (!isEnabled() || isReadonly()) {
+                return;
+            }
+            selectFocused();
+            onSubmit();
+        });
     }
 
     private void updateControlButtonRangeStyles(boolean needsMonth) {
