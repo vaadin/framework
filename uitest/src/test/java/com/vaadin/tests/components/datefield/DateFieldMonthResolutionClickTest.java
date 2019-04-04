@@ -27,7 +27,7 @@ public class DateFieldMonthResolutionClickTest extends MultiBrowserTest {
                 yearResolutionDF.getValue() == null
                         || yearResolutionDF.getValue().isEmpty());
         findElement(By.className("v-datefield-popup")).click();
-        sleep(50);
+        sleep(500);
         assertElementNotPresent(By.className("v-datefield-popup"));
         assertTrue("The selected year should be the current one",
                 LocalDate.now().getYear() == Integer
@@ -45,7 +45,7 @@ public class DateFieldMonthResolutionClickTest extends MultiBrowserTest {
                 monthResolutionDF.getValue() == null
                         || monthResolutionDF.getValue().isEmpty());
         findElement(By.className("v-datefield-popup")).click();
-        sleep(50);
+        sleep(500);
         assertElementNotPresent(By.className("v-datefield-popup"));
         LocalDate now = LocalDate.now();
         String dateValue = new StringBuilder().append(now.getMonth().getValue())
