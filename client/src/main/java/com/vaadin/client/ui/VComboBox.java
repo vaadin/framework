@@ -1812,9 +1812,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
-
         if (event.getTypeInt() == Event.ONPASTE) {
-            if (textInputEnabled && connector.isEnabled()) {
+            if (textInputEnabled && connector.isEnabled()
+                    && !connector.isReadOnly()) {
                 filterOptions(currentPage);
             }
         }
