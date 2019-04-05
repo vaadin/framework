@@ -191,7 +191,7 @@ public class WindowHeaderButtonKeyboardActionsTest extends MultiBrowserTest {
 
         // click button with mouse and wait
         closeButton.click();
-        sleep(100);
+        sleep(200);
 
         assertTrue("Window is not closed when focused element is clicked",
                 findElements(By.className("v-window")).size() == 0);
