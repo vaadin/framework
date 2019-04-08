@@ -23,12 +23,20 @@ import java.io.Serializable;
  * Binder when creating bindings with {@link Binder#bindInstanceFields(Object)}.
  * <p>
  * The framework default implementation is
- * {@link DefaultBindingConverterFactory}.
+ * {@link DefaultConverterFactory}.
  *
  * @author Vaadin Ltd.
  * @since
  */
-public interface BindingConverterFactory extends Serializable {
+public interface ConverterFactory extends Serializable {
+
+    <PRESENTATION, MODEL> boolean applyConverter(
+            Binder.BindingBuilder<MODEL, PRESENTATION> bindingBuilder,
+            Class<PRESENTATION> presentationType, Class<MODEL> modelType);
+
+//    <MODEL, PRESENTATION> Optional<Consumer<Binder.BindingBuilder<MODEL,
+//            PRESENTATION>>> getConverterApplier(
+//          Class<PRESENTATION> presentationType, Class<MODEL> modelType);
 
     /**
      * Builds converter to the given binding to convert between the presentation
@@ -43,8 +51,9 @@ public interface BindingConverterFactory extends Serializable {
      *            the bean property type
      * @return the binder builder with converter applied if possible
      */
-    Binder.BindingBuilder buildBindingConverter(Binder.BindingBuilder builder,
-            Class<?> presentationType, Class<?> modelType);
+    // Binder.BindingBuilder buildBindingConverter(Binder.BindingBuilder
+    // builder,
+    // Class<?> presentationType, Class<?> modelType);
 
     /**
      * Returns whether this factory has a converter to convert between the
@@ -57,6 +66,6 @@ public interface BindingConverterFactory extends Serializable {
      *            class of the property type in the entity
      * @return {@code true} if conversion possible, {@code false} if not
      */
-    boolean isSupported(Class<?> presentationType, Class<?> modelType);
+    // boolean isSupported(Class<?> presentationType, Class<?> modelType);
 
 }

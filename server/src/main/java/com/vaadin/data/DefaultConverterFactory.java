@@ -45,7 +45,7 @@ import com.vaadin.server.SerializableFunction;
 /**
  * TODO
  */
-public class DefaultBindingConverterFactory implements BindingConverterFactory {
+public class DefaultConverterFactory implements ConverterFactory {
 
     private static final Map<Class<?>, Set<Class<?>>> SUPPORTED_PRESENTATION_TO_MODEL_CONVERTERS_MAP = new HashMap<>();
     static {
@@ -60,6 +60,8 @@ public class DefaultBindingConverterFactory implements BindingConverterFactory {
                 new HashSet<>(Collections.singletonList(Date.class)));
     }
 
+    // TODO: provide setters for customizing default behavior
+
     private static final SerializableFunction<Class, ErrorMessageProvider> TYPE_BASED_ERROR_MESSAGE_PROVIDER = clazz -> context -> String
             .format("Invalid value, expected ${0}", clazz.getSimpleName());
 
@@ -68,34 +70,36 @@ public class DefaultBindingConverterFactory implements BindingConverterFactory {
     }
 
     @Override
-    public Binder.BindingBuilder buildBindingConverter(
-            Binder.BindingBuilder builder, Class<?> presentationType,
-            Class<?> modelType) {
+    public <PRESENTATION, MODEL> boolean applyConverter(
+            Binder.BindingBuilder<MODEL, PRESENTATION> builder,
+            Class<PRESENTATION> presentationType, Class<MODEL> modelType) {
         if (isSupported(presentationType, modelType)) {
-            Supplier<?> nullRepresentationProvider = getNullRepresentationProvider(
+            Supplier<PRESENTATION> nullRepresentationProvider = getNullRepresentationProvider(
                     presentationType, modelType);
             if (nullRepresentationProvider != null) {
-                builder = builder.withNullRepresentation(
+                builder.withNullRepresentation(
                         nullRepresentationProvider.get());
             }
             if (presentationType == String.class) {
-                builder = builder
+                ((Binder.BindingBuilder<MODEL, String>)builder)
                         .withConverter(createStringConverter(modelType));
             } else if (presentationType == LocalDateTime.class) {
                 if (modelType == Date.class) {
-                    builder = builder
+                    ((Binder.BindingBuilder<Date, LocalDateTime>)builder)
                             .withConverter(new LocalDateTimeToDateConverter(
                                     getZoneIdForDateConverters()));
                 }
             } else if (presentationType == LocalDate.class) {
                 if (modelType == Date.class) {
-                    builder = builder
+                    ((Binder.BindingBuilder<Date, LocalDate>)builder)
                             .withConverter(new LocalDateToDateConverter(
                                     getZoneIdForDateConverters()));
                 }
             }
+            return true;
+        } else {
+            return false;
         }
-        return builder;
     }
 
     /**
@@ -147,10 +151,10 @@ public class DefaultBindingConverterFactory implements BindingConverterFactory {
      * @return the null representation provider, or {@code null} to prevent
      *         conversion of {@code null} model value
      */
-    protected Supplier<?> getNullRepresentationProvider(
-            Class<?> presentationType, Class<?> modelType) {
+    protected <PRESENTATION> Supplier<PRESENTATION> getNullRepresentationProvider(
+            Class<PRESENTATION> presentationType, Class<?> modelType) {
         if (presentationType.equals(String.class)) {
-            return () -> "";
+            return () -> (PRESENTATION) "";
         }
         return null;
     }
@@ -172,8 +176,7 @@ public class DefaultBindingConverterFactory implements BindingConverterFactory {
         return ZoneId.systemDefault();
     }
 
-    @Override
-    public boolean isSupported(Class<?> presentationType, Class<?> modelType) {
+    private boolean isSupported(Class<?> presentationType, Class<?> modelType) {
         Set<Class<?>> supported = SUPPORTED_PRESENTATION_TO_MODEL_CONVERTERS_MAP
                 .get(presentationType);
         return supported != null && supported.size() > 0

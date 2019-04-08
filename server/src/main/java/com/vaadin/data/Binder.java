@@ -99,8 +99,8 @@ import com.vaadin.util.ReflectTools;
  */
 public class Binder<BEAN> implements Serializable {
 
-    // TODO get default factory from session / ui like in V7 ?
-    private BindingConverterFactory defaultConverter;
+    private final DefaultConverterFactory defaultConverterFactory = new DefaultConverterFactory();
+    private ConverterFactory customConverterFactory;
 
     /**
      * Represents the binding between a field and a data property.
@@ -2639,28 +2639,26 @@ public class Binder<BEAN> implements Serializable {
                     memberField.getName(),
                     objectWithMemberFields.getClass().getName()));
         }
+        HasValue<?> field;
+        // Get the field from the object
+        try {
+            field = (HasValue<?>) ReflectTools.getJavaFieldValue(
+                    objectWithMemberFields, memberField, HasValue.class);
+        } catch (IllegalArgumentException | IllegalAccessException
+                | InvocationTargetException e) {
+            // If we cannot determine the value, just skip the field
+            return false;
+        }
+        if (field == null) {
+            field = makeFieldInstance(
+                    (Class<? extends HasValue<?>>) memberField.getType());
+            initializeField(objectWithMemberFields, memberField, field);
+        }
+        BindingBuilder builder = forField(field);
+
         Class<?> fieldClass = GenericTypeReflector.erase(valueType);
-        if (propertyType.equals(fieldClass) || (defaultConverter != null
-                && defaultConverter.isSupported(fieldClass, propertyType))) {
-            HasValue<?> field;
-            // Get the field from the object
-            try {
-                field = (HasValue<?>) ReflectTools.getJavaFieldValue(
-                        objectWithMemberFields, memberField, HasValue.class);
-            } catch (IllegalArgumentException | IllegalAccessException
-                    | InvocationTargetException e) {
-                // If we cannot determine the value, just skip the field
-                return false;
-            }
-            if (field == null) {
-                field = makeFieldInstance(
-                        (Class<? extends HasValue<?>>) memberField.getType());
-                initializeField(objectWithMemberFields, memberField, field);
-            }
-            BindingBuilder builder = forField(field);
-            if (defaultConverter != null)
-                builder = defaultConverter.buildBindingConverter(builder, fieldClass,
-                        propertyType);
+        if (propertyType.equals(fieldClass)
+                || applyConverterFactory(builder, propertyType, fieldClass)) {
             builder.bind(property);
             return true;
         } else {
@@ -2672,27 +2670,13 @@ public class Binder<BEAN> implements Serializable {
         }
     }
 
-    /**
-     * @return the current default binding converter
-     */
-    public BindingConverterFactory getDefaultConverter() {
-        return defaultConverter;
-    }
-
-    /**
-     * Set at default binding converter. If this is set, it is used when
-     * {@link #bindInstanceFields(Object)} is called. The default converter is
-     * able to convert a set of input classes to a given range of output
-     * classes. This is typically used for automatically binding Integer,
-     * Double, Long or Float to a TextField (which use String as a return
-     * value). It may also be used to convert {@link java.time.LocalDateTime}
-     * (or LocalDate) to the old {@link java.util.Date}
-     *
-     * @param defaultConverter
-     *            an interface for converting values
-     */
-    public void setDefaultConverter(DefaultBindingConverterFactory defaultConverter) {
-        this.defaultConverter = defaultConverter;
+    private boolean applyConverterFactory(BindingBuilder bindingBuilder,
+            Class<?> modelType, Class<?> presentationType) {
+        return customConverterFactory != null
+                && customConverterFactory.applyConverter(bindingBuilder,
+                        presentationType, modelType)
+                || getDefaultConverterFactory().applyConverter(bindingBuilder,
+                        presentationType, modelType);
     }
 
     /**
@@ -2921,6 +2905,37 @@ public class Binder<BEAN> implements Serializable {
         Objects.requireNonNull(propertyName, "Property name can not be null");
         Optional.ofNullable(boundProperties.get(propertyName))
                 .ifPresent(Binding::unbind);
+    }
+
+    /**
+     * TODO
+     * 
+     * @return
+     * @since
+     */
+    public ConverterFactory getCustomConverterFactory() {
+        return customConverterFactory;
+    }
+
+    /**
+     * TODO
+     * 
+     * @param customConverterFactory
+     * @since
+     */
+    public void setCustomConverterFactory(
+            ConverterFactory customConverterFactory) {
+        this.customConverterFactory = customConverterFactory;
+    }
+
+    /**
+     * TODO
+     * 
+     * @return
+     * @since
+     */
+    public DefaultConverterFactory getDefaultConverterFactory() {
+        return defaultConverterFactory;
     }
 
     private static final Logger getLogger() {
