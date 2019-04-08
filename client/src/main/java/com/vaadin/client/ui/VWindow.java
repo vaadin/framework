@@ -434,7 +434,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         DOM.appendChild(super.getContainerElement(), wrapper);
 
         sinkEvents(Event.ONDBLCLICK | Event.MOUSEEVENTS | Event.TOUCHEVENTS
-                | Event.ONCLICK | Event.ONLOSECAPTURE);
+                | Event.ONCLICK | Event.ONLOSECAPTURE | Event.ONKEYUP);
 
         setWidget(contentPanel);
 
@@ -1008,18 +1008,21 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         final int type = event.getTypeInt();
 
         final Element target = DOM.eventGetTarget(event);
-
         if (resizing || resizeBox == target) {
             onResizeEvent(event);
             bubble = false;
+            // if clicked or key ENTER or SPACE is pressed
         } else if (isClosable() && target == closeBox) {
-            if (type == Event.ONCLICK) {
+            if (type == Event.ONCLICK || (type == Event.ONKEYUP
+                    && isKeyEnterOrSpace(event.getKeyCode()))) {
                 onCloseClick();
             }
             bubble = false;
         } else if (target == maximizeRestoreBox) {
             // handled in connector
-            if (type != Event.ONCLICK) {
+            // if clicked or key ENTER or SPACE is pressed
+            if (type != Event.ONCLICK && !(type == Event.ONKEYUP
+                    && isKeyEnterOrSpace(event.getKeyCode()))) {
                 bubble = false;
             }
         } else if (header.isOrHasChild(target) && !dragging) {
@@ -1570,5 +1573,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     public static boolean isModalWindowOpen() {
         return Document.get().getBody()
                 .hasClassName(MODAL_WINDOW_OPEN_CLASSNAME);
+    }
+
+    private boolean isKeyEnterOrSpace(int keyCode) {
+        return keyCode == KeyCodes.KEY_ENTER || keyCode == KeyCodes.KEY_SPACE;
     }
 }
