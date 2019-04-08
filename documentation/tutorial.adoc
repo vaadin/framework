@@ -51,6 +51,8 @@ You'll have your first Vaadin app running in your IDE in a couple of minutes. To
 Naturally, you can just do the beginning of the exercise or pick any of the steps you want.
 To start from a specific step, we have prepared the example code after each step to be downloaded as a zip file.
 
+TIP: The free training videos are an accessible way to get familiar with Vaadin 8. https://vaadin.com/training/courses?type=all[See all courses here!] 
+
 In this tutorial, we build a simple customer management system.
 It is not a real application; we use an in-memory "back-end", so that you can understand how to hook it to an existing Java based back-end.
 We cover the basic Vaadin development and you can use the result as a basis for more experiments with Vaadin, such as using add-ons, your own custom look-and- feel (aka. theme), adding new views, or optimizing the result for mobile support.
