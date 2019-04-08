@@ -70,7 +70,6 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
 
         // reset the dataProvider
         reset();
-        assertResetLabelText();
         assertThatSelectedValueIs("");
 
         // re-add the same value and select
