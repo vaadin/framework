@@ -14,6 +14,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
 
+@Widgetset(TestingWidgetSet.NAME)
 public class ComboBoxItemSize extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
