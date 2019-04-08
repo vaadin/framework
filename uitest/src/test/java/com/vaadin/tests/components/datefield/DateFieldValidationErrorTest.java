@@ -5,10 +5,8 @@ import java.time.LocalDate;
 import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -49,26 +47,6 @@ public class DateFieldValidationErrorTest extends MultiBrowserTest {
         inputElement.sendKeys(Keys.TAB);
 
         assertHasErrorMessage(dateField);
-        assertGreaterOrEqual("Cursor not placed in the end", getCursorPosition(inputElement), inputElement.getText().length());
-    }
-
-    private int getCursorPosition(WebElement element) {
-         String[] commands = {
-                "try {",
-                "  var selectRange = document.selection.createRange().duplicate();",
-                "  var elementRange = arguments[0].createTextRange();",
-                "  selectRange.move('character', 0);",
-                "  elementRange.move('character', 0);",
-                "  var inRange1 = selectRange.inRange(elementRange);",
-                "  var inRange2 = elementRange.inRange(selectRange);",
-                "  elementRange.setEndPoint('EndToEnd', selectRange);",
-                "} catch (e) {",
-                "  throw Error('There is no cursor on this page!');",
-                "}",
-                "return String(elementRange.text).replace(/\r/g,' ').length;"};
-        String script = StringUtils.join(commands,"\n");
-        return (int) ((JavascriptExecutor) driver).executeScript(script,
-                element);        
     }
 
     private void assertHasErrorMessage(DateFieldElement dateField) {
