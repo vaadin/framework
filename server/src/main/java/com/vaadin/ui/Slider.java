@@ -258,6 +258,14 @@ public class Slider extends AbstractField<Double> {
         getState().resolution = resolution;
     }
 
+    public void setEnableClickHandler(boolean enabledClickedHandler) {
+        getState().enableClickHandler = enabledClickedHandler;
+    }
+
+    public boolean isEnableClickHandler() {
+        return getState(false).enableClickHandler;
+    }
+
     private double getRoundedValue(Double value) {
         final double v = value.doubleValue();
         final int resolution = getResolution();
