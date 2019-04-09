@@ -385,6 +385,44 @@ public class ShortcutAction extends Action {
         public static final int NUM9 = 57;
 
         public static final int SPACEBAR = 32;
+
+        public static final int NUMPAD0 = 96;
+
+        public static final int NUMPAD1 = 97;
+
+        public static final int NUMPAD2 = 98;
+
+        public static final int NUMPAD3 = 99;
+
+        public static final int NUMPAD4 = 100;
+
+        public static final int NUMPAD5 = 101;
+
+        public static final int NUMPAD6 = 102;
+
+        public static final int NUMPAD7 = 103;
+
+        public static final int NUMPAD8 = 104;
+
+        public static final int NUMPAD9 = 105;
+
+        public static final int NUMPAD_MULTIPLY = 106;
+
+        public static final int NUMPAD_PLUS = 107;
+
+        public static final int NUMPAD_MINUS = 109;
+
+        public static final int NUMPAD_PERIOD = 110;
+
+        public static final int NUMPAD_DIVISION = 111;
+
+        public static final int NUMLOCK = 144;
+
+        public static final int SCROLL_LOCK = 145;
+
+        public static final int CONTEXT_MENU = 93;
+
+        public static final int PAUSE = 19;
     }
 
     /**
@@ -399,5 +437,9 @@ public class ShortcutAction extends Action {
         public static final int ALT = 18;
 
         public static final int META = 91;
+
+        public static final int WINDOWS_LEFT = 224;
+
+        public static final int WINDOWS_RIGHT = 92;
     }
 }
