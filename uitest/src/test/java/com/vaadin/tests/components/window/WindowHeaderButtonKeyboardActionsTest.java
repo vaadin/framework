@@ -400,6 +400,6 @@ public class WindowHeaderButtonKeyboardActionsTest extends MultiBrowserTest {
 
     protected void pressKeyAndWait(Keys... key) {
         new Actions(driver).sendKeys(key).build().perform();
-        sleep(100);
+        sleep(1000);
     }
 }
