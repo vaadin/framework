@@ -30,6 +30,7 @@ public class MenuBarDownloadBrowserOpenerUITest extends MultiBrowserTest {
         checkAndCloseAlert();
         checkAndCloseAlert();
 
+        sleep(500);
         first.clickItem("TestExtension", "RemoveTrigger");
         first.clickItem("TestExtension", "RunMe");
         checkAndCloseAlert();
