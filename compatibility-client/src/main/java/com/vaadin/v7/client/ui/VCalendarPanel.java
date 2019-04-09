@@ -212,11 +212,11 @@ public class VCalendarPanel extends FocusableFlexTable implements
         Roles.getGridRole().set(getElement());
 
         /*
-         * Firefox auto-repeat works correctly only if we use a key press
+         * Firefox prior to v65 auto-repeat works correctly only if we use a key press
          * handler, other browsers handle it correctly when using a key down
          * handler
          */
-        if (BrowserInfo.get().isGecko()) {
+        if (BrowserInfo.get().isGecko() && BrowserInfo.get().getGeckoVersion() < 65) {
             addKeyPressHandler(this);
         } else {
             addKeyDownHandler(this);

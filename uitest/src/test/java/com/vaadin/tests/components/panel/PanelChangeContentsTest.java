@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class PanelChangeContentsTest extends MultiBrowserTest {
@@ -29,5 +30,6 @@ public class PanelChangeContentsTest extends MultiBrowserTest {
                 "/VVerticalLayout[0]/Slot[1]/VPanel[0]/VVerticalLayout[0]/Slot[0]/VLabel[0]")
                         .getText());
 
+        assertElementNotPresent(By.className("caption-with-html"));
     }
 }
