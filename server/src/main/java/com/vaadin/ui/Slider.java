@@ -259,10 +259,13 @@ public class Slider extends AbstractField<Double> {
     }
 
     /**
-     * Sets the slider to update its value on click events triggered by body.
+     * Sets the slider to update its value when the user clicks on it.
+     * By default, the slider value is updated by dragging the slider's handle
+     * or clicking arrows.
      *
      * @param updateValueOnClick
-     *            click event on Slider's body should update the value
+     *            {@code true} to update the value of the slider on click,
+     *            {@code false} otherwise.
      * @since
      */
     public void setUpdateValueOnClick(boolean updateValueOnClick) {
@@ -270,9 +273,10 @@ public class Slider extends AbstractField<Double> {
     }
 
     /**
-     * Gets the {@code updateValueOnClick) value.
+     * Returns whether the slider updates its value on user click.
      *
-     * @return {@code true} if the Slider updates its value on click
+     * @return {@code true} if the Slider updates its value on click. By
+     *         default, returns {@code false}
      * @since
      */
     public boolean isUpdateValueOnClick() {

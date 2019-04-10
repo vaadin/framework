@@ -676,6 +676,11 @@ public class VSlider extends SimpleFocusablePanel
         return null;
     }
 
+    /**
+     * Specifies whether or not click event should update the Slider's value.
+     *
+     * @param updateValueOnClick
+     */
     public void setUpdateValueOnClick(boolean updateValueOnClick) {
         this.updateValueOnClick = updateValueOnClick;
     }
