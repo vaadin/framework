@@ -29,6 +29,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.vaadin.client.ApplicationConnection;
@@ -67,7 +70,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
     };
 
     abstract class WindowEventHandler
-            implements ClickHandler, DoubleClickHandler {
+            implements ClickHandler, DoubleClickHandler, KeyUpHandler {
     }
 
     private WindowEventHandler maximizeRestoreClickHandler = new WindowEventHandler() {
@@ -88,6 +91,18 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
                     .cast();
             if (getWidget().header.isOrHasChild(target)) {
                 // Double click on header
+                onMaximizeRestore();
+            }
+        }
+
+        @Override
+        public void onKeyUp(KeyUpEvent event) {
+            final int keyCode = event.getNativeKeyCode();
+            final Element target = event.getNativeEvent().getEventTarget()
+                    .cast();
+            // key ENTER or SPACE on maximize/restore box
+            if (target == getWidget().maximizeRestoreBox
+                    && isKeyEnterOrSpace(keyCode)) {
                 onMaximizeRestore();
             }
         }
@@ -115,6 +130,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         window.addHandler(maximizeRestoreClickHandler, ClickEvent.getType());
         window.addHandler(maximizeRestoreClickHandler,
                 DoubleClickEvent.getType());
+        window.addHandler(maximizeRestoreClickHandler, KeyUpEvent.getType());
 
         window.setOwner(getConnection().getUIConnector().getWidget());
 
@@ -510,5 +526,9 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
     public void onWindowMove(WindowMoveEvent event) {
         getRpcProxy(WindowServerRpc.class).windowMoved(event.getNewX(),
                 event.getNewY());
+    }
+
+    private boolean isKeyEnterOrSpace(int keyCode) {
+        return keyCode == KeyCodes.KEY_ENTER || keyCode == KeyCodes.KEY_SPACE;
     }
 }
