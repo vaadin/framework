@@ -170,7 +170,7 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
                 getState().descriptionForAssistiveDevices);
 
         getWidget().setTextFieldTabIndex();
-        // Force cursor to its right place with IE11 (#11455)
+        // Force cursor to its right place with IE11 & Chrome (#11455)
         if ((BrowserInfo.get().isIE11() || BrowserInfo.get().isChrome()) && getWidget().text.getCursorPos() == 0) {
             getWidget().text.setCursorPos(getWidget().text.getValue().length());
         }
