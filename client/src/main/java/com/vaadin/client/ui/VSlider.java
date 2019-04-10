@@ -59,7 +59,7 @@ public class VSlider extends SimpleFocusablePanel
     protected int resolution;
     protected Double value;
 
-    private boolean enableClickHandler;
+    private boolean updateValueOnClick;
     protected SliderOrientation orientation = SliderOrientation.HORIZONTAL;
 
     private final HTML feedback = new HTML("", false);
@@ -270,7 +270,7 @@ public class VSlider extends SimpleFocusablePanel
             processHandleEvent(event);
         } else if (targ.equals(base)
                 && DOM.eventGetType(event) == Event.ONMOUSEUP
-                && enableClickHandler) {
+                && updateValueOnClick) {
             processBaseEvent(event);
             feedbackPopup.show();
         } else if (targ == smaller) {
@@ -305,7 +305,8 @@ public class VSlider extends SimpleFocusablePanel
     }
 
     private boolean isNavigationEvent(Event event) {
-        if (BrowserInfo.get().isGecko() && BrowserInfo.get().getGeckoVersion() < 65) {
+        if (BrowserInfo.get().isGecko()
+                && BrowserInfo.get().getGeckoVersion() < 65) {
             return DOM.eventGetType(event) == Event.ONKEYPRESS;
         } else {
             return DOM.eventGetType(event) == Event.ONKEYDOWN;
@@ -675,7 +676,7 @@ public class VSlider extends SimpleFocusablePanel
         return null;
     }
 
-    public void setEnableClickHandler(boolean enableClickHandler) {
-        this.enableClickHandler = enableClickHandler;
+    public void setUpdateValueOnClick(boolean updateValueOnClick) {
+        this.updateValueOnClick = updateValueOnClick;
     }
 }

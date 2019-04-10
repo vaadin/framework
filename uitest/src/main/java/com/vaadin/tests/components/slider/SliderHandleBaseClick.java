@@ -14,13 +14,15 @@ public class SliderHandleBaseClick extends AbstractTestUI {
         Slider slider = new Slider();
         slider.setWidth(500, Unit.PIXELS);
         slider.setMin(0);
-        slider.setMax(15);
+        slider.setMax(10);
         slider.setValue(3.0);
-        slider.setEnableClickHandler(true);
+        slider.setUpdateValueOnClick(true);
         addComponent(slider);
-        addComponent(new Button("Apply/remove click action", e -> {
-            slider.setEnableClickHandler(!slider.isEnableClickHandler());
-        }));
+        Button toggleHandling = new Button("Apply/remove click action", e -> {
+            slider.setUpdateValueOnClick(!slider.isUpdateValueOnClick());
+        });
+        toggleHandling.setId("toggleHandling");
+        addComponent(toggleHandling);
     }
 
     @Override

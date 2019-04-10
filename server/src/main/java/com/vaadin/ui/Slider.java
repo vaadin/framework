@@ -258,12 +258,25 @@ public class Slider extends AbstractField<Double> {
         getState().resolution = resolution;
     }
 
-    public void setEnableClickHandler(boolean enabledClickedHandler) {
-        getState().enableClickHandler = enabledClickedHandler;
+    /**
+     * Sets the slider to update its value on click events triggered by body.
+     *
+     * @param updateValueOnClick
+     *            click event on Slider's body should update the value
+     * @since
+     */
+    public void setUpdateValueOnClick(boolean updateValueOnClick) {
+        getState().updateValueOnClick = updateValueOnClick;
     }
 
-    public boolean isEnableClickHandler() {
-        return getState(false).enableClickHandler;
+    /**
+     * Gets the {@code updateValueOnClick) value.
+     *
+     * @return {@code true} if the Slider updates its value on click
+     * @since
+     */
+    public boolean isUpdateValueOnClick() {
+        return getState(false).updateValueOnClick;
     }
 
     private double getRoundedValue(Double value) {

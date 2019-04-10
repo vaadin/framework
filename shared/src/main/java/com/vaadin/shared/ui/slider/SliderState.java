@@ -39,7 +39,7 @@ public class SliderState extends AbstractFieldState {
     public int resolution = 0;
 
     @NoLayout
-    public boolean enableClickHandler = false;
+    public boolean updateValueOnClick = false;
 
     public SliderOrientation orientation = SliderOrientation.HORIZONTAL;
 
