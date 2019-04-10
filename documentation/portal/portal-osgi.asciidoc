@@ -77,20 +77,37 @@ link:https://github.com/elmot/liferay-7-solid-portlet-example/[]
 == Deployment a Portlet With OSGi (Maven)
 An OSGi portlet should be packaged as a JAR with a proper OSGi bundle
 manifest, and deployed to a portal that has its required bundles installed.
-The maven archetype `com.vaadin:vaadin-archetype-liferay-portlet:8.1.0` is a good starting point to build an OSGi portlet application.
+The maven archetype `com.vaadin:vaadin-archetype-liferay-portlet` is a good starting point to build an OSGi portlet application.
 The required bundles (and the application as well) can be installed using link:https://dev.liferay.com/develop/tutorials/-/knowledge_base/7-0/blade-cli[blade client].
 The latest client binary can be downloaded from the link: link:https://releases.liferay.com/tools/blade-cli/latest/blade.jar[]
 
-Here is an example script for doing that:
+Here is an example script for doing that (be sure to check the versions required by your project using *mvn dependency:list* ):
 [source, shell]
 ----
-java -jar blade.jar sh start https://repo1.maven.org/maven2/org/jsoup/jsoup/1.11.0/jsoup-1.11.0.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/org/jsoup/jsoup/1.11.2/jsoup-1.11.2.jar
 java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/external/gentyref/1.2.0.vaadin1/gentyref-1.2.0.vaadin1.jar
-java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-shared/8.3.2/vaadin-shared-8.3.2.jar
-java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-server/8.3.2/vaadin-server-8.3.2.jar
-java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-osgi-integration/8.3.2/vaadin-osgi-integration-8.3.2.jar
-java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-client-compiled/8.3.2/vaadin-client-compiled-8.3.2.jar
-java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-themes/8.3.2/vaadin-themes-8.3.2.jar
-java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-liferay-integration/8.3.2/vaadin-liferay-integration-8.3.2.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-shared/8.6.3/vaadin-shared-8.6.3.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-server/8.6.3/vaadin-server-8.6.3.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-osgi-integration/8.6.3/vaadin-osgi-integration-8.6.3.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-client-compiled/8.6.3/vaadin-client-compiled-8.6.3.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-themes/8.6.3/vaadin-themes-8.6.3.jar
+java -jar blade.jar sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-liferay-integration/8.6.3/vaadin-liferay-integration-8.6.3.jar
+java -jar blade.jar sh start file:<path_to_liferay_portlet.jar>
+----
+
+However if you are using Vaadin 8 with compatibility libraries, the list above does not work, since you need to load compatibility versions of the bundles in addition to base versions in right order, here is example of that
+
+[source, shell]
+----
+blade sh start https://repo1.maven.org/maven2/org/jsoup/jsoup/1.11.3/jsoup-1.11.3.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/external/gentyref/1.2.0.vaadin1/gentyref-1.2.0.vaadin1.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-shared/8.6.4/vaadin-shared-8.6.4.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-compatibility-shared/8.6.4/vaadin-compatibility-shared-8.6.4.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-server/8.6.4/vaadin-server-8.6.4.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-compatibility-server/8.6.4/vaadin-compatibility-server-8.6.4.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-osgi-integration/8.6.4/vaadin-osgi-integration-8.6.4.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-compatibility-client-compiled/8.6.4/vaadin-compatibility-client-compiled-8.6.4.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-compatibility-themes/8.6.4/vaadin-compatibility-themes-8.6.4.jar
+blade sh start https://repo1.maven.org/maven2/com/vaadin/vaadin-liferay-integration/8.6.4/vaadin-liferay-integration-8.6.4.jar
 java -jar blade.jar sh start file:<path_to_liferay_portlet.jar>
 ----

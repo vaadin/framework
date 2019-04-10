@@ -21,6 +21,25 @@ There is also a [classname]#Grid#, which is configured with one column from the 
 
 [source, java]
 ----
+public enum Status {
+  TODO, IN_PROGRESS, DONE;
+  
+  public String getCaption() {
+    switch (this) {
+    case TODO:
+      return "To do";
+    case IN_PROGRESS:
+      return "In Progress";
+    case DONE:
+      return "Done";
+    }
+    return "";
+  }
+}
+----
+
+[source, java]
+----
 ComboBox<Status> comboBox = new ComboBox<>();
 comboBox.setItemCaptionGenerator(Status::getCaption);
 

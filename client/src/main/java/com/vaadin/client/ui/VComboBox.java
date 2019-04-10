@@ -16,6 +16,16 @@
 
 package com.vaadin.client.ui;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.UUID;
+import java.util.logging.Logger;
+
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -74,15 +84,6 @@ import com.vaadin.client.ui.menubar.MenuItem;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.util.SharedUtil;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * Client side implementation of the ComboBox component.
@@ -1453,7 +1454,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             if (!waitingForFilteringResponse && suggestionPopup.isAttached()) {
                 showPopup = true;
             }
-            if (showPopup) {
+            // Don't show popup, if is not focused
+            if (showPopup && focused) {
                 suggestionPopup.showSuggestions(currentPage);
             }
 
@@ -1635,26 +1637,11 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             performSelection(selectedKey, oldSuggestionTextMatchTheOldSelection,
                     !isWaitingForFilteringResponse() || popupOpenerClicked);
 
-            // currentSuggestion should be set to match the value of the
-            // ComboBox, especially when a new item is added.
-            resetCurrentSuggestionIfNecessary(selectedKey, selectedCaption,
-                    selectedIconUri);
-
             cancelPendingPostFiltering();
 
             setSelectedCaption(selectedCaption);
 
             setSelectedItemIcon(selectedIconUri);
-        }
-
-        private void resetCurrentSuggestionIfNecessary(String selectedKey,
-                String selectedCaption, String selectedIconUri) {
-            if (currentSuggestion == null
-                    && (selectedKey != null || selectedCaption != null))
-                currentSuggestion = new ComboBoxSuggestion(selectedKey,
-                        selectedCaption, "", selectedIconUri);
-            else if (selectedKey == null && selectedCaption == null)
-                currentSuggestion = null;
         }
 
     }
@@ -1764,7 +1751,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean focused = false;
-
+    /** For internal use only. May be removed or replaced in the future. */
+    public boolean noKeyDownEvents = true;
     /**
      * If set to false, the component should not allow entering text to the
      * field even for filtering.
@@ -1819,9 +1807,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
-
         if (event.getTypeInt() == Event.ONPASTE) {
-            if (textInputEnabled && connector.isEnabled()) {
+            if (textInputEnabled && connector.isEnabled()
+                    && !connector.isReadOnly()) {
                 filterOptions(currentPage);
             }
         }
@@ -2124,7 +2112,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             currentSuggestion = null; // #13217
             selectedOptionKey = null;
             setText(getEmptySelectionCaption());
-            return;
         }
         // some item selected
         for (ComboBoxSuggestion suggestion : currentSuggestions) {
@@ -2213,6 +2200,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 return;
             }
 
+            noKeyDownEvents = false;
             if (suggestionPopup.isAttached()) {
                 if (enableDebug) {
                     debug("Keycode " + keyCode + " target is popup");
@@ -2322,7 +2310,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
             // queue this, may be cancelled by selection
             int selectedIndex = suggestionPopup.menu.getSelectedIndex();
-            if (!allowNewItems && selectedIndex != -1) {
+            if (!allowNewItems && selectedIndex != -1
+                    && !currentSuggestions.isEmpty()) {
                 onSuggestionSelected(currentSuggestions.get(selectedIndex));
             } else {
                 dataReceivedHandler.reactOnInputWhenReady(tb.getText());
@@ -2386,7 +2375,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 // NOP
                 break;
             default:
-                if (textInputEnabled) {
+                if (textInputEnabled && !noKeyDownEvents) {
                     // when filtering, we always want to see the results on the
                     // first page first.
                     filterOptions(0);
@@ -2529,6 +2518,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             return;
         }
 
+        noKeyDownEvents = true;
         focused = true;
         updatePlaceholder();
         addStyleDependentName("focus");

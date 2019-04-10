@@ -1551,7 +1551,8 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      * A ready-made {@link ShortcutListener} that focuses the given
      * {@link Focusable} (usually a {@link Field}) when the keyboard shortcut is
      * invoked.
-     *
+     * 
+     * @deprecated Replaced in 8.0 with {@link com.vaadin.event.FocusShortcut}
      */
     @Deprecated
     public static class FocusShortcut extends ShortcutListener {

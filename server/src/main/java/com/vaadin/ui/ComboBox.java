@@ -186,23 +186,20 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         @Override
         public void createNewItem(String itemValue) {
             // New option entered
-            boolean clientSideHandling = false;
+            boolean added = false;
             if (itemValue != null && !itemValue.isEmpty()) {
                 if (getNewItemProvider() != null) {
-                    getNewItemProvider().apply(itemValue).ifPresent(value -> {
-                        // Update state for the newly selected value
-                        setSelectedItem(value, true);
-                        getDataCommunicator().reset();
-                    });
+                    Optional<T> item = getNewItemProvider().apply(itemValue);
+                    added = item.isPresent();
                 } else if (getNewItemHandler() != null) {
                     getNewItemHandler().accept(itemValue);
                     // Up to the user to tell if no item was added.
-                    clientSideHandling = true;
+                    added = true;
                 }
             }
 
-            if (!clientSideHandling) {
-                // New item was maybe added with NewItemHandler
+            if (!added) {
+                // New item was not handled.
                 getRpcProxy(ComboBoxClientRpc.class).newItemNotAdded(itemValue);
             }
         }
@@ -456,9 +453,18 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         // Must do getItemCaptionGenerator() for each operation since it might
         // not be the same as when this method was invoked
         setDataProvider(listDataProvider, filterText -> item -> captionFilter
-                .test(getItemCaptionGenerator().apply(item), filterText));
+                .test(getItemCaptionOfItem(item), filterText));
     }
 
+    // Helper method for the above to make lambda more readable            
+    private String getItemCaptionOfItem(T item) {
+        String caption = getItemCaptionGenerator().apply(item);
+        if (caption == null) {
+            caption = "";
+        }    
+        return caption;
+    }
+                
     /**
      * Sets the data items of this listing and a simple string filter with which
      * the item string and the text the user has input are compared.

@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.combobox;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.Keys;
@@ -18,7 +19,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
 
-    private enum SelectionType {
+    protected enum SelectionType {
         ENTER, TAB, CLICK_OUT;
     }
 
@@ -134,8 +135,11 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
         assertItemCount(2602);
     }
 
-    private void typeInputAndSelect(String input, SelectionType selectionType) {
-        comboBoxElement.clear();
+    protected void typeInputAndSelect(String input,
+            SelectionType selectionType) {
+        // clear() would cause an additional value change in chrome 70+
+        // since it always makes blur after clear()
+        comboBoxElement.sendKeys(Keys.BACK_SPACE, Keys.BACK_SPACE, Keys.BACK_SPACE);
         sendKeysToInput(input);
         switch (selectionType) {
         case ENTER:
@@ -166,7 +170,7 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
         }
     }
 
-    private void assertThatSelectedValueIs(final String value) {
+    protected void assertThatSelectedValueIs(final String value) {
         waitUntil(new ExpectedCondition<Boolean>() {
             private String actualComboBoxValue;
             private String actualLabelValue;
@@ -189,7 +193,7 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
         });
     }
 
-    private void assertValueChange(int count) {
+    protected void assertValueChange(int count) {
         assertEquals(String.format(
                 "Value change count: %s Selection change count: %s user originated: true",
                 count, count), changeLabelElement.getText());
@@ -226,7 +230,7 @@ public class ComboBoxSelectingNewItemValueChangeTest extends MultiBrowserTest {
         }
     }
 
-    private void reset() {
+    protected void reset() {
         $(ButtonElement.class).id("reset").click();
     }
 

@@ -28,7 +28,7 @@ interface simply defines any methods that can be called through the interface.
 
 For example:
 
-
+[source,java]
 ----
 public interface MyComponentServerRpc extends ServerRpc {
     public void clicked(String buttonName);
@@ -54,7 +54,7 @@ Before making a call, you need to instantiate the server RPC object with
 [methodname]#RpcProxy.create()#. This is usually done transparently by using [methodname]#getRpcProxy()#. After that, you can make calls through the
 server RPC interface that you defined, for example as follows:
 
-
+[source,java]
 ----
 @Connect(MyComponent.class)
 public class MyComponentConnector
@@ -87,7 +87,7 @@ RPC calls are handled in a server-side implementation of the server RPC
 interface. The call and its parameters are serialized and passed to the server
 in an RPC request transparently.
 
-
+[source,java]
 ----
 public class MyComponent extends AbstractComponent {
     private MyComponentServerRpc rpc =

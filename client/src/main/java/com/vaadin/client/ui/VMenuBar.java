@@ -121,6 +121,8 @@ public class VMenuBar extends FocusableFlowPanel implements
     /** For internal use only. May be removed or replaced in the future. */
     public boolean htmlContentAllowed;
 
+    public boolean mouseDownPressed;
+
     private Map<String, List<Command>> triggers = new HashMap<>();
 
     public VMenuBar() {
@@ -131,11 +133,11 @@ public class VMenuBar extends FocusableFlowPanel implements
         addFocusHandler(this);
 
         /*
-         * Firefox auto-repeat works correctly only if we use a key press
+         * Firefox prior to v65 auto-repeat works correctly only if we use a key press
          * handler, other browsers handle it correctly when using a key down
          * handler
          */
-        if (BrowserInfo.get().isGecko()) {
+        if (BrowserInfo.get().isGecko() && BrowserInfo.get().getGeckoVersion() < 65) {
             addKeyPressHandler(this);
         } else {
             addKeyDownHandler(this);
@@ -377,7 +379,6 @@ public class VMenuBar extends FocusableFlowPanel implements
     @Override
     public void onBrowserEvent(Event e) {
         super.onBrowserEvent(e);
-
         // Handle onload events (icon loaded, size changes)
         if (DOM.eventGetType(e) == Event.ONLOAD) {
             VMenuBar parent = getParentMenu();
@@ -401,20 +402,26 @@ public class VMenuBar extends FocusableFlowPanel implements
                 targetItem = item;
             }
         }
-
         if (targetItem != null) {
             switch (DOM.eventGetType(e)) {
 
+            case Event.ONMOUSEDOWN:
+                if (e.getButton() == Event.BUTTON_LEFT) {
+                    if (isEnabled() && targetItem.isEnabled()) {
+                        // Button is clicked, but not yet released
+                        mouseDownPressed = true;
+                    }
+                }
+                break;
             case Event.ONCLICK:
                 if (isEnabled() && targetItem.isEnabled()) {
+                    mouseDownPressed = false;
                     itemClick(targetItem);
                 }
-
                 break;
 
             case Event.ONMOUSEOVER:
                 LazyCloser.cancelClosing();
-
                 if (isEnabled() && targetItem.isEnabled()) {
                     itemOver(targetItem);
                 }
@@ -903,6 +910,7 @@ public class VMenuBar extends FocusableFlowPanel implements
             super.onLoad();
             if (getParentMenu() != null
                     && getParentMenu().getParentMenu() == null
+                    && getParentMenu().getItems().size() >= 1
                     && getParentMenu().getItems().get(0).equals(this)) {
                 getElement().setAttribute("tabindex", "0");
             } else {

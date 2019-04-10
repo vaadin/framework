@@ -30,7 +30,7 @@ the JavaScript of the compiled module is loaded in the browser.
 
 Consider the following client-side application:
 
-
+[source, java]
 ----
 public class HelloWorld implements EntryPoint {
     @Override

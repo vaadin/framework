@@ -99,6 +99,30 @@ public class GridLayoutTest {
         assertEquals(1, gl.getColumnExpandRatio(1), 0);
     }
 
+    @Test
+    public void verifyOutOfBoundsExceptionContainsHelpfulMessage() {
+        GridLayout grid = new GridLayout(1, 1);
+        try {
+            grid.addComponent(new Label(), 3, 3);
+            fail("Should have failed");
+        } catch (GridLayout.OutOfBoundsException ex) {
+            assertEquals("Area{3,3 - 3,3}, layout dimension: 1x1",
+                    ex.getMessage());
+        }
+    }
+
+    @Test
+    public void verifyAddComponentFailsWithHelpfulMessageOnInvalidArgs() {
+        GridLayout grid = new GridLayout(6, 6);
+        try {
+            grid.addComponent(new Label(), 3, 3, 2, 2);
+            fail("Should have failed");
+        } catch (IllegalArgumentException ex) {
+            assertEquals("Illegal coordinates for the component: 3!<=2, 3!<=2",
+                    ex.getMessage());
+        }
+    }
+
     private void assertContentPositions(GridLayout grid) {
         assertEquals(grid.getComponentCount(), children.length);
         int c = 0;
