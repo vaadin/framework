@@ -1420,7 +1420,12 @@ public class VFilterSelect extends Composite
              * way, and they might be useful in a combo box where new items are
              * allowed.
              */
-            getElement().setAttribute("autocomplete", Math.random() + "");
+            if (BrowserInfo.get().isChrome()) {
+                // Chrome supports "off" and random number does not work with Chrome
+                getElement().setAttribute("autocomplete", "off");        		
+            } else {
+                getElement().setAttribute("autocomplete", Math.random() + "");
+            }
         }
 
         /**
