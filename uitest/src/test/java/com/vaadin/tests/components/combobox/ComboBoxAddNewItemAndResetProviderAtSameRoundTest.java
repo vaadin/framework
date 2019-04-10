@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.combobox;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
@@ -70,6 +71,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
 
         // reset the dataProvider
         reset();
+        assertResetLabelText();
         assertThatSelectedValueIs("");
 
         // re-add the same value and select
@@ -80,7 +82,9 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     }
 
     private void assertResetLabelText() {
-        waitUntil(value -> "Reset".equals(changeLabelElement.getText()), 2);
+        sleep(1000);
+        Assert.assertEquals("Data Provider should have been reset.", "Reset",
+                changeLabelElement.getText());
     }
 
     private void sendKeysToInput(CharSequence... keys) {
@@ -91,7 +95,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     private void performSelect(SelectionType selectionType) {
         switch (selectionType) {
         case ENTER:
-            sendKeysToInput(Keys.RETURN);
+            sendKeysToInput(Keys.ENTER);
             break;
         case TAB:
             sendKeysToInput(Keys.TAB);
@@ -103,7 +107,9 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     }
 
     private void assertThatSelectedValueIs(final String value) {
-        waitUntil(input -> value.equals(comboBoxElement.getText()), 2);
+        sleep(1000);
+        Assert.assertEquals("Selected combobox item should be " + value + ".",
+                value, comboBoxElement.getText());
     }
 
     private void delay(boolean delay) {
@@ -115,6 +121,5 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
 
     private void reset() {
         $(ButtonElement.class).id("reset").click();
-        sleep(200);
     }
 }
