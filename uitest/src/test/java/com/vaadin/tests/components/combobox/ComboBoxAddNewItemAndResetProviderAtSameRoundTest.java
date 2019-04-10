@@ -83,6 +83,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
 
     private void assertResetLabelText() {
         sleep(1000);
+        changeLabelElement = $(LabelElement.class).id("change");
         Assert.assertEquals("Data Provider should have been reset.", "Reset",
                 changeLabelElement.getText());
     }
@@ -108,6 +109,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
 
     private void assertThatSelectedValueIs(final String value) {
         sleep(1000);
+        comboBoxElement = $(ComboBoxElement.class).first();
         Assert.assertEquals("Selected combobox item should be " + value + ".",
                 value, comboBoxElement.getText());
     }
