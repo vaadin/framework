@@ -266,7 +266,7 @@ public class Slider extends AbstractField<Double> {
      * @param updateValueOnClick
      *            {@code true} to update the value of the slider on click,
      *            {@code false} otherwise.
-     * @since
+     * @since 8.8
      */
     public void setUpdateValueOnClick(boolean updateValueOnClick) {
         getState().updateValueOnClick = updateValueOnClick;
@@ -277,7 +277,7 @@ public class Slider extends AbstractField<Double> {
      *
      * @return {@code true} if the Slider updates its value on click. By
      *         default, returns {@code false}
-     * @since
+     * @since 8.8
      */
     public boolean isUpdateValueOnClick() {
         return getState(false).updateValueOnClick;
