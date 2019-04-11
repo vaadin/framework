@@ -30,6 +30,7 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.aria.client.SelectedValue;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -581,6 +582,15 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         // Set ID to be referenced from focused date or calendar panel
         Element monthYearElement = getFlexCellFormatter().getElement(0, 2);
         AriaHelper.ensureHasId(monthYearElement);
+        Event.sinkEvents(monthYearElement, Event.ONCLICK);
+        Event.setEventListener(monthYearElement, e -> {
+            // Don't handle header clicks if resolution in below month
+            if (!isEnabled() || isReadonly() || isBelowMonth(getResolution())) {
+                return;
+            }
+            selectFocused();
+            onSubmit();
+        });
         if (!needsBody) {
             Roles.getGridRole().setAriaLabelledbyProperty(getElement(),
                     Id.of(monthYearElement));
@@ -592,14 +602,11 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 "<span class=\"" + parent.getStylePrimaryName()
                         + "-calendarpanel-month\">" + monthName + " " + year
                         + "</span>");
-        Event.sinkEvents(monthYearElement, Event.ONCLICK);
-        Event.setEventListener(monthYearElement, e -> {
-            if (!isEnabled() || isReadonly()) {
-                return;
-            }
-            selectFocused();
-            onSubmit();
-        });
+        if (!isBelowMonth(getResolution())) {
+            monthYearElement.getStyle().setCursor(Style.Cursor.POINTER);
+        } else {
+            monthYearElement.getStyle().setCursor(Style.Cursor.DEFAULT);
+        }
     }
 
     private void updateControlButtonRangeStyles(boolean needsMonth) {
