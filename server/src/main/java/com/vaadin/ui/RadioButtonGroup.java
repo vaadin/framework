@@ -321,6 +321,7 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
 
     @Override
     public void setDataProvider(DataProvider<T, ?> dataProvider) {
+        setSelectedItem(null);
         internalSetDataProvider(dataProvider);
     }
 }
