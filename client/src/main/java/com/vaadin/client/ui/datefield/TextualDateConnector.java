@@ -18,6 +18,7 @@ package com.vaadin.client.ui.datefield;
 
 import java.util.Date;
 
+import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -50,23 +51,23 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
     @Override
     protected void init() {
         super.init();
-        getWidget().popup.addCloseHandler(new CloseHandler<PopupPanel>() {
-
-            @Override
-            public void onClose(CloseEvent<PopupPanel> event) {
-                /*
-                 * FIXME This is a hack so we do not have to rewrite half of the
-                 * datefield so values are not sent while selecting a date
-                 * (#1399).
-                 *
-                 * The datefield will now only set the date variables while the
-                 * user is selecting year/month/date/time and not send them
-                 * directly. Only when the user closes the popup (by clicking on
-                 * a day/enter/clicking outside of popup) then the new value is
-                 * communicated to the server.
-                 */
-                getWidget().sendBufferedValues();
-            }
+        getWidget().popup.addDomHandler(event -> {
+            /*
+             * If popup has time controls process the value on blur in order to
+             * ensure that value change happens before e.g. button click event
+             * if that was reason for blur, see issue #11316
+             */
+            getWidget().sendBufferedValues();
+        }, BlurEvent.getType());
+        getWidget().popup.addCloseHandler(event -> {
+            /*
+             * With exception of above, the datefield will now set the date
+             * variables while the user is selecting year/month/date/time and
+             * not send them directly. Only when the user closes the popup (by
+             * clicking on a day/enter/clicking outside of popup) then the new
+             * value is communicated to the server.
+             */
+            getWidget().sendBufferedValues();
         });
     }
 
