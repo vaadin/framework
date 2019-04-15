@@ -12,6 +12,8 @@ import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
+import static org.junit.Assert.assertTrue;
+
 public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         extends SingleBrowserTest {
 
@@ -84,8 +86,9 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     private void assertResetLabelText() {
         sleep(1000);
         changeLabelElement = $(LabelElement.class).id("change");
-        Assert.assertEquals("Data Provider should have been reset.", "Reset",
-                changeLabelElement.getText());
+        String changeLabel = changeLabelElement.getText();
+        assertTrue("Data Provider should have been reset.",
+                "Reset".equals(changeLabel));
     }
 
     private void sendKeysToInput(CharSequence... keys) {
