@@ -183,7 +183,7 @@ public class ComboBoxConnector extends AbstractListingConnector
      *            user entered string value for the new item
      */
     public void sendNewItem(String itemValue) {
-        if (itemValue != null && itemValue.length()!= 0 && !itemValue.equals(pendingNewItemValue)) {
+        if (itemValue != null && !itemValue.equals(pendingNewItemValue)) {
             // clear any previous handling as outdated
             clearNewItemHandling();
 
