@@ -87,8 +87,14 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         sleep(1000);
         changeLabelElement = $(LabelElement.class).id("change");
         String changeLabel = changeLabelElement.getText();
-        assertTrue("Data Provider should have been reset.",
-                "Reset".equals(changeLabel));
+        try {
+            assertTrue("Data Provider should have been reset.",
+                    "Reset".equals(changeLabel));
+            Assert.fail("the string is " + changeLabel);
+        } catch (RuntimeException e){
+            assertTrue("Data Provider should have been reset.",
+                    "Reset".equals(changeLabel));
+        }
     }
 
     private void sendKeysToInput(CharSequence... keys) {
