@@ -31,7 +31,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         openTestURL();
         waitForElementPresent(By.className("v-filterselect"));
         comboBoxElement = $(ComboBoxElement.class).first();
-        changeLabelElement = $(LabelElement.class).id("change");
+        changeLabelElement = $(LabelElement.class).id("reset-label");
     }
 
     @Test
@@ -70,10 +70,11 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     private void itemHandling(SelectionType selectionType, String input) {
         assertThatSelectedValueIs("");
         sendKeysToInput(input);
+        assertResetLabelText("Reset Label");
 
         // reset the dataProvider
         reset();
-        assertResetLabelText();
+        assertResetLabelText("Reset");
         assertThatSelectedValueIs("");
 
         // re-add the same value and select
@@ -83,18 +84,12 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         assertThatSelectedValueIs(input);
     }
 
-    private void assertResetLabelText() {
+    private void assertResetLabelText(String text) {
         sleep(1000);
-        changeLabelElement = $(LabelElement.class).id("change");
+        changeLabelElement = $(LabelElement.class).id("reset-label");
         String changeLabel = changeLabelElement.getText();
-        try {
-            assertTrue("Data Provider should have been reset.",
-                    "Reset".equals(changeLabel));
-            Assert.fail("the string is " + changeLabel);
-        } catch (RuntimeException e){
-            assertTrue("Data Provider should have been reset.",
-                    "Reset".equals(changeLabel));
-        }
+        assertTrue("Data Provider should have been reset.",
+                text.equals(changeLabel));
     }
 
     private void sendKeysToInput(CharSequence... keys) {

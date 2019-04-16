@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -20,9 +19,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRound
 
     ComboBox<String> comboBox;
     List<String> items = new ArrayList<>();
-    int valueChangeEventCount = 0;
-    int selectionChangeEventCount = 0;
-    Label valueChangeLabel = new Label(null, ContentMode.HTML);
+    Label ResetLabel = new Label("Reset Label");
     CheckBox delay = new CheckBox("Slow adding process", false);
 
     @Override
@@ -43,12 +40,10 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRound
             comboBox.setValue(null);
             initItems();
             comboBox.getDataProvider().refreshAll();
-            valueChangeLabel.setValue("Reset");
-            valueChangeEventCount = 0;
-            selectionChangeEventCount = 0;
+            ResetLabel.setValue("Reset");
         });
 
-        valueChangeLabel.setId("change");
+        ResetLabel.setId("reset-label");
         delay.setId("delay");
         resetButton.setId("reset");
 
@@ -56,7 +51,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRound
         button.setId("button-for-click");
 
         HorizontalLayout hl = new HorizontalLayout(checkButton, button);
-        addComponents(comboBox, valueChangeLabel, hl, resetButton, delay);
+        addComponents(comboBox, ResetLabel, hl, resetButton, delay);
     }
 
     private void configureNewItemHandling() {
@@ -71,8 +66,6 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRound
 
             items.add(text);
             Collections.sort(items);
-            valueChangeLabel
-                    .setValue("adding new item... count: " + items.size());
             comboBox.getDataProvider().refreshAll();
             return Optional.of(text);
         });
