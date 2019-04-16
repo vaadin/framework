@@ -116,8 +116,9 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     private void assertThatSelectedValueIs(String value) {
         sleep(1000);
         valueLabelElement = $(LabelElement.class).id("value-label");
+        String valueLabel = valueLabelElement.getText();
         Assert.assertEquals("Selected combobox item should be " + value + ".",
-                value, valueLabelElement.getText());
+                value, valueLabel);
     }
 
     private void delay(boolean delay) {
