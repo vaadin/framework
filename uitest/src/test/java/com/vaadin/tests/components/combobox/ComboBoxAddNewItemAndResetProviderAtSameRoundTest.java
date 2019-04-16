@@ -22,7 +22,8 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     }
 
     private ComboBoxElement comboBoxElement;
-    private LabelElement changeLabelElement;
+    private LabelElement resetLabelElement;
+    private LabelElement valueLabelElement;
     private String inputValue = "000";
 
     @Override
@@ -31,7 +32,8 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         openTestURL();
         waitForElementPresent(By.className("v-filterselect"));
         comboBoxElement = $(ComboBoxElement.class).first();
-        changeLabelElement = $(LabelElement.class).id("reset-label");
+        resetLabelElement = $(LabelElement.class).id("reset-label");
+        valueLabelElement = $(LabelElement.class).id("value-label");
     }
 
     @Test
@@ -68,14 +70,14 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     }
 
     private void itemHandling(SelectionType selectionType, String input) {
-        assertThatSelectedValueIs("");
+        assertThatSelectedValueIs("Value Label");
         sendKeysToInput(input);
         assertResetLabelText("Reset Label");
 
         // reset the dataProvider
         reset();
         assertResetLabelText("Reset");
-        assertThatSelectedValueIs("");
+        assertThatSelectedValueIs("Value is reset");
 
         // re-add the same value and select
         sendKeysToInput(input);
@@ -86,10 +88,10 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
 
     private void assertResetLabelText(String text) {
         sleep(1000);
-        changeLabelElement = $(LabelElement.class).id("reset-label");
-        String changeLabel = changeLabelElement.getText();
+        resetLabelElement = $(LabelElement.class).id("reset-label");
+        String resetLabel = resetLabelElement.getText();
         assertTrue("Data Provider should have been reset.",
-                text.equals(changeLabel));
+                text.equals(resetLabel));
     }
 
     private void sendKeysToInput(CharSequence... keys) {
@@ -111,11 +113,11 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         }
     }
 
-    private void assertThatSelectedValueIs(final String value) {
+    private void assertThatSelectedValueIs(String value) {
         sleep(1000);
-        comboBoxElement = $(ComboBoxElement.class).first();
+        valueLabelElement = $(LabelElement.class).id("value-label");
         Assert.assertEquals("Selected combobox item should be " + value + ".",
-                value, comboBoxElement.getText());
+                value, valueLabelElement.getText());
     }
 
     private void delay(boolean delay) {

@@ -19,7 +19,8 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRound
 
     ComboBox<String> comboBox;
     List<String> items = new ArrayList<>();
-    Label ResetLabel = new Label("Reset Label");
+    Label resetLabel = new Label("Reset Label");
+    Label valueLabel = new Label("Value Label");
     CheckBox delay = new CheckBox("Slow adding process", false);
 
     @Override
@@ -29,6 +30,8 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRound
         comboBox = new ComboBox(null, items);
         comboBox.setTextInputAllowed(true);
         comboBox.setEmptySelectionAllowed(true);
+        comboBox.addValueChangeListener(
+                event -> valueLabel.setValue(comboBox.getValue()));
 
         configureNewItemHandling();
 
@@ -40,10 +43,12 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRound
             comboBox.setValue(null);
             initItems();
             comboBox.getDataProvider().refreshAll();
-            ResetLabel.setValue("Reset");
+            resetLabel.setValue("Reset");
+            valueLabel.setValue("Value is reset");
         });
 
-        ResetLabel.setId("reset-label");
+        resetLabel.setId("reset-label");
+        valueLabel.setId("value-label");
         delay.setId("delay");
         resetButton.setId("reset");
 
@@ -51,7 +56,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRound
         button.setId("button-for-click");
 
         HorizontalLayout hl = new HorizontalLayout(checkButton, button);
-        addComponents(comboBox, ResetLabel, hl, resetButton, delay);
+        addComponents(comboBox, resetLabel, valueLabel, hl, resetButton, delay);
     }
 
     private void configureNewItemHandling() {
@@ -66,6 +71,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRound
 
             items.add(text);
             Collections.sort(items);
+
             comboBox.getDataProvider().refreshAll();
             return Optional.of(text);
         });
