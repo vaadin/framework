@@ -110,7 +110,11 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         // re-add the same value and select
         sendKeysToInput(input);
         performSelect(selectionType);
-        sleep(200);
+        if (delay) {
+            sleep(2000);
+        } else {
+            sleep(200);
+        }
         assertValueLabelText(input);
     }
 
