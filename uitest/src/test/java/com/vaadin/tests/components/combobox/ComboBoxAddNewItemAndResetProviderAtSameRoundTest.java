@@ -11,8 +11,6 @@ import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertTrue;
 
 public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
@@ -145,10 +143,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
 
     private void assertValueLabelText(String value) {
         valueLabelElement = $(LabelElement.class).id("value-label");
-        String valueLabel = valueLabelElement.getText();
-        sleep(1000);
-        assertThat("Value label has different text than the actual value",
-                value, is(valueLabel));
+        waitUntil(driver -> value.equals(valueLabelElement.getText()));
     }
 
     private void delay(boolean delay) {
