@@ -11,6 +11,8 @@ import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertTrue;
 
 public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
@@ -37,8 +39,8 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     }
 
     /**
-     * Scenario: add new item and reset the data provider in the same round, then
-     * add the same value again with ENTER
+     * Scenario: add new item and reset the data provider in the same round,
+     * then add the same value again with ENTER
      */
     @Test
     public void addNewItemAndReset_reAddWithEnter() {
@@ -46,8 +48,8 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     }
 
     /**
-     * Scenario: add new item and reset the data provider in the same round, then
-     * add the same value again with TAB
+     * Scenario: add new item and reset the data provider in the same round,
+     * then add the same value again with TAB
      */
     @Test
     public void addNewItemAndReset_reAddWithTab() {
@@ -55,8 +57,8 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     }
 
     /**
-     * Scenario: add new item and reset the data provider in the same round, then
-     * add the same value again with clicking out side of the CB
+     * Scenario: add new item and reset the data provider in the same round,
+     * then add the same value again with clicking out side of the CB
      */
     @Test
     public void addNewItemAndReset_reAddWithClickOut() {
@@ -103,7 +105,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
 
         // reset the dataProvider
         reset();
-        sleep(500);
+        sleep(700);
         assertResetLabelText("Reset");
         assertValueLabelText("Value is reset");
 
@@ -113,7 +115,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         if (delay) {
             sleep(2000);
         } else {
-            sleep(500);
+            sleep(700);
         }
         assertValueLabelText(input);
     }
@@ -147,9 +149,8 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     private void assertValueLabelText(String value) {
         valueLabelElement = $(LabelElement.class).id("value-label");
         String valueLabel = valueLabelElement.getText();
-        assertTrue(
-                String.format("Selected combobox item should be : %s , but was %s"
-                        , value, valueLabel), value.equals(valueLabel));
+        assertThat("Value label has different text than the actual value",
+                value, is(valueLabel));
     }
 
     private void delay(boolean delay) {
