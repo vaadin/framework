@@ -143,6 +143,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
 
     private void assertValueLabelText(String value) {
         valueLabelElement = $(LabelElement.class).id("value-label");
+        sleep(1000);
         waitUntil(driver -> value.equals(valueLabelElement.getText()));
     }
 
