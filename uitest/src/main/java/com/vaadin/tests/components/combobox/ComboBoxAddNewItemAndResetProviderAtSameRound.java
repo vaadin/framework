@@ -79,9 +79,11 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRound
 
     private void initItems() {
         items.clear();
+        StringBuilder builder = new StringBuilder();
         for (char c = 'a'; c <= 'z'; c++) {
             for (int i = 0; i < 100; i++) {
-                items.add("" + c + i);
+                builder.setLength(0);
+                items.add(builder.append(c).append(i).toString());
             }
         }
     }
