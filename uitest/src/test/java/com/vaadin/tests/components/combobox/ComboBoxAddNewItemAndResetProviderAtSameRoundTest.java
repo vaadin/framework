@@ -103,7 +103,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
 
         // reset the dataProvider
         reset();
-        sleep(200);
+        sleep(500);
         assertResetLabelText("Reset");
         assertValueLabelText("Value is reset");
 
@@ -113,7 +113,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         if (delay) {
             sleep(2000);
         } else {
-            sleep(200);
+            sleep(500);
         }
         assertValueLabelText(input);
     }
