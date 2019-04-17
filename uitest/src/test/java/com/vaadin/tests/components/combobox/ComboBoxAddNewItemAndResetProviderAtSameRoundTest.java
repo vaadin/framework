@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.combobox;
 
+import net.jcip.annotations.NotThreadSafe;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
@@ -13,6 +14,7 @@ import com.vaadin.tests.tb3.SingleBrowserTest;
 
 import static org.junit.Assert.assertTrue;
 
+@NotThreadSafe
 public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         extends SingleBrowserTest {
 
@@ -31,9 +33,9 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         super.setup();
         openTestURL();
         waitForElementPresent(By.className("v-filterselect"));
+        waitForElementPresent(By.id("reset-label"));
+        waitForElementPresent(By.id("value-label"));
         comboBoxElement = $(ComboBoxElement.class).first();
-        resetLabelElement = $(LabelElement.class).id("reset-label");
-        valueLabelElement = $(LabelElement.class).id("value-label");
     }
 
     /**
@@ -143,7 +145,6 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
 
     private void assertValueLabelText(String value) {
         valueLabelElement = $(LabelElement.class).id("value-label");
-        sleep(1000);
         waitUntil(driver -> value.equals(valueLabelElement.getText()));
     }
 
