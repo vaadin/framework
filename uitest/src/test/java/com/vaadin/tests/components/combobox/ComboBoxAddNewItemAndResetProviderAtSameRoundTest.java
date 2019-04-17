@@ -105,7 +105,6 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
 
         // reset the dataProvider
         reset();
-        sleep(700);
         assertResetLabelText("Reset");
         assertValueLabelText("Value is reset");
 
@@ -114,8 +113,6 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         performSelect(selectionType);
         if (delay) {
             sleep(2000);
-        } else {
-            sleep(700);
         }
         assertValueLabelText(input);
     }
@@ -149,6 +146,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     private void assertValueLabelText(String value) {
         valueLabelElement = $(LabelElement.class).id("value-label");
         String valueLabel = valueLabelElement.getText();
+        sleep(1000);
         assertThat("Value label has different text than the actual value",
                 value, is(valueLabel));
     }
