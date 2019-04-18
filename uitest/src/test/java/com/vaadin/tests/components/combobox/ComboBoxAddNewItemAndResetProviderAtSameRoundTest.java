@@ -4,6 +4,7 @@ import net.jcip.annotations.NotThreadSafe;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
+import org.slf4j.LoggerFactory;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
