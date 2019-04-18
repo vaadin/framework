@@ -1,9 +1,5 @@
 package com.vaadin.tests.components.combobox;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import net.jcip.annotations.NotThreadSafe;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
@@ -15,9 +11,8 @@ import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
-@NotThreadSafe
 public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         extends SingleBrowserTest {
 
@@ -26,7 +21,6 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     }
 
     private ComboBoxElement comboBoxElement;
-    private LabelElement resetLabelElement;
     private LabelElement valueLabelElement;
     private String inputValue = "000";
 
@@ -100,27 +94,22 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     private void itemHandling(SelectionType selectionType, String input) {
         assertValueLabelText("Value Label");
         sendKeysToInput(input);
-        assertResetLabelText("Reset Label");
 
         // reset the dataProvider
         reset();
-        sleep(2000);
-
-        assertResetLabelText("Reset");
-        assertValueLabelText("Value is reset");
+        sleep(1000);
+        assertEquals("1. New item has been added", getLogRow(3));
+        assertEquals("2. ComboBox value : 000", getLogRow(2));
+        assertEquals("3. ComboBox value : null", getLogRow(1));
+        assertEquals("4. DataProvider has been reset", getLogRow(0));
 
         // re-add the same value and select
         sendKeysToInput(input);
+        sleep(1000);
         performSelect(selectionType);
-        sleep(2000);
-        assertValueLabelText(input);
-    }
 
-    private void assertResetLabelText(String text) {
-        resetLabelElement = $(LabelElement.class).id("reset-label");
-        String resetLabel = resetLabelElement.getText();
-        assertTrue("Data Provider should have been reset.",
-                text.equals(resetLabel));
+        assertEquals("5. New item has been added", getLogRow(1));
+        assertEquals("6. ComboBox value : 000", getLogRow(0));
     }
 
     private void sendKeysToInput(CharSequence... keys) {
@@ -144,12 +133,6 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
 
     private void assertValueLabelText(String value) {
         valueLabelElement = $(LabelElement.class).id("value-label");
-
-        Logger.getLogger(ComboBoxAddingSameItemTwoTimesWithItemHandlerResetTest
-                        .class.getName()).log(Level.INFO,
-                "!!!!!! value: " + value +
-                "actual value: " + valueLabelElement.getText());
-
         waitUntil(driver -> value.equals(valueLabelElement.getText()));
     }
 

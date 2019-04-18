@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
@@ -15,7 +15,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 
 public class ComboBoxAddNewItemAndResetProviderAtSameRound
-        extends AbstractTestUI {
+        extends AbstractTestUIWithLog {
 
     ComboBox<String> comboBox;
     List<String> items = new ArrayList<>();
@@ -30,8 +30,10 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRound
         comboBox = new ComboBox(null, items);
         comboBox.setTextInputAllowed(true);
         comboBox.setEmptySelectionAllowed(true);
-        comboBox.addValueChangeListener(
-                event -> valueLabel.setValue(comboBox.getValue()));
+        comboBox.addValueChangeListener(event -> {
+            valueLabel.setValue(comboBox.getValue());
+            log("ComboBox value : " + comboBox.getValue());
+        });
 
         configureNewItemHandling();
 
@@ -45,6 +47,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRound
             comboBox.getDataProvider().refreshAll();
             resetLabel.setValue("Reset");
             valueLabel.setValue("Value is reset");
+            log("DataProvider has been reset");
         });
 
         resetLabel.setId("reset-label");
@@ -73,6 +76,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRound
             Collections.sort(items);
 
             comboBox.getDataProvider().refreshAll();
+            log("New item has been added");
             return Optional.of(text);
         });
     }
