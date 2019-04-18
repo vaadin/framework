@@ -141,6 +141,8 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
 
     private void assertValueLabelText(String value) {
         valueLabelElement = $(LabelElement.class).id("value-label");
+
+        LoggerFactory.getLogger(ComboBoxAddingSameItemTwoTimesWithItemHandlerResetTest.class).info("!!!!!! value: " + value + "actual value: " + valueLabelElement.getText());
         waitUntil(driver -> value.equals(valueLabelElement.getText()));
     }
 
