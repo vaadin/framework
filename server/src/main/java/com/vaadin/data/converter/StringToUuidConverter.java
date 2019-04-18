@@ -36,7 +36,7 @@ import com.vaadin.data.ValueContext;
  * </p>
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.8
  */
 public class StringToUuidConverter implements Converter <String, UUID> {
 
