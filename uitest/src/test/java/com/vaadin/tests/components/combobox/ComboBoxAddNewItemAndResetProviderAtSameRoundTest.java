@@ -26,7 +26,6 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     private LabelElement resetLabelElement;
     private LabelElement valueLabelElement;
     private String inputValue = "000";
-    private Boolean delay = false;
 
     @Override
     public void setup() throws Exception {
@@ -98,22 +97,19 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     private void itemHandling(SelectionType selectionType, String input) {
         assertValueLabelText("Value Label");
         sendKeysToInput(input);
-        if (delay) {
-            sleep(2000);
-        }
         assertResetLabelText("Reset Label");
 
         // reset the dataProvider
         reset();
+        sleep(2000);
+
         assertResetLabelText("Reset");
         assertValueLabelText("Value is reset");
 
         // re-add the same value and select
         sendKeysToInput(input);
         performSelect(selectionType);
-        if (delay) {
-            sleep(2000);
-        }
+        sleep(2000);
         assertValueLabelText(input);
     }
 
@@ -153,7 +149,6 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         if (delay != checkBox.isChecked()) {
             checkBox.click();
         }
-        this.delay = delay;
     }
 
     private void reset() {
