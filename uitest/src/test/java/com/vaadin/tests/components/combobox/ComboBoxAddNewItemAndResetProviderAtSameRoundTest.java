@@ -1,10 +1,12 @@
 package com.vaadin.tests.components.combobox;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import net.jcip.annotations.NotThreadSafe;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
-import org.slf4j.LoggerFactory;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
@@ -143,7 +145,11 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     private void assertValueLabelText(String value) {
         valueLabelElement = $(LabelElement.class).id("value-label");
 
-        LoggerFactory.getLogger(ComboBoxAddingSameItemTwoTimesWithItemHandlerResetTest.class).info("!!!!!! value: " + value + "actual value: " + valueLabelElement.getText());
+        Logger.getLogger(ComboBoxAddingSameItemTwoTimesWithItemHandlerResetTest
+                        .class.getName()).log(Level.INFO,
+                "!!!!!! value: " + value +
+                "actual value: " + valueLabelElement.getText());
+
         waitUntil(driver -> value.equals(valueLabelElement.getText()));
     }
 
