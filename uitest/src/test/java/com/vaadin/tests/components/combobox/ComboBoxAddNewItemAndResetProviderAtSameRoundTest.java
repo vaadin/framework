@@ -1,8 +1,5 @@
 package com.vaadin.tests.components.combobox;
 
-import java.util.logging.Logger;
-
-import net.jcip.annotations.NotThreadSafe;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
@@ -16,7 +13,6 @@ import com.vaadin.tests.tb3.SingleBrowserTest;
 
 import static org.junit.Assert.assertEquals;
 
-@NotThreadSafe
 public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         extends SingleBrowserTest {
 
@@ -36,33 +32,6 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         waitForElementPresent(By.id("reset-label"));
         waitForElementPresent(By.id("value-label"));
         comboBoxElement = $(ComboBoxElement.class).first();
-    }
-
-    /**
-     * Scenario: add new item and reset the data provider in the same round,
-     * then add the same value again with ENTER
-     */
-    @Test
-    public void addNewItemAndReset_reAddWithEnter() {
-        itemHandling(SelectionType.ENTER, inputValue);
-    }
-
-    /**
-     * Scenario: add new item and reset the data provider in the same round,
-     * then add the same value again with TAB
-     */
-    @Test
-    public void addNewItemAndReset_reAddWithTab() {
-        itemHandling(SelectionType.TAB, inputValue);
-    }
-
-    /**
-     * Scenario: add new item and reset the data provider in the same round,
-     * then add the same value again with clicking out side of the CB
-     */
-    @Test
-    public void addNewItemAndReset_reAddWithClickOut() {
-        itemHandling(SelectionType.CLICK_OUT, inputValue);
     }
 
     /**
@@ -110,11 +79,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     }
 
     private void assertLogMessage() {
-        sleep(2000);
-        Logger.getLogger(
-                ComboBoxAddingSameItemTwoTimesWithItemHandlerResetTest.class
-                        .getName()).info("!!!!!!!!!!!!!!!!!!!!!!!!" +
-                getLogRow(0) + getLogRow(1));
+
         assertEquals("6. ComboBox value : 000", getLogRow(0));
         assertEquals("5. New item has been added", getLogRow(1));
         assertEquals("4. DataProvider has been reset", getLogRow(2));
