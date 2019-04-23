@@ -1,5 +1,7 @@
 package com.vaadin.tests.components.combobox;
 
+import java.util.logging.Logger;
+
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
@@ -108,6 +110,10 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     }
 
     private void assertLogMessage() {
+        Logger.getLogger(
+                ComboBoxAddingSameItemTwoTimesWithItemHandlerResetTest.class
+                        .getName()).info("!!!!!!!!!!!!!!!!!!!!!!!!" +
+                getLogRow(0));
         assertEquals("6. ComboBox value : 000", getLogRow(0));
         assertEquals("5. New item has been added", getLogRow(1));
         assertEquals("4. DataProvider has been reset", getLogRow(2));
