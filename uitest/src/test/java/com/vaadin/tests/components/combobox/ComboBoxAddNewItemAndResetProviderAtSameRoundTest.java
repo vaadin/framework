@@ -94,6 +94,7 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
     private void itemHandling(SelectionType selectionType, String input) {
         assertValueLabelText("Value Label");
         sendKeysToInput(input);
+        sleep(1000);
 
         // reset the dataProvider
         reset();
@@ -110,11 +111,11 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         //current test is not stable for collecting all the logs,
         //so that we need to do the assertion with full log and contents.
         assertTrue("The full log should contain the following text",
-                getLogs().contains("ComboBox value : 000"));
+                getLogs().toString().contains("ComboBox value : 000"));
         assertTrue("The full log should contain the following text",
-                getLogs().contains("New item has been added"));
+                getLogs().toString().contains("New item has been added"));
         assertTrue("The full log should contain the following text",
-                getLogs().contains("DataProvider has been reset"));
+                getLogs().toString().contains("DataProvider has been reset"));
     }
 
     private void sendKeysToInput(CharSequence... keys) {
