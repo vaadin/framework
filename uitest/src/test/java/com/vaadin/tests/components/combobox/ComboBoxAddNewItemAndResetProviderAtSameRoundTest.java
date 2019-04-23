@@ -98,18 +98,21 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
         // reset the dataProvider
         reset();
         sleep(1000);
-        assertEquals("1. New item has been added", getLogRow(3));
-        assertEquals("2. ComboBox value : 000", getLogRow(2));
-        assertEquals("3. ComboBox value : null", getLogRow(1));
-        assertEquals("4. DataProvider has been reset", getLogRow(0));
 
         // re-add the same value and select
         sendKeysToInput(input);
         sleep(1000);
         performSelect(selectionType);
 
-        assertEquals("5. New item has been added", getLogRow(1));
+        assertLogMessage();
+    }
+
+    private void assertLogMessage() {
         assertEquals("6. ComboBox value : 000", getLogRow(0));
+        assertEquals("5. New item has been added", getLogRow(1));
+        assertEquals("4. DataProvider has been reset", getLogRow(2));
+        assertEquals("3. ComboBox value : null", getLogRow(3));
+        assertEquals("2. ComboBox value : 000", getLogRow(4));
     }
 
     private void sendKeysToInput(CharSequence... keys) {
