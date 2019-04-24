@@ -215,6 +215,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
     @Test
     public void accordions() throws Exception {
         open("Accordions");
+        Parameters.setScreenshotComparisonTolerance(0.2);
         compareScreen("accordions");
     }
 
