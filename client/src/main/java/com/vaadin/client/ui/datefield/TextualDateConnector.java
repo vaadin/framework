@@ -51,6 +51,11 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
     @Override
     protected void init() {
         super.init();
+        /*
+         * The following special cases are needed despite the super class
+         * AbstractDateFieldConnector already overrides flush and calls
+         * sendBufferedValues()
+         */
         getWidget().popup.addDomHandler(event -> {
             /*
              * If popup has time controls process the value on blur in order to
@@ -65,7 +70,7 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
              * variables while the user is selecting year/month/date/time and
              * not send them directly. Only when the user closes the popup (by
              * clicking on a day/enter/clicking outside of popup) then the new
-             * value is communicated to the server.
+             * value is communicated to the server, see issue #1399.
              */
             getWidget().sendBufferedValues();
         });
