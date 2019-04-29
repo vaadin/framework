@@ -261,5 +261,5 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
      */
     public static boolean isAtmosphereAvailable() {
         return atmosphereAvailable;
-    }    
+    }
 }

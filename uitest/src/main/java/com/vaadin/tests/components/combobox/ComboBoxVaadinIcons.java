@@ -24,7 +24,8 @@ public class ComboBoxVaadinIcons extends AbstractTestUI {
         Label valueLabel = new Label();
         valueLabel.setValue("Test");
         valueLabel.setId("value-label");
-        comboBox.addValueChangeListener(event -> valueLabel.setValue(comboBox.getValue()));
+        comboBox.addValueChangeListener(
+                event -> valueLabel.setValue(comboBox.getValue()));
         addComponent(comboBox);
         addComponent(valueLabel);
     }

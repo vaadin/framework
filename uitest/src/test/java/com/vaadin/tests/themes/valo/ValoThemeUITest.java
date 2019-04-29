@@ -217,13 +217,13 @@ public class ValoThemeUITest extends MultiBrowserTest {
     public void accordions() throws Exception {
         open("Accordions");
 
-        // Screenshot test is very unstable here. 
-        // We are testing the label contains the correct text in this case.  
+        // Screenshot test is very unstable here.
+        // We are testing the label contains the correct text in this case.
         CssLayoutElement content = wrap(CssLayoutElement.class,
                 findElement(By.className("valo-content")));
         LabelElement labelElem = content.$(LabelElement.class).get(1);
-        String text = "Fabio vel iudice vincam, sunt in culpa qui officia. Ut " +
-                "enim ad minim veniam, quis nostrud exercitation.";
+        String text = "Fabio vel iudice vincam, sunt in culpa qui officia. Ut "
+                + "enim ad minim veniam, quis nostrud exercitation.";
         Assert.assertEquals(text, labelElem.getText());
     }
 

@@ -97,9 +97,9 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
             panel.captionNode.setClassName(VPanel.CLASSNAME + "-caption");
             boolean hasCaption = hasCaption();
             if (hasCaption) {
-                panel.setCaption(getState().caption,getState().captionAsHtml);
+                panel.setCaption(getState().caption, getState().captionAsHtml);
             } else {
-                panel.setCaption("",false);
+                panel.setCaption("", false);
                 panel.captionNode.setClassName(VPanel.CLASSNAME + "-nocaption");
             }
 

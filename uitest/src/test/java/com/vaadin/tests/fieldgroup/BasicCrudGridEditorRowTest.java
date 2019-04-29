@@ -36,7 +36,7 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
     public void lookAndFeel() throws Exception {
         GridCellElement ritaBirthdate = grid.getCell(2, 3);
         waitUntilLoadingIndicatorNotVisible();
-        assertEquals("May 16, 1992",ritaBirthdate.getText());
+        assertEquals("May 16, 1992", ritaBirthdate.getText());
 
         // Grid Editor should not present yet
         waitForElementNotPresent(By.className("v-grid-editor"));
@@ -84,7 +84,7 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
         assertNotEquals("Checkbox value did not change", value, cb.getValue());
     }
 
-   @Test
+    @Test
     public void testNoTopStyleSetOnEditorOpenWithFooterOnTop() {
         GridCellElement cell = grid.getCell(2, 3);
         // Open editor row
