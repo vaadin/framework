@@ -2,7 +2,9 @@ package com.vaadin.tests.components.combobox;
 
 import java.io.IOException;
 
+import org.junit.Assert;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
 import com.vaadin.testbench.elements.ComboBoxElement;
@@ -14,10 +16,15 @@ public class ComboBoxVaadinIconsTest extends MultiBrowserTest {
     public void testComboBoxIconRendering() throws IOException {
         openTestURL();
         ComboBoxElement comboBox = $(ComboBoxElement.class).first();
-        comboBox.openPopup();
-        compareScreen(comboBox.getSuggestionPopup(), "popup");
-        comboBox.sendKeys(Keys.ARROW_DOWN, Keys.ARROW_DOWN, Keys.ENTER);
-        compareScreen(comboBox, "paperplane");
-    }
+        waitForElementPresent(By.id("value-label"));
+        Assert.assertEquals(findElement(By.id("value-label")).getText(),
+                "Test");
 
+        comboBox.openPopup();
+        comboBox.sendKeys(Keys.ARROW_DOWN, Keys.ARROW_DOWN, Keys.ENTER);
+        Assert.assertEquals(findElement(By.id("value-label")).getText(),
+                "PAPERPLANE");
+
+
+    }
 }

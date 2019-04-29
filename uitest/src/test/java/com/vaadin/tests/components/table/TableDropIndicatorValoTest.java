@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.Parameters;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -30,6 +31,7 @@ public class TableDropIndicatorValoTest extends MultiBrowserTest {
     public void indicator() throws Exception {
 
         dragRowWithoutDropping(1);
+        Parameters.setScreenshotComparisonTolerance(0.1);
         compareScreen("indicator");
     }
 

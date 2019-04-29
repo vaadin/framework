@@ -104,6 +104,20 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
             return;
         }
 
+        init(servletContext);
+    }
+
+    /**
+     * Initializes Atmosphere for use with Vaadin servlets found in the given
+     * context.
+     * <p>
+     * For JSR 356 websockets to work properly, the initialization must be done
+     * in the servlet context initialization phase.
+     *
+     * @param servletContext
+     *            The servlet context
+     */
+    public void init(ServletContext servletContext) {
         if (!atmosphereAvailable) {
             return;
         }
@@ -239,4 +253,13 @@ public class JSR356WebsocketInitializer implements ServletContextListener {
         }
     }
 
+    /**
+     * Checks if Atmosphere is available on the classpath.
+     *
+     * @return <code>true</code> if Atmosphere is available, <code>false</code>
+     *         otherwise
+     */
+    public static boolean isAtmosphereAvailable() {
+        return atmosphereAvailable;
+    }    
 }
