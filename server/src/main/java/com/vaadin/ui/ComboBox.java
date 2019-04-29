@@ -465,15 +465,15 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                 .test(getItemCaptionOfItem(item), filterText));
     }
 
-    // Helper method for the above to make lambda more readable            
+    // Helper method for the above to make lambda more readable
     private String getItemCaptionOfItem(T item) {
         String caption = getItemCaptionGenerator().apply(item);
         if (caption == null) {
             caption = "";
-        }    
+        }
         return caption;
     }
-                
+
     /**
      * Sets the data items of this listing and a simple string filter with which
      * the item string and the text the user has input are compared.

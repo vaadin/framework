@@ -29,8 +29,8 @@ import com.vaadin.data.ValueContext;
  * Leading and trailing white spaces are ignored when converting from a String.
  * </p>
  * <p>
- * The String representation uses the canonical format of 32-characters with a hyphen
- * to separate each of five groups of hexadecimal digits as defined in:
+ * The String representation uses the canonical format of 32-characters with a
+ * hyphen to separate each of five groups of hexadecimal digits as defined in:
  * RFC 4122: A Universally Unique IDentifier (UUID) URN Namespace
  * http://www.ietf.org/rfc/rfc4122.txt
  * </p>
@@ -38,33 +38,35 @@ import com.vaadin.data.ValueContext;
  * @author Vaadin Ltd
  * @since 8.8
  */
-public class StringToUuidConverter implements Converter <String, UUID> {
+public class StringToUuidConverter implements Converter<String, UUID> {
 
     private ErrorMessageProvider errorMessageProvider;
 
     /**
      * Constructs a converter for String to UUID and back.
      *
-     * @param errorMessage the error message to use if conversion fails
+     * @param errorMessage
+     *            the error message to use if conversion fails
      */
     public StringToUuidConverter(String errorMessage) {
         this(ctx -> errorMessage);
     }
 
     /**
-     * Constructs a new converter instance with the given error message provider.
-     * Empty strings are converted to <code>null</code>.
+     * Constructs a new converter instance with the given error message
+     * provider. Empty strings are converted to <code>null</code>.
      *
-     * @param errorMessageProvider the error message provider to use if conversion fails
+     * @param errorMessageProvider
+     *            the error message provider to use if conversion fails
      */
     public StringToUuidConverter(ErrorMessageProvider errorMessageProvider) {
         this.errorMessageProvider = errorMessageProvider;
     }
 
     @Override
-    public Result <UUID> convertToModel(String value, ValueContext context) {
+    public Result<UUID> convertToModel(String value, ValueContext context) {
         if (value == null) {
-            return Result.ok( null );
+            return Result.ok(null);
         }
 
         // Remove leading and trailing white space
@@ -79,21 +81,22 @@ public class StringToUuidConverter implements Converter <String, UUID> {
         }
 
         if (null != uuid) {
-            return Result.ok(uuid);  // Return the UUID object, converted from String.
+            return Result.ok(uuid); // Return the UUID object, converted from
+                                    // String.
         } else {
-            return Result.error( this.errorMessageProvider.apply(context) );
+            return Result.error(this.errorMessageProvider.apply(context));
         }
     }
 
     @Override
-    public String convertToPresentation (UUID value, ValueContext context) {
-        if ( value == null ) {
+    public String convertToPresentation(UUID value, ValueContext context) {
+        if (value == null) {
             return null;
         }
         // `java.util.UUID::toString` generates a textual representation of a
         // UUID’s 128-bits as a lowercase hexadecimal `String` in canonical
         // 32-character format with four hyphens separating groups of digits.
         // https://docs.oracle.com/javase/10/docs/api/java/util/UUID.html#toString()
-       return value.toString();
+        return value.toString();
     }
 }
