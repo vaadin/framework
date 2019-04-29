@@ -52,7 +52,7 @@ public class SliderHandleBaseClickTest extends MultiBrowserTest {
         sleep(100);
         assertEquals(String.format(
                 "Slider value should not have changed. Expected 3.0 , but was %f",
-                getSliderValue()), 3.0,getSliderValue(), 0.0);
+                getSliderValue()), 3.0, getSliderValue(), 0.0);
         // Enable click event handling
         findElement(By.id("toggleHandling")).click();
     }
