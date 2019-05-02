@@ -89,7 +89,14 @@ public class HeartbeatHandler extends SynchronizedRequestHandler
             return false;
         }
 
-        response.sendError(HttpServletResponse.SC_GONE, "Session expired");
+        // Ensure that the browser does not cache expired response.
+        // iOS 6 Safari requires this (#10370)
+        response.setHeader("Cache-Control", "no-cache");
+        // If Content-Type is not set, browsers assume text/html and may
+        // complain about the empty response body (#12182)
+        response.setHeader("Content-Type", "text/plain");
+
+        response.sendError(HttpServletResponse.SC_NOT_FOUND, "Session expired");
         return true;
     }
 }
