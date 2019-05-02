@@ -121,7 +121,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
          *            icon URI or null
          */
         public ComboBoxSuggestion(String key, String caption, String style,
-                                  String untranslatedIconUri) {
+                String untranslatedIconUri) {
             this.key = key;
             this.caption = caption;
             this.style = style;
@@ -1372,8 +1372,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
              * allowed.
              */
             if (BrowserInfo.get().isChrome()) {
-                // Chrome supports "off" and random number does not work with Chrome
-                getElement().setAttribute("autocomplete", "off");        		
+                // Chrome supports "off" and random number does not work with
+                // Chrome
+                getElement().setAttribute("autocomplete", "off");
             } else {
                 getElement().setAttribute("autocomplete", Math.random() + "");
             }

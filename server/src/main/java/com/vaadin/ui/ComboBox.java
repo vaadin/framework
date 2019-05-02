@@ -191,7 +191,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                 if (getNewItemProvider() != null) {
                     Optional<T> item = getNewItemProvider().apply(itemValue);
                     added = item.isPresent();
-                    // Fixes issue https://github.com/vaadin/framework/issues/11343
+                    // Fixes issue
+                    // https://github.com/vaadin/framework/issues/11343
                     // Update the internal selection state immediately to avoid
                     // client side hanging. This is needed for cases that user
                     // interaction fires multi events (like adding and deleting)
@@ -455,7 +456,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * @since 8.0
      */
     public void setDataProvider(CaptionFilter captionFilter,
-                                ListDataProvider<T> listDataProvider) {
+            ListDataProvider<T> listDataProvider) {
         Objects.requireNonNull(listDataProvider,
                 "List data provider cannot be null");
 

@@ -25,6 +25,5 @@ public class ComboBoxVaadinIconsTest extends MultiBrowserTest {
         Assert.assertEquals(findElement(By.id("value-label")).getText(),
                 "PAPERPLANE");
 
-
     }
 }

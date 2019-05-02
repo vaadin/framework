@@ -108,8 +108,8 @@ public class ComboBoxAddNewItemAndResetProviderAtSameRoundTest
 
     private void assertLogMessage() {
         sleep(2000);
-        //current test is not stable for collecting all the logs,
-        //so that we need to do the assertion with full log and contents.
+        // current test is not stable for collecting all the logs,
+        // so that we need to do the assertion with full log and contents.
         assertTrue("The full log should contain the following text",
                 getLogs().toString().contains("ComboBox value : 000"));
         assertTrue("The full log should contain the following text",

@@ -19,9 +19,11 @@ public class GridDisabledTest extends MultiBrowserTest {
         waitUntilLoadingIndicatorNotVisible();
         GridElement disabledGrid = $(GridElement.class).id("disabled-grid");
 
-        assertFalse(disabledGrid.getClassNames().toString().contains("v-disabled"));
+        assertFalse(
+                disabledGrid.getClassNames().toString().contains("v-disabled"));
         $(ButtonElement.class).caption("Disable").first().click();
 
-        assertTrue(disabledGrid.getClassNames().toString().contains("v-disabled"));
+        assertTrue(
+                disabledGrid.getClassNames().toString().contains("v-disabled"));
     }
 }
