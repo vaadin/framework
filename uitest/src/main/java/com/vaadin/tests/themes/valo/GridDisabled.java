@@ -13,6 +13,7 @@ public class GridDisabled extends AbstractTestUI {
         grid.addColumn("foo", String.class);
         grid.addRow("Foo");
         grid.select(grid.addRow("Bar"));
+        grid.setId("disabled-grid");
 
         addComponent(grid);
 

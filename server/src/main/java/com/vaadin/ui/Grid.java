@@ -1030,7 +1030,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param <P>
          *            the presentation type
          *
-         * @since 
+         * @since 8.8
          */
         protected <P> Column(ValueProvider<T, V> valueProvider,
                 ValueProvider<V, P> presentationProvider,
@@ -1599,7 +1599,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         /**
-         * Returns the width (in pixels). By default a column width is 
+         * Returns the width (in pixels). By default a column width is
          * {@value com.vaadin.shared.ui.grid.GridConstants#DEFAULT_COLUMN_WIDTH_PX}
          * (undefined).
          *
@@ -2804,8 +2804,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param nestedNullBehavior
      *            the behavior when
      * @return the newly added column, not <code>null</code>
-     * 
-     * @since
+     *
+     * @since 8.8
      */
     public Column<T, ?> addColumn(String propertyName,
             AbstractRenderer<? super T, ?> renderer,
@@ -3001,7 +3001,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param <P>
      *            the column presentation type
      *
-     * @since 
+     * @since 8.8
      */
     private <V, P> Column<T, V> createColumn(ValueProvider<T, V> valueProvider,
             ValueProvider<V, P> presentationProvider,
