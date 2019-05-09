@@ -8,7 +8,7 @@ layout: page
 = Integrating a JavaScript library as an extension
 
 JavaScript can also be used for creating Extensions e.g. for integrating
-existing JavaScript libraries. See link:CreatingAUIExtension.asciidoc[Creating a UI extension] for general information about Extensions. The main
+existing JavaScript libraries. See link:CreatingAUIExtension.html[Creating a UI extension] for general information about Extensions. The main
 difference when using JavaScript is that you extend
 `AbstractJavaScriptExtension`, that your shared state class should
 extend `JavaScriptExtensionState` and then of course that your
