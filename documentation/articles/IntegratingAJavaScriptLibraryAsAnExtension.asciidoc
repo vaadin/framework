@@ -12,7 +12,7 @@ existing JavaScript libraries. See link:CreatingAUIExtension.asciidoc[Creating a
 difference when using JavaScript is that you extend
 `AbstractJavaScriptExtension`, that your shared state class should
 extend `JavaScriptExtensionState` and then of course that your
-client-side implementation is written in JavaScript. See link:IntegratingAJavaScriptComponent.asciidoc[Integrating a
+client-side implementation is written in JavaScript. See link:IntegratingAJavaScriptComponent.html[Integrating a
 JavaScript component] for basic information about how to use JavaScript
 for your client-side logic.
 
