@@ -9,7 +9,7 @@ layout: page
 
 To create your own variation of the Valo theme, start by creating a new
 custom theme for your project. See
-the link:CreatingAThemeUsingSass.asciidoc[Creating a theme using Sass] 
+the link:CreatingAThemeUsingSass.html[Creating a theme using Sass] 
 tutorial to get that done.
 
 Change your theme import and include from Reindeer to Valo:
