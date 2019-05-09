@@ -10,7 +10,7 @@ layout: page
 _Versions used in this tutorial: Grails 2.3.x, Vaadin 7.1.x. News and
 updates about Vaadin on Grails are available on
 https://twitter.com/VaadinOnGrails[VaadinOnGrails]. This is continuation
-of link:VaadinOnGrailsDatabaseAccess.asciidoc[Vaadin on Grails - Database access]_
+of link:VaadinOnGrailsDatabaseAccess.html[Vaadin on Grails - Database access]_
 
 In `grails-app/conf/VaadinConfig.groovy`, we can change URL mapping to
 UI. Also, we can define multiple UIs to be accessible from one Grails
