@@ -10,7 +10,7 @@ layout: page
 In this tutorial we create a simple extension that can be attached to a
 `PasswordField`, displaying a floating notification if the user's Caps
 Lock seems to be enabled. We assume the reader is already familiar with
-the link:CreatingAUIExtension.asciidoc[Creating a UI extension]
+the link:CreatingAUIExtension.html[Creating a UI extension]
 tutorial.
 
 This extension has almost no server-side functionality; the whole Extension
