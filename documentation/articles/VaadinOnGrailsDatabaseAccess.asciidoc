@@ -10,7 +10,7 @@ layout: page
 _Versions used in this tutorial: Grails 2.3.x, Vaadin 7.1.x. News and
 updates about Vaadin on Grails are available on
 https://twitter.com/VaadinOnGrails[VaadinOnGrails]. This is continuation
-of link:VaadinOnGrailsCreateProjectInIntelliJIDEA.asciidoc[Vaadin
+of link:VaadinOnGrailsCreateProjectInIntelliJIDEA.html[Vaadin
 on Grails - Create project in IntelliJ IDEA]_
 
 We are going to create persistence a domain class that is automatically
