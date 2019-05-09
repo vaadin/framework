@@ -96,7 +96,7 @@ public class MyComponentConnector extends AbstractComponentConnector {
 ....
 
 (`MyComponentServerRpc` is introduced in
-link:SendingEventsFromTheClientToTheServerUsingRPC.asciidoc[Sending
+link:SendingEventsFromTheClientToTheServerUsingRPC.html[Sending
 events from the client to the server using RPC]. `Window` here is
 `com.google.gwt.user.client.Window`, _not_ `com.vaadin.ui.Window`.)
 
