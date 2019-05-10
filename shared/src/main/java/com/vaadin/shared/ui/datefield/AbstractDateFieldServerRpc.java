@@ -17,6 +17,7 @@ package com.vaadin.shared.ui.datefield;
 
 import java.util.Map;
 
+import com.vaadin.shared.annotations.Delayed;
 import com.vaadin.shared.communication.ServerRpc;
 
 /**
@@ -39,6 +40,7 @@ public interface AbstractDateFieldServerRpc extends ServerRpc {
      *            {@code null}. If the map is empty, that means the
      *            {@code newDateString} is invalid
      */
+    @Delayed(lastOnly = true)
     void update(String newDateString, Map<String, Integer> resolutions);
 
     /**

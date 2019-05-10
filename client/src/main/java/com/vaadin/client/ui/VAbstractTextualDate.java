@@ -81,12 +81,19 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      */
     private boolean groupFocus;
 
+    /** For internal use only. May be removed or replaced in the future. */
+    private String inputPrompt = "";
+
+    private boolean prompting = false;
+
+    private static final String CLASSNAME_PROMPT = "prompt";
+
     public VAbstractTextualDate(R resoluton) {
         super(resoluton);
         text = new TextBox();
         text.addChangeHandler(this);
-        text.addFocusHandler(event -> fireBlurFocusEvent(event, true));
-        text.addBlurHandler(event -> fireBlurFocusEvent(event, false));
+        text.addFocusHandler(event -> fireFocusEvent(event));
+        text.addBlurHandler(event -> fireBlurEvent(event));
         if (BrowserInfo.get().isIE()) {
             addDomHandler(this, KeyDownEvent.getType());
         }
@@ -369,11 +376,32 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     }
 
     protected String getText() {
+        if (prompting) {
+            return "";
+        }
         return text.getText();
     }
 
     protected void setText(String text) {
+        if (inputPrompt != null && (text == null || "".equals(text))
+                && !this.text.getStyleName().contains(VTextField.CLASSNAME + "-"
+                        + VTextField.CLASSNAME_FOCUS)) {
+            text = readonly ? "" : inputPrompt;
+            setPrompting(true);
+        } else {
+            setPrompting(false);
+        }
+
         this.text.setText(text);
+    }
+
+    private void setPrompting(boolean prompting) {
+        this.prompting = prompting;
+        if (prompting) {
+            addStyleDependentName(CLASSNAME_PROMPT);
+        } else {
+            removeStyleDependentName(CLASSNAME_PROMPT);
+        }
     }
 
     @Override
@@ -406,17 +434,31 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         }
     }
 
-    private void fireBlurFocusEvent(DomEvent<?> event, boolean focus) {
+    private void fireFocusEvent(DomEvent<?> event) {
         String styleName = VTextField.CLASSNAME + "-"
                 + VTextField.CLASSNAME_FOCUS;
-        if (focus) {
-            text.addStyleName(styleName);
-        } else {
-            text.removeStyleName(styleName);
+
+        text.addStyleName(styleName);
+        if (prompting) {
+            text.setText("");
+            setPrompting(false);
         }
 
-        Scheduler.get().scheduleDeferred(() -> checkGroupFocus(focus));
+        Scheduler.get().scheduleDeferred(() -> checkGroupFocus(prompting));
+        // Needed for tooltip event handling
+        fireEvent(event);
+    }
 
+    private void fireBlurEvent(DomEvent<?> event) {
+        String styleName = VTextField.CLASSNAME + "-"
+                + VTextField.CLASSNAME_FOCUS;
+
+        text.removeStyleName(styleName);
+        if (prompting) {
+            text.setText(readonly ? "" : inputPrompt);
+        }
+
+        Scheduler.get().scheduleDeferred(() -> checkGroupFocus(prompting));
         // Needed for tooltip event handling
         fireEvent(event);
     }
