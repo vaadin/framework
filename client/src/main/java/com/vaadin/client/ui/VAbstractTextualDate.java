@@ -84,7 +84,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     /** For internal use only. May be removed or replaced in the future. */
     private String inputPrompt = "";
 
-    private boolean prompting = false;
+    public boolean prompting = false;
 
     private static final String CLASSNAME_PROMPT = "prompt";
 

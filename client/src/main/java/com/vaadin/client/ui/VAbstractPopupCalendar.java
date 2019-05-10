@@ -492,7 +492,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         super.buildDate();
 
         // Restore previous value if the input could not be parsed
-        if (!parsable) {
+        if (!parsable && prompting) {
             setText(previousValue);
         }
         updateTextFieldEnabled();
