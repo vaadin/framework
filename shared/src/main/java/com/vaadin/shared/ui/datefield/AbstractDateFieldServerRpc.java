@@ -40,8 +40,10 @@ public interface AbstractDateFieldServerRpc extends ServerRpc {
      *            {@code null}. If the map is empty, that means the
      *            {@code newDateString} is invalid
      */
-    @Delayed(lastOnly = true)
     void update(String newDateString, Map<String, Integer> resolutions);
+
+    @Delayed(lastOnly = true)
+    void updateValue(String newDateString, Map<String, Integer> resolutions);
 
     /**
      * Indicates to the server that the client-side has lost focus.

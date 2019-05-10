@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.ui.datefield.AbstractDateFieldConnector;
+import com.vaadin.shared.annotations.Delayed;
 import com.vaadin.shared.ui.datefield.AbstractDateFieldServerRpc;
 
 /**
@@ -283,6 +284,15 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      */
     public void sendBufferedValues() {
         rpc.update(bufferedDateString,
+                bufferedResolutions.entrySet().stream().collect(
+                        Collectors.toMap(entry -> entry.getKey().name(),
+                                entry -> entry.getValue())));
+        bufferedDateString = null;
+        bufferedResolutions.clear();
+    }
+
+    public void sendBufferedValues(boolean valueOnly) {
+        rpc.updateValue(bufferedDateString,
                 bufferedResolutions.entrySet().stream().collect(
                         Collectors.toMap(entry -> entry.getKey().name(),
                                 entry -> entry.getValue())));

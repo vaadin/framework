@@ -444,7 +444,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             setPrompting(false);
         }
 
-        Scheduler.get().scheduleDeferred(() -> checkGroupFocus(prompting));
+        Scheduler.get().scheduleDeferred(() -> checkGroupFocus(true));
         // Needed for tooltip event handling
         fireEvent(event);
     }
@@ -454,11 +454,14 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
                 + VTextField.CLASSNAME_FOCUS;
 
         text.removeStyleName(styleName);
+        String value = getText();
+        setPrompting(
+                inputPrompt != null && (value == null || "".equals(value)));
         if (prompting) {
             text.setText(readonly ? "" : inputPrompt);
         }
 
-        Scheduler.get().scheduleDeferred(() -> checkGroupFocus(prompting));
+        Scheduler.get().scheduleDeferred(() -> checkGroupFocus(false));
         // Needed for tooltip event handling
         fireEvent(event);
     }
@@ -483,6 +486,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
                 rpc.blur();
             }
             sendBufferedValues();
+            getClient().getServerRpcQueue().flush();
             groupFocus = newGroupFocus;
         }
     }
