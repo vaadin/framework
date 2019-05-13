@@ -23,8 +23,11 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.FocusUtil;
+import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Editor;
 import com.vaadin.client.widgets.Grid.EditorDomEvent;
+
+import java.util.List;
 
 /**
  * The default handler for Grid editor events. Offers several overridable
@@ -164,20 +167,26 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
 
                 int columnCount = event.getGrid().getVisibleColumns().size();
 
-                int colIndex = event.getFocusedColumnIndex() + colDelta;
+                int colIndex = colDelta > 0
+                        ? findNextEditableColumnIndex(event.getGrid(),
+                                event.getFocusedColumnIndex() + colDelta)
+                        : findPrevEditableColumnIndex(event.getGrid(),
+                                event.getFocusedColumnIndex() + colDelta);
                 int rowIndex = event.getRowIndex();
 
                 // Handle row change with horizontal move when column goes out
                 // of range.
-                if (rowDelta == 0) {
-                    if (colIndex >= columnCount
+                if (rowDelta == 0 && colIndex < 0) {
+                    if (colDelta > 0
                             && rowIndex < event.getGrid().getDataSource().size()
                                     - 1) {
                         rowDelta = 1;
-                        colIndex = 0;
-                    } else if (colIndex < 0 && rowIndex > 0) {
+                        colIndex = findNextEditableColumnIndex(event.getGrid(),
+                                0);
+                    } else if (colDelta < 0 && rowIndex > 0) {
                         rowDelta = -1;
-                        colIndex = columnCount - 1;
+                        colIndex = findPrevEditableColumnIndex(event.getGrid(),
+                                columnCount - 1);
                     }
                 }
 
@@ -188,6 +197,50 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         }
 
         return false;
+    }
+
+    /**
+     * Find nearest editable column
+     *
+     * @param grid
+     *            the current grid, not null.
+     * @param startingWith
+     *            start with this column. Index into the
+     *            {@link Grid#getVisibleColumns()}.
+     * @return the index of the nearest visible column; may return the
+     *         <code>startingWith</code> itself. Returns -1 if there is no such
+     *         column.
+     */
+    private int findNextEditableColumnIndex(Grid<T> grid, int startingWith) {
+        final List<Grid.Column<?, T>> columns = grid.getVisibleColumns();
+        for (int i = startingWith; i < columns.size(); i++) {
+            if (columns.get(i).isEditable()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Find nearest editable column
+     *
+     * @param grid
+     *            the current grid, not null.
+     * @param startingWith
+     *            start with this column. Index into the
+     *            {@link Grid#getVisibleColumns()}.
+     * @return the index of the nearest visible column; may return the
+     *         <code>startingWith</code> itself. Returns -1 if there is no such
+     *         column.
+     */
+    private int findPrevEditableColumnIndex(Grid<T> grid, int startingWith) {
+        final List<Grid.Column<?, T>> columns = grid.getVisibleColumns();
+        for (int i = startingWith; i >= 0; i--) {
+            if (columns.get(i).isEditable()) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -218,8 +271,15 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
             // Prevent tab out of Grid Editor
             event.getDomEvent().preventDefault();
 
-            editRow(event, event.getRowIndex(), event.getFocusedColumnIndex()
-                    + (e.getShiftKey() ? -1 : +1));
+            final int newColIndex = e.getShiftKey()
+                    ? findPrevEditableColumnIndex(event.getGrid(),
+                            event.getFocusedColumnIndex() - 1)
+                    : findNextEditableColumnIndex(event.getGrid(),
+                            event.getFocusedColumnIndex() + 1);
+
+            if (newColIndex >= 0) {
+                editRow(event, event.getRowIndex(), newColIndex);
+            }
 
             return true;
         } else if (e.getType().equals(BrowserEvents.KEYDOWN)
