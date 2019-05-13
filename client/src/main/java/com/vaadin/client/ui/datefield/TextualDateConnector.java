@@ -66,7 +66,6 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
                  * communicated to the server.
                  */
                 getWidget().sendBufferedValues();
-                getConnection().getServerRpcQueue().flush();
             }
         });
     }
