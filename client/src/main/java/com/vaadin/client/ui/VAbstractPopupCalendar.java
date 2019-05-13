@@ -496,7 +496,8 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
             setText(previousValue);
         }
         updateTextFieldEnabled();
-        updateBufferedValues();
+        bufferedDateString = text.getText();
+        updateBufferedResolutions();
         sendBufferedValues(true);
     }
 
