@@ -290,6 +290,15 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
         bufferedResolutions.clear();
     }
 
+    public void sendBufferedValueswithDelay() {
+        rpc.updateValue(bufferedDateString,
+                bufferedResolutions.entrySet().stream().collect(
+                        Collectors.toMap(entry -> entry.getKey().name(),
+                                entry -> entry.getValue())));
+        // bufferedDateString = null;
+        // bufferedResolutions.clear();
+    }
+
     /**
      * Returns all available resolutions for the field in the ascending order
      * (which is the same as order of enumeration ordinals).

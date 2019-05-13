@@ -17,6 +17,7 @@ package com.vaadin.shared.ui.datefield;
 
 import java.util.Map;
 
+import com.vaadin.shared.annotations.Delayed;
 import com.vaadin.shared.communication.ServerRpc;
 
 /**
@@ -40,6 +41,9 @@ public interface AbstractDateFieldServerRpc extends ServerRpc {
      *            {@code newDateString} is invalid
      */
     void update(String newDateString, Map<String, Integer> resolutions);
+
+    @Delayed(lastOnly = true)
+    void updateValue(String newDateString, Map<String, Integer> resolutions);
 
     /**
      * Indicates to the server that the client-side has lost focus.
