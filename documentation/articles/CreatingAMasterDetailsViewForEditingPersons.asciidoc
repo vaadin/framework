@@ -382,6 +382,6 @@ it is ready for production.
 
 You might have noticed that the person bean contains a reference to
 another bean, a address, which is not editable here. The tutorial
-link:CreatingACustomFieldForEditingTheAddressOfAPerson.html[Creating a custom field for editing the address of a person] goes
+<<CreatingACustomFieldForEditingTheAddressOfAPerson#, Creating a custom field for editing the address of a person>> goes
 through on how to edit beans within beans with a `CustomField`, which can
 be used directly as a field for the `FieldGroup`.
