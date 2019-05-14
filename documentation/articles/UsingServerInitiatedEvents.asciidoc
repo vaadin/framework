@@ -132,4 +132,4 @@ by using for instance a `ScheduledExecutorService` instead to make the
 executor service handle the iteration and interval (e.g. `Executors.newScheduledThreadPool(1).scheduleAtFixedRate(...)`).
 
 For more information on how to enable push or polling in your
-application, see link:EnablingServerPush.html[Enabling server push] or link:UsingPolling.html[Using polling].
+application, see <<EnablingServerPush#, Enabling server push>> or <<UsingPolling#, Using polling>>.
