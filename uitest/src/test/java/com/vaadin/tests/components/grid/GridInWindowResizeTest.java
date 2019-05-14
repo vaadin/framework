@@ -26,6 +26,12 @@ public class GridInWindowResizeTest extends MultiBrowserTest {
         GridElement grid = $(GridElement.class).first();
         int col1WidthBefore = grid.getCell(0, 0).getSize().getWidth();
         $(ButtonElement.class).caption("resize").first().click();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e){
+
+        }
+        
         int col1WidthAfter = grid.getCell(0, 0).getSize().getWidth();
 
         Assert.assertTrue(col1WidthAfter < col1WidthBefore);
