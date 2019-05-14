@@ -9,8 +9,8 @@ layout: page
 
 In this tutorial we will create an application where any user can send a
 broadcast message to all other active users. We will start from a
-project where push has been enabled (see link:EnablingServerPush.html[Enabling
-server push] for details).
+project where push has been enabled (see <<EnablingServerPush#, Enabling
+server push>> for details).
 
 For simplicity, we will use a static `Broadcaster` which is shared between
 all users and all sessions. Each UI will register itself to this
