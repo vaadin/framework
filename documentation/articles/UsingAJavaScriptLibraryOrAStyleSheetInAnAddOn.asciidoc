@@ -21,7 +21,7 @@ defining class is located. This means that e.g.
 `@StyleSheet({"redbutton.css"})` on the class `com.example.RedButton` will
 cause the file `com/example/redbutton.css` on the classpath to be loaded
 in the browser. `@JavaScript` works in exactly the same way - see
-link:IntegratingAJavaScriptComponent.html[Integrating a JavaScript component]
+<<IntegratingAJavaScriptComponent#, Integrating a JavaScript component>>
 for a practical example.
 
 [source,java]
