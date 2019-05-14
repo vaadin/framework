@@ -31,4 +31,4 @@ public void init(VaadinRequest request) {
 
 More examples on URI fragments and parameters can be found at:
 
-* link:UsingURIFragments.html[Using URI fragments]
+* <<UsingURIFragments#, Using URI fragments>>
