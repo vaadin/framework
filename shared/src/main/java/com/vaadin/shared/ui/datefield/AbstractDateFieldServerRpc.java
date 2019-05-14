@@ -42,8 +42,26 @@ public interface AbstractDateFieldServerRpc extends ServerRpc {
      */
     void update(String newDateString, Map<String, Integer> resolutions);
 
+    /**
+     * Updates the typed data string and resolution names and values with
+     * delayed rpc. The rpc will be sent by triggering another non
+     * {@link Delayed} annotated rpc.
+     *
+     * @since
+     *
+     * @param newDateString
+     *            the value of the text field part. It enables analyzing invalid
+     *            input on the server. {@code null} if the date was chosen with
+     *            popup calendar or contains user-typed string
+     * @param resolutions
+     *            map of time unit (resolution) name and value, the key is the
+     *            resolution name e.g. "HOUR", "MINUTE", the value can be
+     *            {@code null}. If the map is empty, that means the
+     *            {@code newDateString} is invalid
+     */
     @Delayed(lastOnly = true)
-    void updateValue(String newDateString, Map<String, Integer> resolutions);
+    void updateValueWithDelay(String newDateString,
+            Map<String, Integer> resolutions);
 
     /**
      * Indicates to the server that the client-side has lost focus.
