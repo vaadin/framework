@@ -100,3 +100,5 @@ are great, too.
 - <<ConfigureInputFieldsToGuideDataEntry#configure-input-fields-to-guide-data-entry,"Configure input fields to guide data entry">>
 - <<CreatingMultiTabApplications#creating-multi-tab-applications,"Creating multi-tab applications">>
 - <<AddingASplashScreen#adding-a-splash-sreen,"Adding a splash screen">>
+- <<ConnectingLargeAmountsOfDdataToUI#connecting-large-amounts-of-data-to-ui,"Connecting large amounts of data to UI">>
+
