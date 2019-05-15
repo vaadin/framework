@@ -109,5 +109,5 @@ application context, add a new bean, change method signature and other
 image:http://vaadinongrails.com/img/recompile-idea.png[Recompile IDEA]
 
 Now you can continue with
-link:VaadinOnGrailsDatabaseAccess.asciidoc[Vaadin
-on Grails - Database access]
+<<VaadinOnGrailsDatabaseAccess#, Vaadin
+on Grails - Database access>>

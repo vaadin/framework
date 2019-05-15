@@ -503,8 +503,7 @@ database using “lazy loading” implementations of the
 https://vaadin.com/api/com/vaadin/data/Container.html[Container API].
 You can pretty easily write a totally custom version for your specific
 use case, but the strongly suggested method is to use helpers like
-https://vaadin.com/web/matti/blog/-/blogs/connecting-large-amounts-of-data-to-ui[LazyList]
-or https://vaadin.com/addon/lazy-query-container[LazyQueryContainer]
+LazyList or https://vaadin.com/addon/lazy-query-container[LazyQueryContainer]
 instead.
 
 [[structuring_your_ui_code]]
