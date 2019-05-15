@@ -18,13 +18,13 @@ public class GridEventSentOnColumnVisibilityChangeTest extends SingleBrowserTest
 
         GridElement grid = $(GridElement.class).first();
         getSidebarOpenButton(grid).click();
-        //hide the first column
+        // hide the first column
         getSidebarPopup().findElements(By.tagName("td")).get(0).click();
 
-        Assert.assertEquals("There should have only log/event",
-                1, getLogs().size());
+        Assert.assertEquals("There should have only log/event", 1,
+                getLogs().size());
         Assert.assertTrue("Log content should match",
-                "1. UserOriginated: false".equals(getLogRow(0)));
+                "1. UserOriginated: true".equals(getLogRow(0)));
     }
 
     protected WebElement getSidebarOpenButton(GridElement grid) {
