@@ -4909,14 +4909,15 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     private void sort(boolean userOriginated) {
         // Set sort orders
         // In-memory comparator
-        getDataCommunicator().setInMemorySorting(createSortingComparator());
+        getDataCommunicator().setInMemorySorting(createSortingComparator(),
+                false);
 
         // Back-end sort properties
         List<QuerySortOrder> sortProperties = new ArrayList<>();
         sortOrder.stream().map(
                 order -> order.getSorted().getSortOrder(order.getDirection()))
                 .forEach(s -> s.forEach(sortProperties::add));
-        getDataCommunicator().setBackEndSorting(sortProperties);
+        getDataCommunicator().setBackEndSorting(sortProperties, true);
 
         // Close grid editor if it's open.
         if (getEditor().isOpen()) {
