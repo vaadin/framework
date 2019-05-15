@@ -200,7 +200,8 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
     }
 
     /**
-     * Find nearest editable column
+     * Finds index of the first editable column, starting at the specified
+     * index.
      *
      * @param grid
      *            the current grid, not null.
@@ -222,7 +223,8 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
     }
 
     /**
-     * Find nearest editable column
+     * Finds index of the last editable column, searching backwards starting at
+     * the specified index.
      *
      * @param grid
      *            the current grid, not null.
