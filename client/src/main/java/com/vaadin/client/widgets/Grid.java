@@ -639,6 +639,16 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 return null;
             }
 
+            protected int getSizeOfCellGroup(Column<?, ?> column) {
+                for (Entry<CELLTYPE, Set<Column<?, ?>>> entry : cellGroups
+                        .entrySet()) {
+                    if (entry.getValue().contains(column)) {
+                        return entry.getValue().size();
+                    }
+                }
+                return 0;
+            }
+
             void calculateColspans() {
                 // Reset all cells
                 for (CELLTYPE cell : this.cells.values()) {
@@ -4697,7 +4707,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     if (colspan <= 1) {
                         continue;
                     }
-                    final int cellColumnRightIndex = cellColumnIndex + colspan;
+                    final int cellColumnRightIndex = cellColumnIndex + row
+                            .getSizeOfCellGroup(getColumn(cellColumnIndex));
                     final Range cellRange = Range.between(cellColumnIndex,
                             cellColumnRightIndex);
                     final boolean intersects = draggedCellRange
