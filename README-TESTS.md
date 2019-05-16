@@ -10,12 +10,12 @@ is provided by the appropriate Vaadin UI class.
 
 All test UI classes go into `uitest/src`. These files are automatically packaged into a war file which is deployed to a Jetty server during the build process so that tests can open and interact with the UI:s. For development purposes, the Jetty server can be started (both in Eclipse, Intellij and from command-line), see running tests in Eclipse.
 
-The project is setup so that `/run` is mapped to a specialized servlet which allows you to add the UI you want to test to the URL, e.g. http://localhost:8888/run/com.vaadin.tests.component.label.LabelModes or just http://localhost:8888/run/LabelModes if there are no multiple classes named LabelModes. Because of caching, the ?restartApplication parameter is needed after the first run if you want to run multiple test classes.
+The project is setup so that `/run` is mapped to a specialized servlet which allows you to add the UI you want to test to the URL, e.g. [http://localhost:8888/run/com.vaadin.tests.component.label.LabelModes](http://localhost:8888/run/com.vaadin.tests.component.label.LabelModes) or just [http://localhost:8888/run/LabelModes](http://localhost:8888/run/LabelModes) if there are no multiple classes named LabelModes. Because of caching, the `?restartApplication` parameter is needed after the first run if you want to run multiple test classes.
 
 # QuickStart: Running one test
 
-The test logic is present in the TB3+ tests, however they need a webserver to connect to. Read below
-on how to run such webserver.
+The test logic code resides in the TB3+ JUnit tests. However the tests need a webserver to connect to. Read below
+on how to run such a webserver.
 
 ## Starting the WebServer: Hosting your UI class in Jetty
 
