@@ -48,7 +48,7 @@ public class TreeGridBigDetailsManager extends AbstractTestUI {
         treeGrid.setSizeFull();
         treeGrid.addColumn(String::toString).setCaption("String")
                 .setId("string");
-        treeGrid.addColumn((i) -> "--").setCaption("Nothing");
+        treeGrid.addColumn((i) -> items.indexOf(i)).setCaption("Index");
         treeGrid.setHierarchyColumn("string");
         treeGrid.setDetailsGenerator(
                 row -> new Label("details for " + row.toString()));
@@ -77,6 +77,7 @@ public class TreeGridBigDetailsManager extends AbstractTestUI {
             treeGrid.collapse(items);
         });
         collapseAll.setId("collapseAll");
+        @SuppressWarnings("deprecation")
         Button scrollTo55 = new Button("Scroll to 55",
                 event -> treeGrid.scrollTo(55));
         scrollTo55.setId("scrollTo55");
