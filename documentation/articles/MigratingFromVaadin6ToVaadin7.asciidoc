@@ -8,7 +8,7 @@ layout: page
 = Migrating from Vaadin 6 to Vaadin 7
 
 For migration to Vaadin 7.1,  see
-<<MigratingFromVaadin7.0ToVaadin7.1#migrating-from-vaadin-7.0-to-vaadin-7.1,
+<<MigratingFromVaadin7%2E0ToVaadin7%2E1#migrating-from-vaadin-7%2E0-to-vaadin-7%2E1,
 Migrating From Vaadin 7.0 To Vaadin 7.1>>
 
 [[getting-started]]
