@@ -127,6 +127,32 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         return false;
     }
 
+    private static class Delta {
+        public int rowDelta;
+        public int colDelta;
+
+        public Delta(int rowDelta, int colDelta) {
+            this.rowDelta = rowDelta;
+            this.colDelta = colDelta;
+        }
+
+        public boolean isChanged() {
+            return rowDelta != 0 || colDelta != 0;
+        }
+    }
+
+    protected Delta getDeltaFromKeyDownEvent(EditorDomEvent<T> event) {
+        Event e = event.getDomEvent();
+        if (e.getKeyCode() == KEYCODE_MOVE_VERTICAL) {
+            return new Delta(e.getShiftKey() ? -1 : +1, 0);
+        } else if (e.getKeyCode() == KEYCODE_MOVE_HORIZONTAL) {
+            // Prevent tab out of Grid Editor
+            event.getDomEvent().preventDefault();
+            return new Delta(0, (e.getShiftKey() ? -1 : +1));
+        }
+        return new Delta(0, 0);
+    }
+
     /**
      * Moves the editor to another row or another column if the received event
      * is a move event. The default implementation moves the editor to the
@@ -153,47 +179,37 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
             return true;
         } else if (e.getTypeInt() == Event.ONKEYDOWN) {
 
-            int rowDelta = 0;
-            int colDelta = 0;
-
-            if (e.getKeyCode() == KEYCODE_MOVE_VERTICAL) {
-                rowDelta = (e.getShiftKey() ? -1 : +1);
-            } else if (e.getKeyCode() == KEYCODE_MOVE_HORIZONTAL) {
-                colDelta = (e.getShiftKey() ? -1 : +1);
-                // Prevent tab out of Grid Editor
-                event.getDomEvent().preventDefault();
-            }
-
-            final boolean changed = rowDelta != 0 || colDelta != 0;
+            final Delta delta = getDeltaFromKeyDownEvent(event);
+            final boolean changed = delta.isChanged();
 
             if (changed) {
 
                 int columnCount = event.getGrid().getVisibleColumns().size();
 
-                int colIndex = colDelta > 0
+                int colIndex = delta.colDelta > 0
                         ? findNextEditableColumnIndex(event.getGrid(),
-                                event.getFocusedColumnIndex() + colDelta)
+                                event.getFocusedColumnIndex() + delta.colDelta)
                         : findPrevEditableColumnIndex(event.getGrid(),
-                                event.getFocusedColumnIndex() + colDelta);
+                                event.getFocusedColumnIndex() + delta.colDelta);
                 int rowIndex = event.getRowIndex();
 
                 // Handle row change with horizontal move when column goes out
                 // of range.
-                if (rowDelta == 0 && colIndex < 0) {
-                    if (colDelta > 0
+                if (delta.rowDelta == 0 && colIndex < 0) {
+                    if (delta.colDelta > 0
                             && rowIndex < event.getGrid().getDataSource().size()
                                     - 1) {
-                        rowDelta = 1;
+                        delta.rowDelta = 1;
                         colIndex = findNextEditableColumnIndex(event.getGrid(),
                                 0);
-                    } else if (colDelta < 0 && rowIndex > 0) {
-                        rowDelta = -1;
+                    } else if (delta.colDelta < 0 && rowIndex > 0) {
+                        delta.rowDelta = -1;
                         colIndex = findPrevEditableColumnIndex(event.getGrid(),
                                 columnCount - 1);
                     }
                 }
 
-                editRow(event, rowIndex + rowDelta, colIndex);
+                editRow(event, rowIndex + delta.rowDelta, colIndex);
             }
 
             return changed;
