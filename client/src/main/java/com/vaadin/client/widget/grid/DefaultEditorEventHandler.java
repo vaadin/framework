@@ -127,7 +127,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         return false;
     }
 
-    private static class Delta {
+    public static class Delta {
         public int rowDelta;
         public int colDelta;
 
