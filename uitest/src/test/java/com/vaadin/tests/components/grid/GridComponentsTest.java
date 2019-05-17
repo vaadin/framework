@@ -248,9 +248,29 @@ public class GridComponentsTest extends MultiBrowserTest {
 
         // Navigate to currently out of viewport TextField on Row 8
         new Actions(getDriver()).sendKeys(Keys.TAB, Keys.TAB).perform();
-        assertTrue("Grid should be scrolled to show row 7",
+        assertTrue("Grid should be scrolled to show row 8",
                 Integer.parseInt(grid.getVerticalScroller()
                         .getAttribute("scrollTop")) > scrollTopRow7);
+
+        // Focus button in first visible row of Grid
+        grid.getCell(2, 2).findElement(By.id("row_2")).click();
+        int scrollTopRow2 = Integer
+                .parseInt(grid.getVerticalScroller().getAttribute("scrollTop"));
+
+        // Navigate to currently out of viewport Button on Row 1
+        new Actions(getDriver()).sendKeys(Keys.chord(Keys.SHIFT, Keys.TAB),
+                Keys.chord(Keys.SHIFT, Keys.TAB)).perform();
+        int scrollTopRow1 = Integer
+                .parseInt(grid.getVerticalScroller().getAttribute("scrollTop"));
+        assertTrue("Grid should be scrolled to show row 1",
+                scrollTopRow1 < scrollTopRow2);
+
+        // Continue further to the very first row
+        new Actions(getDriver()).sendKeys(Keys.chord(Keys.SHIFT, Keys.TAB),
+                Keys.chord(Keys.SHIFT, Keys.TAB)).perform();
+        assertTrue("Grid should be scrolled to show row 0",
+                Integer.parseInt(grid.getVerticalScroller()
+                        .getAttribute("scrollTop")) < scrollTopRow1);
 
         // Focus button in last row of Grid
         grid.getCell(999, 2).findElement(By.id("row_999")).click();

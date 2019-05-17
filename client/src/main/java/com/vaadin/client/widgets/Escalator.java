@@ -2811,10 +2811,17 @@ public class Escalator extends Widget
                  *
                  * The viewportOffsetTop is positive and we round up, and
                  * visualRowOrder can't be empty, so there is always going to be
-                 * at least one row to move.
+                 * at least one row to move. There should also be one extra that
+                 * actually falls outside of the viewport, in order to ensure
+                 * that tabulator navigation works if the rows have components
+                 * in them.
                  */
                 int rowsToFillTheGap = (int) Math
                         .ceil(viewportOffsetTop / getDefaultRowHeight());
+                // add the extra row if there is room for it
+                if (rowsToFillTheGap < getTopRowLogicalIndex()) {
+                    ++rowsToFillTheGap;
+                }
                 // we may have scrolled up past all the rows and beyond, can
                 // only re-purpose as many rows as we have
                 int rowsToRePurpose = Math.min(rowsToFillTheGap,
@@ -2851,10 +2858,10 @@ public class Escalator extends Widget
                  * scrolled more than the topmost visual row. It's better to
                  * have any extra rows below than above, so move as many of them
                  * as possible regardless of how many are needed to fill the
-                 * gap. It should not be possible to scroll down enough to
-                 * create a gap without it being possible to re-purpose rows to
-                 * fill the gap, so viewport itself doesn't need adjusting no
-                 * matter what.
+                 * gap, as long as one extra row remains at the top. It should
+                 * not be possible to scroll down enough to create a gap without
+                 * it being possible to re-purpose rows to fill the gap, so
+                 * viewport itself doesn't need adjusting no matter what.
                  */
 
                 // we already have the rows and spacers here and we don't want
@@ -2868,6 +2875,12 @@ public class Escalator extends Widget
                 // partially visible rows
                 int rowsToCoverTheExtra = (int) (extraRowPxAbove
                         / getDefaultRowHeight());
+                // if there are rows left over, add one to ensure there is an
+                // extra tab navigation helper row
+                if (getTopRowLogicalIndex() + visualRowOrder.size()
+                        + rowsToCoverTheExtra < getRowCount()) {
+                    ++rowsToCoverTheExtra;
+                }
                 /*
                  * Don't move more rows than there are to move, but also don't
                  * move more rows than should exist at the bottom. However, it's
@@ -2943,6 +2956,26 @@ public class Escalator extends Widget
                     // the insertion index is the new top row logical index
                     setTopRowLogicalIndex(logicalRowIndex);
                 }
+
+                rowsWereMoved = true;
+            } else if (viewportOffsetBottom == 0 && getTopRowLogicalIndex()
+                    + visualRowOrder.size() < getRowCount() - 2) {
+                // last row within visual cache is shown completely and there
+                // are still rows left over, switch one over from the top
+                moveAndUpdateEscalatorRows(Range.between(0, 1),
+                        visualRowOrder.size(),
+                        getTopRowLogicalIndex() + visualRowOrder.size());
+                updateTopRowLogicalIndex(1);
+
+                rowsWereMoved = true;
+            } else if (viewportOffsetTop == 0 && getTopRowLogicalIndex() > 0) {
+                // first row within visual cache is shown completely and there
+                // are still rows left over, switch one over from the bottom
+                moveAndUpdateEscalatorRows(
+                        Range.between(visualRowOrder.size() - 1,
+                                visualRowOrder.size()),
+                        0, getTopRowLogicalIndex() - 1);
+                updateTopRowLogicalIndex(-1);
 
                 rowsWereMoved = true;
             }
@@ -3828,11 +3861,12 @@ public class Escalator extends Widget
             double heightOfSection = getHeightOfSection();
             // By including the possibly shown scrollbar height, we get a
             // consistent count and do not add/remove rows whenever a scrollbar
-            // is shown
+            // is shown. Make sure that two extra rows are included for
+            // assisting with navigation on both sides of the viewport.
             heightOfSection += horizontalScrollbarDeco.getOffsetHeight();
             double defaultRowHeight = getDefaultRowHeight();
             final int maxVisibleRowCount = (int) Math
-                    .ceil(heightOfSection / defaultRowHeight) + 1;
+                    .ceil(heightOfSection / defaultRowHeight) + 2;
 
             /*
              * maxVisibleRowCount can become negative if the headers and footers
