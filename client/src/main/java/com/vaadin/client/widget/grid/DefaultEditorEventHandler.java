@@ -21,7 +21,10 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.Util;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.FocusUtil;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Editor;
@@ -212,14 +215,24 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
      *         <code>startingWith</code> itself. Returns -1 if there is no such
      *         column.
      */
-    private int findNextEditableColumnIndex(Grid<T> grid, int startingWith) {
+    protected int findNextEditableColumnIndex(Grid<T> grid, int startingWith) {
         final List<Grid.Column<?, T>> columns = grid.getVisibleColumns();
         for (int i = startingWith; i < columns.size(); i++) {
-            if (columns.get(i).isEditable()) {
+            if (isEditable(grid, columns.get(i))) {
                 return i;
             }
         }
         return -1;
+    }
+
+    protected boolean isEditable(Grid<T> grid, Grid.Column<?, T> column) {
+        if (!column.isEditable()) {
+            return false;
+        }
+        final Widget editorCell = grid.getEditorWidget(column);
+        final ComponentConnector connector = Util.findConnectorFor(editorCell);
+        final AbstractFieldConnector field = (AbstractFieldConnector) connector;
+        return !field.isReadOnly() && field.isEnabled();
     }
 
     /**
@@ -235,10 +248,10 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
      *         <code>startingWith</code> itself. Returns -1 if there is no such
      *         column.
      */
-    private int findPrevEditableColumnIndex(Grid<T> grid, int startingWith) {
+    protected int findPrevEditableColumnIndex(Grid<T> grid, int startingWith) {
         final List<Grid.Column<?, T>> columns = grid.getVisibleColumns();
         for (int i = startingWith; i >= 0; i--) {
-            if (columns.get(i).isEditable()) {
+            if (isEditable(grid, columns.get(i))) {
                 return i;
             }
         }

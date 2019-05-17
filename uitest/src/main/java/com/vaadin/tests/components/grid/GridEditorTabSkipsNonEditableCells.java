@@ -31,7 +31,14 @@ public class GridEditorTabSkipsNonEditableCells extends AbstractTestUI {
         grid.getEditor().setEnabled(true);
         grid.getColumn("col1").setEditorComponent(new TextField());
         grid.getColumn("col3").setEditorComponent(new TextField());
-        grid.setColumnOrder("col0", "col1", "col2", "col3", "col4");
+        final TextField disabledField = new TextField();
+        disabledField.setEnabled(false);
+        grid.getColumn("col5").setEditorComponent(disabledField);
+        final TextField readOnlyField = new TextField();
+        readOnlyField.setReadOnly(true);
+        grid.getColumn("col6").setEditorComponent(readOnlyField);
+        grid.setColumnOrder("col0", "col1", "col2", "col3", "col4", "col5",
+                "col6");
 
         getLayout().addComponent(
                 new Button("Set Editor Buffered Mode On", event -> {
@@ -57,7 +64,7 @@ public class GridEditorTabSkipsNonEditableCells extends AbstractTestUI {
         return "Pressing TAB doesn't shift the focus to non-editable cells when the Grid is in edit mode.";
     }
 
-    public class TestBean {
+    public static class TestBean {
         private final int row;
 
         public TestBean(int row) {
@@ -84,6 +91,14 @@ public class GridEditorTabSkipsNonEditableCells extends AbstractTestUI {
             return "col4_" + row;
         }
 
+        public String getCol5() {
+            return "col5_" + row;
+        }
+
+        public String getCol6() {
+            return "col6_" + row;
+        }
+
         public void setCol0(String value) {
         }
 
@@ -97,6 +112,12 @@ public class GridEditorTabSkipsNonEditableCells extends AbstractTestUI {
         }
 
         public void setCol4(String value) {
+        }
+
+        public void setCol5(String value) {
+        }
+
+        public void setCol6(String value) {
         }
     }
 }
