@@ -7492,15 +7492,19 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Scrolls to the beginning of the very first row.
      */
     public void scrollToStart() {
-        scrollToRow(0, ScrollDestination.START);
+        if (getEscalator().getBody().getRowCount() > 0) {
+            scrollToRow(0, ScrollDestination.START);
+        }
     }
 
     /**
      * Scrolls to the end of the very last row.
      */
     public void scrollToEnd() {
-        scrollToRow(escalator.getBody().getRowCount() - 1,
-                ScrollDestination.END);
+        if (getEscalator().getBody().getRowCount() > 0) {
+            scrollToRow(escalator.getBody().getRowCount() - 1,
+                    ScrollDestination.END);
+        }
     }
 
     /**
