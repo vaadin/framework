@@ -10,7 +10,7 @@ Helpful articles about Vaadin Framework written by the users for the users. The
 articles are presented as written by the author. Vaadin does not edit or maintain them.
 Pull requests welcome!
 
-NOTE: All contributions are very welcome! Just write your article in link:asciidoctor.org/docs/asciidoc-writers-guide[AsciiDoc],
+NOTE: All contributions are very welcome! Just write your article in link:https://asciidoctor.org/docs/asciidoc-writers-guide[AsciiDoc],
 put it in this directory and send us a pull request. Updates to existing articles
 are great, too.
 
