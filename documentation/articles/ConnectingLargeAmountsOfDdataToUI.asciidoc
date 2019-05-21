@@ -8,7 +8,7 @@ layout: page
 = Connecting large amounts of data to UI
 
 [NOTE]
-The content is posted by *Matti Tahvonen*, who has a long history in Vaadin R&D: developing the core framework from the dark ages of pure JS client side to the GWT era and creating number of official and unofficial Vaadin add-ons. His current responsibility is to keep you up to date with latest and greatest Vaadin related technologies.
+The content is posted by *Matti Tahvonen*, who has a long history in Vaadin R&D: developing the core framework from the dark ages of pure JS client side to the GWT era and creating number of official and unofficial Vaadin add-ons. Currently, he works as the Product Manager of Framework.
 
 Connecting large amounts of data to UI may sometimes become a tricky task. Although you really aren’t earning any “UX medals” by listing thousands of entities in a UI data table, it is still often done due to its simplicity. I have done it and probably will do it in the future too. In most cases, with modern software and hardware, it is really simple: just load the whole DB table into memory, connect it to you UI and *be happy*. But if there is really really really lots of data, or you really have more than couple of concurrent users in your system, this approach may become a performance issue and then you might face a completely new set of problems.
 
@@ -23,7 +23,7 @@ There are several issues that may make listing lots of data in UI problematic:
 * Too much CPU consumed by the client (read: latency in UI)
 * Too much memory consumed by the client
  
-The most common solution is “paging” that is implemented at all layers of your system from the UI to the backend. The fact that Vaadin UI components like the Table or the link:https://vaadin.com/blog/grid-beta-released[upcoming Grid] provides a cool “pageless” scrolling don’t make the topic much simpler. They tackle well the issues on the wire and client, but issues may still appear on the server. A typical Vaadin solution for too high server side resource usage issue is to change to another Container implementation or write a custom tailored by yourself. There are lots of replacements for in memory containers like SQLContainer, JPAContainer and the popular link:https://vaadin.com/directory/component/lazy-query-container[LazyQueryContainer], 
+The most common solution is “paging” that is implemented at all layers of your system from the UI to the backend. The fact that Vaadin UI components like the Table or the link:https://vaadin.com/blog/grid-beta-released[Grid] provides a cool “pageless” scrolling don’t make the topic much simpler. They tackle well the issues on the wire and client, but issues may still appear on the server. A typical Vaadin solution for too high server side resource usage issue is to change to another Container implementation or write a custom tailored by yourself. There are lots of replacements for in memory containers like SQLContainer, JPAContainer and the popular link:https://vaadin.com/directory/component/lazy-query-container[LazyQueryContainer], 
 that can be adopted to pretty much any situation.
 
 = A fresh start to tackle server side issues
