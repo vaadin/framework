@@ -167,8 +167,7 @@ public class WindowHeaderButtonKeyboardActionsTest extends MultiBrowserTest {
                 closeButton.equals(driver.switchTo().activeElement()));
 
         pressKeyAndWait(Keys.ENTER);
-        assertTrue(
-                "Window is not closed when focus is shifted back-and-forth",
+        assertTrue("Window is not closed when focus is shifted back-and-forth",
                 findElements(By.className("v-window")).size() == 0);
     }
 
