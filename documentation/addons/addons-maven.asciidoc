@@ -14,7 +14,7 @@ To use add-ons in a Maven project, you simply have to add them as dependencies i
 Most add-ons include client-side widgets, counterparts of the server-side components.
 The add-on widgets will be included and compiled into the _application widget set_.
 Compiling the widget set is handled by the Vaadin Maven Plugin.
-It is enabled in Maven projects created from the Vaadin archetypes, as described in <<DUMMY/../../getting-started/getting-started-overview#getting-started.overview, "Getting Started">>.
+It is enabled in Maven projects created from the Vaadin archetypes, as described in <<../getting-started/getting-started-overview#getting-started.overview, "Getting Started">>.
 
 The plugin will attempt to automatically detect if you need to compile the application widget set.
 It will generate a [filename]#target/generated-sources/gwt/AppWidgetset.gwt.xml# widget set descriptor, update it when necessary, and use it for compiling the widget set.

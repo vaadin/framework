@@ -44,7 +44,7 @@ The parameters are as follows:
 archetypes.
 
 [parameter]#archetypeArtifactId#:: The archetype ID.
-See the list of available archetypes in <<dummy/../../../framework/getting-started/getting-started-archetypes#getting-started.archetypes,"Overview of Maven Archetypes">>.
+See the list of available archetypes in <<getting-started-archetypes#getting-started.archetypes,"Overview of Maven Archetypes">>.
 
 [parameter]#archetypeVersion#::
 Version of the archetype to use.
@@ -106,7 +106,7 @@ http://localhost:8080/project-name.
 ((("Maven", "using add-ons", id="term.maven.addons", range="startofrange")))
 
 If you use Vaadin add-ons from the http://vaadin.com/directory[Vaadin Directory], you need to add them as dependencies in the project POM.
-The instructions are given in <<dummy/../../../framework/addons/addons-maven#addons.maven, "Using Add-ons in a
+The instructions are given in <<../addons/addons-maven#addons.maven, "Using Add-ons in a
 Maven Project">>.
 
 _In projects that use Vaadin 7.6 or older_, you need to compile the widget set manually.

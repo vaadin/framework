@@ -13,7 +13,7 @@ using multiple different Vaadin versions in different portlets on a page.
 For general OSGi considerations with Vaadin Framework such as packaging and
 bundle manifests, and how to publish static resources such as themes and
 widget sets, see
-<<dummy/../../../framework/advanced/advanced-osgi#advanced.osgi,"Vaadin OSGi Support">>.
+<<../advanced/advanced-osgi#advanced.osgi,"Vaadin OSGi Support">>.
 
 
 [[portal.osgi.portlet]]

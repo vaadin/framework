@@ -1,7 +1,7 @@
 [[getting-started]]
 == Creating a Vaadin Application
 
-TIP: If you are new to Vaadin, we suggest to start with <<dummy/../../../framework/tutorial#tutorial,"the tutorial">>. It also contains instructions how to set up Eclipse based development environment.
+TIP: If you are new to Vaadin, we suggest to start with <<../tutorial#tutorial,"the tutorial">>. It also contains instructions how to set up Eclipse based development environment.
 
 This chapter gives practical instructions for creating a Vaadin application project and deploying it to a server to run it. We also consider topics such as debugging.
 

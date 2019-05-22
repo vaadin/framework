@@ -65,18 +65,18 @@ A conflict causes throwing a [classname]#GridLayout.OverlapsException#.
 [[layout.gridlayout.sizing]]
 == Sizing Grid Cells
 
-You can define the size of both a grid layout and its components in either fixed or percentual units, or leave the size undefined altogether, as described in <<dummy/../../../framework/components/components-features#components.features.sizeable,"Sizing Components">>.
-<<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout Size">> gives an introduction to sizing of layouts.
+You can define the size of both a grid layout and its components in either fixed or percentual units, or leave the size undefined altogether, as described in <<../components/components-features#components.features.sizeable,"Sizing Components">>.
+<<layout-settings#layout.settings.size,"Layout Size">> gives an introduction to sizing of layouts.
 
 The size of the [classname]#GridLayout# component is undefined by default, so it will shrink to fit the size of the components placed inside it.
 In most cases, especially if you set a defined size for the layout but do not set the contained components to full size, there will be some unused space.
 The position of the non-full components within the grid cells will be determined by their __alignment__.
-See <<dummy/../../../framework/layout/layout-settings#layout.settings.alignment,"Layout Cell Alignment">> for details on how to align the components inside the cells.
+See <<layout-settings#layout.settings.alignment,"Layout Cell Alignment">> for details on how to align the components inside the cells.
 
 The components contained within a [classname]#GridLayout# layout can be laid out
 in a number of different ways depending on how you specify their height or
 width.
-The layout options are similar to [classname]#HorizontalLayout# and [classname]#VerticalLayout#, as described in <<dummy/../../../framework/layout/layout-orderedlayout#layout.orderedlayout, "VerticalLayout and HorizontalLayout">>.
+The layout options are similar to [classname]#HorizontalLayout# and [classname]#VerticalLayout#, as described in <<layout-orderedlayout#layout.orderedlayout, "VerticalLayout and HorizontalLayout">>.
 
 [WARNING]
 .A layout that contains components with percentual size must have a defined size!
@@ -86,7 +86,7 @@ the component would fill the space given by the layout, while the layout would
 shrink to fit the space taken by the component, which is a paradox. This
 requirement holds for height and width separately. The debug mode allows
 detecting such invalid cases; see
-<<dummy/../../../framework/advanced/advanced-debug#advanced.debug.mode,"Enabling
+<<../advanced/advanced-debug#advanced.debug.mode,"Enabling
 the Debug Mode">>.
 ====
 

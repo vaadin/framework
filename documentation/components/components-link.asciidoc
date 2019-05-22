@@ -14,7 +14,7 @@ endif::web[]
 
 The [classname]#Link# component allows making hyperlinks. References to
 locations are represented as resource objects, explained in
-<<dummy/../../../framework/application/application-resources#application.resources,"Images
+<<../application/application-resources#application.resources,"Images
 and Other Resources">>. The [classname]#Link# is a regular HTML hyperlink, that
 is, an [literal]#++<a href>++# anchor element that is handled natively by the
 browser. Unlike when clicking a [classname]#Button#, clicking a
@@ -107,7 +107,7 @@ In addition to the [classname]#Link# component, Vaadin allows alternative ways t
 Also, you can make hyperlinks (or any other HTML) in a [classname]#Label# in HTML content mode.
 
 The [classname]#Button# component has a [parameter]#ValoTheme.BUTTON_LINK# style name that makes it look like a hyperlink, while handling clicks in a server-side click listener instead of in the browser.
-However, browsers do not generally allow opening new windows after server side round trip, so for such tasks you need to use the [classname]#BrowserWindowOpener# extension described in <<dummy/../../../framework/advanced/advanced-windows#advanced.windows.popup, "Opening Pop-up Windows">>
+However, browsers do not generally allow opening new windows after server side round trip, so for such tasks you need to use the [classname]#BrowserWindowOpener# extension described in <<../advanced/advanced-windows#advanced.windows.popup, "Opening Pop-up Windows">>
 
 
 == CSS Style Rules

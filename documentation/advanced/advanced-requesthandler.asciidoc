@@ -10,7 +10,7 @@ layout: page
 Request handlers are useful for catching request parameters or generating
 dynamic content, such as HTML, images, PDF, or other content. You can provide
 HTTP content also with stream resources, as described in
-<<dummy/../../../framework/application/application-resources#application.resources.stream,"Stream
+<<../application/application-resources#application.resources.stream,"Stream
 Resources">>. The stream resources, however, are only usable from within a
 Vaadin application, such as in an [classname]#Image# component. Request handlers
 allow responding to HTTP requests made with the application URL, including GET

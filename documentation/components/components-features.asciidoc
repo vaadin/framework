@@ -114,7 +114,7 @@ A description is rendered as a tooltip in most components.
 When a component error has been set with [methodname]#setComponentError()#, the
 error is usually also displayed in the tooltip, below the description.
 Components that are in error state will also display the error indicator. See
-<<dummy/../../../framework/application/application-errors#application.errors.error-indicator, "Error Indicator and Message">>.
+<<../application/application-errors#application.errors.error-indicator, "Error Indicator and Message">>.
 
 The description is actually not plain text, but you can use HTML tags to format
 it. Such a rich text description can contain any HTML elements, including
@@ -245,7 +245,7 @@ icon themselves and display it inside the component.
 
 In addition to image resources, you can use __font icons__, which are icons
 included in special fonts, but which are handled as special resources. See
-<<dummy/../../../framework/themes/themes-fonticon#themes.fonticon,"Font Icons">>
+<<../themes/themes-fonticon#themes.fonticon,"Font Icons">>
 for more details.
 
 === CSS Style Rules
@@ -543,10 +543,10 @@ can set the height, width, or both as undefined with the methods [methodname]#se
 [methodname]#setHeightUndefined()#, and [methodname]#setSizeUndefined()#, respectively.
 
 Always keep in mind that _a layout with undefined size may not contain components with defined relative size_, such as "full size", except in some special cases.
-See <<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout Size">> for details.
+See <<../layout/layout-settings#layout.settings.size,"Layout Size">> for details.
 
 If a component inside [classname]#HorizontalLayout# or [classname]#VerticalLayout# has full size in the namesake direction of the layout, the component will expand to take all available space not needed by the other components.
-See <<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout Size">> for details.
+See <<../layout/layout-settings#layout.settings.size,"Layout Size">> for details.
 
 == Managing Input Focus
 

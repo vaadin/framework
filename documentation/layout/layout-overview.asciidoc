@@ -66,13 +66,13 @@ Or in the declarative format (roughly):
 You will usually need to tune the layout components a bit by setting sizes,
 expansion ratios, alignments, spacings, and so on. The general settings are
 described in
-<<dummy/../../../framework/layout/layout-settings#layout.settings,"Layout
+<<layout-settings#layout.settings,"Layout
 Formatting">>.
 
 Layouts are coupled with themes that specify various layout features, such as
 backgrounds, borders, text alignment, and so on. Definition and use of themes is
 described in
-<<dummy/../../../framework/themes/themes-overview.asciidoc#themes.overview,"Themes">>.
+<<../themes/themes-overview.asciidoc#themes.overview,"Themes">>.
 
 You can see a finished version of the above example in
 <<figure.layout.intro.simple>>.

@@ -63,7 +63,7 @@ not sanitize it just by removing all HTML tags. Also many attributes, such as
 [parameter]#style#, should pass through the sanitization.
 
 See
-<<dummy/../../../framework/advanced/advanced-security#advanced.security.sanitizing,"Sanitizing
+<<../advanced/advanced-security#advanced.security.sanitizing,"Sanitizing
 User Input to Prevent Cross-Site Scripting">> for more details on Cross-Site
 scripting vulnerabilities and sanitization of user input.
 

@@ -65,7 +65,7 @@ Hence it will slow down significantly if used with large itemsets.
 The lazy loading feature could be implemented using two single column Grids instead.
 
 Common selection component features are described in
-<<dummy/../../../framework/components/components-selection#components.selection,"Selection
+<<components-selection#components.selection,"Selection
 Components">>.
 
 == CSS Style Rules

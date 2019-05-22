@@ -80,7 +80,7 @@ resources must be loaded from the same domain as the application. The problem
 occurs only in Firefox. A SecurityError is shown in the debug window. The
 limitation concerns stylesheets such as for web fonts served from external
 sites, as described in
-<<dummy/../../../framework/themes/themes-fonts#themes.fonts.webfonts,"Loading
+<<themes-fonts#themes.fonts.webfonts,"Loading
 Web Fonts">>.
 endif::web[]
 
@@ -172,7 +172,7 @@ You could also play with the [literal]#++display: block++# vs
 Notice that, while the [classname]#Responsive# extension makes it possible to do
 various CSS trickery with component sizes, the normal rules for component and
 layout sizes apply, as described in
-<<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout
+<<layout-settings#layout.settings.size,"Layout
 Size">> and elsewhere, and you should always check the size behaviour of the
 components. In the above example, we set the label to have undefined width,
 which disables word wrap, so we had to re-enable it.
