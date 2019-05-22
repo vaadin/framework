@@ -155,4 +155,4 @@ proper parameters and add the dependency to, for example, MySql driver
 in `BuildConfig.groovy`.
 image:http://vaadinongrails.com/img/idea-datasource.png[IDEA data source]
 
-You can continue with link:VaadinOnGrailsMultipleUIs.asciidoc[Vaadin on Grails - Multiple UIs]
+You can continue with <<VaadinOnGrailsMultipleUIs#, Vaadin on Grails - Multiple UIs>>
