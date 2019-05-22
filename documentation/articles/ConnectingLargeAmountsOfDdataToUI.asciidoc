@@ -1,0 +1,50 @@
+---
+title: Connecting large amounts of data to UI
+order: 86
+layout: page
+---
+
+[[connecting-large-amounts-of-data-to-ui]]
+= Connecting large amounts of data to UI
+
+[NOTE]
+The content is posted by *Matti Tahvonen*, who has a long history in Vaadin R&D: developing the core framework from the dark ages of pure JS client side to the GWT era and creating number of official and unofficial Vaadin add-ons. Currently, he works as the Product Manager of Framework.
+
+Connecting large amounts of data to UI may sometimes become a tricky task. Although you really aren’t earning any “UX medals” by listing thousands of entities in a UI data table, it is still often done due to its simplicity. I have done it and probably will do it in the future too. In most cases, with modern software and hardware, it is really simple: just load the whole DB table into memory, connect it to you UI and *be happy*. But if there is really really really lots of data, or you really have more than couple of concurrent users in your system, this approach may become a performance issue and then you might face a completely new set of problems.
+
+There are several issues that may make listing lots of data in UI problematic:
+
+* Slow DB queries
+* Too much server memory used by the loaded data
+* Too much server memory consumed by the abstraction between components and data (e.g. non-optimized BeanItem and BeanItemContainer in core Vaadin can take several times more memory than the data itself)
+* Too many DB queries
+* Too large DB queries
+* Too much data transferred to the client (latency and hosting cost)
+* Too much CPU consumed by the client (read: latency in UI)
+* Too much memory consumed by the client
+ 
+The most common solution is “paging” that is implemented at all layers of your system from the UI to the backend. The fact that Vaadin UI components like the Table or the link:https://vaadin.com/blog/grid-beta-released[Grid] provides a cool “pageless” scrolling don’t make the topic much simpler. They tackle well the issues on the wire and client, but issues may still appear on the server. A typical Vaadin solution for too high server side resource usage issue is to change to another Container implementation or write a custom tailored by yourself. There are lots of replacements for in memory containers like SQLContainer, JPAContainer and the popular link:https://vaadin.com/directory/component/lazy-query-container[LazyQueryContainer], 
+that can be adopted to pretty much any situation.
+
+= A fresh start to tackle server side issues
+
+Today, while preparing some examples for an upcoming webinar, I wanted to make it very simple for Vaadin developers to connect to well structured service layer, typically an EJB or Spring Data service. Also, I didn’t want to let go of the well typed API provided MTable (a core Table extension in link:https://vaadin.com/directory/component/viritin[Viritin]). Thus I decided to make a yet another start on the topic of “lazy loading Vaadin container”.
+
+I have written too many Container implementations in my life. Seriously. This time I took a different angle to the problem. The Viritin add-on already contains a highly optimized ListContainer implementation, that "surprisingly" connects to basic List instances, so I thought if I could create a universal, but still highly efficient solution by working against the java.util.List interface instead?
+
+The result was link:https://github.com/viritin/viritin/blob/master/viritin/src/main/java/org/vaadin/viritin/LazyList.java[LazyList] class. You’ll instantiate one by simply providing it a way to fetch “paged” lists of entities and the total count of available entities. Thats all you need to know.
+
+Although there are still things like sorting that I want solve in an elegant way, I’m pretty damn satisfied with my todays contribution. The memory usage is really low (less than half of any “competing” solutions), query count is 2 (+ n when scrolling down) and the simplicity of the well-typed MTable is still there. I also added shorthand constructors to MTable and, since Viritin version 1.24, you can now create an extremely well performing binding from your service layer to Vaadin UI using a oneliner (although it should never be the target :-) ):
+
+[source, java]
+...
+MTable<Update> table;
+@Inject
+GPSRouteService s;
+@PostConstruct
+void init() {
+    add(table = new MTable<>(s::fetchUpdates, s::getEntityCount));
+}
+...
+
+If you have simpler methods to do this, I’m all ears. If you have improvement ideas send the to me via link:https://github.com/viritin/viritin[github issues or pull requests]. The LazyList is so far tested in ListContainer, MTable combination, but I think it might actually be handy helper for projects that don't even use Vaadin at all. 
