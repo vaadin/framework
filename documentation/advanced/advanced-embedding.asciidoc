@@ -167,8 +167,8 @@ future.+
 [parameter]#theme#:: Name of the theme, such as one of the built-in themes ( [literal]#++reindeer++#, [literal]#++runo++#, or [literal]#++chameleon++#) or a custom theme. It must exist under the [filename]#VAADIN/themes# folder.
 [parameter]#versionInfo#:: This parameter is itself an associative map that can contain two parameters: [parameter]#vaadinVersion# contains the version number of the Vaadin version used by the application. The [parameter]#applicationVersion# parameter contains the version of the particular application. The contained parameters are optional, but the [parameter]#versionInfo# parameter itself is not.
 [parameter]#vaadinDir#:: Relative path to the [filename]#VAADIN# directory. It is relative to the URL of the embedding page.
-[parameter]#heartbeatInterval#:: The [parameter]#hearbeatInterval# parameter defines the frequency of the keep-alive hearbeat for the UI in seconds, as described in <<dummy/../../../framework/application/application-lifecycle#application.lifecycle.ui-expiration,"UI Expiration">>.
-[parameter]#debug#:: The parameter defines whether the debug window, as described in <<dummy/../../../framework/advanced/advanced-debug#advanced.debug,"Debug Mode and Window">>, is enabled.
+[parameter]#heartbeatInterval#:: The [parameter]#hearbeatInterval# parameter defines the frequency of the keep-alive hearbeat for the UI in seconds, as described in <<../application/application-lifecycle#application.lifecycle.ui-expiration,"UI Expiration">>.
+[parameter]#debug#:: The parameter defines whether the debug window, as described in <<../advanced/advanced-debug#advanced.debug,"Debug Mode and Window">>, is enabled.
 [parameter]#standalone#:: This parameter should be [parameter]#false# when embedding. The parameter defines whether the UI is rendered on its own in the browser window or in some context. A standalone UI may do things that might interfere with other parts of the page, such as change the page title and request focus when it is loaded. When embedding, the UI is not standalone.
 [parameter]#authErrMsg#,[parameter]#comErrMsg#, and[parameter]#sessExpMsg#:: These three parameters define the client-side error messages for authentication error, communication error, and session expiration, respectively. The parameters are associative maps themselves and must contain two key-value pairs: [parameter]#message#, which should contain the error text in HTML, and [parameter]#caption#, which should be the error caption.
 
@@ -204,7 +204,7 @@ For example:
 ----
 Notice that many of the parameters are normally deployment parameters, specified
 in the deployment descriptor, as described in
-<<dummy/../../../framework/application/application-environment#application.environment.parameters,"Other
+<<../application/application-environment#application.environment.parameters,"Other
 Servlet Configuration Parameters">>.
 
 endif::web[]

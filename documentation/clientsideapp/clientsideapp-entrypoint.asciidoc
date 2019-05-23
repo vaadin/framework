@@ -47,7 +47,7 @@ described in the next section.
 
 The entry-point of a client-side application is defined, along with any other
 configuration, in a client-side module descriptor, described in
-<<dummy/../../../framework/clientside/clientside-module#clientside.module,"Client-Side
+<<../clientside/clientside-module#clientside.module,"Client-Side
 Module Descriptor">>. The descriptor is an XML file with suffix
 [filename]#.gwt.xml#.
 

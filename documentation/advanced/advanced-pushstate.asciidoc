@@ -20,7 +20,7 @@ methods and a mechanism to listen to changes in the client side URI in the
 
 Vaadin offers two ways to modify URIs: the high-level
 [classname]#Navigator# utility described in
-<<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator,"Navigating
+<<advanced-navigator#advanced.navigator,"Navigating
 in an Application">> and the low-level API described here.
 
 [[advanced.urifu.setting]]

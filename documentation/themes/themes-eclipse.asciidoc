@@ -57,10 +57,10 @@ image::img/eclipse-theme-created-annotated-hi.png[]
 
 The created theme extends a built-in base theme with an [literal]#++@import++#
 statement. See the explanation of theme inheritance in
-<<dummy/../../../framework/themes/themes-creating#themes.creating,"Creating and
+<<themes-creating#themes.creating,"Creating and
 Using Themes">>. Notice that the [filename]#reindeer# theme is not located in
 the [filename]#widgetsets# folder, but in the Vaadin JAR. See
-<<dummy/../../../framework/themes/themes-creating#themes.creating.builtin,"Built-in
+<<themes-creating#themes.creating.builtin,"Built-in
 Themes">> for information for serving the built-in themes.
 
 If you selected a UI class or classes in the [guilabel]#Modify application

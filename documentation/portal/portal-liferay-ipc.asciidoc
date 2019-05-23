@@ -53,7 +53,7 @@ as from a Maven repository. To download the installation package or find out the
 Maven or Ivy dependency, see the
 link:https://vaadin.com/directory#addon/vaadin-ipc-for-liferay[add-on page at
 Vaadin Directory], and install the add-on as described in
-<<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using
+<<../addons/addons-overview.asciidoc#addons.overview,"Using
 Vaadin Add-ons">>.
 
 The contents of the installation package are as follows:

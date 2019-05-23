@@ -63,7 +63,6 @@ abstract class.
 ((("[classname]#AbstractListing#")))
 There are three more specific types of components.
 
-Field Components:: allow user to edit a value in the UI. All extend [classname]#AbstractField#. Field components are described in detail in
 <<components-fields#components.fields,"Field Components">>.
 
 Selection Component:: show a list of data that the user can select from. All extend [classname]#AbstractListing#. Selection components are described in detail in
@@ -82,8 +81,7 @@ documentation, and a code samples for each of the components.
 In addition to the built-in components, many components are available as
 add-ons, either from the Vaadin Directory or from independent sources. Both
 commercial and free components exist. The installation of add-ons is described
-in
-<<../addons/addons-overview#addons.overview,"Using
+in <<../addons/addons-overview#addons.overview,"Using
 Vaadin Add-ons">>.
 
 ////
