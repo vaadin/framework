@@ -85,6 +85,7 @@ import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeEvent;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeHandler;
 import com.vaadin.client.widget.escalator.ScrollbarBundle;
+import com.vaadin.client.widget.escalator.ScrollbarBundle.Direction;
 import com.vaadin.client.widget.escalator.ScrollbarBundle.HorizontalScrollbarBundle;
 import com.vaadin.client.widget.escalator.ScrollbarBundle.VerticalScrollbarBundle;
 import com.vaadin.client.widget.escalator.Spacer;
@@ -757,13 +758,13 @@ public class Escalator extends Widget
         /*-{
             var vScroll = esc.@com.vaadin.client.widgets.Escalator::verticalScrollbar;
             var vScrollElem = vScroll.@com.vaadin.client.widget.escalator.ScrollbarBundle::getElement()();
-
+        
             var hScroll = esc.@com.vaadin.client.widgets.Escalator::horizontalScrollbar;
             var hScrollElem = hScroll.@com.vaadin.client.widget.escalator.ScrollbarBundle::getElement()();
-
+        
             return $entry(function(e) {
                 var target = e.target;
-
+        
                 // in case the scroll event was native (i.e. scrollbars were dragged, or
                 // the scrollTop/Left was manually modified), the bundles have old cache
                 // values. We need to make sure that the caches are kept up to date.
@@ -784,29 +785,29 @@ public class Escalator extends Widget
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-
+        
                 // Delta mode 0 is in pixels; we don't need to do anything...
-
+        
                 // A delta mode of 1 means we're scrolling by lines instead of pixels
                 // We need to scale the number of lines by the default line height
                 if (e.deltaMode === 1) {
                     var brc = esc.@com.vaadin.client.widgets.Escalator::body;
                     deltaY *= brc.@com.vaadin.client.widgets.Escalator.AbstractRowContainer::getDefaultRowHeight()();
                 }
-
+        
                 // Other delta modes aren't supported
                 if ((e.deltaMode !== undefined) && (e.deltaMode >= 2 || e.deltaMode < 0)) {
                     var msg = "Unsupported wheel delta mode \"" + e.deltaMode + "\"";
-
+        
                     // Print warning message
                     esc.@com.vaadin.client.widgets.Escalator::logWarning(*)(msg);
                 }
-
+        
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-
+        
                 @com.vaadin.client.widgets.Escalator.JsniUtil::moveScrollFromEvent(*)(esc, deltaX, deltaY, e);
             });
         }-*/;
@@ -1129,26 +1130,8 @@ public class Escalator extends Widget
 
         public void scrollToRow(final int rowIndex,
                 final ScrollDestination destination, final double padding) {
-
-            final double targetStartPx = (body.getDefaultRowHeight() * rowIndex)
-                    + body.spacerContainer
-                            .getSpacerHeightsSumUntilIndex(rowIndex);
-            final double targetEndPx = targetStartPx
-                    + body.getDefaultRowHeight();
-
-            final double viewportStartPx = getScrollTop();
-            final double viewportEndPx = viewportStartPx
-                    + body.getHeightOfSection();
-
-            final double scrollTop = getScrollPos(destination, targetStartPx,
-                    targetEndPx, viewportStartPx, viewportEndPx, padding);
-
-            /*
-             * note that it doesn't matter if the scroll would go beyond the
-             * content, since the browser will adjust for that, and everything
-             * falls into line accordingly.
-             */
-            setScrollTop(scrollTop);
+            body.scrollToRowSpacerOrBoth(rowIndex, destination, padding, false,
+                    true);
         }
     }
 
@@ -2875,11 +2858,10 @@ public class Escalator extends Widget
                 // partially visible rows
                 int rowsToCoverTheExtra = (int) (extraRowPxAbove
                         / getDefaultRowHeight());
-                // if there are rows left over, add one to ensure there is an
-                // extra tab navigation helper row
-                if (getTopRowLogicalIndex() + visualRowOrder.size()
-                        + rowsToCoverTheExtra < getRowCount()) {
-                    ++rowsToCoverTheExtra;
+                // leave one to ensure there is an extra tab navigation helper
+                // row
+                if (rowsToCoverTheExtra > 0) {
+                    --rowsToCoverTheExtra;
                 }
                 /*
                  * Don't move more rows than there are to move, but also don't
@@ -4678,9 +4660,374 @@ public class Escalator extends Widget
             spacerContainer.reapplySpacerWidths();
         }
 
+        @Deprecated
         void scrollToSpacer(int spacerIndex, ScrollDestination destination,
                 int padding) {
-            spacerContainer.scrollToSpacer(spacerIndex, destination, padding);
+            scrollToRowSpacerOrBoth(spacerIndex, destination, padding, true,
+                    false);
+        }
+
+        void scrollToRowSpacerOrBoth(int rowIndex,
+                ScrollDestination destination, double padding,
+                boolean scrollToSpacer, boolean scrollToBoth) {
+            if (isScrollLocked(Direction.VERTICAL)) {
+                // no scrolling can happen
+                if (getScrollTop() != tBodyScrollTop) {
+                    setBodyScrollPosition(tBodyScrollLeft, getScrollTop());
+                }
+                return;
+            }
+            validateScrollDestination(destination, (int) padding);
+            if (rowIndex != -1) {
+                verifyValidRowIndex(rowIndex);
+            }
+            int oldTopRowLogicalIndex = getTopRowLogicalIndex();
+            int visualRangeLength = visualRowOrder.size();
+            int paddingInRows = 0;
+            if (padding > 0) {
+                paddingInRows = (int) Math
+                        .ceil(getDefaultRowHeight() / Double.valueOf(padding));
+            } else if (padding < 0) {
+                paddingInRows = -(int) Math
+                        .ceil(getDefaultRowHeight() / Double.valueOf(-padding));
+            }
+
+            int newTopRowLogicalIndex;
+            int logicalTargetIndex;
+            switch (destination) {
+            case ANY:
+                // scroll as little as possible, take into account that there
+                // needs to be a buffer row at both ends if there is room for
+                // one
+                if (rowIndex - paddingInRows < oldTopRowLogicalIndex
+                        || (rowIndex - paddingInRows == oldTopRowLogicalIndex
+                                && rowIndex > 0)) {
+                    // scroll up, add buffer row if it fits
+                    logicalTargetIndex = Math.max(rowIndex - paddingInRows - 1,
+                            0);
+                    newTopRowLogicalIndex = logicalTargetIndex;
+                } else if (rowIndex + paddingInRows >= oldTopRowLogicalIndex
+                        + visualRangeLength
+                        || (rowIndex + paddingInRows == oldTopRowLogicalIndex
+                                + visualRangeLength - 1
+                                && oldTopRowLogicalIndex
+                                        + visualRangeLength < getRowCount())) {
+                    // scroll down, add buffer row if it fits
+                    newTopRowLogicalIndex = Math.min(
+                            rowIndex + paddingInRows + 1, getRowCount() - 1)
+                            - visualRangeLength + 1;
+                    if (newTopRowLogicalIndex
+                            - oldTopRowLogicalIndex < visualRangeLength) {
+                        // partial re-purposing, target index at the end of
+                        // current range
+                        logicalTargetIndex = oldTopRowLogicalIndex
+                                + visualRangeLength;
+                    } else {
+                        // full re-purposing, target index the same as the new
+                        // top row index
+                        logicalTargetIndex = newTopRowLogicalIndex;
+                    }
+                } else {
+                    // no need to re-purpose rows but viewport might need
+                    // adjusting regardless
+                    logicalTargetIndex = -1;
+                    newTopRowLogicalIndex = oldTopRowLogicalIndex;
+                }
+                break;
+            case END:
+                // target row at the bottom of the viewport
+                newTopRowLogicalIndex = Math.min(rowIndex + paddingInRows + 1,
+                        getRowCount() - 1) - visualRangeLength + 1;
+                if (newTopRowLogicalIndex > oldTopRowLogicalIndex
+                        && newTopRowLogicalIndex
+                                - oldTopRowLogicalIndex < visualRangeLength) {
+                    // partial re-purposing, target index at the end of
+                    // current range
+                    logicalTargetIndex = oldTopRowLogicalIndex
+                            + visualRangeLength;
+                } else {
+                    // full re-purposing, target index the same as the new
+                    // top row index
+                    logicalTargetIndex = newTopRowLogicalIndex;
+                }
+                break;
+            case MIDDLE:
+                // target row at the middle of the viewport, padding has to be
+                // zero or we never would have reached this far
+                newTopRowLogicalIndex = rowIndex - visualRangeLength / 2;
+                // ensure we don't attempt to go beyond the bottom row
+                if (newTopRowLogicalIndex + visualRangeLength > getRowCount()) {
+                    newTopRowLogicalIndex = getRowCount() - visualRangeLength;
+                }
+                if (newTopRowLogicalIndex < oldTopRowLogicalIndex) {
+                    logicalTargetIndex = newTopRowLogicalIndex;
+                } else if (newTopRowLogicalIndex > oldTopRowLogicalIndex) {
+                    if (newTopRowLogicalIndex
+                            - oldTopRowLogicalIndex < visualRangeLength) {
+                        // partial re-purposing, target index at the end of
+                        // current range
+                        logicalTargetIndex = oldTopRowLogicalIndex
+                                + visualRangeLength;
+                    } else {
+                        // full re-purposing, target index the same as the new
+                        // top row index
+                        logicalTargetIndex = newTopRowLogicalIndex;
+                    }
+                } else {
+                    logicalTargetIndex = -1;
+                }
+                break;
+            case START:
+                // target row at the top of the viewport
+                logicalTargetIndex = Math.max(rowIndex - paddingInRows - 1, 0);
+                newTopRowLogicalIndex = logicalTargetIndex;
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "Internal: Unsupported ScrollDestination: "
+                                + destination.name());
+            }
+
+            // adjust visual range if necessary
+            boolean rowsWereMoved = adjustVisualRangeForScrollToRowSpacerOrBoth(
+                    oldTopRowLogicalIndex, visualRangeLength,
+                    newTopRowLogicalIndex, logicalTargetIndex);
+
+            // update scroll position if necessary
+            double scrollTop = calculateScrollPositionForScrollToRowSpacerOrBoth(
+                    rowIndex, destination, padding, scrollToSpacer,
+                    scrollToBoth, logicalTargetIndex);
+            if (scrollTop != getScrollTop()) {
+                setScrollTop(scrollTop);
+                setBodyScrollPosition(tBodyScrollLeft, scrollTop);
+            }
+
+            if (rowsWereMoved) {
+                fireRowVisibilityChangeEvent();
+
+                // schedule updating of the physical indexes
+                domSorter.reschedule();
+            }
+        }
+
+        /**
+         * Adjusts visual range for
+         * {@link #scrollToRowSpacerOrBoth(int, ScrollDestination, double, boolean, boolean)},
+         * reuse at your own peril.
+         *
+         * @param oldTopRowLogicalIndex
+         * @param visualRangeLength
+         * @param newTopRowLogicalIndex
+         * @param logicalTargetIndex
+         * @return {@code true} if rows were moved, {@code false} otherwise
+         */
+        private boolean adjustVisualRangeForScrollToRowSpacerOrBoth(
+                int oldTopRowLogicalIndex, int visualRangeLength,
+                int newTopRowLogicalIndex, int logicalTargetIndex) {
+            boolean rowsWereMoved = false;
+            if (newTopRowLogicalIndex < oldTopRowLogicalIndex) {
+                // re-purpose at most the visual range's worth of rows to fill
+                // the gap between the new visualTargetIndex and the existing
+                // rows
+                int rowsToRepurpose = Math.min(
+                        oldTopRowLogicalIndex - logicalTargetIndex,
+                        visualRangeLength);
+                // re-purpose from the end to the beginning
+                moveAndUpdateEscalatorRows(
+                        Range.withLength(visualRangeLength - rowsToRepurpose,
+                                rowsToRepurpose),
+                        0, logicalTargetIndex);
+                // update the index
+                setTopRowLogicalIndex(logicalTargetIndex);
+                rowsWereMoved = true;
+
+            } else if (newTopRowLogicalIndex > oldTopRowLogicalIndex) {
+                // re-purpose at most the visual range's worth of rows to fill
+                // the gap between the new visualTargetIndex and the existing
+                // rows
+                int rowsToRepurpose;
+                if (newTopRowLogicalIndex
+                        - oldTopRowLogicalIndex >= visualRangeLength) {
+                    // full re-purposing
+                    rowsToRepurpose = visualRangeLength;
+                } else {
+                    // partial re-purposing
+                    rowsToRepurpose = newTopRowLogicalIndex
+                            - oldTopRowLogicalIndex;
+                }
+                // re-purpose from the beginning to the end
+                moveAndUpdateEscalatorRows(Range.withLength(0, rowsToRepurpose),
+                        visualRangeLength, logicalTargetIndex);
+                // update the index
+                setTopRowLogicalIndex(newTopRowLogicalIndex);
+                rowsWereMoved = true;
+            }
+            return rowsWereMoved;
+        }
+
+        /**
+         * Calculates scroll position for
+         * {@link #scrollToRowSpacerOrBoth(int, ScrollDestination, double, boolean, boolean)},
+         * reuse at your own peril.
+         *
+         * @param rowIndex
+         * @param destination
+         * @param padding
+         * @param scrollToSpacer
+         * @param scrollToBoth
+         * @param logicalTargetIndex
+         * @return expected scroll position
+         */
+        private double calculateScrollPositionForScrollToRowSpacerOrBoth(
+                int rowIndex, ScrollDestination destination, double padding,
+                boolean scrollToSpacer, boolean scrollToBoth,
+                int logicalTargetIndex) {
+            /*
+             * attempting to scroll above first row or below last row would get
+             * automatically corrected later but that causes unnecessary
+             * calculations, so try not to overshoot
+             */
+            double sectionHeight = getHeightOfSection();
+            double rowTop = getRowTop(rowIndex);
+            double spacerHeight = spacerContainer.getSpacerHeight(rowIndex);
+
+            double scrollTop;
+            switch (destination) {
+            case ANY:
+                if (!scrollToSpacer
+                        && Math.max(rowTop - padding, 0) < getScrollTop()) {
+                    // within visual range but row top above the viewport or not
+                    // enough padding, shift a little
+                    scrollTop = Math.max(rowTop - padding, 0);
+                } else if (scrollToSpacer
+                        && Math.max(rowTop + getDefaultRowHeight() - padding,
+                                0) < getScrollTop()) {
+                    // within visual range but spacer top above the viewport or
+                    // not enough padding, shift a little
+                    scrollTop = Math
+                            .max(rowTop + getDefaultRowHeight() - padding, 0);
+                } else if (!scrollToSpacer && !scrollToBoth
+                        && rowTop + getDefaultRowHeight()
+                                + padding > getScrollTop() + sectionHeight) {
+                    // within visual range but end of row below the viewport
+                    // or not enough padding, shift a little
+                    scrollTop = rowTop + getDefaultRowHeight() - sectionHeight
+                            + padding;
+                    // ensure that we don't overshoot beyond bottom
+                    scrollTop = Math.min(scrollTop,
+                            getRowTop(getRowCount() - 1) + getDefaultRowHeight()
+                                    + spacerContainer
+                                            .getSpacerHeight(getRowCount() - 1)
+                                    - sectionHeight);
+                    // if padding is set we want to overshoot or undershoot,
+                    // otherwise make sure the top of the row is in view
+                    if (padding == 0) {
+                        scrollTop = Math.min(scrollTop, rowTop);
+                    }
+                } else if (rowTop + getDefaultRowHeight() + spacerHeight
+                        + padding > getScrollTop() + sectionHeight) {
+                    // within visual range but end of spacer below the viewport
+                    // or not enough padding, shift a little
+                    scrollTop = rowTop + getDefaultRowHeight() + spacerHeight
+                            - sectionHeight + padding;
+                    // ensure that we don't overshoot beyond bottom
+                    scrollTop = Math.min(scrollTop,
+                            getRowTop(getRowCount() - 1) + getDefaultRowHeight()
+                                    + spacerContainer
+                                            .getSpacerHeight(getRowCount() - 1)
+                                    - sectionHeight);
+                    // if padding is set we want to overshoot or undershoot,
+                    // otherwise make sure the top of the row or spacer is
+                    // in view
+                    if (padding == 0) {
+                        if (scrollToSpacer) {
+                            scrollTop = Math.min(scrollTop,
+                                    rowTop + getDefaultRowHeight());
+                        } else {
+                            scrollTop = Math.min(scrollTop, rowTop);
+                        }
+                    }
+                } else {
+                    // we are fine where we are
+                    scrollTop = getScrollTop();
+                }
+                break;
+            case END:
+                if (!scrollToSpacer && !scrollToBoth
+                        && rowTop + getDefaultRowHeight()
+                                + padding > getScrollTop() + sectionHeight) {
+                    // within visual range but end of row below the viewport
+                    // or not enough padding, shift a little
+                    scrollTop = rowTop + getDefaultRowHeight() - sectionHeight
+                            + padding;
+                    // ensure that we don't overshoot beyond bottom
+                    scrollTop = Math.min(scrollTop,
+                            getRowTop(getRowCount() - 1) + getDefaultRowHeight()
+                                    + spacerContainer
+                                            .getSpacerHeight(getRowCount() - 1)
+                                    - sectionHeight);
+                } else if (rowTop + getDefaultRowHeight() + spacerHeight
+                        + padding > getScrollTop() + sectionHeight) {
+                    // within visual range but end of spacer below the viewport
+                    // or not enough padding, shift a little
+                    scrollTop = rowTop + getDefaultRowHeight() + spacerHeight
+                            - sectionHeight + padding;
+                    // ensure that we don't overshoot beyond bottom
+                    scrollTop = Math.min(scrollTop,
+                            getRowTop(getRowCount() - 1) + getDefaultRowHeight()
+                                    + spacerContainer
+                                            .getSpacerHeight(getRowCount() - 1)
+                                    - sectionHeight);
+                } else {
+                    // we are fine where we are
+                    scrollTop = getScrollTop();
+                }
+                break;
+            case MIDDLE:
+                double center;
+                if (!scrollToSpacer && !scrollToBoth) {
+                    // center the row itself
+                    center = rowTop + (getDefaultRowHeight() / 2.0);
+                } else if (scrollToBoth) {
+                    // center both
+                    center = rowTop
+                            + ((getDefaultRowHeight() + spacerHeight) / 2.0);
+                } else {
+                    // center the spacer
+                    center = rowTop + getDefaultRowHeight()
+                            + (spacerHeight / 2.0);
+                }
+                scrollTop = center - Math.ceil(sectionHeight / 2.0);
+                // ensure that we don't overshoot beyond bottom
+                scrollTop = Math.min(scrollTop,
+                        getRowTop(getRowCount() - 1) + getDefaultRowHeight()
+                                + spacerContainer
+                                        .getSpacerHeight(getRowCount() - 1)
+                                - sectionHeight);
+                // ensure that we don't overshoot beyond top
+                scrollTop = Math.max(0, scrollTop);
+                break;
+            case START:
+                if (!scrollToSpacer
+                        && Math.max(rowTop - padding, 0) < getScrollTop()) {
+                    // row top above the viewport or not enough padding, shift a
+                    // little
+                    scrollTop = Math.max(rowTop - padding, 0);
+                } else if (scrollToSpacer
+                        && Math.max(rowTop + getDefaultRowHeight() - padding,
+                                0) < getScrollTop()) {
+                    // spacer top above the viewport or not enough padding,
+                    // shift a little
+                    scrollTop = Math
+                            .max(rowTop + getDefaultRowHeight() - padding, 0);
+                } else {
+                    scrollTop = getScrollTop();
+                }
+                break;
+            default:
+                scrollTop = getScrollTop();
+            }
+            return scrollTop;
         }
 
         @Override
@@ -6943,11 +7290,9 @@ public class Escalator extends Widget
     public void scrollToRow(final int rowIndex,
             final ScrollDestination destination, final int padding)
             throws IndexOutOfBoundsException, IllegalArgumentException {
-        Scheduler.get().scheduleFinally(() -> {
-            validateScrollDestination(destination, padding);
-            verifyValidRowIndex(rowIndex);
-            scroller.scrollToRow(rowIndex, destination, padding);
-        });
+        verifyValidRowIndex(rowIndex);
+        body.scrollToRowSpacerOrBoth(rowIndex, destination, padding, false,
+                true);
     }
 
     private void verifyValidRowIndex(final int rowIndex) {
@@ -6980,8 +7325,8 @@ public class Escalator extends Widget
     public void scrollToSpacer(final int spacerIndex,
             ScrollDestination destination, final int padding)
             throws IllegalArgumentException {
-        validateScrollDestination(destination, padding);
-        body.scrollToSpacer(spacerIndex, destination, padding);
+        body.scrollToRowSpacerOrBoth(spacerIndex, destination, padding, true,
+                false);
     }
 
     /**
@@ -7011,54 +7356,11 @@ public class Escalator extends Widget
     public void scrollToRowAndSpacer(final int rowIndex,
             final ScrollDestination destination, final int padding)
             throws IllegalArgumentException {
-        Scheduler.get().scheduleFinally(() -> {
-            validateScrollDestination(destination, padding);
-            if (rowIndex != -1) {
-                verifyValidRowIndex(rowIndex);
-            }
-
-            // row range
-            final Range rowRange;
-            if (rowIndex != -1) {
-                int rowTop = (int) Math.floor(body.getRowTop(rowIndex));
-                int rowHeight = (int) Math.ceil(body.getDefaultRowHeight());
-                rowRange = Range.withLength(rowTop, rowHeight);
-            } else {
-                rowRange = Range.withLength(0, 0);
-            }
-
-            // get spacer
-            final SpacerContainer.SpacerImpl spacer = body.spacerContainer
-                    .getSpacer(rowIndex);
-
-            if (rowIndex == -1 && spacer == null) {
-                throw new IllegalArgumentException("Cannot scroll to row index "
-                        + "-1, as there is no spacer open at that index.");
-            }
-
-            // make into target range
-            final Range targetRange;
-            if (spacer != null) {
-                final int spacerTop = (int) Math.floor(spacer.getTop());
-                final int spacerHeight = (int) Math.ceil(spacer.getHeight());
-                Range spacerRange = Range.withLength(spacerTop, spacerHeight);
-
-                targetRange = rowRange.combineWith(spacerRange);
-            } else {
-                targetRange = rowRange;
-            }
-
-            // get params
-            int targetStart = targetRange.getStart();
-            int targetEnd = targetRange.getEnd();
-            double viewportStart = getScrollTop();
-            double viewportEnd = viewportStart + body.getHeightOfSection();
-
-            double scrollPos = getScrollPos(destination, targetStart, targetEnd,
-                    viewportStart, viewportEnd, padding);
-
-            setScrollTop(scrollPos);
-        });
+        if (rowIndex != -1) {
+            verifyValidRowIndex(rowIndex);
+        }
+        body.scrollToRowSpacerOrBoth(rowIndex, destination, padding, false,
+                true);
     }
 
     private static void validateScrollDestination(
@@ -7581,21 +7883,10 @@ public class Escalator extends Widget
         if (type.equalsIgnoreCase("header")) {
             container = getHeader();
         } else if (type.equalsIgnoreCase("cell")) {
-            // If wanted row is not visible, we need to scroll there.
-            Range visibleRowRange = getVisibleRowRange();
             if (indices.length > 0) {
-                // Contains a row number, ensure it is available and visible
-                boolean rowInCache = visibleRowRange.contains(indices[0]);
-
-                // Scrolling might be a no-op if row is already in the viewport
+                // If wanted row is not visible, we need to scroll there.
+                // Scrolling might be a no-op if row is already in the viewport.
                 scrollToRow(indices[0], ScrollDestination.ANY, 0);
-
-                if (!rowInCache) {
-                    // Row was not in cache, scrolling caused lazy loading and
-                    // the caller needs to wait and call this method again to be
-                    // able to get the requested element
-                    return null;
-                }
             }
             container = getBody();
         } else if (type.equalsIgnoreCase("footer")) {
@@ -7663,6 +7954,10 @@ public class Escalator extends Widget
 
     private Element getSubPartElementSpacer(SubPartArguments args) {
         if ("spacer".equals(args.getType()) && args.getIndicesLength() == 1) {
+            // If spacer's row is not visible, we need to scroll there.
+            // Scrolling might be a no-op if row is already in the viewport.
+            scrollToSpacer(args.getIndex(0), ScrollDestination.ANY, 0);
+
             return body.spacerContainer.getSubPartElement(args.getIndex(0));
         } else {
             return null;
