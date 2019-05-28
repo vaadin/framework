@@ -70,28 +70,27 @@ public class GridScrolledToBottomTest extends MultiBrowserTest {
         Actions actions = new Actions(driver);
         actions.clickAndHold(splitter).moveByOffset(0, -rowHeight / 2).release()
                 .perform();
-        // the last row is now only half visible, and in DOM tree it's actually
-        // the first row now but positioned to the bottom
+        // the last row is now only half visible
 
         // can't query grid.getRow(99) now or it moves the row position,
         // have to use element query instead
         List<WebElement> rows = grid.findElement(By.className("v-grid-body"))
                 .findElements(By.className("v-grid-row"));
-        WebElement firstRow = rows.get(0);
         WebElement lastRow = rows.get(rows.size() - 1);
+        WebElement secondToLastRow = rows.get(rows.size() - 2);
 
         // ensure the scrolling didn't jump extra
         assertEquals("Person 99",
-                firstRow.findElement(By.className("v-grid-cell")).getText());
-        assertEquals("Person 98",
                 lastRow.findElement(By.className("v-grid-cell")).getText());
+        assertEquals("Person 98", secondToLastRow
+                .findElement(By.className("v-grid-cell")).getText());
 
         // re-calculate current end position
         gridBottomY = grid.getLocation().getY() + grid.getSize().getHeight();
         // ensure the correct final row really is only half visible at the
         // bottom
-        assertThat(gridBottomY, greaterThan(firstRow.getLocation().getY()));
-        assertThat(firstRow.getLocation().getY() + rowHeight,
+        assertThat(gridBottomY, greaterThan(lastRow.getLocation().getY()));
+        assertThat(lastRow.getLocation().getY() + rowHeight,
                 greaterThan(gridBottomY));
     }
 }
