@@ -6031,6 +6031,10 @@ public class Escalator extends Widget
                 return;
             }
 
+            double specialSpacerHeight = removedRange.contains(-1)
+                    ? getSpacerHeight(-1)
+                    : 0;
+
             for (Entry<Integer, SpacerImpl> entry : removedSpacers.entrySet()) {
                 SpacerImpl spacer = entry.getValue();
 
@@ -6047,6 +6051,15 @@ public class Escalator extends Widget
                 assert spacerScrollerRegistration != null : "Spacer scroller registration was null";
                 spacerScrollerRegistration.removeHandler();
                 spacerScrollerRegistration = null;
+            }
+
+            // if a rowless spacer at the top got removed, all rows and spacers
+            // need to be moved up accordingly
+            if (!WidgetUtil.pixelValuesEqual(specialSpacerHeight, 0)) {
+                double scrollDiff = -Math.min(specialSpacerHeight,
+                        getScrollTop());
+                body.moveViewportAndContent(null, -specialSpacerHeight,
+                        -specialSpacerHeight, scrollDiff);
             }
         }
 
