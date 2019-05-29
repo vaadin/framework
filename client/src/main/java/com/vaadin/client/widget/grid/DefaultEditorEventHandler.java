@@ -127,11 +127,16 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         return false;
     }
 
-    public static class Delta {
-        public int rowDelta;
-        public int colDelta;
+    /**
+     * Specifies the direction at which the focus should move.
+     */
+    public enum CursorMoveDelta {
+        UP(-1, 0), RIGHT(0, 1), DOWN(1, 0), LEFT(0, -1);
 
-        public Delta(int rowDelta, int colDelta) {
+        public final int rowDelta;
+        public final int colDelta;
+
+        CursorMoveDelta(int rowDelta, int colDelta) {
             this.rowDelta = rowDelta;
             this.colDelta = colDelta;
         }
@@ -141,16 +146,25 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         }
     }
 
-    protected Delta getDeltaFromKeyDownEvent(EditorDomEvent<T> event) {
+    /**
+     * Returns the direction to which the cursor should move.
+     *
+     * @param event
+     *            the mouse event, not null.
+     * @return the direction. May return null if the cursor should not move.
+     */
+    protected CursorMoveDelta getDeltaFromKeyDownEvent(
+            EditorDomEvent<T> event) {
         Event e = event.getDomEvent();
         if (e.getKeyCode() == KEYCODE_MOVE_VERTICAL) {
-            return new Delta(e.getShiftKey() ? -1 : +1, 0);
+            return e.getShiftKey() ? CursorMoveDelta.UP : CursorMoveDelta.DOWN;
         } else if (e.getKeyCode() == KEYCODE_MOVE_HORIZONTAL) {
             // Prevent tab out of Grid Editor
             event.getDomEvent().preventDefault();
-            return new Delta(0, (e.getShiftKey() ? -1 : +1));
+            return e.getShiftKey() ? CursorMoveDelta.LEFT
+                    : CursorMoveDelta.RIGHT;
         }
-        return new Delta(0, 0);
+        return null;
     }
 
     /**
@@ -179,8 +193,8 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
             return true;
         } else if (e.getTypeInt() == Event.ONKEYDOWN) {
 
-            final Delta delta = getDeltaFromKeyDownEvent(event);
-            final boolean changed = delta.isChanged();
+            CursorMoveDelta delta = getDeltaFromKeyDownEvent(event);
+            final boolean changed = delta != null;
 
             if (changed) {
 
@@ -199,11 +213,11 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
                     if (delta.colDelta > 0
                             && rowIndex < event.getGrid().getDataSource().size()
                                     - 1) {
-                        delta.rowDelta = 1;
+                        delta = CursorMoveDelta.DOWN;
                         colIndex = findNextEditableColumnIndex(event.getGrid(),
                                 0);
                     } else if (delta.colDelta < 0 && rowIndex > 0) {
-                        delta.rowDelta = -1;
+                        delta = CursorMoveDelta.UP;
                         colIndex = findPrevEditableColumnIndex(event.getGrid(),
                                 columnCount - 1);
                     }
