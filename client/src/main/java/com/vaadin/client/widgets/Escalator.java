@@ -2761,6 +2761,7 @@ public class Escalator extends Widget
 
             // TODO [[mpixscroll]]
             final double scrollTop = tBodyScrollTop;
+            final double sectionHeight = getHeightOfSection();
 
             /*
              * Calculate how the visual range is situated in relation to the
@@ -2771,7 +2772,7 @@ public class Escalator extends Widget
              * re-purposed from the opposite end.
              */
             final double viewportOffsetTop = topElementPosition - scrollTop;
-            final double viewportOffsetBottom = scrollTop + getHeightOfSection()
+            final double viewportOffsetBottom = scrollTop + sectionHeight
                     - getRowTop(
                             getTopRowLogicalIndex() + visualRowOrder.size());
 
@@ -2801,6 +2802,10 @@ public class Escalator extends Widget
                  */
                 int rowsToFillTheGap = (int) Math
                         .ceil(viewportOffsetTop / getDefaultRowHeight());
+                // ensure we don't try to move more rows than are available
+                // above
+                rowsToFillTheGap = Math.min(rowsToFillTheGap,
+                        getTopRowLogicalIndex());
                 // add the extra row if there is room for it
                 if (rowsToFillTheGap < getTopRowLogicalIndex()) {
                     ++rowsToFillTheGap;
@@ -2937,6 +2942,24 @@ public class Escalator extends Widget
                 } else {
                     // the insertion index is the new top row logical index
                     setTopRowLogicalIndex(logicalRowIndex);
+                }
+
+                // Moving rows may have removed more spacers and created another
+                // gap, this time the scroll position needs adjusting. The last
+                // row within visual range should be just below the viewport,
+                // unless it's the last row altogether.
+                int lastRowInVisualRange = getTopRowLogicalIndex()
+                        + targetVisualIndex - 1;
+                double expectedBottom = getRowTop(lastRowInVisualRange);
+                if (lastRowInVisualRange == getRowCount() - 1) {
+                    expectedBottom += getDefaultRowHeight() + spacerContainer
+                            .getSpacerHeight(lastRowInVisualRange);
+                }
+                if (expectedBottom < scrollTop + sectionHeight) {
+                    double expectedTop = Math.max(0,
+                            expectedBottom - sectionHeight);
+                    setBodyScrollPosition(tBodyScrollLeft, expectedTop);
+                    setScrollTop(expectedTop);
                 }
 
                 rowsWereMoved = true;
