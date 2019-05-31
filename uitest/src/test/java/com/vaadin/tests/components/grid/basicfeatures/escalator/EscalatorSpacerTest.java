@@ -426,16 +426,37 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
                 "element index 2 was not a spacer (class=\"" + cssClass + "\")",
                 cssClass.contains("-spacer"));
 
-        scrollVerticallyTo(175); // scroll to last DOM row (Row 20)
-        Thread.sleep(500);
+        // Scroll to last DOM row (Row 20). The exact position varies a bit
+        // depending on the browser.
+        int scrollTo = 172;
+        while (scrollTo < 176) {
+            scrollVerticallyTo(scrollTo);
+            Thread.sleep(500);
 
-        // second row should still be within DOM but the first row out of it, so
-        // the spacer should be the second element within the body (index: 1)
-        spacer = getChild(tbody, 1);
-        cssClass = spacer.getAttribute("class");
-        assertTrue(
-                "element index 1 was not a spacer (class=\"" + cssClass + "\")",
-                cssClass.contains("-spacer"));
+            // if spacer is still the third (index: 2) body element, i.e. not
+            // enough scrolling to re-purpose any rows, scroll a bit further
+            spacer = getChild(tbody, 2);
+            cssClass = spacer.getAttribute("class");
+            if (cssClass.contains("-spacer")) {
+                ++scrollTo;
+            } else {
+                break;
+            }
+        }
+        if (getChild(tbody, 20).getText().startsWith("Row 22:")) {
+            // Some browsers scroll too much, spacer should be out of visual
+            // range
+            assertNull("Element found where there should be none",
+                    getChild(tbody, 21));
+        } else {
+            // second row should still be within DOM but the first row out of
+            // it, so the spacer should be the second element within the body
+            // (index: 1)
+            spacer = getChild(tbody, 1);
+            cssClass = spacer.getAttribute("class");
+            assertTrue("element index 1 was not a spacer (class=\"" + cssClass
+                    + "\")", cssClass.contains("-spacer"));
+        }
     }
 
     @Test
