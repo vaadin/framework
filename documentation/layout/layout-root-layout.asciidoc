@@ -54,7 +54,7 @@ content.addComponent(menuview);
 ----
 
 See
-<<dummy/../../../framework/layout/layout-settings#layout.settings.size,"Layout
+<<layout-settings#layout.settings.size,"Layout
 Size">> for more information about setting layout sizes.
 
 

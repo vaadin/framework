@@ -8,7 +8,7 @@ layout: page
 = Managing URI Fragments
 
 NOTE: This chapter contains instructions how to manage URI fragments. As browser support for HTML5 History API has improved, developers should in most cases developers instead use real URIs with _pushState_ method. Read more from 
-<<dummy/../../../framework/advanced/advanced-navigator#advanced.pushstate,"Manipulating Browser History">>.
+<<advanced-navigator#advanced.pushstate,"Manipulating Browser History">>.
 
 A major issue in AJAX applications is that as they run in a single web page,
 bookmarking the application URL (or more generally the __URI__) can only
@@ -33,7 +33,7 @@ the slash and the question mark.
 
 Vaadin offers two ways to enable the use of URI fragments: the high-level
 [classname]#Navigator# utility described in
-<<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator,"Navigating
+<<advanced-navigator#advanced.navigator,"Navigating
 in an Application">> (if the legacy [classname]#UriFragmentManager# is configured for the Navigator) and the low-level API described here.
 
 [[advanced.urifu.setting]]
@@ -183,7 +183,7 @@ avoid having the [literal]#++_escaped_fragment_++# parameter.
 You need to use the custom servlet class in the [filename]#web.xml# deployment
 descriptor instead of the normal [classname]#VaadinServlet# class, as described
 in
-<<dummy/../../../framework/application/application-environment#application.environment.web-xml,"Using
+<<../application/application-environment#application.environment.web-xml,"Using
 a web.xml Deployment Descriptor">>.
 
 

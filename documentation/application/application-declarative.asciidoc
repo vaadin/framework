@@ -81,7 +81,7 @@ element.
 
 The above design defines the same UI layout as done earlier with Java code, and
 illustrated in
-<<dummy/../../../framework/application/application-architecture#figure.application.architecture.example,"Simple
+<<application-architecture#figure.application.architecture.example,"Simple
 Hierarchical UI">>.
 
 
@@ -345,7 +345,7 @@ public class DeclarativeViewUI extends UI {
 === Designs in View Navigation
 
 To use a design in view navigation, as described in
-<<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator,"Navigating
+<<../advanced/advanced-navigator#advanced.navigator,"Navigating
 in an Application">>, you just need to implement the [interfacename]#View#
 interface.
 
@@ -368,5 +368,5 @@ navigator.addView(MAINVIEW, new MainView());
 ----
 
 See
-<<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator.pathparam,"Handling
+<<../advanced/advanced-navigator#advanced.navigator.pathparam,"Handling
 Path Parameters">> for a complete example.

@@ -23,7 +23,7 @@ If you edit the Sass theme, it is recompiled the next time you reload the page.
 
 The on-the-fly compilation takes a bit time, so it is only available when the
 Vaadin servlet is in the development mode, as described in
-<<dummy/../../../framework/application/application-environment#application.environment.parameters,"Other
+<<../application/application-environment#application.environment.parameters,"Other
 Servlet Configuration Parameters">>. Also, it requires the theme compiler and
 all its dependencies to be in the class path of the servlet. At least for
 production, you must compile the theme to CSS, as described next.

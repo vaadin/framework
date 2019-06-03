@@ -27,8 +27,8 @@ The _widget set_ needs to be compiled into the application widget set.
 Adding the dependency in Maven projects and compiling the widget set is described in <<addons-maven#addons.maven, "Using Add-ons in a Maven Project">>.
 The section also describes how to use the online compilation and CDN services during development.
 
-For Eclipse projects that use Ivy for dependency management, see <<dummy/../../../framework/addons/addons-eclipse.asciidoc#addons.eclipse, "Installing Add-ons in Eclipse with Ivy">>.
-You can also download and install add-ons from a ZIP-package, as described in <<dummy/../../../framework/addons/addons-downloading.asciidoc#addons.downloading, "Downloading Add-ons from Vaadin Directory">>.
+For Eclipse projects that use Ivy for dependency management, see <<addons-eclipse.asciidoc#addons.eclipse, "Installing Add-ons in Eclipse with Ivy">>.
+You can also download and install add-ons from a ZIP-package, as described in <<addons-downloading.asciidoc#addons.downloading, "Downloading Add-ons from Vaadin Directory">>.
 
 == Add-on Licenses
 
@@ -39,7 +39,7 @@ offered under a dual licensing agreement so that they can be used in open source
 projects for free, and many have a trial period for closed-source development.
 Commercial Vaadin add-ons distributed under the CVAL license require installing
 a license key as instructed in
-<<dummy/../../../framework/addons/addons-cval#addons.cval, "Installing Commercial Vaadin Add-on License">>.
+<<addons-cval#addons.cval, "Installing Commercial Vaadin Add-on License">>.
 
 == Feedback and Support
 

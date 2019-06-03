@@ -11,7 +11,7 @@ You can embed images in Vaadin UIs with the [classname]#Image# component, Adobe
 Flash graphics with [classname]#Flash#, and other web content with
 [classname]#BrowserFrame#. There is also a generic [classname]#Embedded#
 component for embedding other object types.
-The embedded content is referenced as _resources_, as described in <<dummy/../../../framework/application/application-resources#application.resources,"Images and Other Resources">>.
+The embedded content is referenced as _resources_, as described in <<../application/application-resources#application.resources,"Images and Other Resources">>.
 
 The following example displays an image as a class resource loaded with the
 class loader:
@@ -55,7 +55,7 @@ directions, so it will automatically fit the size of the embedded image.
 bars")))
 If you want scrolling with scroll bars, you can put the image inside a
 [classname]#Panel# that has a defined size to enable scrolling, as described in
-<<dummy/../../../framework/layout/layout-panel#layout.panel.scrolling,"Scrolling
+<<../layout/layout-panel#layout.panel.scrolling,"Scrolling
 the Panel Content">>. You can also put it inside some other component container
 and set the [literal]#++overflow: auto++# CSS property for the container element
 in a theme to enable automatic scrollbars. (((overflow CSS
@@ -66,7 +66,7 @@ property)))
 
 You can also generate the image content dynamically using a
 [classname]#StreamResource#, as described in
-<<dummy/../../../framework/application/application-resources#application.resources.stream,"Stream
+<<../application/application-resources#application.resources.stream,"Stream
 Resources">>, or with a [classname]#RequestHandler#.
 
 If the image changes, the browser needs to reload it. Simply updating the stream

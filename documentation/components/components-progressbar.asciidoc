@@ -26,11 +26,11 @@ When the position of a progress bar is done in a background thread, the change
 is not shown in the browser immediately. You need to use either polling or
 server push to update the browser. You can enable polling with
 [methodname]#setPollInterval()# in the current UI instance. See
-<<dummy/../../../framework/advanced/advanced-push#advanced.push,"Server Push">>
+<<../advanced/advanced-push#advanced.push,"Server Push">>
 for instructions about using server push. Whichever method you use to update the
 UI, it is important to lock the user session by modifying the progress bar value
 inside [methodname]#access()# call, as described in
-<<dummy/../../../framework/advanced/advanced-push#advanced.push.running,"Accessing UI from Another Thread">>.
+<<../advanced/advanced-push#advanced.push.running,"Accessing UI from Another Thread">>.
 
 [source, java]
 ----
@@ -70,7 +70,7 @@ including the progress bar, can be updated either with polling or by using
 server push. When doing so, you must ensure thread-safety, most easily by
 updating the UI inside a [methodname]#UI.access()# call in a
 [interfacename]#Runnable#, as described in
-<<dummy/../../../framework/advanced/advanced-push#advanced.push.running,"Accessing
+<<../advanced/advanced-push#advanced.push.running,"Accessing
 UI from Another Thread">>.
 
 

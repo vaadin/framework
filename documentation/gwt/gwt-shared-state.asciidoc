@@ -122,7 +122,7 @@ by delegating the property value directly to the widget, as described in
 
 ifdef::web[]
 The processing phases of state changes are described in more detail in
-<<dummy/../../../framework/gwt/gwt-advanced#gwt.advanced.phases,"Client-Side
+<<gwt-advanced#gwt.advanced.phases,"Client-Side
 Processing Phases">>.
 endif::web[]
 

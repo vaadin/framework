@@ -31,7 +31,7 @@ select.setItems("Mercury", "Venus", ...);
 image::img/nativeselect-basic.png[width=20%, scaledwidth=35%]
 
 Common selection component features are described in
-<<dummy/../../../framework/components/components-selection#components.selection,"Selection Components">>.
+<<components-selection#components.selection,"Selection Components">>.
 
 == CSS Style Rules
 

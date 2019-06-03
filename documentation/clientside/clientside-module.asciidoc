@@ -31,12 +31,12 @@ widget set, you should normally inherit the [classname]#DefaultWidgetSet#.
 
 If you are developing a pure client-side application, you should instead inherit
 [classname]#com.vaadin.Vaadin#, as described in
-<<dummy/../../../framework/clientsideapp/clientsideapp-overview.asciidoc#clientsideapp.overview,"Client-Side
+<<../clientsideapp/clientsideapp-overview.asciidoc#clientsideapp.overview,"Client-Side
 Applications">>. In that case, the module descriptor also needs an entry-point.
 
 If you are using the Eclipse IDE, the New Vaadin Widget wizard will
 automatically create the GWT module descriptor. See
-<<dummy/../../../framework/gwt/gwt-eclipse#gwt.eclipse.widget,"Creating a
+<<../gwt/gwt-eclipse#gwt.eclipse.widget,"Creating a
 Widget">> for detailed instructions.
 
 [[clientside.module.stylesheet]]

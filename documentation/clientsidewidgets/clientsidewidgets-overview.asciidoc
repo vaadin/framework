@@ -16,7 +16,7 @@ In general, the client-side widgets come in two categories - basic GWT widgets
 and Vaadin-specific widgets. The library includes __connectors__ for integrating
 the Vaadin-specific widgets with the server-side components, thereby enabling
 the server-side development model of Vaadin. The integration is described in
-<<dummy/../../../framework/gwt/gwt-overview.asciidoc#gwt.overview,"Integrating
+<<../gwt/gwt-overview.asciidoc#gwt.overview,"Integrating
 with the Server-Side">>.
 
 The layout of the client-side UI is managed with __panel__ widgets, which
