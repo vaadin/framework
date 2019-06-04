@@ -2181,8 +2181,8 @@ public class Escalator extends Widget
 
             /*
              * Ensure that element is not root nor the direct descendant of root
-             * (a row) and ensure the element is inside the dom hierarchy of the
-             * root element. If not, return.
+             * (a row or spacer) and ensure the element is inside the dom
+             * hierarchy of the root element. If not, return null.
              */
             if (root == element || element.getParentElement() == root
                     || !root.isOrHasChild(element)) {
@@ -4594,6 +4594,16 @@ public class Escalator extends Widget
             // Convert DOM coordinates to logical coordinates for rows
             TableRowElement rowElement = (TableRowElement) cell.getElement()
                     .getParentElement();
+            if (!visualRowOrder.contains(rowElement)) {
+                for (Entry<Integer, SpacerContainer.SpacerImpl> entry : spacerContainer
+                        .getSpacers().entrySet()) {
+                    if (rowElement.equals(entry.getValue().getRootElement())) {
+                        return new Cell(entry.getKey(), cell.getColumn(),
+                                cell.getElement());
+                    }
+                }
+                return null;
+            }
             return new Cell(getLogicalRowIndex(rowElement), cell.getColumn(),
                     cell.getElement());
         }
