@@ -1,7 +1,9 @@
 package com.vaadin.tests.widgetset.client.grid;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
@@ -17,6 +19,8 @@ import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
 import com.vaadin.client.widget.escalator.Spacer;
 import com.vaadin.client.widget.escalator.SpacerUpdater;
+import com.vaadin.client.widget.escalator.events.SpacerIndexChangedEvent;
+import com.vaadin.client.widget.escalator.events.SpacerIndexChangedHandler;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.tests.widgetset.client.v7.grid.PureGWTTestApplication;
@@ -157,6 +161,7 @@ public class EscalatorBasicClientFeaturesWidget
         private int rowCounter = 0;
         private final List<Integer> columns = new ArrayList<>();
         private final List<Integer> rows = new ArrayList<>();
+        private final Map<Integer, Integer> spacers = new HashMap<>();
 
         @SuppressWarnings("boxing")
         public void insertRows(final int offset, final int amount) {
@@ -248,6 +253,11 @@ public class EscalatorBasicClientFeaturesWidget
                             cell.setColSpan(2);
                         }
                     }
+                    if (spacers.containsKey(cell.getRow()) && !escalator
+                            .getBody().spacerExists(cell.getRow())) {
+                        escalator.getBody().setSpacer(cell.getRow(),
+                                spacers.get(cell.getRow()));
+                    }
                 }
 
                 @Override
@@ -263,7 +273,12 @@ public class EscalatorBasicClientFeaturesWidget
         public void removeRows(final int offset, final int amount) {
             for (int i = 0; i < amount; i++) {
                 rows.remove(offset);
+                if (spacers.containsKey(offset + i)) {
+                    spacers.remove(offset + i);
+                }
             }
+            // the following spacers get their indexes updated through
+            // SpacerIndexChangedHandler
         }
 
         public void removeColumns(final int offset, final int amount) {
@@ -314,6 +329,21 @@ public class EscalatorBasicClientFeaturesWidget
         createFrozenMenu();
         createColspanMenu();
         createSpacerMenu();
+
+        escalator.addHandler(new SpacerIndexChangedHandler() {
+            @Override
+            public void onSpacerIndexChanged(SpacerIndexChangedEvent event) {
+                // remove spacer from old index and move to new index
+                Integer height = data.spacers.remove(event.getOldIndex());
+                if (height != null) {
+                    data.spacers.put(event.getNewIndex(), height);
+                } else {
+                    // no height, make sure the new index doesn't
+                    // point to anything else either
+                    data.spacers.remove(event.getNewIndex());
+                }
+            }
+        }, SpacerIndexChangedEvent.TYPE);
     }
 
     private void createFrozenMenu() {
@@ -589,12 +619,18 @@ public class EscalatorBasicClientFeaturesWidget
     private void createSpacersMenuForRow(final int rowIndex,
             String[] menupath) {
         menupath = new String[] { menupath[0], menupath[1], "Row " + rowIndex };
-        addMenuCommand("Set 100px",
-                () -> escalator.getBody().setSpacer(rowIndex, 100), menupath);
-        addMenuCommand("Set 50px",
-                () -> escalator.getBody().setSpacer(rowIndex, 50), menupath);
-        addMenuCommand("Remove",
-                () -> escalator.getBody().setSpacer(rowIndex, -1), menupath);
+        addMenuCommand("Set 100px", () -> {
+            escalator.getBody().setSpacer(rowIndex, 100);
+            data.spacers.put(rowIndex, 100);
+        }, menupath);
+        addMenuCommand("Set 50px", () -> {
+            escalator.getBody().setSpacer(rowIndex, 50);
+            data.spacers.put(rowIndex, 50);
+        }, menupath);
+        addMenuCommand("Remove", () -> {
+            escalator.getBody().setSpacer(rowIndex, -1);
+            data.spacers.remove(rowIndex);
+        }, menupath);
         addMenuCommand("Scroll here (ANY, 0)", () -> escalator
                 .scrollToSpacer(rowIndex, ScrollDestination.ANY, 0), menupath);
         addMenuCommand("Scroll here row+spacer below (ANY, 0)", () -> escalator
