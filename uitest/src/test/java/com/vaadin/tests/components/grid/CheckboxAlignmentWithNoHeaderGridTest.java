@@ -30,7 +30,7 @@ public class CheckboxAlignmentWithNoHeaderGridTest extends SingleBrowserTest {
         }
         sleep(100);
 
-        Assert.assertTrue("This should be an empty grid",
+        Assert.assertTrue("This grid should have 5 rows",
                 grid.getRowCount() == 5);
         compareScreen("alignment");
     }
