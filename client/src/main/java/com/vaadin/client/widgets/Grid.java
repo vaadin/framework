@@ -7220,6 +7220,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         }
 
                         if (newSize > oldSize) {
+                            if (oldSize == 0 && !isHeaderVisible()) {
+                                // Fixes framework/issues/11607
+                                // Need to recalculate column widths when the
+                                // first row is added to a non-header grid,
+                                // otherwise the checkbox will be aligned in a
+                                // wrong place.
+                                recalculateColumnWidths();
+                            }
                             body.insertRows(oldSize, newSize - oldSize);
                             cellFocusHandler.rowsAddedToBody(Range
                                     .withLength(oldSize, newSize - oldSize));
