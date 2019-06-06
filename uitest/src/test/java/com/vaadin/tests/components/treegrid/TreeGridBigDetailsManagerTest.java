@@ -3,6 +3,7 @@ package com.vaadin.tests.components.treegrid;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
@@ -483,6 +484,50 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
         assertSpacerPositions();
 
         assertNoErrors();
+    }
+
+    @Test
+    public void expandAllOpenAllInitialDetails_hideOne() {
+        openTestURL();
+        $(ButtonElement.class).id(EXPAND_ALL).click();
+        $(ButtonElement.class).id(SHOW_DETAILS).click();
+        $(ButtonElement.class).id(ADD_GRID).click();
+
+        waitForElementPresent(By.className(CLASSNAME_TREEGRID));
+
+        treeGrid = $(TreeGridElement.class).first();
+
+        // check the position of a row
+        int oldY = treeGrid.getCell(2, 0).getLocation().getY();
+
+        // hide the spacer from previous row
+        treeGrid.getCell(1, 0).click();
+
+        // ensure the investigated row moved
+        assertNotEquals(oldY, treeGrid.getCell(2, 0).getLocation().getY());
+    }
+
+    @Test
+    public void expandAllOpenAllInitialDetailsScrolled_hideOne() {
+        openTestURL();
+        $(ButtonElement.class).id(EXPAND_ALL).click();
+        $(ButtonElement.class).id(SHOW_DETAILS).click();
+        $(ButtonElement.class).id(ADD_GRID).click();
+
+        waitForElementPresent(By.className(CLASSNAME_TREEGRID));
+
+        $(ButtonElement.class).id(SCROLL_TO_55).click();
+
+        treeGrid = $(TreeGridElement.class).first();
+
+        // check the position of a row
+        int oldY = treeGrid.getCell(52, 0).getLocation().getY();
+
+        // hide the spacer from previous row
+        treeGrid.getCell(51, 0).click();
+
+        // ensure the investigated row moved
+        assertNotEquals(oldY, treeGrid.getCell(52, 0).getLocation().getY());
     }
 
 }

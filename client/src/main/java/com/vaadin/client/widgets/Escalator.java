@@ -3577,13 +3577,29 @@ public class Escalator extends Widget
         @Override
         public void updateRowPositions(int index, int numberOfRows) {
             int visualIndex = index - getTopRowLogicalIndex();
-            if (visualIndex < 0 || visualIndex >= visualRowOrder.size()) {
-                // inconsistent state, ignore the positioning
+            int adjustedIndex = index;
+            int adjustedNumberOfRows = numberOfRows;
+
+            // only update the section of the given range that overlaps the
+            // visual range
+            if (visualIndex < 0 && visualIndex + numberOfRows - 1 >= 0) {
+                adjustedIndex = getTopRowLogicalIndex();
+                adjustedNumberOfRows += visualIndex;
+                visualIndex = 0;
+            }
+            adjustedNumberOfRows = Math.min(adjustedNumberOfRows,
+                    visualRowOrder.size() - visualIndex);
+
+            if (visualIndex < 0 || visualIndex >= visualRowOrder.size()
+                    || adjustedNumberOfRows < 1) {
+                // no overlap with the visual range, ignore the positioning
                 return;
             }
-            updateRowPositions(index, visualIndex, Math.min(numberOfRows,
-                    visualRowOrder.size() - visualIndex));
 
+            updateRowPositions(adjustedIndex, visualIndex,
+                    adjustedNumberOfRows);
+
+            // make sure there is no unnecessary gap
             adjustScrollPositionIfNeeded();
 
             scroller.recalculateScrollbarsForVirtualViewport();
@@ -3627,14 +3643,11 @@ public class Escalator extends Widget
                     + visualRowOrder.size();
             double gapBelow = scrollTop + getHeightOfSection()
                     - getRowTop(firstBelowVisualRange);
-            boolean lastRowInVisualRange = firstBelowVisualRange == getRowCount();
-            if (scrollTop > 0 && gapBelow > 0 && lastRowInVisualRange) {
+            if (scrollTop > 0 && gapBelow > 0) {
                 /*
                  * This situation can be reached e.g. by removing a spacer.
                  * Scroll position must be adjusted accordingly but no more than
-                 * there is room to scroll up. If the last row isn't in visual
-                 * range yet do nothing, as rendering that/those row(s) might
-                 * remove the gap.
+                 * there is room to scroll up.
                  */
                 moveViewportAndContent(null, 0, 0,
                         -Math.min(gapBelow, scrollTop));
