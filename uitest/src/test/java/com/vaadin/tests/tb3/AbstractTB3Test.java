@@ -10,13 +10,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.logging.Level;
 
 import org.apache.commons.io.IOUtils;
@@ -252,6 +246,13 @@ public abstract class AbstractTB3Test extends ParallelTest {
      */
     protected void openTestURL(Class<?> uiClass, String... parameters) {
         openTestURL(uiClass, new HashSet<>(Arrays.asList(parameters)));
+    }
+
+    /**
+     * Reloads the current page, as if the user pressed F5.
+     */
+    protected void reloadPage() {
+        driver.navigate().refresh();
     }
 
     private void openTestURL(Class<?> uiClass, Set<String> parameters) {

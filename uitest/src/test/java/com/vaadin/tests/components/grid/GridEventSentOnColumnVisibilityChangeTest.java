@@ -10,7 +10,8 @@ import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class GridEventSentOnColumnVisibilityChangeTest extends SingleBrowserTest {
+public class GridEventSentOnColumnVisibilityChangeTest
+        extends SingleBrowserTest {
 
     @Test
     public void changeVisibilityAssertLog() {
@@ -20,7 +21,7 @@ public class GridEventSentOnColumnVisibilityChangeTest extends SingleBrowserTest
         getSidebarOpenButton(grid).click();
         // hide the first column
         getSidebarPopup().findElements(By.tagName("td")).get(0).click();
-        
+
         Assert.assertTrue("Log content should match",
                 "1. UserOriginated: true".equals(getLogRow(0)));
     }
