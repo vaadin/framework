@@ -2,12 +2,14 @@ package com.vaadin.tests.components.uitest;
 
 import java.io.IOException;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.Parameters;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.DateFieldElement;
@@ -31,6 +33,11 @@ public abstract class ThemeTest extends MultiBrowserTest {
     }
 
     protected abstract String getTheme();
+
+    @Before
+    public void before(){
+        Parameters.setScreenshotComparisonTolerance(0.1);
+    }
 
     @Test
     public void testTheme() throws Exception {
