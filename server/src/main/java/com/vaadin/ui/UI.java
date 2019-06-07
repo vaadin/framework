@@ -22,14 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -160,12 +153,6 @@ public abstract class UI extends AbstractSingleComponentContainer
 
     private LoadingIndicatorConfiguration loadingIndicatorConfiguration = new LoadingIndicatorConfigurationImpl(
             this);
-
-    /**
-     * Holder for old navigation state, needed in doRefresh in order not to call
-     * navigateTo too often
-     */
-    private String oldNavigationState;
 
     /**
      * Scroll Y position.
@@ -880,12 +867,10 @@ public abstract class UI extends AbstractSingleComponentContainer
         // PushStateNavigation. Call navigateTo only if state have
         // truly changed
         Navigator navigator = getNavigator();
-        if (navigator != null) {
-            if (oldNavigationState == null) oldNavigationState = getNavigator().getState();
-            if (!navigator.getState().equals(oldNavigationState)) {
-                navigator.navigateTo(navigator.getState());
-                oldNavigationState = navigator.getState();
-            }
+        if (navigator != null
+                && !Objects.equals(navigator.getCurrentNavigationState(),
+                        navigator.getState())) {
+            navigator.navigateTo(navigator.getState());
         }
     }
 

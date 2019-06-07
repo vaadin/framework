@@ -1272,4 +1272,7 @@ public class Navigator implements Serializable {
         ui.setNavigator(null);
     }
 
+    public String getCurrentNavigationState() {
+        return currentNavigationState;
+    }
 }
