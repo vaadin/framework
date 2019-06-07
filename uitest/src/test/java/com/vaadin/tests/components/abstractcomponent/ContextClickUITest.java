@@ -1,13 +1,14 @@
 package com.vaadin.tests.components.abstractcomponent;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.UIElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-
-import static org.junit.Assert.assertTrue;
 
 public class ContextClickUITest extends MultiBrowserTest {
 
@@ -16,13 +17,12 @@ public class ContextClickUITest extends MultiBrowserTest {
         openTestURL();
 
         final UIElement uiElement = $(UIElement.class).first();
-
         new Actions(getDriver()).moveToElement(uiElement,
                 getXOffset(uiElement, 10), getYOffset(uiElement, 10))
                 .contextClick().perform();
 
-        assertTrue("Context click not received correctly",
-                 getLogRow(0).contains("Received context click"));
+        assertEquals("Context click not received correctly",
+                "1. Received context click at (10, 10)", getLogRow(0));
     }
 
     @Test
