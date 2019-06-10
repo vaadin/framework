@@ -1240,8 +1240,8 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
         if (BrowserUtil.isChrome(getDesiredCapabilities())) {
             // Chrome follow W3C spec and moveToElement is relative to center
-            final int width = element.getSize().getWidth();
-            return targetY - ((width + width % 2) / 2);
+            final int height = element.getSize().getHeight();
+            return targetY - ((height + height % 2) / 2);
         }
         return targetY;
     }
