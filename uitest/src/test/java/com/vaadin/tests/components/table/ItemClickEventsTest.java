@@ -1,16 +1,16 @@
 package com.vaadin.tests.components.table;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class ItemClickEventsTest extends MultiBrowserTest {
 
@@ -39,7 +39,6 @@ public class ItemClickEventsTest extends MultiBrowserTest {
         assertNotNull(e);
         assertTrue(hasCssClass(e, "v-selected"));
     }
-
     @Test
     public void testSingleSelectNull() throws Exception {
 
@@ -52,6 +51,7 @@ public class ItemClickEventsTest extends MultiBrowserTest {
         // Select the first item
         clickElement(table.getRow(0));
         assertLog("left click on table/Item 0");
+        sleep(100);
 
         // Do it again
         clickElement(table.getRow(0));
@@ -86,6 +86,7 @@ public class ItemClickEventsTest extends MultiBrowserTest {
 
         // Check log output
         assertLog("left click on table/Item 1");
+        sleep(100);
 
         // Click row 1 again
         clickElement(table.getRow(1));
