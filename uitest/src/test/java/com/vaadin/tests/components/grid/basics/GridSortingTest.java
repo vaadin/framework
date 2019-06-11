@@ -1,8 +1,5 @@
 package com.vaadin.tests.components.grid.basics;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -14,6 +11,9 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.parallel.Browser;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class GridSortingTest extends GridBasicsTest {
 
@@ -46,7 +46,7 @@ public class GridSortingTest extends GridBasicsTest {
     @Test
     public void testSortByMultipleColumnsByUser() {
         getGridElement().getHeaderCell(0, 7).click();
-        getGridElement().getHeaderCell(0, 6).click(20, 20, Keys.SHIFT);
+        getGridElement().getHeaderCell(0, 6).click(0,0, Keys.SHIFT);
 
         int i = 0;
         for (Integer rowNumber : getTestData()
