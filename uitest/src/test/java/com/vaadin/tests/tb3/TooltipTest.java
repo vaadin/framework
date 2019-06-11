@@ -90,7 +90,7 @@ public abstract class TooltipTest extends MultiBrowserTest {
     }
 
     protected void moveMouseTo(WebElement element, int offsetX, int offsetY) {
-        new Actions(getDriver()).moveToElement(element, offsetX, offsetY)
+        new Actions(getDriver()).moveToElement(element, getXOffset(element, offsetX), getYOffset(element, offsetY))
                 .perform();
     }
 
