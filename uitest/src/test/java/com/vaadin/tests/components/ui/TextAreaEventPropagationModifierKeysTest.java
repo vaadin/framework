@@ -1,26 +1,26 @@
 package com.vaadin.tests.components.ui;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.TextAreaElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class TextAreaEventPropagationModifierKeysTest extends MultiBrowserTest {
+import static org.junit.Assert.assertEquals;
+
+public class TextAreaEventPropagationModifierKeysTest extends SingleBrowserTest {
+
     @Test
     public void textAreaShiftEnterEventPropagation()
             throws InterruptedException {
         openTestURL();
-
-        WebElement textArea = $(TextAreaElement.class).first();
         Actions builder = new Actions(driver);
+        WebElement textArea = $(TextAreaElement.class).first();
         builder.click(textArea);
         builder.sendKeys(textArea, "first line asdf");
-        builder.sendKeys(Keys.chord(Keys.SHIFT, Keys.ENTER));
+        pressKeyCombinations(Keys.SHIFT, Keys.ENTER);
         builder.sendKeys(textArea, "second line jkl;");
         builder.perform();
 
@@ -37,7 +37,7 @@ public class TextAreaEventPropagationModifierKeysTest extends MultiBrowserTest {
         Actions builder = new Actions(driver);
         builder.click(textArea);
         builder.sendKeys(textArea, "first line asdf");
-        builder.sendKeys(Keys.chord(Keys.CONTROL, Keys.ENTER));
+        pressKeyCombinations(Keys.CONTROL, Keys.ENTER);
         builder.sendKeys(textArea, "second line jkl;");
         builder.perform();
 
@@ -48,5 +48,14 @@ public class TextAreaEventPropagationModifierKeysTest extends MultiBrowserTest {
     @Override
     protected Class<?> getUIClass() {
         return TextAreaEventPropagation.class;
+    }
+
+    // That is a workaround after Chrome 75, sendKeys(Keys.shift, Keys.Tab) doesn't work
+    protected void pressKeyCombinations(Keys keyModifier, Keys key){
+
+        Actions builder = new Actions(driver);
+        builder.keyDown(keyModifier).perform();
+        builder.sendKeys(Keys.chord(key)).perform();
+        builder.keyUp(keyModifier).perform();
     }
 }
