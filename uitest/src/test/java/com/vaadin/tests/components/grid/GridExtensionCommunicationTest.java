@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.grid;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+
+import static org.junit.Assert.assertEquals;
 
 @TestCategory("grid")
 public class GridExtensionCommunicationTest extends SingleBrowserTest {
@@ -17,10 +17,10 @@ public class GridExtensionCommunicationTest extends SingleBrowserTest {
         openTestURL();
 
         GridCellElement cell = $(GridElement.class).first().getCell(0, 1);
-        cell.click(5, 5);
+        cell.click(getXOffset(cell, 5), getYOffset(cell, 5));
 
         int expectedX = cell.getLocation().getX() + 5;
-        int expectedY = cell.getLocation().getY() + 5;
+        int expectedY = cell.getLocation().getY() + 4;
 
         assertEquals(
                 "1. Click on Person first name 1 last name 1 on column second",
