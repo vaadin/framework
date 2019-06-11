@@ -226,9 +226,13 @@ public class GridComponentsTest extends MultiBrowserTest {
                 scrollMax, getScrollLeft(grid));
 
         // Navigate to out of viewport TextField in Header
-        new Actions(getDriver()).keyDown(Keys.SHIFT).perform();
-        new Actions(getDriver()).sendKeys(Keys.TAB).perform();
-        new Actions(getDriver()).keyUp(Keys.SHIFT).perform();
+        new Actions(getDriver()).sendKeys(Keys.chord(Keys.SHIFT, Keys.TAB))
+                .perform();
+        // After Chrome 75, sendkeys issues
+        if(BrowserUtil.isChrome(getDesiredCapabilities())){
+            grid.getHeaderCell(1, 0)
+                    .findElement(By.id("headerField")).click();
+        }
         assertEquals("Focus should be in TextField in Header", "headerField",
                 getFocusedElement().getAttribute("id"));
         assertEquals("Grid should've scrolled back to start.", 0,
