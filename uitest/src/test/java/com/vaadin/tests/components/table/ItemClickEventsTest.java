@@ -21,7 +21,7 @@ public class ItemClickEventsTest extends MultiBrowserTest {
 
     private void clickElement(TestBenchElement e) {
         assertNotNull(e);
-        e.click(5, 5);
+        e.click();
     }
 
     private void doubleClickElement(TestBenchElement e) {
@@ -39,6 +39,7 @@ public class ItemClickEventsTest extends MultiBrowserTest {
         assertNotNull(e);
         assertTrue(hasCssClass(e, "v-selected"));
     }
+
     @Test
     public void testSingleSelectNull() throws Exception {
 
@@ -86,7 +87,7 @@ public class ItemClickEventsTest extends MultiBrowserTest {
 
         // Check log output
         assertLog("left click on table/Item 1");
-        sleep(100);
+        sleep(500);
 
         // Click row 1 again
         clickElement(table.getRow(1));
