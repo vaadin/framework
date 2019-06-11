@@ -224,8 +224,9 @@ public class TableItemDescriptionGeneratorUITest extends TooltipTest {
     }
 
     private void moveToCorner(TestBenchElement cell) {
-        new Actions(getDriver()).moveToElement(cell, getXOffset(cell, 0),
-                getYOffset(cell, 0)).perform();
+        new Actions(getDriver())
+                .moveToElement(cell, getXOffset(cell, 0), getYOffset(cell, 0))
+                .perform();
     }
 
 }

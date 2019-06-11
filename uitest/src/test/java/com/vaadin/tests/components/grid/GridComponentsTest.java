@@ -229,9 +229,8 @@ public class GridComponentsTest extends MultiBrowserTest {
         new Actions(getDriver()).sendKeys(Keys.chord(Keys.SHIFT, Keys.TAB))
                 .perform();
         // After Chrome 75, sendkeys issues
-        if(BrowserUtil.isChrome(getDesiredCapabilities())){
-            grid.getHeaderCell(1, 0)
-                    .findElement(By.id("headerField")).click();
+        if (BrowserUtil.isChrome(getDesiredCapabilities())) {
+            grid.getHeaderCell(1, 0).findElement(By.id("headerField")).click();
         }
         assertEquals("Focus should be in TextField in Header", "headerField",
                 getFocusedElement().getAttribute("id"));

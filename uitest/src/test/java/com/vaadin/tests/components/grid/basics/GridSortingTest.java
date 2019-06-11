@@ -46,7 +46,7 @@ public class GridSortingTest extends GridBasicsTest {
     @Test
     public void testSortByMultipleColumnsByUser() {
         getGridElement().getHeaderCell(0, 7).click();
-        getGridElement().getHeaderCell(0, 6).click(0,0, Keys.SHIFT);
+        getGridElement().getHeaderCell(0, 6).click(0, 0, Keys.SHIFT);
 
         int i = 0;
         for (Integer rowNumber : getTestData()

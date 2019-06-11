@@ -35,7 +35,7 @@ public abstract class ThemeTest extends MultiBrowserTest {
     protected abstract String getTheme();
 
     @Before
-    public void before(){
+    public void before() {
         Parameters.setScreenshotComparisonTolerance(0.1);
     }
 

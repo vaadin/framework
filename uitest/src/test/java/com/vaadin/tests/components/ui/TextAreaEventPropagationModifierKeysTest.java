@@ -10,7 +10,8 @@ import com.vaadin.tests.tb3.SingleBrowserTest;
 
 import static org.junit.Assert.assertEquals;
 
-public class TextAreaEventPropagationModifierKeysTest extends SingleBrowserTest {
+public class TextAreaEventPropagationModifierKeysTest
+        extends SingleBrowserTest {
 
     @Test
     public void textAreaShiftEnterEventPropagation()
@@ -50,8 +51,9 @@ public class TextAreaEventPropagationModifierKeysTest extends SingleBrowserTest 
         return TextAreaEventPropagation.class;
     }
 
-    // That is a workaround after Chrome 75, sendKeys(Keys.shift, Keys.Tab) doesn't work
-    protected void pressKeyCombinations(Keys keyModifier, Keys key){
+    // That is a workaround after Chrome 75, sendKeys(Keys.shift, Keys.Tab)
+    // doesn't work
+    protected void pressKeyCombinations(Keys keyModifier, Keys key) {
 
         Actions builder = new Actions(driver);
         builder.keyDown(keyModifier).perform();

@@ -403,8 +403,9 @@ public class WindowHeaderButtonKeyboardActionsTest extends SingleBrowserTest {
         sleep(1000);
     }
 
-    // That is a workaround after Chrome 75, sendKeys(Keys.shift, Keys.Tab) doesn't work
-    protected void pressKeyCombinations(Keys keyModifier, Keys key){
+    // That is a workaround after Chrome 75, sendKeys(Keys.shift, Keys.Tab)
+    // doesn't work
+    protected void pressKeyCombinations(Keys keyModifier, Keys key) {
 
         new Actions(getDriver()).keyDown(keyModifier).perform();
         new Actions(getDriver()).sendKeys(Keys.chord(key)).perform();
