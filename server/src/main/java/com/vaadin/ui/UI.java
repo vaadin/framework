@@ -162,6 +162,12 @@ public abstract class UI extends AbstractSingleComponentContainer
             this);
 
     /**
+     * Holder for old navigation state, needed in doRefresh in order not to call
+     * navigateTo too often
+     */
+    private String oldNavigationState;
+
+    /**
      * Scroll Y position.
      */
     private int scrollTop = 0;
@@ -871,10 +877,15 @@ public abstract class UI extends AbstractSingleComponentContainer
         page.updateBrowserWindowSize(newWidth, newHeight, true);
 
         // Navigate if there is navigator, this is needed in case of
-        // PushStateNavigation
+        // PushStateNavigation. Call navigateTo only if state have
+        // truly changed
         Navigator navigator = getNavigator();
         if (navigator != null) {
-            navigator.navigateTo(navigator.getState());
+            if (oldNavigationState == null) oldNavigationState = getNavigator().getState();
+            if (!navigator.getState().equals(oldNavigationState)) {
+                navigator.navigateTo(navigator.getState());
+                oldNavigationState = navigator.getState();
+            }
         }
     }
 
