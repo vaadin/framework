@@ -25,7 +25,7 @@ public class CheckboxAlignmentWithNoHeaderGridTest extends SingleBrowserTest {
         Assert.assertTrue("This should be an empty grid",
                 grid.getRowCount() == 0);
 
-        for (int i =0; i<5; i++) {
+        for (int i = 0; i < 5; i++) {
             $(ButtonElement.class).first().click();
         }
         sleep(100);

@@ -122,7 +122,7 @@ public class TabSheetElement extends AbstractComponentContainerElement {
         }
         // If neither text nor icon caption was found, click at a position that
         // is unlikely to close the tab.
-        ((TestBenchElement) tabCell).click(10, 10);
+        ((TestBenchElement) tabCell).click(-5, 0);
     }
 
     /**
