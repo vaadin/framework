@@ -1,19 +1,21 @@
 package com.vaadin.tests.components.colorpicker;
 
-import com.vaadin.tests.tb3.MultiBrowserTest;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.tests.tb3.SingleBrowserTest;
+
 import static org.junit.Assert.assertEquals;
 
-public class ColorPickerUserColorChangeTest extends MultiBrowserTest {
+public class ColorPickerUserColorChangeTest extends SingleBrowserTest {
 
     @Test
     public void testUserOriginatedTrue() {
         openTestURL();
+        waitUntilLoadingIndicatorNotVisible();
         // Open colorPicker
-        findElement(By.className("v-button-v-colorpicker ")).click();
+        findElement(By.className("v-button-v-colorpicker")).click();
         sleep(2000);
         // click somewhere inside the gradient layer
         findElement(By.className("v-colorpicker-gradient-clicklayer")).click();
