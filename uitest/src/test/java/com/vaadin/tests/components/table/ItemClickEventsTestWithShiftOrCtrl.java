@@ -1,8 +1,5 @@
 package com.vaadin.tests.components.table;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.util.List;
 
 import org.junit.Before;
@@ -11,11 +8,14 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class ItemClickEventsTestWithShiftOrCtrl extends MultiBrowserTest {
 
@@ -32,7 +32,7 @@ public class ItemClickEventsTestWithShiftOrCtrl extends MultiBrowserTest {
 
     private void clickElement(TestBenchElement e) {
         assertNotNull(e);
-        e.click(5, 5);
+        e.click();
     }
 
     private void shiftClickElement(TestBenchElement e) {
@@ -132,6 +132,7 @@ public class ItemClickEventsTestWithShiftOrCtrl extends MultiBrowserTest {
         // Click item 10, verify log output
         clickElement(table.getCell(9, 0));
         assertLog("left click on table/Item 9");
+        sleep(100);
 
         // Click it again, should not deselect
         ctrlClickElement(table.getCell(9, 0));
