@@ -51,7 +51,7 @@ The [classname]#DragStartEvent# is fired when the drag has started, and the [cla
 [source, java]
 ----
 dragSource.addDragStartListener(event ->
-    Notification.show("Drag event started");
+    Notification.show("Drag event started")
 );
 dragSource.addDragEndListener(event -> {
     if (event.isCanceled()) {
@@ -69,7 +69,7 @@ It is possible to transfer any Object as server side data to the drop target if 
 [source, java]
 ----
 dragSource.addDragStartListener(event ->
-    dragSource.setDragData(myObject);
+    dragSource.setDragData(myObject)
 );
 dragSource.addDragEndListener(event ->
     dragSource.setDragData(null);
