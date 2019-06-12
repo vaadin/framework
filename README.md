@@ -76,7 +76,7 @@ The following preferences need to be set to keep the project consistent. You nee
 1. Open *vaadin-uitest* -> *Plugins* -> *jetty* -> *jetty:run-exploded*
 1. Open URL [http://localhost:8888/run/&lt;testUI&gt;](http://localhost:8888/run/<testUI>)
 
-## Running a Development Server
+
 
 1. Open *Run* menu  and click *Edit Configurations*
 1. Click green ***+*** sign at top left corner, select *Maven* from popup
