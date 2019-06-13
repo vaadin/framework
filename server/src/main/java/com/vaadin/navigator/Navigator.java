@@ -1272,4 +1272,17 @@ public class Navigator implements Serializable {
         ui.setNavigator(null);
     }
 
+    /**
+     * Returns the current navigation state for which the
+     * {@link #getCurrentView()} has been constructed. This may differ to
+     * {@link #getState()} in case the URL has been changed on the browser and
+     * the navigator wasn't yet given an opportunity to construct new view. The
+     * state is in the form of
+     * <code>current-view-name/optional/parameters</code>
+     *
+     * @return the current navigation state, may be {@code null}.
+     */
+    public String getCurrentNavigationState() {
+        return currentNavigationState;
+    }
 }

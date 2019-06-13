@@ -31,10 +31,8 @@ import org.junit.rules.TestName;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -252,6 +250,13 @@ public abstract class AbstractTB3Test extends ParallelTest {
      */
     protected void openTestURL(Class<?> uiClass, String... parameters) {
         openTestURL(uiClass, new HashSet<>(Arrays.asList(parameters)));
+    }
+
+    /**
+     * Reloads the current page, as if the user pressed F5.
+     */
+    protected void reloadPage() {
+        driver.navigate().refresh();
     }
 
     private void openTestURL(Class<?> uiClass, Set<String> parameters) {
