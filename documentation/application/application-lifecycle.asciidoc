@@ -17,7 +17,7 @@ actually work and, especially, in what circumstances their execution ends.
 
 Before a Vaadin application can be used, it has to be deployed to a Java web
 server, as described in
-<<dummy/../../../framework/application/application-environment#application.environment,"Deploying
+<<application-environment#application.environment,"Deploying
 an Application">>. Deploying reads the servlet classes annotated with the
 [literal]#++@WebServlet++# annotation or the [filename]#web.xml#
 deployment descriptor in the application to register servlets for
@@ -130,7 +130,7 @@ lower-level session objects, [interfacename]#HttpSession# and
 [interfacename]#PortletSession#, through a [classname]#WrappedSession#. You can
 also access the deployment configuration through [classname]#VaadinSession#, as
 described in
-<<dummy/../../../framework/application/application-environment#application.environment.configuration,"Deployment
+<<application-environment#application.environment.configuration,"Deployment
 Configuration">>.
 
 A session ends after the last [classname]#UI# instance expires or is closed, as
@@ -219,7 +219,7 @@ separate [filename]#vaadinBootstrap.js# script.
 
 You can also use entirely custom loader code, such as in a static HTML page, as
 described in
-<<dummy/../../../framework/advanced/advanced-embedding#advanced.embedding,"Embedding
+<<../advanced/advanced-embedding#advanced.embedding,"Embedding
 UIs in Web Pages">>.
 
 
@@ -278,7 +278,7 @@ The heartbeats occur at an interval of 5 minutes, which can be changed with the
 [parameter]#heartbeatInterval# parameter of the servlet. You can configure the
 parameter in [classname]#@VaadinServletConfiguration# or in [filename]#web.xml#
 as described in
-<<dummy/../../../framework/application/application-environment#application.environment.parameters,"Other
+<<application-environment#application.environment.parameters,"Other
 Servlet Configuration Parameters">>.
 
 When the UI cleanup happens, a [classname]#DetachEvent# is sent to all
@@ -305,7 +305,7 @@ programmatically, but redirection is possible. You can redirect the window to
 another URL with [methodname]#setLocation()#, as is done in the examples in
 <<application.lifecycle.session-closing>>. You can close popup windows by making
 JavaScript [methodname]#close()# call for them, as described in
-<<dummy/../../../framework/advanced/advanced-windows#advanced.windows.popup-closing,"Closing
+<<../advanced/advanced-windows#advanced.windows.popup-closing,"Closing
 Popup Windows">>.
 
 If you close other UI than the one associated with the current request, they
@@ -332,19 +332,19 @@ setting. ((("session",
 ((("closeIdleSessions")))
 If the [parameter]#closeIdleSessions# parameter of the servlet is set to
 [literal]#++true++# in the [filename]#web.xml#, as described in
-<<dummy/../../../framework/application/application-environment#application.environment.web-xml,"Using
+<<application-environment#application.environment.web-xml,"Using
 a web.xml Deployment Descriptor">>, the session and all of its UIs are closed
 when the timeout specified by the [parameter]#session-timeout# parameter of the
 servlet expires after the last non-heartbeat request. Once the session is gone,
 the browser will show an Out Of Sync error on the next server request.
 ((("redirection")))
 To avoid the ugly message, you may want to set a redirect URL for the UIs, as described in
-<<dummy/../../../framework/application/application-errors#application.errors.systemmessages,"Customizing
+<<application-errors#application.errors.systemmessages,"Customizing
 System
 Messages">>.
 
 The related configuration parameters are described in
-<<dummy/../../../framework/application/application-environment#application.environment.parameters,"Other
+<<application-environment#application.environment.parameters,"Other
 Servlet Configuration Parameters">>.
 
 ((("[interfacename]#SessionDestroyListener#")))
@@ -405,7 +405,7 @@ and, by default, reloads the UI when the message is clicked.
 ((("system messages")))
 You can customize the message and the redirect URL in the system messages.
 
-It is described in <<dummy/../../../framework/application/application-errors#application.errors.systemmessages,"Customizing System Messages">>.
+It is described in <<application-errors#application.errors.systemmessages,"Customizing System Messages">>.
 
 ((("heartbeat")))
 ((("UI", "heartbeat")))
@@ -417,7 +417,7 @@ UIs detect the situation faster, you need to make the heart beat faster, as was
 done in the example above. You can also use server push to close the other UIs
 immediately, as is done in the following example. Access to the UIs must be
 synchronized as described in
-<<dummy/../../../framework/advanced/advanced-push#advanced.push,"Server Push">>.
+<<../advanced/advanced-push#advanced.push,"Server Push">>.
 
 [source, java]
 ----

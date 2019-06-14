@@ -39,7 +39,7 @@ images, [filename]#layouts# for custom layouts, and [filename]#css# for
 additional stylesheets.
 
 Custom themes need to extend a base theme, as described in
-<<dummy/../../../framework/themes/themes-creating#themes.creating,"Creating and
+<<themes-creating#themes.creating,"Creating and
 Using Themes">>. Copying and modifying an existing theme is also possible, but
 it is not recommended, as it may need more work to maintain if the modifications
 are small.
@@ -64,12 +64,12 @@ changed as needed.
 
 In addition to style sheets, a theme can contain HTML templates for custom
 layouts used with [classname]#CustomLayout#. See
-<<dummy/../../../framework/layout/layout-customlayout#layout.customlayout,"Custom
+<<../layout/layout-customlayout#layout.customlayout,"Custom
 Layouts">> for details.
 
 Resources provided in a theme can also be accessed using the
 [classname]#ThemeResource# class, as described in
-<<dummy/../../../framework/application/application-resources#application.resources.theme,"Theme
+<<../application/application-resources#application.resources.theme,"Theme
 Resources">>. This allows displaying theme resources in component icons, in the
 [classname]#Image# component, and other such uses.
 

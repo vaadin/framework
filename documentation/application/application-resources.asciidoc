@@ -12,7 +12,7 @@ embedded content, or downloadable files, that the browser has to load from the
 server. Image resources are typically displayed with the [classname]#Image#
 component or as component icons. Embedded browser frames can be displayed with [classname]#BrowserFrame#, and
 other content with the [classname]#Embedded# component, as described in
-<<dummy/../../../framework/components/components-embedded#components.embedded,"Embedded
+<<../components/components-embedded#components.embedded,"Embedded
 Resources">>. Downloadable files are usually provided by clicking a
 [classname]#Link# or using the [classname]#FileDownloader# extension.
 
@@ -23,7 +23,7 @@ them dynamically. The resource request interfaces in Vaadin allow applications
 to both refer to static resources as well as dynamically create them. The
 dynamic creation includes the [classname]#StreamResource# class and the
 [interfacename]#RequestHandler# described in
-<<dummy/../../../framework/advanced/advanced-requesthandler#advanced.requesthandler,"Request
+<<../advanced/advanced-requesthandler#advanced.requesthandler,"Request
 Handlers">>.
 
 Vaadin also provides low-level facilities for retrieving the URI and other
@@ -33,7 +33,7 @@ handling URIs and parameters to provide resources and functionalities.
 
 Notice that using request handlers to create "pages" is not normally meaningful
 in Vaadin or in AJAX applications generally. Please see
-<<dummy/../../../framework/architecture/architecture-technology#architecture.technology.ajax,"AJAX">>
+<<../architecture/architecture-technology#architecture.technology.ajax,"AJAX">>
 for a detailed explanation.
 
 [[application.resources.api]]
@@ -129,7 +129,7 @@ Image image = new Image("My Theme Image", resource);
 ----
 
 To use theme resources, you must set the theme for the UI. See
-<<dummy/../../../framework/themes/themes-overview.asciidoc#themes.overview,"Themes">>
+<<../themes/themes-overview.asciidoc#themes.overview,"Themes">>
 for more information regarding themes.
 
 
@@ -223,5 +223,5 @@ The resulting image is shown in <<figure.application.resource.stream>>.
 image::img/application_streamresource.png[width=25%, scaledwidth=25%]
 
 Another way to create dynamic content is a request handler, described in
-<<dummy/../../../framework/advanced/advanced-requesthandler#advanced.requesthandler,"Request
+<<../advanced/advanced-requesthandler#advanced.requesthandler,"Request
 Handlers">>.

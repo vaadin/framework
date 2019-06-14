@@ -121,7 +121,7 @@ debugging the component tree in various ways.
 
 The [guibutton]#Show the connector hierarchy tree# button displays the
 client-side connector hierarchy. As explained in
-<<dummy/../../../framework/gwt/gwt-overview.asciidoc#gwt.overview,"Integrating
+<<../gwt/gwt-overview.asciidoc#gwt.overview,"Integrating
 with the Server-Side">>, client-side widgets are managed by connectors that
 handle communication with the server-side component counterparts. The connector
 hierarchy therefore corresponds with the server-side component tree, but the
@@ -204,5 +204,5 @@ get more detailed information about the requests and responses.
 
 The [guilabel]#Menu# tab in the window opens a sub-menu to select various
 settings. Here you can also launch the GWT SuperDevMode, as described in
-<<dummy/../../../framework/clientside/clientside-debugging#clientside.debugging,"Debugging
+<<../clientside/clientside-debugging#clientside.debugging,"Debugging
 Client-Side Code">>.

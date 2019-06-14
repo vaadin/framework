@@ -18,7 +18,7 @@ request used to initialize the application and you can get the URI
 fragment using
 
 ....
-getPage().geUriFragment()
+getPage().getUriFragment()
 ....
 
 A simple init that depends on the URI fragment is thus:

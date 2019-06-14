@@ -10,8 +10,8 @@ layout: page
 The [classname]#Tree# and the [classname]#TreeGrid# components allow you to show data with hierarchical relationships between items.
 That data can be populated by on-demand from a back end by implementing the [interfacename]#HierarchicalDataProvider# interface. If you have the data available in-memory on the server,
 you use the collection style API of [classname]#TreeData# and then pass it to a [classname]#TreeDataProvider#. This chapter introduces the hierarchical data providers and how they work.
-For using them with the components you should see <<dummy/../../../framework/components/components-tree.asciidoc#components.tree,"Tree">>
-and <<dummy/../../../framework/components/components-treegrid.asciidoc#components.treegrid,"TreeGrid">> documentation.
+For using them with the components you should see <<../components/components-tree.asciidoc#components.tree,"Tree">>
+and <<../components/components-treegrid.asciidoc#components.treegrid,"TreeGrid">> documentation.
 
 == In-memory Hierarchical Data
 
@@ -66,7 +66,7 @@ dataProvider.setFilter(project -> project.getHours() > 100);
 
 == Lazy Loading Hierarchical Data from a Back End
 
-The lazy loading hierarchical data, same concepts apply as with the non-hierarchical data, so you should take a look at <<dummy/../../../framework/datamodel/datamodel-providers.asciidoc#datamodel.dataproviders.lazy,"Lazy Loading Data to a Listing">> if you have not already.
+The lazy loading hierarchical data, same concepts apply as with the non-hierarchical data, so you should take a look at <<datamodel-providers.asciidoc#datamodel.dataproviders.lazy,"Lazy Loading Data to a Listing">> if you have not already.
 
 To load hierarchical data on-demand from your back end, you should extend the [classname]#AbstractHierarchicalDataProvider# class. Then you just have to implement the following three methods:
 

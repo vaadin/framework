@@ -18,7 +18,7 @@ shown for each field. The field captions can have an icon in addition to the
 text. [classname]#FormLayout# is an ordered layout and much like
 [classname]#VerticalLayout#. For description of margins, spacing, and other
 features in ordered layouts, see
-<<dummy/../../../framework/layout/layout-orderedlayout#layout.orderedlayout, "VerticalLayout and HorizontalLayout">>.
+<<layout-orderedlayout#layout.orderedlayout, "VerticalLayout and HorizontalLayout">>.
 
 The following example shows typical use of [classname]#FormLayout# in a form:
 
@@ -88,6 +88,6 @@ is shown as a dedicated column, the indicator for required fields is currently
 shown as a part of the caption column.
 
 For information on setting margins and spacing, see also
-<<dummy/../../../framework/layout/layout-orderedlayout#layout.orderedlayout.spacing,"Spacing
+<<layout-orderedlayout#layout.orderedlayout.spacing,"Spacing
 in Ordered Layouts">> and
-<<dummy/../../../framework/layout/layout-settings#layout.settings.margins, "Layout Margins">>.
+<<layout-settings#layout.settings.margins, "Layout Margins">>.

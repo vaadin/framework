@@ -47,7 +47,7 @@ tf.addValueChangeListener(event ->
 
 [classname]#TextField# edits [classname]#String# values, but you can use [classname]#Binder#
 to bind it to any property type that has a proper converter, as described in
-<<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms.conversion,"Conversion">>.
+<<../datamodel/datamodel-forms.asciidoc#datamodel.forms.conversion,"Conversion">>.
 
 Much of the API of [classname]#TextField# is defined in
 [classname]#AbstractTextField#, which allows different kinds of text input

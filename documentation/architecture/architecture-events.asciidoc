@@ -56,4 +56,4 @@ in this case the [classname]#Button#.
 .Class Diagram of a Button Click Listener
 image::img/events-classdiagram.png[width=80%, scaledwidth=100%]
 
-<<dummy/../../../framework/application/application-events#application.events,"Handling Events with Listeners">> goes into details of handling events in practice.
+<<../application/application-events#application.events,"Handling Events with Listeners">> goes into details of handling events in practice.

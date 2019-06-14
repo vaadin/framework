@@ -11,23 +11,23 @@ The Vaadin Data Model is one of the core concepts of the library.
 There is a standard data interface that all UI components use to access and modify the application's data.
 
 The most basic UI component for handling data is a field component that lets the user define a single value, for instance a text field for writing the name of a product or a dropdown menu for selecting which department an employee belongs to.
-See <<dummy/../../../framework/datamodel/datamodel-fields.asciidoc#datamodel.fields,"Editing Values in Fields">> to learn how these components can be used on their own.
+See <<datamodel-fields.asciidoc#datamodel.fields,"Editing Values in Fields">> to learn how these components can be used on their own.
 
 In most applications, there are business classes that represent real-world objects like a single employee or a product in an inventory.
 The user interface is structured as a form that lets the user edit all the different properties of a single business object instance.
 Vaadin Framework makes it easy to create forms for editing these sorts.
 You have full control over how you configure and lay out the individual input fields making up a form, and then you can use `Binder` to hook up those fields to a business object instance.
-<<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms,"Binding Data to Forms">> shows how to bind data to fields.
+<<datamodel-forms.asciidoc#datamodel.forms,"Binding Data to Forms">> shows how to bind data to fields.
 
 There are UI components in the framework that lists multiple similar objects and lets the user view, select and in some cases even edit those objects.
 A listing component can get its data from an in-memory collection or lazily fetch it from some backend.
 In either case, there are options available for defining how the data is sorted and filtered before being displayed to the user.
-Read more about how to provide lists of data to these components in <<dummy/../../../framework/datamodel/datamodel-providers.asciidoc#datamodel.providers,"Showing Many Items in a Listing">>. For using hierarchical data, see <<dummy/../../../framework/datamodel/datamodel-hierarchical.asciidoc#datamodel.hierarchical,"Hierarchical Data">>.
-Using a listing component as an input field to select one or many of the listed items is described in <<dummy/../../../framework/datamodel/datamodel-selection.asciidoc#datamodel.selection,"Selecting items">>.
+Read more about how to provide lists of data to these components in <<datamodel-providers.asciidoc#datamodel.providers,"Showing Many Items in a Listing">>. For using hierarchical data, see <<datamodel-hierarchical.asciidoc#datamodel.hierarchical,"Hierarchical Data">>.
+Using a listing component as an input field to select one or many of the listed items is described in <<datamodel-selection.asciidoc#datamodel.selection,"Selecting items">>.
 
 Vaadin Data Model topic references::
-* <<dummy/../../../framework/datamodel/datamodel-fields.asciidoc#datamodel.fields,"Editing Values in Fields">>
-* <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms,"Binding Data to Forms">>
-* <<dummy/../../../framework/datamodel/datamodel-providers.asciidoc#datamodel.providers,"Showing Many Items in a Listing">>
-* <<dummy/../../../framework/datamodel/datamodel-selection.asciidoc#datamodel.selection,"Selecting items">>
-* <<dummy/../../../framework/datamodel/datamodel-hierarchical.asciidoc#datamodel.hierarchical,"Hierarchical Data">>
+* <<datamodel-fields.asciidoc#datamodel.fields,"Editing Values in Fields">>
+* <<datamodel-forms.asciidoc#datamodel.forms,"Binding Data to Forms">>
+* <<datamodel-providers.asciidoc#datamodel.providers,"Showing Many Items in a Listing">>
+* <<datamodel-selection.asciidoc#datamodel.selection,"Selecting items">>
+* <<datamodel-hierarchical.asciidoc#datamodel.hierarchical,"Hierarchical Data">>
