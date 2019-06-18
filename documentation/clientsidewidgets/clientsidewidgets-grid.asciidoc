@@ -9,7 +9,7 @@ layout: page
 
 The [classname]#Grid# widget is the client-side counterpart for the server-side
 [classname]#Grid# component described in
-<<dummy/../../../framework/components/components-grid#components.grid,"Grid">>.
+<<../components/components-grid#components.grid,"Grid">>.
 
 The client-side API is almost identical to the server-side API, so its
 documentation is currently omitted here and we refer you to the API
@@ -20,7 +20,7 @@ documentation. In the following, we go through some customization features of
 == Renderers
 
 As described in
-<<dummy/../../../framework/components/components-grid#components.grid.renderer,"Column
+<<../components/components-grid#components.grid.renderer,"Column
 Renderers">>, renderers draw the visual representation of data values on the
 client-side. They implement [interfacename]#Renderer# interface and its
 [methodname]#render()# method. The method gets a reference to the element of the
@@ -29,7 +29,7 @@ modify the element as needed.
 
 For example, [classname]#TextRenderer# is implemented simply as follows:
 
-
+[source, java] 
 ----
 public class TextRenderer implements Renderer<String> {
     @Override
@@ -44,7 +44,7 @@ The server-side renderer API should extend [classname]#AbstractRenderer# or
 [classname]#ClickableRenderer# with the data type accepted by the renderer. The
 data type also must be given for the superclass constructor.
 
-
+[source, java] 
 ----
 public class TextRenderer extends AbstractRenderer<String> {
     public TextRenderer() {
@@ -56,7 +56,7 @@ public class TextRenderer extends AbstractRenderer<String> {
 The client-side and server-side renderer need to be connected with a connector
 extending from [classname]#AbstractRendererConnector#.
 
-
+[source, java] 
 ----
 @Connect(com.vaadin.ui.renderer.TextRenderer.class)
 public class TextRendererConnector

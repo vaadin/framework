@@ -31,6 +31,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -869,6 +870,16 @@ public abstract class UI extends AbstractSingleComponentContainer
 
         page.updateLocation(newLocation.toString(), true, false);
         page.updateBrowserWindowSize(newWidth, newHeight, true);
+
+        // Navigate if there is navigator, this is needed in case of
+        // PushStateNavigation. Call navigateTo only if state have
+        // truly changed
+        Navigator navigator = getNavigator();
+        if (navigator != null
+                && !Objects.equals(navigator.getCurrentNavigationState(),
+                        navigator.getState())) {
+            navigator.navigateTo(navigator.getState());
+        }
     }
 
     /**

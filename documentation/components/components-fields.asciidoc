@@ -21,7 +21,7 @@ Field components are built upon the framework defined in the [classname]#HasValu
 interface.
 [classname]#AbstractField# is the base class for all field components,
 except those components that allow the user to select a value.
-(see <<dummy/../../../framework/components/components-selection.asciidoc#components.selection,"Selection Components">>).
+(see <<components-selection.asciidoc#components.selection,"Selection Components">>).
 
 In addition to the component features inherited from
 [classname]#AbstractComponent#, it implements the features defined in the
@@ -51,7 +51,7 @@ access with the corresponding setters and getters.
 [methodname]#requiredIndicatorVisible#:: When enabled, a required indicator
 (the asterisk * character) is displayed on the left, above, or right the field,
 depending on the containing layout and whether the field has a caption.
-When the component is used in a form (see <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms.validation,"Validation">>),
+When the component is used in a form (see <<../datamodel/datamodel-forms.asciidoc#datamodel.forms.validation,"Validation">>),
 it can be set to be required, which will automatically show the required indicator,
 and validate that the value is not empty. Without validation, the required indicator
 is merely a visual guide.
@@ -116,7 +116,7 @@ Person p = new Person();
 binder.setBean(p);
 ----
 
-For more information on data binding, see <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms,"Binding Data to Forms">>
+For more information on data binding, see <<../datamodel/datamodel-forms.asciidoc#datamodel.forms,"Binding Data to Forms">>
 
 
 == Validating Field Values
@@ -138,7 +138,7 @@ binder.forField(nameField)
 ----
 
 Failed validation is by default indicated with the error indicator of the field, described in
-<<dummy/../../../framework/application/application-errors#application.errors.error-indicator,"Error
+<<../application/application-errors#application.errors.error-indicator,"Error
 Indicator and Message">>. Hovering mouse on the field displays the error message
 returned by the validator. If any value in a set of bound fields fails validation,
 none of the field values are saved into the bound property until the validation
@@ -192,7 +192,7 @@ Field values are always of some particular type. For example,
 a data source, the type of the source property can be something different,
 say an [classname]#Integer#. __Converters__ are used for converting the values
 between the presentation and the model. Their usage is described in
-<<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms.conversion,"Conversion">>.
+<<../datamodel/datamodel-forms.asciidoc#datamodel.forms.conversion,"Conversion">>.
 
 
 (((range="endofrange", startref="term.components.fields")))

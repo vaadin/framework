@@ -189,17 +189,11 @@ Tutorial] for detailed instructions for using Spring Boot.
 [[advanced.spring.installation]]
 == Installing Vaadin Spring Add-on
 
-Vaadin Spring requires a Java EE 7 compatible servlet container, such as
-Glassfish or Apache TomEE Web Profile, as mentioned for the reference toolchain
-in
-<<dummy/../../../framework/getting-started/getting-started-environment#getting-started.environment,"Setting
-up the Development Environment">>.
-
 To install the Vaadin Spring and/or Vaadin Spring Boot add-ons, either define
 them as an Ivy or Maven dependency or download from the Vaadin Directory add-on
 page at link:https://vaadin.com/directory#addon/vaadin-spring[vaadin.com/directory#addon/vaadin-spring]
 or link:https://vaadin.com/directory#addon/vaadin-spring-boot[vaadin.com/directory#addon/vaadin-spring-boot].
-See <<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using
+See <<../addons/addons-overview.asciidoc#addons.overview,"Using
 Vaadin Add-ons">> for general instructions for installing and using Vaadin
 add-ons.
 
@@ -271,7 +265,7 @@ section.
 
 Vaadin Spring offers an easier way to instantiate UIs and to define the URL
 mapping for them than the usual ways described in
-<<dummy/../../../framework/application/application-environment#application.environment,"Deploying
+<<../application/application-environment#application.environment,"Deploying
 an Application">>. It is also needed for enabling Spring features in the UI. To
 define a UI class that should be instantiated for a given URL, you simply need
 to annotate the class with [classname]#@SpringUI#. It takes an optional path as
@@ -377,7 +371,7 @@ ifdef::web[]
 == View Navigation
 
 Vaadin Spring extends the navigation framework in Vaadin, described in
-<<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator,"Navigating
+<<advanced-navigator#advanced.navigator,"Navigating
 in an Application">>. It manages Spring views with a special view provider and
 enables view scoping. Furthermore, Vaadin Spring provides a customized navigator class
 [classname]#SpringNavigator# that supports the scope functionality.
@@ -388,7 +382,7 @@ enables view scoping. Furthermore, Vaadin Spring provides a customized navigator
 
 You can define navigation for any single-component container, component container or bean
 implementing [classname]#ViewDisplay#, as described in
-<<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator.navigating,"Setting
+<<advanced-navigator#advanced.navigator.navigating,"Setting
 Up for Navigation">>, but typically you set up navigation for the entire UI
 content. The easiest way to set up navigation is to use the annotation
 [classname]#@SpringViewDisplay# on the UI (in which case the whole contents of the UI are
@@ -585,7 +579,7 @@ use Spring with non-Spring servlets and UIs in a web application.
 === Custom Servlets
 
 When customizing the Vaadin servlet, as outlined in
-<<dummy/../../../framework/application/application-lifecycle#application.lifecycle.servlet-service,"Vaadin
+<<../application/application-lifecycle#application.lifecycle.servlet-service,"Vaadin
 Servlet, Portlet, and Service">>, you simply need to extend
 [classname]#com.vaadin.spring.server.SpringVaadinServlet# instead of
 [classname]#com.vaadin.servlet.VaadinServlet#.
@@ -598,7 +592,7 @@ public class [replaceable]#MySpringServlet# extends SpringVaadinServlet {
 ----
 The custom servlet must not have [classname]#@VaadinServletConfiguration#, as
 you would normally with a Vaadin servlet, as described in
-<<dummy/../../../framework/application/application-environment#application.environment,"Deploying
+<<../application/application-environment#application.environment,"Deploying
 an Application">>.
 
 

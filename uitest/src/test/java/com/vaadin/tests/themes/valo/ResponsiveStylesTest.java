@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.Parameters;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -83,6 +84,7 @@ public class ResponsiveStylesTest extends MultiBrowserTest {
         actions.perform();
         sleep(200);
 
+        Parameters.setScreenshotComparisonTolerance(0.1);
         compareScreen("expandedMenu");
     }
 }

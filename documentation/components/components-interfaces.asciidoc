@@ -15,8 +15,8 @@ and the client.
 
 This section gives details on the basic component interfaces and abstractions.
 The layout and other component container abstractions are described in
-<<dummy/../../../framework/layout/layout-overview.asciidoc#layout.overview,"Managing Layout">>.
-The interfaces that define the Vaadin data model are described in <<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding Components to Data">>.
+<<../layout/layout-overview.asciidoc#layout.overview,"Managing Layout">>.
+The interfaces that define the Vaadin data model are described in <<../datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding Components to Data">>.
 
 [[figure.components.interfaces]]
 .Component interfaces and abstractions

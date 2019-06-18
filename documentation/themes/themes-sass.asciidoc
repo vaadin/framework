@@ -17,7 +17,7 @@ Sass can be used in two basic ways in Vaadin applications, either by compiling
 SCSS files to CSS or by doing the compilation on the fly. The latter way is
 possible if the development mode is enabled for the Vaadin servlet, as described
 in
-<<dummy/../../../framework/application/application-environment#application.environment.parameters,"Other
+<<../application/application-environment#application.environment.parameters,"Other
 Servlet Configuration Parameters">>.
 
 [[themes.sass.overview]]
@@ -132,7 +132,7 @@ The above SCSS would translated to the following CSS:
 
 You can also have nested rules in a mixin, which makes them especially powerful.
 Mixing in rules is used when extending Vaadin themes, as described in
-<<dummy/../../../framework/themes/themes-creating#themes.creating.sass,"Sass
+<<themes-creating#themes.creating.sass,"Sass
 Themes">>.
 
 Vaadin themes are defined as mixins to allow for certain uses, such as different
@@ -148,7 +148,7 @@ excellent documentation at http://sass-lang.com/. In the following, we give just
 basic introduction to using it with Vaadin.
 
 You can create a new Sass-based theme with the Eclipse plugin, as described in
-<<dummy/../../../framework/themes/themes-eclipse#themes.eclipse,"Creating a
+<<themes-eclipse#themes.eclipse,"Creating a
 Theme in Eclipse">>.
 
 

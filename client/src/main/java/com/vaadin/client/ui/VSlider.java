@@ -58,6 +58,8 @@ public class VSlider extends SimpleFocusablePanel
     protected double max;
     protected int resolution;
     protected Double value;
+
+    private boolean updateValueOnClick;
     protected SliderOrientation orientation = SliderOrientation.HORIZONTAL;
 
     private final HTML feedback = new HTML("", false);
@@ -266,16 +268,16 @@ public class VSlider extends SimpleFocusablePanel
             processMouseWheelEvent(event);
         } else if (dragging || targ == handle) {
             processHandleEvent(event);
+        } else if (targ.equals(base)
+                && DOM.eventGetType(event) == Event.ONMOUSEUP
+                && updateValueOnClick) {
+            processBaseEvent(event);
+            feedbackPopup.show();
         } else if (targ == smaller) {
             decreaseValue(true);
         } else if (targ == bigger) {
             increaseValue(true);
-        } else if (DOM.eventGetType(event) == Event.MOUSEEVENTS) {
-            processBaseEvent(event);
-        } else if (BrowserInfo.get().isGecko()
-                && DOM.eventGetType(event) == Event.ONKEYPRESS
-                || !BrowserInfo.get().isGecko()
-                        && DOM.eventGetType(event) == Event.ONKEYDOWN) {
+        } else if (isNavigationEvent(event)) {
 
             if (handleNavigation(event.getKeyCode(), event.getCtrlKey(),
                     event.getShiftKey())) {
@@ -299,6 +301,15 @@ public class VSlider extends SimpleFocusablePanel
         if (WidgetUtil.isTouchEvent(event)) {
             event.preventDefault(); // avoid simulated events
             event.stopPropagation();
+        }
+    }
+
+    private boolean isNavigationEvent(Event event) {
+        if (BrowserInfo.get().isGecko()
+                && BrowserInfo.get().getGeckoVersion() < 65) {
+            return DOM.eventGetType(event) == Event.ONKEYPRESS;
+        } else {
+            return DOM.eventGetType(event) == Event.ONKEYDOWN;
         }
     }
 
@@ -358,11 +369,9 @@ public class VSlider extends SimpleFocusablePanel
     }
 
     private void processBaseEvent(Event event) {
-        if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
-            if (!disabled && !readonly && !dragging) {
-                setValueByEvent(event, true);
-                DOM.eventCancelBubble(event, true);
-            }
+        if (!disabled && !readonly && !dragging) {
+            setValueByEvent(event, true);
+            DOM.eventCancelBubble(event, true);
         }
     }
 
@@ -665,5 +674,14 @@ public class VSlider extends SimpleFocusablePanel
             return "popup";
         }
         return null;
+    }
+
+    /**
+     * Specifies whether or not click event should update the Slider's value.
+     *
+     * @param updateValueOnClick
+     */
+    public void setUpdateValueOnClick(boolean updateValueOnClick) {
+        this.updateValueOnClick = updateValueOnClick;
     }
 }

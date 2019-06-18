@@ -1,0 +1,10 @@
+---
+title: Deploying Vaadin 8.8.2 on WebSphere Application Server 8.5.5.15 traditional
+order: 87
+layout: page
+---
+
+[[deploying-vaadin-8-8-2-on-websphere-application-server-8-5-5-15-traditional]]
+= Deploying Vaadin 8.8.2 on WebSphere Application Server 8.5.5.15 traditional
+
+Full document is published on the IBM's developerWorks recipes site: https://developer.ibm.com/recipes/tutorials/deploying-vaadin-8-8-2-on-websphere-application-server-8-5-5-15-traditional/

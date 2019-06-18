@@ -53,7 +53,7 @@ event to the server-side using RPC.
 == Project Structure
 
 Widget set compilation, as described in
-<<dummy/../../../framework/clientside/clientside-module#clientside.module,"Client-Side
+<<../clientside/clientside-module#clientside.module,"Client-Side
 Module Descriptor">>, requires using a special project structure, where the
 client-side classes are located under a [filename]#client# package under the
 package of the module descriptor. Any static resources, such as stylesheets and
@@ -68,7 +68,7 @@ The basic project structure is illustrated in <<figure.gwt.overview.project>>.
 image::img/gwt-widget-files-hi.png[]
 
 The Eclipse wizard, described in
-<<dummy/../../../framework/gwt/gwt-eclipse#gwt.eclipse,"Starting It Simple With
+<<gwt-eclipse#gwt.eclipse,"Starting It Simple With
 Eclipse">>, creates a widget integration skeleton with the above structure.
 
 

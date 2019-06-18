@@ -12,7 +12,7 @@ starts, much like the [methodname]#init()# method in server-side Vaadin UIs.
 
 Consider the following application:
 
-
+[source, java]
 ----
 package com.example.myapp.client;
 
@@ -47,11 +47,11 @@ described in the next section.
 
 The entry-point of a client-side application is defined, along with any other
 configuration, in a client-side module descriptor, described in
-<<dummy/../../../framework/clientside/clientside-module#clientside.module,"Client-Side
+<<../clientside/clientside-module#clientside.module,"Client-Side
 Module Descriptor">>. The descriptor is an XML file with suffix
 [filename]#.gwt.xml#.
 
-
+[source, xml]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module PUBLIC

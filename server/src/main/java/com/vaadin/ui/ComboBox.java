@@ -191,6 +191,16 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                 if (getNewItemProvider() != null) {
                     Optional<T> item = getNewItemProvider().apply(itemValue);
                     added = item.isPresent();
+                    // Fixes issue
+                    // https://github.com/vaadin/framework/issues/11343
+                    // Update the internal selection state immediately to avoid
+                    // client side hanging. This is needed for cases that user
+                    // interaction fires multi events (like adding and deleting)
+                    // on a new item during the same round trip.
+                    item.ifPresent(value -> {
+                        setSelectedItem(value, true);
+                        getDataCommunicator().reset();
+                    });
                 } else if (getNewItemHandler() != null) {
                     getNewItemHandler().accept(itemValue);
                     // Up to the user to tell if no item was added.
@@ -453,7 +463,16 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         // Must do getItemCaptionGenerator() for each operation since it might
         // not be the same as when this method was invoked
         setDataProvider(listDataProvider, filterText -> item -> captionFilter
-                .test(getItemCaptionGenerator().apply(item), filterText));
+                .test(getItemCaptionOfItem(item), filterText));
+    }
+
+    // Helper method for the above to make lambda more readable
+    private String getItemCaptionOfItem(T item) {
+        String caption = getItemCaptionGenerator().apply(item);
+        if (caption == null) {
+            caption = "";
+        }
+        return caption;
     }
 
     /**
@@ -601,12 +620,11 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * <p>
      * The empty string {@code ""} is the default empty selection caption.
      *
+     * @return the empty selection caption, not {@code null}
      * @see #setEmptySelectionAllowed(boolean)
      * @see #isEmptySelectionAllowed()
      * @see #setEmptySelectionCaption(String)
      * @see #isSelected(Object)
-     *
-     * @return the empty selection caption, not {@code null}
      * @since 8.0
      */
     public String getEmptySelectionCaption() {

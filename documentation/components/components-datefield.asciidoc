@@ -52,7 +52,7 @@ The same format definitions are used for parsing user input.
 === Date Format
 
 The date is normally displayed according to the default format for the current locale (see
-<<dummy/../../../framework/components/components-features#components.features.locale,"Locale">>).
+<<components-features#components.features.locale,"Locale">>).
 You can specify a custom format with [methodname]#setDateFormat()#. It takes a
 format string that follows the format of the [classname]#java.time.format.DateTimeFormatter# in
 Java.
@@ -265,7 +265,7 @@ be visible. Please see the API Reference for the complete list of resolution par
 The date is displayed according to the locale of the user, as reported
 by the browser. You can set a custom locale with the [methodname]#setLocale()#
 method of [classname]#AbstractComponent#, as described in
-<<dummy/../../../framework/components/components-features#components.features.locale,"Locale">>.
+<<components-features#components.features.locale,"Locale">>.
 Only Gregorian calendar is supported.
 
 

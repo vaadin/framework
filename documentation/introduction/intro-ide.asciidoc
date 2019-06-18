@@ -31,5 +31,5 @@ It enables visual editing of declarative designs that you can use in your applic
 See <<dummy/../../../designer/designer-overview#designer.overview, "Vaadin Designer">> for more information.
 
 Using the Vaadin plug-in is the recommended way of installing Vaadin for development.
-Installing the IDEs and the plug-ins is covered in <<dummy/../../../framework/installing/installing-overview#installing, "Installing Development Tools">>.
-The creation of a new Vaadin project with each IDE is covered in <<dummy/../../../framework/getting-started/getting-started-first-project#getting-started.overview, "Creating a Vaadin Project">>.
+Installing the IDEs and the plug-ins is covered in <<installing-overview#installing, "Installing Development Tools">>.
+The creation of a new Vaadin project with each IDE is covered in <<../getting-started/getting-started-first-project#getting-started.overview, "Creating a Vaadin Project">>.

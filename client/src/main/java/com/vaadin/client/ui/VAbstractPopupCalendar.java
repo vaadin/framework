@@ -496,6 +496,10 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
             setText(previousValue);
         }
         updateTextFieldEnabled();
+        bufferedDateString = text.getText();
+        updateBufferedResolutions();
+        // send the Time changes with delayed rpc.
+        sendBufferedValuesWithDelay();
     }
 
     /**

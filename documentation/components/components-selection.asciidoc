@@ -7,7 +7,7 @@ layout: page
 [[components.selection]]
 = Selection Components
 
-For a better overview on how selection works, see link:<<dummy/../../../framework/datamodel/datamodel-selection.asciidoc#datamodel.selection,"Selecting Items">>.
+For a better overview on how selection works, see link:<<../datamodel/datamodel-selection.asciidoc#datamodel.selection,"Selecting Items">>.
 
 Vaadin offers many alternative ways for selecting one or more items. The core
 library includes the following selection components, all based on either
@@ -42,7 +42,7 @@ In addition, the [classname]#Grid# component allows user selection.
 The selection components are typically bound to list of items obtained from backend system.
 You can give the list of items in the constructor or set it with
 [methodname]#setItems()#. Read more in
-<<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding
+<<../datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding
 Components to Data">>.
 
 You can get the current selection as the
@@ -109,7 +109,7 @@ elements.
 [[components.selection.getset]]
 == Getting and Setting Selection
 
-For a better overview on how selection works, see link:<<dummy/../../../framework/datamodel/datamodel-selection.asciidoc#datamodel.selection,"Selecting Items">>.
+For a better overview on how selection works, see link:<<../datamodel/datamodel-selection.asciidoc#datamodel.selection,"Selecting Items">>.
 
 You can get selected the item with [methodname]#getValue()# of the
 [interfacename]#HasValue# interface that returns either a single selected item
@@ -154,7 +154,7 @@ image::img/select-selected1.png[width=30%, scaledwidth=40%]
 [[components.selection.multiple]]
 == Multiple Selection
 
-For a better overview on how selection works, see link:<<dummy/../../../framework/datamodel/datamodel-selection.asciidoc#datamodel.selection,"Selecting Items">>.
+For a better overview on how selection works, see link:<<../datamodel/datamodel-selection.asciidoc#datamodel.selection,"Selecting Items">>.
 
 Some selection components, such as [classname]#CheckBoxGroup#,
 [classname]#ListSelect# and [classname]#TwinColSelect# are multiselect components,

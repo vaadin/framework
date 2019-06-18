@@ -10,7 +10,7 @@
     <artifactId>vaadin-root</artifactId>
     <name>vaadin-root</name>
     <packaging>pom</packaging>
-    <version>8.7-SNAPSHOT</version>
+    <version>8.9-SNAPSHOT</version>
 
     <prerequisites>
         <maven>3.1.0</maven>
@@ -48,7 +48,7 @@
         <!-- Dependency unpack directory -->
         <dependency.unpack.directory>${project.build.directory}/dependency-unpack</dependency.unpack.directory>
  
-        <jetty.version>9.4.12.v20180830</jetty.version>
+        <jetty.version>9.4.17.v20190418</jetty.version>
 
         <!-- Sonar properties -->
         <sonar.java.source>8</sonar.java.source>
@@ -475,12 +475,10 @@
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>2.17</version>
                     <dependencies>
-                        <!-- Needed because of a JavadocMethodCheck bug in 
-                            6.11 -->
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>6.17</version>
+                            <version>8.18</version>
                         </dependency>
                     </dependencies>
                     <configuration>

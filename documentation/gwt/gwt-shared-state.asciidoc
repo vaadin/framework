@@ -16,7 +16,7 @@ A shared state object simply needs to extend the
 [classname]#AbstractComponentState#. The member variables should normally be
 declared as public.
 
-
+[source, java]
 ----
 public class MyComponentState extends AbstractComponentState {
     public String text;
@@ -42,7 +42,7 @@ and other classes needed by shared-state or RPC communication.
 For example, you could have the following definitions in the
 [filename]#.gwt.xml# descriptor:
 
-
+[source, xml]
 ----
     <source path="client" />
     <source path="shared" />
@@ -59,7 +59,7 @@ A server-side component can access the shared state with the
 implementation with one that returns the shared state object cast to the proper
 type, as follows:
 
-
+[source, java]
 ----
 @Override
 public MyComponentState getState() {
@@ -70,7 +70,7 @@ public MyComponentState getState() {
 You can then use the [methodname]#getState()# to access the shared state object
 with the proper type.
 
-
+[source, java]
 ----
 public MyComponent() {
     getState().setText("This is the initial state");
@@ -86,7 +86,7 @@ A connector can access a shared state with the [methodname]#getState()# method.
 The access should be read-only. It is required that you override the base
 implementation with one that returns the proper shared state type, as follows:
 
-
+[source, java]
 ----
 @Override
 public MyComponentState getState() {
@@ -99,7 +99,7 @@ client-side. When a state change occurs, the [methodname]#onStateChanged()#
 method in the connector is called. You should always call the superclass
 method before anything else to handle changes to common component properties.
 
-
+[source, java]
 ----
 @Override
 public void onStateChanged(StateChangeEvent stateChangeEvent) {
@@ -122,7 +122,7 @@ by delegating the property value directly to the widget, as described in
 
 ifdef::web[]
 The processing phases of state changes are described in more detail in
-<<dummy/../../../framework/gwt/gwt-advanced#gwt.advanced.phases,"Client-Side
+<<gwt-advanced#gwt.advanced.phases,"Client-Side
 Processing Phases">>.
 endif::web[]
 
@@ -141,7 +141,7 @@ separately in arbitrary order.
 We can replace the [methodname]#onStateChange()# method in the earlier connector
 example with the following:
 
-
+[source, java]
 ----
 @OnStateChange("text")
 void updateText() {
@@ -164,7 +164,7 @@ defines automatic delegation of the property value to the corresponding widget
 property of the same name and type, by calling the respective setter for the
 property in the widget.
 
-
+[source, java]
 ----
 public class MyComponentState extends AbstractComponentState {
     @DelegateToWidget
@@ -178,7 +178,7 @@ example in <<gwt.shared-state.onstatechange>>.
 If you want to delegate a shared state property to a widget property of another
 name, you can give the property name as a string parameter for the annotation.
 
-
+[source, java]
 ----
 public class MyComponentState extends AbstractComponentState {
     @DelegateToWidget("description")
@@ -196,7 +196,7 @@ only refer to a server-side component, while on the client-side you only have
 widgets. References to components can be made by referring to their connectors
 (all server-side components implement the [interfacename]#Connector# interface).
 
-
+[source, java]
 ----
 public class MyComponentState extends AbstractComponentState {
     public Connector otherComponent;
@@ -205,7 +205,7 @@ public class MyComponentState extends AbstractComponentState {
 
 You could then access the component on the server-side as follows:
 
-
+[source, java]
 ----
 public class MyComponent {
     public void MyComponent(Component otherComponent) {
@@ -241,7 +241,7 @@ serialized to the client-side separately.
 
 Let us begin with the server-side API:
 
-
+[source, java]
 ----
 public class MyComponent extends AbstractComponent {
     ...
@@ -259,7 +259,7 @@ public class MyComponent extends AbstractComponent {
 On the client-side, you can then get the URL of the resource with
 [methodname]#getResourceUrl()#.
 
-
+[source, java]
 ----
 @Override
 public void onStateChanged(StateChangeEvent stateChangeEvent) {
@@ -273,7 +273,7 @@ public void onStateChanged(StateChangeEvent stateChangeEvent) {
 
 The widget could then use the URL, for example, as follows:
 
-
+[source, java]
 ----
 public class MyWidget extends Label {
     ...

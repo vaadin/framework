@@ -32,6 +32,8 @@ is loaded lazily from the server, so that only the visible data is loaded. The
 smart lazy loading functionality gives excellent user experience even with low
 bandwidth, such as mobile devices.
 
+TIP: Watch the https://vaadin.com/training/course/view/data-providers-and-grid[Vaadin 8: Data Providers and Grid] free training video to learn more about the DataProvider API, Grid, sorting and filtering.
+
 The grid data can be edited with a row-based editor after double-clicking a row.
 The fields are set explicitly, and bound to data.
 
@@ -44,7 +46,7 @@ cell style generator.
 
 [classname]#Grid# is normally used by binding it to a data provider,
 described in
-<<dummy/../../../framework/datamodel/datamodel-providers.asciidoc#datamodel.dataproviders,"Showing Many Items in a Listing">>.
+<<../datamodel/datamodel-providers.asciidoc#datamodel.dataproviders,"Showing Many Items in a Listing">>.
 By default, it is bound to List of items. You can set the items with the
 [methodname]#setItems()# method.
 
@@ -467,7 +469,7 @@ grid.addColumn(person -> "Delete",
 
 [classname]#ImageRenderer#:: Renders the cell as an image.
 The column type must be a [interfacename]#Resource#, as described in
-<<dummy/../../../framework/application/application-resources#application.resources,"Images and Other Resources">>; only [classname]#ThemeResource# and
+<<../application/application-resources#application.resources,"Images and Other Resources">>; only [classname]#ThemeResource# and
 [classname]#ExternalResource# are currently supported for images in
 [classname]#Grid#.
 
@@ -586,6 +588,7 @@ the height of all rows in the Grid.
 +
 Use [classname]#Button# in [classname]#Grid#:
 +
+[source, java]
 ----
 grid.addComponentColumn(person -> {
       Button button = new Button("Click me!");
@@ -603,6 +606,7 @@ example on how to achieve this.
 +
 Store a [classname]#TextField# with changed value.
 +
+[source, java]
 ----
 Map<Person, TextField> textFields = new HashMap<>();
 grid.addColumn(person -> {
@@ -626,7 +630,7 @@ grid.addColumn(person -> {
 === Custom Renderers
 
 Renderers are component extensions that require a client-side counterpart. See
-<<dummy/../../../framework/clientsidewidgets/clientsidewidgets-grid#clientsidewidgets.grid.renderers,"Renderers">>
+<<../clientsidewidgets/clientsidewidgets-grid#clientsidewidgets.grid.renderers,"Renderers">>
 for information on implementing custom renderers.
 
 
@@ -822,7 +826,7 @@ can correct the inputs.
 The [classname]#Editor# is accessible via [methodname]#getEditor()#, and to enable editing, you need to call [methodname]#setEnabled(true)# on it.
 
 The editor is based on [classname]#Binder# which is used to bind the data to the editor.
-See <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms.beans,"Binding Beans to Forms">> for more information on setting up field components and validation by using [classname]#Binder#.
+See <<../datamodel/datamodel-forms.asciidoc#datamodel.forms.beans,"Binding Beans to Forms">> for more information on setting up field components and validation by using [classname]#Binder#.
 For each column that should be editable, a binding should be created in the editor binder and then the column is configured to use that binding.
 For simple cases where no conversion or validation is needed, it is also possible to directly use `setEditorComponent` on a `Column` to only define the editor component and a setter that updates the row object when saving.
 
@@ -945,7 +949,7 @@ You can scroll to first item with [methodname]#scrollToStart()#, to end with
 == Drag and Drop of Rows
 
 Please refer to the
-<<dummy/../../../framework/advanced/advanced-dragndrop#advanced.dragndrop.grid,"Drag and Drop Rows in Grid">> documentation.
+<<../advanced/advanced-dragndrop#advanced.dragndrop.grid,"Drag and Drop Rows in Grid">> documentation.
 
 [[advanced.dragndrop.grid]]
 
@@ -969,10 +973,10 @@ property of an item, you can style them as follows:
 
 [source, java]
 ----
-grid.setStyleGenerator(person -> {
+grid.setStyleGenerator(person ->
     // Style based on alive status
-    person.isAlive() ? null : "dead";
-});
+    person.isAlive() ? null : "dead"
+);
 ----
 
 You could then style the rows with CSS as follows:

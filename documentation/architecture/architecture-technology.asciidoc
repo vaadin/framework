@@ -79,7 +79,7 @@ images, fonts, and other resources. Vaadin themes are specifically written in
 Sass. In development mode, Sass files are compiled automatically to CSS. For
 production use, you compile the Sass files to CSS with the included compiler.
 The use of themes is documented in detail in
-<<dummy/../../../framework/themes/themes-overview.asciidoc#themes.overview,"Themes">>,
+<<../themes/themes-overview.asciidoc#themes.overview,"Themes">>,
 which also gives an introduction to CSS and Sass.
 
 
@@ -138,17 +138,17 @@ communications and allows handling user interaction logic in a server-side
 application. This makes the architecture of an AJAX-based web application much
 simpler. Nevertheless, Vaadin Framework also allows developing pure client-side
 applications, as described in
-<<dummy/../../../framework/clientsideapp/clientsideapp-overview.asciidoc#clientsideapp.overview,"Client-Side
+<<../clientsideapp/clientsideapp-overview.asciidoc#clientsideapp.overview,"Client-Side
 Applications">>.
 
 See
-<<dummy/../../../framework/architecture/architecture-client-side#architecture.client-side,"Client-Side
+<<architecture-client-side#architecture.client-side,"Client-Side
 Engine">> for a description of how the client-side framework based on GWT is
 used in the Client-Side Engine of Vaadin Framework.
-<<dummy/../../../framework/clientside/clientside-overview.asciidoc#clientside.overview,"Client-Side
+<<../clientside/clientside-overview.asciidoc#clientside.overview,"Client-Side
 Vaadin Development">> provides information about the client-side development,
 and
-<<dummy/../../../framework/gwt/gwt-overview.asciidoc#gwt.overview,"Integrating
+<<../gwt/gwt-overview.asciidoc#gwt.overview,"Integrating
 with the Server-Side">> about the integration of client-side widgets with the
 server-side components.
 
@@ -186,7 +186,7 @@ and then mostly JSON responses to synchronize the widgets and their server-side
 counterparts. It also serves various resources, such as themes. The server-side
 UIs are implemented as classes extending the [classname]#UI# class, as described
 in
-<<dummy/../../../framework/application/application-overview.asciidoc#application.overview,"Writing
+<<../application/application-overview.asciidoc#application.overview,"Writing
 a Server-Side Web Application">>. The class is given as a parameter to the
 Vaadin Servlet in the deployment descriptor.
 

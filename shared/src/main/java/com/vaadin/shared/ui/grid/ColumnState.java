@@ -53,7 +53,7 @@ public class ColumnState extends AbstractGridExtensionState {
 
     /**
      * Column width in pixels. Default column width is
-     * {@value GridConstants#DEFAULT_COLUMN_WIDTH_PX}.
+     * {@value com.vaadin.shared.ui.grid.GridConstants#DEFAULT_COLUMN_WIDTH_PX}.
      */
     public double width = GridConstants.DEFAULT_COLUMN_WIDTH_PX;
 

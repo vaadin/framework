@@ -16,10 +16,10 @@ client-side, in addition to any server-side logic.
 == Basic Server-Side Component
 
 The component state is usually managed by a __shared state__, described later in
-<<dummy/../../../framework/gwt/gwt-shared-state#gwt.shared-state,"Shared
+<<gwt-shared-state#gwt.shared-state,"Shared
 State">>.
 
-
+[source, java]
 ----
 public class MyComponent extends AbstractComponent {
     public MyComponent() {

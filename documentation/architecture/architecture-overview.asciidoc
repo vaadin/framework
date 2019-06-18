@@ -51,7 +51,7 @@ task is to create the initial user interface out of UI components and set up
 event listeners to handle user input. The UI can then be loaded in the browser
 using an URL, or can be embedded to any HTML page. For detailed information
 about implementing a [classname]#UI#, see
-<<dummy/../../../framework/application/application-overview.asciidoc#application.overview,"Writing
+<<../application/application-overview.asciidoc#application.overview,"Writing
 a Server-Side Web Application">>.
 
 +
@@ -69,7 +69,7 @@ client-side applications. The server-side components relay these events to the
 application logic. Field components that have a value, which the user can view
 or edit, can be bound to a data source (see below). For a more detailed
 description of the UI component architecture, see
-<<dummy/../../../framework/components/components-overview.asciidoc#components.overview,"User
+<<../components/components-overview.asciidoc#components.overview,"User
 Interface Components">>.
 
 Client-Side Engine:: ((("Client-Side
@@ -82,12 +82,12 @@ browser by employing various client-side __widgets__, counterparts of the
 server-side components. It communicates user interaction to the server-side, and
 then again renders the changes in the UI. The communications are made using
 asynchronous HTTP or HTTPS requests. See
-<<dummy/../../../framework/architecture/architecture-client-side#architecture.client-side,"Client-Side
+<<architecture-client-side#architecture.client-side,"Client-Side
 Engine">>.
 
 Vaadin Servlet:: ((("VaadinServlet")))
 Server-side Vaadin applications work on top of the Java Servlet API (see
-<<dummy/../../../framework/architecture/architecture-technology#architecture.technology.servlet,"Java
+<<architecture-technology#architecture.technology.servlet,"Java
 Servlets">>). The Vaadin servlet, or more exactly the [classname]#VaadinServlet#
 class, receives requests from different clients, determines which user session
 they belong to by tracking the sessions with cookies, and delegates the requests
@@ -105,14 +105,14 @@ defined in __themes__ as CSS or Sass. Vaadin provides a number of default
 themes. User themes can, in addition to style sheets, include HTML templates
 that define custom layouts and other resources, such as images and fonts. Themes
 are discussed in detail in
-<<dummy/../../../framework/themes/themes-overview.asciidoc#themes.overview,"Themes">>.
+<<../themes/themes-overview.asciidoc#themes.overview,"Themes">>.
 
 Events:: ((("events")))
 Interaction with user interface components creates events, which are first
 processed on the client-side by the widgets, then passed all the way through the
 HTTP server, Vaadin servlet, and the user interface components to the event
 listeners defined in the application. See
-<<dummy/../../../framework/architecture/architecture-events#architecture.events,"Events
+<<architecture-events#architecture.events,"Events
 and Listeners">>.
 
 Server Push:: ((("server
@@ -121,7 +121,7 @@ In addition to the event-driven programming model, Vaadin supports server push,
 where the UI changes are pushed directly from the server to the client without a
 client request or an event. This makes it possible to update UIs immediately
 from other threads and other UIs, without having to wait for a request. See
-<<dummy/../../../framework/advanced/advanced-push#advanced.push,"Server Push">>.
+<<../advanced/advanced-push#advanced.push,"Server Push">>.
 
 Data Binding:: ((("Data
 Model")))
@@ -133,7 +133,7 @@ selection components, with a data source. Using data binding, the user interface
 components can update the application data directly, often without the need for
 any control code. For example, you can bind a data grid component to a backend query
 response. For a complete overview of the data binding model, please refer to
-<<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding
+<<../datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding
 Components to Data">>.
 
 Client-Side Applications:: In addition to server-side web applications, Vaadin supports client-side
@@ -143,7 +143,7 @@ They are useful when you have a need for highly responsive UI logic, such as for
 games or for serving a large number of clients with possibly stateless
 server-side code, and for various other purposes, such as offering an off-line
 mode for server-side applications. Please see
-<<dummy/../../../framework/clientsideapp/clientsideapp-overview.asciidoc#clientsideapp.overview,"Client-Side
+<<../clientsideapp/clientsideapp-overview.asciidoc#clientsideapp.overview,"Client-Side
 Applications">> for further details.
 
 Back-end:: Vaadin is meant for building user interfaces, and it is recommended that other
