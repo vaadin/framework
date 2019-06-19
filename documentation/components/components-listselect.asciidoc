@@ -41,7 +41,7 @@ The number of visible items is set with [methodname]#setRows()#.
 image::img/listselect-basic.png[width=35%, scaledwidth=50%]
 
 Common selection component features are described in
-<<dummy/../../../framework/components/components-selection#components.selection,"Selection Components">>.
+<<components-selection#components.selection,"Selection Components">>.
 
 == CSS Style Rules
 

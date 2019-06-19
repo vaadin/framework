@@ -14,7 +14,7 @@ package. For example, if the project root package is
 [filename]#com.example.myproject#, the widget set definition file is typically
 at [filename]#com/example/project/AppWidgetset.gwt.xml#. The location is not
 fixed and it can be elsewhere, as long as references to it match. See
-<<dummy/../../../framework/clientside/clientside-module#clientside.module,"Client-Side
+<<../clientside/clientside-module#clientside.module,"Client-Side
 Module Descriptor">> for details on the contents of the client-side module
 descriptor, which is used to define a widget set.
 
@@ -44,7 +44,7 @@ is loaded properly.
 * Use the ?debug parameter for the application to open the debug window and check
 if there is any version conflict between the widget set and the Vaadin library,
 or the themes. See
-<<dummy/../../../framework/advanced/advanced-debug#advanced.debug,"Debug Mode
+<<../advanced/advanced-debug#advanced.debug,"Debug Mode
 and Window">> for details.
 
 * Refresh and recompile the project. In Eclipse, select the project and press F5,

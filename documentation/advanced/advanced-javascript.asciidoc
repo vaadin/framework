@@ -101,7 +101,7 @@ Link link = new Link("Send Message", new ExternalResource(
 
 The function callback mechanism is the same as the RPC mechanism used with
 JavaScript component integration, as described in
-<<dummy/../../../framework/gwt/gwt-javascript#gwt.javascript.rpc,"RPC from
+<<../gwt/gwt-javascript#gwt.javascript.rpc,"RPC from
 JavaScript to Server-Side">>.
 
 

@@ -160,7 +160,7 @@ Scroll bars in sub-windows are handled with regular HTML features, namely
 As [classname]#Window# extends [classname]#Panel#, windows are also
 [interfacename]#Scrollable#. Note that the interface defines __programmatic
 scrolling__, not scrolling by the user. Please see
-<<dummy/../../../framework/layout/layout-panel#layout.panel,"Panel">>.
+<<layout-panel#layout.panel,"Panel">>.
 
 (((range="endofrange", startref="term.layout.sub-window.scrolling.scrollbars")))
 

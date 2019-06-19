@@ -9,7 +9,7 @@ layout: page
 
 In this section, we continue from the basic application architectures described
 in
-<<dummy/../../../framework/application/application-architecture#application.architecture,"Building
+<<../application/application-architecture#application.architecture,"Building
 the UI">> and discuss some of the more advanced patterns that are often used in
 Vaadin applications.
 
@@ -29,7 +29,7 @@ model and the "business logic" of the application, typically as beans or POJOs.
 A user interface is built on top of the domain model, in our context with the
 Vaadin Framework. The Vaadin user interface could be bound directly to the data
 model through the Vaadin Data Model, described in
-<<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding Components to Data">>.
+<<../datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding Components to Data">>.
 Beneath the domain model lies a data store, such as a relational database.
 The dependencies between the layers are restricted so that a higher layer may depend on a lower one, but never the other way around.
 

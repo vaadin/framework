@@ -81,7 +81,7 @@ getService().setSystemMessagesProvider(
 ----
 
 See
-<<dummy/../../../framework/application/application-lifecycle#application.lifecycle.servlet-service,"Vaadin
+<<application-lifecycle#application.lifecycle.servlet-service,"Vaadin
 Servlet, Portlet, and Service">> for information about customizing Vaadin
 servlets.
 

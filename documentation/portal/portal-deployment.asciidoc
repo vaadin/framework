@@ -8,7 +8,7 @@ layout: page
 = Deploying to a Portal
 
 For OSGi portlets in Liferay 7, see
-<<dummy/../../../framework/portal/portal-osgi#portal.osgi.portlet,"Publishing a Portlet With OSGi">>.
+<<portal-osgi#portal.osgi.portlet,"Publishing a Portlet With OSGi">>.
 The text below applies mostly to non-OSGi portlets.
 
 To deploy a portlet WAR in a portal, you need to provide a
@@ -262,7 +262,7 @@ bundled in Liferay 5.3 and later.
 If your portlets are contained in multiple WARs, which can happen quite
 typically, you need to install the widget set and theme portal-wide so that all
 the portlets can use them. See
-<<dummy/../../../framework/portal/portal-liferay#portal.liferay,"Developing
+<<portal-liferay#portal.liferay,"Developing
 Vaadin Portlets for Liferay">> on configuring the widget sets in the portal
 itself.
 
@@ -275,7 +275,7 @@ deployment, you probably want to either use Maven or an Ant script to build the
 package. In Eclipse, you can right-click on the project and select "Export >
 WAR". Choose a name for the package and a target. If you have installed Vaadin
 in the portal as described in
-<<dummy/../../../framework/portal/portal-liferay#portal.liferay,"Developing
+<<portal-liferay#portal.liferay,"Developing
 Vaadin Portlets for Liferay">>, you should exclude all the Vaadin libraries, as
 well as widget set and themes from the WAR.
 

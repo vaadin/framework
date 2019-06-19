@@ -16,7 +16,7 @@ endif::web[]
 selection from a group of radio buttons. [classname]#CheckBoxGroup# is a multiselection
 component where items are displayed as check boxes. The common selection component features are
 described in
-<<dummy/../../../framework/components/components-selection#components.selection,"Selection Components">>.
+<<components-selection#components.selection,"Selection Components">>.
 
 [[figure.components.optiongroups]]
 .RadioButtonGroup and CheckBoxGroup
@@ -40,7 +40,7 @@ multi.setItems("Many", "Muchos", "Monta");
 
 You can also create check boxes individually using the [classname]#CheckBox#
 class, as described in
-<<dummy/../../../framework/components/components-checkbox#components.checkbox,"CheckBox">>.
+<<components-checkbox#components.checkbox,"CheckBox">>.
 The advantages of the [classname]#CheckBoxGroup# component are that as it
 maintains the individual check box objects, you can get an array of the
 currently selected items easily, and that you can easily change the appearance

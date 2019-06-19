@@ -51,7 +51,7 @@ application architecture makes our approach a very effective one.
 
 Behind the server-driven development model, Vaadin makes the best use of AJAX (
 __Asynchronous JavaScript and XML__, see
-<<dummy/../../../framework/architecture/architecture-technology#architecture.technology.ajax,"AJAX">>
+<<../architecture/architecture-technology#architecture.technology.ajax,"AJAX">>
 for a description) techniques that make it possible to create Rich Internet
 Applications (RIA) that are as responsive and interactive as desktop
 applications.
@@ -76,11 +76,11 @@ Vaadin allows flexible separation between the appearance, structure, and
 interaction logic of the user interface. You can design the layouts either
 programmatically or declaratively, at the level of your choosing. The final
 appearance is defined in __themes__ in CSS or Sass, as described in
-<<dummy/../../../framework/themes/themes-overview.asciidoc#themes.overview,"Themes">>.
+<<../themes/themes-overview.asciidoc#themes.overview,"Themes">>.
 
 We hope that this is enough about the basic architecture and features of Vaadin
 for now. You can read more about it later in
-<<dummy/../../../framework/architecture/architecture-overview.asciidoc#architecture.overview,"Architecture">>,
+<<../architecture/architecture-overview.asciidoc#architecture.overview,"Architecture">>,
 or jump straight to more practical things in
-<<dummy/../../../framework/application/application-overview.asciidoc#application.overview,"Writing
+<<../application/application-overview.asciidoc#application.overview,"Writing
 a Server-Side Web Application">>.

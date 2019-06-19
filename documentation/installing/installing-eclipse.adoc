@@ -7,7 +7,7 @@ layout: page
 [[installing.eclipse]]
 = Installing the Eclipse IDE and Plugin
 
-TIP: If you are new to Vaadin, we suggest to start with <<dummy/../../../framework/tutorial#tutorial,"the tutorial">>. It also contains instructions how to set up Eclipse based development environment.
+TIP: If you are new to Vaadin, we suggest to start with <<../tutorial#tutorial,"the tutorial">>. It also contains instructions how to set up Eclipse based development environment.
 
 If you are using the Eclipse IDE, using the Vaadin Plugin for Eclipse helps
 greatly. The plugin includes wizards for creating new Vaadin-based projects,
@@ -25,7 +25,7 @@ Vaadin Designer is a visual design tool for professional developers.
 It allows for easy creation of declarative designs.
 It is also good as a sketching tool, as well as an easy way to learn about Vaadin components and layouts.
 
-Once you have installed the Eclipse IDE and the plug-in, you can create a Vaadin application project as described in <<DUMMY/../../getting-started/getting-started-first-project#getting-started.first-project, "Creating a Project in Eclipse">>.
+Once you have installed the Eclipse IDE and the plug-in, you can create a Vaadin application project as described in <<../getting-started/getting-started-first-project#getting-started.first-project, "Creating a Project in Eclipse">>.
 
 [[installing.eclipse.ide]]
 == Installing the Eclipse IDE

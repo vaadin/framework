@@ -40,6 +40,7 @@ import com.vaadin.shared.data.DataCommunicatorClientRpc;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.shared.extension.datacommunicator.DataCommunicatorState;
+import com.vaadin.ui.ComboBox;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
@@ -530,7 +531,9 @@ public class DataCommunicator<T> extends AbstractExtension {
     public void reset() {
         // Only needed if a full reset is not pending.
         if (!reset) {
-            beforeClientResponse(true);
+            if (getParent() instanceof ComboBox) {
+                beforeClientResponse(true);
+            }
             // Soft reset through client-side re-request.
             getClientRpc().reset(getDataProviderSize());
         }
@@ -574,10 +577,28 @@ public class DataCommunicator<T> extends AbstractExtension {
      *
      * @param comparator
      *            comparator used to sort data
+     * @param immediateReset
+     *            {@code true} if an internal reset should be performed
+     *            immediately after updating the comparator (unless full reset
+     *            is already pending), {@code false} if you are going to trigger
+     *            reset separately later
+     */
+    public void setInMemorySorting(Comparator<T> comparator,
+            boolean immediateReset) {
+        inMemorySorting = comparator;
+        if (immediateReset) {
+            reset();
+        }
+    }
+
+    /**
+     * Sets the {@link Comparator} to use with in-memory sorting.
+     *
+     * @param comparator
+     *            comparator used to sort data
      */
     public void setInMemorySorting(Comparator<T> comparator) {
-        inMemorySorting = comparator;
-        reset();
+        setInMemorySorting(comparator, true);
     }
 
     /**
@@ -595,11 +616,29 @@ public class DataCommunicator<T> extends AbstractExtension {
      *
      * @param sortOrder
      *            list of sort order information to pass to a query
+     * @param immediateReset
+     *            {@code true} if an internal reset should be performed
+     *            immediately after updating the comparator (unless full reset
+     *            is already pending), {@code false} if you are going to trigger
+     *            reset separately later
      */
-    public void setBackEndSorting(List<QuerySortOrder> sortOrder) {
+    public void setBackEndSorting(List<QuerySortOrder> sortOrder,
+            boolean immediateReset) {
         backEndSorting.clear();
         backEndSorting.addAll(sortOrder);
-        reset();
+        if (immediateReset) {
+            reset();
+        }
+    }
+
+    /**
+     * Sets the {@link QuerySortOrder}s to use with backend sorting.
+     *
+     * @param sortOrder
+     *            list of sort order information to pass to a query
+     */
+    public void setBackEndSorting(List<QuerySortOrder> sortOrder) {
+        setBackEndSorting(sortOrder, true);
     }
 
     /**

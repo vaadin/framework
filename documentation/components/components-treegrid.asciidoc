@@ -19,7 +19,7 @@ endif::web[]
 It is otherwise identical to the [classname]#Grid# component, but it adds the possibility to show
 hierarchical data, allowing the user to expand and collapse nodes to show or hide data.
 
-See the documentation for <<dummy/../../../framework/components/components-grid.asciidoc#components.grid,"Grid">> for all the shared features between [classname]#Grid# and [classname]#TreeGrid#.
+See the documentation for <<components-grid.asciidoc#components.grid,"Grid">> for all the shared features between [classname]#Grid# and [classname]#TreeGrid#.
 
 [[figure.components.treegrid.basic]]
 .A [classname]#TreeGrid#
@@ -29,7 +29,7 @@ image::img/tree-grid-basic.png[width=70%, scaledwidth=100%]
 == Binding to Data
 
 [classname]#TreeGrid# is used by binding it to a hierarchical data provider. The data provider can be based on in-memory or back end data. For in-memory data, the [classname]#TreeDataProvider# can be used, and for loading data from a back end, you need to implement three methods from the [interfacename]#HierarchicalDataProvider# interface. Usage of both data providers is described in
-<<dummy/../../../framework/datamodel/datamodel-hierarchical.asciidoc#datamodel.hierarchical,"Hierarchical Data">>.
+<<../datamodel/datamodel-hierarchical.asciidoc#datamodel.hierarchical,"Hierarchical Data">>.
 
 Populating a [classname]#TreeGrid# with in-memory data can be done as follows
 

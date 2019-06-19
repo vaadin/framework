@@ -54,7 +54,7 @@ applications with Vaadin Framework much like you would develop desktop applicati
 The most important task in the initialization is the creation of the initial
 user interface. This, and the deployment of a UI as a Java Servlet in the
 Servlet container, as described in
-<<dummy/../../../framework/application/application-environment#application.environment,"Deploying
+<<application-environment#application.environment,"Deploying
 an Application">>, are the minimal requirements for an application.
 
 Below is a short overview of the other basic elements of an application besides
@@ -76,7 +76,7 @@ The current UI object can be accessed globally with
 instance for the currently processed request
 ifdef::web[]
  (see
-<<dummy/../../../framework/advanced/advanced-global#advanced.global.threadlocal,"ThreadLocal
+<<../advanced/advanced-global#advanced.global.threadlocal,"ThreadLocal
 Pattern">>)
 endif::web[]
 .
@@ -102,28 +102,28 @@ handle. __Field components__ are intended for inputting values and can be
 directly bound to data using the data model of the framework. You can make your own user
 interface components through either inheritance or composition. For a thorough
 reference of user interface components, see
-<<dummy/../../../framework/components/components-overview.asciidoc#components.overview,"User
+<<../components/components-overview.asciidoc#components.overview,"User
 Interface Components">>, for layout components, see
-<<dummy/../../../framework/layout/layout-overview.asciidoc#layout.overview,"Managing
+<<../layout/layout-overview.asciidoc#layout.overview,"Managing
 Layout">>, and for compositing components, see
-<<dummy/../../../framework/components/components-customcomponent#components.customcomponent,"Composition
+<<../components/components-customcomponent#components.customcomponent,"Composition
 with Composite and CustomComponent">>.
 
 Events and Listeners:: Vaadin Framework follows an event-driven programming paradigm, in which events, and
 listeners that handle the events, are the basis of handling user interaction in
 an application (although also server push is possible as described in
-<<dummy/../../../framework/advanced/advanced-push#advanced.push,"Server
+<<../advanced/advanced-push#advanced.push,"Server
 Push">>).
-<<dummy/../../../framework/architecture/architecture-events#architecture.events,"Events
+<<../architecture/architecture-events#architecture.events,"Events
 and Listeners">> gave an introduction to events and listeners from an
 architectural point-of-view, while
-<<dummy/../../../framework/application/application-events#application.events,"Handling
+<<application-events#application.events,"Handling
 Events with Listeners">> later in this chapter takes a more practical view.
 
 Resources:: A user interface can display images or have links to web pages or downloadable
 documents. These are handled as __resources__, which can be external or provided
 by the web server or the application itself.
-<<dummy/../../../framework/application/application-resources#application.resources,"Images
+<<application-resources#application.resources,"Images
 and Other Resources">> gives a practical overview of the different types of
 resources.
 
@@ -132,11 +132,11 @@ logic is handled as Java code, the presentation is defined in __themes__ as CSS
 or SCSS. Vaadin includes some built-in themes. User-defined themes can, in
 addition to style sheets, include HTML templates that define custom layouts and
 other theme resources, such as images. Themes are discussed in detail in
-<<dummy/../../../framework/themes/themes-overview.asciidoc#themes.overview,"Themes">>,
+<<../themes/themes-overview.asciidoc#themes.overview,"Themes">>,
 custom layouts in
-<<dummy/../../../framework/layout/layout-customlayout#layout.customlayout,"Custom
+<<../layout/layout-customlayout#layout.customlayout,"Custom
 Layouts">>, and theme resources in
-<<dummy/../../../framework/application/application-resources#application.resources.theme,"Theme
+<<application-resources#application.resources.theme,"Theme
 Resources">>.
 
 Data Binding:: With data binding, any field component in Vaadin Framework can be bound to the properties
@@ -145,5 +145,5 @@ can get their values from and update user input to the data model directly, with
 the need for any control code. Similarly, any select component can be bound to a
 __data provider__, fetching its items from a Java Collection or a backend such as an SQL database.
 For a complete overview of data binding in Vaadin, please refer to
-<<dummy/../../../framework/datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding
+<<../datamodel/datamodel-overview.asciidoc#datamodel.overview,"Binding
 Components to Data">>.

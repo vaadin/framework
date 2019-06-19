@@ -43,25 +43,25 @@ public class HelloWorld implements EntryPoint {
 The user interface of a client-side application is built under a HTML __root
 element__, which can be accessed by [methodname]#RootPanel.get()#. The purpose
 and use of the entry-point is documented in more detail in
-<<dummy/../../../framework/clientsideapp/clientsideapp-entrypoint#clientsideapp.entrypoint,"Client-Side
+<<clientsideapp-entrypoint#clientsideapp.entrypoint,"Client-Side
 Module Entry-Point">>. The user interface is built from __widgets__
 hierarchically, just like with server-side Vaadin UIs. The built-in widgets and
 their relationships are catalogued in
-<<dummy/../../../framework/clientsidewidgets/clientsidewidgets-overview.asciidoc#clientsidewidgets.overview,"Client-Side
+<<../clientsidewidgets/clientsidewidgets-overview.asciidoc#clientsidewidgets.overview,"Client-Side
 Widgets">>. You can also use many of the widgets in Vaadin add-ons that have
 them, or make your own.
 
 A client-side module is defined in a __module descriptor__, as described in
-<<dummy/../../../framework/clientside/clientside-module#clientside.module,"Client-Side
+<<../clientside/clientside-module#clientside.module,"Client-Side
 Module Descriptor">>. A module is compiled from Java to JavaScript using the
 Vaadin Compiler, of which use was described in
-<<dummy/../../../framework/clientside/clientside-compiling#clientside.compiling,"Compiling
+<<../clientside/clientside-compiling#clientside.compiling,"Compiling
 a Client-Side Module">>. The
-<<dummy/../../../framework/clientsideapp/clientsideapp-compiling#clientsideapp.compiling,"Compiling
+<<clientsideapp-compiling#clientsideapp.compiling,"Compiling
 and Running a Client-Side Application">> in this chapter gives further
 information about compiling client-side applications. The resulting JavaScript
 can be loaded to any web page, as described in
-<<dummy/../../../framework/clientsideapp/clientsideapp-loading#clientsideapp.loading,"Loading
+<<clientsideapp-loading#clientsideapp.loading,"Loading
 a Client-Side Application">>.
 
 // TODO What is this? What's an "UI Binder"?

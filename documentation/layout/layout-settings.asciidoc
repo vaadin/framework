@@ -22,7 +22,7 @@ The size of a layout component can be specified with the
 [methodname]#setWidth()# and [methodname]#setHeight()# methods defined in the
 [classname]#Sizeable# interface, just like for any component. It can also be
 undefined, in which case the layout shrinks to fit the component(s) inside it.
-<<dummy/../../../framework/components/components-features#components.features.sizeable,"Sizing
+<<../components/components-features#components.features.sizeable,"Sizing
 Components">> gives details on the interface.
 
 [[figure.layout.settings.size.undefined]]
@@ -51,7 +51,7 @@ the component will try to fill the space given by the layout, while the layout
 will shrink to fit the space taken by the component, which is a paradox. This
 requirement holds for height and width separately. The debug mode allows
 detecting such invalid cases; see
-<<dummy/../../../framework/advanced/advanced-debug#advanced.debug.hierarchy,"Inspecting
+<<../advanced/advanced-debug#advanced.debug.hierarchy,"Inspecting
 Component Hierarchy">>.
 
 ====
@@ -120,9 +120,9 @@ example below, the buttons have 1:2:3 ratio for the expansion.
 
 Expansion is covered in detail in the documentation of the layout components that
 support it. See
-<<dummy/../../../framework/layout/layout-orderedlayout#layout.orderedlayout,"VerticalLayout
+<<layout-orderedlayout#layout.orderedlayout,"VerticalLayout
 and HorizontalLayout">> and
-<<dummy/../../../framework/layout/layout-gridlayout#layout.gridlayout,"GridLayout">>
+<<layout-gridlayout#layout.gridlayout,"GridLayout">>
 for details on components with relative sizes.
 
 
@@ -301,7 +301,7 @@ you can customize it in a custom theme.
 In the Valo theme, you can specify the spacing with the
 $v-layout-spacing-vertical and $v-layout-spacing-horizontal parameters, as
 described in
-<<dummy/../../../framework/themes/themes-valo#themes.valo.variables,"Common
+<<../themes/themes-valo#themes.valo.variables,"Common
 Settings">>. The spacing defaults to the $v-unit-size measure.
 
 When adjusting spacing in other themes, you should note that it is implemented
@@ -321,7 +321,7 @@ HTML element of the layout component.
 
 In the Valo theme, the margin sizes default to $v-unit-size. You can customize
 them with $v-layout-margin-top, right, bottom, and left. See
-<<dummy/../../../framework/themes/themes-valo#themes.valo.variables,"Common
+<<../themes/themes-valo#themes.valo.variables,"Common
 Settings">> for a description of the parameters.
 
 To customize the default margins in other themes, you can define each margin

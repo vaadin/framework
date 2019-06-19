@@ -14,7 +14,7 @@ endif::web[]
 
 [classname]#TextArea# is a multi-line version of the [classname]#TextField#
 component described in
-<<dummy/../../../framework/components/components-textfield#components.textfield,"TextField">>.
+<<components-textfield#components.textfield,"TextField">>.
 
 The following example creates a simple text area:
 

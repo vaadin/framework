@@ -639,6 +639,16 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 return null;
             }
 
+            protected int getSizeOfCellGroup(Column<?, ?> column) {
+                for (Entry<CELLTYPE, Set<Column<?, ?>>> entry : cellGroups
+                        .entrySet()) {
+                    if (entry.getValue().contains(column)) {
+                        return entry.getValue().size();
+                    }
+                }
+                return 0;
+            }
+
             void calculateColspans() {
                 // Reset all cells
                 for (CELLTYPE cell : this.cells.values()) {
@@ -4697,7 +4707,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     if (colspan <= 1) {
                         continue;
                     }
-                    final int cellColumnRightIndex = cellColumnIndex + colspan;
+                    final int cellColumnRightIndex = cellColumnIndex + row
+                            .getSizeOfCellGroup(getColumn(cellColumnIndex));
                     final Range cellRange = Range.between(cellColumnIndex,
                             cellColumnRightIndex);
                     final boolean intersects = draggedCellRange
@@ -7209,6 +7220,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         }
 
                         if (newSize > oldSize) {
+                            if (oldSize == 0 && !isHeaderVisible()) {
+                                // Fixes framework/issues/11607
+                                // Need to recalculate column widths when the
+                                // first row is added to a non-header grid,
+                                // otherwise the checkbox will be aligned in a
+                                // wrong place.
+                                recalculateColumnWidths();
+                            }
                             body.insertRows(oldSize, newSize - oldSize);
                             cellFocusHandler.rowsAddedToBody(Range
                                     .withLength(oldSize, newSize - oldSize));
@@ -7492,15 +7511,19 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Scrolls to the beginning of the very first row.
      */
     public void scrollToStart() {
-        scrollToRow(0, ScrollDestination.START);
+        if (getEscalator().getBody().getRowCount() > 0) {
+            scrollToRow(0, ScrollDestination.START);
+        }
     }
 
     /**
      * Scrolls to the end of the very last row.
      */
     public void scrollToEnd() {
-        scrollToRow(escalator.getBody().getRowCount() - 1,
-                ScrollDestination.END);
+        if (getEscalator().getBody().getRowCount() > 0) {
+            scrollToRow(escalator.getBody().getRowCount() - 1,
+                    ScrollDestination.END);
+        }
     }
 
     /**
