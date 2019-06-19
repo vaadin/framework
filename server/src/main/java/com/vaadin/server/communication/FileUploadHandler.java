@@ -269,13 +269,17 @@ public class FileUploadHandler implements RequestHandler {
         session.lock();
         try {
             UI uI = session.getUIById(Integer.parseInt(uiId));
+            if (uI == null) {
+                throw new UploadException(
+                        "File upload ignored because the UI was not found and stream variable cannot be determined");
+            }
+            // Set UI so that it can be used in stream variable clean up
             UI.setCurrent(uI);
 
             streamVariable = uI.getConnectorTracker()
                     .getStreamVariable(connectorId, variableName);
             String secKey = uI.getConnectorTracker().getSeckey(streamVariable);
             if (secKey == null || !secKey.equals(parts[3])) {
-                // TODO Should rethink error handling
                 return true;
             }
 
@@ -456,7 +460,7 @@ public class FileUploadHandler implements RequestHandler {
         try {
             // Store ui reference so we can do cleanup even if connector is
             // detached in some event handler
-            UI ui = connector.getUI();
+            UI ui = UI.getCurrent();
             boolean forgetVariable = streamToReceiver(session, inputStream,
                     streamVariable, filename, mimeType, contentLength);
             if (forgetVariable) {
