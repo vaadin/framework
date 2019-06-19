@@ -477,7 +477,11 @@
 
   td.#{$primary-stylename}-month {
     width: round($v-unit-size * 4);
+    cursor:default;
     @include valo-datefield-calendarpanel-month-style;
+  }
+  td.#{$primary-stylename}-month.header-below-month{
+    cursor:pointer;
   }
 
   .#{$primary-stylename}-year td.#{$primary-stylename}-month {

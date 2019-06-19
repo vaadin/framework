@@ -28,8 +28,7 @@ public class DateFieldMonthResolutionClickTest extends MultiBrowserTest {
                 yearResolutionDF.getValue() == null
                         || yearResolutionDF.getValue().isEmpty());
         findElement(By.className("v-datefield-calendarpanel-month")).click();
-        sleep(150);
-        assertElementNotPresent(By.className("v-datefield-popup"));
+        waitForElementNotPresent(By.className("v-datefield-popup"));
         assertTrue("The selected year should be the current one",
                 getZonedDateTimeAtECT().getYear() == Integer
                         .valueOf(yearResolutionDF.getValue()));
@@ -46,8 +45,7 @@ public class DateFieldMonthResolutionClickTest extends MultiBrowserTest {
                 monthResolutionDF.getValue() == null
                         || monthResolutionDF.getValue().isEmpty());
         findElement(By.className("v-datefield-calendarpanel-month")).click();
-        sleep(150);
-        assertElementNotPresent(By.className("v-datefield-popup"));
+        waitForElementNotPresent(By.className("v-datefield-popup"));
         String dateValue = new StringBuilder()
                 .append(getZonedDateTimeAtECT().getMonth().getValue())
                 .append("/").append(getZonedDateTimeAtECT().getYear())
@@ -61,8 +59,7 @@ public class DateFieldMonthResolutionClickTest extends MultiBrowserTest {
         DateFieldElement dayResolutionDF = $(DateFieldElement.class)
                 .id("resolutionDayDF");
         dayResolutionDF.openPopup();
-        sleep(100);
-        assertElementPresent(By.className("v-datefield-popup"));
+        waitForElementPresent(By.className("v-datefield-popup"));
         findElement(By.className("v-datefield-calendarpanel-month")).click();
         // Click should have no effect
         assertElementPresent(By.className("v-datefield-popup"));
@@ -73,13 +70,11 @@ public class DateFieldMonthResolutionClickTest extends MultiBrowserTest {
     public void setResoultionToYearAndClick() {
         // Switch the resolution to verify clicking is now enabled
         findElement(By.id("buttonChangeResolution")).click();
-        sleep(200);
+        waitForElementPresent(By.id("resolutionDayDF"));
         $(DateFieldElement.class).id("resolutionDayDF").openPopup();
-        sleep(100);
-        assertElementPresent(By.className("v-datefield-popup"));
+        waitForElementPresent(By.className("v-datefield-popup"));
         findElement(By.className("v-datefield-calendarpanel-month")).click();
-        sleep(150);
-        assertElementNotPresent(By.className("v-datefield-popup"));
+        waitForElementNotPresent(By.className("v-datefield-popup"));
         // Set Back to month
         findElement(By.id("buttonChangeResolution")).click();
     }

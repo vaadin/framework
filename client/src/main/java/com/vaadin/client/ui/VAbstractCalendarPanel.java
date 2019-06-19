@@ -583,7 +583,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         Element monthYearElement = getFlexCellFormatter().getElement(0, 2);
         AriaHelper.ensureHasId(monthYearElement);
         Event.sinkEvents(monthYearElement, Event.ONCLICK);
-        Event.setEventListener(monthYearElement, e -> {
+        Event.setEventListener(monthYearElement, event -> {
             // Don't handle header clicks if resolution in below month
             if (!isEnabled() || isReadonly() || isBelowMonth(getResolution())) {
                 return;
@@ -603,9 +603,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                         + "-calendarpanel-month\">" + monthName + " " + year
                         + "</span>");
         if (!isBelowMonth(getResolution())) {
-            monthYearElement.getStyle().setCursor(Style.Cursor.POINTER);
-        } else {
-            monthYearElement.getStyle().setCursor(Style.Cursor.DEFAULT);
+            monthYearElement.addClassName("header-below-month");
         }
     }
 
