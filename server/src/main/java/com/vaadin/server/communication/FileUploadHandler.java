@@ -270,7 +270,7 @@ public class FileUploadHandler implements RequestHandler {
         try {
             UI uI = session.getUIById(Integer.parseInt(uiId));
             if (uI == null) {
-                throw new UploadException(
+                throw new IOException(
                         "File upload ignored because the UI was not found and stream variable cannot be determined");
             }
             // Set UI so that it can be used in stream variable clean up
