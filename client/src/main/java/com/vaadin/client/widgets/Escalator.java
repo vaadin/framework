@@ -4669,6 +4669,10 @@ public class Escalator extends Widget
 
             double maxWidth = Math.max(headerWidth,
                     Math.max(bodyWidth, footerWidth));
+            if (maxWidth < 0 && header.getRowCount() == 0
+                    && body.getRowCount() == 0 && footer.getRowCount() == 0) {
+                maxWidth = 0;
+            }
             assert maxWidth >= 0 : "Got a negative max width for a column, which should be impossible.";
             return maxWidth;
         }
@@ -4681,7 +4685,11 @@ public class Escalator extends Widget
 
             double minWidth = Math.max(headerWidth,
                     Math.max(bodyWidth, footerWidth));
-            assert minWidth >= 0 : "Got a negative max width for a column, which should be impossible.";
+            if (minWidth < 0 && header.getRowCount() == 0
+                    && body.getRowCount() == 0 && footer.getRowCount() == 0) {
+                minWidth = 0;
+            }
+            assert minWidth >= 0 : "Got a negative min width for a column, which should be impossible.";
             return minWidth;
         }
 

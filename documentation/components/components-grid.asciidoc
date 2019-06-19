@@ -46,7 +46,7 @@ cell style generator.
 
 [classname]#Grid# is normally used by binding it to a data provider,
 described in
-<<dummy/../../../framework/datamodel/datamodel-providers.asciidoc#datamodel.dataproviders,"Showing Many Items in a Listing">>.
+<<../datamodel/datamodel-providers.asciidoc#datamodel.dataproviders,"Showing Many Items in a Listing">>.
 By default, it is bound to List of items. You can set the items with the
 [methodname]#setItems()# method.
 
@@ -469,7 +469,7 @@ grid.addColumn(person -> "Delete",
 
 [classname]#ImageRenderer#:: Renders the cell as an image.
 The column type must be a [interfacename]#Resource#, as described in
-<<dummy/../../../framework/application/application-resources#application.resources,"Images and Other Resources">>; only [classname]#ThemeResource# and
+<<../application/application-resources#application.resources,"Images and Other Resources">>; only [classname]#ThemeResource# and
 [classname]#ExternalResource# are currently supported for images in
 [classname]#Grid#.
 
@@ -630,7 +630,7 @@ grid.addColumn(person -> {
 === Custom Renderers
 
 Renderers are component extensions that require a client-side counterpart. See
-<<dummy/../../../framework/clientsidewidgets/clientsidewidgets-grid#clientsidewidgets.grid.renderers,"Renderers">>
+<<../clientsidewidgets/clientsidewidgets-grid#clientsidewidgets.grid.renderers,"Renderers">>
 for information on implementing custom renderers.
 
 
@@ -826,7 +826,7 @@ can correct the inputs.
 The [classname]#Editor# is accessible via [methodname]#getEditor()#, and to enable editing, you need to call [methodname]#setEnabled(true)# on it.
 
 The editor is based on [classname]#Binder# which is used to bind the data to the editor.
-See <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms.beans,"Binding Beans to Forms">> for more information on setting up field components and validation by using [classname]#Binder#.
+See <<../datamodel/datamodel-forms.asciidoc#datamodel.forms.beans,"Binding Beans to Forms">> for more information on setting up field components and validation by using [classname]#Binder#.
 For each column that should be editable, a binding should be created in the editor binder and then the column is configured to use that binding.
 For simple cases where no conversion or validation is needed, it is also possible to directly use `setEditorComponent` on a `Column` to only define the editor component and a setter that updates the row object when saving.
 
@@ -949,7 +949,7 @@ You can scroll to first item with [methodname]#scrollToStart()#, to end with
 == Drag and Drop of Rows
 
 Please refer to the
-<<dummy/../../../framework/advanced/advanced-dragndrop#advanced.dragndrop.grid,"Drag and Drop Rows in Grid">> documentation.
+<<../advanced/advanced-dragndrop#advanced.dragndrop.grid,"Drag and Drop Rows in Grid">> documentation.
 
 [[advanced.dragndrop.grid]]
 

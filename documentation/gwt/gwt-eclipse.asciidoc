@@ -90,7 +90,7 @@ using the new widget set. The compilation result is written under the
 [filename]#WebContent/VAADIN/widgetsets# folder. When you need to recompile the
 widget set in Eclipse, see <<gwt.eclipse.compiling>>. For detailed information
 on compiling widget sets, see
-<<dummy/../../../framework/clientside/clientside-compiling#clientside.compiling,"Compiling
+<<../clientside/clientside-compiling#clientside.compiling,"Compiling
 a Client-Side Module">>.
 
 The following setting is inserted in the [filename]#web.xml# deployment
@@ -146,12 +146,12 @@ You can speed up the compilation significantly by compiling the widget set only
 for your browser during development. The generated [filename]#.gwt.xml#
 descriptor stub includes a disabled element that specifies the target browser.
 See
-<<dummy/../../../framework/clientside/clientside-module#gwt.module.compilation-limiting,"Limiting
+<<../clientside/clientside-module#gwt.module.compilation-limiting,"Limiting
 Compilation Targets">> for more details on setting the [literal]#++user-agent++#
 property.
 
 For more information on compiling widget sets, see
-<<dummy/../../../framework/clientside/clientside-compiling#clientside.compiling,"Compiling
+<<../clientside/clientside-compiling#clientside.compiling,"Compiling
 a Client-Side Module">>. Should you compile a widget set outside Eclipse, you
 need to refresh the project by selecting it in [guilabel]#Project Explorer# and
 pressing F5.

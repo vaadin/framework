@@ -9,7 +9,7 @@ layout: page
 
 The [classname]#Grid# widget is the client-side counterpart for the server-side
 [classname]#Grid# component described in
-<<dummy/../../../framework/components/components-grid#components.grid,"Grid">>.
+<<../components/components-grid#components.grid,"Grid">>.
 
 The client-side API is almost identical to the server-side API, so its
 documentation is currently omitted here and we refer you to the API
@@ -20,7 +20,7 @@ documentation. In the following, we go through some customization features of
 == Renderers
 
 As described in
-<<dummy/../../../framework/components/components-grid#components.grid.renderer,"Column
+<<../components/components-grid#components.grid.renderer,"Column
 Renderers">>, renderers draw the visual representation of data values on the
 client-side. They implement [interfacename]#Renderer# interface and its
 [methodname]#render()# method. The method gets a reference to the element of the

@@ -52,7 +52,7 @@ is disabled by default, but can be enabled with
 markup in the caption and description of a notification. If it is in any way
 possible to get the notification content from user input, you should either
 disallow HTML or sanitize the content carefully, as noted in
-<<dummy/../../../framework/advanced/advanced-security#advanced.security.sanitizing,"Sanitizing
+<<../advanced/advanced-security#advanced.security.sanitizing,"Sanitizing
 User Input to Prevent Cross-Site Scripting">>.
 
 [[figure.notification.example2]]

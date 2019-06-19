@@ -1,9 +1,5 @@
 package com.vaadin.tests.fieldgroup;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Locale;
 
 import org.junit.Before;
@@ -21,6 +17,11 @@ import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+
 @TestCategory("grid")
 public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
     private GridElement grid;
@@ -29,19 +30,22 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
     public void openTest() {
         openTestURL();
         grid = $(GridElement.class).first();
-
     }
 
     @Test
     public void lookAndFeel() throws Exception {
         GridCellElement ritaBirthdate = grid.getCell(2, 3);
         waitUntilLoadingIndicatorNotVisible();
-        compareScreen("grid");
+        assertEquals("May 16, 1992", ritaBirthdate.getText());
 
+        // Grid Editor should not present yet
+        waitForElementNotPresent(By.className("v-grid-editor"));
         // Open editor row
         new Actions(getDriver()).doubleClick(ritaBirthdate).perform();
         sleep(200);
-        compareScreen("editorrow");
+        // Compound class name is not allowed to use here,
+        // check the v-grid-editor class only in this case.
+        waitForElementPresent(By.className("v-grid-editor"));
     }
 
     @Test
@@ -76,7 +80,7 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
 
         // Check values
         String value = cb.getValue();
-        cb.click(5, 5);
+        cb.click();
         assertNotEquals("Checkbox value did not change", value, cb.getValue());
     }
 

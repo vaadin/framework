@@ -406,19 +406,31 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     }
 
     @Override
-    public void setBackEndSorting(List<QuerySortOrder> sortOrder) {
+    public void setBackEndSorting(List<QuerySortOrder> sortOrder,
+            boolean immediateReset) {
         if (mapper != null) {
             mapper.setBackEndSorting(sortOrder);
         }
-        super.setBackEndSorting(sortOrder);
+        super.setBackEndSorting(sortOrder, immediateReset);
+    }
+
+    @Override
+    public void setBackEndSorting(List<QuerySortOrder> sortOrder) {
+        setBackEndSorting(sortOrder, true);
+    }
+
+    @Override
+    public void setInMemorySorting(Comparator<T> comparator,
+            boolean immediateReset) {
+        if (mapper != null) {
+            mapper.setInMemorySorting(comparator);
+        }
+        super.setInMemorySorting(comparator, immediateReset);
     }
 
     @Override
     public void setInMemorySorting(Comparator<T> comparator) {
-        if (mapper != null) {
-            mapper.setInMemorySorting(comparator);
-        }
-        super.setInMemorySorting(comparator);
+        setInMemorySorting(comparator, true);
     }
 
     @Override

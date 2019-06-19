@@ -14,23 +14,23 @@ tabs, either opened by the user using an URL or by the Vaadin application.
 In addition to native browser windows, Vaadin has a [classname]#Window#
 component, which is a floating panel or __sub-window__ inside a page, as
 described in
-<<dummy/../../../framework/layout/layout-sub-window#layout.sub-window,"Sub-Windows">>.
+<<../layout/layout-sub-window#layout.sub-window,"Sub-Windows">>.
 
 * __Native popup windows__. An application can open popup windows for sub-tasks.
 * __Page-based browsing__. The application can allow the user to open certain content to different windows. For example, in a messaging application, it can be useful to open different messages to different windows so that the user can browse through them while writing a new message.
 * __Bookmarking__. Bookmarks in the web browser can provide an entry-point to some content provided by an application.
-* __Embedding UIs__. UIs can be embedded in web pages, thus making it possible to provide different views to an application from different pages or even from the same page, while keeping the same session. See <<dummy/../../../framework/advanced/advanced-embedding#advanced.embedding,"Embedding UIs in Web Pages">>.
+* __Embedding UIs__. UIs can be embedded in web pages, thus making it possible to provide different views to an application from different pages or even from the same page, while keeping the same session. See <<advanced-embedding#advanced.embedding,"Embedding UIs in Web Pages">>.
 
 Use of multiple windows in an application may require defining and providing
 different UIs for the different windows. The UIs of an application share the
 same user session, that is, the [classname]#VaadinSession# object, as described
 in
-<<dummy/../../../framework/application/application-lifecycle#application.lifecycle.session,"User
+<<../application/application-lifecycle#application.lifecycle.session,"User
 Session">>. Each UI is identified by a URL that is used to access it, which
 makes it possible to bookmark application UIs. UI instances can even be created
 dynamically based on the URLs or other request parameters, such as browser
 information, as described in
-<<dummy/../../../framework/application/application-lifecycle#application.lifecycle.ui,"Loading
+<<../application/application-lifecycle#application.lifecycle.ui,"Loading
 a UI">>.
 
 Because of the special nature of AJAX applications, use of multiple windows uses

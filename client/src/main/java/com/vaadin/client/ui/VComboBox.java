@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import com.google.gwt.animation.client.AnimationScheduler;
@@ -1373,8 +1372,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
              * allowed.
              */
             if (BrowserInfo.get().isChrome()) {
-                // Chrome supports "off" and random number does not work with Chrome
-                getElement().setAttribute("autocomplete", "off");        		
+                // Chrome supports "off" and random number does not work with
+                // Chrome
+                getElement().setAttribute("autocomplete", "off");
             } else {
                 getElement().setAttribute("autocomplete", Math.random() + "");
             }
@@ -1642,11 +1642,32 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             performSelection(selectedKey, oldSuggestionTextMatchTheOldSelection,
                     !isWaitingForFilteringResponse() || popupOpenerClicked);
 
+            // currentSuggestion should be set to match the value of the
+            // ComboBox
+            resetCurrentSuggestionBasedOnServerResponse(selectedKey,
+                    selectedCaption, selectedIconUri);
+
             cancelPendingPostFiltering();
 
             setSelectedCaption(selectedCaption);
 
             setSelectedItemIcon(selectedIconUri);
+        }
+
+        /*
+         * Updates the current suggestion based on values provided by the
+         * server.
+         */
+        private void resetCurrentSuggestionBasedOnServerResponse(
+                String selectedKey, String selectedCaption,
+                String selectedIconUri) {
+            if (currentSuggestion == null
+                    && (selectedKey != null || selectedCaption != null)) {
+                currentSuggestion = new ComboBoxSuggestion(selectedKey,
+                        selectedCaption, "", selectedIconUri);
+            } else if (selectedKey == null && selectedCaption == null) {
+                currentSuggestion = null;
+            }
         }
 
     }
@@ -1707,7 +1728,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public boolean initDone = false;
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     */
     public String lastFilter = "";
 
     /**
@@ -1800,6 +1823,16 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     private static double getMarginBorderPaddingWidth(Element element) {
         final ComputedStyle s = new ComputedStyle(element);
         return s.getMarginWidth() + s.getBorderWidth() + s.getPaddingWidth();
+    }
+
+    /**
+     * This method will reset the saved item string which is added last time.
+     */
+    public void resetLastNewItemString() {
+        // Clean the temp string eagerly in order to re-add the same value again
+        // after data provider got reset.
+        // Fixes issue https://github.com/vaadin/framework/issues/11317
+        lastNewItemString = null;
     }
 
     /*

@@ -697,8 +697,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         @Override
         public void columnVisibilityChanged(String internalId, boolean hidden) {
             Column<T, ?> column = getColumnByInternalId(internalId);
+            column.checkColumnIsAttached();
             if (column.isHidden() != hidden) {
-                column.setHidden(hidden);
+                column.getState().hidden = hidden;
                 fireColumnVisibilityChangeEvent(column, hidden, true);
             }
         }
@@ -1599,7 +1600,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         /**
-         * Returns the width (in pixels). By default a column width is 
+         * Returns the width (in pixels). By default a column width is
          * {@value com.vaadin.shared.ui.grid.GridConstants#DEFAULT_COLUMN_WIDTH_PX}
          * (undefined).
          *
@@ -2804,7 +2805,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param nestedNullBehavior
      *            the behavior when
      * @return the newly added column, not <code>null</code>
-     * 
+     *
      * @since 8.8
      */
     public Column<T, ?> addColumn(String propertyName,
@@ -4909,14 +4910,15 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     private void sort(boolean userOriginated) {
         // Set sort orders
         // In-memory comparator
-        getDataCommunicator().setInMemorySorting(createSortingComparator());
+        getDataCommunicator().setInMemorySorting(createSortingComparator(),
+                false);
 
         // Back-end sort properties
         List<QuerySortOrder> sortProperties = new ArrayList<>();
         sortOrder.stream().map(
                 order -> order.getSorted().getSortOrder(order.getDirection()))
                 .forEach(s -> s.forEach(sortProperties::add));
-        getDataCommunicator().setBackEndSorting(sortProperties);
+        getDataCommunicator().setBackEndSorting(sortProperties, true);
 
         // Close grid editor if it's open.
         if (getEditor().isOpen()) {

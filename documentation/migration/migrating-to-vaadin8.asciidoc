@@ -135,13 +135,13 @@ Framework 8 no longer uses `Item`, `Property` nor `Container`.
 These building blocks for the old data binding have been deprecated in favor of more Java 8 friendly APIs.
 
 The new data model can be roughly split into three main topics, namely binding data to field components, providing data to listing components and handling selections.
-The revised <<dummy/../../../framework/datamodel/datamodel-fields.asciidoc#datamodel.fields, "Binding Components to Data">> chapter is the recommended resource to get started with learning these new concepts.
+The revised <<../datamodel/datamodel-fields.asciidoc#datamodel.fields, "Binding Components to Data">> chapter is the recommended resource to get started with learning these new concepts.
 For migration from Framework 7 the key references are the following sections:
 
-* <<dummy/../../../framework/datamodel/datamodel-fields.asciidoc#datamodel.fields, "Editing Values in Fields">> and <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms, "Binding Data to Forms">>, which cover the new data binding concepts that replace `Property` and `FieldGroup`.
+* <<../datamodel/datamodel-fields.asciidoc#datamodel.fields, "Editing Values in Fields">> and <<../datamodel/datamodel-forms.asciidoc#datamodel.forms, "Binding Data to Forms">>, which cover the new data binding concepts that replace `Property` and `FieldGroup`.
 
-* <<dummy/../../../framework/datamodel/datamodel-providers.asciidoc#datamodel.providers, "Showing Many Items in a Listing">>, which covers the new `Container` and `Item` replacement, the `DataProvider`, as well as the associated sorting and filtering APIs.
+* <<../datamodel/datamodel-providers.asciidoc#datamodel.providers, "Showing Many Items in a Listing">>, which covers the new `Container` and `Item` replacement, the `DataProvider`, as well as the associated sorting and filtering APIs.
 
-* And for the new selection APIs,  <<dummy/../../../framework/datamodel/datamodel-selection.asciidoc#datamodel.selection, "Selecting Items">>.
+* And for the new selection APIs,  <<../datamodel/datamodel-selection.asciidoc#datamodel.selection, "Selecting Items">>.
 
 For a full list of incompatible changes between Framework 7 and 8, please refer to the _Incompatible or Behavior-altering Changes_ section of the release notes, available at link:https://vaadin.com/download/prerelease/8.0/8.0.0/8.0.0.beta1/release-notes.html#incompatible[].

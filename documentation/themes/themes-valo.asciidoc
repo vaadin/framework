@@ -234,7 +234,7 @@ $v-hover-styles-enabled(default:[literal]#++true++#):: Specifies whether various
 that mouse pointer hovers over an element.
 
 $v-disabled-opacity(default:[literal]#++0.5++#):: Opacity of disabled components, as described in
-<<dummy/../../../framework/components/components-features#components.features.enabled,"Enabled">>.
+<<../components/components-features#components.features.enabled,"Enabled">>.
 
 $v-selection-color(default:[literal]#++$v-focus-color++#):: Color for indicating selection in selection components.
 
@@ -242,12 +242,12 @@ $v-default-field-width(default:[literal]#++$v-unit-size * 5++#):: Default width 
 [methodname]#setWidth()#.
 
 $v-error-indicator-color(default:[literal]#++#ed473b++#):: Color of the component error indicator, as described in
-<<dummy/../../../framework/application/application-errors#application.errors.error-indicator,"Error
+<<../application/application-errors#application.errors.error-indicator,"Error
 Indicator and Message">>.
 
 $v-required-field-indicator-color(default:[literal]#++$v-error-indicator-color++#):: Color of the required indicator in field components.
 ifdef::vaadin7[]
-Field components are described in <<dummy/../../../framework/components/components-fields#components.fields.field,"Field Interface">>.
+Field components are described in <<../components/components-fields#components.fields.field,"Field Interface">>.
 endif::vaadin7[]
 
 Color specifications for $v-border, $v-bevel, and $v-shadow may use, in addition

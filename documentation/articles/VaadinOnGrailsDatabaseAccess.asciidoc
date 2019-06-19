@@ -10,8 +10,8 @@ layout: page
 _Versions used in this tutorial: Grails 2.3.x, Vaadin 7.1.x. News and
 updates about Vaadin on Grails are available on
 https://twitter.com/VaadinOnGrails[VaadinOnGrails]. This is continuation
-of link:VaadinOnGrailsCreateProjectInIntelliJIDEA.asciidoc[Vaadin
-on Grails - Create project in IntelliJ IDEA]_
+of <<VaadinOnGrailsCreateProjectInIntelliJIDEA#, Vaadin
+on Grails - Create project in IntelliJ IDEA>>_
 
 We are going to create persistence a domain class that is automatically
 mapped into a database through Hibernate. GORM from Grails framework
@@ -155,4 +155,4 @@ proper parameters and add the dependency to, for example, MySql driver
 in `BuildConfig.groovy`.
 image:http://vaadinongrails.com/img/idea-datasource.png[IDEA data source]
 
-You can continue with link:VaadinOnGrailsMultipleUIs.asciidoc[Vaadin on Grails - Multiple UIs]
+You can continue with <<VaadinOnGrailsMultipleUIs#, Vaadin on Grails - Multiple UIs>>

@@ -4,7 +4,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-
 public class PanelHTMLCaptionTest extends MultiBrowserTest {
     @Test
     public void testCaptionDisplayedAsText() {

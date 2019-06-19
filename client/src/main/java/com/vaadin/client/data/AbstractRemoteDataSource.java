@@ -746,9 +746,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
             if (trackInvalidatedRows) {
                 /*
-                 * We need to invalidate the cache from the inserted row onwards,
-                 * since the cache wants to be a contiguous range. It doesn't
-                 * support holes.
+                 * We need to invalidate the cache from the inserted row
+                 * onwards, since the cache wants to be a contiguous range. It
+                 * doesn't support holes.
                  *
                  * If holes were supported, we could shift the higher part of
                  * "cached" and leave a hole the size of "count" in the middle.
@@ -769,11 +769,12 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         Profiler.leave("AbstractRemoteDataSource.insertRowData");
     }
 
-    private void trackInvalidatedRowsFromCache(Range invalidated, int insertedRowCount){
+    private void trackInvalidatedRowsFromCache(Range invalidated,
+            int insertedRowCount) {
         /*
-         * If we already have a map in invalidatedRows, we're in a state
-         * where multiple row manipulations without data received have
-         * happened and the cache restoration is prevented completely.
+         * If we already have a map in invalidatedRows, we're in a state where
+         * multiple row manipulations without data received have happened and
+         * the cache restoration is prevented completely.
          */
 
         if (!invalidated.isEmpty() && invalidatedRows == null) {

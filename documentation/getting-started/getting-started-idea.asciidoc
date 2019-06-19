@@ -61,7 +61,7 @@ To compile a Vaadin application using Maven, you can define a run/debug
 configuration to execute a goal such as [literal]#++package++# to build the
 deployable WAR package. It will also compile the widget set and theme, if
 necessary. See
-<<dummy/../../../framework/getting-started/getting-started-maven#getting-started.maven.compiling,"Compiling
+<<getting-started-maven#getting-started.maven.compiling,"Compiling
 and Running the Application">> for more details.
 
 Compilation is included in the following instructions for deploying the

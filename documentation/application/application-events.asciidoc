@@ -8,7 +8,7 @@ layout: page
 = Handling Events with Listeners
 
 Let us put into practice what we learned of event handling in
-<<dummy/../../../framework/architecture/architecture-events#architecture.events,"Events
+<<../architecture/architecture-events#architecture.events,"Events
 and Listeners">>. You can implement listener interfaces by directly using lambda expressions, method references or anonymous classes.
 
 For example, in the following, we use a lambda expression to handle button click

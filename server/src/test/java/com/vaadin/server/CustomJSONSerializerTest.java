@@ -12,7 +12,7 @@ import com.vaadin.ui.ConnectorTracker;
 import elemental.json.JsonValue;
 
 public class CustomJSONSerializerTest {
-    
+
     public static class Foo {
 
     }
