@@ -1,9 +1,5 @@
 package com.vaadin.tests.components.grid;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Locale;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -19,11 +15,15 @@ import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class GridComponentsTest extends MultiBrowserTest {
 
@@ -228,6 +228,10 @@ public class GridComponentsTest extends MultiBrowserTest {
         // Navigate to out of viewport TextField in Header
         new Actions(getDriver()).sendKeys(Keys.chord(Keys.SHIFT, Keys.TAB))
                 .perform();
+        // After Chrome 75, sendkeys issues
+        if (BrowserUtil.isChrome(getDesiredCapabilities())) {
+            grid.getHeaderCell(1, 0).findElement(By.id("headerField")).click();
+        }
         assertEquals("Focus should be in TextField in Header", "headerField",
                 getFocusedElement().getAttribute("id"));
         assertEquals("Grid should've scrolled back to start.", 0,

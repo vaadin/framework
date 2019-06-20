@@ -62,7 +62,7 @@ If your application uses a special theme (look and feel), you must include it in
 Widget sets (OPTIONAL)::
 If your application uses add-ons or custom widgets, they must be compiled to the [filename]#VAADIN/widgetset/# directory.
 When using add-ons, this is done automatically in Maven projects.
-See <<dummy/../../../framework/addons/addons-maven#addons.maven, "Using Add-ons in a Maven Project">> for more information.
+See <<../addons/addons-maven#addons.maven, "Using Add-ons in a Maven Project">> for more information.
 
 [[application.environment.webservlet]]
 == Web Servlet Class
@@ -177,7 +177,7 @@ In a project that does not use add-ons or custom widgets, the [classname]#com.va
 It contains all the widgets for the built-in Vaadin components.
 When using add-ons, the Vaadin Maven Plugin automatically defines an  [classname]#AppWidgetSet# that includes all the add-on widget sets.
 
-The widget set must be compiled, as described in <<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using Vaadin Add-ons">> (for add-ons) or <<dummy/../../../framework/clientside/clientside-compiling#clientside.compiling,"Compiling a Client-Side Module">> (for custom widgets and client-side modules), and properly deployed with the application.
+The widget set must be compiled, as described in <<../addons/addons-overview.asciidoc#addons.overview,"Using Vaadin Add-ons">> (for add-ons) or <<../clientside/clientside-compiling#clientside.compiling,"Compiling a Client-Side Module">> (for custom widgets and client-side modules), and properly deployed with the application.
 
 [[application.environment.servlet-mapping]]
 == Servlet Mapping with URL Patterns
@@ -262,7 +262,7 @@ features. For production use, you should have the
 [classname]#@VaadinServletConfiguration#.
 
 The parameter and the debug and production modes are described in more detail in
-<<dummy/../../../framework/advanced/advanced-debug#advanced.debug,"Debug Mode
+<<../advanced/advanced-debug#advanced.debug,"Debug Mode
 and Window">>.
 
 
@@ -282,7 +282,7 @@ defined in the context as well.
 === UI Heartbeat
 
 Vaadin monitors UIs by using a heartbeat, as explained in
-<<dummy/../../../framework/application/application-lifecycle#application.lifecycle.ui-expiration,"UI
+<<application-lifecycle#application.lifecycle.ui-expiration,"UI
 Expiration">>. If the user closes the browser window of a Vaadin application or
 navigates to another page, the Client-Side Engine running in the page stops
 sending heartbeat to the server, and the server eventually cleans up the
@@ -330,7 +330,7 @@ request.
 === Push Mode
 
 You can enable server push, as described in
-<<dummy/../../../framework/advanced/advanced-push#advanced.push,"Server Push">>,
+<<../advanced/advanced-push#advanced.push,"Server Push">>,
 for a UI either with a [classname]#@Push# annotation for the UI or in the
 descriptor. The push mode is defined with a [parameter]#pushmode# init parameter. The
 [literal]#++automatic++# mode pushes changes to the browser automatically after

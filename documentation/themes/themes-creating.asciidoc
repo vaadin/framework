@@ -204,7 +204,7 @@ public class MyUI extends UI {
 
 The Valo theme comes with a custom icon font, VaadinIcons,
 which you can use as font icons, as described in
-<<dummy/../../../framework/themes/themes-fonticon#themes.fonticon,"Font
+<<themes-fonticon#themes.fonticon,"Font
 Icons">>.
 
 ifdef::web[]
@@ -238,7 +238,7 @@ projects).
 You can also serve static content from a front-end caching server, which reduces
 the load of the application server. In portals, you install the themes globally
 in the portal in similar way, as described in
-<<dummy/../../../framework/portal/portal-liferay#portal.liferay.install,"Installing
+<<../portal/portal-liferay#portal.liferay.install,"Installing
 Vaadin Resources">>.
 
 Just make sure to update the static content when you upgrade to a newer version
@@ -250,7 +250,7 @@ endif::web[]
 
 
 Creation of a default theme for custom GWT widgets is described in
-<<dummy/../../../framework/gwt/gwt-styling#gwt.styling,"Styling a Widget">>.
+<<../gwt/gwt-styling#gwt.styling,"Styling a Widget">>.
 
 
 [[themes.creating.addon]]

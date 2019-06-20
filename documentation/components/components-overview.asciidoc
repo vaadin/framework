@@ -63,14 +63,13 @@ abstract class.
 ((("[classname]#AbstractListing#")))
 There are three more specific types of components.
 
-Field Components:: allow user to edit a value in the UI. All extend [classname]#AbstractField#. Field components are described in detail in
-<<dummy/../../../framework/component/components-fields.asciidoc#components.fields,"Field Components">>.
+<<components-fields#components.fields,"Field Components">>.
 
 Selection Component:: show a list of data that the user can select from. All extend [classname]#AbstractListing#. Selection components are described in detail in
-<<dummy/../../../framework/component/components-selection.asciidoc#components.selection,"Selection Components">>.
+<<components-selection#components.selection,"Selection Components">>.
 
 Layouts and Component Containers:: Components that can contain other components. All layouts and containers implement the [interfacename]#HasComponents# interface. Layout components are described in detail in
-<<dummy/../../../framework/layout/layout-overview.asciidoc#layout.overview,"Managing
+<<../layout/layout-overview#layout.overview,"Managing
 Layout">>.
 
 ((("Sampler")))
@@ -82,8 +81,7 @@ documentation, and a code samples for each of the components.
 In addition to the built-in components, many components are available as
 add-ons, either from the Vaadin Directory or from independent sources. Both
 commercial and free components exist. The installation of add-ons is described
-in
-<<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using
+in <<../addons/addons-overview#addons.overview,"Using
 Vaadin Add-ons">>.
 
 ////

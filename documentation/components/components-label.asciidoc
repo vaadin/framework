@@ -122,7 +122,7 @@ content mode.
 Having [classname]#Label# in HTML content mode allows pure HTML content. If the
 content comes from user input, you should always carefully sanitize it to
 prevent cross-site scripting (XSS) attacks. Please see
-<<dummy/../../../framework/advanced/advanced-security#advanced.security.sanitizing,"Sanitizing
+<<../advanced/advanced-security#advanced.security.sanitizing,"Sanitizing
 User Input to Prevent Cross-Site Scripting">>.
 
 Also, the validity of the HTML content is not checked when rendering the

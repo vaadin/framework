@@ -163,7 +163,7 @@ including WOFF, TTF, EOT, and SVG. Not all browsers support any one of them, so
 all are needed to support all the common browsers. Extract the [filename]#fonts#
 folder from the package to under your theme.
 
-See <<dummy/../../../framework/themes/themes-fonts#themes.fonts.loading,"Loading
+See <<themes-fonts#themes.fonts.loading,"Loading
 Local Fonts">> for instructions for loading a custom font.
 
 

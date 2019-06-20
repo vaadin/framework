@@ -1,17 +1,15 @@
 package com.vaadin.tests.components.embedded;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.EmbeddedElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import static org.junit.Assert.assertEquals;
 
 public class EmbeddedClickListenerRelativeCoordinatesTest
         extends MultiBrowserTest {
@@ -50,8 +48,14 @@ public class EmbeddedClickListenerRelativeCoordinatesTest
                 "Reported X-coordinate from Embedded does not match click location",
                 expectedX, x);
 
-        // IE10 and IE11 sometimes click one pixel below the given position
-        int tolerance = isIE() ? 1 : 0;
+        // IE10 and IE11 sometimes click one pixel below the given position,
+        // so does the Chrome(since 75)
+        int tolerance;
+        if (isIE() || isChrome()) {
+            tolerance = 1;
+        } else {
+            tolerance = 0;
+        }
         assertEquals(
                 "Reported Y-coordinate from Embedded does not match click location",
                 expectedY, y, tolerance);
@@ -59,6 +63,10 @@ public class EmbeddedClickListenerRelativeCoordinatesTest
 
     private boolean isIE() {
         return BrowserUtil.isIE(getDesiredCapabilities());
+    }
+
+    private boolean isChrome() {
+        return BrowserUtil.isChrome(getDesiredCapabilities());
     }
 
 }

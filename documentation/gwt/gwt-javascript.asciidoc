@@ -233,7 +233,7 @@ mechanism, as described in the next section.
 User interaction with the JavaScript component has to be passed to the
 server-side using an RPC (Remote Procedure Call) mechanism. The JavaScript RPC
 mechanism is almost equal to regular client-side widgets, as described in
-<<dummy/../../../framework/gwt/gwt-rpc#gwt.rpc,"RPC Calls Between Client- and
+<<gwt-rpc#gwt.rpc,"RPC Calls Between Client- and
 Server-Side">>.
 
 [[gwt.javascript.rpc.handling]]

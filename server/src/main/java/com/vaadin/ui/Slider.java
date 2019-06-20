@@ -259,9 +259,9 @@ public class Slider extends AbstractField<Double> {
     }
 
     /**
-     * Sets the slider to update its value when the user clicks on it.
-     * By default, the slider value is updated by dragging the slider's handle
-     * or clicking arrows.
+     * Sets the slider to update its value when the user clicks on it. By
+     * default, the slider value is updated by dragging the slider's handle or
+     * clicking arrows.
      *
      * @param updateValueOnClick
      *            {@code true} to update the value of the slider on click,

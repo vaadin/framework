@@ -17,7 +17,7 @@ endif::web[]
 on a tab opens its contained component in the space between the tab and the next
 one. You can use an [classname]#Accordion# identically to a
 [classname]#TabSheet#, which it actually inherits. See
-<<dummy/../../../framework/layout/layout-tabsheet#layout.tabsheet,"TabSheet">>
+<<layout-tabsheet#layout.tabsheet,"TabSheet">>
 for more information.
 
 The following example shows how you can create a simple accordion. As the

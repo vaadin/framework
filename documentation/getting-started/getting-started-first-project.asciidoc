@@ -7,7 +7,7 @@ layout: page
 [[getting-started.first-project]]
 = Creating and Running a Project in Eclipse
 
-TIP: If you are new to Vaadin, we suggest to start with <<dummy/../../../framework/tutorial#tutorial,"the tutorial">>. It also contains instructions how to set up Eclipse based development environment.
+TIP: If you are new to Vaadin, we suggest to start with <<../tutorial#tutorial,"the tutorial">>. It also contains instructions how to set up Eclipse based development environment.
 
 This section gives instructions for creating a new Eclipse project using the
 Vaadin Plugin. The task will include the following steps:
@@ -23,7 +23,7 @@ Vaadin Plugin. The task will include the following steps:
 We also show how you can debug the application in the debug mode in Eclipse.
 
 This walkthrough assumes that you have already installed the Eclipse IDE, the Vaadin Plugin, and a development server, as instructed in
-<<dummy/../../../framework/installing/installing-eclipse#installing.eclipse, "Installing the Eclipse IDE and Plugin">>.
+<<../installing/installing-eclipse#installing.eclipse, "Installing the Eclipse IDE and Plugin">>.
 
 [[getting-started.first-project.creation]]
 == Creating a Maven Project
@@ -207,7 +207,7 @@ image::img/debuggingMyProject.png[scaledwidth=100%]
 
 Above, we described how to debug a server-side application.
 Debugging client-side applications and widgets is described in
-<<dummy/../../../framework/clientside/clientside-debugging#clientside.debugging,"Debugging Client-Side Code">>.
+<<../clientside/clientside-debugging#clientside.debugging,"Debugging Client-Side Code">>.
 
 [[getting-started.eclipse.mavenlibraryupdate]]
 == Updating the Vaadin Framework Libraries

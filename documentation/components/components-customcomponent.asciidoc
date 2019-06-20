@@ -13,7 +13,7 @@ composite components. In many applications, such composite components make up
 the majority of the user interface.
 
 As described earlier in
-<<dummy/../../../framework/application/application-architecture#application.architecture.composition,"Compositing
+<<../application/application-architecture#application.architecture.composition,"Compositing
 Components">>, you have two basic ways to create a composite - either by
 extending a layout component or by using a composition component (a
 [classname]#Composite# or a [classname]#CustomComponent#), which typically
@@ -87,5 +87,5 @@ composition.
 Even further, you can create entirely new low-level components, by integrating
 pure client-side components or by extending the client-side functionality of
 built-in components. Development of new components is covered in
-<<dummy/../../../framework/gwt/gwt-overview.asciidoc#gwt.overview,"Integrating
+<<../gwt/gwt-overview.asciidoc#gwt.overview,"Integrating
 with the Server-Side">>.

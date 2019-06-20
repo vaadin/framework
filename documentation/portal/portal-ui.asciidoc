@@ -33,7 +33,7 @@ public class MyportletUI extends UI {
 ----
 
 For OSGi portlets in Liferay 7, use additional annotations as described in
-<<dummy/../../../framework/portal/portal-osgi#portal.osgi,"OSGi Portlets on Liferay 7">>.
+<<portal-osgi#portal.osgi,"OSGi Portlets on Liferay 7">>.
 
 The portlet theme is defined with the [classname]#@Theme# annotation as usual.
 The theme for the UI must match a theme installed in the portal. You can use any
@@ -67,7 +67,7 @@ can make testing it easier than deploying it to a portal.
 If you created the project as a Servlet 3.0 project, the generated UI stub
 includes a static servlet class annotated with [classname]#@WebServlet#, as
 described in
-<<dummy/../../../framework/getting-started/getting-started-first-project#getting-started.first-project.exploring,"Exploring
+<<../getting-started/getting-started-first-project#getting-started.first-project.exploring,"Exploring
 the Project">>.
 
 Otherwise, the following snippet can be used.

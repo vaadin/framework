@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.window;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 
 import org.junit.Test;
@@ -12,9 +10,11 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.WindowElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class WindowHeaderButtonKeyboardActionsTest extends MultiBrowserTest {
+import static org.junit.Assert.assertTrue;
+
+public class WindowHeaderButtonKeyboardActionsTest extends SingleBrowserTest {
 
     private static final String HEADER_CLASS = "v-window-header";
     private static final String RESTORE_BOX_CLASS = "v-window-restorebox";
@@ -162,13 +162,13 @@ public class WindowHeaderButtonKeyboardActionsTest extends MultiBrowserTest {
         pressKeyAndWait(Keys.TAB);
         assertTrue("Window's close button is the focused element",
                 !closeButton.equals(driver.switchTo().activeElement()));
-        pressKeyAndWait(Keys.SHIFT, Keys.TAB);
+
+        pressKeyCombinations(Keys.SHIFT, Keys.TAB);
         assertTrue("Window's close button is not the focused element",
                 closeButton.equals(driver.switchTo().activeElement()));
 
         pressKeyAndWait(Keys.ENTER);
-        assertTrue(
-                "Window is not closed when focus is shifted back-and-forth",
+        assertTrue("Window is not closed when focus is shifted back-and-forth",
                 findElements(By.className("v-window")).size() == 0);
     }
 
@@ -325,7 +325,7 @@ public class WindowHeaderButtonKeyboardActionsTest extends MultiBrowserTest {
         pressKeyAndWait(Keys.TAB);
         assertTrue("Window's maximize button is the focused element",
                 !maximizeButton.equals(driver.switchTo().activeElement()));
-        pressKeyAndWait(Keys.SHIFT, Keys.TAB);
+        pressKeyCombinations(Keys.SHIFT, Keys.TAB);
         assertTrue("Window's maximize button is not the focused element",
                 maximizeButton.equals(driver.switchTo().activeElement()));
 
@@ -401,5 +401,14 @@ public class WindowHeaderButtonKeyboardActionsTest extends MultiBrowserTest {
     protected void pressKeyAndWait(Keys... key) {
         new Actions(driver).sendKeys(key).build().perform();
         sleep(1000);
+    }
+
+    // That is a workaround after Chrome 75, sendKeys(Keys.shift, Keys.Tab)
+    // doesn't work
+    protected void pressKeyCombinations(Keys keyModifier, Keys key) {
+
+        new Actions(getDriver()).keyDown(keyModifier).perform();
+        new Actions(getDriver()).sendKeys(Keys.chord(key)).perform();
+        new Actions(getDriver()).keyUp(keyModifier).perform();
     }
 }

@@ -143,13 +143,13 @@ public class MainView extends CustomComponent implements View {
 
 Vaadin CDI requires a Java EE 7 compatible servlet container, such as Glassfish
 or Apache TomEE Web Profile, as mentioned for the reference toolchain in
-<<dummy/../../../framework/getting-started/getting-started-environment#getting-started.environment,"Setting
+<<../getting-started/getting-started-environment#getting-started.environment,"Setting
 up the Development Environment">>.
 
 To install the Vaadin CDI add-on, either define it as an Ivy or Maven dependency
 or download it from the Vaadin Directory add-on page at
 <<,vaadin.com/directory#addon/vaadin-cdi>>. See
-<<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using
+<<../addons/addons-overview.asciidoc#addons.overview,"Using
 Vaadin Add-ons">> for general instructions for installing and using Vaadin
 add-ons.
 
@@ -197,7 +197,7 @@ servlet, see <<advanced.cdi.deployment>>.
 
 Vaadin CDI offers an easier way to instantiate UIs and to define the URL mapping
 for them than the usual ways described in
-<<dummy/../../../framework/application/application-environment#application.environment,"Deploying
+<<../application/application-environment#application.environment,"Deploying
 an Application">>. To define a UI class that should be instantiated for a given
 URL, you simply need to annotate the class with [classname]#@CDIUI#. It takes an
 optional URL path as parameter.
@@ -334,7 +334,7 @@ must be synchronized.
 The lifecycle and visibility of session-scoped beans is bound to a HTTP or user
 session, which in Vaadin applications is associated with the
 [classname]#VaadinSession# (see
-<<dummy/../../../framework/application/application-lifecycle#application.lifecycle.session,"User
+<<../application/application-lifecycle#application.lifecycle.session,"User
 Session">>). This is a very typical scope to store user data, as is done in many
 examples in this section, or database connections. The lifecycle of
 session-scoped beans starts when a user opens the page for a UI in the browser,
@@ -476,7 +476,7 @@ other Vaadin servlets.
 === Custom Servlets
 
 When customizing the Vaadin servlet, as outlined in
-<<dummy/../../../framework/application/application-lifecycle#application.lifecycle.servlet-service,"Vaadin
+<<../application/application-lifecycle#application.lifecycle.servlet-service,"Vaadin
 Servlet, Portlet, and Service">>, you simply need to extend
 [classname]#com.vaadin.cdi.internal.VaadinCDIServlet# instead of
 [classname]#com.vaadin.servlet.VaadinServlet#.
@@ -484,7 +484,7 @@ Servlet, Portlet, and Service">>, you simply need to extend
 The custom servlet must not have [classname]#@WebServlet# annotation or
 [classname]#@VaadinServletConfiguration#, as you would normally with a Vaadin
 servlet, as described in
-<<dummy/../../../framework/application/application-environment#application.environment,"Deploying
+<<../application/application-environment#application.environment,"Deploying
 an Application">>.
 
 
@@ -494,7 +494,7 @@ ifdef::web[]
 == View Navigation
 
 Vaadin CDI extends the navigation framework in Vaadin, described in
-<<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator,"Navigating
+<<../advanced/advanced-navigator#advanced.navigator,"Navigating
 in an Application">>. It manages CDI views with a special view provider and
 enables view scoping.
 
@@ -502,7 +502,7 @@ enables view scoping.
 === Preparing the UI
 
 You can define navigation for any single-component container, as described in
-<<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator.navigating,"Setting
+<<advanced-navigator#advanced.navigator.navigating,"Setting
 Up for Navigation">>, but typically you set up navigation for the entire UI
 content. To use Vaadin CDI views, you need to inject a
 [classname]#CDIViewProvider# in the UI and add it as a provider for the
@@ -787,7 +787,7 @@ events.
 
 CDI events are not propagated to inactive contexts, and only the context of the
 currently processed UI is active. Further, as explained in
-<<dummy/../../../framework/advanced/advanced-push#advanced.push.running,"Accessing
+<<advanced-push#advanced.push.running,"Accessing
 UI from Another Thread">>, other Vaadin UIs may not be accessed without proper
 synchronization, as their requests are processed concurrently in different
 server threads. Therefore, you need to pass the events through an
@@ -795,7 +795,7 @@ application-scoped messaging service and synchronize the access to other UIs by
 using the [methodname]#access()# method.
 
 In
-<<dummy/../../../framework/advanced/advanced-push#advanced.push.pusharound,"Broadcasting
+<<advanced-push#advanced.push.pusharound,"Broadcasting
 to Other Users">> we looked into how to pass messages to all other UIs using a
 broadcasting service. In that example, we used static variables and methods to
 store references and to access the service. With CDI, we can let the context

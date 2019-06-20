@@ -13,7 +13,7 @@ globally in Liferay so that the resources are shared between all Vaadin
 portlets, as self-contained WARs where each portlet carries their own
 resources or as OSGi bundles in Liferay 7.
 
-For Liferay 7 and OSGi portlets, see <<dummy/../../../framework/portal/portal-osgi#portal.osgi,"OSGi Portlets on Liferay 7">>. This is the recommended approach when using Vaadin 8.1 or later and Liferay 7.
+For Liferay 7 and OSGi portlets, see <<portal-osgi#portal.osgi,"OSGi Portlets on Liferay 7">>. This is the recommended approach when using Vaadin 8.1 or later and Liferay 7.
 Currently, the latest Maven archetype supports the OSGi approach.
 
 The material below applies mostly to non-OSGi portlets.
@@ -115,7 +115,7 @@ image::img/liferay-maven-profile.png[]
 == Creating a Portlet Project with Maven
 
 Creation of Vaadin a Maven project is described in
-<<dummy/../../../framework/getting-started/getting-started-maven#getting-started.maven,"Using
+<<../getting-started/getting-started-maven#getting-started.maven,"Using
 Vaadin with Maven">>. For a Liferay project, you should use the
 [literal]#++vaadin-archetype-liferay-portlet++#.
 

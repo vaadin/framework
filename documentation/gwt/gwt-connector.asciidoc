@@ -13,7 +13,7 @@ the widget state and events to the server-side.
 
 A connector normally gets the state of the server-side component by the __shared
 state__, described later in
-<<dummy/../../../framework/gwt/gwt-shared-state#gwt.shared-state,"Shared
+<<gwt-shared-state#gwt.shared-state,"Shared
 State">>.
 
 [[gwt.connector.basic]]
@@ -56,7 +56,7 @@ method that is called when any of the state properties is changed. A finer and
 simpler handling is achieved by using the [classname]#@OnStateChange# annotation
 on a handler method for each property, or by [classname]#@DelegateToWidget# on a
 shared state property, as described later in
-<<dummy/../../../framework/gwt/gwt-shared-state#gwt.shared-state,"Shared
+<<../gwt/gwt-shared-state#gwt.shared-state,"Shared
 State">>.
 
 
@@ -69,7 +69,7 @@ to the widget.
 
 Server-to-client communication is normally done using a __shared state__, as
 described in
-<<dummy/../../../framework/gwt/gwt-shared-state#gwt.shared-state,"Shared
+<<gwt-shared-state#gwt.shared-state,"Shared
 State">>, as well as RPC calls. The serialization of the state data is handled
 completely transparently.
 
@@ -77,7 +77,7 @@ ifdef::web[]
 Once the client-side engine receives the changes from the server, it reacts to
 them by creating and notifying connectors that in turn manage widgets. This is
 described in
-<<dummy/../../../framework/gwt/gwt-advanced#gwt.advanced.phases,"Client-Side
+<<gwt-advanced#gwt.advanced.phases,"Client-Side
 Processing Phases">> in more
 detail.
 endif::web[]
@@ -85,7 +85,7 @@ endif::web[]
 For client-to-server communication, a connector can make remote procedure calls
 (RPC) to the server-side. Also, the server-side component can make RPC calls to
 the connector. For a thorough description of the RPC mechanism, refer to
-<<dummy/../../../framework/gwt/gwt-rpc#gwt.rpc,"RPC Calls Between Client- and
+<<gwt-rpc#gwt.rpc,"RPC Calls Between Client- and
 Server-Side">>.
 
 

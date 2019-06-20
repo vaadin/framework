@@ -13,7 +13,7 @@ applications, whether you use add-on components, or use CSS or Sass themes.
 
 [filename]#vaadin-server-8.x.x.jar#::
 The main library for developing server-side Vaadin applications, as described in
-<<dummy/../../../framework/application/application-overview.asciidoc#application.overview,"Writing a Server-Side Web Application">>.
+<<../application/application-overview.asciidoc#application.overview,"Writing a Server-Side Web Application">>.
 It requires the [filename]#vaadin-shared# and the [filename]#vaadin-themes# libraries.
 You can use the pre-built [filename]#vaadin-client-compiled# for server-side development, unless you need add-on components or custom widgets.
 
@@ -41,10 +41,10 @@ You should not deploy it with a web application.
 
 [filename]#vaadin-client-compiler-8.x.x.jar#::
 The Vaadin Client Compiler is a Java-to-JavaScript compiler that allows building client-side modules, such as the Client-Side Engine (widget set) required for server-side applications.
-The compiler is needed, for example, for compiling add-on components to the application widget set, as described in <<dummy/../../../framework/addons/addons-overview.asciidoc#addons.overview,"Using Vaadin Add-ons">>.
+The compiler is needed, for example, for compiling add-on components to the application widget set, as described in <<../addons/addons-overview.asciidoc#addons.overview,"Using Vaadin Add-ons">>.
 +
 For detailed information regarding the compiler, see
-<<dummy/../../../framework/clientside/clientside-compiling#clientside.compiling,"Compiling a Client-Side Module">>.
+<<../clientside/clientside-compiling#clientside.compiling,"Compiling a Client-Side Module">>.
 Note that you should not deploy this library with a web application.
 
 [filename]#vaadin-compatibility-*-8.x.x.jar#::
