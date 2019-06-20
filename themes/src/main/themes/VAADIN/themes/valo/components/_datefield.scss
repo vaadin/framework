@@ -480,7 +480,7 @@
     cursor:default;
     @include valo-datefield-calendarpanel-month-style;
   }
-  td.#{$primary-stylename}-month.header-below-month{
+  td.#{$primary-stylename}-month.header-month-year{
     cursor:pointer;
   }
 

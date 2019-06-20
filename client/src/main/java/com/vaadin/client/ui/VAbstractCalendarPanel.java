@@ -603,7 +603,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                         + "-calendarpanel-month\">" + monthName + " " + year
                         + "</span>");
         if (!isBelowMonth(getResolution())) {
-            monthYearElement.addClassName("header-below-month");
+            monthYearElement.addClassName("header-month-year");
         }
     }
 
