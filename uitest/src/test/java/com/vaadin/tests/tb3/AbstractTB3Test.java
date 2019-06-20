@@ -1025,8 +1025,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
         WebElement menuElement = getMenuElement(menuCaption);
         Dimension size = menuElement.getSize();
         new Actions(getDriver())
-                .moveToElement(menuElement, size.width - 10, size.height / 2)
-                .perform();
+                .moveToElement(menuElement).perform();
         if (click) {
             new Actions(getDriver()).click().perform();
         }
@@ -1044,7 +1043,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     protected WebElement getMenuElement(String menuCaption)
             throws NoSuchElementException {
         return getDriver().findElement(
-                By.xpath("//span[text() = '" + menuCaption + "']"));
+                By.xpath("//span[text() = '" + menuCaption + "']/.."));
     }
 
     /**
@@ -1074,7 +1073,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
         for (int i = 1; i < menuCaptions.length - 1; i++) {
             selectMenu(menuCaptions[i]);
-            new Actions(getDriver()).moveByOffset(40, 0).build().perform();
+            new Actions(getDriver()).moveByOffset(getMenuElement(menuCaptions[i]).getSize().getWidth(), 0).build().perform();
         }
         selectMenu(menuCaptions[menuCaptions.length - 1], true);
     }
@@ -1247,4 +1246,45 @@ public abstract class AbstractTB3Test extends ParallelTest {
         }, 30);
     }
 
+    /**
+     * Gets the X offset for
+     * {@link Actions#moveToElement(WebElement, int, int)}. This method takes
+     * into account the W3C specification in browsers that properly implement
+     * it.
+     *
+     * @param element
+     *            the element
+     * @param targetX
+     *            the X coordinate where the move is wanted to go to
+     * @return the correct X offset
+     */
+    protected int getXOffset(WebElement element, int targetX) {
+        if (BrowserUtil.isChrome(getDesiredCapabilities())) {
+            // Chrome follow W3C spec and moveToElement is relative to center
+            final int width = element.getSize().getWidth();
+            return targetX - ((width + width % 2) / 2);
+        }
+        return targetX;
+    }
+
+    /**
+     * Gets the Y offset for
+     * {@link Actions#moveToElement(WebElement, int, int)}. This method takes
+     * into account the W3C specification in browsers that properly implement
+     * it.
+     *
+     * @param element
+     *            the element
+     * @param targetY
+     *            the Y coordinate where the move is wanted to go to
+     * @return the correct Y offset
+     */
+    protected int getYOffset(WebElement element, int targetY) {
+        if (BrowserUtil.isChrome(getDesiredCapabilities())) {
+            // Chrome follow W3C spec and moveToElement is relative to center
+            final int height = element.getSize().getHeight();
+            return targetY - ((height + height % 2) / 2);
+        }
+        return targetY;
+    }
 }
