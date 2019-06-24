@@ -1,7 +1,5 @@
 package com.vaadin.tests.fieldgroup;
 
-import static org.junit.Assert.assertFalse;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +15,8 @@ import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import static org.junit.Assert.assertFalse;
 
 @TestCategory("grid")
 public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
@@ -72,7 +72,7 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
 
         // Check values
         String value = cb.getValue();
-        cb.click(5, 5);
+        cb.click();
         Assert.assertNotEquals("Checkbox value did not change", value,
                 cb.getValue());
     }
