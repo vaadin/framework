@@ -155,7 +155,7 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
     private int getHorizontalOffsetForDragAndDrop(GridCellElement columnHeader,
             CellSide cellSide) {
         if (cellSide == CellSide.LEFT) {
-            return 5;
+            return -5;
         } else {
             int half = columnHeader.getSize().getWidth() / 2;
             return half + (half / 2);
