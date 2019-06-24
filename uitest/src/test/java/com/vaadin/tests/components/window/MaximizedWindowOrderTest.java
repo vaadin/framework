@@ -1,10 +1,12 @@
 package com.vaadin.tests.components.window;
 
+import org.junit.Test;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.tests.tb3.AbstractTB3Test;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.tb3.newelements.WindowElement;
-import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
@@ -61,10 +63,19 @@ public class MaximizedWindowOrderTest extends MultiBrowserTest {
         WindowElement anotherWindow = openAnotherWindow();
 
         // move the window to make the maximize button visible.
-        anotherWindow.move(10, 20);
+        moveWindow(anotherWindow, 10, 20);
         maximizedWindow.maximize();
 
         assertThat(maximizedWindow.getCssValue("z-index"),
                 is(greaterThan(anotherWindow.getCssValue("z-index"))));
+    }
+
+    private void moveWindow(WindowElement window, int xOffset, int yOffset) {
+        WebElement wrap = window
+                .findElement(org.openqa.selenium.By.className("v-window-wrap"));
+        new Actions(getDriver())
+                .moveToElement(wrap, getXOffset(wrap, 5), getYOffset(wrap, 5))
+                .clickAndHold().moveByOffset(xOffset, yOffset).release().build()
+                .perform();
     }
 }
