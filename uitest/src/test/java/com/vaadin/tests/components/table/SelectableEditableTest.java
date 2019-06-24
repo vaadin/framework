@@ -11,7 +11,7 @@ public class SelectableEditableTest extends MultiBrowserTest {
     public void testSelectFromCellWith() throws Exception {
         openTestURL();
         TableElement table = $(TableElement.class).first();
-        table.getCell(0, 1).click(70, 12);
+        table.getCell(0, 1).click();
         Assert.assertTrue("Element does not have the 'v-selected' css class",
                 hasCssClass(table.getRow(0), "v-selected"));
     }
