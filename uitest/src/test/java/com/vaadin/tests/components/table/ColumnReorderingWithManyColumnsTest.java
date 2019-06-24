@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.table;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 
 import org.junit.Test;
@@ -12,6 +10,8 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TableHeaderElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import static org.junit.Assert.assertEquals;
 
 public class ColumnReorderingWithManyColumnsTest extends MultiBrowserTest {
     @Test
@@ -30,9 +30,9 @@ public class ColumnReorderingWithManyColumnsTest extends MultiBrowserTest {
 
     private void drag(WebElement source, WebElement target) {
         Actions actions = new Actions(getDriver());
-        actions.moveToElement(source, 10, 10);
+        actions.moveToElement(source, getXOffset(source, 10), getYOffset(source, 10));
         actions.clickAndHold(source);
-        actions.moveToElement(target, 10, 10);
+        actions.moveToElement(target, getXOffset(target, 10), getYOffset(target, 10));
         actions.perform();
     }
 }
