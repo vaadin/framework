@@ -26,8 +26,8 @@ public class EmbeddedClickListenerRelativeCoordinatesTest
         clickAt(41, 22);
         checkLocation(41, 22);
 
-        clickAt(0, 0);
-        checkLocation(0, 0);
+        clickAt(1, 1);
+        checkLocation(1, 1);
     }
 
     private void clickAt(int x, int y) {
@@ -39,7 +39,7 @@ public class EmbeddedClickListenerRelativeCoordinatesTest
             x += 2;
             y += 2;
         }
-        embedded.click(x, y);
+        embedded.click(getXOffset(embedded, x), getYOffset(embedded, y));
     }
 
     private void checkLocation(int expectedX, int expectedY) {
