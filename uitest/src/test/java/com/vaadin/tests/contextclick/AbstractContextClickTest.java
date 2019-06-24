@@ -127,7 +127,7 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
      *            y coordinate
      */
     protected void contextClick(WebElement e, int xCoord, int yCoord) {
-        new Actions(getDriver()).moveToElement(e, xCoord, yCoord).contextClick()
+        new Actions(getDriver()).moveToElement(e, getXOffset(e, xCoord), getYOffset(e, yCoord)).contextClick()
                 .moveByOffset(-5, -5).click().perform();
     }
 
