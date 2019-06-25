@@ -30,6 +30,7 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.aria.client.SelectedValue;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -49,6 +50,7 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -580,6 +582,15 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         // Set ID to be referenced from focused date or calendar panel
         Element monthYearElement = getFlexCellFormatter().getElement(0, 2);
         AriaHelper.ensureHasId(monthYearElement);
+        Event.sinkEvents(monthYearElement, Event.ONCLICK);
+        Event.setEventListener(monthYearElement, event -> {
+            // Don't handle header clicks if resolution in below month
+            if (!isEnabled() || isReadonly() || isBelowMonth(getResolution())) {
+                return;
+            }
+            selectFocused();
+            onSubmit();
+        });
         if (!needsBody) {
             Roles.getGridRole().setAriaLabelledbyProperty(getElement(),
                     Id.of(monthYearElement));
@@ -591,6 +602,9 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 "<span class=\"" + parent.getStylePrimaryName()
                         + "-calendarpanel-month\">" + monthName + " " + year
                         + "</span>");
+        if (!isBelowMonth(getResolution())) {
+            monthYearElement.addClassName("header-month-year");
+        }
     }
 
     private void updateControlButtonRangeStyles(boolean needsMonth) {
