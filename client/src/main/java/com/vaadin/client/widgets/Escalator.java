@@ -187,11 +187,12 @@ import com.vaadin.shared.util.SharedUtil;
  order. See BodyRowContainerImpl.DeferredDomSorter for more
  about that.
 
- It should be noted that the entire visual range is
- not necessarily in view at any given time, although it
- should be optimised to not exceed the maximum amount of
- rows that can theoretically fit within the viewport when
- their associated spacers have zero height.
+ It should be noted that the entire visual range is not
+ necessarily in view at any given time, although it should be
+ optimised to not exceed the maximum amount of rows that can
+ theoretically fit within the viewport when their associated
+ spacers have zero height, except by the two rows that are
+ required for tab navigation to work.
 
  */
 
@@ -3132,14 +3133,17 @@ public class Escalator extends Widget
             } else if (newRowsInsertedAboveCurrentViewport) {
                 /*
                  * Rows were inserted within the visual range but above the
-                 * viewport. Even if we don't have any spacers the first row
-                 * might be partially visible, and inserting rows just above it
-                 * would qualify as this situation. If we do have spacers and
-                 * are scrolled to the bottom, there might even be quite a few
-                 * hidden dom rows above the viewport, and they need to be
-                 * correctly filled and positioned so that they will be
-                 * displayed correctly if someone removes a big spacer from the
-                 * bottom and the viewport slides up as a result.
+                 * viewport. Unless we are scrolled all the way to the top the
+                 * first row is always either completely or partially out of
+                 * view (buffer row for tabulator navigation), and depending on
+                 * scrolling and spacers there might even be several rows there,
+                 * especially when scrolled all the way to the bottom. If any
+                 * scrolling has happened, inserting rows just above any of
+                 * these completely or partially hidden rows would qualify as
+                 * this situation. Even these hidden rows within visual range
+                 * need to be correctly populated and positioned so that they
+                 * will be displayed correctly if someone removes a big spacer
+                 * from the bottom and the viewport slides up as a result.
                  *
                  * Note that it's not possible to insert content so that it's
                  * partially visible at the top. A partially visible row at top
@@ -3187,9 +3191,10 @@ public class Escalator extends Widget
                  * to regain its old relative position again.
                  *
                  * The visual range only ever contains at most as many rows as
-                 * would fit within the viewport without any spacers with one or
-                 * two rows partially in view, so the amount of rows that needs
-                 * to be checked is always reasonably limited.
+                 * would fit within the viewport without any spacers with one
+                 * extra row on both at the top and at the bottom as buffer
+                 * rows, so the amount of rows that needs to be checked is
+                 * always reasonably limited.
                  */
 
                 // insertion index within the visual range
@@ -3244,7 +3249,7 @@ public class Escalator extends Widget
 
                     rowVisibilityChanged = true;
                 } else {
-                    // update the spacer indexes
+                    // no rows to re-purpose but update the spacer indexes
                     spacerContainer.updateSpacerIndexesForRowAndAfter(index,
                             index + numberOfRows - addedRows.size(),
                             numberOfRows - addedRows.size());
@@ -3643,14 +3648,19 @@ public class Escalator extends Widget
                     + visualRowOrder.size();
             double gapBelow = scrollTop + getHeightOfSection()
                     - getRowTop(firstBelowVisualRange);
-            if (scrollTop > 0 && gapBelow > 0) {
+            boolean bufferRowNeeded = gapBelow == 0
+                    && firstBelowVisualRange < getRowCount();
+            if (scrollTop > 0 && (gapBelow > 0 || bufferRowNeeded)) {
                 /*
                  * This situation can be reached e.g. by removing a spacer.
                  * Scroll position must be adjusted accordingly but no more than
-                 * there is room to scroll up.
+                 * there is room to scroll up. If a buffer row is needed make
+                 * sure the last row ends up at least slightly below the
+                 * viewport.
                  */
                 moveViewportAndContent(null, 0, 0,
-                        -Math.min(gapBelow, scrollTop));
+                        -Math.min(Math.max(gapBelow, bufferRowNeeded ? 1 : 0),
+                                scrollTop));
             }
         }
 
@@ -3805,6 +3815,7 @@ public class Escalator extends Widget
                     escalatorRowsStillFit);
 
             if (escalatorRowsNeeded > 0) {
+                int rowsBeforeAddition = visualRowOrder.size();
 
                 // this is AbstractRowContainer method and not easily overridden
                 // to consider logical indexes separately from visual indexes,
@@ -3836,9 +3847,10 @@ public class Escalator extends Widget
                 }
 
                 // if something is getting inserted instead of just being
-                // brought to visual range the logical indexes below the
-                // insertion point need updating
-                if (logicalIndex >= getTopRowLogicalIndex()) {
+                // brought to visual range, the rows below the insertion point
+                // need to have their spacer indexes updated accordingly
+                if (logicalIndex >= getTopRowLogicalIndex()
+                        && visualIndex < rowsBeforeAddition) {
                     spacerContainer.updateSpacerIndexesForRowAndAfter(
                             logicalIndex, getRowCount(), addedRows.size());
                 }
@@ -3864,8 +3876,6 @@ public class Escalator extends Widget
 
                 // Execute the registered callback function for newly created
                 // rows
-                // TODO: should this be modified to allow several so that
-                // DetailsManagerConnector can set one too?
                 Optional.ofNullable(newEscalatorRowCallback)
                         .ifPresent(callback -> callback.accept(addedRows));
 
@@ -3960,7 +3970,8 @@ public class Escalator extends Widget
                 /*
                  * Rows were removed entirely from above the visual range. No
                  * rows to re-purpose, just need to update the spacer indexing
-                 * and the scroll position. No need to touch the physical index.
+                 * and the content positions. No need to touch the physical
+                 * index.
                  */
 
                 // update the logical indexes of remaining spacers
@@ -4533,7 +4544,9 @@ public class Escalator extends Widget
              * position in the DOM will remain undefined.
              */
 
-            // If a spacer was not reordered, it means that it's out of view.
+            // If a spacer was not reordered, it means that it's out of visual
+            // range. This should never happen with default Grid implementations
+            // but it's possible on an extended Escalator.
             for (SpacerContainer.SpacerImpl unmovedSpacer : spacers.values()) {
                 unmovedSpacer.hide();
             }
@@ -4644,17 +4657,20 @@ public class Escalator extends Widget
         }
 
         /**
-         * <em>Calculates</em> the correct top position of a row at a logical
-         * index, regardless if there is one there or not.
+         * <em>Calculates</em> the expected top position of a row at a logical
+         * index, regardless if there is one there currently or not.
          * <p>
-         * A correct result requires that both {@link #getDefaultRowHeight()} is
-         * consistent, and the placement and height of all spacers above the
-         * given logical index are consistent.
+         * This method relies on fixed row height (by
+         * {@link #getDefaultRowHeight()}) and can only take into account
+         * spacers that are within visual range. Any scrolling might invalidate
+         * these results, so this method shouldn't be used to estimate scroll
+         * positions.
          *
          * @param logicalIndex
          *            the logical index of the row for which to calculate the
          *            top position
-         * @return the position at which to place a row in {@code logicalIndex}
+         * @return the position where the row should currently be, were it to
+         *         exist
          * @see #getRowTop(TableRowElement)
          */
         private double getRowTop(int logicalIndex) {
@@ -5020,10 +5036,7 @@ public class Escalator extends Widget
                             - sectionHeight + padding;
                     // ensure that we don't overshoot beyond bottom
                     scrollTop = Math.min(scrollTop,
-                            getRowTop(getRowCount() - 1) + getDefaultRowHeight()
-                                    + spacerContainer
-                                            .getSpacerHeight(getRowCount() - 1)
-                                    - sectionHeight);
+                            getRowTop(getRowCount()) - sectionHeight);
                 } else {
                     // we are fine where we are
                     scrollTop = getScrollTop();
@@ -5077,8 +5090,6 @@ public class Escalator extends Widget
         }
 
         @Override
-        // TODO: should this be modified to allow several so that
-        // DetailsManagerConnector can set one too?
         public void setNewRowCallback(
                 Consumer<List<TableRowElement>> callback) {
             newEscalatorRowCallback = callback;
@@ -5876,7 +5887,13 @@ public class Escalator extends Widget
             /**
              * Updates the spacer's visibility parameters, based on whether it
              * is being currently visible or not.
+             *
+             * @deprecated Escalator no longer uses this logic at initialisation
+             *             as there can only be a limited number of spacers and
+             *             hidden spacers within visual range interfere with
+             *             position calculations.
              */
+            @Deprecated
             public void updateVisibility() {
                 if (isInViewport()) {
                     show();
@@ -6014,25 +6031,8 @@ public class Escalator extends Widget
             assert !destination.equals(ScrollDestination.MIDDLE)
                     || padding != 0 : "destination/padding check should be done before this method";
 
-            SpacerImpl spacer = rowIndexToSpacer.get(spacerIndex);
-            double targetStartPx;
-            double targetEndPx;
-            if (spacer == null) {
-                targetStartPx = body.getRowTop(spacerIndex + 1);
-                targetEndPx = targetStartPx;
-            } else {
-                targetStartPx = spacer.getTop();
-                targetEndPx = targetStartPx + spacer.getHeight();
-            }
-
-            Range viewportPixels = getViewportPixels();
-            double viewportStartPx = viewportPixels.getStart();
-            double viewportEndPx = viewportPixels.getEnd();
-
-            double scrollTop = getScrollPos(destination, targetStartPx,
-                    targetEndPx, viewportStartPx, viewportEndPx, padding);
-
-            setScrollTop(scrollTop);
+            body.scrollToRowSpacerOrBoth(spacerIndex, destination, padding,
+                    true, false);
         }
 
         public void reapplySpacerWidths() {
@@ -6481,7 +6481,7 @@ public class Escalator extends Widget
             assert getElement().isOrHasChild(spacer
                     .getElement()) : "Spacer element somehow got detached from Escalator during attaching";
 
-            spacer.updateVisibility();
+            spacer.show();
         }
 
         public String getSubPartName(Element subElement) {

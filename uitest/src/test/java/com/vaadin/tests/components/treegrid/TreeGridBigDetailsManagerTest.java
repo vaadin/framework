@@ -491,11 +491,7 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
         openTestURL();
         $(ButtonElement.class).id(EXPAND_ALL).click();
         $(ButtonElement.class).id(SHOW_DETAILS).click();
-        $(ButtonElement.class).id(ADD_GRID).click();
-
-        waitForElementPresent(By.className(CLASSNAME_TREEGRID));
-
-        treeGrid = $(TreeGridElement.class).first();
+        addGrid();
 
         // check the position of a row
         int oldY = treeGrid.getCell(2, 0).getLocation().getY();
@@ -512,13 +508,9 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
         openTestURL();
         $(ButtonElement.class).id(EXPAND_ALL).click();
         $(ButtonElement.class).id(SHOW_DETAILS).click();
-        $(ButtonElement.class).id(ADD_GRID).click();
-
-        waitForElementPresent(By.className(CLASSNAME_TREEGRID));
+        addGrid();
 
         $(ButtonElement.class).id(SCROLL_TO_55).click();
-
-        treeGrid = $(TreeGridElement.class).first();
 
         // check the position of a row
         int oldY = treeGrid.getCell(52, 0).getLocation().getY();
