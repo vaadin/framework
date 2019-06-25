@@ -132,7 +132,11 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             if (numberOfRows == 1) {
                 getParent().singleDetailsOpened(firstRowIndex);
             }
+            // the update may have affected details row contents and size,
+            // recalculation and triggering of any pending navigation
+            // confirmations etc. is needed
             triggerDelayedRepositioning(firstRowIndex, numberOfRows);
+            triggerDelayedDetailsRefreshedCommand(true);
         }
 
         @Override
@@ -424,30 +428,6 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             }
             getWidget().setDetailsVisible(rowIndex, false);
             indexToDetailConnectorId.remove(rowIndex);
-        }
-    }
-
-    private void detachAllIfNeeded() {
-        // no details to display, remove all
-        Integer start = null;
-        Integer end = null;
-        for (Integer index : indexToDetailConnectorId.keySet()) {
-            if (start == null || start > index) {
-                start = index;
-            }
-            if (end == null || end < index) {
-                end = index;
-            }
-            detachIfNeeded(index, null);
-        }
-
-        // refresh the positions of all affected rows and those
-        // below them, unless all affected rows are outside of the
-        // visual range, and clear out any pending operations that wait to see
-        // if there might be a new details row
-        if (start != null) {
-            triggerDelayedRepositioning(start, end - start);
-            triggerDelayedDetailsRefreshedCommand(false);
         }
     }
 
