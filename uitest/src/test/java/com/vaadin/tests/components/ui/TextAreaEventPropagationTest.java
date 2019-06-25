@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.ui;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -10,6 +8,8 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests that the TextArea widget correctly stops ENTER events from propagating.
@@ -49,7 +49,7 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
     }
 
     @Test
-    public void testTextFieldEscapeEventPropagation() {
+    public void testTextFieldEscapeEventPropagation() throws InterruptedException {
         openTestURL();
         WebElement textField = $(TextFieldElement.class).first();
         Actions builder2 = new Actions(driver);
@@ -57,9 +57,11 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
 
         builder2.sendKeys("third line");
         builder2.sendKeys(Keys.ENTER);
+        sleep(100);
         builder2.sendKeys(Keys.ESCAPE);
-
+        sleep(100);
         builder2.perform();
+        sleep(100);
 
         assertEquals("1. Enter button pressed", getLogRow(1));
         assertEquals("2. Escape button pressed", getLogRow(0));
