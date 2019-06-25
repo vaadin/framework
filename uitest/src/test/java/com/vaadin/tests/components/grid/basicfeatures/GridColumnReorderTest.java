@@ -1,8 +1,5 @@
 package com.vaadin.tests.components.grid.basicfeatures;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -11,6 +8,9 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -219,8 +219,7 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
 
         // when
-        int horizontalOffset = (getGridElement().getHeaderCell(1, 1).getSize()
-                .getWidth() / 2) - 10;
+        int horizontalOffset =  - 10;
         dragAndDropColumnHeader(1, 3, 1, horizontalOffset);
 
         // then
