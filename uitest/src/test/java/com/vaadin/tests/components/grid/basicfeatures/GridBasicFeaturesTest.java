@@ -158,7 +158,7 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
             return -5;
         } else {
             int half = columnHeader.getSize().getWidth() / 2;
-            return half + (half / 2);
+            return getXOffset(columnHeader, half + (half / 2));
         }
     }
 
