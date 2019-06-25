@@ -48,6 +48,15 @@ public abstract class DndActionsTest extends MultiBrowserTest {
             action.moveToElement(target);
             action.release();
             action.build().perform();
+        } else if(BrowserUtil.isChrome(getDesiredCapabilities())){
+            Actions action = new Actions(getDriver());
+            action.moveToElement(element);
+            action.moveByOffset(getXOffset(element, 0), getYOffset(element,1));
+            action.clickAndHold();
+            action.moveToElement(target);
+            action.moveByOffset(getXOffset(target, 20), getYOffset(target,1));
+            action.release();
+            action.build().perform();
         } else {
             Actions action = new Actions(getDriver());
             action.dragAndDrop(element, target);
