@@ -1,11 +1,5 @@
 package com.vaadin.tests.components.grid.basicfeatures;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.util.List;
 
 import org.junit.Assert;
@@ -20,6 +14,12 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @TestCategory("grid")
 public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
@@ -857,8 +857,9 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         getSidebarOpenButton().click();
         verifySidebarOpened();
         // Click somewhere far from Grid.
+        WebElement element = findElement(By.className("v-app"));
         new Actions(getDriver())
-                .moveToElement(findElement(By.className("v-app")), 600, 600)
+                .moveToElement(element, getXOffset(element, 600), getYOffset(element, 600))
                 .click().perform();
         verifySidebarClosed();
     }
