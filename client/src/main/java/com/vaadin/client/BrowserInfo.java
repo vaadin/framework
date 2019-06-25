@@ -33,11 +33,13 @@ public class BrowserInfo {
     private static final String BROWSER_EDGE = "edge";
     private static final String BROWSER_FIREFOX = "ff";
     private static final String BROWSER_SAFARI = "sa";
+    private static final String BROWSER_CHROME = "ch";
 
     public static final String ENGINE_GECKO = "gecko";
     public static final String ENGINE_WEBKIT = "webkit";
     public static final String ENGINE_PRESTO = "presto";
     public static final String ENGINE_TRIDENT = "trident";
+    public static final String ENGINE_BLINK = "blink";
 
     private static final String OS_WINDOWS = "win";
     private static final String OS_LINUX = "lin";
@@ -124,6 +126,7 @@ public class BrowserInfo {
      * optionally with a version appended.
      *
      * Abbreviations: Firefox: ff Internet Explorer: ie Safari: sa Opera: op
+     * Chrome: ch
      *
      * Browsers that CSS-wise behave like each other will get the same
      * abbreviation (this usually depends on the rendering engine).
@@ -154,10 +157,12 @@ public class BrowserInfo {
                         + browserDetails.getBrowserMinorVersion();
                 browserEngineClass = ENGINE_GECKO;
             } else if (browserDetails.isChrome()) {
-                // TODO update when Chrome is more stable
-                browserIdentifier = BROWSER_SAFARI;
-                majorVersionClass = "ch";
-                browserEngineClass = ENGINE_WEBKIT;
+                browserIdentifier = BROWSER_CHROME;
+                majorVersionClass = browserIdentifier
+                        + getBrowserMajorVersion();
+                minorVersionClass = majorVersionClass
+                        + browserDetails.getBrowserMinorVersion();
+                browserEngineClass = ENGINE_BLINK;
             } else if (browserDetails.isSafari()) {
                 browserIdentifier = BROWSER_SAFARI;
                 majorVersionClass = browserIdentifier
