@@ -1,8 +1,5 @@
 package com.vaadin.tests.components.grid.basicfeatures.server;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.List;
 
 import org.junit.Before;
@@ -14,6 +11,9 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests that Grid columns can be reordered by user with drag and drop #16643.
@@ -342,7 +342,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         GridCellElement draggedHeaderCell = getGridElement().getHeaderCell(0,
                 1);
         final int xOffset = 500;
-        new Actions(getDriver()).moveToElement(draggedHeaderCell, 20, 10)
+        new Actions(getDriver()).moveToElement(draggedHeaderCell, getXOffset(draggedHeaderCell, 20), getYOffset(draggedHeaderCell, 10))
                 .clickAndHold().moveByOffset(xOffset, 0).build().perform();
 
         WebElement floatingDragElement = findElement(
