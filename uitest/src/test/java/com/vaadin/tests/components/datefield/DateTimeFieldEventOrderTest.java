@@ -29,6 +29,7 @@ public class DateTimeFieldEventOrderTest extends SingleBrowserTest {
         new Select(timeSelects.get(0)).selectByValue("09");
 
         findElement(By.id("test-button")).click();
+        sleep(100);
 
         assertEquals("The button click event should come second.",
                 "2. Button Click Event", getLogRow(0));
