@@ -39,6 +39,30 @@ public class GridSelectionTest extends GridBasicsTest {
     }
 
     @Test
+    public void testEditorSelectOnOff() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Editor", "Enabled");
+
+        selectMenuPath("Component", "Editor", "Edit row 0");
+        waitForElementVisible(By.className("v-grid-editor"));
+        assertFalse("editor should not be selected", editorIsSelected());
+        getGridElement().getEditor().cancel();
+
+        toggleFirstRowSelection();
+        selectMenuPath("Component", "Editor", "Edit row 0");
+        waitForElementVisible(By.className("v-grid-editor"));
+        assertTrue("editor should become selected", editorIsSelected());
+        getGridElement().getEditor().cancel();
+    }
+
+    private boolean editorIsSelected() {
+        WebElement cellWrapperElement = findElements(
+                By.className("v-grid-editor-cells")).get(1);
+        return cellWrapperElement.getAttribute("class").contains("-selected");
+    }
+
+    @Test
     public void testSelectOnScrollOffScroll() throws Exception {
         openTestURL();
 
