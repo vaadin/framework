@@ -15,10 +15,6 @@
  */
 package com.vaadin.tests.components.grid;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.number.IsCloseTo.closeTo;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -33,6 +29,10 @@ import com.vaadin.testbench.elements.OptionGroupElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.number.IsCloseTo.closeTo;
 
 /**
  * Tests that Grid gets correct height based on height mode, and resizes
@@ -104,7 +104,8 @@ public class GridHeightTest extends MultiBrowserTest {
                             detailsRowHeight, "initial" });
                 }
 
-                grid.getRow(2).click(5, 5);
+                GridElement.GridRowElement row = grid.getRow(2);
+                row.click(5, 5);
                 waitForElementPresent(By.id("lbl1"));
 
                 int openHeight = grid.getSize().getHeight();
@@ -117,7 +118,7 @@ public class GridHeightTest extends MultiBrowserTest {
                             detailsRowHeight, "opened" });
                 }
 
-                grid.getRow(2).click(5, 5);
+                row.click(getXOffset(row, 5), getYOffset(row, 5));
                 waitForElementNotPresent(By.id("lbl1"));
 
                 int afterHeight = grid.getSize().getHeight();

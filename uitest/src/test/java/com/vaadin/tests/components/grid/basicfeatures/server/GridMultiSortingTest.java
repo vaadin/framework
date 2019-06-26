@@ -1,10 +1,8 @@
 package com.vaadin.tests.components.grid.basicfeatures.server;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
@@ -12,6 +10,9 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class GridMultiSortingTest extends GridBasicFeaturesTest {
 
@@ -21,6 +22,7 @@ public class GridMultiSortingTest extends GridBasicFeaturesTest {
     }
 
     @Test
+    @Ignore("sendkey issue, view cannot scroll back to the first column")
     public void testUserMultiColumnSorting() {
         openTestURL();
 

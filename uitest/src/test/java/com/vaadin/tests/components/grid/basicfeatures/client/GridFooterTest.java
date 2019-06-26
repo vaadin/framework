@@ -194,7 +194,7 @@ public class GridFooterTest extends GridStaticSectionTest {
 
         assertNotEquals("clicked", button.getText().toLowerCase());
 
-        new Actions(getDriver()).moveToElement(button, 5, 5).click().perform();
+        new Actions(getDriver()).moveToElement(button, getXOffset(button, 5), getYOffset(button, 5)).click().perform();
 
         assertEquals("clicked", button.getText().toLowerCase());
     }

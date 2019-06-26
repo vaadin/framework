@@ -49,7 +49,7 @@ public class CalendarNotificationsTest extends MultiBrowserTest {
         WebElement day = findElements(By.className("v-calendar-day-number"))
                 .get(2);
         // IE8 requires you to click on the text part to fire the event
-        new Actions(getDriver()).moveToElement(day, 83, 11).click().perform();
+        new Actions(getDriver()).moveToElement(day, getXOffset(day, 83), getYOffset(day, 11)).click().perform();
 
         Assert.assertTrue("There should be a notification",
                 $(NotificationElement.class).exists());

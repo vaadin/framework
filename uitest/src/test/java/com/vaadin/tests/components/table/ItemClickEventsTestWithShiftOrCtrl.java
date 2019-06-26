@@ -1,8 +1,5 @@
 package com.vaadin.tests.components.table;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.util.List;
 
 import org.junit.Before;
@@ -16,6 +13,9 @@ import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class ItemClickEventsTestWithShiftOrCtrl extends MultiBrowserTest {
 
@@ -32,7 +32,7 @@ public class ItemClickEventsTestWithShiftOrCtrl extends MultiBrowserTest {
 
     private void clickElement(TestBenchElement e) {
         assertNotNull(e);
-        e.click(5, 5);
+        e.click();
     }
 
     private void shiftClickElement(TestBenchElement e) {

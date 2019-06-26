@@ -21,7 +21,7 @@ public class ItemClickEventsTest extends MultiBrowserTest {
 
     private void clickElement(TestBenchElement e) {
         assertNotNull(e);
-        e.click(5, 5);
+        e.click();
     }
 
     private void doubleClickElement(TestBenchElement e) {
