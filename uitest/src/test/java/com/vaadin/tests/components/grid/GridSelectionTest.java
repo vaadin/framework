@@ -36,20 +36,29 @@ public class GridSelectionTest extends GridBasicsTest {
         assertTrue("row should become selected", getRow(0).isSelected());
         getGridElement().getCell(0, 0).click();
         assertFalse("row shouldn't remain selected", getRow(0).isSelected());
+    }
 
-        getGridElement().getCell(0, 0).doubleClick();
+    @Test
+    public void testEditorSelectOnOff() throws Exception {
+        openTestURL();
+
+        selectMenuPath("Component", "Editor", "Enabled");
+
+        selectMenuPath("Component", "Editor", "Edit row 0");
         waitForElementVisible(By.className("v-grid-editor"));
-        assertFalse("editor should not be selected",editorIsSelected());
+        assertFalse("editor should not be selected", editorIsSelected());
         getGridElement().getEditor().cancel();
+
         toggleFirstRowSelection();
-        getGridElement().getCell(0, 0).doubleClick();
+        selectMenuPath("Component", "Editor", "Edit row 0");
         waitForElementVisible(By.className("v-grid-editor"));
-        assertTrue("editor should become selected",editorIsSelected());
+        assertTrue("editor should become selected", editorIsSelected());
         getGridElement().getEditor().cancel();
     }
 
     private boolean editorIsSelected() {
-        WebElement cellWrapperElement = findElement(By.className("v-grid-editor-cells"));
+        WebElement cellWrapperElement = findElements(
+                By.className("v-grid-editor-cells")).get(1);
         return cellWrapperElement.getAttribute("class").contains("-selected");
     }
 
