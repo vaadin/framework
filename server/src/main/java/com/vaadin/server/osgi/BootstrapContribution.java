@@ -39,8 +39,8 @@ public class BootstrapContribution implements OsgiVaadinContributor {
     public List<OsgiVaadinResource> getContributions() {
         final List<OsgiVaadinResource> contributions = new ArrayList<>(
                 RESOURCES.length);
-        for (final String theme : RESOURCES) {
-            contributions.add(OsgiVaadinResource.create(theme));
+        for (final String resource : RESOURCES) {
+            contributions.add(OsgiVaadinResource.create(resource));
         }
         return contributions;
     }
