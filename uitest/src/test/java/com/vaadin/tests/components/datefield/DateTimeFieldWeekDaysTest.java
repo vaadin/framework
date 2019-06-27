@@ -1,8 +1,5 @@
 package com.vaadin.tests.components.datefield;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -12,6 +9,9 @@ import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.DateTimeFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class DateTimeFieldWeekDaysTest extends SingleBrowserTest {
 
@@ -55,6 +55,7 @@ public class DateTimeFieldWeekDaysTest extends SingleBrowserTest {
 
         openPopupAndValidateNoWeeknumbers();
 
+
         $(ButtonElement.class).id("finnish").click();
 
         openPopupAndValidateWeekNumbers();
@@ -65,7 +66,8 @@ public class DateTimeFieldWeekDaysTest extends SingleBrowserTest {
                 .findElement(By.className("v-datefield-button"));
         // Open date popup
         popupButton.click();
-
+        sleep(100);
+        
         waitUntil(ExpectedConditions.visibilityOfElementLocated(
                 org.openqa.selenium.By.className("v-datefield-popup")));
 
@@ -75,6 +77,7 @@ public class DateTimeFieldWeekDaysTest extends SingleBrowserTest {
                                 .isEmpty());
         // Close popup
         popupButton.click();
+        sleep(100);
     }
 
     private void openPopupAndValidateNoWeeknumbers() {
@@ -82,6 +85,7 @@ public class DateTimeFieldWeekDaysTest extends SingleBrowserTest {
                 .findElement(By.className("v-datefield-button"));
         // Open date popup
         popupButton.click();
+        sleep(100);
 
         waitUntil(ExpectedConditions.visibilityOfElementLocated(
                 org.openqa.selenium.By.className("v-datefield-popup")));
@@ -92,5 +96,6 @@ public class DateTimeFieldWeekDaysTest extends SingleBrowserTest {
                                 .isEmpty());
         // Close popup
         popupButton.click();
+        sleep(100);
     }
 }
