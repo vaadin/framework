@@ -17,7 +17,6 @@ package com.vaadin.osgi.liferay;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceObjects;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -26,7 +25,6 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.log.LogService;
 import org.osgi.util.tracker.ServiceTracker;
 
-import com.vaadin.osgi.resources.OsgiVaadinResources;
 import com.vaadin.osgi.resources.VaadinResourceService;
 import com.vaadin.ui.UI;
 
@@ -45,18 +43,27 @@ public class VaadinPortletProvider {
 
     private ServiceTracker<UI, ServiceObjects<UI>> serviceTracker;
     private PortletUIServiceTrackerCustomizer portletUIServiceTrackerCustomizer;
+    private VaadinResourceService vaadinService;
     private LogService logService;
 
     @Activate
-    void activate(ComponentContext componentContext) throws Exception {
-        BundleContext bundleContext = componentContext.getBundleContext();
-        VaadinResourceService service = OsgiVaadinResources.getService();
-
+    void activate(BundleContext bundleContext) throws Exception {
         portletUIServiceTrackerCustomizer = new PortletUIServiceTrackerCustomizer(
-                service, logService);
+                vaadinService, logService);
         serviceTracker = new ServiceTracker<UI, ServiceObjects<UI>>(
                 bundleContext, UI.class, portletUIServiceTrackerCustomizer);
         serviceTracker.open();
+    }
+    
+    @Reference
+    void setVaadinResourceService(VaadinResourceService vaadinService) {
+        this.vaadinService = vaadinService;
+    }
+    
+    void unsetVaadinResourceService(VaadinResourceService vaadinService) {
+        if(this.vaadinService == vaadinService) {
+            this.vaadinService = null;
+        }
     }
 
     @Reference(cardinality = ReferenceCardinality.OPTIONAL)
@@ -65,7 +72,9 @@ public class VaadinPortletProvider {
     }
 
     void unsetLogService(LogService logService) {
-        this.logService = null;
+        if(this.logService == logService) {
+            this.logService = null;
+        }
     }
 
     @Deactivate

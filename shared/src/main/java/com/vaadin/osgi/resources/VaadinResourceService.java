@@ -27,7 +27,6 @@ import org.osgi.service.http.NamespaceException;
  * @since 8.1
  */
 public interface VaadinResourceService {
-
     /**
      * Register the theme with the given name under the
      * {@link VaadinResourceService} versioned namespace. The theme folder is
@@ -38,6 +37,7 @@ public interface VaadinResourceService {
      * "/vaadin-x.x.x/VAADIN/themes/themeName" where x.x.x is the version of the
      * Vaadin Shared bundle
      *
+     * @deprecated use OSGi DS services and register a {@link OsgiVaadinTheme}
      * @param themeName
      *            the name of the theme
      * @param httpService
@@ -45,6 +45,7 @@ public interface VaadinResourceService {
      * @throws NamespaceException
      *             if there is a clash during the theme registration
      */
+    @Deprecated
     void publishTheme(String themeName, HttpService httpService)
             throws NamespaceException;
 
@@ -56,6 +57,8 @@ public interface VaadinResourceService {
      * The resource will become accessible under the url "/vaadin-x.x.x/VAADIN/"
      * where x.x.x is the version of the Vaadin Shared bundle
      *
+     * @deprecated use OSGi DS services and register a
+     *             {@link OsgiVaadinResource}
      * @param resourceName
      *            the name of the resource
      * @param httpService
@@ -63,6 +66,7 @@ public interface VaadinResourceService {
      * @throws NamespaceException
      *             if there is a clash during the theme registration
      */
+    @Deprecated
     void publishResource(String resourceName, HttpService httpService)
             throws NamespaceException;
 
@@ -75,6 +79,8 @@ public interface VaadinResourceService {
      * "/vaadin-x.x.x/VAADIN/widgetsets" where x.x.x is the version of the
      * Vaadin Shared bundle
      *
+     * @deprecated use OSGi DS services and register a
+     *             {@link OsgiVaadinWidgetset}
      * @param widgetsetName
      *            the name of the resource
      * @param httpService
@@ -82,6 +88,7 @@ public interface VaadinResourceService {
      * @throws NamespaceException
      *             if there is a clash during the theme registration
      */
+    @Deprecated
     void publishWidgetset(String widgetsetName, HttpService httpService)
             throws NamespaceException;
 
@@ -94,4 +101,10 @@ public interface VaadinResourceService {
      */
     String getResourcePathPrefix();
 
+    /**
+     * Returns the http servlet context name of Vaadin
+     *
+     * @return the context name
+     */
+    String getContextName();
 }
