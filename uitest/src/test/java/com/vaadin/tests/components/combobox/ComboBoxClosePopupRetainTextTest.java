@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.combobox;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import static org.junit.Assert.assertEquals;
 
 public class ComboBoxClosePopupRetainTextTest extends MultiBrowserTest {
     @Override
@@ -37,7 +37,7 @@ public class ComboBoxClosePopupRetainTextTest extends MultiBrowserTest {
         ComboBoxElement cb = $(ComboBoxElement.class).first();
         cb.selectByText("Item 3");
         WebElement textbox = cb.findElement(By.vaadin("#textbox"));
-        textbox.clear();
+        cb.clear();
         textbox.sendKeys("I");
         // Close the open suggestions popup
         // Uses #clickElement instead of ComboBoxElement#openPopup() due to an
