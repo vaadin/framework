@@ -1908,6 +1908,15 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             updateBufferedStyleName();
 
+            // Add class name with selected modifier if the editor is being
+            // opened on selected row, see #11634
+            String selectedStylename = styleName + "-selected";
+            if (grid.isSelected(grid.getDataSource().getRow(getRow()))) {
+                cellWrapper.addClassName(selectedStylename);
+            } else {
+                cellWrapper.removeClassName(selectedStylename);
+            }
+
             int frozenColumns = grid.getVisibleFrozenColumnCount();
             double frozenColumnsWidth = 0;
             double cellHeight = 0;
