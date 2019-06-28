@@ -1,9 +1,5 @@
 package com.vaadin.tests.components.window;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -11,6 +7,9 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.TwinColSelectElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class WindowTwinColSelectTest extends MultiBrowserTest {
 
@@ -23,8 +22,8 @@ public class WindowTwinColSelectTest extends MultiBrowserTest {
         WebElement selectionsElement = twinColSelect.getSelectionsElement();
         assertTrue(optionsElement.isDisplayed());
         assertTrue(selectionsElement.isDisplayed());
-        assertThat(selectionsElement.getLocation().getY(),
-                is(optionsElement.getLocation().getY()));
+        assertEquals("Coordinate is not matching within the tolerance",
+                optionsElement.getLocation().getY(), selectionsElement.getLocation().getY(), 3);
     }
 
     @Test
@@ -41,7 +40,7 @@ public class WindowTwinColSelectTest extends MultiBrowserTest {
         WebElement selectionsElement = twinColSelect.getSelectionsElement();
         assertTrue(optionsElement.isDisplayed());
         assertTrue(selectionsElement.isDisplayed());
-        assertThat(selectionsElement.getLocation().getY(),
-                is(optionsElement.getLocation().getY()));
+        assertEquals("Coordinate is not matching within the tolerance.",
+                optionsElement.getLocation().getY(), selectionsElement.getLocation().getY(), 3);
     }
 }
