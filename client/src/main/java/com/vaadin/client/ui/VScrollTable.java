@@ -338,6 +338,8 @@ public class VScrollTable extends FlowPanel
 
     private SelectMode selectMode = SelectMode.NONE;
 
+    private boolean multiSelectTouchDetectionEnabled = true;
+
     public final HashSet<String> selectedRowKeys = new HashSet<String>();
 
     /*
@@ -1483,6 +1485,9 @@ public class VScrollTable extends FlowPanel
             } else {
                 selectMode = SelectMode.NONE;
             }
+            if (uidl.hasAttribute("touchdetection")) {
+                multiSelectTouchDetectionEnabled = uidl.getBooleanAttribute("touchdetection");
+            }
         }
     }
 
@@ -1936,9 +1941,9 @@ public class VScrollTable extends FlowPanel
     }
 
     private void setMultiSelectMode(int multiselectmode) {
-        if (BrowserInfo.get().isTouchDevice()) {
+        if (BrowserInfo.get().isTouchDevice() && multiSelectTouchDetectionEnabled) {
             // Always use the simple mode for touch devices that do not have
-            // shift/ctrl keys
+            // shift/ctrl keys (unless this feature is explicitly disabled)
             this.multiselectmode = MULTISELECT_MODE_SIMPLE;
         } else {
             this.multiselectmode = multiselectmode;
