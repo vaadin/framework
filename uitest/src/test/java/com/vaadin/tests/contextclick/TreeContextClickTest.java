@@ -1,7 +1,5 @@
 package com.vaadin.tests.contextclick;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.List;
 
 import org.junit.Test;
@@ -10,6 +8,8 @@ import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.TreeElement;
+
+import static org.junit.Assert.assertEquals;
 
 public class TreeContextClickTest extends AbstractContextClickTest {
 
@@ -40,7 +40,8 @@ public class TreeContextClickTest extends AbstractContextClickTest {
         List<WebElement> nodes = $(TreeElement.class).first()
                 .findElements(By.className("v-tree-node"));
 
-        new Actions(getDriver()).moveToElement(nodes.get(1), 10, 10).click()
+        WebElement target = nodes.get(1);
+        new Actions(getDriver()).moveToElement(target, getXOffset(target, 10), getYOffset(target, 10)).click()
                 .perform();
 
         nodes = $(TreeElement.class).first()

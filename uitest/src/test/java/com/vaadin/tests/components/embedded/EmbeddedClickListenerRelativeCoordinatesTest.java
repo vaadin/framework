@@ -26,8 +26,8 @@ public class EmbeddedClickListenerRelativeCoordinatesTest
         clickAt(41, 22);
         checkLocation(41, 22);
 
-        clickAt(0, 0);
-        checkLocation(0, 0);
+        clickAt(1, 1);
+        checkLocation(1, 1);
     }
 
     private void clickAt(int x, int y) {
@@ -39,7 +39,7 @@ public class EmbeddedClickListenerRelativeCoordinatesTest
             x += 2;
             y += 2;
         }
-        embedded.click(x, y);
+        embedded.click(getXOffset(embedded, x), getYOffset(embedded, y));
     }
 
     private void checkLocation(int expectedX, int expectedY) {
@@ -54,7 +54,7 @@ public class EmbeddedClickListenerRelativeCoordinatesTest
                 expectedX, x);
 
         // IE10 and IE11 sometimes click one pixel below the given position
-        int tolerance = isIE() ? 1 : 0;
+        int tolerance = isIE() || isChrome() ? 1 : 0;
         Assert.assertTrue(
                 "Reported Y-coordinate from Embedded does not match click location",
                 Math.abs(expectedY - y) <= tolerance);
@@ -62,6 +62,10 @@ public class EmbeddedClickListenerRelativeCoordinatesTest
 
     private boolean isIE() {
         return BrowserUtil.isIE(getDesiredCapabilities());
+    }
+
+    private boolean isChrome(){
+        return BrowserUtil.isChrome(getDesiredCapabilities());
     }
 
     private boolean isIE8() {

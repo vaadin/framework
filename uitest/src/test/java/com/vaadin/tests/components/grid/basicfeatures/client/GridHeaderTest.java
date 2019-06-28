@@ -1,10 +1,5 @@
 package com.vaadin.tests.components.grid.basicfeatures.client;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -15,6 +10,11 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class GridHeaderTest extends GridStaticSectionTest {
 
@@ -232,7 +232,7 @@ public class GridHeaderTest extends GridStaticSectionTest {
         GridCellElement widgetCell = getGridElement().getHeaderCell(0, 0);
         WebElement button = widgetCell.findElement(By.className("gwt-Button"));
 
-        new Actions(getDriver()).moveToElement(button, 5, 5).click().perform();
+        new Actions(getDriver()).moveToElement(button, getXOffset(button, 5), getYOffset(button, 5)).click().perform();
 
         assertEquals("clicked", button.getText().toLowerCase());
     }
@@ -251,7 +251,7 @@ public class GridHeaderTest extends GridStaticSectionTest {
 
         assertNotEquals("clicked", button.getText().toLowerCase());
 
-        new Actions(getDriver()).moveToElement(button, 5, 5).click().perform();
+        new Actions(getDriver()).moveToElement(button, getXOffset(button, 5), getYOffset(button, 5)).click().perform();
 
         assertEquals("clicked", button.getText().toLowerCase());
     }

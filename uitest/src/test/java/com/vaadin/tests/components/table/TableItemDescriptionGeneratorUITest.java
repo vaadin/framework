@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.table;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.List;
 
 import org.junit.Test;
@@ -12,6 +10,8 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.TooltipTest;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests Table tooltips with various settings.
@@ -194,7 +194,7 @@ public class TableItemDescriptionGeneratorUITest extends TooltipTest {
         clearTooltip();
 
         // move to the corner of the element, outside of the button
-        new Actions(getDriver()).moveToElement(cell_1_1, 0, 0).perform();
+        new Actions(getDriver()).moveToElement(cell_1_1, getXOffset(cell_1_1, 0), getYOffset(cell_1_1, 0)).perform();
         sleep(1000);
 
         // ensure the tooltip is present
@@ -215,7 +215,7 @@ public class TableItemDescriptionGeneratorUITest extends TooltipTest {
         clearTooltip();
 
         // move to the corner of the element, outside of the textfield
-        new Actions(getDriver()).moveToElement(cell_4_2, 0, 0).perform();
+        new Actions(getDriver()).moveToElement(cell_4_2, getXOffset(cell_4_2, 0), getYOffset(cell_4_2, 0)).perform();
         sleep(1000);
 
         // ensure the tooltip is present

@@ -27,18 +27,14 @@ public class CtrlShiftMultiselectTest extends MultiBrowserTest {
     @Test
     public void testSelectionRangeDragging() throws IOException {
         openTestURL();
-        clickRow(3);
-        new Actions(driver).keyDown(Keys.SHIFT).perform();
-        clickRow(8);
-        new Actions(driver).keyUp(Keys.SHIFT).perform();
+        new Actions(driver).moveToElement(getAllRows().get(3)).click()
+                .keyDown(Keys.SHIFT)
+                .moveToElement(getAllRows().get(8)).click()
+                .keyUp(Keys.SHIFT).build().perform();
+
         dragRows(5, 700, 0);
         compareScreen("draggedMultipleRows");
         new Actions(driver).release().perform();
-    }
-
-    private void clickRow(int index) {
-        List<WebElement> rows = getAllRows();
-        rows.get(index).click();
     }
 
     private void dragRows(int dragIdx, int xOffset, int yOffset) {

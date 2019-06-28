@@ -6,11 +6,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.TreeElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import org.openqa.selenium.interactions.Actions;
 
 public class TreeHtmlContentAllowedTest extends SingleBrowserTest {
 
@@ -30,7 +30,8 @@ public class TreeHtmlContentAllowedTest extends SingleBrowserTest {
         assertTreeCaptionTexts("Just text", "Some html", "Child element html");
 
         // Expand the HTML parent
-        new Actions(getDriver()).moveToElement(findElements(By.className("v-tree-node")).get(1), 2, 2).click().perform();
+        WebElement target = findElements(By.className("v-tree-node")).get(1);
+        new Actions(getDriver()).moveToElement(target, getXOffset(target, 2), getYOffset(target, 2)).click().perform();
 
         assertTreeCaptionTexts("Just text", "Some html", "Child html",
                 "Child element html");

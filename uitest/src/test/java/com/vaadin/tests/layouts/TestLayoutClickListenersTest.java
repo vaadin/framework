@@ -42,7 +42,7 @@ public class TestLayoutClickListenersTest extends MultiBrowserTest {
                 "2. GridLayout: left click on This is tf5");
 
         // click on the layout body (not any component inside the layout)
-        layout.click(130, 41);
+        layout.click(getXOffset(layout, 130), getYOffset(layout, 41));
         assertLogText("GridLayout body clicked",
                 "3. GridLayout: left click on <none>");
     }
@@ -99,8 +99,9 @@ public class TestLayoutClickListenersTest extends MultiBrowserTest {
         GridLayoutElement layout = $(GridLayoutElement.class).first();
 
         // Drag inside the first label in this layout
+        LabelElement label = layout.$(LabelElement.class).first();
         new Actions(getDriver())
-                .moveToElement(layout.$(LabelElement.class).first(), 40, 8)
+                .moveToElement(label, getXOffset(label, 40), getYOffset(label, 8))
                 .clickAndHold().moveByOffset(-20, 0).release().perform();
         assertLogText("Mouse dragged in GridLayout",
                 "1. GridLayout: left click on This is label 1");

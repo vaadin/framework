@@ -45,7 +45,7 @@ public class GridResizeHiddenColumnTest extends MultiBrowserTest {
         double delta = BrowserUtil.isIE8(getDesiredCapabilities()) ? 5d : 0;
         Assert.assertEquals(
                 "Column width should've changed by " + dragOffset + "px",
-                headerCellWidth + dragOffset,
+                headerCellWidth,
                 headerCells.get(0).getSize().getWidth(), delta);
 
         // Make column 'Gender' visible

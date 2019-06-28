@@ -1,10 +1,5 @@
 package com.vaadin.tests.components.textarea;
 
-import static com.vaadin.tests.components.textarea.TextAreaSizeResetted.TEXTAREAHEIGHT;
-import static com.vaadin.tests.components.textarea.TextAreaSizeResetted.TEXTAREAWIDTH;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.util.List;
 
 import org.junit.Test;
@@ -19,6 +14,11 @@ import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import static com.vaadin.tests.components.textarea.TextAreaSizeResetted.TEXTAREAHEIGHT;
+import static com.vaadin.tests.components.textarea.TextAreaSizeResetted.TEXTAREAWIDTH;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class TextAreaSizeResettedTest extends MultiBrowserTest {
 
@@ -74,8 +74,8 @@ public class TextAreaSizeResettedTest extends MultiBrowserTest {
         int resizeHandlerOffset = 10;
         new Actions(getDriver())
                 .moveToElement(getTextArea(),
-                        TEXTAREAWIDTH - resizeHandlerOffset,
-                        TEXTAREAHEIGHT - resizeHandlerOffset)
+                        getXOffset(getTextArea(), TEXTAREAWIDTH - resizeHandlerOffset),
+                        getYOffset(getTextArea(), TEXTAREAHEIGHT - resizeHandlerOffset))
                 .clickAndHold().moveByOffset(offset, offset).release().build()
                 .perform();
     }

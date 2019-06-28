@@ -1,9 +1,5 @@
 package com.vaadin.tests.components.grid;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -17,6 +13,10 @@ import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * TB tests for the various builtin widget-based renderers.
@@ -57,7 +57,7 @@ public class WidgetRenderersTest extends MultiBrowserTest {
                 buttonCell.isFocused());
 
         // avoid clicking on the button
-        buttonCell.click(buttonCell.getSize().getWidth() - 10, 5);
+        buttonCell.click();
         assertTrue("cell should be focused after focusing",
                 buttonCell.isFocused());
 

@@ -1,8 +1,5 @@
 package com.vaadin.tests.components.grid.basicfeatures.server;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -13,6 +10,9 @@ import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeatures;
 import com.vaadin.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @TestCategory("grid")
 public class GridColumnResizeTest extends GridBasicFeaturesTest {
@@ -106,8 +106,8 @@ public class GridColumnResizeTest extends GridBasicFeaturesTest {
                 columnIndex);
         Dimension size = headerCell.getSize();
         new Actions(getDriver())
-                .moveToElement(headerCell, size.getWidth() + posX,
-                        size.getHeight() / 2)
+                .moveToElement(headerCell, getXOffset(headerCell, size.getWidth() + posX),
+                        getYOffset(headerCell, size.getHeight() / 2))
                 .clickAndHold().moveByOffset(offset, 0).release().perform();
     }
 
