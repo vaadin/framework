@@ -38,6 +38,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -1340,6 +1341,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          */
         public Column<T, V> setCaption(String caption) {
             Objects.requireNonNull(caption, "Header caption can't be null");
+            caption = Jsoup.parse(caption).text();
             if (caption.equals(getState(false).caption)) {
                 return this;
             }
