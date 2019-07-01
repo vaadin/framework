@@ -17,7 +17,7 @@ public class CtrlShiftMultiselectTouchDetectionDisabledTest extends MultiBrowser
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowserCapabilities(Browser.IE11, Browser.CHROME);
+        return getBrowserCapabilities(Browser.IE11);
     }
 
     @Override
