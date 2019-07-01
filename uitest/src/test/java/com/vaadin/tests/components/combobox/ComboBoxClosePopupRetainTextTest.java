@@ -34,7 +34,7 @@ public class ComboBoxClosePopupRetainTextTest extends MultiBrowserTest {
         ComboBoxElement cb = $(ComboBoxElement.class).first();
         cb.selectByText("Item 3");
         WebElement textbox = cb.findElement(By.vaadin("#textbox"));
-        textbox.clear();
+        cb.clear();
         textbox.sendKeys("I");
         cb.openPopup();
         // Entered value should remain in the text field even though the popup
