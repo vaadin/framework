@@ -1,12 +1,13 @@
 package com.vaadin.tests.components.datefield;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import static org.junit.Assert.assertEquals;
 
 public class DateFieldFocusTest extends MultiBrowserTest {
 
@@ -19,11 +20,10 @@ public class DateFieldFocusTest extends MultiBrowserTest {
         TextFieldElement textField = $(TextFieldElement.class).caption("second")
                 .first();
 
-        dateField.openPopup();
-        dateField.openPopup();
-
-        dateField.openPopup();
-        dateField.openPopup();
+        //open DateField popup
+        dateField.findElement(By.className("v-datefield-button")).click();
+        //close DateField popup
+        dateField.findElement(By.className("v-datefield-button")).click();
 
         assertEquals("1. focused", getLogRow(0));
 
