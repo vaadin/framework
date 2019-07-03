@@ -20,15 +20,15 @@ public class DateFieldFocusTest extends MultiBrowserTest {
         TextFieldElement textField = $(TextFieldElement.class).caption("second")
                 .first();
 
-        //open DateField popup
+        // open DateField popup
         dateField.findElement(By.className("v-datefield-button")).click();
-        //close DateField popup
+        sleep(100);
+        // close DateField popup
         dateField.findElement(By.className("v-datefield-button")).click();
+        sleep(100);
 
         assertEquals("1. focused", getLogRow(0));
-
         textField.focus();
-
         waitUntil(input -> "2. blurred".equals(getLogRow(0)));
     }
 }
