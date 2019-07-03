@@ -63,8 +63,6 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     /* For listening spacer index changes that originate from Escalator. */
     private HandlerRegistration spacerIndexChangedHandlerRegistration;
     /* Registration for spacer visibility change handler. */
-    private HandlerRegistration spacerVisibilityChangeRegistration;
-    /* Registration for spacer visibility change handler. */
     private HandlerRegistration rowVisibilityChangeHandlerRegistration;
 
     private final Map<Element, ScheduledCommand> elementToResizeCommand = new HashMap<Element, Scheduler.ScheduledCommand>();
@@ -107,11 +105,14 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     /* calculated when the first details row is opened */
     private Double spacerCellBorderHeights = null;
 
+    private Range removing = Range.emptyRange();
+    private Range availableRowRange = Range.emptyRange();
+    private Range visibleRowRange = Range.emptyRange();
+
     /**
      * DataChangeHandler for updating the visibility of detail widgets.
      */
     private final class DetailsChangeHandler implements DataChangeHandler {
-        boolean removing = false;
 
         @Override
         public void resetDataAndSize(int estimatedNewDataSize) {
@@ -125,18 +126,59 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                 triggerDelayedDetailsRefreshedCommand(false);
                 return;
             }
-            for (int i = 0; i < numberOfRows; ++i) {
-                int index = firstRowIndex + i;
-                detachIfNeeded(index, getDetailsComponentConnectorId(index));
+            Range updatedRange = Range.withLength(firstRowIndex, numberOfRows);
+
+            // NOTE: this relies on Escalator getting updated first
+            Range newVisibleRowRange = getWidget().getEscalator()
+                    .getVisibleRowRange();
+
+            if (updatedRange.partitionWith(availableRowRange)[1]
+                    .length() != updatedRange.length()
+                    || availableRowRange.partitionWith(newVisibleRowRange)[1]
+                            .length() != newVisibleRowRange.length()) {
+                // full visible range not available yet or full refresh coming
+                // up anyway, leave updating to dataAvailable
+                if (numberOfRows == 1
+                        && visibleRowRange.contains(firstRowIndex)) {
+                    // A single details row has been opened or closed within
+                    // visual range, trigger scrollTo after dataAvailable has
+                    // done its thing. Do not attempt to scroll to details rows
+                    // that are opened outside of the visual range.
+                    Scheduler.get().scheduleFinally(() -> {
+                        getParent().singleDetailsOpened(firstRowIndex);
+                        triggerDelayedDetailsRefreshedCommand(true);
+                    });
+                }
+                return;
             }
-            if (numberOfRows == 1) {
+
+            // only trigger scrolling attempt if the single updated row is
+            // within existing visual range
+            boolean scrollToFirst = numberOfRows == 1
+                    && visibleRowRange.contains(firstRowIndex);
+
+            if (!newVisibleRowRange.equals(visibleRowRange)) {
+                // update visible range
+                visibleRowRange = newVisibleRowRange;
+
+                // do full refresh
+                detachOldAndRefreshCurrentDetails();
+            } else {
+                // refresh only the updated range
+                refreshDetailsVisibilityWithRange(updatedRange);
+
+                // the update may have affected details row contents and size,
+                // recalculation and triggering of any pending navigation
+                // confirmations etc. is needed
+                triggerDelayedRepositioning(firstRowIndex, numberOfRows);
+            }
+
+            if (scrollToFirst) {
+                // scroll to opened row (if it got closed instead, nothing
+                // happens)
                 getParent().singleDetailsOpened(firstRowIndex);
+                triggerDelayedDetailsRefreshedCommand(true);
             }
-            // the update may have affected details row contents and size,
-            // recalculation and triggering of any pending navigation
-            // confirmations etc. is needed
-            triggerDelayedRepositioning(firstRowIndex, numberOfRows);
-            triggerDelayedDetailsRefreshedCommand(true);
         }
 
         @Override
@@ -145,7 +187,25 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                 triggerDelayedDetailsRefreshedCommand(false);
                 return;
             }
-            removing = true;
+            removing = Range.withLength(firstRowIndex, numberOfRows);
+
+            // update the handled range to only contain rows that fall before
+            // the removed range
+            visibleRowRange = Range.between(visibleRowRange.getStart(),
+                    Math.max(visibleRowRange.getStart(),
+                            Math.min(firstRowIndex, visibleRowRange.getEnd())));
+
+            // reduce the available range accordingly
+            Range[] partitions = availableRowRange.partitionWith(removing);
+            Range removedAbove = partitions[0];
+            Range removedAvailable = partitions[1];
+            availableRowRange = Range.withLength(
+                    Math.max(0,
+                            availableRowRange.getStart()
+                                    - removedAbove.length()),
+                    Math.max(0, availableRowRange.length()
+                            - removedAvailable.length()));
+
             for (int i = 0; i < numberOfRows; ++i) {
                 int rowIndex = firstRowIndex + i;
                 if (indexToDetailConnectorId.containsKey(rowIndex)) {
@@ -162,7 +222,7 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                     indexToDetailConnectorId.remove(rowIndex);
                 }
             }
-            removing = false;
+            removing = Range.emptyRange();
             // Grid and Escalator take care of their own cleanup at removal, no
             // need to clear details from those. Because this removal happens
             // instantly any pending scroll to row or such should not need
@@ -173,54 +233,41 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
 
         @Override
         public void dataAvailable(int firstRowIndex, int numberOfRows) {
-            if (removing || !getState().hasDetailsGenerator) {
+            if (!getState().hasDetailsGenerator) {
                 triggerDelayedDetailsRefreshedCommand(false);
                 return;
             }
+
+            // update available range
+            availableRowRange = Range.withLength(firstRowIndex, numberOfRows);
+
             // NOTE: this relies on Escalator getting updated first
-            Range visibleRowRange = getWidget().getEscalator()
+            Range newVisibleRowRange = getWidget().getEscalator()
                     .getVisibleRowRange();
-            boolean newOrUpdatedDetails = false;
-            for (int i = 0; i < numberOfRows; ++i) {
-                int rowIndex = firstRowIndex + i;
-                if (!visibleRowRange.contains(rowIndex)) {
-                    continue;
-                }
-                String id = getDetailsComponentConnectorId(rowIndex);
-                String oldId = indexToDetailConnectorId.get(rowIndex);
-                if ((oldId == null && id == null)
-                        || (oldId != null && oldId.equals(id))) {
-                    // nothing to update, move along
-                    continue;
-                }
-                if (oldId != null) {
-                    // Details have been hidden or updated, listeners attached
-                    // to the old component need to be removed
-                    ComponentConnector connector = (ComponentConnector) ConnectorMap
-                            .get(getConnection()).getConnector(oldId);
-                    if (connector != null) {
-                        Element element = connector.getWidget().getElement();
-                        elementToResizeCommand.remove(element);
-                        getLayoutManager().removeElementResizeListener(element,
-                                detailsRowResizeListener);
-                    }
-                    if (id == null) {
-                        // hidden, clear reference
-                        getWidget().setDetailsVisible(rowIndex, false);
-                        indexToDetailConnectorId.remove(rowIndex);
-                    } else {
-                        // updated, replace reference
-                        indexToDetailConnectorId.put(rowIndex, id);
-                        newOrUpdatedDetails = true;
-                    }
-                } else {
-                    // new Details content
-                    indexToDetailConnectorId.put(rowIndex, id);
-                    newOrUpdatedDetails = true;
-                    getWidget().setDetailsVisible(rowIndex, true);
-                }
+            // only process the section that is actually available
+            newVisibleRowRange = availableRowRange
+                    .partitionWith(newVisibleRowRange)[1];
+            if (newVisibleRowRange.equals(visibleRowRange)) {
+                // no need to update
+                return;
             }
-            triggerDelayedDetailsRefreshedCommand(newOrUpdatedDetails);
+
+            // check whether the visible range has simply got shortened
+            // (e.g. by changing the default row height)
+            boolean subsectionOfOld = visibleRowRange
+                    .partitionWith(newVisibleRowRange)[1]
+                            .length() == newVisibleRowRange.length();
+
+            // update visible range
+            visibleRowRange = newVisibleRowRange;
+
+            if (subsectionOfOld) {
+                // only detach extra rows
+                detachExcludingRange(visibleRowRange);
+            } else {
+                // there are completely new visible rows, full refresh
+                detachOldAndRefreshCurrentDetails();
+            }
         }
 
         @Override
@@ -243,6 +290,19 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                 detachIfNeeded(rowIndex, id);
                 return null;
             }
+            String oldId = indexToDetailConnectorId.get(rowIndex);
+            if (oldId != null && !oldId.equals(id)) {
+                // remove outdated connector
+                ComponentConnector connector = (ComponentConnector) ConnectorMap
+                        .get(getConnection()).getConnector(oldId);
+                if (connector != null) {
+                    Element element = connector.getWidget().getElement();
+                    elementToResizeCommand.remove(element);
+                    getLayoutManager().removeElementResizeListener(element,
+                            detailsRowResizeListener);
+                }
+            }
+
             indexToDetailConnectorId.put(rowIndex, id);
             getWidget().setDetailsVisible(rowIndex, true);
 
@@ -326,23 +386,55 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
         dataChangeRegistration = getWidget().getDataSource()
                 .addDataChangeHandler(new DetailsChangeHandler());
 
-        // When details element is shown, remeasure it in the layout phase
-        spacerVisibilityChangeRegistration = getWidget()
-                .addSpacerVisibilityChangedHandler(event -> {
-                    if (event.isSpacerVisible()) {
-                        String id = indexToDetailConnectorId
-                                .get(event.getRowIndex());
-                        ComponentConnector connector = (ComponentConnector) ConnectorMap
-                                .get(getConnection()).getConnector(id);
-                        getLayoutManager()
-                                .setNeedsMeasureRecursively(connector);
-                    }
-                });
-
         rowVisibilityChangeHandlerRegistration = getWidget()
                 .addRowVisibilityChangeHandler(event -> {
-                    refreshDetailsVisibilityWithRange(
-                            event.getVisibleRowRange());
+                    if (getConnection().getMessageHandler().isUpdatingState()) {
+                        // don't update in the middle of state changes,
+                        // leave to dataAvailable
+                        return;
+                    }
+                    Range newVisibleRowRange = event.getVisibleRowRange();
+                    if (newVisibleRowRange.equals(visibleRowRange)) {
+                        // no need to update
+                        return;
+                    }
+                    Range availableAndVisible = availableRowRange
+                            .partitionWith(newVisibleRowRange)[1];
+                    if (availableAndVisible.isEmpty()) {
+                        // nothing to update yet, leave to dataAvailable
+                        return;
+                    }
+
+                    if (!availableAndVisible.equals(visibleRowRange)) {
+                        // check whether the visible range has simply got
+                        // shortened
+                        // (e.g. by changing the default row height)
+                        boolean subsectionOfOld = visibleRowRange
+                                .partitionWith(newVisibleRowRange)[1]
+                                        .length() == newVisibleRowRange
+                                                .length();
+
+                        // update visible range
+                        visibleRowRange = availableAndVisible;
+
+                        if (subsectionOfOld) {
+                            // only detach extra rows
+                            detachExcludingRange(visibleRowRange);
+                        } else {
+                            // there are completely new visible rows, full
+                            // refresh
+                            detachOldAndRefreshCurrentDetails();
+                        }
+                    } else {
+                        // refresh only the visible range, nothing to detach
+                        refreshDetailsVisibilityWithRange(availableAndVisible);
+
+                        // the update may have affected details row contents and
+                        // size, recalculation is needed
+                        triggerDelayedRepositioning(
+                                availableAndVisible.getStart(),
+                                availableAndVisible.length());
+                    }
                 });
     }
 
@@ -401,6 +493,7 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             delayedDetailsRefreshed = true;
         }
         if (!delayedDetailsRefreshedCommandTriggered) {
+            delayedDetailsRefreshedCommandTriggered = true;
             Scheduler.get().scheduleFinally(delayedDetailsRefreshedCommand);
         }
     }
@@ -438,7 +531,6 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
         dataChangeRegistration.remove();
         dataChangeRegistration = null;
 
-        spacerVisibilityChangeRegistration.removeHandler();
         spacerIndexChangedHandlerRegistration.removeHandler();
         rowVisibilityChangeHandlerRegistration.removeHandler();
 
@@ -491,6 +583,9 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             return;
         }
         boolean shownDetails = false;
+
+        // Don't update the class variable here, the calling method should take
+        // care of that if relevant.
         Range visibleRowRange = getWidget().getEscalator().getVisibleRowRange();
         Range[] partitions = visibleRowRange.partitionWith(rangeToRefresh);
         // only inspect the range where visible and refreshed rows overlap
@@ -512,5 +607,100 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
         }
 
         triggerDelayedDetailsRefreshedCommand(shownDetails);
+    }
+
+    private void detachOldAndRefreshCurrentDetails() {
+        Range[] partitions = availableRowRange.partitionWith(visibleRowRange);
+        Range availableAndVisible = partitions[1];
+
+        detachExcludingRange(availableAndVisible);
+
+        boolean newOrUpdatedDetails = refreshRange(availableAndVisible);
+
+        triggerDelayedDetailsRefreshedCommand(newOrUpdatedDetails);
+    }
+
+    private void detachExcludingRange(Range keep) {
+        // remove all spacers that are no longer in range
+        for (Integer existingIndex : indexToDetailConnectorId.keySet()) {
+            if (removing.contains(existingIndex)) {
+                // dataRemoved is already handling this row
+                continue;
+            }
+            if (!keep.contains(existingIndex)) {
+                detachDetails(existingIndex);
+            }
+        }
+    }
+
+    private boolean refreshRange(Range rangeToRefresh) {
+        // make sure all spacers that are currently in range are up to date
+        boolean newOrUpdatedDetails = false;
+        for (int i = rangeToRefresh.getStart(); i < rangeToRefresh
+                .getEnd(); ++i) {
+            int rowIndex = i;
+            if (removing.contains(rowIndex)) {
+                // dataRemoved is already handling this row
+                continue;
+            }
+            if (refreshDetails(rowIndex)) {
+                newOrUpdatedDetails = true;
+            }
+        }
+        return newOrUpdatedDetails;
+    }
+
+    private void detachDetails(int rowIndex) {
+        String id = indexToDetailConnectorId.get(rowIndex);
+        if (id != null) {
+            ComponentConnector connector = (ComponentConnector) ConnectorMap
+                    .get(getConnection()).getConnector(id);
+            if (connector != null) {
+                Element element = connector.getWidget().getElement();
+                elementToResizeCommand.remove(element);
+                getLayoutManager().removeElementResizeListener(element,
+                        detailsRowResizeListener);
+            }
+        }
+        indexToDetailConnectorId.remove(rowIndex);
+        getWidget().setDetailsVisible(rowIndex, false);
+    }
+
+    private boolean refreshDetails(int rowIndex) {
+        String id = getDetailsComponentConnectorId(rowIndex);
+        String oldId = indexToDetailConnectorId.get(rowIndex);
+        if ((oldId == null && id == null)
+                || (oldId != null && oldId.equals(id))) {
+            // nothing to update, move along
+            return false;
+        }
+        boolean newOrUpdatedDetails = false;
+        if (oldId != null) {
+            // Details have been hidden or updated, listeners attached
+            // to the old component need to be removed
+            ComponentConnector connector = (ComponentConnector) ConnectorMap
+                    .get(getConnection()).getConnector(oldId);
+            if (connector != null) {
+                Element element = connector.getWidget().getElement();
+                elementToResizeCommand.remove(element);
+                getLayoutManager().removeElementResizeListener(element,
+                        detailsRowResizeListener);
+            }
+            if (id == null) {
+                // hidden, clear reference
+                getWidget().setDetailsVisible(rowIndex, false);
+                indexToDetailConnectorId.remove(rowIndex);
+            } else {
+                // updated, replace reference
+                indexToDetailConnectorId.put(rowIndex, id);
+                newOrUpdatedDetails = true;
+            }
+        } else {
+            // new Details content
+            indexToDetailConnectorId.put(rowIndex, id);
+            newOrUpdatedDetails = true;
+            getWidget().setDetailsVisible(rowIndex, true);
+        }
+        return newOrUpdatedDetails;
     }
 }
