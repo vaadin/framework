@@ -503,9 +503,7 @@ public class ComboBoxConnector extends AbstractListingConnector
         @Override
         public void resetDataAndSize(int estimatedNewDataSize) {
             if (getState().pageLength == 0) {
-                if (getWidget().suggestionPopup.isShowing()) {
-                    dataSource.ensureAvailability(0, estimatedNewDataSize);
-                }
+                dataSource.ensureAvailability(0, estimatedNewDataSize);
                 // else lets just wait till the popup is opened before
                 // everything is fetched to it. this could be optimized later on
                 // to fetch everything if in-memory data is used.
