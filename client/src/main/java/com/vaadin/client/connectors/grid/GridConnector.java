@@ -221,29 +221,41 @@ public class GridConnector extends AbstractListingConnector
 
             @Override
             public void scrollToRow(int row, ScrollDestination destination) {
-                Scheduler.get().scheduleFinally(
-                        () -> grid.scrollToRow(row, destination));
-                // Add details refresh listener and handle possible detail for
-                // scrolled row.
-                addDetailsRefreshCallback(() -> {
-                    if (rowHasDetails(row)) {
-                        grid.scrollToRow(row, destination);
-                    }
+                // scrolling must happen after any potential resizing or other
+                // similar action that was triggered from the server side within
+                // the same round trip
+                Scheduler.get().scheduleFinally(() -> {
+                    grid.scrollToRow(row, destination);
+                    // Add details refresh listener and handle possible detail
+                    // for scrolled row.
+                    addDetailsRefreshCallback(() -> {
+                        if (rowHasDetails(row)) {
+                            grid.scrollToRow(row, destination);
+                        }
+                    });
                 });
             }
 
             @Override
             public void scrollToStart() {
+                // scrolling must happen after any potential resizing or other
+                // similar action that was triggered from the server side within
+                // the same round trip
                 Scheduler.get().scheduleFinally(() -> grid.scrollToStart());
             }
 
             @Override
             public void scrollToEnd() {
-                Scheduler.get().scheduleFinally(() -> grid.scrollToEnd());
-                addDetailsRefreshCallback(() -> {
-                    if (rowHasDetails(grid.getDataSource().size() - 1)) {
-                        grid.scrollToEnd();
-                    }
+                // scrolling must happen after any potential resizing or other
+                // similar action that was triggered from the server side within
+                // the same round trip
+                Scheduler.get().scheduleFinally(() -> {
+                    grid.scrollToEnd();
+                    addDetailsRefreshCallback(() -> {
+                        if (rowHasDetails(grid.getDataSource().size() - 1)) {
+                            grid.scrollToEnd();
+                        }
+                    });
                 });
             }
 
