@@ -1,8 +1,5 @@
 package com.vaadin.tests.components.grid;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.List;
 
 import org.junit.Test;
@@ -12,6 +9,9 @@ import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @TestCategory("grid")
 public class GridEditorMultiselectTest extends MultiBrowserTest {
@@ -37,6 +37,7 @@ public class GridEditorMultiselectTest extends MultiBrowserTest {
         openTestURL();
         GridElement grid = openEditor();
         grid.getEditor().cancel();
+        sleep(100);
         assertCheckboxesEnabled(grid, true);
     }
 
