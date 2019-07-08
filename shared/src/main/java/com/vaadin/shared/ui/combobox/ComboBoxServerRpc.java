@@ -40,4 +40,11 @@ public interface ComboBoxServerRpc extends ServerRpc {
      *            mode
      */
     public void setFilter(String filter);
+
+    /**
+     * Reset the force update flag once the list contents have been updated.
+     *
+     * @since
+     */
+    public void resetForceDataSourceUpdate();
 }
