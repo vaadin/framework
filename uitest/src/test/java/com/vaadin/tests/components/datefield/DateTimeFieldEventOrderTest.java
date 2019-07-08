@@ -20,7 +20,7 @@ public class DateTimeFieldEventOrderTest extends SingleBrowserTest {
 
         DateTimeFieldElement field = $(DateTimeFieldElement.class).first();
 
-        field.openPopup();
+        field.findElement(By.className("v-datefield-button")).click();
 
         List<WebElement> timeSelects = findElement(
                 By.className("v-datefield-calendarpanel-time"))
