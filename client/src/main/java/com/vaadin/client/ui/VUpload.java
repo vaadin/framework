@@ -226,6 +226,11 @@ public class VUpload extends SimplePanel {
             rebuildPanel();
             submitted = false;
         }
+
+        if (fu.getElement().getParentElement().getParentElement()
+                .hasClassName("v-disabled")) {
+            disableUpload();
+        }
     }
 
     private void setEnabledForSubmitButton(boolean enabled) {
