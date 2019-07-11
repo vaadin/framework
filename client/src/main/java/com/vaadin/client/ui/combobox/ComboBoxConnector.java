@@ -62,6 +62,10 @@ public class ComboBoxConnector extends AbstractListingConnector
      */
     private String pendingNewItemValue = null;
 
+    /**
+     * If this flag is toggled, even unpaged data sources should be updated on
+     * reset.
+     */
     private boolean forceDataSourceUpdate = false;
 
     @Override
