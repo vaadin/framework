@@ -26,7 +26,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.ListBox;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.FastStringSet;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.connectors.AbstractMultiSelectConnector.MultiSelectWidget;
@@ -121,11 +120,6 @@ public class VListSelect extends Composite
             final JsonObject item = items.get(i);
             // reuse existing option if possible
             String key = MultiSelectWidget.getKey(item);
-            if (BrowserInfo.get().isIE11() && key != null) {
-                // IE11 doesn't handle numerical keys well on Win7,
-                // prevent incorrect type handling with extra character
-                key += " ";
-            }
             if (i < select.getItemCount()) {
                 select.setItemText(i, MultiSelectWidget.getCaption(item));
                 select.setValue(i, key);
@@ -133,7 +127,13 @@ public class VListSelect extends Composite
                 select.addItem(MultiSelectWidget.getCaption(item), key);
             }
             final boolean selected = MultiSelectWidget.isSelected(item);
-            select.setItemSelected(i, selected);
+
+            // Check that the selection has changed before updating it because
+            // IE11 causes problems on Windows 7 if we update without needing to
+            if (selected != select.isItemSelected(i)) {
+                select.setItemSelected(i, selected);
+            }
+
             if (selected) {
                 selectedItemKeys.add(key);
             }
@@ -155,10 +155,6 @@ public class VListSelect extends Composite
         for (int i = 0; i < select.getItemCount(); i++) {
             if (select.isItemSelected(i)) {
                 String key = select.getValue(i);
-                if (BrowserInfo.get().isIE11() && key != null) {
-                    // remove the IE11 workaround
-                    key = key.trim();
-                }
                 selectedItemKeys.add(key);
             }
         }
