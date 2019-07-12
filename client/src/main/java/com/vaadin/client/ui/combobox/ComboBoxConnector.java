@@ -62,6 +62,12 @@ public class ComboBoxConnector extends AbstractListingConnector
      */
     private String pendingNewItemValue = null;
 
+    /**
+     * If this flag is toggled, even unpaged data sources should be updated on
+     * reset.
+     */
+    private boolean forceDataSourceUpdate = false;
+
     @Override
     protected void init() {
         super.init();
@@ -121,6 +127,11 @@ public class ComboBoxConnector extends AbstractListingConnector
             addEmptySelectionItem();
         }
         getWidget().setEmptySelectionCaption(getState().emptySelectionCaption);
+    }
+
+    @OnStateChange("forceDataSourceUpdate")
+    private void onForceDataSourceUpdate() {
+        forceDataSourceUpdate = getState().forceDataSourceUpdate;
     }
 
     @OnStateChange({ "selectedItemKey", "selectedItemCaption",
@@ -503,8 +514,12 @@ public class ComboBoxConnector extends AbstractListingConnector
         @Override
         public void resetDataAndSize(int estimatedNewDataSize) {
             if (getState().pageLength == 0) {
-                if (getWidget().suggestionPopup.isShowing()) {
+                if (getWidget().suggestionPopup.isShowing()
+                        || forceDataSourceUpdate) {
                     dataSource.ensureAvailability(0, estimatedNewDataSize);
+                }
+                if (forceDataSourceUpdate) {
+                    rpc.resetForceDataSourceUpdate();
                 }
                 // else lets just wait till the popup is opened before
                 // everything is fetched to it. this could be optimized later on
