@@ -25,6 +25,7 @@ import com.vaadin.shared.ui.AbstractSingleSelectState;
  * @since 7.0
  */
 public class ComboBoxState extends AbstractSingleSelectState {
+
     {
         // TODO ideally this would be v-combobox, but that would affect a lot of
         // themes
@@ -107,4 +108,11 @@ public class ComboBoxState extends AbstractSingleSelectState {
      */
     public String currentFilterText;
 
+    /**
+     * Ensure the data source is updated when backing dataprovider has been
+     * refreshed.
+     *
+     * @since
+     */
+    public boolean forceDataSourceUpdate;
 }
