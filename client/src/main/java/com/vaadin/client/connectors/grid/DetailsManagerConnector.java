@@ -17,6 +17,7 @@ package com.vaadin.client.connectors.grid;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -31,6 +32,8 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.ui.layout.ElementResizeListener;
+import com.vaadin.client.widget.escalator.events.SpacerIndexChangedEvent;
+import com.vaadin.client.widget.escalator.events.SpacerIndexChangedHandler;
 import com.vaadin.client.widget.grid.HeightAwareDetailsGenerator;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.Registration;
@@ -51,11 +54,13 @@ import elemental.json.JsonObject;
 public class DetailsManagerConnector extends AbstractExtensionConnector {
 
     /* Map for tracking which details are open on which row */
-    private Map<Integer, String> indexToDetailConnectorId = new HashMap<>();
+    private TreeMap<Integer, String> indexToDetailConnectorId = new TreeMap<>();
     /* Boolean flag to avoid multiple refreshes */
     private boolean refreshing;
-    /* Registration for data change handler. */
+    /* For listening data changes that originate from DataSource. */
     private Registration dataChangeRegistration;
+    /* For listening spacer index changes that originate from Escalator. */
+    private HandlerRegistration spacerIndexChangedHandlerRegistration;
 
     /**
      * Handle for the spacer visibility change handler.
@@ -187,6 +192,20 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     @Override
     protected void extend(ServerConnector target) {
         getWidget().setDetailsGenerator(new CustomDetailsGenerator());
+        spacerIndexChangedHandlerRegistration = getWidget()
+                .addSpacerIndexChangedHandler(new SpacerIndexChangedHandler() {
+                    @Override
+                    public void onSpacerIndexChanged(
+                            SpacerIndexChangedEvent event) {
+                        // Move spacer from old index to new index. Escalator is
+                        // responsible for making sure the new index doesn't
+                        // already contain a spacer.
+                        String connectorId = indexToDetailConnectorId
+                                .remove(event.getOldIndex());
+                        indexToDetailConnectorId.put(event.getNewIndex(),
+                                connectorId);
+                    }
+                });
         dataChangeRegistration = getWidget().getDataSource()
                 .addDataChangeHandler(new DetailsChangeHandler());
 
@@ -238,6 +257,7 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
         dataChangeRegistration = null;
 
         spacerVisibilityChangeRegistration.removeHandler();
+        spacerIndexChangedHandlerRegistration.removeHandler();
 
         indexToDetailConnectorId.clear();
     }
