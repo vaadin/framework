@@ -62,7 +62,7 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     private Registration dataChangeRegistration;
     /* For listening spacer index changes that originate from Escalator. */
     private HandlerRegistration spacerIndexChangedHandlerRegistration;
-    /* Registration for spacer visibility change handler. */
+    /* For listening when Escalator's visual range is changed. */
     private HandlerRegistration rowVisibilityChangeHandlerRegistration;
 
     private final Map<Element, ScheduledCommand> elementToResizeCommand = new HashMap<Element, Scheduler.ScheduledCommand>();
@@ -73,41 +73,21 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
         }
     };
 
-    /* variables for delayed alert that details have been refreshed */
-    private boolean delayedDetailsRefreshedCommandTriggered = false;
-    private boolean delayedDetailsRefreshed = false;
-    private ScheduledCommand delayedDetailsRefreshedCommand = () -> {
-        getParent().detailsRefreshed(delayedDetailsRefreshed);
-        delayedDetailsRefreshedCommandTriggered = false;
-        delayedDetailsRefreshed = false;
-    };
+    /* for delayed alert if Grid needs to run or cancel pending operations */
+    private boolean delayedDetailsAddedOrUpdatedAlertTriggered = false;
+    private boolean delayedDetailsAddedOrUpdated = false;
 
-    /* variables for triggering a delayed re-positioning in Escalator */
+    /* for delayed re-positioning of Escalator contents to prevent gaps */
+    /* -1 is a possible spacer index in Escalator so can't be used as default */
     private boolean delayedRepositioningTriggered = false;
     private Integer delayedRepositioningStart = null;
     private Integer delayedRepositioningEnd = null;
-    private ScheduledCommand delayedRepositioningCommand = () -> {
-        // refresh the positions of all affected rows and those
-        // below them, unless all affected rows are outside of the
-        // visual range
-        if (getWidget().getEscalator().getVisibleRowRange().intersects(Range
-                .between(delayedRepositioningStart, delayedRepositioningEnd))) {
-            getWidget().getEscalator().getBody().updateRowPositions(
-                    delayedRepositioningStart,
-                    getWidget().getEscalator().getBody().getRowCount()
-                            - delayedRepositioningStart);
-        }
-        delayedRepositioningTriggered = false;
-        delayedRepositioningStart = null;
-        delayedRepositioningEnd = null;
-    };
 
     /* calculated when the first details row is opened */
     private Double spacerCellBorderHeights = null;
 
-    private Range removing = Range.emptyRange();
     private Range availableRowRange = Range.emptyRange();
-    private Range visibleRowRange = Range.emptyRange();
+    private Range updatedVisibleRowRange = Range.emptyRange();
 
     /**
      * DataChangeHandler for updating the visibility of detail widgets.
@@ -116,14 +96,14 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
 
         @Override
         public void resetDataAndSize(int estimatedNewDataSize) {
-            // Full clean up
-            indexToDetailConnectorId.clear();
+            // No need to do anything, dataUpdated and dataAvailable take care
+            // of cleanup.
         }
 
         @Override
         public void dataUpdated(int firstRowIndex, int numberOfRows) {
             if (!getState().hasDetailsGenerator) {
-                triggerDelayedDetailsRefreshedCommand(false);
+                markDetailsAddedOrUpdatedForDelayedAlertToGrid(false);
                 return;
             }
             Range updatedRange = Range.withLength(firstRowIndex, numberOfRows);
@@ -139,14 +119,18 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                 // full visible range not available yet or full refresh coming
                 // up anyway, leave updating to dataAvailable
                 if (numberOfRows == 1
-                        && visibleRowRange.contains(firstRowIndex)) {
+                        && updatedVisibleRowRange.contains(firstRowIndex)) {
                     // A single details row has been opened or closed within
                     // visual range, trigger scrollTo after dataAvailable has
                     // done its thing. Do not attempt to scroll to details rows
                     // that are opened outside of the visual range.
                     Scheduler.get().scheduleFinally(() -> {
                         getParent().singleDetailsOpened(firstRowIndex);
-                        triggerDelayedDetailsRefreshedCommand(true);
+                        // we don't know yet whether there are details or not,
+                        // mark them added or updated just in case, so that
+                        // the potential scrolling attempt gets triggered after
+                        // another layout phase is finished
+                        markDetailsAddedOrUpdatedForDelayedAlertToGrid(true);
                     });
                 }
                 return;
@@ -155,11 +139,11 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             // only trigger scrolling attempt if the single updated row is
             // within existing visual range
             boolean scrollToFirst = numberOfRows == 1
-                    && visibleRowRange.contains(firstRowIndex);
+                    && updatedVisibleRowRange.contains(firstRowIndex);
 
-            if (!newVisibleRowRange.equals(visibleRowRange)) {
+            if (!newVisibleRowRange.equals(updatedVisibleRowRange)) {
                 // update visible range
-                visibleRowRange = newVisibleRowRange;
+                updatedVisibleRowRange = newVisibleRowRange;
 
                 // do full refresh
                 detachOldAndRefreshCurrentDetails();
@@ -177,23 +161,25 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                 // scroll to opened row (if it got closed instead, nothing
                 // happens)
                 getParent().singleDetailsOpened(firstRowIndex);
-                triggerDelayedDetailsRefreshedCommand(true);
+                markDetailsAddedOrUpdatedForDelayedAlertToGrid(true);
             }
         }
 
         @Override
         public void dataRemoved(int firstRowIndex, int numberOfRows) {
             if (!getState().hasDetailsGenerator) {
-                triggerDelayedDetailsRefreshedCommand(false);
+                markDetailsAddedOrUpdatedForDelayedAlertToGrid(false);
                 return;
             }
-            removing = Range.withLength(firstRowIndex, numberOfRows);
+            Range removing = Range.withLength(firstRowIndex, numberOfRows);
 
             // update the handled range to only contain rows that fall before
             // the removed range
-            visibleRowRange = Range.between(visibleRowRange.getStart(),
-                    Math.max(visibleRowRange.getStart(),
-                            Math.min(firstRowIndex, visibleRowRange.getEnd())));
+            updatedVisibleRowRange = Range
+                    .between(updatedVisibleRowRange.getStart(),
+                            Math.max(updatedVisibleRowRange.getStart(),
+                                    Math.min(firstRowIndex,
+                                            updatedVisibleRowRange.getEnd())));
 
             // reduce the available range accordingly
             Range[] partitions = availableRowRange.partitionWith(removing);
@@ -222,19 +208,18 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                     indexToDetailConnectorId.remove(rowIndex);
                 }
             }
-            removing = Range.emptyRange();
             // Grid and Escalator take care of their own cleanup at removal, no
             // need to clear details from those. Because this removal happens
             // instantly any pending scroll to row or such should not need
             // another attempt and unless something else causes such need the
             // pending operations should be cleared out.
-            triggerDelayedDetailsRefreshedCommand(false);
+            markDetailsAddedOrUpdatedForDelayedAlertToGrid(false);
         }
 
         @Override
         public void dataAvailable(int firstRowIndex, int numberOfRows) {
             if (!getState().hasDetailsGenerator) {
-                triggerDelayedDetailsRefreshedCommand(false);
+                markDetailsAddedOrUpdatedForDelayedAlertToGrid(false);
                 return;
             }
 
@@ -247,23 +232,23 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             // only process the section that is actually available
             newVisibleRowRange = availableRowRange
                     .partitionWith(newVisibleRowRange)[1];
-            if (newVisibleRowRange.equals(visibleRowRange)) {
+            if (newVisibleRowRange.equals(updatedVisibleRowRange)) {
                 // no need to update
                 return;
             }
 
             // check whether the visible range has simply got shortened
             // (e.g. by changing the default row height)
-            boolean subsectionOfOld = visibleRowRange
+            boolean subsectionOfOld = updatedVisibleRowRange
                     .partitionWith(newVisibleRowRange)[1]
                             .length() == newVisibleRowRange.length();
 
             // update visible range
-            visibleRowRange = newVisibleRowRange;
+            updatedVisibleRowRange = newVisibleRowRange;
 
             if (subsectionOfOld) {
                 // only detach extra rows
-                detachExcludingRange(visibleRowRange);
+                detachExcludingRange(updatedVisibleRowRange);
             } else {
                 // there are completely new visible rows, full refresh
                 detachOldAndRefreshCurrentDetails();
@@ -280,6 +265,7 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     /**
      * Height aware details generator for client-side Grid.
      */
+    @SuppressWarnings("deprecation")
     private class CustomDetailsGenerator
             implements HeightAwareDetailsGenerator {
 
@@ -394,7 +380,7 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                         return;
                     }
                     Range newVisibleRowRange = event.getVisibleRowRange();
-                    if (newVisibleRowRange.equals(visibleRowRange)) {
+                    if (newVisibleRowRange.equals(updatedVisibleRowRange)) {
                         // no need to update
                         return;
                     }
@@ -405,21 +391,21 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                         return;
                     }
 
-                    if (!availableAndVisible.equals(visibleRowRange)) {
+                    if (!availableAndVisible.equals(updatedVisibleRowRange)) {
                         // check whether the visible range has simply got
                         // shortened
                         // (e.g. by changing the default row height)
-                        boolean subsectionOfOld = visibleRowRange
+                        boolean subsectionOfOld = updatedVisibleRowRange
                                 .partitionWith(newVisibleRowRange)[1]
                                         .length() == newVisibleRowRange
                                                 .length();
 
                         // update visible range
-                        visibleRowRange = availableAndVisible;
+                        updatedVisibleRowRange = availableAndVisible;
 
                         if (subsectionOfOld) {
                             // only detach extra rows
-                            detachExcludingRange(visibleRowRange);
+                            detachExcludingRange(updatedVisibleRowRange);
                         } else {
                             // there are completely new visible rows, full
                             // refresh
@@ -467,34 +453,60 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
         if (!delayedRepositioningTriggered) {
             delayedRepositioningTriggered = true;
 
-            Scheduler.get().scheduleFinally(delayedRepositioningCommand);
+            Scheduler.get().scheduleFinally(() -> {
+                // refresh the positions of all affected rows and those
+                // below them, unless all affected rows are outside of the
+                // visual range
+                if (getWidget().getEscalator().getVisibleRowRange()
+                        .intersects(Range.between(delayedRepositioningStart,
+                                delayedRepositioningEnd))) {
+                    getWidget().getEscalator().getBody().updateRowPositions(
+                            delayedRepositioningStart,
+                            getWidget().getEscalator().getBody().getRowCount()
+                                    - delayedRepositioningStart);
+                }
+                delayedRepositioningTriggered = false;
+                delayedRepositioningStart = null;
+                delayedRepositioningEnd = null;
+            });
         }
     }
 
     /**
-     * Trigger a delayed alert to the parent that details have been added or
-     * updated, so that the parent can re-attempt any position-sensitive
-     * operations. Since the delay needs to be introduced in order to allow the
-     * details row(s) to get their final size, it's possible that more than one
-     * operation that might affect the existence or size will be performed
-     * before the check can actually be made. The check will be only performed
-     * once regardless of how many times it gets triggered within the delay
-     * period. Re-attempt will be performed if this method is called at least
-     * once with value {@code true} before the check, even if the initial or any
-     * subsequent call within the delay period were called with value
-     * {@code false}.
+     * Makes sure that after the layout phase has finished Grid will be informed
+     * whether any details rows were added or updated. This delay is needed to
+     * allow the details row(s) to get their final size, and it's possible that
+     * more than one operation that might affect that size or details row
+     * existence will be performed (and consequently this method called) before
+     * the check can actually be made.
+     * <p>
+     * If this method is called with value {@code true} at least once within the
+     * delay phase Grid will be told to run any pending position-sensitive
+     * operations it might have in store.
+     * <p>
+     * If this method is only called with value {@code false} within the delay
+     * period Grid will be told to cancel the pending operations.
+     * <p>
+     * If this method isn't called at all, Grid won't be instructed to either
+     * trigger the pending operations or cancel them and hence they remain in a
+     * pending state.
      *
-     * @param detailsShown
+     * @param newOrUpdatedDetails
      *            {@code true} if the calling operation added or updated
      *            details, {@code false} otherwise
      */
-    private void triggerDelayedDetailsRefreshedCommand(boolean detailsShown) {
-        if (detailsShown) {
-            delayedDetailsRefreshed = true;
+    private void markDetailsAddedOrUpdatedForDelayedAlertToGrid(
+            boolean newOrUpdatedDetails) {
+        if (newOrUpdatedDetails) {
+            delayedDetailsAddedOrUpdated = true;
         }
-        if (!delayedDetailsRefreshedCommandTriggered) {
-            delayedDetailsRefreshedCommandTriggered = true;
-            Scheduler.get().scheduleFinally(delayedDetailsRefreshedCommand);
+        if (!delayedDetailsAddedOrUpdatedAlertTriggered) {
+            delayedDetailsAddedOrUpdatedAlertTriggered = true;
+            Scheduler.get().scheduleFinally(() -> {
+                getParent().detailsRefreshed(delayedDetailsAddedOrUpdated);
+                delayedDetailsAddedOrUpdatedAlertTriggered = false;
+                delayedDetailsAddedOrUpdated = false;
+            });
         }
     }
 
@@ -575,23 +587,27 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
 
     /**
      * Refreshes the existence of details components within the given range, and
-     * gives a delayed notice to the parent if any got added or updated.
+     * gives a delayed notice to Grid if any got added or updated.
      */
     private void refreshDetailsVisibilityWithRange(Range rangeToRefresh) {
         if (!getState().hasDetailsGenerator) {
-            triggerDelayedDetailsRefreshedCommand(false);
+            markDetailsAddedOrUpdatedForDelayedAlertToGrid(false);
             return;
         }
-        boolean shownDetails = false;
+        boolean newOrUpdatedDetails = false;
 
-        // Don't update the class variable here, the calling method should take
-        // care of that if relevant.
-        Range visibleRowRange = getWidget().getEscalator().getVisibleRowRange();
-        Range[] partitions = visibleRowRange.partitionWith(rangeToRefresh);
+        // Don't update the updatedVisibleRowRange class variable here, the
+        // calling method should take care of that if relevant.
+        Range currentVisibleRowRange = getWidget().getEscalator()
+                .getVisibleRowRange();
+
+        Range[] partitions = currentVisibleRowRange
+                .partitionWith(rangeToRefresh);
+
         // only inspect the range where visible and refreshed rows overlap
-        Range filteredRange = partitions[1];
+        Range intersectingRange = partitions[1];
 
-        for (int i = filteredRange.getStart(); i < filteredRange
+        for (int i = intersectingRange.getStart(); i < intersectingRange
                 .getEnd(); ++i) {
             String id = getDetailsComponentConnectorId(i);
 
@@ -603,30 +619,27 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
 
             indexToDetailConnectorId.put(i, id);
             getWidget().setDetailsVisible(i, true);
-            shownDetails = true;
+            newOrUpdatedDetails = true;
         }
 
-        triggerDelayedDetailsRefreshedCommand(shownDetails);
+        markDetailsAddedOrUpdatedForDelayedAlertToGrid(newOrUpdatedDetails);
     }
 
     private void detachOldAndRefreshCurrentDetails() {
-        Range[] partitions = availableRowRange.partitionWith(visibleRowRange);
+        Range[] partitions = availableRowRange
+                .partitionWith(updatedVisibleRowRange);
         Range availableAndVisible = partitions[1];
 
         detachExcludingRange(availableAndVisible);
 
         boolean newOrUpdatedDetails = refreshRange(availableAndVisible);
 
-        triggerDelayedDetailsRefreshedCommand(newOrUpdatedDetails);
+        markDetailsAddedOrUpdatedForDelayedAlertToGrid(newOrUpdatedDetails);
     }
 
     private void detachExcludingRange(Range keep) {
         // remove all spacers that are no longer in range
         for (Integer existingIndex : indexToDetailConnectorId.keySet()) {
-            if (removing.contains(existingIndex)) {
-                // dataRemoved is already handling this row
-                continue;
-            }
             if (!keep.contains(existingIndex)) {
                 detachDetails(existingIndex);
             }
@@ -639,10 +652,6 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
         for (int i = rangeToRefresh.getStart(); i < rangeToRefresh
                 .getEnd(); ++i) {
             int rowIndex = i;
-            if (removing.contains(rowIndex)) {
-                // dataRemoved is already handling this row
-                continue;
-            }
             if (refreshDetails(rowIndex)) {
                 newOrUpdatedDetails = true;
             }
@@ -651,7 +660,7 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     }
 
     private void detachDetails(int rowIndex) {
-        String id = indexToDetailConnectorId.get(rowIndex);
+        String id = indexToDetailConnectorId.remove(rowIndex);
         if (id != null) {
             ComponentConnector connector = (ComponentConnector) ConnectorMap
                     .get(getConnection()).getConnector(id);
@@ -662,7 +671,6 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                         detailsRowResizeListener);
             }
         }
-        indexToDetailConnectorId.remove(rowIndex);
         getWidget().setDetailsVisible(rowIndex, false);
     }
 
@@ -696,7 +704,9 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                 newOrUpdatedDetails = true;
             }
         } else {
-            // new Details content
+            // new Details content, listeners will get attached to the connector
+            // when Escalator requests for the Details through
+            // CustomDetailsGenerator#getDetails(int)
             indexToDetailConnectorId.put(rowIndex, id);
             newOrUpdatedDetails = true;
             getWidget().setDetailsVisible(rowIndex, true);
