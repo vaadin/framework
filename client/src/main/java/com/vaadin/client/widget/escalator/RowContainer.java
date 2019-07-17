@@ -142,7 +142,7 @@ public interface RowContainer {
          * @param numberOfRows
          *            the number of rows to reposition
          */
-        void updateRowPositions(int index, int numberOfRows);
+        public void updateRowPositions(int index, int numberOfRows);
 
         /**
          * Sets a callback function that is executed when new rows are added to

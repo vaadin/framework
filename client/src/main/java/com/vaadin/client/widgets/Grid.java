@@ -3814,9 +3814,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             } else {
                 Element element = detailsWidget.getElement();
                 spacerElement.appendChild(element);
-                if (!detailsWidget.isAttached()) {
-                    setParent(detailsWidget, Grid.this);
-                }
+                setParent(detailsWidget, Grid.this);
                 Widget previousWidget = elementToWidgetMap.put(element,
                         detailsWidget);
 
@@ -3847,12 +3845,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 } else {
                     Scheduler.get().scheduleFinally(() -> {
                         // make sure the spacer hasn't got removed
-                        if (getElement().isOrHasChild(spacer.getElement())) {
+                        if (spacer.getElement().getParentElement() != null) {
                             // re-check the height
                             double confirmedContentHeight = WidgetUtil
                                     .getRequiredHeightBoundingClientRectDouble(
                                             element);
-                            if (confirmedContentHeight != contentHeight) {
+                            if (confirmedContentHeight > 0) {
                                 double confirmedMeasuredHeight = confirmedContentHeight
                                         + WidgetUtil
                                                 .getBorderTopAndBottomThickness(
