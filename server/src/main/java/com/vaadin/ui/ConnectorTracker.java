@@ -70,6 +70,15 @@ import elemental.json.JsonObject;
  *
  */
 public class ConnectorTracker implements Serializable {
+    /**
+     * Cache whether FINE messages are loggable. This is done to avoid
+     * excessively calling getLogger() which might be slightly slow in some
+     * specific environments. Please note that we're not caching the logger
+     * instance itself because of
+     * https://github.com/vaadin/framework/issues/2092.
+     */
+    private static final boolean fineLogging = getLogger()
+            .isLoggable(Level.FINE);
 
     private final Map<String, ClientConnector> connectorIdToConnector = new HashMap<>();
     private final Set<ClientConnector> dirtyConnectors = new HashSet<>();
@@ -138,7 +147,7 @@ public class ConnectorTracker implements Serializable {
         if (previouslyRegistered == null) {
             connectorIdToConnector.put(connectorId, connector);
             uninitializedConnectors.add(connector);
-            if (getLogger().isLoggable(Level.FINE)) {
+            if (fineLogging) {
                 getLogger().log(Level.FINE, "Registered {0} ({1})",
                         new Object[] { connector.getClass().getSimpleName(),
                                 connectorId });
@@ -191,7 +200,7 @@ public class ConnectorTracker implements Serializable {
         } else if (unregisteredConnectors.add(connector)) {
             // Client side knows about the connector, track it for a while if it
             // becomes reattached
-            if (getLogger().isLoggable(Level.FINE)) {
+            if (fineLogging) {
                 getLogger().log(Level.FINE, "Unregistered {0} ({1})",
                         new Object[] { connector.getClass().getSimpleName(),
                                 connectorId });
@@ -339,7 +348,7 @@ public class ConnectorTracker implements Serializable {
                 assert isRemovalSentToClient(connector) : "Connector "
                         + connector + " (id = " + connector.getConnectorId()
                         + ") is no longer visible to the client, but no corresponding hierarchy change was sent.";
-                if (getLogger().isLoggable(Level.FINE)) {
+                if (fineLogging) {
                     getLogger().log(Level.FINE,
                             "cleanConnectorMap removed state for {0} as it is not visible",
                             getConnectorAndParentInfo(connector));
@@ -524,11 +533,9 @@ public class ConnectorTracker implements Serializable {
                     "A connector should not be marked as dirty while a response is being written.");
         }
 
-        if (getLogger().isLoggable(Level.FINE)) {
-            if (!isDirty(connector)) {
-                getLogger().log(Level.FINE, "{0} is now dirty",
-                        getConnectorAndParentInfo(connector));
-            }
+        if (fineLogging && !isDirty(connector)) {
+            getLogger().log(Level.FINE, "{0} is now dirty",
+                    getConnectorAndParentInfo(connector));
         }
 
         if (!isDirty(connector)) {
@@ -545,11 +552,9 @@ public class ConnectorTracker implements Serializable {
      *            The connector that should be marked clean.
      */
     public void markClean(ClientConnector connector) {
-        if (getLogger().isLoggable(Level.FINE)) {
-            if (dirtyConnectors.contains(connector)) {
-                getLogger().log(Level.FINE, "{0} is no longer dirty",
-                        getConnectorAndParentInfo(connector));
-            }
+        if (fineLogging && dirtyConnectors.contains(connector)) {
+            getLogger().log(Level.FINE, "{0} is no longer dirty",
+                    getConnectorAndParentInfo(connector));
         }
 
         dirtyConnectors.remove(connector);
@@ -601,7 +606,9 @@ public class ConnectorTracker implements Serializable {
      */
     public void markAllConnectorsDirty() {
         markConnectorsDirtyRecursively(uI);
-        getLogger().fine("All connectors are now dirty");
+        if (fineLogging) {
+            getLogger().fine("All connectors are now dirty");
+        }
     }
 
     /**
@@ -609,7 +616,9 @@ public class ConnectorTracker implements Serializable {
      */
     public void markAllConnectorsClean() {
         dirtyConnectors.clear();
-        getLogger().fine("All connectors are now clean");
+        if (fineLogging) {
+            getLogger().fine("All connectors are now clean");
+        }
     }
 
     /**
