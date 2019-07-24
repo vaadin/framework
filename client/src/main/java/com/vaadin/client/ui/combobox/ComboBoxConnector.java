@@ -68,6 +68,8 @@ public class ComboBoxConnector extends AbstractListingConnector
      */
     private boolean forceDataSourceUpdate = false;
 
+    private boolean initialSelectionChangePending = true;
+
     @Override
     protected void init() {
         super.init();
@@ -138,8 +140,13 @@ public class ComboBoxConnector extends AbstractListingConnector
             "selectedItemIcon" })
     private void onSelectionChange() {
         if (getWidget().selectedOptionKey != getState().selectedItemKey) {
-            getWidget().selectedOptionKey = null;
-            getWidget().currentSuggestion = null;
+            if (initialSelectionChangePending) {
+                getWidget().selectedOptionKey = getState().selectedItemKey;
+            } else {
+                getWidget().selectedOptionKey = null;
+                getWidget().currentSuggestion = null;
+            }
+            initialSelectionChangePending = false;
         }
 
         clearNewItemHandlingIfMatch(getState().selectedItemCaption);
