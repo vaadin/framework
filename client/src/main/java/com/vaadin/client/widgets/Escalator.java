@@ -2083,6 +2083,7 @@ public class Escalator extends Widget
             Element cellElem = tr.getFirstChildElement();
             while (cellElem != null) {
                 cellElem.getStyle().setHeight(heightPx, Unit.PX);
+                cellElem.getStyle().setLineHeight(heightPx, Unit.PX);
                 cellElem = cellElem.getNextSiblingElement();
             }
 
