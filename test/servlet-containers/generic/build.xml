@@ -18,7 +18,7 @@
         location="${uitest.dir}/target/${module.name}-8.2-SNAPSHOT-jboss6.war" />
 
     <!-- Need to give a default value to keep Ivy happy -->
-    <property name="vaadin.build.repository" value="http://maven.vaadin.com/vaadin-prereleases"/>
+    <property name="vaadin.build.repository" value="https://maven.vaadin.com/vaadin-prereleases"/>
 
     <target name="clean">
         <fail unless="result.dir" message="No result.dir parameter given" />
