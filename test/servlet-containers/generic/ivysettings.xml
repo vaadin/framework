@@ -12,7 +12,7 @@
     <resolvers>
         <ibiblio name="public" m2compatible="true" />
         <ibiblio name="vaadin-addons" usepoms="true"
-            m2compatible="true" root="http://maven.vaadin.com/vaadin-addons" />
+            m2compatible="true" root="https://maven.vaadin.com/vaadin-addons" />
         <filesystem name="local-maven" m2compatible="true">
             <artifact
                 pattern="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]" />
