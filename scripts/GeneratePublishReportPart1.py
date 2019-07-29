@@ -76,10 +76,10 @@ content = """<html>
 
 mavenUrl = ""
 if not prerelease:
-	mavenUrl = "http://repo1.maven.org/maven2/com/vaadin/vaadin-server/"
+	mavenUrl = "https://repo1.maven.org/maven2/com/vaadin/vaadin-server/"
 	content += "<tr><td></td><td><a href='{mvnUrl}'>Check {ver} is published to maven.org (might take a while)</td></tr>".format(ver=args.version, mvnUrl=mavenUrl)
 else:
-	mavenUrl = "http://maven.vaadin.com/vaadin-prereleases/com/vaadin/vaadin-server/"
+	mavenUrl = "https://maven.vaadin.com/vaadin-prereleases/com/vaadin/vaadin-server/"
 	content += "<tr><td></td><td><a href='{mvnUrl}'>Check {ver} is published as prerelease to maven.vaadin.com</td></tr>".format(ver=args.version, mvnUrl=mavenUrl)
 
 content += "<tr><td></td><td><a href=\"https://github.com/vaadin/framework/milestones\">Create milestone for next version in GitHub</a></td></tr>"
