@@ -226,6 +226,17 @@ public class VUpload extends SimplePanel {
             rebuildPanel();
             submitted = false;
         }
+        ensureUploadButton();
+
+    }
+
+    private void ensureUploadButton() {
+        //when push got enabled, need to ensure the upload is disabled properly
+        //check ticket #11652
+        if (fu.getElement().getParentElement().getParentElement()
+                .hasClassName("v-disabled")) {
+            disableUpload();
+        }
     }
 
     private void setEnabledForSubmitButton(boolean enabled) {
