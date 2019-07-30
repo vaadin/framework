@@ -44,7 +44,7 @@ public interface ComboBoxServerRpc extends ServerRpc {
     /**
      * Reset the force update flag once the list contents have been updated.
      *
-     * @since
+     * @since 8.9
      */
     public void resetForceDataSourceUpdate();
 }

@@ -112,7 +112,7 @@ public class ComboBoxState extends AbstractSingleSelectState {
      * Ensure the data source is updated when backing dataprovider has been
      * refreshed.
      *
-     * @since
+     * @since 8.9
      */
     public boolean forceDataSourceUpdate;
 }
