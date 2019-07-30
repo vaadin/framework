@@ -106,7 +106,7 @@ have the following features:
 * The [literal]#++<div>++# element must have an [literal]#++id++# attribute, which must be a unique ID in the page, normally something that identifies the servlet of the UI uniquely.
 * It must have at least the [literal]#++v-app++# style class.
 * it should have a nested [literal]#++<div>++# element with [literal]#++v-app-loading++# style class. This is a placeholder for the loading indicator that is displayed while the UI is being loaded.
-* It should also contain a [literal]#++<noscript>++# element that is shown if the browser does not support JavaScript or it has been disabled. The content of the element should instruct the use to enable JavaScript in the browser.
+* It should also contain a [literal]#++<noscript>++# element that is shown if the browser does not support JavaScript or it has been disabled. The content of the element should instruct the user to enable JavaScript in the browser.
 
 The placeholder element can include style settings, typically a width and
 height. If the sizes are not defined, the UI will have an undefined size in the
