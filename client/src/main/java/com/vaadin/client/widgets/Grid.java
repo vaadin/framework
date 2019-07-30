@@ -7934,7 +7934,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (!event.getCell().isHeader()) {
                 return;
             }
-            if (event.getCell().getColumnIndex() < getFrozenColumnCount()) {
+            int offset = 0; // apply offset depending on selection column, see #10546
+            if (getSelectionColumn().isPresent()) {
+                offset = -1;
+            }
+            if (event.getCell().getColumnIndex()+offset < getFrozenColumnCount()) {
                 return;
             }
 
