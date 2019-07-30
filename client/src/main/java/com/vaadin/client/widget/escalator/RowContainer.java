@@ -81,7 +81,7 @@ public interface RowContainer {
          *            the row index for the queried spacer.
          * @return {@code true} if spacer for given row index exists,
          *         {@code false} otherwise
-         * @since
+         * @since 8.9
          */
         boolean spacerExists(int rowIndex);
 

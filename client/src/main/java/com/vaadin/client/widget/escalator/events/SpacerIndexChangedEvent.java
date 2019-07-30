@@ -21,7 +21,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * Event fired when a spacer element is moved to a new index in Escalator.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.9
  */
 public class SpacerIndexChangedEvent
         extends GwtEvent<SpacerIndexChangedHandler> {
