@@ -8782,7 +8782,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * @param handler
      *            the handler to be called when a spacer's index changes
      * @return the registration object with which the handler can be removed
-     * @since
+     * @since 8.9
      */
     public HandlerRegistration addSpacerIndexChangedHandler(
             SpacerIndexChangedHandler handler) {

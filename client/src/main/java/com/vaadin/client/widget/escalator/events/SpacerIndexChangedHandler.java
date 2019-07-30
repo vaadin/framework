@@ -21,7 +21,7 @@ import com.google.gwt.event.shared.EventHandler;
  * Event handler for a spacer index changed event.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.9
  */
 public interface SpacerIndexChangedHandler extends EventHandler {
 
