@@ -1,7 +1,5 @@
 package com.vaadin.tests.fonticon;
 
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -10,14 +8,13 @@ import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+import static org.junit.Assert.assertTrue;
 public class GridLayoutOnFontLoadTest extends MultiBrowserTest {
 
     @Test
     public void testComponentsDontOverlap() throws Exception {
         openTestURL();
-
-        // Make sure fonts are loaded.
-        sleep(1000);
+        reloadPage();
 
         ButtonElement button = $(ButtonElement.class).first();
         CheckBoxElement checkbox = $(CheckBoxElement.class).first();
