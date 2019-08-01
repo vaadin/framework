@@ -74,30 +74,30 @@ image:img/form3.png[Form with grouped inputs]
 (See layout component sections in Tutorial and Book of Vaadin to see how
 this is done in Vaadin.)
 
-[[input-prompts]]
-Input prompts
-^^^^^^^^^^^^^
+[[placeholders]]
+Placeholders
+^^^^^^^^^^^^
 
-An input prompt is a placeholder text inside an input field that
+A placeholder is an input prompt text inside an input field that
 disappears as soon as a value is entered into the field. Many input
-components in Vaadin have a *setInputPrompt()* method for this:
+components in Vaadin have a *setPlaceholder()* method for this:
 
 [source,java]
 ....
 TextField tfSearch = new TextField();
-tfSearch.setInputPrompt(“Search by keywords”);
+tfSearch.setPlaceholder(“Search by keywords”);
 ....
 
-One use for input prompts is as an alternative to a separate *caption*.
+One use for placeholders is as an alternative to a separate *caption*.
 This can be useful especially if there is very little space for the
 field, or if you wish to reduce the visual clutter of your UI. A common
-example is a search or text-filter field with an input prompt like
+example is a search or text-filter field with a placeholder like
 _“Search by keywords”_ or _“Filter by name”_ :
 
-image:img/searchfield.png[Search field with prompt]
+image:img/searchfield.png[Search field placeholder]
 
-The decision to use input prompts as captions should not be taken
-lightly, however. Keep in mind that the input prompt disappears as soon
+The decision to use placeholders as captions should not be taken
+lightly, however. Keep in mind that the placeholder disappears as soon
 as any text is entered into the field, so the user will have to remember
 what the field was for, or be able to deduce its identity from its
 current value. In the example above, with just a single search field, or
@@ -107,18 +107,18 @@ the user might wish to read through before submitting to check that
 everything has been correctly entered, this approach quickly turns into
 a problem.
 
-Another way to use input prompts is for displaying *additional
+Another way to use placeholders is for displaying *additional
 information* about the field, such as the expected *format*, or the
 *types of values that are accepted*. This is quite similar to
-*tooltips*, with the difference that the input prompt must be kept short
+*tooltips*, with the difference that the placeholder must be kept short
 enough to fit into the field itself, and that it is immediately visible,
 without hovering over the field with the mouse pointer. For this reason,
-input prompts are useful on touch screens, as opposed to tooltips.
+placeholders are useful on touch screens, as opposed to tooltips.
 
 A good example of indicating the types of values a fields accepts is a
 _Location_ field where you can enter a street address, a postal code or
 just the name of the city. These details are probably too long to fit in
 the field’s caption, and might not be discoverable enough in a tooltip.
-An input prompt briefly explaining the options is an excellent solution:
+A placeholder briefly explaining the options is an excellent solution:
 
-image:img/locationfield.png[Input field with prompt]
+image:img/locationfield.png[Input field with placeholder]

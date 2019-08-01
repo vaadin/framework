@@ -75,6 +75,17 @@ public interface RowContainer {
                 throws IllegalArgumentException;
 
         /**
+         * Checks whether the given rowIndex contains a spacer.
+         *
+         * @param rowIndex
+         *            the row index for the queried spacer.
+         * @return {@code true} if spacer for given row index exists,
+         *         {@code false} otherwise
+         * @since 8.9
+         */
+        boolean spacerExists(int rowIndex);
+
+        /**
          * Sets a new spacer updater.
          * <p>
          * Spacers that are currently visible will be updated, i.e.

@@ -20,7 +20,7 @@ import static org.junit.Assert.fail;
 @TestCategory("grid")
 public class GridEditorTabSkipsNonEditableCellsTest extends MultiBrowserTest {
     /**
-     * The grid with 5 columns. First, third and fifth columns are not editable.
+     * The grid with 7 columns. First, third and fifth columns are not editable.
      */
     private GridElement grid;
 
@@ -116,7 +116,7 @@ public class GridEditorTabSkipsNonEditableCellsTest extends MultiBrowserTest {
     private String getFocusedEditorCellContents() {
         final GridElement.GridEditorElement editor = grid.getEditor();
         final WebElement focusedElement = getFocusedElement();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 7; i++) {
             if (editor.isEditable(i)
                     && editor.getField(i).equals(focusedElement)) {
                 return (editor.getField(i).wrap(TextFieldElement.class))

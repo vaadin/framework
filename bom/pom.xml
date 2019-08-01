@@ -11,13 +11,13 @@
     <groupId>com.vaadin</groupId>
     <artifactId>vaadin-bom</artifactId>
     <packaging>pom</packaging>
-    <version>8.9-SNAPSHOT</version>
+    <version>8.10-SNAPSHOT</version>
     <name>Vaadin Framework (Bill of Materials)</name>
     <description>Vaadin Framework (Bill of Materials)</description>
     <url>http://vaadin.com</url>
 
     <properties>
-        <vaadin.spring.version>3.1.1</vaadin.spring.version>
+        <vaadin.spring.version>3.2.1</vaadin.spring.version>
         <vaadin.testbench.version>5.2.0</vaadin.testbench.version>
         <vaadin.cdi.version>3.0.1</vaadin.cdi.version>
         <vaadin.context-menu.version>3.0.0</vaadin.context-menu.version>
@@ -26,7 +26,7 @@
     <repositories>
         <repository>
             <id>vaadin-snapshots</id>
-            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots</url>
+            <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots</url>
         </repository>
     </repositories>
 

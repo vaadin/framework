@@ -291,6 +291,26 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     }
 
     /**
+     * Puts the {@link #bufferedDateString} and {@link #bufferedResolutions}
+     * changes into the rpc queue and clears their values.
+     * <p>
+     * Note: The value will not be sent to the server immediately. It will be
+     * sent when a non {@link com.vaadin.shared.annotations.Delayed} annotated
+     * rpc is triggered.
+     * </p>
+     *
+     * @since 8.9
+     */
+    public void sendBufferedValuesWithDelay() {
+        rpc.updateValueWithDelay(bufferedDateString,
+                bufferedResolutions.entrySet().stream().collect(
+                        Collectors.toMap(entry -> entry.getKey().name(),
+                                entry -> entry.getValue())));
+        bufferedDateString = null;
+        bufferedResolutions.clear();
+    }
+
+    /**
      * Returns all available resolutions for the field in the ascending order
      * (which is the same as order of enumeration ordinals).
      * <p>

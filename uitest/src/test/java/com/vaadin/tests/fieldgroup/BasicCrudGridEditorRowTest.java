@@ -80,7 +80,7 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
 
         // Check values
         String value = cb.getValue();
-        cb.click(5, 5);
+        cb.click();
         assertNotEquals("Checkbox value did not change", value, cb.getValue());
     }
 

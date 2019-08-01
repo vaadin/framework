@@ -90,6 +90,7 @@ import com.vaadin.client.widget.escalator.ScrollbarBundle.VerticalScrollbarBundl
 import com.vaadin.client.widget.escalator.Spacer;
 import com.vaadin.client.widget.escalator.SpacerUpdater;
 import com.vaadin.client.widget.escalator.events.RowHeightChangedEvent;
+import com.vaadin.client.widget.escalator.events.SpacerIndexChangedEvent;
 import com.vaadin.client.widget.escalator.events.SpacerVisibilityChangedEvent;
 import com.vaadin.client.widget.grid.events.ScrollEvent;
 import com.vaadin.client.widget.grid.events.ScrollHandler;
@@ -4125,6 +4126,11 @@ public class Escalator extends Widget
         }
 
         @Override
+        public boolean spacerExists(int rowIndex) {
+            return spacerContainer.spacerExists(rowIndex);
+        }
+
+        @Override
         public void setSpacerUpdater(SpacerUpdater spacerUpdater)
                 throws IllegalArgumentException {
             spacerContainer.setSpacerUpdater(spacerUpdater);
@@ -4669,7 +4675,8 @@ public class Escalator extends Widget
 
             double maxWidth = Math.max(headerWidth,
                     Math.max(bodyWidth, footerWidth));
-            if (maxWidth < 0 && header.getRowCount() == 0 && body.getRowCount() == 0 && footer.getRowCount() == 0) {
+            if (maxWidth < 0 && header.getRowCount() == 0
+                    && body.getRowCount() == 0 && footer.getRowCount() == 0) {
                 maxWidth = 0;
             }
             assert maxWidth >= 0 : "Got a negative max width for a column, which should be impossible.";
@@ -4684,7 +4691,8 @@ public class Escalator extends Widget
 
             double minWidth = Math.max(headerWidth,
                     Math.max(bodyWidth, footerWidth));
-            if (minWidth < 0 && header.getRowCount() == 0 && body.getRowCount() == 0 && footer.getRowCount() == 0) {
+            if (minWidth < 0 && header.getRowCount() == 0
+                    && body.getRowCount() == 0 && footer.getRowCount() == 0) {
                 minWidth = 0;
             }
             assert minWidth >= 0 : "Got a negative min width for a column, which should be impossible.";
@@ -4970,16 +4978,19 @@ public class Escalator extends Widget
             }
 
             /**
-             * Sets a new row index for this spacer. Also updates the bookeeping
-             * at {@link SpacerContainer#rowIndexToSpacer}.
+             * Sets a new row index for this spacer. Also updates the
+             * bookkeeping at {@link SpacerContainer#rowIndexToSpacer}.
              */
             @SuppressWarnings("boxing")
             public void setRowIndex(int rowIndex) {
                 SpacerImpl spacer = rowIndexToSpacer.remove(this.rowIndex);
                 assert this == spacer : "trying to move an unexpected spacer.";
+                int oldIndex = this.rowIndex;
                 this.rowIndex = rowIndex;
                 root.setPropertyInt(SPACER_LOGICAL_ROW_PROPERTY, rowIndex);
                 rowIndexToSpacer.put(this.rowIndex, this);
+
+                fireEvent(new SpacerIndexChangedEvent(oldIndex, this.rowIndex));
             }
 
             /**

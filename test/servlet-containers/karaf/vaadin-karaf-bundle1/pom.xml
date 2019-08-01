@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-test-karaf</artifactId>
-        <version>8.9-SNAPSHOT</version>
+        <version>8.10-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-karaf-bundle1</artifactId>
     <packaging>jar</packaging>
@@ -134,7 +134,7 @@
             <repositories>
                 <repository>
                     <id>vaadin-prereleases</id>
-                    <url>http://maven.vaadin.com/vaadin-prereleases</url>
+                    <url>https://maven.vaadin.com/vaadin-prereleases</url>
                 </repository>
                 <repository>
                     <id>vaadin-snapshots</id>
@@ -150,7 +150,7 @@
             <pluginRepositories>
                 <pluginRepository>
                     <id>vaadin-prereleases</id>
-                    <url>http://maven.vaadin.com/vaadin-prereleases</url>
+                    <url>https://maven.vaadin.com/vaadin-prereleases</url>
                 </pluginRepository>
                 <pluginRepository>
                     <id>vaadin-snapshots</id>

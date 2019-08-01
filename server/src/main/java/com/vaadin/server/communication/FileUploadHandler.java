@@ -16,8 +16,6 @@
 
 package com.vaadin.server.communication;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -41,6 +39,8 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload.FailedEvent;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Handles a file upload request submitted via an Upload component.
@@ -269,13 +269,17 @@ public class FileUploadHandler implements RequestHandler {
         session.lock();
         try {
             UI uI = session.getUIById(Integer.parseInt(uiId));
+            if (uI == null) {
+                throw new IOException(
+                        "File upload ignored because the UI was not found and stream variable cannot be determined");
+            }
+            // Set UI so that it can be used in stream variable clean up
             UI.setCurrent(uI);
 
             streamVariable = uI.getConnectorTracker()
                     .getStreamVariable(connectorId, variableName);
             String secKey = uI.getConnectorTracker().getSeckey(streamVariable);
             if (secKey == null || !secKey.equals(parts[3])) {
-                // TODO Should rethink error handling
                 return true;
             }
 
@@ -456,7 +460,7 @@ public class FileUploadHandler implements RequestHandler {
         try {
             // Store ui reference so we can do cleanup even if connector is
             // detached in some event handler
-            UI ui = connector.getUI();
+            UI ui = UI.getCurrent();
             boolean forgetVariable = streamToReceiver(session, inputStream,
                     streamVariable, filename, mimeType, contentLength);
             if (forgetVariable) {
@@ -617,7 +621,12 @@ public class FileUploadHandler implements RequestHandler {
             } finally {
                 session.unlock();
             }
-            return true;
+            boolean pushEnabled = UI.getCurrent().getPushConfiguration()
+                    .getPushMode().isEnabled();
+            if (!pushEnabled) {
+                return true;
+            }
+
             // Note, we are not throwing interrupted exception forward as it is
             // not a terminal level error like all other exception.
         } catch (final Exception e) {

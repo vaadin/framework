@@ -101,4 +101,5 @@ are great, too.
 - <<CreatingMultiTabApplications#creating-multi-tab-applications,"Creating multi-tab applications">>
 - <<AddingASplashScreen#adding-a-splash-sreen,"Adding a splash screen">>
 - <<ConnectingLargeAmountsOfDdataToUI#connecting-large-amounts-of-data-to-ui,"Connecting large amounts of data to UI">>
+- <<DeployingVaadin882OnWebsphere85515Traditional#deploying-vaadin-8-8-2-on-websphere-application-server-8-5-5-15-traditional,"Deploying Vaadin 8.8.2 on WebSphere Application Server 8.5.5.15 traditional">>
 

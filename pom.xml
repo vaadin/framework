@@ -10,7 +10,7 @@
     <artifactId>vaadin-root</artifactId>
     <name>vaadin-root</name>
     <packaging>pom</packaging>
-    <version>8.9-SNAPSHOT</version>
+    <version>8.10-SNAPSHOT</version>
 
     <prerequisites>
         <maven>3.1.0</maven>
@@ -43,7 +43,7 @@
         <osgi.version>6.0.0</osgi.version>
         <osgi.annotation.version>6.0.1</osgi.annotation.version>
 
-        <bnd.version>3.3.0</bnd.version>
+        <bnd.version>3.5.0</bnd.version>
 
         <!-- Dependency unpack directory -->
         <dependency.unpack.directory>${project.build.directory}/dependency-unpack</dependency.unpack.directory>
@@ -898,7 +898,7 @@
             <repositories>
                 <repository>
                     <id>vaadin-prereleases</id>
-                    <url>http://maven.vaadin.com/vaadin-prereleases</url>
+                    <url>https://maven.vaadin.com/vaadin-prereleases</url>
                 </repository>
             </repositories>
             <build>
