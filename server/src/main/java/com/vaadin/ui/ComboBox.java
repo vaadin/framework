@@ -972,7 +972,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
         // This workaround is done to fix issue #11642 for unpaged comboboxes.
         // Data sources for on the client need to be updated after data provider
-        // refreshAll so that serverside selection works even before the dropdown
+        // refreshAll so that serverside selection works even before the
+        // dropdown
         // is opened. Only done for in-memory data providers for performance
         // reasons.
         if (dataProvider instanceof InMemoryDataProvider) {
