@@ -18,7 +18,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 @TestCategory("grid")
 public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
 
-    public static final int TOTAL_MARGIN_PX = 21;
+    public static final int TOTAL_MARGIN_PX = 26;
 
     @Before
     public void before() {
@@ -63,8 +63,8 @@ public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
         int headerWidth = col[0].getSize().getWidth();
         int colWidth = col[2].getSize().getWidth() - TOTAL_MARGIN_PX;
 
-        assertLessThan("column should've been narrower than content", colWidth,
-                headerWidth);
+        assertLessThan("column should've been narrower than content",
+                colWidth, headerWidth);
     }
 
     @Test
