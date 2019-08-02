@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
 
     public static final int TOTAL_MARGIN_PX = 26;
-    private static final int delta = 10;
+    private static final int tolerance = 10;
 
     @Before
     public void before() {
@@ -36,7 +36,7 @@ public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
         assertLessThan("header should've been narrower than body", headerWidth,
                 bodyWidth);
         assertEquals("column should've been roughly as wide as the body",
-                bodyWidth, colWidth, delta);
+                bodyWidth, colWidth, tolerance);
     }
 
     @Test
@@ -49,7 +49,7 @@ public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
         assertGreater("header should've been wider than body", headerWidth,
                 bodyWidth);
         assertEquals("column should've been roughly as wide as the header",
-                headerWidth, colWidth, delta);
+                headerWidth, colWidth, tolerance);
 
     }
 
@@ -64,8 +64,8 @@ public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
         int headerWidth = col[0].getSize().getWidth();
         int colWidth = col[2].getSize().getWidth() - TOTAL_MARGIN_PX;
 
-        assertLessThan("column should've been narrower than content",
-                colWidth, headerWidth);
+        assertLessThan("column should've been narrower than content", colWidth,
+                headerWidth);
     }
 
     @Test
