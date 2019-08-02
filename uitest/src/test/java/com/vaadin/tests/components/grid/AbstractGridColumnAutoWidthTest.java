@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.grid;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.util.regex.Pattern;
 
@@ -14,11 +12,14 @@ import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+import static org.junit.Assert.assertEquals;
+
 @SuppressWarnings("boxing")
 @TestCategory("grid")
 public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
 
     public static final int TOTAL_MARGIN_PX = 26;
+    private static final int delta = 10;
 
     @Before
     public void before() {
@@ -35,7 +36,7 @@ public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
         assertLessThan("header should've been narrower than body", headerWidth,
                 bodyWidth);
         assertEquals("column should've been roughly as wide as the body",
-                bodyWidth, colWidth, 5);
+                bodyWidth, colWidth, delta);
     }
 
     @Test
@@ -48,7 +49,7 @@ public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
         assertGreater("header should've been wider than body", headerWidth,
                 bodyWidth);
         assertEquals("column should've been roughly as wide as the header",
-                headerWidth, colWidth, 5);
+                headerWidth, colWidth, delta);
 
     }
 
