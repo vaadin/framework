@@ -17,18 +17,21 @@ public class GridLayoutOnFontLoadTest extends MultiBrowserTest {
     TextAreaElement textarea;
     GridElement grid;
 
-    private ExpectedCondition<Boolean> expectedCondition(int element1, int element2) {
+    private ExpectedCondition<Boolean> checkNoOverlapping(String element1,
+            int position1, String element2, int position2) {
         return new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver arg0) {
-                return element1 <= element2;
+                return position1 <= position2;
             }
 
             @Override
             public String toString() {
                 // waiting for...
-                return String.format(
-                        "There should be no overlaps between two elements");
+                return String
+                        .format(" the coordinates of the inspected elements ("
+                                + element1 + ", " + element2
+                                + ") to not overlap");
             }
         };
     }
@@ -44,10 +47,12 @@ public class GridLayoutOnFontLoadTest extends MultiBrowserTest {
         textarea = $(TextAreaElement.class).first();
         grid = $(GridElement.class).first();
 
-        waitUntil(expectedCondition(button.getLocation().getX() + button.getSize(). width,checkbox
-                .getLocation().getX()));
-        waitUntil(expectedCondition(textarea.getLocation().getY() + textarea.getSize().height
-                + 10, grid.getLocation().getY()));
+        waitUntil(checkNoOverlapping("button",
+                button.getLocation().getX() + button.getSize().width,
+                "checkbox", checkbox.getLocation().getX()));
+        waitUntil(checkNoOverlapping("textarea",
+                textarea.getLocation().getY() + textarea.getSize().height + 10,
+                "grid", grid.getLocation().getY()));
     }
 
 }
