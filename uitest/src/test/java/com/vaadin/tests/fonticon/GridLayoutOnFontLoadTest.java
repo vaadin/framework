@@ -31,7 +31,8 @@ public class GridLayoutOnFontLoadTest extends MultiBrowserTest {
                 return String
                         .format("the coordinates of the inspected elements ("
                                 + element1 + ", " + element2
-                                + ") to not overlap");
+                                + ") to not overlap, the actual position for each "
+                                + "element is " + position1 + ", "+ position2 + "respectively");
             }
         };
     }
