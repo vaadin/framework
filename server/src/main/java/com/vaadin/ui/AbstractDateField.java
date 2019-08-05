@@ -93,11 +93,12 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
         @Override
         public void updateValueWithDelay(String newDateString,
-                                         Map<String, Integer> resolutions) {
+                Map<String, Integer> resolutions) {
             valueUpdate(newDateString, resolutions);
         }
 
-        private void valueUpdate(String newDateString, Map<String, Integer> resolutions) {
+        private void valueUpdate(String newDateString,
+                Map<String, Integer> resolutions) {
             Set<String> resolutionNames = getResolutions().map(Enum::name)
                     .collect(Collectors.toSet());
             resolutionNames.retainAll(resolutions.keySet());

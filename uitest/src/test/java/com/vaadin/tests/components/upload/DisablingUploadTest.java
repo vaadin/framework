@@ -78,13 +78,14 @@ public class DisablingUploadTest extends SingleBrowserTest {
         assertEquals("false", stateButton.getCaption());
 
         uploadFile(false);
-        //assert no new log
+        // assert no new log
         assertEquals("Upload log row does not match expected", expected,
                 actual);
     }
 
     @Test
-    public void pushDisabled_uploadFile_uploadButtonDisabled() throws Exception {
+    public void pushDisabled_uploadFile_uploadButtonDisabled()
+            throws Exception {
         buttonGroup();
 
         pushButton.click();
@@ -102,13 +103,14 @@ public class DisablingUploadTest extends SingleBrowserTest {
         assertEquals("false", stateButton.getCaption());
 
         uploadFile(false);
-        //assert no new log
+        // assert no new log
         assertEquals("Upload log row does not match expected", expected,
                 actual);
     }
 
     @Test
-    public void pushEnabled_uploadLargeFile_uploadButtonDisabled() throws Exception {
+    public void pushEnabled_uploadLargeFile_uploadButtonDisabled()
+            throws Exception {
         buttonGroup();
 
         uploadFile(true);
@@ -124,13 +126,14 @@ public class DisablingUploadTest extends SingleBrowserTest {
         assertEquals("false", stateButton.getCaption());
 
         uploadFile(true);
-        //assert no new log
+        // assert no new log
         assertEquals("Upload log row does not match expected", expected,
                 actual);
     }
 
     @Test
-    public void pushDisabled_uploadLargeFile_uploadButtonDisabled() throws Exception {
+    public void pushDisabled_uploadLargeFile_uploadButtonDisabled()
+            throws Exception {
         buttonGroup();
 
         pushButton.click();
@@ -148,7 +151,7 @@ public class DisablingUploadTest extends SingleBrowserTest {
         assertEquals("false", stateButton.getCaption());
 
         uploadFile(true);
-        //assert no new log
+        // assert no new log
         assertEquals("Upload log row does not match expected", expected,
                 actual);
     }
@@ -174,7 +177,7 @@ public class DisablingUploadTest extends SingleBrowserTest {
     private File createTempFile(boolean large) throws IOException {
         File tempFile = File.createTempFile("TestFileUpload", ".txt");
         BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-        if(large) {
+        if (large) {
             writer.write(getLargeTempFileContents());
         } else {
             writer.write(getTempFileContents());

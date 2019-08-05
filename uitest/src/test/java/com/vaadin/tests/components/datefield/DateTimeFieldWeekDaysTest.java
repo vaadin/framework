@@ -55,7 +55,6 @@ public class DateTimeFieldWeekDaysTest extends SingleBrowserTest {
 
         openPopupAndValidateNoWeeknumbers();
 
-
         $(ButtonElement.class).id("finnish").click();
 
         openPopupAndValidateWeekNumbers();
@@ -67,7 +66,7 @@ public class DateTimeFieldWeekDaysTest extends SingleBrowserTest {
         // Open date popup
         popupButton.click();
         sleep(100);
-        
+
         waitUntil(ExpectedConditions.visibilityOfElementLocated(
                 org.openqa.selenium.By.className("v-datefield-popup")));
 

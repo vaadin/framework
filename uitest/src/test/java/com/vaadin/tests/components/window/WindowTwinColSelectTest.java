@@ -23,7 +23,8 @@ public class WindowTwinColSelectTest extends MultiBrowserTest {
         assertTrue(optionsElement.isDisplayed());
         assertTrue(selectionsElement.isDisplayed());
         assertEquals("Coordinate is not matching within the tolerance",
-                optionsElement.getLocation().getY(), selectionsElement.getLocation().getY(), 3);
+                optionsElement.getLocation().getY(),
+                selectionsElement.getLocation().getY(), 3);
     }
 
     @Test
@@ -41,6 +42,7 @@ public class WindowTwinColSelectTest extends MultiBrowserTest {
         assertTrue(optionsElement.isDisplayed());
         assertTrue(selectionsElement.isDisplayed());
         assertEquals("Coordinate is not matching within the tolerance.",
-                optionsElement.getLocation().getY(), selectionsElement.getLocation().getY(), 3);
+                optionsElement.getLocation().getY(),
+                selectionsElement.getLocation().getY(), 3);
     }
 }
