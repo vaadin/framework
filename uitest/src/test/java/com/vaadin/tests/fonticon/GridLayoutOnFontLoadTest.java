@@ -27,7 +27,7 @@ public class GridLayoutOnFontLoadTest extends MultiBrowserTest {
 
             @Override
             public String toString() {
-                // waiting for...
+                // waiting for ...
                 return String
                         .format(" the coordinates of the inspected elements ("
                                 + element1 + ", " + element2
