@@ -29,7 +29,7 @@ public class GridLayoutOnFontLoadTest extends MultiBrowserTest {
             public String toString() {
                 // waiting for ...
                 return String
-                        .format(" the coordinates of the inspected elements ("
+                        .format("the coordinates of the inspected elements ("
                                 + element1 + ", " + element2
                                 + ") to not overlap");
             }
