@@ -28,17 +28,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+import com.vaadin.data.provider.CallbackDataProvider;
+import com.vaadin.data.provider.DataChangeEvent;
+import com.vaadin.data.provider.DataCommunicator;
+import com.vaadin.data.provider.DataGenerator;
+import com.vaadin.data.provider.DataKeyMapper;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.InMemoryDataProvider;
+import com.vaadin.data.provider.ListDataProvider;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasFilterableDataProvider;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.ValueProvider;
-import com.vaadin.data.provider.CallbackDataProvider;
-import com.vaadin.data.provider.DataCommunicator;
-import com.vaadin.data.provider.DataGenerator;
-import com.vaadin.data.provider.DataKeyMapper;
-import com.vaadin.data.provider.DataProvider;
-import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -218,6 +220,11 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         public void setFilter(String filterText) {
             getState().currentFilterText = filterText;
             filterSlot.accept(filterText);
+        }
+
+        @Override
+        public void resetForceDataSourceUpdate() {
+            getState().forceDataSourceUpdate = false;
         }
     };
 
@@ -962,6 +969,21 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
         filterSlot = filter -> providerFilterSlot
                 .accept(convertOrNull.apply(filter));
+
+        // This workaround is done to fix issue #11642 for unpaged comboboxes.
+        // Data sources for on the client need to be updated after data provider
+        // refreshAll so that serverside selection works even before the
+        // dropdown
+        // is opened. Only done for in-memory data providers for performance
+        // reasons.
+        if (dataProvider instanceof InMemoryDataProvider) {
+            dataProvider.addDataProviderListener(event -> {
+                if ((!(event instanceof DataChangeEvent.DataRefreshEvent))
+                        && (getPageLength() == 0)) {
+                    getState().forceDataSourceUpdate = true;
+                }
+            });
+        }
     }
 
     /**

@@ -63,7 +63,7 @@ abstract class.
 ((("[classname]#AbstractListing#")))
 There are three more specific types of components.
 
-<<components-fields#components.fields,"Field Components">>.
+Field Components:: allow user to edit a value in the UI. All extend [classname]#AbstractField#. Field components are described in detail in <<components-fields#components.fields,"Field Components">>.
 
 Selection Component:: show a list of data that the user can select from. All extend [classname]#AbstractListing#. Selection components are described in detail in
 <<components-selection#components.selection,"Selection Components">>.

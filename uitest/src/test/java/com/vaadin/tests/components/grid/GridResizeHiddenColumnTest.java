@@ -1,9 +1,5 @@
 package com.vaadin.tests.components.grid;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.List;
 
 import org.junit.Before;
@@ -17,6 +13,10 @@ import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class GridResizeHiddenColumnTest extends MultiBrowserTest {
 
@@ -74,6 +74,7 @@ public class GridResizeHiddenColumnTest extends MultiBrowserTest {
         for (GridCellElement e : headerCells) {
             widthSum += e.getSize().getWidth();
         }
+        sleep(100);
         assertEquals("'Last Name' column should take up the remaining space",
                 grid.getHeader().getSize().getWidth(), widthSum, 1d);
     }

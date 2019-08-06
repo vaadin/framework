@@ -46,7 +46,7 @@ wizard in Eclipse. If not, copy it there.
   <ibiblio name="vaadin-addons"
            usepoms="true"
            m2compatible="true"
-           root="http://maven.vaadin.com/vaadin-addons"/>
+           root="https://maven.vaadin.com/vaadin-addons"/>
   ...
 </chain>
 ----

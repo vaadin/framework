@@ -1,9 +1,5 @@
 package com.vaadin.tests.elements.menubar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.List;
 
 import org.junit.Before;
@@ -14,6 +10,10 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.MenuBarElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class MenuBarUITest extends MultiBrowserTest {
 
@@ -58,6 +58,7 @@ public class MenuBarUITest extends MultiBrowserTest {
         // The Edit menu will be opened by moving the mouse over the item (done
         // by clickItem). The first click then actually closes the menu.
         menuBar.clickItem("Edit");
+        sleep(100);
         menuBar.clickItem("Edit");
         assertFalse(isItemVisible("Save As.."));
         assertTrue(isItemVisible("Paste"));

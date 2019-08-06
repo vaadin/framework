@@ -56,9 +56,10 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
         builder2.click(textField);
 
         builder2.sendKeys("third line");
+        sleep(100);
         builder2.sendKeys(Keys.ENTER);
+        sleep(100);
         builder2.sendKeys(Keys.ESCAPE);
-
         builder2.perform();
 
         assertEquals("1. Enter button pressed", getLogRow(1));
