@@ -1,13 +1,24 @@
 package com.vaadin.tests.application;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Test;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserThemeTest;
 
 public class CriticalNotificationsTest extends MultiBrowserThemeTest {
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        return Arrays.asList(Browser.CHROME.getDesiredCapabilities(),
+                Browser.FIREFOX.getDesiredCapabilities());
+    }
 
     @Test
     public void internalError() throws Exception {

@@ -9,6 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.WindowElement;
 import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -17,8 +18,7 @@ public class WindowControlButtonFocusTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return Arrays.asList(Browser.CHROME.getDesiredCapabilities(),
-                Browser.IE11.getDesiredCapabilities());
+        return Arrays.asList(Browser.CHROME.getDesiredCapabilities());
     }
 
     @Test
