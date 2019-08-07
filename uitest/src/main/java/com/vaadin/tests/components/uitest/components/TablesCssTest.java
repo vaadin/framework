@@ -1,16 +1,19 @@
 package com.vaadin.tests.components.uitest.components;
 
 import java.util.HashSet;
+import java.util.Iterator;
 
 import com.vaadin.event.Action;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.uitest.TestSampler;
 import com.vaadin.tests.util.TestUtils;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.themes.ChameleonTheme;
 import com.vaadin.v7.ui.themes.Reindeer;
 
+@SuppressWarnings("deprecation")
 public class TablesCssTest extends GridLayout {
 
     private TestSampler parent;
@@ -37,6 +40,15 @@ public class TablesCssTest extends GridLayout {
         createTableWith("Striped", ChameleonTheme.TABLE_STRIPED);
         createTableWith("Strong", Reindeer.TABLE_STRONG);
 
+        parent.addReadOnlyChangeListener(event -> {
+            Iterator<Component> iterator = iterator();
+            while (iterator.hasNext()) {
+                Component c = iterator.next();
+                if (c instanceof Table) {
+                    ((Table) c).setReadOnly(!((Table) c).isReadOnly());
+                }
+            }
+        });
     }
 
     private void createTableWith(String caption, String primaryStyleName) {

@@ -1,5 +1,7 @@
 package com.vaadin.tests.components.uitest.components;
 
+import java.util.Iterator;
+
 import com.vaadin.tests.components.uitest.TestSampler;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
@@ -12,6 +14,7 @@ import com.vaadin.v7.ui.Select;
 import com.vaadin.v7.ui.TwinColSelect;
 import com.vaadin.v7.ui.themes.ChameleonTheme;
 
+@SuppressWarnings("deprecation")
 public class SelectsCssTest extends GridLayout {
 
     private TestSampler parent;
@@ -80,6 +83,17 @@ public class SelectsCssTest extends GridLayout {
                 "100px");
         createComboBoxWith("SelectButton",
                 ChameleonTheme.COMBOBOX_SELECT_BUTTON, "100px");
+
+        parent.addReadOnlyChangeListener(event -> {
+            Iterator<Component> iterator = iterator();
+            while (iterator.hasNext()) {
+                Component c = iterator.next();
+                if (c instanceof AbstractSelect) {
+                    ((AbstractSelect) c)
+                            .setReadOnly(!((AbstractSelect) c).isReadOnly());
+                }
+            }
+        });
     }
 
     private void createComboBoxWith(String caption, String primaryStyleName,

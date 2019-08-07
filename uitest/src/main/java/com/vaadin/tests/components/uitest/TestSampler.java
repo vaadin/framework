@@ -3,6 +3,7 @@ package com.vaadin.tests.components.uitest;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.tests.components.uitest.components.AccordionsCssTest;
 import com.vaadin.tests.components.uitest.components.ButtonsCssTest;
 import com.vaadin.tests.components.uitest.components.DatesCssTest;
@@ -36,6 +37,7 @@ public class TestSampler extends TabSheet {
     public static final String ICON_URL = "../runo/icons/16/help.png";
 
     private List<Component> components = new ArrayList<>();
+    private List<ValueChangeListener<Boolean>> readOnlyChangeListeners = new ArrayList<ValueChangeListener<Boolean>>();
 
     private ComponentContainer currentTab;
 
@@ -197,5 +199,14 @@ public class TestSampler extends TabSheet {
             }
             c.addStyleName(newStyleName);
         }
+    }
+
+    public List<ValueChangeListener<Boolean>> getReadOnlyChangeListeners() {
+        return readOnlyChangeListeners;
+    }
+
+    public void addReadOnlyChangeListener(
+            ValueChangeListener<Boolean> listener) {
+        readOnlyChangeListeners.add(listener);
     }
 }
