@@ -259,6 +259,12 @@
         display: none;
       }
     }
+
+    &.borderless {
+      [class*="input"] {
+        @include valo-textfield-borderless-style;
+      }
+    }
   }
 }
 
