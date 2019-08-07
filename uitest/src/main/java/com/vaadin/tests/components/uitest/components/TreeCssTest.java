@@ -6,6 +6,7 @@ import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.HierarchicalContainer;
 import com.vaadin.v7.ui.Tree;
 
+@SuppressWarnings("deprecation")
 public class TreeCssTest {
     private int debugIdCounter = 0;
 
@@ -45,6 +46,9 @@ public class TreeCssTest {
         }
 
         parent.addComponent(tree);
+
+        parent.addReadOnlyChangeListener(
+                event -> tree.setReadOnly(!tree.isReadOnly()));
     }
 
     private HierarchicalContainer createHierarchicalContainer() {

@@ -5,6 +5,7 @@ import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.HierarchicalContainer;
 import com.vaadin.v7.ui.TreeTable;
 
+@SuppressWarnings("deprecation")
 public class TreeTableCssTest {
     private int debugIdCounter = 0;
 
@@ -12,6 +13,7 @@ public class TreeTableCssTest {
         TreeTable treeTable = new TreeTable();
         treeTable.setId("treetable" + debugIdCounter++);
         treeTable.setWidth("100%");
+        treeTable.setSelectable(true);
         parent.addComponent(treeTable);
 
         HierarchicalContainer hc = createHierarchicalContainer();
@@ -21,6 +23,9 @@ public class TreeTableCssTest {
         for (Object itemId : treeTable.getItemIds()) {
             treeTable.setCollapsed(itemId, false);
         }
+
+        parent.addReadOnlyChangeListener(
+                event -> treeTable.setReadOnly(!treeTable.isReadOnly()));
     }
 
     private HierarchicalContainer createHierarchicalContainer() {
