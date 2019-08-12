@@ -19,14 +19,12 @@ public class TwinColSelectCtrlATest extends MultiBrowserTest {
 
     @Test
     public void TestSelectionWithCtrlA() {
-        getTwinColElement().findElement(By.tagName("select"))
-                .sendKeys(Keys.chord(Keys.CONTROL, "a"));
-        getTwinColElement().findElements(By.className("v-button")).get(0)
-                .click();
-        assertEquals(getTwinColElement().getValues().size(), 6);
-    }
+        TwinColSelectElement twinColSelectElement = $(TwinColSelectElement.class).first();
 
-    private TwinColSelectElement getTwinColElement() {
-        return $(TwinColSelectElement.class).first();
+        twinColSelectElement.findElement(By.tagName("select"))
+                .sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        twinColSelectElement.findElements(By.className("v-button")).get(0)
+                .click();
+        assertEquals(twinColSelectElement.getValues().size(), 6);
     }
 }
