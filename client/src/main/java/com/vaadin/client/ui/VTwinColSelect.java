@@ -565,7 +565,7 @@ public class VTwinColSelect extends Composite implements MultiSelectWidget,
 
         // Catch Ctrl-A and select all items since other browsers
         // than Chrome do not handle this natively
-	if (event.isControlKeyDown() && (keycode == KeyCodes.KEY_A)) {
+        if (event.isControlKeyDown() && (keycode == KeyCodes.KEY_A)) {
             for (int i = 0; i < optionsListBox.getItemCount(); i++) {
                 optionsListBox.setItemSelected(i, true);
             }
