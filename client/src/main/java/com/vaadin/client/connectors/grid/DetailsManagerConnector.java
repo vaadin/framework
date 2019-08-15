@@ -87,7 +87,7 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     private Double spacerCellBorderHeights = null;
 
     private Range availableRowRange = Range.emptyRange();
-    private Range updatedVisibleRowRange = Range.emptyRange();
+    private Range latestVisibleRowRange = Range.emptyRange();
 
     /**
      * DataChangeHandler for updating the visibility of detail widgets.
@@ -119,7 +119,7 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                 // full visible range not available yet or full refresh coming
                 // up anyway, leave updating to dataAvailable
                 if (numberOfRows == 1
-                        && updatedVisibleRowRange.contains(firstRowIndex)) {
+                        && latestVisibleRowRange.contains(firstRowIndex)) {
                     // A single details row has been opened or closed within
                     // visual range, trigger scrollTo after dataAvailable has
                     // done its thing. Do not attempt to scroll to details rows
@@ -139,11 +139,11 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             // only trigger scrolling attempt if the single updated row is
             // within existing visual range
             boolean scrollToFirst = numberOfRows == 1
-                    && updatedVisibleRowRange.contains(firstRowIndex);
+                    && latestVisibleRowRange.contains(firstRowIndex);
 
-            if (!newVisibleRowRange.equals(updatedVisibleRowRange)) {
+            if (!newVisibleRowRange.equals(latestVisibleRowRange)) {
                 // update visible range
-                updatedVisibleRowRange = newVisibleRowRange;
+                latestVisibleRowRange = newVisibleRowRange;
 
                 // do full refresh
                 detachOldAndRefreshCurrentDetails();
@@ -175,11 +175,11 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
 
             // update the handled range to only contain rows that fall before
             // the removed range
-            updatedVisibleRowRange = Range
-                    .between(updatedVisibleRowRange.getStart(),
-                            Math.max(updatedVisibleRowRange.getStart(),
+            latestVisibleRowRange = Range
+                    .between(latestVisibleRowRange.getStart(),
+                            Math.max(latestVisibleRowRange.getStart(),
                                     Math.min(firstRowIndex,
-                                            updatedVisibleRowRange.getEnd())));
+                                            latestVisibleRowRange.getEnd())));
 
             // reduce the available range accordingly
             Range[] partitions = availableRowRange.partitionWith(removing);
@@ -232,23 +232,23 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             // only process the section that is actually available
             newVisibleRowRange = availableRowRange
                     .partitionWith(newVisibleRowRange)[1];
-            if (newVisibleRowRange.equals(updatedVisibleRowRange)) {
+            if (newVisibleRowRange.equals(latestVisibleRowRange)) {
                 // no need to update
                 return;
             }
 
             // check whether the visible range has simply got shortened
             // (e.g. by changing the default row height)
-            boolean subsectionOfOld = updatedVisibleRowRange
+            boolean subsectionOfOld = latestVisibleRowRange
                     .partitionWith(newVisibleRowRange)[1]
                             .length() == newVisibleRowRange.length();
 
             // update visible range
-            updatedVisibleRowRange = newVisibleRowRange;
+            latestVisibleRowRange = newVisibleRowRange;
 
             if (subsectionOfOld) {
                 // only detach extra rows
-                detachExcludingRange(updatedVisibleRowRange);
+                detachExcludingRange(latestVisibleRowRange);
             } else {
                 // there are completely new visible rows, full refresh
                 detachOldAndRefreshCurrentDetails();
@@ -380,7 +380,7 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                         return;
                     }
                     Range newVisibleRowRange = event.getVisibleRowRange();
-                    if (newVisibleRowRange.equals(updatedVisibleRowRange)) {
+                    if (newVisibleRowRange.equals(latestVisibleRowRange)) {
                         // no need to update
                         return;
                     }
@@ -391,21 +391,21 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                         return;
                     }
 
-                    if (!availableAndVisible.equals(updatedVisibleRowRange)) {
+                    if (!availableAndVisible.equals(latestVisibleRowRange)) {
                         // check whether the visible range has simply got
                         // shortened
                         // (e.g. by changing the default row height)
-                        boolean subsectionOfOld = updatedVisibleRowRange
+                        boolean subsectionOfOld = latestVisibleRowRange
                                 .partitionWith(newVisibleRowRange)[1]
                                         .length() == newVisibleRowRange
                                                 .length();
 
                         // update visible range
-                        updatedVisibleRowRange = availableAndVisible;
+                        latestVisibleRowRange = availableAndVisible;
 
                         if (subsectionOfOld) {
                             // only detach extra rows
-                            detachExcludingRange(updatedVisibleRowRange);
+                            detachExcludingRange(latestVisibleRowRange);
                         } else {
                             // there are completely new visible rows, full
                             // refresh
@@ -596,7 +596,7 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
         }
         boolean newOrUpdatedDetails = false;
 
-        // Don't update the updatedVisibleRowRange class variable here, the
+        // Don't update the latestVisibleRowRange class variable here, the
         // calling method should take care of that if relevant.
         Range currentVisibleRowRange = getWidget().getEscalator()
                 .getVisibleRowRange();
@@ -627,7 +627,7 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
 
     private void detachOldAndRefreshCurrentDetails() {
         Range[] partitions = availableRowRange
-                .partitionWith(updatedVisibleRowRange);
+                .partitionWith(latestVisibleRowRange);
         Range availableAndVisible = partitions[1];
 
         detachExcludingRange(availableAndVisible);
