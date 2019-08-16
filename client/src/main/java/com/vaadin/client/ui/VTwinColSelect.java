@@ -563,6 +563,14 @@ public class VTwinColSelect extends Composite implements MultiSelectWidget,
     public void onKeyDown(KeyDownEvent event) {
         int keycode = event.getNativeKeyCode();
 
+        // Catch Ctrl-A and select all items since other browsers
+        // than Chrome do not handle this natively
+        if (event.isControlKeyDown() && (keycode == KeyCodes.KEY_A)) {
+            for (int i = 0; i < optionsListBox.getItemCount(); i++) {
+                optionsListBox.setItemSelected(i, true);
+            }
+        }
+
         // Catch tab and move between select:s
         if (keycode == KeyCodes.KEY_TAB
                 && event.getSource() == optionsListBox) {
