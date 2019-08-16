@@ -9,6 +9,7 @@ import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.v7.data.fieldgroup.FieldGroup;
 import com.vaadin.v7.data.util.BeanItem;
 
+@SuppressWarnings("deprecation")
 public class FormsCssTest extends HorizontalLayout {
 
     private TestSampler parent;
@@ -37,6 +38,10 @@ public class FormsCssTest extends HorizontalLayout {
         login.setHeight("150px");
         addComponent(login);
 
+        parent.addReadOnlyChangeListener(event -> {
+            fg.setReadOnly(!fg.isReadOnly());
+            // it's not possible to set LoginForm read-only
+        });
     }
 
     @Override

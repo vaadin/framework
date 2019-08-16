@@ -1,6 +1,9 @@
 package com.vaadin.tests.components.uitest.components;
 
+import java.util.Iterator;
+
 import com.vaadin.tests.components.uitest.TestSampler;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.PasswordField;
@@ -10,6 +13,7 @@ import com.vaadin.v7.ui.TextArea;
 import com.vaadin.v7.ui.themes.ChameleonTheme;
 import com.vaadin.v7.ui.themes.Reindeer;
 
+@SuppressWarnings("deprecation")
 public class TextFieldsCssTest extends GridLayout {
 
     private TestSampler parent;
@@ -41,6 +45,16 @@ public class TextFieldsCssTest extends GridLayout {
         rta.setId("textfield" + debugIdCounter++);
         addComponent(rta, 0, 1, 6, 1);
 
+        parent.addReadOnlyChangeListener(event -> {
+            Iterator<Component> iterator = iterator();
+            while (iterator.hasNext()) {
+                Component c = iterator.next();
+                if (c instanceof AbstractField) {
+                    AbstractField<?> af = (AbstractField<?>) c;
+                    af.setReadOnly(!af.isReadOnly());
+                }
+            }
+        });
     }
 
     private void createTextFieldWith(String caption, String primaryStyleName,
