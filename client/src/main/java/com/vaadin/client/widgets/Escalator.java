@@ -1131,8 +1131,8 @@ public class Escalator extends Widget
 
         public void scrollToRow(final int rowIndex,
                 final ScrollDestination destination, final double padding) {
-            body.scrollToRowSpacerOrBoth(rowIndex, destination, padding, false,
-                    true);
+            body.scrollToRowSpacerOrBoth(rowIndex, destination, padding,
+                    ScrollType.ROW);
         }
     }
 
@@ -2798,7 +2798,7 @@ public class Escalator extends Widget
                  * should be a buffer row for tab navigation on top, but there
                  * isn't.
                  */
-                recycleUpOnScroll(viewportOffsetTop);
+                recycleRowsUpOnScroll(viewportOffsetTop);
 
                 rowsWereMoved = true;
             } else if ((viewportOffsetBottom > 0
@@ -2811,7 +2811,7 @@ public class Escalator extends Widget
                  * row, or there should be a buffer row at the bottom to ensure
                  * tab navigation works, but there isn't.
                  */
-                recycleDownOnScroll(topElementPosition, scrollTop);
+                recycleRowsDownOnScroll(topElementPosition, scrollTop);
 
                 // Moving rows may have removed more spacers and created another
                 // gap, this time the scroll position needs adjusting. The last
@@ -2844,13 +2844,13 @@ public class Escalator extends Widget
         }
 
         /**
-         * Recycling up for {@link #updateEscalatorRowsOnScroll()}.
+         * Recycling rows up for {@link #updateEscalatorRowsOnScroll()}.
          * <p>
          * NOTE: This method should not be called directly from anywhere else.
          *
          * @param viewportOffsetTop
          */
-        private void recycleUpOnScroll(double viewportOffsetTop) {
+        private void recycleRowsUpOnScroll(double viewportOffsetTop) {
             /*
              * We can ignore spacers here, because we keep enough rows within
              * the visual range to fill the viewport completely whether or not
@@ -2907,14 +2907,14 @@ public class Escalator extends Widget
         }
 
         /**
-         * Recycling down for {@link #updateEscalatorRowsOnScroll()}.
+         * Recycling rows down for {@link #updateEscalatorRowsOnScroll()}.
          * <p>
          * NOTE: This method should not be called directly from anywhere else.
          *
          * @param topElementPosition
          * @param scrollTop
          */
-        private void recycleDownOnScroll(double topElementPosition,
+        private void recycleRowsDownOnScroll(double topElementPosition,
                 double scrollTop) {
             /*
              * It's better to have any extra rows below than above, so move as
@@ -2928,7 +2928,7 @@ public class Escalator extends Widget
             // we already have the rows and spacers here and we don't want
             // to recycle rows that are going to stay visible, so the
             // spacers have to be taken into account
-            double extraRowPxAbove = getRowHeightsSumBetweenPx(
+            double extraRowPxAbove = getRowHeightsSumBetweenPxExcludingSpacers(
                     topElementPosition, scrollTop);
 
             // how many rows fit within that extra space and can be
@@ -3027,7 +3027,8 @@ public class Escalator extends Widget
          *            end position
          * @return position difference excluding any space taken up by spacers
          */
-        private double getRowHeightsSumBetweenPx(double y1, double y2) {
+        private double getRowHeightsSumBetweenPxExcludingSpacers(double y1,
+                double y2) {
             assert y1 < y2 : "y1 must be smaller than y2";
 
             double viewportPx = y2 - y1;
@@ -3524,19 +3525,18 @@ public class Escalator extends Widget
             }
 
             // refresh contents of rows to be recycled, returns the combined
-            // height of the spacers that get removed from visual range
-            double spacerHeightsOfRecycledRowsBefore = refreshRowContentsForMove(
+            // height of the spacers that got removed from visual range
+            double spacerHeightsOfRecycledRowsBefore = refreshRecycledRowContents(
                     logicalTargetIndex, adjustedVisualTargetIndex,
                     sourceRangeLength, oldSourceRangeLogicalStart);
 
-            boolean scrolling = scrollingUp || scrollingDown;
             boolean movedDown = adjustedVisualTargetIndex != visualTargetIndex;
             boolean recycledToOrFromTop = recycledToTop || recycledFromTop;
 
             // update spacer indexes unless we are scrolling -- with scrolling
             // the remaining spacers are where they belong, the recycled ones
             // were already removed, and new ones will be added with delay
-            if (!scrolling) {
+            if (!(scrollingUp || scrollingDown)) {
                 if (recycledToOrFromTop) {
                     updateSpacerIndexesForMoveWhenRecycledToOrFromTop(
                             oldSourceRangeLogicalStart, sourceRangeLength,
@@ -3549,31 +3549,29 @@ public class Escalator extends Widget
                 }
             }
 
-            // TODO: would be useful if new spacer heights could be determined
+            // Would be useful if new spacer heights could be determined
             // here already but their contents are populated with delay.
-            double spacerHeightsOfRecycledRowsAfter = 0d;
+            // If the heights ever become available immediately, the
+            // handling that follows needs to be updated to take the new
+            // spacer heights into account.
 
             repositionMovedRows(adjustedVisualTargetIndex, sourceRangeLength,
                     newTopRowLogicalIndex);
 
             // variables for reducing the amount of necessary parameters
-            boolean scrollingDownAndSpacersRemoved = scrollingDown
+            boolean scrollingDownAndNoSpacersRemoved = scrollingDown
                     && spacerHeightsOfRecycledRowsBefore <= 0d;
-            boolean scrollingUpAndSpacersAdded = scrollingUp
-                    && spacerHeightsOfRecycledRowsAfter <= 0d;
-            boolean recycledToTopNoSpacersAdded = recycledToTop
-                    && spacerHeightsOfRecycledRowsAfter <= 0d;
-            boolean spacerHeightsChanged = spacerHeightsOfRecycledRowsBefore != spacerHeightsOfRecycledRowsAfter;
+            boolean spacerHeightsChanged = spacerHeightsOfRecycledRowsBefore > 0d;
 
             repositionRowsShiftedByTheMove(visualSourceRange, visualTargetIndex,
                     adjustedVisualTargetIndex, newTopRowLogicalIndex,
-                    scrollingDownAndSpacersRemoved, scrollingUpAndSpacersAdded,
-                    recycledToTopNoSpacersAdded);
+                    scrollingDownAndNoSpacersRemoved, scrollingUp,
+                    recycledToTop);
 
             repositionRowsBelowMovedAndShiftedIfNeeded(visualSourceRange,
                     visualTargetIndex, adjustedVisualTargetIndex,
-                    newTopRowLogicalIndex, scrolling, recycledToOrFromTop,
-                    spacerHeightsChanged);
+                    newTopRowLogicalIndex, (scrollingUp || scrollingDown),
+                    recycledToOrFromTop, spacerHeightsChanged);
         }
 
         /**
@@ -3589,7 +3587,7 @@ public class Escalator extends Widget
          * @param oldSourceRangeLogicalStart
          * @return the combined height of any removed spacers
          */
-        private double refreshRowContentsForMove(int logicalTargetIndex,
+        private double refreshRecycledRowContents(int logicalTargetIndex,
                 int adjustedVisualTargetIndex, int sourceRangeLength,
                 int oldSourceRangeLogicalStart) {
             final ListIterator<TableRowElement> iter = visualRowOrder
@@ -3713,23 +3711,25 @@ public class Escalator extends Widget
          * @param visualTargetIndex
          * @param adjustedVisualTargetIndex
          * @param newTopRowLogicalIndex
-         * @param scrollingDownAndSpacersRemoved
-         * @param scrollingUpAndSpacersAdded
-         * @param recycledToTopNoSpacersAdded
+         * @param scrollingDownAndNoSpacersRemoved
+         * @param scrollingUp
+         * @param recycledToTop
          */
         private void repositionRowsShiftedByTheMove(Range visualSourceRange,
                 int visualTargetIndex, int adjustedVisualTargetIndex,
                 int newTopRowLogicalIndex,
-                boolean scrollingDownAndSpacersRemoved,
-                boolean scrollingUpAndSpacersAdded,
-                boolean recycledToTopNoSpacersAdded) {
+                boolean scrollingDownAndNoSpacersRemoved, boolean scrollingUp,
+                boolean recycledToTop) {
             if (visualSourceRange.length() == visualRowOrder.size()) {
                 // all rows got updated and were repositioned already
                 return;
             }
-            if (scrollingDownAndSpacersRemoved || scrollingUpAndSpacersAdded) {
+            if (scrollingDownAndNoSpacersRemoved || scrollingUp) {
                 // scrolling, no spacers got removed from or added above any
                 // remaining rows so everything is where it belongs already
+                // (there is no check for added spacers because adding happens
+                // with delay, whether any spacers are coming or not they don't
+                // exist yet and thus can't be taken into account here)
                 return;
             }
 
@@ -3744,10 +3744,13 @@ public class Escalator extends Widget
                 // unless it's just a recycling and no spacer heights
                 // above got updated
 
-                if (recycledToTopNoSpacersAdded) {
+                if (recycledToTop) {
                     // rows below the shifted ones need to be moved up (which is
                     // done in the next helper method) but the shifted rows
                     // themselves are already where they belong
+                    // (this should only be done if no spacers were added, but
+                    // we can't know that yet so we'll have to adjust for them
+                    // afterwards if any do appear)
                     return;
                 }
 
@@ -4215,6 +4218,8 @@ public class Escalator extends Widget
                  * situation.
                  */
 
+                // Visual range contents changed, RowVisibilityChangeEvent will
+                // be triggered within this method
                 paintRemoveRowsWithinVisualRange(index, numberOfRows,
                         oldTopRowLogicalIndex, oldVisualRangeLength,
                         removedLogicalAbove.length(), removedLogicalWithin);
@@ -4606,18 +4611,17 @@ public class Escalator extends Widget
                         break;
                     }
                     oldFirstVisibleVisualIndex = i;
-                    continue;
                 }
 
-                int removeFromAbove = Math.max(0,
+                int rowsToRemoveFromAbove = Math.max(0,
                         Math.min(-rowDiff, oldFirstVisibleVisualIndex));
 
                 boolean spacersRemovedFromAbove = false;
-                if (removeFromAbove > 0) {
+                if (rowsToRemoveFromAbove > 0) {
                     double initialSpacerHeightSum = spacerContainer
                             .getSpacerHeightsSum();
                     iter = visualRowOrder.listIterator(0);
-                    for (int i = 0; i < removeFromAbove; ++i) {
+                    for (int i = 0; i < rowsToRemoveFromAbove; ++i) {
                         final Element first = iter.next();
                         first.removeFromParent();
                         iter.remove();
@@ -4630,9 +4634,10 @@ public class Escalator extends Widget
 
                 // if there weren't enough rows above, remove the rest from
                 // below
-                if (removeFromAbove < -rowDiff) {
+                int rowsToRemoveFromBelow = -rowDiff - rowsToRemoveFromAbove;
+                if (rowsToRemoveFromBelow > 0) {
                     iter = visualRowOrder.listIterator(visualRowOrder.size());
-                    for (int i = 1; i <= -rowDiff - removeFromAbove; ++i) {
+                    for (int i = 1; i <= rowsToRemoveFromBelow; ++i) {
                         final Element last = iter.previous();
                         last.removeFromParent();
                         iter.remove();
@@ -4642,7 +4647,7 @@ public class Escalator extends Widget
                     }
                 }
 
-                updateTopRowLogicalIndex(removeFromAbove);
+                updateTopRowLogicalIndex(rowsToRemoveFromAbove);
 
                 if (spacersRemovedFromAbove) {
                     updateRowPositions(oldTopRowLogicalIndex, 0,
@@ -4854,6 +4859,21 @@ public class Escalator extends Widget
             return rowContainingFocus;
         }
 
+        /**
+         * Returns the cell object which contains information about the cell or
+         * spacer the element is in. As an implementation detail each spacer is
+         * a row with one cell, but they are stored in their own container and
+         * share the indexing with the regular rows.
+         *
+         * @param element
+         *            The element to get the cell for. If element is not present
+         *            in row or spacer container then <code>null</code> is
+         *            returned.
+         *
+         * @return the cell reference of the element, or <code>null</code> if
+         *         element is not present in the {@link RowContainer} or the
+         *         {@link SpacerContainer}.
+         */
         @Override
         public Cell getCell(Element element) {
             Cell cell = super.getCell(element);
@@ -4966,16 +4986,9 @@ public class Escalator extends Widget
             spacerContainer.reapplySpacerWidths();
         }
 
-        @Deprecated
-        void scrollToSpacer(int spacerIndex, ScrollDestination destination,
-                int padding) {
-            scrollToRowSpacerOrBoth(spacerIndex, destination, padding, true,
-                    false);
-        }
-
         void scrollToRowSpacerOrBoth(int targetRowIndex,
                 ScrollDestination destination, double padding,
-                boolean scrollToSpacer, boolean scrollToBoth) {
+                ScrollType scrollType) {
             if (isScrollLocked(Direction.VERTICAL)) {
                 // no scrolling can happen
                 if (getScrollTop() != tBodyScrollTop) {
@@ -4986,7 +4999,7 @@ public class Escalator extends Widget
             validateScrollDestination(destination, (int) padding);
             // ignore the special case of -1 index spacer from the row index
             // validation
-            if (!(targetRowIndex == -1 && (scrollToSpacer || scrollToBoth))) {
+            if (!(targetRowIndex == -1 && !ScrollType.ROW.equals(scrollType))) {
                 // throws an IndexOutOfBoundsException if not valid
                 verifyValidRowIndex(targetRowIndex);
             }
@@ -4995,7 +5008,7 @@ public class Escalator extends Widget
             int paddingInRows = 0;
             if (!WidgetUtil.pixelValuesEqual(padding, 0d)) {
                 paddingInRows = (int) Math
-                        .ceil(getDefaultRowHeight() / Double.valueOf(padding));
+                        .ceil(Double.valueOf(padding) / getDefaultRowHeight());
             }
 
             int newTopRowLogicalIndex;
@@ -5008,13 +5021,13 @@ public class Escalator extends Widget
                 // scroll as little as possible, take into account that there
                 // needs to be a buffer row at both ends if there is room for
                 // one
-                boolean newRowsNeedeAbove = (targetIndexMinusPadding < oldTopRowLogicalIndex)
+                boolean newRowsNeededAbove = (targetIndexMinusPadding < oldTopRowLogicalIndex)
                         || (targetIndexMinusPadding == oldTopRowLogicalIndex
                                 && targetRowIndex > 0);
                 boolean rowsNeededBelow = (targetIndexPlusPadding >= oldFirstBelowIndex)
                         || ((targetIndexPlusPadding == oldFirstBelowIndex - 1)
                                 && (oldFirstBelowIndex < getRowCount()));
-                if (newRowsNeedeAbove) {
+                if (newRowsNeededAbove) {
                     // scroll up, add buffer row if it fits
                     logicalTargetIndex = Math.max(targetIndexMinusPadding - 1,
                             0);
@@ -5082,7 +5095,8 @@ public class Escalator extends Widget
                 }
                 break;
             case START:
-                // target row at the top of the viewport
+                // target row at the top of the viewport, include buffer
+                // row if there is room for one
                 logicalTargetIndex = Math.max(targetIndexMinusPadding - 1, 0);
                 newTopRowLogicalIndex = logicalTargetIndex;
                 break;
@@ -5106,8 +5120,7 @@ public class Escalator extends Widget
 
             // update scroll position if necessary
             double scrollTop = calculateScrollPositionForScrollToRowSpacerOrBoth(
-                    targetRowIndex, destination, padding, scrollToSpacer,
-                    scrollToBoth);
+                    targetRowIndex, destination, padding, scrollType);
             if (scrollTop != getScrollTop()) {
                 setScrollTop(scrollTop);
                 setBodyScrollPosition(tBodyScrollLeft, scrollTop);
@@ -5188,13 +5201,12 @@ public class Escalator extends Widget
          * @param targetRowIndex
          * @param destination
          * @param padding
-         * @param scrollToSpacer
-         * @param scrollToBoth
+         * @param scrollType
          * @return expected scroll position
          */
         private double calculateScrollPositionForScrollToRowSpacerOrBoth(
                 int targetRowIndex, ScrollDestination destination,
-                double padding, boolean scrollToSpacer, boolean scrollToBoth) {
+                double padding, ScrollType scrollType) {
             /*
              * attempting to scroll above first row or below last row would get
              * automatically corrected later but that causes unnecessary
@@ -5208,19 +5220,19 @@ public class Escalator extends Widget
             double scrollTop;
             switch (destination) {
             case ANY:
-                if (!scrollToSpacer
+                if (!ScrollType.SPACER.equals(scrollType)
                         && Math.max(rowTop - padding, 0) < getScrollTop()) {
                     // within visual range but row top above the viewport or not
                     // enough padding, shift a little
                     scrollTop = Math.max(rowTop - padding, 0);
-                } else if (scrollToSpacer
+                } else if (ScrollType.SPACER.equals(scrollType)
                         && Math.max(rowTop + getDefaultRowHeight() - padding,
                                 0) < getScrollTop()) {
                     // within visual range but spacer top above the viewport or
                     // not enough padding, shift a little
                     scrollTop = Math
                             .max(rowTop + getDefaultRowHeight() - padding, 0);
-                } else if (!scrollToSpacer && !scrollToBoth
+                } else if (ScrollType.ROW.equals(scrollType)
                         && rowTop + getDefaultRowHeight()
                                 + padding > getScrollTop() + sectionHeight) {
                     // within visual range but end of row below the viewport
@@ -5254,7 +5266,7 @@ public class Escalator extends Widget
                     // otherwise make sure the top of the row or spacer is
                     // in view
                     if (padding == 0) {
-                        if (scrollToSpacer) {
+                        if (ScrollType.SPACER.equals(scrollType)) {
                             scrollTop = Math.min(scrollTop,
                                     rowTop + getDefaultRowHeight());
                         } else {
@@ -5267,7 +5279,7 @@ public class Escalator extends Widget
                 }
                 break;
             case END:
-                if (!scrollToSpacer && !scrollToBoth
+                if (ScrollType.ROW.equals(scrollType)
                         && rowTop + getDefaultRowHeight()
                                 + padding > getScrollTop() + sectionHeight) {
                     // within visual range but end of row below the viewport
@@ -5296,10 +5308,10 @@ public class Escalator extends Widget
                 break;
             case MIDDLE:
                 double center;
-                if (!scrollToSpacer && !scrollToBoth) {
+                if (ScrollType.ROW.equals(scrollType)) {
                     // center the row itself
                     center = rowTop + (getDefaultRowHeight() / 2.0);
-                } else if (scrollToBoth) {
+                } else if (ScrollType.ROW_AND_SPACER.equals(scrollType)) {
                     // center both
                     center = rowTop
                             + ((getDefaultRowHeight() + spacerHeight) / 2.0);
@@ -5319,12 +5331,12 @@ public class Escalator extends Widget
                 scrollTop = Math.max(0, scrollTop);
                 break;
             case START:
-                if (!scrollToSpacer
+                if (!ScrollType.SPACER.equals(scrollType)
                         && Math.max(rowTop - padding, 0) < getScrollTop()) {
                     // row top above the viewport or not enough padding, shift a
                     // little
                     scrollTop = Math.max(rowTop - padding, 0);
-                } else if (scrollToSpacer
+                } else if (ScrollType.SPACER.equals(scrollType)
                         && Math.max(rowTop + getDefaultRowHeight() - padding,
                                 0) < getScrollTop()) {
                     // spacer top above the viewport or not enough padding,
@@ -6284,7 +6296,7 @@ public class Escalator extends Widget
                     || padding != 0 : "destination/padding check should be done before this method";
 
             body.scrollToRowSpacerOrBoth(spacerIndex, destination, padding,
-                    true, false);
+                    ScrollType.SPACER);
         }
 
         public void reapplySpacerWidths() {
@@ -6941,6 +6953,10 @@ public class Escalator extends Widget
         }
     }
 
+    enum ScrollType {
+        ROW, SPACER, ROW_AND_SPACER
+    }
+
     // abs(atan(y/x))*(180/PI) = n deg, x = 1, solve y
     /**
      * The solution to
@@ -7043,7 +7059,9 @@ public class Escalator extends Widget
 
     private boolean layoutIsScheduled = false;
     private ScheduledCommand layoutCommand = () -> {
-        // ensure that row heights have been set or auto-detected
+        // ensure that row heights have been set or auto-detected if
+        // auto-detection is already possible, because visibility changes might
+        // not trigger the default check that happens in onLoad()
         header.autodetectRowHeightLater();
         body.autodetectRowHeightLater();
         footer.autodetectRowHeightLater();
@@ -7232,6 +7250,9 @@ public class Escalator extends Widget
     protected void onLoad() {
         super.onLoad();
 
+        // ensure that row heights have been set or auto-detected if
+        // auto-detection is already possible, if not the check will be
+        // performed again in layoutCommand
         header.autodetectRowHeightLater();
         body.autodetectRowHeightLater();
         footer.autodetectRowHeightLater();
@@ -7602,8 +7623,8 @@ public class Escalator extends Widget
             final ScrollDestination destination, final int padding)
             throws IndexOutOfBoundsException, IllegalArgumentException {
         verifyValidRowIndex(rowIndex);
-        body.scrollToRowSpacerOrBoth(rowIndex, destination, padding, false,
-                true);
+        body.scrollToRowSpacerOrBoth(rowIndex, destination, padding,
+                ScrollType.ROW);
     }
 
     private void verifyValidRowIndex(final int rowIndex) {
@@ -7636,8 +7657,8 @@ public class Escalator extends Widget
     public void scrollToSpacer(final int spacerIndex,
             ScrollDestination destination, final int padding)
             throws IllegalArgumentException {
-        body.scrollToRowSpacerOrBoth(spacerIndex, destination, padding, true,
-                false);
+        body.scrollToRowSpacerOrBoth(spacerIndex, destination, padding,
+                ScrollType.SPACER);
     }
 
     /**
@@ -7672,8 +7693,8 @@ public class Escalator extends Widget
             if (rowIndex != -1) {
                 verifyValidRowIndex(rowIndex);
             }
-            body.scrollToRowSpacerOrBoth(rowIndex, destination, padding, false,
-                    true);
+            body.scrollToRowSpacerOrBoth(rowIndex, destination, padding,
+                    ScrollType.ROW_AND_SPACER);
         });
     }
 
