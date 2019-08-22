@@ -4613,8 +4613,8 @@ public class Escalator extends Widget
                     oldFirstVisibleVisualIndex = i;
                 }
 
-                int rowsToRemoveFromAbove = Math.max(0,
-                        Math.min(-rowDiff, oldFirstVisibleVisualIndex));
+                int rowsToRemoveFromAbove = Math.max(0, Math
+                        .min(Math.abs(rowDiff), oldFirstVisibleVisualIndex));
 
                 boolean spacersRemovedFromAbove = false;
                 if (rowsToRemoveFromAbove > 0) {
@@ -4634,7 +4634,8 @@ public class Escalator extends Widget
 
                 // if there weren't enough rows above, remove the rest from
                 // below
-                int rowsToRemoveFromBelow = -rowDiff - rowsToRemoveFromAbove;
+                int rowsToRemoveFromBelow = Math.abs(rowDiff)
+                        - rowsToRemoveFromAbove;
                 if (rowsToRemoveFromBelow > 0) {
                     iter = visualRowOrder.listIterator(visualRowOrder.size());
                     for (int i = 1; i <= rowsToRemoveFromBelow; ++i) {
@@ -4989,11 +4990,7 @@ public class Escalator extends Widget
         void scrollToRowSpacerOrBoth(int targetRowIndex,
                 ScrollDestination destination, double padding,
                 ScrollType scrollType) {
-            if (isScrollLocked(Direction.VERTICAL)) {
-                // no scrolling can happen
-                if (getScrollTop() != tBodyScrollTop) {
-                    setBodyScrollPosition(tBodyScrollLeft, getScrollTop());
-                }
+            if (!ensureScrollingAllowed()) {
                 return;
             }
             validateScrollDestination(destination, (int) padding);
@@ -5011,30 +5008,37 @@ public class Escalator extends Widget
                         .ceil(Double.valueOf(padding) / getDefaultRowHeight());
             }
 
+            // calculate the largest index necessary to include at least
+            // partially below the top of the viewport and the smallest index
+            // necessary to include at least partially above the bottom of the
+            // viewport (target row itself might not be if padding is negative)
+            int firstVisibleIndexIfScrollingUp = targetRowIndex - paddingInRows;
+            int lastVisibleIndexIfScrollingDown = targetRowIndex
+                    + paddingInRows;
+
+            int oldFirstBelowIndex = oldTopRowLogicalIndex + visualRangeLength;
             int newTopRowLogicalIndex;
             int logicalTargetIndex;
-            int targetIndexMinusPadding = targetRowIndex - paddingInRows;
-            int targetIndexPlusPadding = targetRowIndex + paddingInRows;
-            int oldFirstBelowIndex = oldTopRowLogicalIndex + visualRangeLength;
             switch (destination) {
             case ANY:
                 // scroll as little as possible, take into account that there
                 // needs to be a buffer row at both ends if there is room for
                 // one
-                boolean newRowsNeededAbove = (targetIndexMinusPadding < oldTopRowLogicalIndex)
-                        || (targetIndexMinusPadding == oldTopRowLogicalIndex
+                boolean newRowsNeededAbove = (firstVisibleIndexIfScrollingUp < oldTopRowLogicalIndex)
+                        || (firstVisibleIndexIfScrollingUp == oldTopRowLogicalIndex
                                 && targetRowIndex > 0);
-                boolean rowsNeededBelow = (targetIndexPlusPadding >= oldFirstBelowIndex)
-                        || ((targetIndexPlusPadding == oldFirstBelowIndex - 1)
-                                && (oldFirstBelowIndex < getRowCount()));
+                boolean rowsNeededBelow = (lastVisibleIndexIfScrollingDown >= oldFirstBelowIndex)
+                        || ((lastVisibleIndexIfScrollingDown == oldFirstBelowIndex
+                                - 1) && (oldFirstBelowIndex < getRowCount()));
                 if (newRowsNeededAbove) {
                     // scroll up, add buffer row if it fits
-                    logicalTargetIndex = Math.max(targetIndexMinusPadding - 1,
-                            0);
+                    logicalTargetIndex = Math
+                            .max(firstVisibleIndexIfScrollingUp - 1, 0);
                     newTopRowLogicalIndex = logicalTargetIndex;
                 } else if (rowsNeededBelow) {
                     // scroll down, add buffer row if it fits
-                    newTopRowLogicalIndex = Math.min(targetIndexPlusPadding + 1,
+                    newTopRowLogicalIndex = Math.min(
+                            lastVisibleIndexIfScrollingDown + 1,
                             getRowCount() - 1) - visualRangeLength + 1;
                     if (newTopRowLogicalIndex
                             - oldTopRowLogicalIndex < visualRangeLength) {
@@ -5055,8 +5059,9 @@ public class Escalator extends Widget
                 break;
             case END:
                 // target row at the bottom of the viewport
-                newTopRowLogicalIndex = Math.min(targetIndexPlusPadding + 1,
-                        getRowCount() - 1) - visualRangeLength + 1;
+                newTopRowLogicalIndex = Math.min(
+                        lastVisibleIndexIfScrollingDown + 1, getRowCount() - 1)
+                        - visualRangeLength + 1;
                 if ((newTopRowLogicalIndex > oldTopRowLogicalIndex)
                         && (newTopRowLogicalIndex
                                 - oldTopRowLogicalIndex < visualRangeLength)) {
@@ -5097,7 +5102,8 @@ public class Escalator extends Widget
             case START:
                 // target row at the top of the viewport, include buffer
                 // row if there is room for one
-                logicalTargetIndex = Math.max(targetIndexMinusPadding - 1, 0);
+                logicalTargetIndex = Math
+                        .max(firstVisibleIndexIfScrollingUp - 1, 0);
                 newTopRowLogicalIndex = logicalTargetIndex;
                 break;
             default:
@@ -5132,6 +5138,23 @@ public class Escalator extends Widget
                 // schedule updating of the physical indexes
                 domSorter.reschedule();
             }
+        }
+
+        /**
+         * Checks that scrolling is allowed and resets the scroll position if
+         * it's not.
+         *
+         * @return {@code true} if scrolling is allowed, {@code false} otherwise
+         */
+        private boolean ensureScrollingAllowed() {
+            if (isScrollLocked(Direction.VERTICAL)) {
+                // no scrolling can happen
+                if (getScrollTop() != tBodyScrollTop) {
+                    setBodyScrollPosition(tBodyScrollLeft, getScrollTop());
+                }
+                return false;
+            }
+            return true;
         }
 
         /**
