@@ -6323,9 +6323,9 @@ public class Escalator extends Widget
         /**
          * Removes spacers of the given range without moving other contents.
          * <p>
-         * NOTE: Changed functionality. Previous incarnation of this method
-         * updated the positions of all the contents below the first removed
-         * spacer.
+         * NOTE: Changed functionality since 8.9. Previous incarnation of this
+         * method updated the positions of all the contents below the first
+         * removed spacer.
          *
          * @param removedRange
          *            logical range of spacers to remove

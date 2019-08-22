@@ -141,6 +141,7 @@ public interface RowContainer {
          *            logical index of the first row to reposition
          * @param numberOfRows
          *            the number of rows to reposition
+         * @since 8.9
          */
         public void updateRowPositions(int index, int numberOfRows);
 

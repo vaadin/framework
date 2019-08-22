@@ -26,6 +26,8 @@ public class DetailsManagerState extends AbstractGridExtensionState {
      * For informing the connector when details handling can be skipped
      * altogether as it's not possible to have any details rows without a
      * generator.
+     * 
+     * @since 8.9
      */
     public boolean hasDetailsGenerator = false;
 }
