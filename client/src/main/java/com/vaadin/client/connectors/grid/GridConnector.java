@@ -87,6 +87,61 @@ public class GridConnector extends AbstractListingConnector
 
     private Set<Runnable> refreshDetailsCallbacks = new HashSet<>();
 
+    /**
+     * Server-to-client RPC implementation for GridConnector.
+     * <p>
+     * The scrolling methods must trigger the scrolling only after any potential
+     * resizing or other similar action triggered from the server side within
+     * the same round trip has had a chance to happen, so there needs to be a
+     * delay. The delay is done with <code>scheduleFinally</code> rather than
+     * <code>scheduleDeferred</code> because the latter has been known to cause
+     * flickering in Grid.
+     *
+     */
+    private class GridConnectorClientRpc implements GridClientRpc {
+        private final Grid<JsonObject> grid;
+
+        private GridConnectorClientRpc(Grid<JsonObject> grid) {
+            this.grid = grid;
+        }
+
+        @Override
+        public void scrollToRow(int row, ScrollDestination destination) {
+            Scheduler.get().scheduleFinally(() -> {
+                grid.scrollToRow(row, destination);
+                // Add details refresh listener and handle possible detail
+                // for scrolled row.
+                addDetailsRefreshCallback(() -> {
+                    if (rowHasDetails(row)) {
+                        grid.scrollToRow(row, destination);
+                    }
+                });
+            });
+        }
+
+        @Override
+        public void scrollToStart() {
+            Scheduler.get().scheduleFinally(() -> grid.scrollToStart());
+        }
+
+        @Override
+        public void scrollToEnd() {
+            Scheduler.get().scheduleFinally(() -> {
+                grid.scrollToEnd();
+                addDetailsRefreshCallback(() -> {
+                    if (rowHasDetails(grid.getDataSource().size() - 1)) {
+                        grid.scrollToEnd();
+                    }
+                });
+            });
+        }
+
+        @Override
+        public void recalculateColumnWidths() {
+            grid.recalculateColumnWidths();
+        }
+    }
+
     private class ItemClickHandler
             implements BodyClickHandler, BodyDoubleClickHandler {
 
@@ -217,41 +272,7 @@ public class GridConnector extends AbstractListingConnector
         grid.setHeaderVisible(!grid.isHeaderVisible());
         grid.setFooterVisible(!grid.isFooterVisible());
 
-        registerRpc(GridClientRpc.class, new GridClientRpc() {
-
-            @Override
-            public void scrollToRow(int row, ScrollDestination destination) {
-                Scheduler.get().scheduleFinally(
-                        () -> grid.scrollToRow(row, destination));
-                // Add details refresh listener and handle possible detail for
-                // scrolled row.
-                addDetailsRefreshCallback(() -> {
-                    if (rowHasDetails(row)) {
-                        grid.scrollToRow(row, destination);
-                    }
-                });
-            }
-
-            @Override
-            public void scrollToStart() {
-                Scheduler.get().scheduleFinally(() -> grid.scrollToStart());
-            }
-
-            @Override
-            public void scrollToEnd() {
-                Scheduler.get().scheduleFinally(() -> grid.scrollToEnd());
-                addDetailsRefreshCallback(() -> {
-                    if (rowHasDetails(grid.getDataSource().size() - 1)) {
-                        grid.scrollToEnd();
-                    }
-                });
-            }
-
-            @Override
-            public void recalculateColumnWidths() {
-                grid.recalculateColumnWidths();
-            }
-        });
+        registerRpc(GridClientRpc.class, new GridConnectorClientRpc(grid));
 
         grid.addSortHandler(this::handleSortEvent);
         grid.setRowStyleGenerator(rowRef -> {

@@ -125,6 +125,11 @@ public class EscalatorProxy extends Escalator {
             throw new UnsupportedOperationException(
                     "setNewRowCallback is not supported");
         }
+
+        @Override
+        public void updateRowPositions(int index, int numberOfRows) {
+            rowContainer.updateRowPositions(index, numberOfRows);
+        }
     }
 
     private class RowContainerProxy implements RowContainer {
