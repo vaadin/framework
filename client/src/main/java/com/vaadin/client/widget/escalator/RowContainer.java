@@ -132,6 +132,20 @@ public interface RowContainer {
                 throws IndexOutOfBoundsException, IllegalArgumentException;
 
         /**
+         * Recalculates and updates the positions of rows and spacers within the
+         * given range and ensures there is no gap below the rows if there are
+         * enough rows to fill the space. Recalculates the scrollbars for
+         * virtual viewport.
+         *
+         * @param index
+         *            logical index of the first row to reposition
+         * @param numberOfRows
+         *            the number of rows to reposition
+         * @since 8.9
+         */
+        public void updateRowPositions(int index, int numberOfRows);
+
+        /**
          * Sets a callback function that is executed when new rows are added to
          * the escalator.
          *

@@ -275,12 +275,17 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
 
         /*
-         * we check for row -3 instead of -1, because escalator has two rows
+         * we check for row -2 instead of -1, because escalator has one row
          * buffered underneath the footer
          */
         selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, SCROLL_TO, ROW_75);
         Thread.sleep(500);
-        assertEquals("Row 75: 0,75", getBodyCell(-3, 0).getText());
+        TestBenchElement cell75 = getBodyCell(-2, 0);
+        assertEquals("Row 75: 0,75", cell75.getText());
+        // confirm the scroll position
+        WebElement footer = findElement(By.className("v-escalator-footer"));
+        assertEquals(footer.getLocation().y,
+                cell75.getLocation().y + cell75.getSize().height);
 
         selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, SCROLL_TO, ROW_25);
         Thread.sleep(500);
@@ -406,17 +411,52 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     }
 
     @Test
-    public void spacersAreInCorrectDomPositionAfterScroll() {
+    public void spacersAreInCorrectDomPositionAfterScroll()
+            throws InterruptedException {
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
 
-        scrollVerticallyTo(32); // roughly one row's worth
+        scrollVerticallyTo(40); // roughly two rows' worth
 
+        // both rows should still be within DOM after this little scrolling, so
+        // the spacer should be the third element within the body (index: 2)
         WebElement tbody = getEscalator().findElement(By.tagName("tbody"));
-        WebElement spacer = getChild(tbody, 1);
+        WebElement spacer = getChild(tbody, 2);
         String cssClass = spacer.getAttribute("class");
         assertTrue(
-                "element index 1 was not a spacer (class=\"" + cssClass + "\")",
+                "element index 2 was not a spacer (class=\"" + cssClass + "\")",
                 cssClass.contains("-spacer"));
+
+        // Scroll to last DOM row (Row 20). The exact position varies a bit
+        // depending on the browser.
+        int scrollTo = 172;
+        while (scrollTo < 176) {
+            scrollVerticallyTo(scrollTo);
+            Thread.sleep(500);
+
+            // if spacer is still the third (index: 2) body element, i.e. not
+            // enough scrolling to re-purpose any rows, scroll a bit further
+            spacer = getChild(tbody, 2);
+            cssClass = spacer.getAttribute("class");
+            if (cssClass.contains("-spacer")) {
+                ++scrollTo;
+            } else {
+                break;
+            }
+        }
+        if (getChild(tbody, 20).getText().startsWith("Row 22:")) {
+            // Some browsers scroll too much, spacer should be out of visual
+            // range
+            assertNull("Element found where there should be none",
+                    getChild(tbody, 21));
+        } else {
+            // second row should still be within DOM but the first row out of
+            // it, so the spacer should be the second element within the body
+            // (index: 1)
+            spacer = getChild(tbody, 1);
+            cssClass = spacer.getAttribute("class");
+            assertTrue("element index 1 was not a spacer (class=\"" + cssClass
+                    + "\")", cssClass.contains("-spacer"));
+        }
     }
 
     @Test

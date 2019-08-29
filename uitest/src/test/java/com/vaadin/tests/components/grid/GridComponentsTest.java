@@ -1,5 +1,9 @@
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Locale;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -20,10 +24,6 @@ import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class GridComponentsTest extends MultiBrowserTest {
 
@@ -219,19 +219,14 @@ public class GridComponentsTest extends MultiBrowserTest {
                 getScrollLeft(grid));
 
         // Navigate back to fully visible TextField
-        new Actions(getDriver()).sendKeys(Keys.chord(Keys.SHIFT, Keys.TAB))
-                .perform();
+        pressKeyWithModifier(Keys.SHIFT, Keys.TAB);
         assertEquals(
                 "Grid should not scroll when focusing the text field again. ",
                 scrollMax, getScrollLeft(grid));
 
         // Navigate to out of viewport TextField in Header
-        new Actions(getDriver()).sendKeys(Keys.chord(Keys.SHIFT, Keys.TAB))
-                .perform();
-        // After Chrome 75, sendkeys issues
-        if (BrowserUtil.isChrome(getDesiredCapabilities())) {
-            grid.getHeaderCell(1, 0).findElement(By.id("headerField")).click();
-        }
+        pressKeyWithModifier(Keys.SHIFT, Keys.TAB);
+
         assertEquals("Focus should be in TextField in Header", "headerField",
                 getFocusedElement().getAttribute("id"));
         assertEquals("Grid should've scrolled back to start.", 0,
@@ -248,9 +243,29 @@ public class GridComponentsTest extends MultiBrowserTest {
 
         // Navigate to currently out of viewport TextField on Row 8
         new Actions(getDriver()).sendKeys(Keys.TAB, Keys.TAB).perform();
-        assertTrue("Grid should be scrolled to show row 7",
+        assertTrue("Grid should be scrolled to show row 8",
                 Integer.parseInt(grid.getVerticalScroller()
                         .getAttribute("scrollTop")) > scrollTopRow7);
+
+        // Focus button in first visible row of Grid
+        grid.getCell(2, 2).findElement(By.id("row_2")).click();
+        int scrollTopRow2 = Integer
+                .parseInt(grid.getVerticalScroller().getAttribute("scrollTop"));
+
+        // Navigate to currently out of viewport Button on Row 1
+        pressKeyWithModifier(Keys.SHIFT, Keys.TAB);
+        pressKeyWithModifier(Keys.SHIFT, Keys.TAB);
+        int scrollTopRow1 = Integer
+                .parseInt(grid.getVerticalScroller().getAttribute("scrollTop"));
+        assertTrue("Grid should be scrolled to show row 1",
+                scrollTopRow1 < scrollTopRow2);
+
+        // Continue further to the very first row
+        pressKeyWithModifier(Keys.SHIFT, Keys.TAB);
+        pressKeyWithModifier(Keys.SHIFT, Keys.TAB);
+        assertTrue("Grid should be scrolled to show row 0",
+                Integer.parseInt(grid.getVerticalScroller()
+                        .getAttribute("scrollTop")) < scrollTopRow1);
 
         // Focus button in last row of Grid
         grid.getCell(999, 2).findElement(By.id("row_999")).click();
@@ -287,5 +302,13 @@ public class GridComponentsTest extends MultiBrowserTest {
         GridRowElement row = $(GridElement.class).first().getRow(i);
         assertFalse("Row " + i + " should not have a button",
                 row.getCell(2).isElementPresent(ButtonElement.class));
+    }
+
+    // Workaround for Chrome 75, sendKeys(Keys.chord(Keys.SHIFT, Keys.TAB))
+    // doesn't work anymore
+    private void pressKeyWithModifier(Keys keyModifier, Keys key) {
+        new Actions(getDriver()).keyDown(keyModifier).perform();
+        new Actions(getDriver()).sendKeys(key).perform();
+        new Actions(getDriver()).keyUp(keyModifier).perform();
     }
 }
