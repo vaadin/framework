@@ -256,10 +256,10 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
 
     @Override
     public void remove() {
-        super.remove();
-
         getParent().getDataCommunicator()
                 .removeDataGenerator(dragDataGenerator);
+
+        super.remove();
     }
 
     @Override
