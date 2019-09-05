@@ -5102,14 +5102,18 @@ public class Escalator extends Widget
             case START:
                 // target row at the top of the viewport, include buffer
                 // row if there is room for one
-                logicalTargetIndex = Math
+                newTopRowLogicalIndex = Math
                         .max(firstVisibleIndexIfScrollingUp - 1, 0);
-                newTopRowLogicalIndex = logicalTargetIndex;
+                if (getVisibleRowRange().contains(newTopRowLogicalIndex)) {
+                    logicalTargetIndex = oldTopRowLogicalIndex
+                            + visualRangeLength;
+                } else {
+                    logicalTargetIndex = newTopRowLogicalIndex;
+                }
                 break;
             default:
-                throw new IllegalArgumentException(
-                        "Internal: Unsupported ScrollDestination: "
-                                + destination.name());
+                String msg = "Internal: Unsupported ScrollDestination: ";
+                throw new IllegalArgumentException(msg + destination.name());
             }
 
             // adjust visual range if necessary
@@ -5125,12 +5129,8 @@ public class Escalator extends Widget
             boolean rowsWereMoved = newTopRowLogicalIndex != oldTopRowLogicalIndex;
 
             // update scroll position if necessary
-            double scrollTop = calculateScrollPositionForScrollToRowSpacerOrBoth(
-                    targetRowIndex, destination, padding, scrollType);
-            if (scrollTop != getScrollTop()) {
-                setScrollTop(scrollTop);
-                setBodyScrollPosition(tBodyScrollLeft, scrollTop);
-            }
+            adjustScrollPositionForScrollToRowSpacerOrBoth(targetRowIndex,
+                    destination, padding, scrollType);
 
             if (rowsWereMoved) {
                 fireRowVisibilityChangeEvent();
@@ -5217,7 +5217,7 @@ public class Escalator extends Widget
         }
 
         /**
-         * Calculates scroll position for
+         * Adjusts scroll position for
          * {@link #scrollToRowSpacerOrBoth(int, ScrollDestination, double, boolean, boolean)},
          * reuse at your own peril.
          *
@@ -5225,9 +5225,8 @@ public class Escalator extends Widget
          * @param destination
          * @param padding
          * @param scrollType
-         * @return expected scroll position
          */
-        private double calculateScrollPositionForScrollToRowSpacerOrBoth(
+        private void adjustScrollPositionForScrollToRowSpacerOrBoth(
                 int targetRowIndex, ScrollDestination destination,
                 double padding, ScrollType scrollType) {
             /*
@@ -5281,10 +5280,7 @@ public class Escalator extends Widget
                             - sectionHeight + padding;
                     // ensure that we don't overshoot beyond bottom
                     scrollTop = Math.min(scrollTop,
-                            getRowTop(getRowCount() - 1) + getDefaultRowHeight()
-                                    + spacerContainer
-                                            .getSpacerHeight(getRowCount() - 1)
-                                    - sectionHeight);
+                            getRowTop(getRowCount()) - sectionHeight);
                     // if padding is set we want to overshoot or undershoot,
                     // otherwise make sure the top of the row or spacer is
                     // in view
@@ -5304,26 +5300,15 @@ public class Escalator extends Widget
             case END:
                 if (ScrollType.ROW.equals(scrollType)
                         && rowTop + getDefaultRowHeight()
-                                + padding > getScrollTop() + sectionHeight) {
-                    // within visual range but end of row below the viewport
-                    // or not enough padding, shift a little
+                                + padding != getScrollTop() + sectionHeight) {
+                    // row should be at the bottom of the viewport
                     scrollTop = rowTop + getDefaultRowHeight() - sectionHeight
                             + padding;
-                    // ensure that we don't overshoot beyond bottom
-                    scrollTop = Math.min(scrollTop,
-                            getRowTop(getRowCount() - 1) + getDefaultRowHeight()
-                                    + spacerContainer
-                                            .getSpacerHeight(getRowCount() - 1)
-                                    - sectionHeight);
                 } else if (rowTop + getDefaultRowHeight() + spacerHeight
-                        + padding > getScrollTop() + sectionHeight) {
-                    // within visual range but end of spacer below the viewport
-                    // or not enough padding, shift a little
+                        + padding != getScrollTop() + sectionHeight) {
+                    // spacer should be at the bottom of the viewport
                     scrollTop = rowTop + getDefaultRowHeight() + spacerHeight
                             - sectionHeight + padding;
-                    // ensure that we don't overshoot beyond bottom
-                    scrollTop = Math.min(scrollTop,
-                            getRowTop(getRowCount()) - sectionHeight);
                 } else {
                     // we are fine where we are
                     scrollTop = getScrollTop();
@@ -5344,26 +5329,16 @@ public class Escalator extends Widget
                             + (spacerHeight / 2.0);
                 }
                 scrollTop = center - Math.ceil(sectionHeight / 2.0);
-                // ensure that we don't overshoot beyond bottom
-                scrollTop = Math.min(scrollTop,
-                        getRowTop(getRowCount() - 1) + getDefaultRowHeight()
-                                + spacerContainer
-                                        .getSpacerHeight(getRowCount() - 1)
-                                - sectionHeight);
-                // ensure that we don't overshoot beyond top
-                scrollTop = Math.max(0, scrollTop);
                 break;
             case START:
                 if (!ScrollType.SPACER.equals(scrollType)
-                        && Math.max(rowTop - padding, 0) < getScrollTop()) {
-                    // row top above the viewport or not enough padding, shift a
-                    // little
+                        && Math.max(rowTop - padding, 0) != getScrollTop()) {
+                    // row should be at the top of the viewport
                     scrollTop = Math.max(rowTop - padding, 0);
                 } else if (ScrollType.SPACER.equals(scrollType)
                         && Math.max(rowTop + getDefaultRowHeight() - padding,
-                                0) < getScrollTop()) {
-                    // spacer top above the viewport or not enough padding,
-                    // shift a little
+                                0) != getScrollTop()) {
+                    // spacer should be at the top of the viewport
                     scrollTop = Math
                             .max(rowTop + getDefaultRowHeight() - padding, 0);
                 } else {
@@ -5373,7 +5348,16 @@ public class Escalator extends Widget
             default:
                 scrollTop = getScrollTop();
             }
-            return scrollTop;
+            // ensure that we don't overshoot beyond bottom
+            scrollTop = Math.min(scrollTop,
+                    getRowTop(getRowCount()) - sectionHeight);
+            // ensure that we don't overshoot beyond top
+            scrollTop = Math.max(0, scrollTop);
+
+            if (scrollTop != getScrollTop()) {
+                setScrollTop(scrollTop);
+                setBodyScrollPosition(tBodyScrollLeft, scrollTop);
+            }
         }
 
         @Override
