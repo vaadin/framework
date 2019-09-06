@@ -48,7 +48,7 @@ public class TreeGridBigDetailsManager extends AbstractTestUI {
         treeGrid.setSizeFull();
         treeGrid.addColumn(String::toString).setCaption("String")
                 .setId("string");
-        treeGrid.addColumn((i) -> "--").setCaption("Nothing");
+        treeGrid.addColumn((i) -> items.indexOf(i)).setCaption("Index");
         treeGrid.setHierarchyColumn("string");
         treeGrid.setDetailsGenerator(
                 row -> new Label("details for " + row.toString()));
@@ -77,21 +77,54 @@ public class TreeGridBigDetailsManager extends AbstractTestUI {
             treeGrid.collapse(items);
         });
         collapseAll.setId("collapseAll");
+        @SuppressWarnings("deprecation")
         Button scrollTo55 = new Button("Scroll to 55",
                 event -> treeGrid.scrollTo(55));
         scrollTo55.setId("scrollTo55");
         scrollTo55.setVisible(false);
+        Button scrollTo3055 = new Button("Scroll to 3055",
+                event -> treeGrid.scrollTo(3055));
+        scrollTo3055.setId("scrollTo3055");
+        scrollTo3055.setVisible(false);
+        Button scrollToEnd = new Button("Scroll to end",
+                event -> treeGrid.scrollToEnd());
+        scrollToEnd.setId("scrollToEnd");
+        scrollToEnd.setVisible(false);
+        Button scrollToStart = new Button("Scroll to start",
+                event -> treeGrid.scrollToStart());
+        scrollToStart.setId("scrollToStart");
+        scrollToStart.setVisible(false);
+
+        Button toggle15 = new Button("Toggle 15",
+                event -> treeGrid.setDetailsVisible(items.get(15),
+                        !treeGrid.isDetailsVisible(items.get(15))));
+        toggle15.setId("toggle15");
+        toggle15.setVisible(false);
+
+        Button toggle3000 = new Button("Toggle 3000",
+                event -> treeGrid.setDetailsVisible(items.get(3000),
+                        !treeGrid.isDetailsVisible(items.get(3000))));
+        toggle3000.setId("toggle3000");
+        toggle3000.setVisible(false);
+
         Button addGrid = new Button("Add grid", event -> {
             addComponent(treeGrid);
             getLayout().setExpandRatio(treeGrid, 2);
             scrollTo55.setVisible(true);
+            scrollTo3055.setVisible(true);
+            scrollToEnd.setVisible(true);
+            scrollToStart.setVisible(true);
+            toggle15.setVisible(true);
+            toggle3000.setVisible(true);
         });
         addGrid.setId("addGrid");
 
         addComponents(
                 new HorizontalLayout(showDetails, hideDetails, expandAll,
                         collapseAll),
-                new HorizontalLayout(addGrid, scrollTo55));
+                new HorizontalLayout(scrollTo55, scrollTo3055, scrollToEnd,
+                        scrollToStart),
+                new HorizontalLayout(addGrid, toggle15, toggle3000));
 
         getLayout().getParent().setHeight("100%");
         getLayout().setHeight("100%");
