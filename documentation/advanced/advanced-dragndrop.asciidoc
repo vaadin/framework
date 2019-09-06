@@ -250,7 +250,7 @@ GridRowDragger<Task> gridRowDragger = new GridRowDragger<>(taskGrid);
 grid.getColumns().stream().forEach(col -> col.setSortable(false));
 ----
 
-The `GridRowDragger` uses the `DropMode.BETWEEN` by default. It doesn't not allow the user to drop data on top of a sorted grid's rows by automatically switching to `DropMode.ON_GRID` if the grid has been sorted by the user. This is because the shown drop location would not be correct due to the sorting. It is recommended that you disable the sorting for the grid, by using the `Column.setSortable` method (like above). By default, all columns are sortable when a in-memory data provider is used. If you allow the user to drop on top of a sorted grid's rows, you should scroll the dropped data to be visible with `grid.scrollToRow(index);` after drop for good UX - the `GridRowDragger` does not do this!
+The `GridRowDragger` uses the `DropMode.BETWEEN` by default. It does not allow the user to drop data on top of a sorted grid's rows by automatically switching to `DropMode.ON_GRID` if the grid has been sorted by the user. This is because the shown drop location would not be correct due to the sorting. It is recommended that you disable the sorting for the grid, by using the `Column.setSortable` method (like above). By default, all columns are sortable when a in-memory data provider is used. If you allow the user to drop on top of a sorted grid's rows, you should scroll the dropped data to be visible with `grid.scrollToRow(index);` after drop for good UX - the `GridRowDragger` does not do this!
 
 If you want to customize the setup for the grid as a drag source or drop target, you can access and customize the handlers with the `getGridDragSource()` and `getGridDropTarget()` methods.
 
