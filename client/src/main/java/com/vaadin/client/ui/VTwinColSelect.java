@@ -167,14 +167,22 @@ public class VTwinColSelect extends Composite implements MultiSelectWidget,
         // extra empty space
         captionWrapper.setVisible(false);
 
-        panel.add(optionsListBox);
+        // Wrap select in Div to workaround bug in Chrome 76, see #11712
+        HTML optionsWrapper = new HTML("<div></div>");
+        optionsWrapper.getElement().appendChild(optionsListBox.getElement());
+        optionsWrapper.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+        panel.add(optionsWrapper);
         buttons.add(addItemsLeftToRightButton);
         final HTML br = new HTML("<span/>");
         br.setStyleName(CLASSNAME + "-deco");
         buttons.add(br);
         buttons.add(removeItemsRightToLeftButton);
         panel.add(buttons);
-        panel.add(selectionsListBox);
+        // Wrap select in Div to workaround bug in Chrome 76, see #11712
+        HTML selectionsWrapper = new HTML("<div></div>");
+        selectionsWrapper.getElement().appendChild(selectionsListBox.getElement());
+        selectionsWrapper.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+        panel.add(selectionsWrapper);
 
         optionsListBox.addKeyDownHandler(this);
         optionsListBox.addMouseDownHandler(this);
