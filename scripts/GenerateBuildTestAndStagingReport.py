@@ -96,6 +96,9 @@ def getAllowedArtifactPaths(allowedArtifacts):
 def checkStagingContents(url, allowedArtifacts):
     dirs = dirTree(url)
     allowedDirs = getAllowedArtifactPaths(allowedArtifacts)
+    print(dirs)
+    print("~~~~~~~~~~~~~")
+    print(allowedDirs)
     return set(dirs) == set(allowedDirs)
 
 def getStagingContentsHtml(repoUrl, allowedArtifacts):
