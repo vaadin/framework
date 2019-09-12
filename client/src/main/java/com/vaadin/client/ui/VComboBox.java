@@ -467,9 +467,25 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         }
 
         private int getDesiredLeftPosition() {
+            double change = 0.0;
+            getLogger().severe(
+                    "Changing to be reflected getMainWidth " + getMainWidth());
+            getLogger().severe("Right position: " + WidgetUtil
+                    .getBoundingClientRect(VComboBox.this.getElement())
+                    .getRight());
+            getLogger().severe("getoffset left: "
+                    + VComboBox.this.getElement().getOffsetLeft());
+            double realWidth = WidgetUtil
+                    .getBoundingClientRect(menu.getElement()).getWidth();
+            getLogger().severe("REAL WIDTH menu to print" + realWidth);
+            if (popupWidth == -1 && realWidth > getMainWidth()) {
+
+                change = realWidth - getMainWidth();
+                getLogger().severe("Logging difference:" + change);
+            }
             return toInt32(WidgetUtil
                     .getBoundingClientRect(VComboBox.this.getElement())
-                    .getLeft());
+                    .getLeft() - change);
         }
 
         private native int toInt32(double val)
