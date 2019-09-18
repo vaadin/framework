@@ -3040,6 +3040,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Removes the given column from this {@link Grid}.
      *
+     * Note: If you have Editor with binding in this Grid to this property, you need to remove that
+     * using removeBinding method provided by Binder.
+     *
      * @param column
      *            the column to remove
      *
