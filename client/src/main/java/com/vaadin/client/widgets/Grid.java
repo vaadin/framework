@@ -7774,11 +7774,18 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         return;
                     }
 
-                    TableCellElement cellElement = container
-                            .getRowElement(rowIndex).getCells()
-                            .getItem(colIndex);
+                    try {
+                        TableCellElement cellElement = container
+                                .getRowElement(rowIndex).getCells()
+                                .getItem(colIndex);
 
-                    cell = new Cell(rowIndex, colIndex, cellElement);
+                        cell = new Cell(rowIndex, colIndex, cellElement);
+                    } catch (IllegalStateException e) {
+                        // IllegalStateException may occur if user has scrolled Grid so
+                        // that Escalator has updated, and row under Editor is no longer
+                        // there
+                        return;
+                    }
                 } else {
                     if (escalator.getElement().isOrHasChild(e)) {
                         eventCell.set(new Cell(-1, -1, null), Section.BODY);
