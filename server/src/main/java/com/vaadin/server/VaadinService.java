@@ -1232,7 +1232,7 @@ public abstract class VaadinService implements Serializable {
      *
      * @param session
      */
-    void cleanupSession(VaadinSession session) {
+    public void cleanupSession(VaadinSession session) {
         if (isSessionActive(session)) {
             closeInactiveUIs(session);
             removeClosedUIs(session);
