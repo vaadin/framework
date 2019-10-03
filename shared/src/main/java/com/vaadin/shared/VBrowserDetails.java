@@ -681,10 +681,14 @@ public class VBrowserDetails implements Serializable {
             return true;
         }
         // Webkit 533 in Safari 4.1+, Android 2.2+, iOS 4+
-        if (isSafari() && getBrowserEngineVersion() < 533) {
+        // All iOS browsers use Safari as their engine.
+        if ((isSafari() || isIOS()) && getBrowserEngineVersion() < 533) {
             return true;
         }
-        if (isFirefox() && getBrowserMajorVersion() < 45) {
+        // Firefox for iOS uses a different versioning scheme and will
+        // fail the test. Since it is already covered by the iOS test
+        // above, ignore it here.
+        if (isFirefox() && !isIOS() && getBrowserMajorVersion() < 45) {
             return true;
         }
         if (isOpera() && getBrowserMajorVersion() < 11) {
