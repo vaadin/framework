@@ -7751,8 +7751,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             return;
         }
 
-        Element e = Element.as(target);
-        RowContainer container = escalator.findRowContainer(e);
+        Element element = Element.as(target);
+        RowContainer container = escalator.findRowContainer(element);
         Cell cell;
 
         if (container == null) {
@@ -7764,23 +7764,30 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             } else {
                 // Click might be in an editor cell, should still map.
                 if (editor.editorOverlay != null
-                        && editor.editorOverlay.isOrHasChild(e)) {
+                        && editor.editorOverlay.isOrHasChild(element)) {
                     container = escalator.getBody();
                     int rowIndex = editor.getRow();
-                    int colIndex = editor.getElementColumn(e);
+                    int colIndex = editor.getElementColumn(element);
 
                     if (colIndex < 0) {
                         // Click in editor, but not for any column.
                         return;
                     }
 
-                    TableCellElement cellElement = container
-                            .getRowElement(rowIndex).getCells()
-                            .getItem(colIndex);
+                    try {
+                        TableCellElement cellElement = container
+                                .getRowElement(rowIndex).getCells()
+                                .getItem(colIndex);
 
-                    cell = new Cell(rowIndex, colIndex, cellElement);
+                        cell = new Cell(rowIndex, colIndex, cellElement);
+                    } catch (IllegalStateException exception) {
+                        // IllegalStateException may occur if user has scrolled Grid so
+                        // that Escalator has updated, and row under Editor is no longer
+                        // there
+                        return;
+                    }
                 } else {
-                    if (escalator.getElement().isOrHasChild(e)) {
+                    if (escalator.getElement().isOrHasChild(element)) {
                         eventCell.set(new Cell(-1, -1, null), Section.BODY);
                         // Fire native events.
                         super.onBrowserEvent(event);
@@ -7789,7 +7796,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 }
             }
         } else {
-            cell = container.getCell(e);
+            cell = container.getCell(element);
             if (eventType.equals(BrowserEvents.MOUSEDOWN)) {
                 cellOnPrevMouseDown = cell;
             } else if (cell == null && eventType.equals(BrowserEvents.CLICK)) {
