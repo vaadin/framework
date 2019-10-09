@@ -3,11 +3,7 @@ package com.vaadin.tests.components.upload;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Upload.Receiver;
 
 import java.io.ByteArrayOutputStream;
