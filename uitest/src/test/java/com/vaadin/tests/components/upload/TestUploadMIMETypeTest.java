@@ -30,8 +30,12 @@ public class TestUploadMIMETypeTest extends MultiBrowserTest {
         WebElement input = getInput();
         assertThat(input.getAttribute("accept"), is(TEST_MIME_TYPE));
         uploadFile();
-        waitUntil(driver->getSubmitButton().isEnabled(),150);
-        assertThat(input.getAttribute("accept"), is(TEST_MIME_TYPE));
+        waitUntil(driver -> getSubmitButton().isEnabled());
+        sleep(2000);
+        assertThat(
+                String.format("Accept is expected to be %s , but was %s ",
+                        TEST_MIME_TYPE, input.getAttribute("accept")),
+                input.getAttribute("accept"), is(TEST_MIME_TYPE));
     }
 
     private void uploadFile() throws Exception {
