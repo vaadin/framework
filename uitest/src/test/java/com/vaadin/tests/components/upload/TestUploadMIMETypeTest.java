@@ -1,11 +1,13 @@
 package com.vaadin.tests.components.upload;
 
 import com.vaadin.testbench.elements.UploadElement;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.internal.WrapsElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebElement;
 
@@ -13,6 +15,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 import static com.vaadin.tests.components.upload.TestUploadMIMEType.TEST_MIME_TYPE;
 import static org.hamcrest.CoreMatchers.is;
@@ -31,12 +34,12 @@ public class TestUploadMIMETypeTest extends MultiBrowserTest {
         assertThat(input.getAttribute("accept"), is(TEST_MIME_TYPE));
         uploadFile();
         waitUntil(driver -> getSubmitButton().isEnabled());
-        sleep(2000);
+        //Previous element is removed, getting a new one
+        input = getInput();
         assertThat(
                 String.format("Accept is expected to be %s , but was %s ",
                         TEST_MIME_TYPE, input.getAttribute("accept")),
-                input.getAttribute("accept"), is(TEST_MIME_TYPE));
-    }
+                input.getAttribute("accept"), is(TEST_MIME_TYPE));}
 
     private void uploadFile() throws Exception {
         File tempFile = createTempFile();
@@ -93,5 +96,10 @@ public class TestUploadMIMETypeTest extends MultiBrowserTest {
                             + element.getClass().getName());
         }
     }
-
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // IE11 throws an `Unhandled Alert Exception`
+        //https://stackoverflow.com/questions/23883071/unhandled-alert-exception-modal-dialog-present-selenium
+        return getBrowserCapabilities(Browser.CHROME, Browser.FIREFOX);
+    }
 }
