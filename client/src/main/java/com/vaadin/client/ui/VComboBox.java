@@ -791,6 +791,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
             updateMenuWidth(desiredWidth, naturalMenuWidth);
 
+            double menuMarginBorderPaddingWidth = getMarginBorderPaddingWidth(
+                    menu.getElement());
             if (BrowserInfo.get().isIE()
                     && BrowserInfo.get().getBrowserMajorVersion() < 11) {
                 // Must take margin,border,padding manually into account for
@@ -805,15 +807,13 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                             .getStyle().getVisibility();
                     menu.getElement().getParentElement().getStyle()
                             .setVisibility(Visibility.VISIBLE);
-                    naturalMenuOuterWidth = WidgetUtil
-                            .getRequiredWidthDouble(menuFirstChild)
-                            + getMarginBorderPaddingWidth(menu.getElement());
+                    naturalMenuOuterWidth = WidgetUtil.getRequiredWidthDouble(
+                            menuFirstChild) + menuMarginBorderPaddingWidth;
                     menu.getElement().getParentElement().getStyle()
                             .setProperty("visibility", before);
                 } else {
-                    naturalMenuOuterWidth = WidgetUtil
-                            .getRequiredWidthDouble(menuFirstChild)
-                            + getMarginBorderPaddingWidth(menu.getElement());
+                    naturalMenuOuterWidth = WidgetUtil.getRequiredWidthDouble(
+                            menuFirstChild) + menuMarginBorderPaddingWidth;
                 }
 
                 /*
@@ -893,9 +893,11 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 }
             }
 
-            if (offsetWidth + left > Window.getClientWidth()) {
+            if (offsetWidth + menuMarginBorderPaddingWidth + left > Window
+                    .getClientWidth()) {
                 left = VComboBox.this.getAbsoluteLeft()
-                        + VComboBox.this.getOffsetWidth() - offsetWidth;
+                        + VComboBox.this.getOffsetWidth() - offsetWidth
+                        - (int) menuMarginBorderPaddingWidth;
                 if (left < 0) {
                     left = 0;
                     menu.setWidth(Window.getClientWidth() + "px");
