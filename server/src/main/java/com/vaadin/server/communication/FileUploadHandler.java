@@ -621,11 +621,7 @@ public class FileUploadHandler implements RequestHandler {
             } finally {
                 session.unlock();
             }
-            boolean pushEnabled = UI.getCurrent().getPushConfiguration()
-                    .getPushMode().isEnabled();
-            if (!pushEnabled) {
-                return true;
-            }
+            return true;
 
             // Note, we are not throwing interrupted exception forward as it is
             // not a terminal level error like all other exception.
@@ -704,7 +700,20 @@ public class FileUploadHandler implements RequestHandler {
 
     private void cleanStreamVariable(VaadinSession session, final UI ui,
             final ClientConnector owner, final String variableName) {
-        session.accessSynchronously(() -> ui.getConnectorTracker()
-                .cleanStreamVariable(owner.getConnectorId(), variableName));
+        session.accessSynchronously(() -> {
+            ui.getConnectorTracker().cleanStreamVariable(owner.getConnectorId(),
+                    variableName);
+
+            // in case of automatic push mode, the client connector
+            // could already have refreshed its StreamVariable
+            // in the ConnectorTracker. For instance, the Upload component
+            // adds its stream variable in its paintContent method, which is
+            // called (indirectly) on each session unlock in case of automatic
+            // pushes.
+            // To cover this case, mark the client connector as dirty, so that
+            // the unlock after this runnable refreshes the StreamVariable
+            // again.
+            owner.markAsDirty();
+        });
     }
 }
