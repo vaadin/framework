@@ -1699,7 +1699,7 @@ public class Binder<BEAN> implements Serializable {
         } else {
             doRemoveBean(false);
             this.bean = bean;
-            getBindings().forEach(b -> b.initFieldValue(bean),true);
+            getBindings().forEach(b -> b.initFieldValue(bean, true));
             // if there has been field value change listeners that trigger
             // validation, need to make sure the validation errors are cleared
             getValidationStatusHandler().statusChange(
