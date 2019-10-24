@@ -816,7 +816,7 @@ public class Binder<BEAN> implements Serializable {
 
             getBinder().bindings.add(binding);
             if (getBinder().getBean() != null) {
-                binding.initFieldValue(getBinder().getBean());
+                binding.initFieldValue(getBinder().getBean(), true);
             }
             if (setter == null) {
                 binding.getField().setReadOnly(true);
@@ -1146,20 +1146,33 @@ public class Binder<BEAN> implements Serializable {
          *
          * @param bean
          *            the bean to fetch the property value from
+         * @param writeBackChangedValues
+         *            <code>true</code> if the bean value should be updated if
+         *            the value is different after converting to and from the
+         *            presentation value; <code>false</code> to avoid updating
+         *            the bean value
          */
-        private void initFieldValue(BEAN bean) {
+        private void initFieldValue(BEAN bean, boolean writeBackChangedValues) {
             assert bean != null;
             assert onValueChange != null;
             valueInit = true;
             try {
-                getField().setValue(convertDataToFieldType(bean));
+                TARGET originalValue = getter.apply(bean);
+                convertAndSetFieldValue(originalValue);
+
+                if (writeBackChangedValues && setter != null) {
+                    doConversion().ifOk(convertedValue -> {
+                        if (!Objects.equals(originalValue, convertedValue)) {
+                            setter.accept(bean, convertedValue);
+                        }
+                    });
+                }
             } finally {
                 valueInit = false;
             }
         }
 
-        private FIELDVALUE convertDataToFieldType(BEAN bean) {
-            TARGET target = getter.apply(bean);
+        private FIELDVALUE convertToFieldType(TARGET target) {
             ValueContext valueContext = createValueContext();
             return converterValidatorChain.convertToPresentation(target,
                     valueContext);
@@ -1218,7 +1231,31 @@ public class Binder<BEAN> implements Serializable {
 
         @Override
         public void read(BEAN bean) {
-            getField().setValue(convertDataToFieldType(bean));
+            convertAndSetFieldValue(getter.apply(bean));
+        }
+
+        private void convertAndSetFieldValue(TARGET modelValue) {
+            FIELDVALUE convertedValue = convertToFieldType(modelValue);
+            try {
+                getField().setValue(convertedValue);
+            } catch (RuntimeException e) {
+                /*
+                 * Add an additional hint to the exception for the typical case
+                 * with a field that doesn't accept null values. The non-null
+                 * empty value is used as a heuristic to determine that the
+                 * field doesn't accept null rather than throwing for some other
+                 * reason.
+                 */
+                if (convertedValue == null && getField().getEmptyValue() != null) {
+                    throw new IllegalStateException(String.format(
+                            "A field of type %s didn't accept a null value."
+                                    + " If null values are expected, then configure a null representation for the binding.",
+                            field.getClass().getName()), e);
+                } else {
+                    // Otherwise, let the original exception speak for itself
+                    throw e;
+                }
+            }
         }
 
         @Override
@@ -1639,6 +1676,10 @@ public class Binder<BEAN> implements Serializable {
      * Any change made in the fields also runs validation for the field
      * {@link Binding} and bean level validation for this binder (bean level
      * validators are added using {@link Binder#withValidator(Validator)}.
+     * <p>
+     * After updating each field, the value is read back from the field and the
+     * bean's property value is updated if it has been changed from the original
+     * value by the field or a converter.     
      *
      * @see #readBean(Object)
      * @see #writeBean(Object)
@@ -1658,7 +1699,7 @@ public class Binder<BEAN> implements Serializable {
         } else {
             doRemoveBean(false);
             this.bean = bean;
-            getBindings().forEach(b -> b.initFieldValue(bean));
+            getBindings().forEach(b -> b.initFieldValue(bean),true);
             // if there has been field value change listeners that trigger
             // validation, need to make sure the validation errors are cleared
             getValidationStatusHandler().statusChange(
@@ -1706,7 +1747,7 @@ public class Binder<BEAN> implements Serializable {
                 // we unbind a binding in valueChangeListener of another
                 // field.
                 if (binding.getField() != null)
-                    binding.initFieldValue(bean);
+                    binding.initFieldValue(bean, false);
             });
             getValidationStatusHandler().statusChange(
                     BinderValidationStatus.createUnresolvedStatus(this));
