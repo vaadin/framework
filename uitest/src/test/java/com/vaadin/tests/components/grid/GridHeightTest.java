@@ -1,5 +1,10 @@
 package com.vaadin.tests.components.grid;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.number.IsCloseTo.closeTo;
+import static org.junit.Assert.fail;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -7,17 +12,13 @@ import java.util.Map.Entry;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.testbench.elements.RadioButtonGroupElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.number.IsCloseTo.closeTo;
-import static org.junit.Assert.fail;
 
 /**
  * Tests that Grid gets correct height based on height mode, and resizes
@@ -85,7 +86,9 @@ public class GridHeightTest extends MultiBrowserTest {
                 }
 
                 GridRowElement row = grid.getRow(2);
-                row.click(getXOffset(row, 5), getYOffset(row, 5));
+                WebElement cell = row.findElements(By.className("v-grid-cell"))
+                        .get(0);
+                cell.click();
                 waitForElementPresent(By.id("lbl1"));
 
                 int openHeight = grid.getSize().getHeight();
@@ -98,7 +101,7 @@ public class GridHeightTest extends MultiBrowserTest {
                             detailsRowHeight, "opened" });
                 }
 
-                row.click(5, 5);
+                cell.click();
                 waitForElementNotPresent(By.id("lbl1"));
 
                 int afterHeight = grid.getSize().getHeight();
