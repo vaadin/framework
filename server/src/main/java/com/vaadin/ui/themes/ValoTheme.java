@@ -100,13 +100,13 @@ public class ValoTheme {
 
     /**
      * Success notification style. Adds a border around the notification and an
-     * icon next to the title. Can be combined with any other Label style.
+     * icon next to the title. Can be combined with any other Notification style.
      */
     public static final String NOTIFICATION_SUCCESS = "success";
 
     /**
      * Failure notification style. Adds a border around the notification and an
-     * icon next to the title. Can be combined with any other Label style.
+     * icon next to the title. Can be combined with any other Notification style.
      */
     public static final String NOTIFICATION_FAILURE = "failure";
 
@@ -116,6 +116,12 @@ public class ValoTheme {
      * combined with any other Notification style.
      */
     public static final String NOTIFICATION_CRITICAL_ERROR = "critical-error";
+
+    /**
+     * Styles the notification to be dark variant. Can be combined with any
+     * other Notification style.
+     */
+    public static final String NOTIFICATION_DARK = "dark";
 
     /***************************************************************************
      *
