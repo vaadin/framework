@@ -86,7 +86,8 @@ public interface MultiSelect<T> extends HasValue<Set<T>> {
      * If all the added items were already selected and the removed items were
      * not selected, this is a NO-OP.
      * <p>
-     * Duplicate items (in both add & remove sets) are ignored.
+     * Duplicate items (in both add & remove sets) are ignored and removed from
+     * the sets.
      *
      * @param addedItems
      *            the items to add, not {@code null}
