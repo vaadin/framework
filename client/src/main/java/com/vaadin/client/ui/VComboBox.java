@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -1850,7 +1851,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         if (event.getTypeInt() == Event.ONPASTE) {
             if (textInputEnabled && connector.isEnabled()
                     && !connector.isReadOnly()) {
-                filterOptions(currentPage);
+                Scheduler.get()
+                        .scheduleDeferred(() -> filterOptions(currentPage));
             }
         }
     }
