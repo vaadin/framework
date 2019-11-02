@@ -28,6 +28,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.AtmospherePushConnection.AtmosphereResponse;
+import com.vaadin.client.communication.MessageSender;
 import com.vaadin.shared.ui.ui.UIState.ReconnectDialogConfigurationState;
 
 import elemental.json.JsonObject;
@@ -528,6 +529,13 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
         debug("pushOk()");
         if (isReconnecting()) {
             resolveTemporaryError(Type.PUSH);
+        }
+
+        // Push will fail during send if hasActiveRequest is true
+        // see issues #11702
+        MessageSender messageSender = getConnection().getMessageSender();
+        if (pushConnection.isBidirectional() && messageSender.hasActiveRequest()) {
+            messageSender.endRequest();
         }
     }
 
