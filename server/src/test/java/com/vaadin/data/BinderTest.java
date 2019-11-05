@@ -1341,6 +1341,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 field);
 
         exceptionRule.expect(NullPointerException.class);
+        exceptionRule.expectMessage("Null");
 
         binder.readBean(new AtomicReference<>(null));
     }
