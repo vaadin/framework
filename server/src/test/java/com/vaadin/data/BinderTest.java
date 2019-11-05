@@ -13,11 +13,14 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.Binder.BindingBuilder;
@@ -31,8 +34,16 @@ import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.TextField;
 import org.apache.commons.lang.StringUtils;
+import org.hamcrest.CoreMatchers;
 
 public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
+
+    @Rule
+    /*
+     * transient to avoid interfering with serialization tests that capture a
+     * test instance in a closure
+     */
+    public transient ExpectedException exceptionRule = ExpectedException.none();    
 
     @Before
     public void setUp() {
@@ -333,7 +344,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.setBean(namelessPerson);
 
         assertTrue(nullTextField.isEmpty());
-        assertEquals(null, namelessPerson.getFirstName());
+        assertEquals("null", namelessPerson.getFirstName());
 
         // Change value, see that textfield is not empty and bean is updated.
         nullTextField.setValue("");
@@ -1245,5 +1256,121 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         beanSet.set(false);
 
         nameField.setValue("Foo");
+    }
+
+    @Test
+    public void nonSymetricValue_setBean_writtenToBean() {
+        binder.bind(nameField, Person::getLastName, Person::setLastName);
+
+        Assert.assertNull(item.getLastName());
+
+        binder.setBean(item);
+
+        Assert.assertEquals("", item.getLastName());
+    }
+
+    @Test
+    public void nonSymmetricValue_readBean_beanNotTouched() {
+        binder.bind(nameField, Person::getLastName, Person::setLastName);
+        binder.addValueChangeListener(
+                event -> Assert.fail("No value change event should be fired"));
+
+        Assert.assertNull(item.getLastName());
+
+        binder.readBean(item);
+
+        Assert.assertNull(item.getLastName());
+    }
+
+    @Test
+    public void symetricValue_setBean_beanNotUpdated() {
+        binder.bind(nameField, Person::getFirstName, Person::setFirstName);
+
+        binder.setBean(new Person() {
+            @Override
+            public String getFirstName() {
+                return "First";
+            }
+
+            @Override
+            public void setFirstName(String firstName) {
+                Assert.fail("Setter should not be called");
+            }
+        });
+    }
+
+    @Test
+    public void nullRejetingField_nullValue_wrappedExceptionMentionsNullRepresentation() {
+        TestTextField field = createNullRejectingFieldWithEmptyValue("");
+
+        Binder<AtomicReference<Integer>> binder = createIntegerConverterBinder(
+                field);
+
+        exceptionRule.expect(IllegalStateException.class);
+        exceptionRule.expectMessage("null representation");
+        exceptionRule.expectCause(CoreMatchers.isA(NullPointerException.class));
+
+        binder.readBean(new AtomicReference<>());
+    }
+
+
+    @Test
+    public void nullRejetingField_otherRejectedValue_originalExceptionIsThrown() {
+        TestTextField field = createNullRejectingFieldWithEmptyValue("");
+
+        Binder<AtomicReference<Integer>> binder = createIntegerConverterBinder(
+                field);
+
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("42");
+
+        binder.readBean(new AtomicReference<>(Integer.valueOf(42)));
+    }
+
+    @Test
+    public void nullAcceptingField_nullValue_originalExceptionIsThrown() {
+        /*
+         * Edge case with a field that throws for null but has null as the empty
+         * value. This is most likely the case if the field doesn't explicitly
+         * reject null values but is instead somehow broken so that any value is
+         * rejected.
+         */
+        TestTextField field = createNullRejectingFieldWithEmptyValue(null);
+
+        Binder<AtomicReference<Integer>> binder = createIntegerConverterBinder(
+                field);
+
+        exceptionRule.expect(NullPointerException.class);
+
+        binder.readBean(new AtomicReference<>(null));
+    }
+
+    private TestTextField createNullRejectingFieldWithEmptyValue(
+            String emptyValue) {
+        return new TestTextField() {
+            @Override
+            public void setValue(String value) {
+                if (value == null) {
+                    throw new NullPointerException("Null value");
+                } else if ("42".equals(value)) {
+                    throw new IllegalArgumentException("42 is not allowed");
+                }
+                super.setValue(value);
+            }
+
+            @Override
+            public String getEmptyValue() {
+                return emptyValue;
+            }
+        };
+    }
+
+    private Binder<AtomicReference<Integer>> createIntegerConverterBinder(
+            TestTextField field) {
+        Binder<AtomicReference<Integer>> binder = new Binder<>();
+        binder.forField(field)
+                .withConverter(new StringToIntegerConverter("Must have number"))
+                .bind(AtomicReference::get, AtomicReference::set);
+        return binder;
     }
 }
