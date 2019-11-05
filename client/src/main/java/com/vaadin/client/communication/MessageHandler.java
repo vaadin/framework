@@ -193,6 +193,7 @@ public class MessageHandler {
     private int lastSeenServerSyncId = UNDEFINED_SYNC_ID;
 
     private ApplicationConnection connection;
+    private boolean resyncInProgress;
 
     /**
      * Data structure holding information about pending UIDL messages.
@@ -258,7 +259,17 @@ public class MessageHandler {
     protected void handleJSON(final ValueMap json) {
         final int serverId = getServerId(json);
 
-        if (isResynchronize(json) && !isNextExpectedMessage(serverId)) {
+        boolean hasResynchronize = isResynchronize(json);
+
+        if (!hasResynchronize && resyncInProgress) {
+            Logger.getLogger(MessageHandler.class.getName())
+                .warning("Dropping the response of a request before a resync request.");
+            return;
+        }
+
+        resyncInProgress = false;
+
+        if (hasResynchronize && !isNextExpectedMessage(serverId)) {
             // Resynchronize request. We must remove any old pending
             // messages and ensure this is handled next. Otherwise we
             // would keep waiting for an older message forever (if this
@@ -321,7 +332,7 @@ public class MessageHandler {
             int serverNextExpected = json
                     .getInt(ApplicationConstants.CLIENT_TO_SERVER_ID);
             getMessageSender().setClientToServerMessageId(serverNextExpected,
-                    isResynchronize(json));
+                    hasResynchronize);
         }
 
         if (serverId != -1) {
@@ -1822,4 +1833,7 @@ public class MessageHandler {
         }
     }-*/;
 
+    public void onResynchronize() {
+        resyncInProgress = true;
+    }
 }
