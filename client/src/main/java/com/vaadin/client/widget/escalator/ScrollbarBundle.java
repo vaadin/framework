@@ -587,10 +587,12 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * @return the new scroll position in pixels
      */
     public final double getScrollPos() {
-        assert internalGetScrollPos() == toInt32(
-                scrollPos) : "calculated scroll position (" + scrollPos
+        int internalScrollPos = internalGetScrollPos();
+        assert Math.abs(internalScrollPos
+                - toInt32(scrollPos)) <= 1 : "calculated scroll position ("
+                        + scrollPos
                         + ") did not match the DOM element scroll position ("
-                        + internalGetScrollPos() + ")";
+                        + internalScrollPos + ")";
         return scrollPos;
     }
 
