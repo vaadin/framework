@@ -1327,7 +1327,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.readBean(new AtomicReference<>(Integer.valueOf(42)));
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void nullAcceptingField_nullValue_originalExceptionIsThrown() {
         /*
          * Edge case with a field that throws for null but has null as the empty
@@ -1339,9 +1339,6 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         Binder<AtomicReference<Integer>> binder = createIntegerConverterBinder(
                 field);
-
-        exceptionRule.expect(NullPointerException.class);
-        exceptionRule.expectMessage("Null");
 
         binder.readBean(new AtomicReference<>(null));
     }
