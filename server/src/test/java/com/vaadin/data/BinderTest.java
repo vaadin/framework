@@ -593,7 +593,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         binder.setBean(item);
         assertNull(textField.getErrorMessage());
-        assertEquals(0, invokes.get());
+        assertEquals(1, invokes.get());
 
         textField.setValue("        ");
         ErrorMessage errorMessage = textField.getErrorMessage();
@@ -601,7 +601,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         assertEquals("Input&#32;required&#46;",
                 errorMessage.getFormattedHtmlMessage());
         // validation is done for all changed bindings once.
-        assertEquals(1, invokes.get());
+        assertEquals(2, invokes.get());
 
         textField.setValue("value");
         assertNull(textField.getErrorMessage());
