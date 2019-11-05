@@ -259,7 +259,9 @@ public class MessageHandler {
     protected void handleJSON(final ValueMap json) {
         final int serverId = getServerId(json);
 
-        if (!isResynchronize(json) && resyncInProgress) {
+        boolean hasResynchronize = isResynchronize(json);
+
+        if (!hasResynchronize && resyncInProgress) {
             Logger.getLogger(MessageHandler.class.getName())
                 .warning("Dropping the response of a request before a resync request.");
             return;
@@ -267,7 +269,7 @@ public class MessageHandler {
 
         resyncInProgress = false;
 
-        if (isResynchronize(json) && !isNextExpectedMessage(serverId)) {
+        if (hasResynchronize && !isNextExpectedMessage(serverId)) {
             // Resynchronize request. We must remove any old pending
             // messages and ensure this is handled next. Otherwise we
             // would keep waiting for an older message forever (if this
@@ -330,7 +332,7 @@ public class MessageHandler {
             int serverNextExpected = json
                     .getInt(ApplicationConstants.CLIENT_TO_SERVER_ID);
             getMessageSender().setClientToServerMessageId(serverNextExpected,
-                    isResynchronize(json));
+                    hasResynchronize);
         }
 
         if (serverId != -1) {
