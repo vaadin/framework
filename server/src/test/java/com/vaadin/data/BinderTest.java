@@ -1301,7 +1301,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
     @Test
     public void nullRejetingField_nullValue_wrappedExceptionMentionsNullRepresentation() {
-        TestTextField field = createNullRejectingFieldWithEmptyValue("");
+        TextField field = createNullRejectingFieldWithEmptyValue("");
 
         Binder<AtomicReference<Integer>> binder = createIntegerConverterBinder(
                 field);
@@ -1316,7 +1316,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
     @Test
     public void nullRejetingField_otherRejectedValue_originalExceptionIsThrown() {
-        TestTextField field = createNullRejectingFieldWithEmptyValue("");
+        TextField field = createNullRejectingFieldWithEmptyValue("");
 
         Binder<AtomicReference<Integer>> binder = createIntegerConverterBinder(
                 field);
@@ -1335,7 +1335,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
          * reject null values but is instead somehow broken so that any value is
          * rejected.
          */
-        TestTextField field = createNullRejectingFieldWithEmptyValue(null);
+        TextField field = createNullRejectingFieldWithEmptyValue(null);
 
         Binder<AtomicReference<Integer>> binder = createIntegerConverterBinder(
                 field);
@@ -1345,9 +1345,9 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.readBean(new AtomicReference<>(null));
     }
 
-    private TestTextField createNullRejectingFieldWithEmptyValue(
+    private TextField createNullRejectingFieldWithEmptyValue(
             String emptyValue) {
-        return new TestTextField() {
+        return new TextField() {
             @Override
             public void setValue(String value) {
                 if (value == null) {
