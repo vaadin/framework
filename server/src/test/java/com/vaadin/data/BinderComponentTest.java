@@ -68,7 +68,7 @@ public class BinderComponentTest
             HasValue<T> field) {
         binder.bind(field, t -> null, (str, val) -> {
             assertEquals("Value update with initial value failed.",
-                    initialValue, field.getValue());
+                    field.getEmptyValue(), field.getValue());
         });
         field.setValue(initialValue);
         assertEquals("Initial value of field unexpected", initialValue,
