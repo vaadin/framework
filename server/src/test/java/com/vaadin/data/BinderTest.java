@@ -1366,7 +1366,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     }
 
     private Binder<AtomicReference<Integer>> createIntegerConverterBinder(
-            TestTextField field) {
+            TextField field) {
         Binder<AtomicReference<Integer>> binder = new Binder<>();
         binder.forField(field)
                 .withConverter(new StringToIntegerConverter("Must have number"))
