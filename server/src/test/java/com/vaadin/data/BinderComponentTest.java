@@ -67,8 +67,6 @@ public class BinderComponentTest
     private <T> void testFieldNullRepresentation(T initialValue,
             HasValue<T> field) {
         binder.bind(field, t -> null, (str, val) -> {
-            assertEquals("Value update with initial value failed.",
-                    field.getEmptyValue(), field.getValue());
         });
         field.setValue(initialValue);
         assertEquals("Initial value of field unexpected", initialValue,
@@ -76,7 +74,6 @@ public class BinderComponentTest
         binder.setBean(item);
         assertEquals("Null representation for field failed",
                 field.getEmptyValue(), field.getValue());
-        field.setValue(initialValue);
     }
 
 }
