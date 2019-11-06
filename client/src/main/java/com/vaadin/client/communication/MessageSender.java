@@ -349,6 +349,7 @@ public class MessageSender {
      * state from the server
      */
     public void resynchronize() {
+        getMessageHandler().onResynchronize();
         getLogger().info("Resynchronizing from server");
         JsonObject resyncParam = Json.createObject();
         resyncParam.put(ApplicationConstants.RESYNCHRONIZE_ID, true);
