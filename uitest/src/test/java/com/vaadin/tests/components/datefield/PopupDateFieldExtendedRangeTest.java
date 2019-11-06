@@ -1,5 +1,9 @@
 package com.vaadin.tests.components.datefield;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +18,6 @@ import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Tests contents and functionality of PopupDateField's popup.
@@ -372,8 +372,13 @@ public class PopupDateFieldExtendedRangeTest extends MultiBrowserTest {
         new Actions(driver).keyUp(Keys.SHIFT).perform();
 
         // TODO: remove this once #14406 has been fixed
-        popup.findElement(By.className("v-datefield-calendarpanel-prevyear"))
-                .findElement(By.tagName("button")).click();
+        if (!(BrowserUtil.isChrome(getDesiredCapabilities())
+                || BrowserUtil.isFirefox(getDesiredCapabilities())
+                || BrowserUtil.isIE8(getDesiredCapabilities()))) {
+            popup.findElement(
+                    By.className("v-datefield-calendarpanel-prevyear"))
+                    .findElement(By.tagName("button")).click();
+        }
 
         // verify contents
         assertEquals("unexpected month", "tammikuu 2009", popup
