@@ -17,7 +17,7 @@ public class VerifyJreVersionTest extends SingleBrowserTest {
         WebElement jreVersionLabel = vaadinElementById("jreVersionLabel");
 
         assertThat(jreVersionLabel.getText(),
-                is("Using Java 1.8.0_181 by Oracle Corporation"));
+                is("Using Java 1.8.0_201 by Oracle Corporation"));
     }
 
 }
