@@ -43,7 +43,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
      * transient to avoid interfering with serialization tests that capture a
      * test instance in a closure
      */
-    public transient ExpectedException exceptionRule = ExpectedException.none();    
+    public transient ExpectedException exceptionRule = ExpectedException.none();
 
     @Before
     public void setUp() {
