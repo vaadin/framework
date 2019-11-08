@@ -8,6 +8,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -1110,12 +1111,12 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         binder.setBean(item);
         ageField.setValue("3");
-        Assert.assertEquals(infoMessage,
+        assertEquals(infoMessage,
                 ageField.getComponentError().getFormattedHtmlMessage());
-        Assert.assertEquals(ErrorLevel.INFO,
+        assertEquals(ErrorLevel.INFO,
                 ageField.getComponentError().getErrorLevel());
 
-        Assert.assertEquals(3, item.getAge());
+        assertEquals(3, item.getAge());
     }
 
     @Test
@@ -1262,24 +1263,24 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     public void nonSymetricValue_setBean_writtenToBean() {
         binder.bind(nameField, Person::getLastName, Person::setLastName);
 
-        Assert.assertNull(item.getLastName());
+        assertNull(item.getLastName());
 
         binder.setBean(item);
 
-        Assert.assertEquals("", item.getLastName());
+        assertEquals("", item.getLastName());
     }
 
     @Test
     public void nonSymmetricValue_readBean_beanNotTouched() {
         binder.bind(nameField, Person::getLastName, Person::setLastName);
         binder.addValueChangeListener(
-                event -> Assert.fail("No value change event should be fired"));
+                event -> fail("No value change event should be fired"));
 
-        Assert.assertNull(item.getLastName());
+        assertNull(item.getLastName());
 
         binder.readBean(item);
 
-        Assert.assertNull(item.getLastName());
+        assertNull(item.getLastName());
     }
 
     @Test
@@ -1294,7 +1295,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
             @Override
             public void setFirstName(String firstName) {
-                Assert.fail("Setter should not be called");
+                fail("Setter should not be called");
             }
         });
     }
