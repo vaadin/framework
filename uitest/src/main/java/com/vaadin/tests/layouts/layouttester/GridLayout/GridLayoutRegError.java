@@ -16,6 +16,7 @@
 package com.vaadin.tests.layouts.layouttester.GridLayout;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
@@ -50,5 +51,11 @@ public class GridLayoutRegError extends GridBaseLayoutTestUI {
         layout.addComponent(createLabelsFields(NativeSelect.class, true, ""));
         layout.addComponent(createLabelsFields(CheckBox.class, true, ""));
 
+    }
+
+    @Override
+    protected void setDefaultForVertical(AbstractOrderedLayout l1,
+            AbstractOrderedLayout l2) {
+        setLayoutMeasures(l1, l2, "800px", "800px");
     }
 }
