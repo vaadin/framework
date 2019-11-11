@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -384,7 +385,6 @@ public class VTwinColSelect extends Composite implements MultiSelectWidget,
                 final String text = source.getItemText(optionIndex);
                 final String value = source.getValue(optionIndex);
                 target.addItem(text, value);
-                target.setItemSelected(target.getItemCount() - 1, true);
                 source.removeItem(optionIndex);
             }
         }
@@ -396,7 +396,27 @@ public class VTwinColSelect extends Composite implements MultiSelectWidget,
             source.setFocus(true);
         }
 
+        for (String item: movedItems) {
+            setSelectedItem(target,item);
+        }
+
         return movedItems;
+    }
+
+    private static void setSelectedItem(ListBox select, String value) {
+    	if (value == null) return;
+    	// There is a bug in GWT ListBox, it retains selection by indexes after
+    	// being sorted when new item has been added. This is a workaround.
+    	// See issue #11287
+        Scheduler.get().scheduleFixedDelay(() -> {
+            for (int i=0;i<select.getItemCount();i++) {
+                if (select.getValue(i).equals(value)) {
+                    select.setItemSelected(i, true);
+                    break;
+                }
+            }
+            return false;
+        },100);        	
     }
 
     @Override
