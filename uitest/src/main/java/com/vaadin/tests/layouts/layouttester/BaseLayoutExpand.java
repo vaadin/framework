@@ -42,8 +42,6 @@ public class BaseLayoutExpand extends BaseLayoutTestUI {
         }
         Table t1 = getTestTable();
         Table t2 = getTestTable();
-        t1.setSizeFull();
-        t2.setSizeFull();
         l2.addComponent(t1);
         l2.addComponent(t2);
 

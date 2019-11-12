@@ -17,8 +17,8 @@ public class GridLayoutMarginSpacing extends GridBaseLayoutTestUI {
     private void buildLayout() {
         Table t1 = getTestTable();
         Table t2 = getTestTable();
-        t1.setSizeFull();
-        t2.setSizeFull();
+        t1.setSizeUndefined();
+        t2.setSizeUndefined();
 
         final Button btn1 = new Button("Toggle margin on/off");
         btn1.addClickListener(event -> {

@@ -31,7 +31,7 @@ public abstract class BaseAlignment extends BaseLayoutTestUI {
             }
             layout.setMargin(false);
             layout.setSpacing(false);
-            layout.setHeight("300px");
+            layout.setHeight("100px");
             layout.setWidth("200px");
             layout.addComponent(components[i]);
             layout.setComponentAlignment(components[i], alignments[i]);
