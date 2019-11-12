@@ -28,5 +28,6 @@ public class GridComponentSizing extends GridBaseLayoutTestUI {
     protected void setup(VaadinRequest request) {
         getLayoutForLayoutSizing("component");
         super.setup(request);
+        layout.setSizeFull();
     }
 }

@@ -30,6 +30,7 @@ public class GridLayoutExpand extends GridBaseLayoutTestUI {
     protected void setup(VaadinRequest request) {
         buildLayout();
         super.setup(request);
+        layout.setSizeFull();
     }
 
     private void buildLayout() {
@@ -50,8 +51,6 @@ public class GridLayoutExpand extends GridBaseLayoutTestUI {
         }
         Table t1 = getTestTable();
         Table t2 = getTestTable();
-        t1.setSizeFull();
-        t2.setSizeFull();
         layout.setColumns(4);
         layout.setRows(4);
         layout.addComponent(new ExpandButton(1, 2, 1.0f, 0.0f), 0, 0);

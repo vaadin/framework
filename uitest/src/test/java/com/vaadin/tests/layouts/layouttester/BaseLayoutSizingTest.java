@@ -14,13 +14,14 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * @author Vaadin Ltd
  */
 public abstract class BaseLayoutSizingTest extends MultiBrowserTest {
+    protected String[] states = new String[] { "setSize350px", "setSize_-1px",
+            "setSize75Percent", "setSize100Percent" };
+
     @Test
     public void LayoutSizing() throws IOException, InterruptedException {
         openTestURL();
         sleep(500);
         compareScreen("initial");
-        String[] states = { "setSize350px", "setSize_-1px", "setSize75Percent",
-                "setSize100Percent" };
         List<ButtonElement> buttons = $(ButtonElement.class).all();
         int index = 0;
         // go through all buttons click them and see result

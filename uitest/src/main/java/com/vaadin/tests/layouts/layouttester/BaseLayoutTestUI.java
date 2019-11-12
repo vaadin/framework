@@ -45,11 +45,11 @@ public abstract class BaseLayoutTestUI extends AbstractTestUI {
     protected static final String CALENDAR_32_PNG = "../runo/icons/16/calendar.png";
     protected static final String LOCK_16_PNG = "../runo/icons/16/lock.png";
     protected static final String GLOBE_16_PNG = "../runo/icons/16/globe.png";
-    public Alignment[] alignments = new Alignment[] { Alignment.TOP_CENTER,
-            Alignment.TOP_LEFT, Alignment.TOP_RIGHT, Alignment.BOTTOM_CENTER,
-            Alignment.BOTTOM_LEFT, Alignment.BOTTOM_RIGHT,
-            Alignment.MIDDLE_CENTER, Alignment.MIDDLE_LEFT,
-            Alignment.MIDDLE_RIGHT };
+    public Alignment[] alignments = new Alignment[] { Alignment.TOP_LEFT,
+            Alignment.TOP_CENTER, Alignment.TOP_RIGHT, Alignment.MIDDLE_LEFT,
+            Alignment.MIDDLE_CENTER, Alignment.MIDDLE_RIGHT,
+            Alignment.BOTTOM_LEFT, Alignment.BOTTOM_CENTER,
+            Alignment.BOTTOM_RIGHT };
 
     public final String[] CAPTIONS = new String[] { "",
             "VeryLongOneWordCaption",
@@ -93,7 +93,8 @@ public abstract class BaseLayoutTestUI extends AbstractTestUI {
     private void fillComponents() {
         for (int i = 0; i < components.length; i++) {
             String name = "Field" + i;
-            TextField field = new TextField();
+            TextField field = new TextField(alignments[i].getVerticalAlignment()
+                    + " " + alignments[i].getHorizontalAlignment());
             field.setValue(name);
             components[i] = field;
         }
@@ -110,9 +111,7 @@ public abstract class BaseLayoutTestUI extends AbstractTestUI {
         l2.setMargin(false);
 
         final AbstractComponent c1 = getTestTable();
-        c1.setSizeFull();
         final AbstractComponent c2 = getTestTable();
-        c2.setSizeFull();
 
         class SetSizeButton extends Button {
             SetSizeButton(final String size) {
@@ -128,6 +127,7 @@ public abstract class BaseLayoutTestUI extends AbstractTestUI {
                         } else if (compType == "component") {
                             c2.setHeight(size);
                             c2.setWidth(size);
+                            c2.setCaption("Configured width");
                         } else {
                         }
 
@@ -163,11 +163,13 @@ public abstract class BaseLayoutTestUI extends AbstractTestUI {
 
             }
         });
+        btn2.setCaption(btn2.getCaption() + " + add Label");
     }
 
     protected Table getTestTable() {
         Table t = new Table();
-        t.setPageLength(5);
+        t.setSizeFull();
+        t.setCaption("100% default width");
         t.addContainerProperty("test", String.class, null);
         t.addItem(new Object[] { "qwertyuiop asdfghjköäxccvbnm,m,." }, 1);
         t.addItem(new Object[] { "YGVYTCTCTRXRXRXRX" }, 2);
@@ -235,6 +237,12 @@ public abstract class BaseLayoutTestUI extends AbstractTestUI {
      */
     @Override
     protected void setup(VaadinRequest request) {
+        mainLayout.setSizeUndefined();
+        getLayout().setSizeUndefined();
+        if (getLayout().getParent() instanceof VerticalLayout) {
+            ((VerticalLayout) getLayout().getParent()).setSizeUndefined();
+        }
+
         mainLayout.addComponent(l1);
         mainLayout.addComponent(l2);
         addComponent(mainLayout);
@@ -254,8 +262,8 @@ public abstract class BaseLayoutTestUI extends AbstractTestUI {
             AbstractOrderedLayout l2, String w, String h) {
         l1.setWidth(w);
         l1.setHeight(h);
-        l2.setWidth(h);
-        l2.setHeight(w);
+        l2.setWidth(w);
+        l2.setHeight(h);
     }
 
     protected void setDefaultForVertical(AbstractOrderedLayout l1,
