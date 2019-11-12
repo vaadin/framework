@@ -67,7 +67,7 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
      *            if {@code true}, scan for nested property definitions as well
      */
     public BeanValidationBinder(Class<BEAN> beanType, boolean scanNestedDefinitions) {
-     	super(beanType, scanNestedDefinitions);
+        super(beanType, scanNestedDefinitions);
         if (!BeanUtil.checkBeanValidationAvailable()) {
             throw new IllegalStateException(BeanValidationBinder.class
                     .getSimpleName()
