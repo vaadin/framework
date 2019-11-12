@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -365,5 +367,41 @@ public class VaadinPortletService extends VaadinService {
     protected void removeFromHttpSession(WrappedSession wrappedSession) {
         getWrappedPortletSession(wrappedSession).removeAttribute(
                 getSessionAttributeName(), PortletSession.APPLICATION_SCOPE);
+    }
+
+    @Override
+    protected void setSessionLock(WrappedSession wrappedSession, Lock lock) {
+        if (wrappedSession == null) {
+            throw new IllegalArgumentException(
+                    "Can't set a lock for a null session");
+        }
+        Object currentSessionLock = getWrappedPortletSession(wrappedSession)
+                .getAttribute(getLockAttributeName(),
+                        PortletSession.APPLICATION_SCOPE);
+        assert (currentSessionLock == null
+                || currentSessionLock == lock) : "Changing the lock for a session is not allowed";
+
+        getWrappedPortletSession(wrappedSession).setAttribute(
+                getLockAttributeName(), lock,
+                PortletSession.APPLICATION_SCOPE);
+    }
+
+    @Override
+    protected Lock getSessionLock(WrappedSession wrappedSession) {
+        Object lock = getWrappedPortletSession(wrappedSession)
+                .getAttribute(getLockAttributeName(),
+                        PortletSession.APPLICATION_SCOPE);
+
+        if (lock instanceof ReentrantLock) {
+            return (ReentrantLock) lock;
+        }
+
+        if (lock == null) {
+            return null;
+        }
+
+        throw new RuntimeException(
+                "Something else than a ReentrantLock was stored in the "
+                        + getLockAttributeName() + " in the session");
     }
 }
