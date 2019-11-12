@@ -9,6 +9,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.portlet.PortletSession;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -185,9 +187,9 @@ public class VaadinPortletServiceTest {
             ReentrantLock mockLock = Mockito.mock(ReentrantLock.class);
             when(mockLock.isHeldByCurrentThread()).thenReturn(true);
 
-            WrappedSession emptyWrappedSession = Mockito
+            WrappedPortletSession emptyWrappedSession = Mockito
                     .mock(WrappedPortletSession.class);
-            when(emptyWrappedSession.getAttribute("null.lock"))
+            when(emptyWrappedSession.getAttribute("null.lock",PortletSession.APPLICATION_SCOPE))
                     .thenReturn(mockLock);
             VaadinRequest requestWithUIIDSet = Mockito
                     .mock(VaadinRequest.class);
