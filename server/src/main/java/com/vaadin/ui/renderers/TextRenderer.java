@@ -50,10 +50,15 @@ public class TextRenderer extends AbstractRenderer<Object, Object> {
 
     @Override
     public JsonValue encode(Object value) {
-        if ((value == null) || (value.toString() == null)) {
+        if (value == null) {
             return super.encode(null);
         } else {
-            return Json.create(value.toString());
+            String stringValue = value.toString();
+            if (stringValue == null) {
+                return super.encode(null);
+            } else {
+                return Json.create(value.toString());
+            }
         }
     }
 
