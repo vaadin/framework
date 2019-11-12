@@ -57,7 +57,7 @@ public class TextRenderer extends AbstractRenderer<Object, Object> {
             if (stringValue == null) {
                 return super.encode(null);
             } else {
-                return Json.create(value.toString());
+                return Json.create(stringValue);
             }
         }
     }
