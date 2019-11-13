@@ -292,6 +292,9 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
     /**
      * Set the contents of the template used to draw the custom layout.
      *
+     * Note: setTemplateContents can be applied only before CustomLayout
+     * instance has been attached.
+     *
      * @param templateContents
      */
     public void setTemplateContents(String templateContents) {

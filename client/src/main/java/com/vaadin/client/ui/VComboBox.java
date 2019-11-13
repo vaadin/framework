@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -427,10 +428,15 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             // Add TT anchor point
             getElement().setId("VAADIN_COMBOBOX_OPTIONLIST");
 
-            leftPosition = getDesiredLeftPosition();
-            topPosition = getDesiredTopPosition();
+            // Set the default position if the popup isn't already visible,
+            // the setPopupPositionAndShow call later on can deal with any
+            // adjustments that might be needed
+            if (!popup.isShowing()) {
+                leftPosition = getDesiredLeftPosition();
+                topPosition = getDesiredTopPosition();
 
-            setPopupPosition(leftPosition, topPosition);
+                setPopupPosition(leftPosition, topPosition);
+            }
 
             int nullOffset = getNullSelectionItemShouldBeVisible() ? 1 : 0;
             boolean firstPage = currentPage == 0;
@@ -791,6 +797,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
             updateMenuWidth(desiredWidth, naturalMenuWidth);
 
+            double menuMarginBorderPaddingWidth = getMarginBorderPaddingWidth(
+                    menu.getElement());
             if (BrowserInfo.get().isIE()
                     && BrowserInfo.get().getBrowserMajorVersion() < 11) {
                 // Must take margin,border,padding manually into account for
@@ -805,15 +813,13 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                             .getStyle().getVisibility();
                     menu.getElement().getParentElement().getStyle()
                             .setVisibility(Visibility.VISIBLE);
-                    naturalMenuOuterWidth = WidgetUtil
-                            .getRequiredWidthDouble(menuFirstChild)
-                            + getMarginBorderPaddingWidth(menu.getElement());
+                    naturalMenuOuterWidth = WidgetUtil.getRequiredWidthDouble(
+                            menuFirstChild) + menuMarginBorderPaddingWidth;
                     menu.getElement().getParentElement().getStyle()
                             .setProperty("visibility", before);
                 } else {
-                    naturalMenuOuterWidth = WidgetUtil
-                            .getRequiredWidthDouble(menuFirstChild)
-                            + getMarginBorderPaddingWidth(menu.getElement());
+                    naturalMenuOuterWidth = WidgetUtil.getRequiredWidthDouble(
+                            menuFirstChild) + menuMarginBorderPaddingWidth;
                 }
 
                 /*
@@ -893,14 +899,24 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 }
             }
 
-            if (offsetWidth + left > Window.getClientWidth()) {
+            if (offsetWidth + menuMarginBorderPaddingWidth
+                    + left < VComboBox.this.getAbsoluteLeft()
+                            + VComboBox.this.getOffsetWidth()) {
+                // Popup doesn't reach all the way to the end of the input
+                // field, filtering may have changed the popup width.
+                left = VComboBox.this.getAbsoluteLeft();
+            }
+            if (offsetWidth + menuMarginBorderPaddingWidth + left > Window
+                    .getClientWidth()) {
+                // Popup doesn't fit the view, needs to be opened to the left
+                // instead.
                 left = VComboBox.this.getAbsoluteLeft()
-                        + VComboBox.this.getOffsetWidth() - offsetWidth;
-                if (left < 0) {
-                    left = 0;
-                    menu.setWidth(Window.getClientWidth() + "px");
-
-                }
+                        + VComboBox.this.getOffsetWidth() - offsetWidth
+                        - (int) menuMarginBorderPaddingWidth;
+            }
+            if (left < 0) {
+                left = 0;
+                menu.setWidth(Window.getClientWidth() + "px");
             }
 
             setPopupPosition(left, top);
@@ -1848,7 +1864,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         if (event.getTypeInt() == Event.ONPASTE) {
             if (textInputEnabled && connector.isEnabled()
                     && !connector.isReadOnly()) {
-                filterOptions(currentPage);
+                Scheduler.get()
+                        .scheduleDeferred(() -> filterOptions(currentPage));
             }
         }
     }

@@ -22,6 +22,15 @@ public class InterruptUpload extends AbstractTestUI {
 
     private Upload sample;
     private UploadInfoWindow uploadInfoWindow;
+    private final boolean pushManually;
+
+    public InterruptUpload() {
+        this(false);
+    }
+
+    public InterruptUpload(boolean pushManually) {
+        this.pushManually = pushManually;
+    }
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -39,13 +48,17 @@ public class InterruptUpload extends AbstractTestUI {
                 UI.getCurrent().addWindow(uploadInfoWindow);
             }
             uploadInfoWindow.setClosable(false);
+            pushIfManual();
         });
-        sample.addFinishedListener(event -> uploadInfoWindow.setClosable(true));
+        sample.addFinishedListener(event -> {
+            uploadInfoWindow.setClosable(true);
+            pushIfManual();
+        });
 
-        addComponent(sample);
+        addComponents(new Label(getDescription()), sample);
     }
 
-    private static class UploadInfoWindow extends Window
+    private class UploadInfoWindow extends Window
             implements Upload.StartedListener, Upload.ProgressListener,
             Upload.FailedListener, Upload.SucceededListener,
             Upload.FinishedListener {
@@ -114,6 +127,7 @@ public class InterruptUpload extends AbstractTestUI {
             textualProgress.setVisible(false);
             cancelButton.setVisible(false);
             UI.getCurrent().setPollInterval(-1);
+            pushIfManual();
         }
 
         @Override
@@ -128,6 +142,7 @@ public class InterruptUpload extends AbstractTestUI {
             fileName.setValue(event.getFilename());
 
             cancelButton.setVisible(true);
+            pushIfManual();
         }
 
         @Override
@@ -138,11 +153,13 @@ public class InterruptUpload extends AbstractTestUI {
             textualProgress.setValue(
                     "Processed " + readBytes + " bytes of " + contentLength);
             result.setValue(counter.getLineBreakCount() + " (counting...)");
+            pushIfManual();
         }
 
         @Override
         public void uploadSucceeded(final SucceededEvent event) {
             result.setValue(counter.getLineBreakCount() + " (total)");
+            pushIfManual();
         }
 
         @Override
@@ -150,6 +167,13 @@ public class InterruptUpload extends AbstractTestUI {
             result.setValue(
                     counter.getLineBreakCount() + " (counting interrupted at "
                             + Math.round(100 * progressBar.getValue()) + "%)");
+            pushIfManual();
+        }
+    }
+
+    private void pushIfManual() {
+        if (pushManually) {
+            push();
         }
     }
 

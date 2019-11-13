@@ -2095,6 +2095,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * all currently available row data to be recreated and sent to the
          * client.
          *
+         * Note: Setting a new renderer will reset presentation provider if
+         * it exists.
+         *
          * @param renderer
          *            the new renderer
          * @return this column
@@ -4387,7 +4390,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         Objects.requireNonNull(destination,
                 "ScrollDestination can not be null");
 
-        if (row > getDataCommunicator().getDataProviderSize()) {
+        if (row >= getDataCommunicator().getDataProviderSize()) {
             throw new IllegalArgumentException("Row outside dataProvider size");
         }
 

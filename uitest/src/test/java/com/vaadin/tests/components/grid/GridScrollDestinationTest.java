@@ -15,10 +15,12 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.NativeSelectElement;
+import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class GridScrollDestinationTest extends SingleBrowserTest {
 
+    private TextFieldElement textField;
     private ButtonElement button;
     private GridElement grid;
     private TestBenchElement header;
@@ -28,6 +30,7 @@ public class GridScrollDestinationTest extends SingleBrowserTest {
     public void setup() throws Exception {
         super.setup();
         openTestURL();
+        textField = $(TextFieldElement.class).first();
         button = $(ButtonElement.class).first();
         grid = $(GridElement.class).first();
         header = grid.getHeader();
@@ -110,6 +113,28 @@ public class GridScrollDestinationTest extends SingleBrowserTest {
         rows = grid.getBody().findElements(By.className("v-grid-row"));
         row = rows.get(6);
         assertEquals("50", row.getText());
+
+        // scroll to beginning using scroll destination
+        textField.setValue("0");
+        button.click();
+
+        // expect to be scrolled all the way up
+        rows = grid.getBody().findElements(By.className("v-grid-row"));
+        row = rows.get(0);
+        assertEquals("0", row.getText());
+
+        assertElementAtTop(row);
+
+        // scroll to end using scroll destination
+        textField.setValue("99");
+        button.click();
+
+        // expect to be scrolled all the way down
+        rows = grid.getBody().findElements(By.className("v-grid-row"));
+        row = rows.get(rows.size() - 1);
+        assertEquals("99", row.getText());
+
+        assertElementAtBottom(row);
     }
 
     @Test
@@ -166,6 +191,29 @@ public class GridScrollDestinationTest extends SingleBrowserTest {
         rows = grid.getBody().findElements(By.className("v-grid-row"));
         row = rows.get(rows.size() - 2);
         assertEquals("50", row.getText());
+
+        assertElementAtBottom(row);
+
+        // scroll to beginning using scroll destination
+        textField.setValue("0");
+        button.click();
+        button.click();
+
+        // expect to be scrolled all the way up
+        rows = grid.getBody().findElements(By.className("v-grid-row"));
+        row = rows.get(0);
+        assertEquals("0", row.getText());
+
+        assertElementAtTop(row);
+
+        // scroll to end using scroll destination
+        textField.setValue("99");
+        button.click();
+
+        // expect to be scrolled all the way down
+        rows = grid.getBody().findElements(By.className("v-grid-row"));
+        row = rows.get(rows.size() - 1);
+        assertEquals("99", row.getText());
 
         assertElementAtBottom(row);
     }
@@ -226,6 +274,28 @@ public class GridScrollDestinationTest extends SingleBrowserTest {
         assertEquals("50", row.getText());
 
         assertElementAtTop(row);
+
+        // scroll to beginning using scroll destination
+        textField.setValue("0");
+        button.click();
+
+        // expect to be scrolled all the way up
+        rows = grid.getBody().findElements(By.className("v-grid-row"));
+        row = rows.get(0);
+        assertEquals("0", row.getText());
+
+        assertElementAtTop(row);
+
+        // scroll to end using scroll destination
+        textField.setValue("99");
+        button.click();
+
+        // expect to be scrolled all the way down
+        rows = grid.getBody().findElements(By.className("v-grid-row"));
+        row = rows.get(rows.size() - 1);
+        assertEquals("99", row.getText());
+
+        assertElementAtBottom(row);
     }
 
     @Test
@@ -287,5 +357,27 @@ public class GridScrollDestinationTest extends SingleBrowserTest {
         assertEquals("50", row.getText());
 
         assertElementAtMiddle(row);
+
+        // scroll to beginning using scroll destination
+        textField.setValue("0");
+        button.click();
+
+        // expect to be scrolled all the way up
+        rows = grid.getBody().findElements(By.className("v-grid-row"));
+        row = rows.get(0);
+        assertEquals("0", row.getText());
+
+        assertElementAtTop(row);
+
+        // scroll to end using scroll destination
+        textField.setValue("99");
+        button.click();
+
+        // expect to be scrolled all the way down
+        rows = grid.getBody().findElements(By.className("v-grid-row"));
+        row = rows.get(rows.size() - 1);
+        assertEquals("99", row.getText());
+
+        assertElementAtBottom(row);
     }
 }
