@@ -100,6 +100,8 @@ public class Upload extends AbstractComponent
 
     private String buttonCaption = "Upload";
 
+    private boolean buttonCaptionAsHtml = false;
+
     private String buttonStyleName;
 
     /**
@@ -190,6 +192,8 @@ public class Upload extends AbstractComponent
                 target.addAttribute("buttonstylename", buttonStyleName);
             }
         }
+
+        target.addAttribute("buttoncaptionashtml", buttonCaptionAsHtml);
 
         target.addAttribute("nextid", nextid);
 
@@ -866,6 +870,35 @@ public class Upload extends AbstractComponent
      */
     public void setReceiver(Receiver receiver) {
         this.receiver = receiver;
+    }
+
+    /**
+     * Checks whether captions on upload button are rendered as HTML
+     * <p>
+     * The default is false, i.e. to render that caption as plain text.
+     *
+     * @return true if the captions are rendered as HTML, false if rendered as
+     *         plain text
+     */
+    public boolean isButtonCaptionAsHtml() {
+        return buttonCaptionAsHtml;
+    }
+
+    /**
+     * Sets whether the caption on upload button is rendered as HTML.
+     * <p>
+     * If set to true, the captions are rendered in the browser as HTML and the
+     * developer is responsible for ensuring no harmful HTML is used. If set to
+     * false, the caption is rendered in the browser as plain text.
+     * <p>
+     * The default is false, i.e. to render that caption as plain text.
+     *
+     * @param captionAsHtml
+     *            true if the captions are rendered as HTML, false if rendered
+     *            as plain text
+     */
+    public void setButtonCaptionAsHtml(boolean buttonCaptionAsHtml) {
+        this.buttonCaptionAsHtml = buttonCaptionAsHtml;
     }
 
     /**

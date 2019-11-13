@@ -67,8 +67,13 @@ public class UploadConnector extends AbstractComponentConnector
                 .translateVaadinUri(uidl.getStringVariable("action"));
         upload.element.setAction(action);
         if (uidl.hasAttribute("buttoncaption")) {
-            upload.submitButton
-                    .setText(uidl.getStringAttribute("buttoncaption"));
+            if (isButtonCaptionAsHtml(uidl)) {
+                upload.submitButton
+                        .setHtml(uidl.getStringAttribute("buttoncaption"));
+            } else {
+                upload.submitButton
+                        .setText(uidl.getStringAttribute("buttoncaption"));
+            }
             if (uidl.hasAttribute("buttonstylename")) {
                 upload.submitButton.setStyleName(
                         uidl.getStringAttribute("buttonstylename"));
@@ -86,6 +91,14 @@ public class UploadConnector extends AbstractComponentConnector
             upload.enableUpload();
             upload.ensureTargetFrame();
         }
+    }
+
+    private boolean isButtonCaptionAsHtml(UIDL uidl) {
+        if (!uidl.hasAttribute("buttoncaptionashtml")) {
+            return false;
+        }
+
+        return uidl.getBooleanAttribute("buttoncaptionashtml");
     }
 
     @Override
