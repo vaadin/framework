@@ -16,6 +16,7 @@
 package com.vaadin.tests.layouts.layouttester.GridLayout;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
@@ -38,5 +39,14 @@ public class GridIcon extends GridBaseLayoutTestUI {
         layout.addComponent(createLabelsFields(Link.class, true, ""));
         layout.addComponent(createLabelsFields(TabSheet.class, true, ""));
         super.setup(request);
+    }
+
+    @Override
+    protected void setLayoutMeasures(AbstractOrderedLayout l1,
+            AbstractOrderedLayout l2, String w, String h) {
+        super.setLayoutMeasures(l1, l2, "400px", "-1px");
+        l1.setSpacing(true);
+        l2.setSpacing(true);
+        mainLayout.setSpacing(true);
     }
 }

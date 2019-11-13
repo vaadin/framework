@@ -43,8 +43,7 @@ public abstract class GridBaseLayoutTestUI extends BaseLayoutTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        layout.setMargin(true);
-        layout.setSizeFull();
+        layout.setSizeUndefined();
         getUI().setContent(layout);
     }
 
@@ -55,9 +54,7 @@ public abstract class GridBaseLayoutTestUI extends BaseLayoutTestUI {
         layout.setMargin(false);
 
         final AbstractComponent c1 = getTestTable();
-        c1.setSizeFull();
         final AbstractComponent c2 = getTestTable();
-        c2.setSizeFull();
 
         class SetSizeButton extends Button {
             SetSizeButton(final String size) {
@@ -73,6 +70,7 @@ public abstract class GridBaseLayoutTestUI extends BaseLayoutTestUI {
                         } else if (compType == "component") {
                             c2.setHeight(size);
                             c2.setWidth(size);
+                            c2.setCaption("Configured width");
                         } else {
                         }
 
@@ -81,7 +79,7 @@ public abstract class GridBaseLayoutTestUI extends BaseLayoutTestUI {
             }
 
         }
-        Button btn1 = new SetSizeButton("550px");
+        Button btn1 = new SetSizeButton("350px");
         Button btn2 = new SetSizeButton("-1px");
         Button btn3 = new SetSizeButton("75%");
         Button btn4 = new SetSizeButton("100%");
@@ -104,5 +102,6 @@ public abstract class GridBaseLayoutTestUI extends BaseLayoutTestUI {
                 layout.addComponent(newLabel);
             }
         });
+        btn2.setCaption(btn2.getCaption() + " + add Label");
     }
 }
