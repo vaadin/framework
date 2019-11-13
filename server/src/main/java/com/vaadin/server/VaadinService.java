@@ -549,7 +549,7 @@ public abstract class VaadinService implements Serializable {
      * @param lock
      *            The lock object
      */
-    private void setSessionLock(WrappedSession wrappedSession, Lock lock) {
+    protected void setSessionLock(WrappedSession wrappedSession, Lock lock) {
         if (wrappedSession == null) {
             throw new IllegalArgumentException(
                     "Can't set a lock for a null session");
@@ -567,7 +567,7 @@ public abstract class VaadinService implements Serializable {
      *
      * @return The attribute name for the lock
      */
-    private String getLockAttributeName() {
+    protected String getLockAttributeName() {
         return getServiceName() + ".lock";
     }
 
