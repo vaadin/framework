@@ -38,6 +38,7 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -328,21 +329,41 @@ public class VTwinColSelect extends Composite implements MultiSelectWidget,
 
     private static void updateListBox(ListBox listBox,
             List<JsonObject> options) {
+        List<String> selected = new ArrayList<String>();
+        // Retain right visible selection, see #11287
+        for (int i = 0; i < listBox.getItemCount(); ++i) {
+            if (listBox.isItemSelected(i)) {
+                selected.add(listBox.getItemText(i));
+            }
+        }
         for (int i = 0; i < options.size(); i++) {
             final JsonObject item = options.get(i);
             // reuse existing option if possible
+            String caption = MultiSelectWidget.getCaption(item);
             if (i < listBox.getItemCount()) {
-                listBox.setItemText(i, MultiSelectWidget.getCaption(item));
+                listBox.setItemText(i, caption);
                 listBox.setValue(i, MultiSelectWidget.getKey(item));
             } else {
-                listBox.addItem(MultiSelectWidget.getCaption(item),
-                        MultiSelectWidget.getKey(item));
+                listBox.addItem(caption, MultiSelectWidget.getKey(item));
             }
+            boolean isSelected = selected.contains(caption);
+            listBox.setItemSelected(i, isSelected);
+            if (isSelected) {
+                // Ensure that last selected item is visible
+                scrollToView(listBox,i);
+            }            
         }
         // remove extra
         for (int i = listBox.getItemCount() - 1; i >= options.size(); i--) {
             listBox.removeItem(i);
         }
+    }
+
+    private static void scrollToView(ListBox listBox, int i) {
+        Scheduler.get().scheduleDeferred(() -> {
+             Element el = (Element) listBox.getElement().getChild(i);
+             el.scrollIntoView();
+        });
     }
 
     private static boolean[] getSelectionBitmap(ListBox listBox) {
@@ -385,6 +406,7 @@ public class VTwinColSelect extends Composite implements MultiSelectWidget,
                 final String text = source.getItemText(optionIndex);
                 final String value = source.getValue(optionIndex);
                 target.addItem(text, value);
+                target.setItemSelected(target.getItemCount() - 1, true);                    
                 source.removeItem(optionIndex);
             }
         }
@@ -396,27 +418,7 @@ public class VTwinColSelect extends Composite implements MultiSelectWidget,
             source.setFocus(true);
         }
 
-        for (String item: movedItems) {
-            setSelectedItem(target,item);
-        }
-
         return movedItems;
-    }
-
-    private static void setSelectedItem(ListBox select, String value) {
-    	if (value == null) return;
-    	// There is a bug in GWT ListBox, it retains selection by indexes after
-    	// being sorted when new item has been added. This is a workaround.
-    	// See issue #11287
-        Scheduler.get().scheduleFixedDelay(() -> {
-            for (int i=0;i<select.getItemCount();i++) {
-                if (select.getValue(i).equals(value)) {
-                    select.setItemSelected(i, true);
-                    break;
-                }
-            }
-            return false;
-        },100);        	
     }
 
     @Override
