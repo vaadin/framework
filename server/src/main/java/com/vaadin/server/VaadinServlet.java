@@ -33,6 +33,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -1349,15 +1350,22 @@ public class VaadinServlet extends HttpServlet implements Constants {
      */
     protected String getStaticFilePath(HttpServletRequest request) {
         String pathInfo = request.getPathInfo();
-        if (pathInfo == null) {
+        String decodedPath = null;
+        try {
+            // pathInfo should be already decoded, but some containers do not decode
+            decodedPath = URLDecoder.decode(pathInfo, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("An error occurred during decoding URL.",e);
+        }
+        if (decodedPath == null) {
             return null;
         }
         // Servlet mapped as /* serves at /VAADIN
         // Servlet mapped as /foo/bar/* serves at /foo/bar/VAADIN
-        if (pathInfo.startsWith("/VAADIN/")) {
+        if (decodedPath.startsWith("/VAADIN/")) {
             return pathInfo;
         }
-        String servletPrefixedPath = request.getServletPath() + pathInfo;
+        String servletPrefixedPath = request.getServletPath() + decodedPath;
         // Servlet mapped as /VAADIN/*
         if (servletPrefixedPath.startsWith("/VAADIN/")) {
             return servletPrefixedPath;
