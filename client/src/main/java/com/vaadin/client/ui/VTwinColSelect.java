@@ -406,7 +406,7 @@ public class VTwinColSelect extends Composite implements MultiSelectWidget,
                 final String text = source.getItemText(optionIndex);
                 final String value = source.getValue(optionIndex);
                 target.addItem(text, value);
-                target.setItemSelected(target.getItemCount() - 1, true);                    
+                target.setItemSelected(target.getItemCount() - 1, true);
                 source.removeItem(optionIndex);
             }
         }
