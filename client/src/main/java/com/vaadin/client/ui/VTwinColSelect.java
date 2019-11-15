@@ -352,7 +352,7 @@ public class VTwinColSelect extends Composite implements MultiSelectWidget,
             if (isSelected) {
                 // Ensure that last selected item is visible
                 scrollToView(listBox,i);
-            }            
+            }
         }
         // remove extra
         for (int i = listBox.getItemCount() - 1; i >= options.size(); i--) {
