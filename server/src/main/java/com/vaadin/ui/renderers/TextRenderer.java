@@ -52,14 +52,12 @@ public class TextRenderer extends AbstractRenderer<Object, Object> {
     public JsonValue encode(Object value) {
         if (value == null) {
             return super.encode(null);
-        } else {
-            String stringValue = value.toString();
-            if (stringValue == null) {
-                return super.encode(null);
-            } else {
-                return Json.create(stringValue);
-            }
         }
+        String stringValue = value.toString();
+        if (stringValue == null) {
+            return super.encode(null);
+        }
+        return Json.create(stringValue);
     }
 
     @Override
