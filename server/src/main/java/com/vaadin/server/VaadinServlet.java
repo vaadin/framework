@@ -1361,12 +1361,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("An error occurred during decoding URL.",e);
         }
+        String filePath = decodedPath.replace(request.getContextPath(), "");
         // Servlet mapped as /* serves at /VAADIN
         // Servlet mapped as /foo/bar/* serves at /foo/bar/VAADIN
-        if (decodedPath.startsWith("/VAADIN/")) {
-            return decodedPath;
+        if (filePath.startsWith("/VAADIN/")) {
+            return filePath;
         }
-        String servletPrefixedPath = request.getServletPath() + decodedPath;
+        String servletPrefixedPath = request.getServletPath() + filePath;
         // Servlet mapped as /VAADIN/*
         if (servletPrefixedPath.startsWith("/VAADIN/")) {
             return servletPrefixedPath;
