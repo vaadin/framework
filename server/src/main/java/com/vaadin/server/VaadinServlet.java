@@ -1364,7 +1364,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
             throw new RuntimeException("An error occurred during decoding URL.",e);
         }
         String filePath = decodedPath.substring(contextPath.length());
-        if (filePath.equals("/VAADIN")) filePath = "/VAADIN/";
         // Servlet mapped as /* serves at /VAADIN
         // Servlet mapped as /foo/bar/* serves at /foo/bar/VAADIN
         if (filePath.startsWith("/VAADIN/")) {
