@@ -82,6 +82,7 @@ public class VTwinColSelect extends Composite implements MultiSelectWidget,
     private static final int VISIBLE_COUNT = 10;
 
     private static final int DEFAULT_COLUMN_COUNT = 10;
+    private static int scheduledScrollToItem = -1;
 
     private final DoubleClickListBox optionsListBox;
 
@@ -360,10 +361,16 @@ public class VTwinColSelect extends Composite implements MultiSelectWidget,
     }
 
     private static void scrollToView(ListBox listBox, int i) {
-        Scheduler.get().scheduleDeferred(() -> {
-             Element el = (Element) listBox.getElement().getChild(i);
-             el.scrollIntoView();
-        });
+        if (scheduledScrollToItem == -1) {
+            scheduledScrollToItem = i;
+            Scheduler.get().scheduleDeferred(() -> {
+                 Element el = (Element) listBox.getElement().getChild(scheduledScrollToItem);
+                 el.scrollIntoView();
+                 scheduledScrollToItem = -1;
+            });
+        } else {
+            scheduledScrollToItem = i;
+        }
     }
 
     private static boolean[] getSelectionBitmap(ListBox listBox) {
