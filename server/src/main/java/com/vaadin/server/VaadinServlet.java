@@ -1365,7 +1365,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
         String filePath = decodedPath.substring(contextPath.length());
         String servletPath = request.getServletPath();
-        if (!servletPath.isEmpty()) {
+        if (!servletPath.isEmpty() && !serlvetPath.equals("/VAADIN")) {
             filePath = filePath.substring(servletPath.length());
         }        
         // Servlet mapped as /* serves at /VAADIN
