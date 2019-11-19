@@ -116,6 +116,8 @@ public class VaadinServletTest {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         Mockito.when(request.getServletPath()).thenReturn(servletPath);
         Mockito.when(request.getPathInfo()).thenReturn(pathInfo);
+        Mockito.when(request.getRequestURI()).thenReturn("/context"+pathInfo);
+        Mockito.when(request.getContextPath()).thenReturn("/context");
         return request;
     }
 }
