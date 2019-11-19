@@ -1,3 +1,5 @@
+package com.vaadin.tests.components.combobox;
+
 import java.util.List;
 
 import org.junit.Assert;
@@ -8,7 +10,7 @@ import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ComboboxPageLengthZeroFilterTest extends MultiBrowserTest {
-	
+
     @Test
     public void testOptionsNotEmpty() {
         openTestURL();
