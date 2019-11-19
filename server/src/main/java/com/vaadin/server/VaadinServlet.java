@@ -1350,21 +1350,23 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @since 8.0
      */
     protected String getStaticFilePath(HttpServletRequest request) {
-        String pathInfo = request.getPathInfo();
-        if (pathInfo == null) {
+        if (request.getPathInfo() == null) {
             return null;
         }
         String decodedPath = null;
         String contextPath = null;
         try {
-            // pathInfo should be already decoded, but some containers do not decode
+            // pathInfo should be already decoded, but some containers do not decode it,
+            // hence we use getRequestURI instead.
             decodedPath = URLDecoder.decode(request.getRequestURI(), StandardCharsets.UTF_8.name());
             contextPath = URLDecoder.decode(request.getContextPath(), StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("An error occurred during decoding URL.",e);
         }
+        // Possible context path needs to be removed
         String filePath = decodedPath.substring(contextPath.length());
         String servletPath = request.getServletPath();
+        // Possible servlet path needs to be removed
         if (!servletPath.isEmpty() && !servletPath.equals("/VAADIN") 
                 && filePath.startsWith(servletPath)) {
             filePath = filePath.substring(servletPath.length());
