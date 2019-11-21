@@ -252,4 +252,26 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
         $(TreeElement.class).first().getItem(0).showTooltip();
         assertEquals("", "0 | 0", getTooltipElement().getText());
     }
+
+    @Test
+    public void tree_disable_enable_expand_collapse() {
+        TreeElement tree = $(TreeElement.class).first();
+        selectMenuPath("Component", "Enabled");
+        assertTrue(tree.hasClassName("v-disabled"));
+        // ensure expanding doesn't work
+        tree.expand(0);
+        assertEquals("0 | 1", tree.getItem(1).getText());
+        selectMenuPath("Component", "Enabled");
+        assertFalse(tree.hasClassName("v-disabled"));
+        // ensure expanding and collapsing works again
+        tree.expand(0);
+        assertEquals("1 | 0", tree.getItem(1).getText());
+        tree.collapse(0);
+        assertEquals("0 | 1", tree.getItem(1).getText());
+        // same test for server-side expanding and collapsing
+        selectMenuPath("Component", "Expand 0 | 0");
+        assertEquals("1 | 0", tree.getItem(1).getText());
+        selectMenuPath("Component", "Collapse 0 | 0");
+        assertEquals("0 | 1", tree.getItem(1).getText());
+    }
 }
