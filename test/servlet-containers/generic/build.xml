@@ -39,10 +39,10 @@
     <target name="clean-testbench-errors"><!--todo remove when have got rid of screenshots-->
         <fail unless="com.vaadin.testbench.screenshot.directory"
             message="Define screenshot directory using -Dcom.vaadin.testbench.screenshot.directory" />
-        <mkdir dir="${com.vaadin.testbench.screenshot.directory}/errors" />
+        <mkdir dir="${com.vaadin.testbench.screenshot.directory}/error-screenshots" />
         <delete>
             <fileset
-                dir="${com.vaadin.testbench.screenshot.directory}/errors">
+                dir="${com.vaadin.testbench.screenshot.directory}/error-screenshots">
                 <include name="*" />
             </fileset>
         </delete>
