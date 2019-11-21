@@ -288,7 +288,7 @@ public class TreeGridConnector extends GridConnector {
      */
     private void setCollapsed(int rowIndex, boolean collapsed,
             boolean userOriginated) {
-        if (isAwaitingRowChange()) {
+        if (isAwaitingRowChange() || !getState().enabled) {
             return;
         }
         if (collapsed) {
