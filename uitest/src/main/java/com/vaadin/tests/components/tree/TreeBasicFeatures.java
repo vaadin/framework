@@ -115,6 +115,15 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
                                 ? t -> "level" + t.getDepth()
                                 : t -> null))
                 .setCheckable(true);
+        MenuItem enabled = componentMenu.addItem("Enabled",
+                menuItem -> tree.setEnabled(!tree.isEnabled()));
+        enabled.setCheckable(true);
+        enabled.setChecked(true);
+
+        componentMenu.addItem("Expand 0 | 0",
+                menuItem -> tree.expand(new HierarchicalTestBean(null, 0, 0)));
+        componentMenu.addItem("Collapse 0 | 0", menuItem -> tree
+                .collapse(new HierarchicalTestBean(null, 0, 0)));
 
         return menu;
     }
