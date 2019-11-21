@@ -6348,15 +6348,15 @@ public class VScrollTable extends FlowPanel
 
                         if (targetCellOrRowFound) {
                             setRowFocus(this);
-                            ensureFocus();
                             if (dragmode != 0 && (event
                                     .getButton() == NativeEvent.BUTTON_LEFT)) {
+                                ensureFocus();
                                 startRowDrag(event, type, targetTdOrTr);
 
                             } else if (event.getCtrlKey() || event.getShiftKey()
                                     || event.getMetaKey()
                                             && isMultiSelectModeDefault()) {
-
+                                ensureFocus();
                                 // Prevent default text selection in Firefox
                                 event.preventDefault();
 
