@@ -53,7 +53,7 @@ We're going to do the same as with the command-line approach - launch the `mvn j
 Before running any tests from your IDE you need to
 1. copy `uitest/eclipse-run-selected-test.properties` to `work/eclipse-run-selected-test.properties`
 2. edit `work/eclipse-run-selected-test.properties`
-    1. Define `com.vaadin.testbench.screenshot.directory` as the directory where you checked out the screenshots repository (this directory contains the “references” subdirectory)
+    1. Define `com.vaadin.testbench.screenshot.directory` as the `uitest` repository (this directory contains the “reference-screenshots” subdirectory)
     2. Set `com.vaadin.testbench.deployment.url=http://localhost:8888/`
     3. Set `com.vaadin.testbench.runLocally=chrome` to only run tests on Chrome. On Ubuntu you can then install Chrome driver easily:
        `sudo apt install chromium-chromedriver`

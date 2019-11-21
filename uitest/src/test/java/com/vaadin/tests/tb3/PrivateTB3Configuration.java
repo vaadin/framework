@@ -80,8 +80,9 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         String dir = System.getProperty(SCREENSHOT_DIRECTORY,
                 properties.getProperty(SCREENSHOT_DIRECTORY));
         if (dir != null && !dir.isEmpty()) {
-            String reference = Paths.get(dir, "reference").toString();
-            String errors = Paths.get(dir, "errors").toString();
+            String reference = Paths.get(dir, "reference-screenshots")
+                    .toString();
+            String errors = Paths.get(dir, "error-screenshots").toString();
             Parameters.setScreenshotReferenceDirectory(reference);
             Parameters.setScreenshotErrorDirectory(errors);
         } else {
