@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.textfield;
 
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.event.InputEvent;
 import com.vaadin.client.ui.VTextField;
 import com.vaadin.shared.ui.Connect;
@@ -44,7 +45,25 @@ public class TextFieldConnector extends AbstractTextFieldConnector {
 
     @Override
     public VTextField getWidget() {
-        return (VTextField) super.getWidget();
-    }
+        VTextField vTextField = (VTextField) super.getWidget();
 
+        /*-
+         * Stop the browser from showing its own suggestion popup.
+         *
+         * Using an invalid value instead of "off" as suggested by
+         * https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
+         *
+         * Leaving the non-standard Safari options autocapitalize and
+         * autocorrect untouched since those do not interfere in the same
+         * way.
+         */
+        if (BrowserInfo.get().isChrome()) {
+            // Chrome supports "off" and random number does not work with Chrome
+            vTextField.getElement().setAttribute("autocomplete", "off");
+        } else {
+            vTextField.getElement().setAttribute("autocomplete",
+                    Math.random() + "");
+        }
+        return vTextField;
+    }
 }
