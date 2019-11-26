@@ -216,6 +216,16 @@ public class Composite extends AbstractComponent implements HasComponents {
     }
 
     @Override
+    public void setEnabled(boolean enabled) {
+        getRootOrThrow().setEnabled(enabled);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return getRootOrThrow().isEnabled();
+    }
+
+    @Override
     public float getWidth() {
         return getRootOrThrow().getWidth();
     }
