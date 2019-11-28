@@ -296,7 +296,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         // name is not written to draft as validation / conversion
         // does not pass
-        assertNoteEquals(fieldValue, person.getFirstName());
+        assertNotEquals(fieldValue, person.getFirstName());
         // age is written to draft even if firstname validation
         // fails
         assertEquals(age, person.getAge());
