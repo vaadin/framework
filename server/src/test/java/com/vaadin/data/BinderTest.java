@@ -270,6 +270,26 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     }
 
     @Test
+    public void save_bound_beanAsDraft() {
+        Binder<Person> binder = new Binder<>();
+        binder.forField(nameField)
+            .withValidator((value,context) -> {
+                if (value.equals("Mike")) return ValidationResult.ok();
+                else return ValidationResult.error("value must be Mike");
+            })
+            .bind(Person::getFirstName, Person::setFirstName);
+
+        Person person = new Person();
+
+        String fieldValue = "John";
+        nameField.setValue(fieldValue);
+
+        binder.writeBeanAsDraft(person);
+
+        assertEquals(fieldValue, person.getFirstName());
+    }
+    
+    @Test
     public void load_bound_fieldValueIsUpdated() {
         binder.bind(nameField, Person::getFirstName, Person::setFirstName);
 
