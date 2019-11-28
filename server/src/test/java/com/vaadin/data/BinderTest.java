@@ -278,17 +278,28 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 else return ValidationResult.error("value must be Mike");
             })
             .bind(Person::getFirstName, Person::setFirstName);
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
 
         Person person = new Person();
 
         String fieldValue = "John";
         nameField.setValue(fieldValue);
 
+        int age = 10;
+        ageField.setValue("10");
+
         person.setFirstName("Mark");
 
         binder.writeBeanAsDraft(person);
 
-        assertEquals(fieldValue, person.getFirstName());
+        // name is not written to draft as validation / conversion
+        // does not pass
+        assertNoteEquals(fieldValue, person.getFirstName());
+        // age is written to draft even if firstname validation
+        // fails
+        assertEquals(age, person.getAge());
     }
     
     @Test
