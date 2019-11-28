@@ -284,6 +284,8 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         String fieldValue = "John";
         nameField.setValue(fieldValue);
 
+        person.setFirstName("John");
+
         binder.writeBeanAsDraft(person);
 
         assertEquals(fieldValue, person.getFirstName());
