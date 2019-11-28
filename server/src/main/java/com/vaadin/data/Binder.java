@@ -1787,6 +1787,24 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
+     * Writes successfully converted changes from the bound fields bypassing
+     * all the Validation. If the conversion fails, the value written to the
+     * bean will be null.
+     *
+     * @see #writeBean(Object)
+     * @see #writeBeanIfValid(Object)
+     * @see #readBean(Object)
+     * @see #setBean(Object)
+     *
+     * @param bean
+     *            the object to which to write the field values, not
+     *            {@code null}
+     */
+    public void writeBeanAsDraft(BEAN bean) {
+   		doWriteDraft(bean, new ArrayList<>(bindings));
+    }
+
+    /**
      * Writes changes from the bound fields to the given bean if all validators
      * (binding and bean level) pass.
      * <p>
@@ -1871,6 +1889,22 @@ public class Binder<BEAN> implements Serializable {
         getValidationStatusHandler().statusChange(status);
         fireStatusChangeEvent(!status.isOk());
         return status;
+    }
+
+    /**
+     * Writes the successfully converted field values into the given bean
+     *
+     * @param bean
+     *            the bean to write field values into
+     * @param bindings
+     *            the set of bindings to write to the bean
+     */
+    @SuppressWarnings({ "unchecked" })
+    private void doWriteDraft(BEAN bean, Collection<Binding<BEAN, ?>> bindings) {
+        Objects.requireNonNull(bean, "bean cannot be null");
+
+        bindings.forEach(binding -> ((BindingImpl<BEAN, ?, ?>) binding)
+                    .writeFieldValue(bean));
     }
 
     /**
