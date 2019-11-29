@@ -301,7 +301,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         // fails
         assertEquals(age, person.getAge());
     }
-    
+
     @Test
     public void load_bound_fieldValueIsUpdated() {
         binder.bind(nameField, Person::getFirstName, Person::setFirstName);
