@@ -1788,7 +1788,7 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Writes successfully converted and validated changes from the bound fields
-     * to the bean regardless if there are some fields with non-validated changes.
+     * to the bean even if there are other fields with non-validated changes.
      *
      * @see #writeBean(Object)
      * @see #writeBeanIfValid(Object)
