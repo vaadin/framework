@@ -1800,7 +1800,7 @@ public class Binder<BEAN> implements Serializable {
      *            {@code null}
      */
     public void writeBeanAsDraft(BEAN bean) {
-   		doWriteDraft(bean, new ArrayList<>(bindings));
+   	    doWriteDraft(bean, new ArrayList<>(bindings));
     }
 
     /**
