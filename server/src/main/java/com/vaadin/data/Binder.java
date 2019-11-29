@@ -228,13 +228,15 @@ public class Binder<BEAN> implements Serializable {
         public Setter<BEAN, TARGET> getSetter();
 
         /**
-         * By default asRequired validator is enabled, with parameter
-         * value false asRequired validator can be disabled.
+         * Enable or disable asRequired validator.
+         * The validator is enabled by default.
          *
          * @see #asRequired(String)
          * @see #asRequired(ErrorMessageProvider)
-         * 
-         * @param asRequiredEnabled A boolean value
+         *
+         * @param asRequiredEnabled
+         *            {@code false} if asRequired validator should
+         *            be disabled, {@code true} otherwise (default)
          */
         public void setAsRequiredEnabled(boolean asRequiredEnabled);
 
@@ -244,7 +246,8 @@ public class Binder<BEAN> implements Serializable {
          * @see #asRequired(String)
          * @see #asRequired(ErrorMessageProvider)
          *
-         * @return A boolean value
+         * @return {@code false} if asRequired validator is disabled
+         *         {@code true} otherwise (default)
          */
         public boolean isAsRequiredEnabled();
     }
@@ -941,7 +944,7 @@ public class Binder<BEAN> implements Serializable {
                 Validator<TARGET> customRequiredValidator) {
             checkUnbound();
             this.asRequiredSet = true;
-            field.setRequiredIndicatorVisible(true);            
+            field.setRequiredIndicatorVisible(true);
             return withValidator((value, context) -> {
                 if (!field.isRequiredIndicatorVisible())
                     return ValidationResult.ok();
@@ -1317,9 +1320,11 @@ public class Binder<BEAN> implements Serializable {
 
         @Override
         public void setAsRequiredEnabled(boolean asRequiredEnabled) {
-            if (!asRequiredSet) throw new IllegalStateException(
-                 "asRequired should be set for this binding to be " 
-                         + "able to toggle this on the fly.");
+            if (!asRequiredSet) {
+                throw new IllegalStateException(
+                 "Unable to toggle asRequired validation since " 
+                         + "asRequired has not been set.");
+            }
             if (asRequiredEnabled != isAsRequiredEnabled()) {
                 field.setRequiredIndicatorVisible(asRequiredEnabled);
                         validate();
