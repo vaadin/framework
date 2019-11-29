@@ -1891,7 +1891,8 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Writes the successfully converted field values into the given bean
+     * Writes the successfully converted and validated field values into the
+     * given bean.
      *
      * @param bean
      *            the bean to write field values into
