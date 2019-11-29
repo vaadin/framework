@@ -473,13 +473,13 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         TextField textField = new TextField();
         assertFalse(textField.isRequiredIndicatorVisible());
 
-        BindingBuilder<Person, String> binding = binder.forField(textField);
+        BindingBuilder<Person, String> bindingBuilder = binder.forField(textField);
         assertFalse(textField.isRequiredIndicatorVisible());
 
-        binding.asRequired("foobar");
+        bindingBuilder.asRequired("foobar");
         assertTrue(textField.isRequiredIndicatorVisible());
 
-        binding.bind(Person::getFirstName, Person::setFirstName);
+        Binding<Person, String> binding = bindingBuilder.bind(Person::getFirstName, Person::setFirstName);
         binder.setBean(item);
         assertNull(textField.getErrorMessage());
 
