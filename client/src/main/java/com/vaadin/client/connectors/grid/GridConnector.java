@@ -93,9 +93,9 @@ public class GridConnector extends AbstractListingConnector
      * The scrolling methods must trigger the scrolling only after any potential
      * resizing or other similar action triggered from the server side within
      * the same round trip has had a chance to happen, so there needs to be a
-     * delay. The delay is done with <code>scheduleFinally</code> rather than
-     * <code>scheduleDeferred</code> because the latter has been known to cause
-     * flickering in Grid.
+     * delay. The delay is done with <code>scheduleDeferred</code> rather than
+     * <code>scheduleFinally</code> because otherwise the order of the
+     * operations isn't guaranteed.
      *
      */
     private class GridConnectorClientRpc implements GridClientRpc {
@@ -107,7 +107,7 @@ public class GridConnector extends AbstractListingConnector
 
         @Override
         public void scrollToRow(int row, ScrollDestination destination) {
-            Scheduler.get().scheduleFinally(() -> {
+            Scheduler.get().scheduleDeferred(() -> {
                 grid.scrollToRow(row, destination);
                 // Add details refresh listener and handle possible detail
                 // for scrolled row.
@@ -121,12 +121,12 @@ public class GridConnector extends AbstractListingConnector
 
         @Override
         public void scrollToStart() {
-            Scheduler.get().scheduleFinally(() -> grid.scrollToStart());
+            Scheduler.get().scheduleDeferred(() -> grid.scrollToStart());
         }
 
         @Override
         public void scrollToEnd() {
-            Scheduler.get().scheduleFinally(() -> {
+            Scheduler.get().scheduleDeferred(() -> {
                 grid.scrollToEnd();
                 addDetailsRefreshCallback(() -> {
                     if (rowHasDetails(grid.getDataSource().size() - 1)) {
