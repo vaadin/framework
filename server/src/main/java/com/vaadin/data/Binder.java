@@ -241,7 +241,7 @@ public class Binder<BEAN> implements Serializable {
         public void setAsRequiredEnabled(boolean asRequiredEnabled);
 
         /**
-         * Returns if asRequired validator is currently enabled or not
+         * Returns whether asRequired validator is currently enabled or not
          *
          * @see #asRequired(String)
          * @see #asRequired(ErrorMessageProvider)
