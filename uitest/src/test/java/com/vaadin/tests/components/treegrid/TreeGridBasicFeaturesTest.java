@@ -348,6 +348,30 @@ public class TreeGridBasicFeaturesTest extends MultiBrowserTest {
         assertEquals("Not expanded", "1 | 0", grid.getCell(1, 0).getText());
     }
 
+    @Test
+    public void disable_enable_expand_collapse() {
+        TreeGridElement treeGrid = $(TreeGridElement.class).first();
+        selectMenuPath("Component", "State", "Enabled");
+        assertTrue(treeGrid.hasClassName("v-disabled"));
+        // ensure expanding doesn't work
+        treeGrid.expandWithClick(0);
+        assertCellTexts(1, 0, new String[] { "0 | 1" });
+        selectMenuPath("Component", "State", "Enabled");
+        assertFalse(treeGrid.hasClassName("v-disabled"));
+        // ensure expanding and collapsing works again
+        treeGrid.expandWithClick(0);
+        assertCellTexts(1, 0, new String[] { "1 | 0" });
+        treeGrid.collapseWithClick(0);
+        assertCellTexts(1, 0, new String[] { "0 | 1" });
+        // same test for server-side expanding and collapsing
+        selectMenuPath("Component", "Features", "Server-side expand",
+                "Expand 0 | 0");
+        assertCellTexts(1, 0, new String[] { "1 | 0" });
+        selectMenuPath("Component", "Features", "Server-side collapse",
+                "Collapse 0 | 0");
+        assertCellTexts(1, 0, new String[] { "0 | 1" });
+    }
+
     private void assertCellTexts(int startRowIndex, int cellIndex,
             String[] cellTexts) {
         int index = startRowIndex;

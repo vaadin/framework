@@ -43,7 +43,7 @@ public class VaadinBrowserFactory extends DefaultBrowserFactory {
         case PHANTOMJS:
             return create(browser, "1", Platform.LINUX);
         case CHROME:
-            return create(browser, "40", Platform.VISTA);
+            return create(browser, "", Platform.ANY);
         case FIREFOX:
         default:
             DesiredCapabilities dc = create(Browser.FIREFOX, "45",

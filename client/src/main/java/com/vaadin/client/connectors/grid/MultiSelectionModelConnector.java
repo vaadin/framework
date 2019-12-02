@@ -250,7 +250,7 @@ public class MultiSelectionModelConnector
 
     @Override
     protected boolean isSelected(JsonObject item) {
-        return getState().allSelected || super.isSelected(item);
+        return super.isSelected(item);
     }
 
     /**

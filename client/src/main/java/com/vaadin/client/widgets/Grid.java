@@ -7809,8 +7809,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
         }
 
-        assert cell != null : "received " + eventType
-                + "-event with a null cell target";
+        if (cell == null) {
+            getLogger().log(Level.WARNING,
+                    "received " + eventType + "-event with a null cell target");
+            return;
+        }
         eventCell.set(cell, getSectionFromContainer(container));
 
         GridEvent<T> gridEvent = new GridEvent<>(event, eventCell);

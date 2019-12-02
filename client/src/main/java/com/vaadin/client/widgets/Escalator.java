@@ -5059,9 +5059,10 @@ public class Escalator extends Widget
                 break;
             case END:
                 // target row at the bottom of the viewport
-                newTopRowLogicalIndex = Math.min(
-                        lastVisibleIndexIfScrollingDown + 1, getRowCount() - 1)
+                newTopRowLogicalIndex = lastVisibleIndexIfScrollingDown + 1
                         - visualRangeLength + 1;
+                newTopRowLogicalIndex = ensureTopRowLogicalIndexSanity(
+                        newTopRowLogicalIndex);
                 if ((newTopRowLogicalIndex > oldTopRowLogicalIndex)
                         && (newTopRowLogicalIndex
                                 - oldTopRowLogicalIndex < visualRangeLength)) {
@@ -5078,10 +5079,8 @@ public class Escalator extends Widget
                 // target row at the middle of the viewport, padding has to be
                 // zero or we never would have reached this far
                 newTopRowLogicalIndex = targetRowIndex - visualRangeLength / 2;
-                // ensure we don't attempt to go beyond the bottom row
-                if (newTopRowLogicalIndex + visualRangeLength > getRowCount()) {
-                    newTopRowLogicalIndex = getRowCount() - visualRangeLength;
-                }
+                newTopRowLogicalIndex = ensureTopRowLogicalIndexSanity(
+                        newTopRowLogicalIndex);
                 if (newTopRowLogicalIndex < oldTopRowLogicalIndex) {
                     logicalTargetIndex = newTopRowLogicalIndex;
                 } else if (newTopRowLogicalIndex > oldTopRowLogicalIndex) {
@@ -5102,8 +5101,9 @@ public class Escalator extends Widget
             case START:
                 // target row at the top of the viewport, include buffer
                 // row if there is room for one
-                newTopRowLogicalIndex = Math
-                        .max(firstVisibleIndexIfScrollingUp - 1, 0);
+                newTopRowLogicalIndex = firstVisibleIndexIfScrollingUp - 1;
+                newTopRowLogicalIndex = ensureTopRowLogicalIndexSanity(
+                        newTopRowLogicalIndex);
                 if (getVisibleRowRange().contains(newTopRowLogicalIndex)) {
                     logicalTargetIndex = oldTopRowLogicalIndex
                             + visualRangeLength;
@@ -5138,6 +5138,24 @@ public class Escalator extends Widget
                 // schedule updating of the physical indexes
                 domSorter.reschedule();
             }
+        }
+
+        /**
+         * Modifies the proposed top row logical index to fit within the logical
+         * range and to not leave gaps if it is avoidable.
+         *
+         * @param proposedTopRowLogicalIndex
+         * @return an adjusted index, or the original if no changes were
+         *         necessary
+         */
+        private int ensureTopRowLogicalIndexSanity(
+                int proposedTopRowLogicalIndex) {
+            int newTopRowLogicalIndex = Math.max(proposedTopRowLogicalIndex, 0);
+            int visualRangeLength = visualRowOrder.size();
+            if (newTopRowLogicalIndex + visualRangeLength > getRowCount()) {
+                newTopRowLogicalIndex = getRowCount() - visualRangeLength;
+            }
+            return newTopRowLogicalIndex;
         }
 
         /**
