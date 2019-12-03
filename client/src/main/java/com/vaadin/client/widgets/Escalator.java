@@ -7713,14 +7713,11 @@ public class Escalator extends Widget
     public void scrollToRowAndSpacer(final int rowIndex,
             final ScrollDestination destination, final int padding)
             throws IllegalArgumentException {
-        // wait for the layout phase to finish
-        Scheduler.get().scheduleFinally(() -> {
-            if (rowIndex != -1) {
-                verifyValidRowIndex(rowIndex);
-            }
-            body.scrollToRowSpacerOrBoth(rowIndex, destination, padding,
-                    ScrollType.ROW_AND_SPACER);
-        });
+        if (rowIndex != -1) {
+            verifyValidRowIndex(rowIndex);
+        }
+        body.scrollToRowSpacerOrBoth(rowIndex, destination, padding,
+                ScrollType.ROW_AND_SPACER);
     }
 
     private static void validateScrollDestination(
