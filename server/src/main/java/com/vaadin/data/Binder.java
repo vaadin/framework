@@ -228,26 +228,30 @@ public class Binder<BEAN> implements Serializable {
         public Setter<BEAN, TARGET> getSetter();
 
         /**
-         * Enable or disable asRequired validator.
-         * The validator is enabled by default.
+         * Enable or disable asRequired validator. The validator is enabled by
+         * default.
          *
          * @see #asRequired(String)
          * @see #asRequired(ErrorMessageProvider)
          *
          * @param asRequiredEnabled
-         *            {@code false} if asRequired validator should
-         *            be disabled, {@code true} otherwise (default)
+         *            {@code false} if asRequired validator should be disabled,
+         *            {@code true} otherwise (default)
+         *
+         * @since 8.10
          */
         public void setAsRequiredEnabled(boolean asRequiredEnabled);
 
         /**
-         * Returns whether asRequired validator is currently enabled or not
+         * Returns whether asRequired validator is currently enabled or not.
          *
          * @see #asRequired(String)
          * @see #asRequired(ErrorMessageProvider)
          *
          * @return {@code false} if asRequired validator is disabled
          *         {@code true} otherwise (default)
+         *
+         * @since 8.10
          */
         public boolean isAsRequiredEnabled();
     }
@@ -946,10 +950,11 @@ public class Binder<BEAN> implements Serializable {
             this.asRequiredSet = true;
             field.setRequiredIndicatorVisible(true);
             return withValidator((value, context) -> {
-                if (!field.isRequiredIndicatorVisible())
+                if (!field.isRequiredIndicatorVisible()) {
                     return ValidationResult.ok();
-                else
+                } else {
                     return customRequiredValidator.apply(value, context);
+                }
             });
         }
 
@@ -1281,7 +1286,8 @@ public class Binder<BEAN> implements Serializable {
                  * field doesn't accept null rather than throwing for some other
                  * reason.
                  */
-                if (convertedValue == null && getField().getEmptyValue() != null) {
+                if (convertedValue == null
+                        && getField().getEmptyValue() != null) {
                     throw new IllegalStateException(String.format(
                             "A field of type %s didn't accept a null value."
                                     + " If null values are expected, then configure a null representation for the binding.",
@@ -1322,12 +1328,12 @@ public class Binder<BEAN> implements Serializable {
         public void setAsRequiredEnabled(boolean asRequiredEnabled) {
             if (!asRequiredSet) {
                 throw new IllegalStateException(
-                 "Unable to toggle asRequired validation since " 
-                         + "asRequired has not been set.");
+                        "Unable to toggle asRequired validation since "
+                                + "asRequired has not been set.");
             }
             if (asRequiredEnabled != isAsRequiredEnabled()) {
                 field.setRequiredIndicatorVisible(asRequiredEnabled);
-                        validate();
+                validate();
             }
         }
 
@@ -1732,7 +1738,7 @@ public class Binder<BEAN> implements Serializable {
      * <p>
      * After updating each field, the value is read back from the field and the
      * bean's property value is updated if it has been changed from the original
-     * value by the field or a converter.     
+     * value by the field or a converter.
      *
      * @see #readBean(Object)
      * @see #writeBean(Object)
@@ -1799,8 +1805,9 @@ public class Binder<BEAN> implements Serializable {
                 // avoid NPE inside initFieldValue. It happens e.g. when
                 // we unbind a binding in valueChangeListener of another
                 // field.
-                if (binding.getField() != null)
+                if (binding.getField() != null) {
                     binding.initFieldValue(bean, false);
+                }
             });
             getValidationStatusHandler().statusChange(
                     BinderValidationStatus.createUnresolvedStatus(this));
@@ -1851,6 +1858,8 @@ public class Binder<BEAN> implements Serializable {
      * @param bean
      *            the object to which to write the field values, not
      *            {@code null}
+     *
+     * @since 8.10
      */
     public void writeBeanAsDraft(BEAN bean) {
         doWriteDraft(bean, new ArrayList<>(bindings));
@@ -1953,11 +1962,12 @@ public class Binder<BEAN> implements Serializable {
      *            the set of bindings to write to the bean
      */
     @SuppressWarnings({ "unchecked" })
-    private void doWriteDraft(BEAN bean, Collection<Binding<BEAN, ?>> bindings) {
+    private void doWriteDraft(BEAN bean,
+            Collection<Binding<BEAN, ?>> bindings) {
         Objects.requireNonNull(bean, "bean cannot be null");
 
         bindings.forEach(binding -> ((BindingImpl<BEAN, ?, ?>) binding)
-                    .writeFieldValue(bean));
+                .writeFieldValue(bean));
     }
 
     /**

@@ -202,7 +202,7 @@ public abstract class VaadinService implements Serializable {
      * @since 8.2
      */
     protected VaadinService() {
-        this.deploymentConfiguration = null;
+        deploymentConfiguration = null;
     }
 
     /**
@@ -1232,6 +1232,9 @@ public abstract class VaadinService implements Serializable {
      * default called at the end of each request, after sending the response.
      *
      * @param session
+     *            the session to clean up
+     *
+     * @since 8.10
      */
     public void cleanupSession(VaadinSession session) {
         if (isSessionActive(session)) {
