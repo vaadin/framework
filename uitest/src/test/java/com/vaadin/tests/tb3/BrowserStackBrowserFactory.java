@@ -45,6 +45,9 @@ public class BrowserStackBrowserFactory extends DefaultBrowserFactory {
             caps.setCapability("ie.ensureCleanSession", true);
             caps.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION,
                     true);
+            // Workaround for an IE11 bug in BrowserStack sendKeys handling, see
+            // https://www.browserstack.com/automate/using-sendkeys-on-remote-IE11
+            caps.setCapability("browserstack.sendKeys", true);
             break;
         default:
             caps = DesiredCapabilities.firefox();
