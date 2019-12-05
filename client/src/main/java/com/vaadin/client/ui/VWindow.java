@@ -1014,14 +1014,20 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             // if clicked or key ENTER or SPACE is pressed
         } else if (isClosable() && target == closeBox) {
             if (type == Event.ONCLICK || (type == Event.ONKEYUP
-                    && isKeyEnterOrSpace(event.getKeyCode()))) {
-                onCloseClick();
+                    && (isKeyEnterOrSpace(event.getKeyCode()))
+                    || event.getKeyCode() == KeyCodes.KEY_ESCAPE)) {
+                closeWindow();
             }
             bubble = false;
         } else if (target == maximizeRestoreBox) {
+            // if ESC is pressed, close the window
+            if (type == Event.ONKEYUP
+                    && event.getKeyCode() == KeyCodes.KEY_ESCAPE) {
+                closeWindow();
+            }
             // handled in connector
             // if clicked or key ENTER or SPACE is pressed
-            if (type != Event.ONCLICK && !(type == Event.ONKEYUP
+            else if (type != Event.ONCLICK && !(type == Event.ONKEYUP
                     && isKeyEnterOrSpace(event.getKeyCode()))) {
                 bubble = false;
             }
@@ -1097,7 +1103,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
     }
 
-    private void onCloseClick() {
+    private void closeWindow() {
         // Send the close event to the server
         client.updateVariable(id, "close", true, true);
     }
