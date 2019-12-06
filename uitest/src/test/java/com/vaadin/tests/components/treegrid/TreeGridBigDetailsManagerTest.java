@@ -762,7 +762,7 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
 
         assertThat("Scroll to 55 didn't scroll as expected",
                 (double) detailsY + detailsHeight,
-                closeTo(wrapperY + wrapperHeight, 1d));
+                closeTo(wrapperY + wrapperHeight, 2d));
 
         $(ButtonElement.class).id(SCROLL_TO_3055).click();
         waitUntil(expectedConditionDetails(74, 5, null));
@@ -775,7 +775,7 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
 
         assertThat("Scroll to 3055 didn't scroll as expected",
                 (double) detailsY + detailsHeight,
-                closeTo(wrapperY + wrapperHeight, 1d));
+                closeTo(wrapperY + wrapperHeight, 2d));
 
         $(ButtonElement.class).id(SCROLL_TO_END).click();
         waitUntil(expectedConditionDetails(99, 9, 2));
@@ -792,7 +792,7 @@ public class TreeGridBigDetailsManagerTest extends MultiBrowserTest {
 
         assertThat("Scroll to end didn't scroll as expected",
                 (double) detailsY + detailsHeight,
-                closeTo(wrapperY + wrapperHeight, 1d));
+                closeTo(wrapperY + wrapperHeight, 2d));
 
         $(ButtonElement.class).id(SCROLL_TO_START).click();
         waitUntil(expectedConditionDetails(0, 0, 0));

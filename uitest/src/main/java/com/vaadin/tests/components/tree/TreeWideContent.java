@@ -17,7 +17,7 @@ public class TreeWideContent extends AbstractTestUI {
         tree.setWidth("150px");
         tree.setHeight("100px");
 
-        TreeData<String> data = new TreeData();
+        TreeData<String> data = new TreeData<>();
         data.addItem(null, "Foo");
         data.addItem("Foo", "Extra long text content that should be wider"
                 + " than the allocated width of the Tree.");
