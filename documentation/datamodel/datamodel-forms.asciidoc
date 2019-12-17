@@ -138,6 +138,7 @@ binder.forField(nameField)
 
 binder.forField(titleField)
   // Shorthand for requiring the field to be non-empty
+  // This is conditional on Binding::setAsRequiredEnabled(boolean)
   .asRequired("Every employee must have a title")
   .bind(Person::getTitle, Person::setTitle);
 ----
@@ -382,6 +383,11 @@ if (saved) {
 ----
 --
 
+[NOTE]
+Note, if you need to write the values passing the validation regardless of having one or more failing validators, you can
+use binder.writeBeanAsDraft(person).
+
+
 Binder keeps track of which bindings have been updated by the user and which bindings are in an invalid state.
 It also fires an event when this status changes.
 We can use that event to make the save and reset buttons of our forms become enabled or disabled depending on the current status of the form.
@@ -611,4 +617,11 @@ binder.forField(yearOfBirth)
   .bind(Person::getYearOfBirth, Person::setYearOfBirth));
 
 binder.bindInstanceFields(this);
+----
+
+[NOTE]
+If you need to bind nested proprerties with bindInstanceFields method, you need to instantiate the Binder using: 
+[source,java]
+----
+Binder<Person> binder = new Binder<>(Person.class,true);
 ----
