@@ -81,6 +81,7 @@ import com.vaadin.client.ui.aria.HandlesAriaRequired;
 import com.vaadin.client.ui.combobox.ComboBoxConnector;
 import com.vaadin.client.ui.menubar.MenuBar;
 import com.vaadin.client.ui.menubar.MenuItem;
+import com.vaadin.client.ui.orderedlayout.Slot;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.util.SharedUtil;
@@ -899,19 +900,27 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 }
             }
 
-            if (offsetWidth + menuMarginBorderPaddingWidth
-                    + left < VComboBox.this.getAbsoluteLeft()
-                            + VComboBox.this.getOffsetWidth()) {
-                // Popup doesn't reach all the way to the end of the input
-                // field, filtering may have changed the popup width.
-                left = VComboBox.this.getAbsoluteLeft();
+            int comboBoxLeft = VComboBox.this.getAbsoluteLeft();
+            int comboBoxWidth = VComboBox.this.getOffsetWidth();
+            if (hasParentWithUnadjustedPositioning()) {
+                // ComboBox itself may be incorrectly positioned, don't adjust
+                // popup position yet. Width calculations must be performed
+                // anyway to avoid flickering.
+                return;
+            }
+            if (left > comboBoxLeft
+                    || offsetWidth + menuMarginBorderPaddingWidth
+                            + left < comboBoxLeft + comboBoxWidth) {
+                // Popup is positioned too far right or doesn't reach all the
+                // way to the end of the input field, filtering may have changed
+                // the popup width.
+                left = comboBoxLeft;
             }
             if (offsetWidth + menuMarginBorderPaddingWidth + left > Window
                     .getClientWidth()) {
                 // Popup doesn't fit the view, needs to be opened to the left
                 // instead.
-                left = VComboBox.this.getAbsoluteLeft()
-                        + VComboBox.this.getOffsetWidth() - offsetWidth
+                left = comboBoxLeft + comboBoxWidth - offsetWidth
                         - (int) menuMarginBorderPaddingWidth;
             }
             if (left < 0) {
@@ -921,6 +930,50 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
             setPopupPosition(left, top);
             menu.scrollSelectionIntoView();
+        }
+
+        /**
+         * Checks whether there are any {@link VHorizontalLayout}s with
+         * incomplete internal position calculations among this VComboBox's
+         * parents.
+         *
+         * @return {@code true} if unadjusted parents found, {@code false}
+         *         otherwise
+         */
+        private boolean hasParentWithUnadjustedPositioning() {
+            /*
+             * If there are any VHorizontalLayouts among this VComboBox's
+             * parents, any spacing or expand ratio may cause incorrect
+             * intermediate positioning. The status of the layout's internal
+             * positioning can be checked from the first slot's margin-left
+             * style, which will be set to 0px if no spacing or expand ratio
+             * adjustments are needed, and to a negative pixel amount if they
+             * are. If the style hasn't been set at all, calculations are still
+             * underway. Popup position shouldn't be adjusted before such
+             * calculations have been finished.
+             *
+             * VVerticalLayout has the same logic but it only affects the
+             * vertical positioning, which is irrelevant for the calculations
+             * here.
+             */
+            Widget toCheck = VComboBox.this;
+            while (toCheck != null && !(toCheck.getParent() instanceof VUI)) {
+                toCheck = toCheck.getParent();
+                if (toCheck instanceof VHorizontalLayout) {
+                    VHorizontalLayout hLayout = (VHorizontalLayout) toCheck;
+                    // because hLayout is a parent it must have at least one
+                    // child widget
+                    Widget slot = hLayout.getWidget(0);
+                    if (slot instanceof Slot && slot.getElement().getStyle()
+                            .getMarginLeft().isEmpty()) {
+                        // margin hasn't been set, layout's internal positioning
+                        // is still being adjusted and ComboBox's position may
+                        // not be final
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         /**
