@@ -49,7 +49,7 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
      *            the bean type to use, not <code>null</code>
      */
     public BeanValidationBinder(Class<BEAN> beanType) {
-        this(beanType,false);
+        this(beanType, false);
     }
 
     /**
@@ -65,8 +65,11 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
      *            the bean type to use, not {@code null}
      * @param scanNestedDefinitions
      *            if {@code true}, scan for nested property definitions as well
+     * 
+     * @since 8.10
      */
-    public BeanValidationBinder(Class<BEAN> beanType, boolean scanNestedDefinitions) {
+    public BeanValidationBinder(Class<BEAN> beanType,
+            boolean scanNestedDefinitions) {
         super(beanType, scanNestedDefinitions);
         if (!BeanUtil.checkBeanValidationAvailable()) {
             throw new IllegalStateException(BeanValidationBinder.class
