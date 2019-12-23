@@ -22,7 +22,7 @@ public class GridEditorFrozenColumnsUITest extends MultiBrowserTest {
         openTestURL();
 
         openEditor(10);
-        sleep(500);
+        waitForElementPresent(By.className("v-grid-editor"));
         compareScreen("noscroll");
 
         scrollGridHorizontallyTo(100);

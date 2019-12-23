@@ -30,8 +30,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import com.vaadin.annotations.Theme;
-import com.vaadin.ui.themes.ValoTheme;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -834,6 +832,26 @@ public abstract class AbstractComponent extends AbstractClientConnector
     @Override
     public void setSizeFull() {
         setWidth(100, Unit.PERCENTAGE);
+        setHeight(100, Unit.PERCENTAGE);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.vaadin.server.Sizeable#setWidthFull()
+     */
+    @Override
+    public void setWidthFull() {
+        setWidth(100, Unit.PERCENTAGE);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.vaadin.server.Sizeable#setHeightFull()
+     */
+    @Override
+    public void setHeightFull() {
         setHeight(100, Unit.PERCENTAGE);
     }
 

@@ -1694,9 +1694,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
             state = State.ACTIVATING;
 
-            grid.scrollToRow(rowIndex,
-                    isBuffered() ? ScrollDestination.MIDDLE
-                            : ScrollDestination.ANY,
+            grid.scrollToRow(rowIndex, ScrollDestination.ANY,
                     () -> show(rowIndex, columnIndexDOM));
         }
 
@@ -7459,15 +7457,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      */
     public void scrollToRow(int rowIndex, ScrollDestination destination,
             Runnable callback) {
-        waitUntilVisible(rowIndex, destination, () -> {
-            Reference<HandlerRegistration> registration = new Reference<>();
-            registration.set(addDataAvailableHandler(event -> {
-                if (event.getAvailableRows().contains(rowIndex)) {
-                    registration.get().removeHandler();
-                    callback.run();
-                }
-            }));
-        });
+        waitUntilVisible(rowIndex, destination, callback);
     }
 
     /**
@@ -7533,29 +7523,61 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      */
     private void waitUntilVisible(int rowIndex, ScrollDestination destination,
             Runnable whenVisible) {
-        final Escalator escalator = getEscalator();
-        if (escalator.getVisibleRowRange().contains(rowIndex)) {
-            TableRowElement rowElement = escalator.getBody()
-                    .getRowElement(rowIndex);
-            long bottomBorder = Math.round(WidgetUtil.getBorderBottomThickness(
-                    rowElement.getFirstChildElement()) + 0.5d);
-            if (rowElement.getAbsoluteTop() + bottomBorder >= escalator
-                    .getHeader().getElement().getAbsoluteBottom()
-                    && rowElement.getAbsoluteBottom() <= escalator.getFooter()
-                            .getElement().getAbsoluteTop() + bottomBorder) {
-                whenVisible.run();
-                return;
-            }
+        boolean waitForCache = false;
+        if (getDataSource().getRow(rowIndex) == null) {
+            // not yet in cache, wait for this to change
+            waitForCache = true;
+
+            Reference<Registration> registration = new Reference<>();
+            registration.set(getDataSource()
+                    .addDataChangeHandler(new DataChangeHandler() {
+                        @Override
+                        public void resetDataAndSize(int estimatedNewDataSize) {
+                            // data set changed, cancel the operation
+                            registration.get().remove();
+                        }
+
+                        @Override
+                        public void dataUpdated(int firstRowIndex,
+                                int numberOfRows) {
+                            // NOP
+                        }
+
+                        @Override
+                        public void dataRemoved(int firstRowIndex,
+                                int numberOfRows) {
+                            // data set changed, cancel the operation
+                            registration.get().remove();
+                        }
+
+                        @Override
+                        public void dataAvailable(int firstRowIndex,
+                                int numberOfRows) {
+                            // if new available range contains the row,
+                            // try again
+                            if (Range.withLength(firstRowIndex, numberOfRows)
+                                    .contains(rowIndex)) {
+                                registration.get().remove();
+                                waitUntilVisible(rowIndex, destination,
+                                        whenVisible);
+                            }
+                        }
+
+                        @Override
+                        public void dataAdded(int firstRowIndex,
+                                int numberOfRows) {
+                            // data set changed, cancel the operation
+                            registration.get().remove();
+                        }
+                    }));
         }
 
-        Reference<HandlerRegistration> registration = new Reference<>();
-        registration.set(addScrollHandler(event -> {
-            if (escalator.getVisibleRowRange().contains(rowIndex)) {
-                registration.get().removeHandler();
-                whenVisible.run();
-            }
-        }));
         scrollToRow(rowIndex, destination);
+
+        if (!waitForCache) {
+            // all necessary adjustments done, time to perform
+            whenVisible.run();
+        }
     }
 
     /**

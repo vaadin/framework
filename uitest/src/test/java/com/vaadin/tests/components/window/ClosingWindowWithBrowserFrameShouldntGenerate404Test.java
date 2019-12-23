@@ -1,14 +1,18 @@
 package com.vaadin.tests.components.window;
 
-import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.LabelElement;
-import com.vaadin.testbench.elements.WindowElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
-import java.util.List;
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.LabelElement;
+import com.vaadin.testbench.elements.WindowElement;
+import com.vaadin.testbench.parallel.Browser;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ClosingWindowWithBrowserFrameShouldntGenerate404Test
         extends MultiBrowserTest {
@@ -35,5 +39,13 @@ public class ClosingWindowWithBrowserFrameShouldntGenerate404Test
     private boolean theresNoLogWith404In(List<LogEntry> logs) {
         return !logs.stream().anyMatch(
                 ClosingWindowWithBrowserFrameShouldntGenerate404Test::contains404);
+    }
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // IE driver does not support logging API, see
+        // https://github.com/SeleniumHQ/selenium/issues/6414
+        return Arrays.asList(Browser.CHROME.getDesiredCapabilities(),
+                Browser.FIREFOX.getDesiredCapabilities());
     }
 }
