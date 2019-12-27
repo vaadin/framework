@@ -47,4 +47,13 @@ public class TextFieldConnector extends AbstractTextFieldConnector {
         return (VTextField) super.getWidget();
     }
 
+    @OnStateChange({"readOnly", "enabled"})
+    private void onReadOnlyChanged() {
+        VTextField widget = getWidget();
+        widget.readOnly = isReadOnly();
+        widget.enabled = isEnabled();
+        widget.setReadOnly(isReadOnly());
+        widget.setEnabled(isEnabled());
+        widget.setPlaceholder(getState().placeholder);
+    } 
 }
