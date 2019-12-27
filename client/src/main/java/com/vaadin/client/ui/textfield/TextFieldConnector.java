@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.textfield;
 
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.event.InputEvent;
 import com.vaadin.client.ui.VTextField;
 import com.vaadin.shared.ui.Connect;
