@@ -380,6 +380,11 @@ public class ValoTheme {
     /**
      * Move the default caption icon inside the text field. Can be combined with
      * any other TextField style.
+     * <br>
+     * Note: Does not apply in FormLayout
+     * <br>
+     * Note: TextField's with inlined icons in Grid header needs to be wrapped into
+     * e.g. HorizontalLayout
      */
     public static final String TEXTFIELD_INLINE_ICON = "inline-icon";
 
