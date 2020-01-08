@@ -125,4 +125,10 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
     private static Logger getLogger() {
         return Logger.getLogger(AbstractDateFieldConnector.class.getName());
     }
+
+    @Override
+    public void flush() {
+        super.flush();
+        getConnection().getServerRpcQueue().flush();
+    }
 }
