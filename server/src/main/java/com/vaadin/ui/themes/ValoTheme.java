@@ -383,7 +383,7 @@ public class ValoTheme {
      * <p>
      * Note: Does not apply in FormLayout
      * <p>
-     * Note: TextField's with inlined icons in Grid header needs to be wrapped into
+     * Note: TextFields with inlined icons in Grid header needs to be wrapped into
      * e.g. HorizontalLayout
      */
     public static final String TEXTFIELD_INLINE_ICON = "inline-icon";
