@@ -722,9 +722,11 @@ You can set a component in a header or footer cell with
 [methodname]#setComponent()#. Often, this feature is used to allow filtering.
 
 [NOTE]
-Note, when you use cell.[methodname]#setComponent(textField)#, the [classname]#TextField# will be rendered in compact mode
+====
+Note, when you use [methodname]#setComponent(TextField)#, the [classname]#TextField# will be rendered in compact mode
 without caption and icon. If you need override this behavior, you need to wrap the [classname]#TextField# e.g.
 into [classname]#HorizontalLayout#.
+====
 
 ////
 // commented out until filtering is sorted for 8
