@@ -33,7 +33,6 @@ public class DateFieldReadOnly extends AbstractReindeerTestUI {
 
         // Set date so that testing always has same time
         timeField.setValue(LocalDate.of(2009, 6, 12));
-        timeField.setReadOnly(true);
 
         addComponent(timeField);
 
