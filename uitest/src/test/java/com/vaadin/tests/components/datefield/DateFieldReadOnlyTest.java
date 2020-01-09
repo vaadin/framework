@@ -17,8 +17,6 @@ public class DateFieldReadOnlyTest extends MultiBrowserTest {
             throws IOException, InterruptedException {
         openTestURL();
 
-        compareScreen("initial-date");
-
         openPopup();
         compareScreen("readwrite-popup-date");
 
