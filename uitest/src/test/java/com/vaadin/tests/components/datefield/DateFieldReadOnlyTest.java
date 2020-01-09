@@ -18,7 +18,6 @@ public class DateFieldReadOnlyTest extends MultiBrowserTest {
         openTestURL();
 
         compareScreen("initial-date");
-        toggleReadOnly();
 
         openPopup();
         compareScreen("readwrite-popup-date");
