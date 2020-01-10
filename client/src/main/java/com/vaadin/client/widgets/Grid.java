@@ -3901,8 +3901,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 setParent(detailsWidget, null);
                 spacerElement.removeAllChildren();
                 if (getHeightMode() == HeightMode.UNDEFINED) {
-                    // update spacer height
-                    escalator.getBody().setSpacer(spacer.getRow(), 0);
                     setHeightByRows(getEscalator().getBody().getRowCount());
                 }
             }
