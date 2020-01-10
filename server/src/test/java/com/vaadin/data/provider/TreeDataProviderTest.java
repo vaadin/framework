@@ -202,6 +202,44 @@ public class TreeDataProviderTest
         assertEquals(stringData.getChildren("c"), Arrays.asList());
         assertEquals(stringData.getChildren("a/b"), Arrays.asList());
     }
+    @Test
+    public void filter_is_applied_to_children_provider_filter() {
+        final SerializablePredicate<String> dataProviderFilter = item -> item.contains("Sub");
+        final HierarchicalQuery<String, SerializablePredicate<String>> query = new HierarchicalQuery<>(
+            null, null);
+        filter_is_applied_to_children(dataProviderFilter,query);
+    }
+
+    @Test
+    public void filter_is_applied_to_children_query_filter() {
+        final SerializablePredicate<String> dataProviderFilter = null;
+        final HierarchicalQuery<String, SerializablePredicate<String>> query = new HierarchicalQuery<>(
+            item -> item.contains("Sub"), null);
+        filter_is_applied_to_children(dataProviderFilter,query);
+    }
+
+    @Test
+    public void filter_is_applied_to_children_both_filters() {
+        final SerializablePredicate<String> dataProviderFilter = item -> item.contains("Sub");
+        final HierarchicalQuery<String, SerializablePredicate<String>> query = new HierarchicalQuery<>(
+            dataProviderFilter, null);
+        filter_is_applied_to_children(dataProviderFilter,query);
+    }
+
+    private void filter_is_applied_to_children(
+        final SerializablePredicate<String> dataProviderFilter,
+        final HierarchicalQuery<String, SerializablePredicate<String>> query) {
+        final TreeData<String> stringData = new TreeData<>();
+        final String root = "Main";
+        final List<String> children = Arrays.asList("Sub1", "Sub2");
+        stringData.addRootItems(root);
+        stringData.addItems(root, children);
+        final TreeDataProvider<String> provider = new TreeDataProvider<>(
+            stringData);
+        provider.setFilter(dataProviderFilter);
+        assertEquals(1, provider.getChildCount(query));
+        assertTrue(provider.fetchChildren(query).allMatch(root::equals));
+    }
 
     @Test
     public void setFilter() {
@@ -214,7 +252,7 @@ public class TreeDataProviderTest
                 && !item.getValue().equals("Xyz"));
 
         assertEquals(
-                "Previous filter should be replaced when setting a new one", 6,
+                "Previous filter should be replaced when setting a new one", 14,
                 sizeWithUnfilteredQuery());
 
         getDataProvider().setFilter(null);
@@ -227,7 +265,7 @@ public class TreeDataProviderTest
     public void addFilter() {
         getDataProvider().addFilter(item -> item.getId() <= 10);
         getDataProvider().addFilter(item -> item.getId() >= 5);
-        assertEquals(5, sizeWithUnfilteredQuery());
+        assertEquals(8, sizeWithUnfilteredQuery());
     }
 
     @Override
@@ -240,7 +278,7 @@ public class TreeDataProviderTest
                         .size(new HierarchicalQuery<>("Xyz", null)));
         assertEquals("No item should match 'Zyx'", 0, strFilterDataProvider
                 .size(new HierarchicalQuery<>("Zyx", null)));
-        assertEquals("Unexpected number of matches for 'Foo'", 3,
+        assertEquals("Unexpected number of matches for 'Foo'", 4,
                 strFilterDataProvider
                         .size(new HierarchicalQuery<>("Foo", null)));
         assertEquals("No items should've been filtered out", rootData.size(),
@@ -256,7 +294,7 @@ public class TreeDataProviderTest
         assertEquals("No item should match 'Zyx'", 0,
                 dataProvider.size(new HierarchicalQuery<>(
                         strBean -> strBean.getValue().contains("Zyx"), null)));
-        assertEquals("Unexpected number of matches for 'Foo'", 3,
+        assertEquals("Unexpected number of matches for 'Foo'", 4,
                 getDataProvider()
                         .size(new HierarchicalQuery<>(fooFilter, null)));
     }
