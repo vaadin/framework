@@ -172,9 +172,17 @@ public class TreeDataProvider<T>
 
     private Stream<T> getFilteredStream(Stream<T> stream,
             Optional<SerializablePredicate<T>> queryFilter) {
-        if (filter != null) {
-            stream = stream.filter(filter);
-        }
-        return queryFilter.map(stream::filter).orElse(stream);
+        final Optional<SerializablePredicate<T>> combinedFilter =
+            filter != null ?
+                Optional.of(queryFilter.map(filter::and).orElse(filter)) :
+                queryFilter;
+        return combinedFilter
+            .map(f -> stream.filter(element -> flatten(element).anyMatch(f)))
+            .orElse(stream);
+    }
+
+    private Stream<T> flatten(T element) {
+        return Stream.concat(Stream.of(element),
+            getTreeData().getChildren(element).stream().flatMap(this::flatten));
     }
 }
