@@ -195,11 +195,12 @@ public class HierarchyMapperWithDataTest {
         expand(expandedNode);
 
         SerializablePredicate<Node> filter = n -> n.getNumber() % 2 == 0;
-        List<Node> expectedResult = testData.stream().filter(filter)
-                .filter(n -> roots.contains(n)
-                        || n.getParent().equals(testData.get(0))
-                        || n.getParent().equals(expandedNode))
-                .collect(Collectors.toList());
+
+        // Root nodes plus children of expanded nodes 0 and 4 that match the
+        // filter
+        List<Node> expectedResult = IntStream
+            .of(0, 1, 4, 6, 7, 10, 13, 26, 39, 52).mapToObj(testData::get)
+            .collect(Collectors.toList());
 
         mapper.setFilter(filter);
 
