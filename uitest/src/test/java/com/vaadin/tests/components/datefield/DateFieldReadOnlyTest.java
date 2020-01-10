@@ -1,13 +1,18 @@
 package com.vaadin.tests.components.datefield;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 
 import org.junit.Test;
-import org.openqa.selenium.Keys;
+import org.openqa.selenium.ElementNotInteractableException;
+import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.AbstractDateFieldElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateFieldReadOnlyTest extends MultiBrowserTest {
@@ -17,27 +22,51 @@ public class DateFieldReadOnlyTest extends MultiBrowserTest {
             throws IOException, InterruptedException {
         openTestURL();
 
-        compareScreen("initial-date");
-        toggleReadOnly();
+        DateFieldElement df = $(DateFieldElement.class).first();
+        WebElement dfButton = df
+                .findElement(By.className("v-datefield-button"));
 
-        openPopup();
-        compareScreen("readwrite-popup-date");
+        // ensure initial read-only state works and pop-up cannot be opened
+        assertTrue(df.hasClassName("v-readonly"));
+        assertEquals("none", dfButton.getCssValue("display"));
+        assertTrue(findElements(By.className("v-datefield-calendarpanel"))
+                .isEmpty());
 
-        closePopup();
+        assertFalse(openPopup(df));
+        assertTrue(findElements(By.className("v-datefield-calendarpanel"))
+                .isEmpty());
+
+        // ensure read-only state can be removed and the component is still
+        // functional
         toggleReadOnly();
-        compareScreen("readonly-date");
+        assertFalse(df.hasClassName("v-readonly"));
+        assertEquals("inline-block", dfButton.getCssValue("display"));
+
+        assertTrue(openPopup(df));
+        assertEquals(1,
+                findElements(By.className("v-datefield-calendarpanel")).size());
+
+        // ensure read-only state can be re-applied, pop-up is closed and cannot
+        // be re-opened
+        toggleReadOnly();
+        assertTrue(df.hasClassName("v-readonly"));
+        assertEquals("none", dfButton.getCssValue("display"));
+        assertTrue(findElements(By.className("v-datefield-calendarpanel"))
+                .isEmpty());
+
+        assertFalse(openPopup(df));
+        assertTrue(findElements(By.className("v-datefield-calendarpanel"))
+                .isEmpty());
     }
 
-    private void closePopup() {
-        findElement(By.className("v-datefield-calendarpanel"))
-                .sendKeys(Keys.RETURN);
-    }
-
-    private void openPopup() {
-        // waiting for openPopup() in TB4 beta1:
-        // http://dev.vaadin.com/ticket/13766
-        $(AbstractDateFieldElement.class).first()
-                .findElement(By.tagName("button")).click();
+    private boolean openPopup(DateFieldElement df) {
+        // ensure the hidden button cannot be interacted with
+        try {
+            df.openPopup();
+            return true;
+        } catch (ElementNotInteractableException e) {
+            return false;
+        }
     }
 
     private void toggleReadOnly() {
