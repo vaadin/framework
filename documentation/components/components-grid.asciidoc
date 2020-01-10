@@ -724,7 +724,7 @@ You can set a component in a header or footer cell with
 [NOTE]
 ====
 Note, when you use [methodname]#setComponent(TextField)#, the [classname]#TextField# will be rendered in compact mode
-without caption and icon. If you need override this behavior, you need to wrap the [classname]#TextField# e.g.
+without caption and icon. If you need to override this behavior, you need to wrap the [classname]#TextField# e.g.
 into [classname]#HorizontalLayout#.
 ====
 
