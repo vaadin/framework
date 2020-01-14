@@ -1949,7 +1949,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *            {@code true} if column is editable; {@code false} if not
          * @return this column
          * @throws IllegalStateException
-         *            if column has no editor binding or component defined
+         *            if editable is true and column has no editor binding or
+         *            component defined
          *
          * @see #setEditorComponent(HasValue, Setter)
          * @see #setEditorBinding(Binding)
