@@ -202,13 +202,6 @@ public class TreeDataProviderTest
         assertEquals(stringData.getChildren("c"), Arrays.asList());
         assertEquals(stringData.getChildren("a/b"), Arrays.asList());
     }
-    @Test
-    public void filter_is_applied_to_children_provider_filter() {
-        final SerializablePredicate<String> dataProviderFilter = item -> item.contains("Sub");
-        final HierarchicalQuery<String, SerializablePredicate<String>> query = new HierarchicalQuery<>(
-            null, null);
-        filter_is_applied_to_children(dataProviderFilter,query);
-    }
 
     @Test
     public void filter_is_applied_to_children_provider_filter() {
