@@ -211,31 +211,41 @@ public class TreeDataProviderTest
     }
 
     @Test
+    public void filter_is_applied_to_children_provider_filter() {
+        final SerializablePredicate<String> dataProviderFilter = item -> item
+                .contains("Sub");
+        final HierarchicalQuery<String, SerializablePredicate<String>> query = new HierarchicalQuery<>(
+                null, null);
+        filter_is_applied_to_children(dataProviderFilter, query);
+    }
+
+    @Test
     public void filter_is_applied_to_children_query_filter() {
         final SerializablePredicate<String> dataProviderFilter = null;
         final HierarchicalQuery<String, SerializablePredicate<String>> query = new HierarchicalQuery<>(
-            item -> item.contains("Sub"), null);
-        filter_is_applied_to_children(dataProviderFilter,query);
+                item -> item.contains("Sub"), null);
+        filter_is_applied_to_children(dataProviderFilter, query);
     }
 
     @Test
     public void filter_is_applied_to_children_both_filters() {
-        final SerializablePredicate<String> dataProviderFilter = item -> item.contains("Sub");
+        final SerializablePredicate<String> dataProviderFilter = item -> item
+                .contains("Sub");
         final HierarchicalQuery<String, SerializablePredicate<String>> query = new HierarchicalQuery<>(
-            dataProviderFilter, null);
-        filter_is_applied_to_children(dataProviderFilter,query);
+                dataProviderFilter, null);
+        filter_is_applied_to_children(dataProviderFilter, query);
     }
 
     private void filter_is_applied_to_children(
-        final SerializablePredicate<String> dataProviderFilter,
-        final HierarchicalQuery<String, SerializablePredicate<String>> query) {
+            final SerializablePredicate<String> dataProviderFilter,
+            final HierarchicalQuery<String, SerializablePredicate<String>> query) {
         final TreeData<String> stringData = new TreeData<>();
         final String root = "Main";
         final List<String> children = Arrays.asList("Sub1", "Sub2");
         stringData.addRootItems(root);
         stringData.addItems(root, children);
         final TreeDataProvider<String> provider = new TreeDataProvider<>(
-            stringData);
+                stringData);
         provider.setFilter(dataProviderFilter);
         assertEquals(1, provider.getChildCount(query));
         assertTrue(provider.fetchChildren(query).allMatch(root::equals));
