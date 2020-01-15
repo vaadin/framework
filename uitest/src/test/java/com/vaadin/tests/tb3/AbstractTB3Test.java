@@ -45,6 +45,7 @@ import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.UIProvider;
@@ -365,6 +366,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      *         {@link org.openqa.selenium.JavascriptExecutor#executeScript(String, Object...)}
      *         returns
      */
+    @Override
     protected Object executeScript(String script, Object... args) {
         return ((JavascriptExecutor) getDriver()).executeScript(script, args);
     }
@@ -444,6 +446,15 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     protected void waitForElementVisible(final By by) {
         waitUntil(ExpectedConditions.visibilityOfElementLocated(by));
+    }
+
+    @Override
+    protected <T> T waitUntil(ExpectedCondition<T> condition,
+            long timeoutInSeconds) {
+        // Override the default wait between attempts to be 300 milliseconds
+        // instead of 500 milliseconds.
+        return new WebDriverWait(getDriver(), timeoutInSeconds, 300)
+                .until(condition);
     }
 
     /**
