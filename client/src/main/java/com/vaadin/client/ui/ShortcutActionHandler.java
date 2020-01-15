@@ -126,15 +126,31 @@ public class ShortcutActionHandler {
             target = Util.findPaintable(client, et);
         }
         final ComponentConnector finalTarget = target;
-
         event.preventDefault();
-
         /*
          * The focused component might have unpublished changes, try to
          * synchronize them before firing shortcut action.
          */
         client.flushActiveConnector();
-
+        /*
+         * Legacy components don't have built-in logic for flushing, they need a
+         * workaround with blur and focus to trigger the value change.
+         */
+        ComponentConnector activeConnector = getActiveConnector(client);
+        if (activeConnector != null) {
+            Class<?> clz = activeConnector.getClass();
+            while (clz != null) {
+                if (clz.getName().equals(
+                        "com.vaadin.v7.client.ui.AbstractLegacyComponentConnector")) {
+                    shakeTarget(et);
+                    Scheduler.get().scheduleDeferred(() -> {
+                        shakeTarget(et);
+                    });
+                    break;
+                }
+                clz = clz.getSuperclass();
+            }
+        }
         Scheduler.get().scheduleDeferred(() -> {
             if (finalTarget != null) {
                 client.updateVariable(paintableId, "actiontarget", finalTarget,
@@ -143,6 +159,26 @@ public class ShortcutActionHandler {
             client.updateVariable(paintableId, "action", a.getKey(), true);
         });
     }
+
+    /**
+     * We try to fire value change in the component the key combination was
+     * typed. E.g. TextField may contain newly typed text that is expected to be
+     * sent to server before the shortcut action is triggered. This is done by
+     * removing focus and then returning it immediately back to target element.
+     * <p>
+     * This is a hack copied over from V7 in order to keep the compatibility
+     * classes working. Main V8 classes don't require shaking.
+     */
+    private static void shakeTarget(final Element e) {
+        blur(e);
+        focus(e);
+    }
+
+    private static native ComponentConnector getActiveConnector(
+            ApplicationConnection ac)
+    /*-{
+        return ac.@com.vaadin.client.ApplicationConnection::getActiveConnector()();
+    }-*/;
 
     private static native void blur(Element e)
     /*-{
