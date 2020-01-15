@@ -233,15 +233,19 @@ public class TreeDataProviderTest
             final SerializablePredicate<String> dataProviderFilter,
             final HierarchicalQuery<String, SerializablePredicate<String>> query) {
         final TreeData<String> stringData = new TreeData<>();
-        final String root = "Main";
-        final List<String> children = Arrays.asList("Sub1", "Sub2");
-        stringData.addRootItems(root);
-        stringData.addItems(root, children);
+        final String root1 = "Main";
+        final List<String> children1 = Arrays.asList("Sub1", "Sub2");
+        final String root2 = "Other";
+        final List<String> children2 = Arrays.asList("Foo1", "Foo2");
+        stringData.addRootItems(root1, root2);
+        stringData.addItems(root1, children1);
+        stringData.addItems(root2, children2);
         final TreeDataProvider<String> provider = new TreeDataProvider<>(
                 stringData);
         provider.setFilter(dataProviderFilter);
-        assertEquals(1, provider.getChildCount(query));
-        assertTrue(provider.fetchChildren(query).allMatch(root::equals));
+        assertEquals("Unexpected amount of root items after filtering.", 1,
+                provider.getChildCount(query));
+        assertTrue(provider.fetchChildren(query).allMatch(root1::equals));
     }
 
     @Test
