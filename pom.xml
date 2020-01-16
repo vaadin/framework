@@ -10,7 +10,7 @@
     <artifactId>vaadin-root</artifactId>
     <name>vaadin-root</name>
     <packaging>pom</packaging>
-    <version>8.10-SNAPSHOT</version>
+    <version>8.11-SNAPSHOT</version>
 
     <prerequisites>
         <maven>3.1.0</maven>
