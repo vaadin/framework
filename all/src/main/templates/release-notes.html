@@ -83,10 +83,12 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Allowed using <tt>BeanValidationBinder</tt> with scanNestedDefinitions.</li>
+		<li>Added helper methods for setting only <tt>height</tt> or <tt>width full</tt></li>
+                <li>Allowed using <tt>BeanValidationBinder</tt> with scanNestedDefinitions.</li>
 	        <li>Allowed conditional asRequired in <tt>Binder</tt>.</li>
 	        <li>Allowed <tt>Binder</tt> to save partial data to a bean.</li>
 	        <li>Improved access to triggering session cleanup.</li>
+		<li>Making <tt>Grid::setEditable</tt> friendlier</li>
         </ul>
 
         </p>
@@ -121,7 +123,7 @@
             components sizes in many cases, which might cause unwanted 1px gaps between components.
             </li>
             <li>Up-to-date information about configuration needed for push and compatibility issues are available in
-            <a href="https://vaadin.com/wiki/-/wiki/Main/Configuring+push+for+your+environment">this wiki page.</a>
+            <a href="https://vaadin.com/docs/v8/framework/articles/ConfiguringPushForYourEnvironment.html">this documentation page.</a>
             <br />
             The most prominent limitations are:
             <ul>
@@ -388,12 +390,11 @@
         </p>
 
         <ul>
-            <li>Mozilla Firefox 54+</li>
-            <li>Mozilla Firefox ESR 52+</li>
+            <li>Mozilla Firefox latest</li>
+            <li>Mozilla Firefox ESR latest</li>
             <li>Internet Explorer 11, Edge (latest version)</li>
             <li>Safari 9+</li>
-            <li>Google Chrome 59+</li>
-        </ul>
+            <li>Google Chrome latest</li>
 
         <p>
             Additionally, Vaadin Framework supports the built-in browsers in the
