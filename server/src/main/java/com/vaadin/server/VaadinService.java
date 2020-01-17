@@ -1761,10 +1761,10 @@ public abstract class VaadinService implements Serializable {
                  */
 
                 // Ensure that the browser does not cache expired responses.
-                // iOS 6 Safari requires this (#10370)
+                // iOS 6 Safari requires this (#3226)
                 response.setHeader("Cache-Control", "no-cache");
                 // If Content-Type is not set, browsers assume text/html and may
-                // complain about the empty response body (#12182)
+                // complain about the empty response body (#4167)
                 response.setHeader("Content-Type", "text/plain");
 
                 response.sendError(HttpServletResponse.SC_FORBIDDEN,
