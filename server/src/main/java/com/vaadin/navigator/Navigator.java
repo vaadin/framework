@@ -900,6 +900,11 @@ public class Navigator implements Serializable {
     /**
      * Returns the current navigation state reported by this Navigator's
      * {@link NavigationStateManager}.
+     * <p>
+     * When the navigation is triggered by the browser (for example by pressing
+     * the back or forward button in the browser), the navigation state may 
+     * already have been updated to reflect the new address, before the 
+     * {@link #navigateTo(String)} is notified.
      *
      * @return The navigation state.
      */
