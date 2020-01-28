@@ -16,6 +16,8 @@
 
 package com.vaadin.client.ui;
 
+import static com.vaadin.client.DateTimeService.asTwoDigits;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +32,6 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.aria.client.SelectedValue;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -56,13 +57,10 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.util.SharedUtil;
-
-import static com.vaadin.client.DateTimeService.asTwoDigits;
 
 /**
  * Abstract calendar panel to show and select a date using a resolution. The
@@ -963,7 +961,17 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      *            resolution of the calendar is changed and no date has been
      *            selected.
      */
+    @SuppressWarnings("rawtypes")
     public void renderCalendar(boolean updateDate) {
+        if (parent instanceof VAbstractPopupCalendar
+                && !((VAbstractPopupCalendar) parent).popup.isShowing()) {
+            if (getDate() == null) {
+                // no date set, cannot pre-render yet
+                return;
+            }
+            // a popup that isn't open cannot possibly need a focus change event
+            updateDate = false;
+        }
         doRenderCalendar(updateDate);
 
         initialRenderDone = true;
@@ -986,11 +994,15 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 getDateField().getStylePrimaryName() + "-calendarpanel");
 
         if (focusedDate == null) {
-            Date now = new Date();
+            Date date = getDate();
+            if (date == null) {
+                date = new Date();
+            }
             // focusedDate must have zero hours, mins, secs, millisecs
-            focusedDate = new FocusedDate(now.getYear(), now.getMonth(),
-                    now.getDate());
-            displayedMonth = new FocusedDate(now.getYear(), now.getMonth(), 1);
+            focusedDate = new FocusedDate(date.getYear(), date.getMonth(),
+                    date.getDate());
+            displayedMonth = new FocusedDate(date.getYear(), date.getMonth(),
+                    1);
         }
 
         if (updateDate && !isDay(getResolution())
