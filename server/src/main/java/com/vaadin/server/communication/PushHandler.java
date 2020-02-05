@@ -198,9 +198,6 @@ public class PushHandler {
      *            the atmosphere resource for the current request
      * @param callback
      *            the push callback to call when a UI is found and locked
-     * @param websocket
-     *            true if this is a websocket message (as opposed to a HTTP
-     *            request)
      */
     private void callWithUi(final AtmosphereResource resource,
             final PushEventCallback callback) {
@@ -210,7 +207,7 @@ public class PushHandler {
         VaadinSession session = null;
 
         boolean isWebsocket = resource.transport() == TRANSPORT.WEBSOCKET;
-        if (isWebSocket) {
+        if (isWebsocket) {
             // For any HTTP request we have already started the request in the
             // servlet
             service.requestStart(vaadinRequest, null);
@@ -282,7 +279,7 @@ public class PushHandler {
             }
         } finally {
             try {
-                if (isWebSocket) {
+                if (isWebsocket) {
                     service.requestEnd(vaadinRequest, null, session);
                 }
             } catch (Exception e) {
