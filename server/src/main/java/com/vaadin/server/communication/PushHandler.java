@@ -203,13 +203,14 @@ public class PushHandler {
      *            request)
      */
     private void callWithUi(final AtmosphereResource resource,
-            final PushEventCallback callback, boolean websocket) {
+            final PushEventCallback callback) {
         AtmosphereRequest req = resource.getRequest();
         VaadinServletRequest vaadinRequest = new VaadinServletRequest(req,
                 service);
         VaadinSession session = null;
 
-        if (websocket) {
+        boolean isWebsocket = resource.transport() == TRANSPORT.WEBSOCKET;
+        if (isWebSocket) {
             // For any HTTP request we have already started the request in the
             // servlet
             service.requestStart(vaadinRequest, null);
@@ -281,7 +282,7 @@ public class PushHandler {
             }
         } finally {
             try {
-                if (websocket) {
+                if (isWebSocket) {
                     service.requestEnd(vaadinRequest, null, session);
                 }
             } catch (Exception e) {
@@ -520,7 +521,7 @@ public class PushHandler {
      *            The related atmosphere resources
      */
     void onConnect(AtmosphereResource resource) {
-        callWithUi(resource, establishCallback, false);
+        callWithUi(resource, establishCallback);
     }
 
     /**
@@ -531,8 +532,7 @@ public class PushHandler {
      *            The related atmosphere resources
      */
     void onMessage(AtmosphereResource resource) {
-        callWithUi(resource, receiveCallback,
-                resource.transport() == TRANSPORT.WEBSOCKET);
+        callWithUi(resource, receiveCallback);
     }
 
     /**
