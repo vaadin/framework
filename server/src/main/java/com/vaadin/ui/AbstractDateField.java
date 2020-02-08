@@ -303,6 +303,10 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *            - the allowed range's start date
      */
     public void setRangeStart(T startDate) {
+        if (!afterDate(startDate, convertFromDateString("0000-01-01"))) {
+            throw new IllegalStateException(
+                    "startDate cannot be negative");
+        }
         if (afterDate(startDate, convertFromDateString(getState().rangeEnd))) {
             throw new IllegalStateException(
                     "startDate cannot be later than endDate");
