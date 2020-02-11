@@ -57,12 +57,12 @@ public class DateFieldBinderCrossValidationTest extends SingleBrowserTest {
         // The next month button should be disabled
         findElement(By.className("v-button-nextmonth")).click();
         // Test that year has not changed
-        assertTrue("",monthYearLabel.getText().contains("9999"));
+        assertTrue("Month label should contain 9999, contains: "+monthYearLabel.getText(),monthYearLabel.getText().contains("9999"));
 
         // The next year button should be disabled
         findElement(By.className("v-button-nextyear")).click();
         // Test that year has not changed
-        assertTrue("",monthYearLabel.getText().contains("9999"));
+        assertTrue("Month label should contain 9999, contains: "+monthYearLabel.getText(),monthYearLabel.getText().contains("9999"));
     }
 
     @Test
