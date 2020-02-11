@@ -50,7 +50,7 @@ public class DateFieldBinderCrossValidationTest extends SingleBrowserTest {
 
         DateFieldElement fromField = $(DateFieldElement.class).id("from-field");
         fromField.openPopup();
-        waitForElementNotPresent(By.className("v-datefield-popup"));
+        waitForElementPresent(By.className("v-datefield-popup"));
 
         WebElement monthYearLabel = findElement(By.className("v-datefield-calendarpanel-month"));
 
@@ -77,7 +77,7 @@ public class DateFieldBinderCrossValidationTest extends SingleBrowserTest {
 
         // Test that popup opens
         fromField.openPopup();
-        waitForElementNotPresent(By.className("v-datefield-popup"));
+        waitForElementPresent(By.className("v-datefield-popup"));
         assertElementPresent(By.className("v-datefield-popup"));
     }
 }
