@@ -49,6 +49,7 @@ public class DateFieldBinderCrossValidationTest extends SingleBrowserTest {
         toFieldText.sendKeys("9999/12/31", Keys.ENTER);
 
         DateFieldElement fromField = $(DateFieldElement.class).id("from-field");
+        WebElement fromFieldText = fromField.findElement(By.tagName("input"));
         // Set year to 9999, next year and next month will be on 10000
         fromFieldText.sendKeys("9999/12/01", Keys.ENTER);
         fromField.openPopup();
