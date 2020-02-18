@@ -39,9 +39,11 @@ public class DateFieldTestCase {
 
     @Test
     public void belowRangeStartIsNotAcceptedAsValue() {
+        LocalDate currentDate = dateField.getValue();
         dateField.setRangeStart(date);
         dateField.setValue(date.minusDays(1));
         assertNotNull(dateField.getComponentError());
+        assertThat(dateField.getValue(), is(currentDate));
     }
 
     @Test
@@ -60,8 +62,10 @@ public class DateFieldTestCase {
 
     @Test
     public void aboveRangeEndIsNotAcceptedAsValue() {
+        LocalDate currentDate = dateField.getValue();
         dateField.setRangeEnd(date);
         dateField.setValue(date.plusDays(1));
         assertNotNull(dateField.getComponentError());
+        assertThat(dateField.getValue(), is(currentDate));
     }
 }
