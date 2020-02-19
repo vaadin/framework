@@ -59,8 +59,8 @@
 
         <p>
             Vaadin Framework @version@ is a
-<!--            maintenance release that includes a number of bug fixes, as listed in the <a href="#changelog">change log</a> below. -->
-                feature release that includes 
+            maintenance release that includes a number of bug fixes, as listed in the <a href="#changelog">change log</a> below.
+<!--            feature release that includes -->
 <!--            pre-release for evaluating -->
                 a number of new features and bug fixes, as listed in the <a
                 href="#enhancements">list of enhancements</a> and <a
@@ -101,11 +101,13 @@
             to Vaadin Framework 8</a>.
         </p>
 
-        <h2 id="incompatible">No Incompatible or Behavior-altering Changes in @version-minor@</h2>
+        <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h2>
 
         <ul>
-            <li></li>
-        </ul>
+                <li>Ensured that value change happens before shortcuts in compatibility components</li>
+		<li>Ensured that <tt>TreeDataProvider</tt> filters also take into account child items</li>
+                <li>Improved <tt>Binder</tt> handling of null values.</li>
+	</ul>
 
         <h2>For incompatible or behavior-altering changes in 8.9, please see <a href="https://vaadin.com/download/release/8.9/8.9.0/release-notes.html#incompatible">8.9 release notes</a></h2>
 
