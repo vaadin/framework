@@ -46,6 +46,7 @@ public class DateFieldFaultyInputNotValidTest extends SingleBrowserTest {
     public void testDateOutOfRange() {
         openTestURL();
         DateFieldElement dateField = $(DateFieldElement.class).first();
+        WebElement dateFieldText = dateFieldText.findElement(By.tagName("input"));
         dateField.setDate(LocalDate.now());
 
         $(ButtonElement.class).first().click();
@@ -53,7 +54,7 @@ public class DateFieldFaultyInputNotValidTest extends SingleBrowserTest {
                 $(NotificationElement.class).first().getText());
         $(NotificationElement.class).first().close();
 
-        dateField.setDate(LocalDate.now().minusDays(7));
+        dateFieldText.sendKeys(LocalDate.now().minusDays(7).toString(), Keys.ENTER);
 
         $(ButtonElement.class).first().click();
         assertEquals("Last week should not be ok", "Fail",
