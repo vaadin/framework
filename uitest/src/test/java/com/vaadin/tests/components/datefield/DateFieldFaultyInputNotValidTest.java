@@ -48,7 +48,7 @@ public class DateFieldFaultyInputNotValidTest extends SingleBrowserTest {
     public void testDateOutOfRange() {
         openTestURL();
         DateFieldElement dateField = $(DateFieldElement.class).first();
-        WebElement dateFieldText = dateFieldText.findElement(By.tagName("input"));
+        WebElement dateFieldText = dateField.findElement(By.tagName("input"));
         dateField.setDate(LocalDate.now());
 
         $(ButtonElement.class).first().click();
