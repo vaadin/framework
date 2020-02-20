@@ -296,6 +296,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * date (taking the resolution into account), the component will not
      * validate. If {@code startDate} is set to {@code null}, any value before
      * {@code endDate} will be accepted by the range
+     * <p>
+     * Note: Negative, i.e. BC dates are not supported
      *
      * @param startDate
      *            - the allowed range's start date
