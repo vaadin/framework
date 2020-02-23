@@ -786,6 +786,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     protected void doSetValue(T value) {
 
         // Also set the internal dateString
+        this.value = value;
         if (value == null) {
             value = getEmptyValue();
         }
@@ -797,8 +798,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
         if (result.isError()) {
             currentErrorMessage = getDateOutOfRangeMessage();
-        } else {
-            this.value = value;
         }
 
         getState().parsable = currentErrorMessage == null;
