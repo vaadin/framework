@@ -621,8 +621,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      */
     @Override
     public void setValue(T value) {
-        currentErrorMessage = null;
-	RangeValidator<LocalDate> validator = getRangeValidator();
+	RangeValidator<T> validator = getRangeValidator();
 	ValidationResult result = validator.apply(value,
                 new ValueContext(this, this));
 
@@ -630,6 +629,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             throw new IllegalStateException(
                     "value is not withing acceptable range");
         } else {
+            currentErrorMessage = null;
             /*
              * First handle special case when the client side component have a date
              * string but value is null (e.g. unparsable date string typed in by the
