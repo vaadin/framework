@@ -622,23 +622,32 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     @Override
     public void setValue(T value) {
         currentErrorMessage = null;
-        /*
-         * First handle special case when the client side component have a date
-         * string but value is null (e.g. unparsable date string typed in by the
-         * user). No value changes should happen, but we need to do some
-         * internal housekeeping.
-         */
-        if (value == null && !getState(false).parsable) {
-            /*
-             * Side-effects of doSetValue clears possible previous strings and
-             * flags about invalid input.
-             */
-            doSetValue(null);
+	RangeValidator<LocalDate> validator = getRangeValidator();
+	ValidationResult result = validator.apply(value,
+                new ValueContext(this, this));
 
-            markAsDirty();
-            return;
+        if (result.isError()) {
+            throw new IllegalStateException(
+                    "value is not withing acceptable range");
+        } else {
+            /*
+             * First handle special case when the client side component have a date
+             * string but value is null (e.g. unparsable date string typed in by the
+             * user). No value changes should happen, but we need to do some
+             * internal housekeeping.
+             */
+            if (value == null && !getState(false).parsable) {
+                /*
+                 * Side-effects of doSetValue clears possible previous strings and
+                 * flags about invalid input.
+                 */
+                doSetValue(null);
+
+                markAsDirty();
+                return;
+            }
+            super.setValue(value);
         }
-        super.setValue(value);
     }
 
     /**
