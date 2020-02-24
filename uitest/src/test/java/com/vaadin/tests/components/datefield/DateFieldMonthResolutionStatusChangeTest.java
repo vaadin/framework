@@ -35,4 +35,20 @@ public class DateFieldMonthResolutionStatusChangeTest
         assertEquals("Unexpected date change.", "1/19", df.getValue());
     }
 
+    @Test
+    public void testPopupOpenWithDateNotInRange() {
+        openTestURL();
+        DateFieldElement df = $(DateFieldElement.class).first();
+
+        // set value before range
+        $(ButtonElement.class).id("resetValue").click();
+        // add range, previously set date is not in range
+        $(ButtonElement.class).id("addRange").click();
+
+        // Test that popup still opens
+        df.openPopup();
+        waitForElementPresent(By.className("v-datefield-popup"));
+        assertElementPresent(By.className("v-datefield-popup"));
+    }
+
 }
