@@ -3,6 +3,7 @@ package com.vaadin.tests.components.datefield;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.DateFieldElement;
@@ -33,6 +34,24 @@ public class DateFieldMonthResolutionStatusChangeTest
         $(ButtonElement.class).id("addRange").click();
 
         assertEquals("Unexpected date change.", "1/19", df.getValue());
+    }
+
+    @Test
+    public void testPopupOpenWithDateNotInRange() {
+        openTestURL();
+        DateFieldElement df = $(DateFieldElement.class).first();
+
+        // switch read-only state
+        $(ButtonElement.class).id("readOnly").click();
+        // set value before range
+        $(ButtonElement.class).id("resetValue").click();
+        // add range, previously set date is not in range
+        $(ButtonElement.class).id("addRange").click();
+
+        // Test that popup still opens
+        df.openPopup();
+        waitForElementPresent(By.className("v-datefield-popup"));
+        assertElementPresent(By.className("v-datefield-popup"));
     }
 
 }
