@@ -3,6 +3,7 @@ package com.vaadin.tests.components.datefield;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.DateFieldElement;
