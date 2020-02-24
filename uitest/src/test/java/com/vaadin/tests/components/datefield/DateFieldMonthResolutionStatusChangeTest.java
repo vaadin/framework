@@ -41,6 +41,8 @@ public class DateFieldMonthResolutionStatusChangeTest
         openTestURL();
         DateFieldElement df = $(DateFieldElement.class).first();
 
+        // switch read-only state
+        $(ButtonElement.class).id("readOnly").click();
         // set value before range
         $(ButtonElement.class).id("resetValue").click();
         // add range, previously set date is not in range
