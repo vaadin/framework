@@ -30,9 +30,16 @@ public class DateFieldMonthResolutionStatusChange extends AbstractTestUI {
             dateField.setRangeEnd(LocalDate.of(2020, 1, 1));
         });
 
+        Button resetValueButton = new Button("Reset value");
+        addRangeButton.setId("resetValue");
+        addRangeButton.addClickListener(event -> {
+            dateField.setValue(LocalDate.now());
+        });
+
         addComponent(dateField);
         addComponent(dateReadOnlySwitch);
         addComponent(addRangeButton);
+        addComponent(resetValueButton);
     }
 
     @Override
