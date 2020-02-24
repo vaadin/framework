@@ -762,8 +762,18 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             return true;
         }
 
+        // If dateStrResolution has more year digits than rangeEnd, we need
+        // to pad it in order to be lexicographically compatible
         String dateStrResolution = dateStrResolution(date, minResolution);
-        return rangeEnd.substring(0, dateStrResolution.length())
+        String paddedEnd = rangeEnd.substring(0);
+        int yearDigits = dateStrResolution.indexOf("-");
+        if (yearDigits == -1) {
+            yearDigits = dateStrResolution.length();
+        }
+        while (paddedEnd.indexOf("-") < yearDigits) {
+            paddedEnd = "0" + paddedEnd;
+        }
+        return paddedEnd.substring(0, dateStrResolution.length())
                 .compareTo(dateStrResolution) >= 0;
     }
 
@@ -965,10 +975,6 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     public void renderCalendar(boolean updateDate) {
         if (parent instanceof VAbstractPopupCalendar
                 && !((VAbstractPopupCalendar) parent).popup.isShowing()) {
-            if (getDate() == null) {
-                // no date set, cannot pre-render yet
-                return;
-            }
             // a popup that isn't open cannot possibly need a focus change event
             updateDate = false;
         }
@@ -2126,7 +2132,13 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      */
     public void setRangeEnd(String newRangeEnd) {
         if (!SharedUtil.equals(rangeEnd, newRangeEnd)) {
-            rangeEnd = newRangeEnd;
+            // Dates with year 10000 or more has + prefix, which is not compatible
+            // with format returned by dateStrResolution method
+            if (newRangeEnd.startsWith("+")) {
+                rangeEnd = newRangeEnd.substring(1);
+            } else {
+                rangeEnd = newRangeEnd;
+            }
             if (initialRenderDone) {
                 // Dynamic updates to the range needs to render the calendar to
                 // update the element stylenames
