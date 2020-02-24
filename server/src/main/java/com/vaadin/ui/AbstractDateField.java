@@ -297,7 +297,9 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * validate. If {@code startDate} is set to {@code null}, any value before
      * {@code endDate} will be accepted by the range
      * <p>
-     * Note: Negative, i.e. BC dates are not supported
+     * Note: Negative, i.e. BC dates are not supported.
+     * <p>
+     * Note: Not remmended to be used mixed with Binder and validators.
      *
      * @param startDate
      *            - the allowed range's start date
@@ -359,6 +361,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * date (taking the resolution into account), the component will not
      * validate. If {@code endDate} is set to {@code null}, any value after
      * {@code startDate} will be accepted by the range.
+     * <p>
+     * Note: Not remmended to be used mixed with Binder and validators.
      *
      * @param endDate
      *            the allowed range's end date (inclusive, based on the current
@@ -618,6 +622,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *
      * @param value
      *            the new value, may be {@code null}
+     * @throws IllegalArgumentException
+     *            if the value is not within range bounds
      */
     @Override
     public void setValue(T value) {
@@ -626,7 +632,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                 new ValueContext(this, this));
 
         if (result.isError()) {
-            throw new IllegalStateException(
+            throw new IllegalArgumentException(
                     "value is not withing acceptable range");
         } else {
             currentErrorMessage = null;
