@@ -31,8 +31,8 @@ public class DateFieldMonthResolutionStatusChange extends AbstractTestUI {
         });
 
         Button resetValueButton = new Button("Reset value");
-        addRangeButton.setId("resetValue");
-        addRangeButton.addClickListener(event -> {
+        resetValueButton.setId("resetValue");
+        resetValueButton.addClickListener(event -> {
             dateField.setValue(LocalDate.now());
         });
 
