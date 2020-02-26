@@ -26,6 +26,8 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import com.google.gwt.animation.client.AnimationScheduler;
+import com.google.gwt.aria.client.ExpandedValue;
+import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
@@ -343,6 +345,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             implements PositionCallback, CloseHandler<PopupPanel> {
 
         private static final int Z_INDEX = 30000;
+        private static final String POPUP_ID = "VAADIN_COMBOBOX_OPTIONLIST";
 
         /** For internal use only. May be removed or replaced in the future. */
         public final SuggestionMenu menu;
@@ -369,6 +372,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
          */
         SuggestionPopup() {
             super(true, false);
+            getElement().setId(POPUP_ID);
             debug("VComboBox.SP: constructor()");
             setOwner(VComboBox.this);
             menu = new SuggestionMenu();
@@ -427,7 +431,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
             final SuggestionPopup popup = this;
             // Add TT anchor point
-            getElement().setId("VAADIN_COMBOBOX_OPTIONLIST");
+            getElement().setId(POPUP_ID);
 
             // Set the default position if the popup isn't already visible,
             // the setPopupPositionAndShow call later on can deal with any
@@ -466,6 +470,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             menu.getElement().getFirstChildElement().getStyle().clearWidth();
 
             setPopupPositionAndShow(popup);
+            Roles.getComboboxRole().setAriaExpandedState(panel.getElement(), ExpandedValue.TRUE);
         }
 
         private int getDesiredTopPosition() {
@@ -1087,6 +1092,12 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                     }
                 }
             }
+        }
+
+        @Override
+        public void hide() {
+            Roles.getComboboxRole().setAriaExpandedState(panel.getElement(), ExpandedValue.FALSE);
+            super.hide();
         }
     }
 
@@ -1870,6 +1881,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         Roles.getButtonRole().setAriaHiddenState(popupOpener.getElement(),
                 true);
         Roles.getButtonRole().set(popupOpener.getElement());
+        Roles.getComboboxRole().setAriaHaspopupProperty(panel.getElement(), true);
+        Roles.getComboboxRole().setAriaOwnsProperty(panel.getElement(), Id.of(suggestionPopup.getElement()));
 
         panel.add(tb);
         panel.add(popupOpener);
