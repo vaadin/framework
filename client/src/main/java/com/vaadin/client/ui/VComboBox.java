@@ -906,6 +906,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 // ComboBox itself may be incorrectly positioned, don't adjust
                 // popup position yet. Width calculations must be performed
                 // anyway to avoid flickering.
+                setPopupPosition(left, top);
                 return;
             }
             if (left > comboBoxLeft
