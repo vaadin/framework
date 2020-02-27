@@ -4367,7 +4367,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     private boolean refreshBodyRequested = false;
 
     private boolean resizeRequested = false;
-    private boolean resizeRerfreshScheduled = false;
+    private boolean resizeRefreshScheduled = false;
 
     private DragAndDropHandler.DragAndDropCallback headerCellDndCallback = new DragAndDropCallback() {
 
@@ -9268,12 +9268,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * Delay calculation to be deferred so Escalator can do it's magic.
          */
         resizeRequested = true;
-        if (!resizeRerfreshScheduled) {
-            resizeRerfreshScheduled = true;
+        if (!resizeRefreshScheduled) {
+            resizeRefreshScheduled = true;
             Scheduler.get().scheduleFixedDelay(() -> {
                 if (!resizeRequested) {
                     doRefreshOnResize();
-                    resizeRerfreshScheduled = false;
+                    resizeRefreshScheduled = false;
                     return false;
                 } else {
                     resizeRequested = false;
