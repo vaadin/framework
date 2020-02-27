@@ -1011,7 +1011,11 @@ public abstract class AbstractClientConnector
      */
     protected void fireEvent(EventObject event) {
         if (eventRouter != null) {
-            eventRouter.fireEvent(event);
+            if (errorHandler != null) {
+                eventRouter.fireEvent(event,errorHandler);
+            } else {
+                eventRouter.fireEvent(event);
+            }
         }
     }
 
