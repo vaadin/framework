@@ -30,7 +30,7 @@
         <vaadin.plugin.version>8.7-SNAPSHOT</vaadin.plugin.version>
 
         <!-- Used in OSGi manifests -->
-        <javax.validation.version>1.0.0.GA</javax.validation.version>
+        <javax.validation.version>2.0.1.Final</javax.validation.version>
         <jsoup.version>1.11.2</jsoup.version>
         <javax.portlet.version>2.0</javax.portlet.version>
         <vaadin.sass.version>0.9.13</vaadin.sass.version>
@@ -208,7 +208,7 @@
                 <version>1.7.7</version>
             </dependency>
             <dependency>
-                <groupId>javax.validation</groupId>
+                <groupId</groupId>
                 <artifactId>validation-api</artifactId>
                 <version>${javax.validation.version}</version>
             </dependency>
