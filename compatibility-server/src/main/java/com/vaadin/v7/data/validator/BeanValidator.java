@@ -92,9 +92,16 @@ public class BeanValidator implements Validator {
         public Object getValidatedValue() {
             return value;
         }
+
+        /**
+         * Do not use, the method is just for purpose of compatibility with newer
+         * validation API.
+         *
+         * @param type Do not use.
+         */
         @Override
         public <T> T unwrap(Class<T> type) {
-            return violation.unwrap(type);
+            return null;
         }
     }
 
