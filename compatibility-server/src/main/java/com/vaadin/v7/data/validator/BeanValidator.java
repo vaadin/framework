@@ -92,7 +92,10 @@ public class BeanValidator implements Validator {
         public Object getValidatedValue() {
             return value;
         }
-
+        @Override
+        public <T> T unwrap(Class<T> type) {
+            return violation.unwrap(type);
+        }
     }
 
     /**
