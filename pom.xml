@@ -208,7 +208,7 @@
                 <version>1.7.7</version>
             </dependency>
             <dependency>
-                <groupId</groupId>
+                <groupId>javax.validation</groupId>
                 <artifactId>validation-api</artifactId>
                 <version>${javax.validation.version}</version>
             </dependency>
