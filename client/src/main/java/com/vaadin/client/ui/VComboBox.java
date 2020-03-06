@@ -902,11 +902,16 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
             int comboBoxLeft = VComboBox.this.getAbsoluteLeft();
             int comboBoxWidth = VComboBox.this.getOffsetWidth();
-            if (hasParentWithUnadjustedPositioning()) {
-                // ComboBox itself may be incorrectly positioned, don't adjust
-                // popup position yet. Width calculations must be performed
-                // anyway to avoid flickering.
-                setPopupPosition(left, top);
+            if (hasParentWithUnadjustedHorizontalPositioning()) {
+                // ComboBox itself may be incorrectly positioned, don't try to
+                // adjust horizontal popup position yet. Earlier width
+                // calculations must be performed anyway to avoid flickering.
+                if (top != topPosition) {
+                    // Variable 'left' still contains the original popupLeft,
+                    // 'top' has been updated, thus vertical position needs
+                    // adjusting.
+                    setPopupPosition(left, top);
+                }
                 return;
             }
             if (left > comboBoxLeft
@@ -929,7 +934,10 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 menu.setWidth(Window.getClientWidth() + "px");
             }
 
-            setPopupPosition(left, top);
+            // Only update the position if it has changed.
+            if (top != topPosition || left != getPopupLeft()) {
+                setPopupPosition(left, top);
+            }
             menu.scrollSelectionIntoView();
         }
 
@@ -941,7 +949,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
          * @return {@code true} if unadjusted parents found, {@code false}
          *         otherwise
          */
-        private boolean hasParentWithUnadjustedPositioning() {
+        private boolean hasParentWithUnadjustedHorizontalPositioning() {
             /*
              * If there are any VHorizontalLayouts among this VComboBox's
              * parents, any spacing or expand ratio may cause incorrect
