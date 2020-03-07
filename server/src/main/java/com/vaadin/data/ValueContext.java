@@ -17,7 +17,6 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Optional;
 
 import com.vaadin.ui.Component;
@@ -61,8 +60,6 @@ public class ValueContext implements Serializable {
      *            The component related to current value. Can be null.
      */
     public ValueContext(Component component) {
-        Objects.requireNonNull(component,
-                "Component can't be null in ValueContext construction");
         this.component = component;
         locale = findLocale();
     }
