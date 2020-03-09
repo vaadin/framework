@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -51,7 +52,7 @@ import elemental.json.JsonObject;
  * @since 8.0
  */
 public class VRadioButtonGroup extends FocusableFlowPanelComposite
-        implements Field, ClickHandler, HasEnabled {
+        implements Field, ClickHandler, HasEnabled, HasRendererWorkaround {
 
     public static final String CLASSNAME = "v-select-optiongroup";
     public static final String CLASSNAME_OPTION = "v-select-option";
@@ -71,6 +72,8 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
     private boolean readonly;
     private final String groupId;
     private List<Consumer<JsonObject>> selectionChangeListeners;
+
+    private boolean rendererWorkaroundTriggered = false;
 
     public VRadioButtonGroup() {
         groupId = DOM.createUniqueId();
@@ -316,5 +319,28 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         // #9258 apply the v-disabled class when disabled for UX
         boolean hasDisabledStyle = !isEnabled() || !value;
         radioButton.setStyleName(StyleConstants.DISABLED, hasDisabledStyle);
+    }
+
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     * <p>
+     * Causes delayed refresh of selection with the old value. This is needed
+     * for ComponentRenderer after Grid resize in order to re-trigger the
+     * correct application of :checked pseudo class.
+     */
+    @Override
+    public void rendererWorkaround() {
+        if (!rendererWorkaroundTriggered) {
+            rendererWorkaroundTriggered = true;
+            Scheduler.get().scheduleFinally(() -> {
+                for (Entry<RadioButton, JsonObject> entry : optionsToItems
+                        .entrySet()) {
+                    updateItemSelection(entry.getKey(),
+                            entry.getValue().getBoolean(
+                                    ListingJsonConstants.JSONKEY_ITEM_SELECTED));
+                }
+                rendererWorkaroundTriggered = false;
+            });
+        }
     }
 }

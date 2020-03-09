@@ -35,8 +35,14 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 
-public class VSlider extends SimpleFocusablePanel
-        implements Field, HasValue<Double>, SubPartAware {
+/**
+ * The client-side widget for the {@code Slider} component.
+ *
+ * @author Vaadin Ltd.
+ */
+@SuppressWarnings("deprecation")
+public class VSlider extends SimpleFocusablePanel implements Field,
+        HasValue<Double>, SubPartAware, HasRendererWorkaround {
 
     public static final String CLASSNAME = "v-slider";
 
@@ -95,6 +101,8 @@ public class VSlider extends SimpleFocusablePanel
         fireValueChanged();
         acceleration = 1;
     });
+
+    private boolean rendererWorkaroundTriggered = false;
 
     public VSlider() {
         super();
@@ -683,5 +691,23 @@ public class VSlider extends SimpleFocusablePanel
      */
     public void setUpdateValueOnClick(boolean updateValueOnClick) {
         this.updateValueOnClick = updateValueOnClick;
+    }
+
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     * <p>
+     * Causes delayed refresh of handle position with the old value. This is
+     * needed for ComponentRenderer to render the widget correctly during
+     * scrolling.
+     */
+    @Override
+    public void rendererWorkaround() {
+        if (!rendererWorkaroundTriggered) {
+            rendererWorkaroundTriggered = true;
+            Scheduler.get().scheduleFinally(() -> {
+                setValue(getValue(), false);
+                rendererWorkaroundTriggered = false;
+            });
+        }
     }
 }
