@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.vaadin</groupId>
     <artifactId>vaadin-test-widget-set-testutil</artifactId>
-    <version>8.10-SNAPSHOT</version>
+    <version>8.11-SNAPSHOT</version>
     <packaging>jar</packaging>
     <!-- 
         This module does not inherit the vaadin-test on purpose. It is done 

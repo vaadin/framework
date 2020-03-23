@@ -3901,8 +3901,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 setParent(detailsWidget, null);
                 spacerElement.removeAllChildren();
                 if (getHeightMode() == HeightMode.UNDEFINED) {
-                    // update spacer height
-                    escalator.getBody().setSpacer(spacer.getRow(), 0);
                     setHeightByRows(getEscalator().getBody().getRowCount());
                 }
             }
@@ -4106,15 +4104,25 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         private void setHeightToHeaderCellHeight() {
             RowContainer header = grid.escalator.getHeader();
-            if (header.getRowCount() == 0
+            if (!WidgetUtil.isDisplayed(header.getElement())
+                    || header.getRowCount() == 0
                     || !header.getRowElement(0).hasChildNodes()) {
                 getLogger().info(
                         "No header cell available when calculating sidebar button height");
-                openCloseButton.setHeight(header.getDefaultRowHeight() + "px");
+                // If the Grid is hidden with styles when this is called the
+                // border height will be off, but it's usually only a matter of
+                // a pixel or so. Removing a style name cannot trigger a full
+                // refresh of the layout, it's developer's responsibility to do
+                // that where needed.
+                double height = header.getDefaultRowHeight()
+                        - WidgetUtil.measureVerticalBorder(getElement()) / 2;
+                openCloseButton.setHeight(height + "px");
 
                 return;
             }
 
+            // Use actual height instead of expected height in case the height
+            // is modified by styles.
             Element firstHeaderCell = header.getRowElement(0)
                     .getFirstChildElement();
             double height = WidgetUtil
@@ -4133,8 +4141,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 close();
                 grid.getElement().appendChild(getElement());
                 Grid.setParent(this, grid);
-                // border calculation won't work until attached
-                setHeightToHeaderCellHeight();
             }
         }
 
@@ -4145,10 +4151,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         @Override
         protected void onAttach() {
             super.onAttach();
-            // make sure the button will get correct height if the button should
-            // be visible when the grid is rendered the first time.
-            Scheduler.get()
-                    .scheduleDeferred(() -> setHeightToHeaderCellHeight());
+            // Make sure the button will get correct height whenever the Sidebar
+            // is added to the Grid.
+            setHeightToHeaderCellHeight();
         }
 
         @Override
@@ -4180,6 +4185,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * no reason. Also helps for keeping the keyboard navigation working.
          */
         private boolean hidingColumn;
+
+        /**
+         * When several columns are set hidable, don't reset the Sidebar for
+         * every column separately.
+         */
+        private boolean toggleUpdateTriggered;
 
         private void updateColumnHidable(final Column<?, T> column) {
             if (column.isHidable()) {
@@ -4226,16 +4237,26 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         private void updateTogglesOrder() {
-            if (!hidingColumn) {
-                int lastIndex = 0;
-                for (Column<?, T> column : getColumns()) {
-                    if (column.isHidable()) {
-                        final MenuItem menuItem = columnToHidingToggleMap
-                                .get(column);
-                        sidebar.menuBar.removeItem(menuItem);
-                        sidebar.menuBar.insertItem(menuItem, lastIndex++);
+            if (!hidingColumn && !toggleUpdateTriggered) {
+                // This method is called whenever a column is set hidable. If
+                // there are multiple hidable columns, it will get called
+                // separately for all of them. There is no need to update the
+                // order more than once and no other layouting is dependent on
+                // the Sidebar layouting getting finished first, so wait until
+                // all calls have arrived before proceeding further.
+                toggleUpdateTriggered = true;
+                Scheduler.get().scheduleFinally(() -> {
+                    int lastIndex = 0;
+                    for (Column<?, T> column : getColumns()) {
+                        if (column.isHidable()) {
+                            final MenuItem menuItem = columnToHidingToggleMap
+                                    .get(column);
+                            sidebar.menuBar.removeItem(menuItem);
+                            sidebar.menuBar.insertItem(menuItem, lastIndex++);
+                        }
                     }
-                }
+                    toggleUpdateTriggered = false;
+                });
             }
         }
 
@@ -4367,6 +4388,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             (RowReference<Object>) rowReference);
 
     private boolean refreshBodyRequested = false;
+
+    private boolean resizeRequested = false;
+    private boolean resizeRefreshScheduled = false;
 
     private DragAndDropHandler.DragAndDropCallback headerCellDndCallback = new DragAndDropCallback() {
 
@@ -9266,23 +9290,38 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /*
          * Delay calculation to be deferred so Escalator can do it's magic.
          */
-        Scheduler.get().scheduleFinally(() -> {
-            if (escalator
-                    .getInnerWidth() != autoColumnWidthsRecalculator.lastCalculatedInnerWidth) {
-                recalculateColumnWidths();
-            }
+        resizeRequested = true;
+        if (!resizeRefreshScheduled) {
+            resizeRefreshScheduled = true;
+            Scheduler.get().scheduleFixedDelay(() -> {
+                if (!resizeRequested) {
+                    doRefreshOnResize();
+                    resizeRefreshScheduled = false;
+                    return false;
+                } else {
+                    resizeRequested = false;
+                    return true;
+                }
+            }, 50);
+        }
+    }
+    
+    private void doRefreshOnResize() {
+        if (escalator
+                .getInnerWidth() != autoColumnWidthsRecalculator.lastCalculatedInnerWidth) {
+           recalculateColumnWidths();
+        }
 
-            // Vertical resizing could make editor positioning invalid so it
-            // needs to be recalculated on resize
-            if (isEditorActive()) {
-                editor.updateVerticalScrollPosition();
-            }
+        // Vertical resizing could make editor positioning invalid so it
+        // needs to be recalculated on resize
+        if (isEditorActive()) {
+            editor.updateVerticalScrollPosition();
+        }
 
-            // if there is a resize, we need to refresh the body to avoid an
-            // off-by-one error which occurs when the user scrolls all the
-            // way to the bottom.
-            refreshBody();
-        });
+        // if there is a resize, we need to refresh the body to avoid an
+        // off-by-one error which occurs when the user scrolls all the
+        // way to the bottom.
+        refreshBody();
     }
 
     private double getEscalatorInnerHeight() {
