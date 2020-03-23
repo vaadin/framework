@@ -14,7 +14,8 @@ public abstract class BaseLayoutMarginSpacingTest extends MultiBrowserTest {
         openTestURL();
         sleep(500);
         compareScreen("initial");
-        String[] states = { "marginOnSpaceOff", "marginOnfSpaceOn" };
+        String[] states = { "marginOnSpaceOff", "marginOnSpaceOn",
+                "marginOffSpaceOn" };
         ButtonElement marginBtn = $(ButtonElement.class).get(0);
         ButtonElement spaceBtn = $(ButtonElement.class).get(1);
         marginBtn.click();
@@ -23,5 +24,8 @@ public abstract class BaseLayoutMarginSpacingTest extends MultiBrowserTest {
         spaceBtn.click();
         sleep(1000);
         compareScreen(states[1]);
+        marginBtn.click();
+        sleep(1000);
+        compareScreen(states[2]);
     }
 }
