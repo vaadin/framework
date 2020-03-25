@@ -179,6 +179,30 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     };
 
     /**
+     * The default start year (inclusive) from which to calculate the 
+     * daylight-saving time zone transition dates.
+     */
+    private static final int DEFAULT_START_YEAR = 1980;
+
+    /**
+     * The default value of the number of future years from the current date for
+     * which the daylight-saving time zone transition dates are calculated.
+     */
+    private static final int DEFAULT_YEARS_FROM_NOW = 20;
+
+    /**
+     * The optional user-supplied start year (inclusive) from which to calculate
+     * the daylight-saving time zone transition dates.
+     */
+    private Integer startYear;
+
+    /**
+     * The optional user-supplied end year (inclusive) until which to calculate
+     * the daylight-saving time zone transition dates.
+     */
+    private Integer endYear;
+
+    /**
      * Value of the field.
      */
     private T value;
@@ -483,7 +507,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
     /**
      * Sets the {@link ZoneId}, which is used when {@code z} is included inside
-     * the {@link #setDateFormat(String)}.
+     * the {@link #setDateFormat(String)} .
      *
      * @param zoneId
      *            the zone id
@@ -492,19 +516,71 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     public void setZoneId(ZoneId zoneId) {
         if (zoneId != this.zoneId
                 || (zoneId != null && !zoneId.equals(this.zoneId))) {
-            updateTimeZoneJSON(zoneId, getLocale());
+            updateTimeZoneJSON(zoneId, getLocale(), getStartYear(),
+                    getEndYear());
         }
         this.zoneId = zoneId;
     }
 
-    private void updateTimeZoneJSON(ZoneId zoneId, Locale locale) {
+    private void updateTimeZoneJSON(ZoneId zoneId, Locale locale, int startYear,
+            int endYear) {
         String timeZoneJSON;
         if (zoneId != null && locale != null) {
-            timeZoneJSON = TimeZoneUtil.toJSON(zoneId, locale);
+            timeZoneJSON = TimeZoneUtil.toJSON(zoneId, locale, startYear,
+                    endYear);
         } else {
             timeZoneJSON = null;
         }
         getState().timeZoneJSON = timeZoneJSON;
+    }
+
+    /**
+     * Sets {@link startYear} and {@link endYear}: the start and end years (both
+     * inclusive) between which to calculate the daylight-saving time zone
+     * transition dates. Both parameters are used when '{@code z}' is included
+     * inside the {@link #setDateFormat(String)}, they would have no effect
+     * otherwise. Specifically, these parameters determine the range of years in 
+     * which zone names are are adjusted to show the daylight saving names. 
+     *
+     * If no values are provided, by default {@link startYear} is set to
+     * {@value #DEFAULT_START_YEAR}, and {@link endYear} is set to
+     * {@value #DEFAULT_YEARS_FROM_NOW} years into the future from the current
+     * date.
+     *
+     * @param startYear
+     *            the start year of DST transitions
+     * @param endYear
+     *            the end year of DST transitions
+     */
+    public void setDaylightSavingTimeRange(int startYear, int endYear) {
+        if (startYear > endYear) {
+            throw new IllegalArgumentException(
+                    "The start year from which to begin calculating the "
+                            + "daylight-saving time zone transition dates must be less than or equal the end year."
+                            + "\n" + startYear + " is greater than " + endYear);
+        }
+        if (this.startYear == null || this.endYear == null
+                || startYear != this.startYear || endYear != this.endYear) {
+            updateTimeZoneJSON(getZoneId(), getLocale(), startYear, endYear);
+        }
+        this.startYear = startYear;
+        this.endYear = endYear;
+    }
+
+    private int getStartYear() {
+        if (startYear == null) {
+            return DEFAULT_START_YEAR;
+        } else {
+            return startYear;
+        }
+    }
+
+    private int getEndYear() {
+        if (endYear == null) {
+            return LocalDate.now().getYear() + DEFAULT_YEARS_FROM_NOW;
+        } else {
+            return endYear;
+        }
     }
 
     @Override
@@ -512,7 +588,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         Locale oldLocale = getLocale();
         if (locale != oldLocale
                 || (locale != null && !locale.equals(oldLocale))) {
-            updateTimeZoneJSON(getZoneId(), locale);
+            updateTimeZoneJSON(getZoneId(), locale, getStartYear(),
+                    getEndYear());
         }
         super.setLocale(locale);
     }

@@ -41,17 +41,6 @@ import elemental.json.impl.JsonUtil;
  */
 public final class TimeZoneUtil implements Serializable {
 
-    /**
-     * The start year used to send the time zone transition dates.
-     */
-    private static final int STARTING_YEAR = 1980;
-
-    /**
-     * Till how many years from now, should we send the time zone transition
-     * dates.
-     */
-    private static final int YEARS_FROM_NOW = 20;
-
     private TimeZoneUtil() {
         // Static utils only
     }
@@ -65,10 +54,15 @@ public final class TimeZoneUtil implements Serializable {
      *            the {@link ZoneId} to get the daylight transitions from
      * @param locale
      *            the locale used to determine the short name of the time zone
+     * @param startYear
+     *            the start year of DST transitions
+     * @param endYear
+     *            the end year of DST transitions
      *
      * @return the encoded string
      */
-    public static String toJSON(ZoneId zoneId, Locale locale) {
+    public static String toJSON(ZoneId zoneId, Locale locale, int startYear,
+            int endYear) {
         if (zoneId == null || locale == null) {
             return null;
         }
@@ -78,9 +72,8 @@ public final class TimeZoneUtil implements Serializable {
 
         TimeZoneInfo info = new TimeZoneInfo();
 
-        int endYear = LocalDate.now().getYear() + YEARS_FROM_NOW;
         if (timeZone.useDaylightTime()) {
-            for (int year = STARTING_YEAR; year <= endYear; year++) {
+            for (int year = startYear; year <= endYear; year++) {
                 ZonedDateTime i = LocalDateTime.of(year, 1, 1, 0, 0)
                         .atZone(zoneId);
                 while (true) {
