@@ -1,0 +1,109 @@
+#!/usr/bin/python
+
+import sys,os,re
+
+###############################################################################
+# Utility scripts
+###############################################################################
+
+def command(cmd):
+    result = os.system(cmd)
+    if result != 0:
+        print "Command failed: %s" % (cmd)
+        sys.exit(1)
+
+###############################################################################
+# Determine versions
+###############################################################################
+
+def subVersions(version):
+    m = re.match(r'(\d+\.\d+)', version)
+    if not m:
+        print "Unable to determine major version"
+        sys.exit(1)
+    minor = m.group(1)
+
+    m = re.match(r'(\d+\.\d+\.\d+)', version)
+    if not m:
+        print "Unable to determine minor version"
+        sys.exit(1)
+    maintenance = m.group(1)
+
+    m = re.match(r'\d+\.\d+\.\d+(\.pre\d+)', version) or re.match(r'\d+\.\d+\.\d+(\.alpha\d+)', version) or re.match(r'\d+\.\d+\.\d+(\.beta\d+)', version) or re.match(r'\d+\.\d+\.\d+(\.rc\d+)', version)
+    if m:
+        print "This is a prerelease."
+        prerelease = m.group(1)
+    else:
+        prerelease = None
+    return (minor, maintenance, prerelease)
+
+def parseVersion(version):
+    m = re.match(r'(\d+)\.(\d+)\.(\d+)', version)
+    if m:
+        return (m.group(1), m.group(2), m.group(3))
+
+def str2int(s):
+    try:
+        return int(s)
+    except:
+        return s
+
+def getLatestVersions():
+    with open('/home/vaadin/download/LATEST8', 'r') as f:
+        latest_8 = f.readline().strip()
+    with open('/home/vaadin/download/LATEST7', 'r') as f:
+        latest_7 = f.readline().strip()
+    with open('/home/vaadin/download/PRERELEASES', 'r') as f:
+        latest_prerelease = f.readline().strip()
+    return (latest_8, latest_7, latest_prerelease)
+
+###############################################################################
+# Update Eclipse metadata
+###############################################################################
+
+def updateEclipseMetadata(version):
+    (minor, maintenance, prerelease) = subVersions(version)
+    (latest_8, latest_7, latest_prerelease) = getLatestVersions()
+    command("cp /home/vaadin/download/eclipse-maven-archetypes.xml.template /home/vaadin/download/eclipse-maven-archetypes.xml")
+    if prerelease:
+        command("sed -i 's/#VAADIN_PRERELEASE#/%s/g' /home/vaadin/download/eclipse-maven-archetypes.xml" % latest_prerelease)
+        command("sed -i 's/#VAADIN_VERSION8#/%s/g' /home/vaadin/download/eclipse-maven-archetypes.xml" % latest_8)
+    else:
+        command("sed -i 's/#VAADIN_VERSION8#/%s/g' /home/vaadin/download/eclipse-maven-archetypes.xml" % latest_8)
+        command("sed -i 's/#VAADIN_PRERELEASE#/%s/g' /home/vaadin/download/eclipse-maven-archetypes.xml" % latest_prerelease)
+        # compatibility with old Eclipse plug-in versions
+        command("cp /home/vaadin/download/maven-archetypes.xml.template /home/vaadin/download/maven-archetypes.xml")
+        command("sed -i 's/#VAADIN_VERSION#/%s/g' /home/vaadin/download/maven-archetypes.xml" % latest_7)
+    command("sed -i 's/#VAADIN_VERSION7#/%s/g' /home/vaadin/download/eclipse-maven-archetypes.xml" % latest_7)
+
+###############################################################################
+# Post-release
+###############################################################################
+
+def postRelease(version):
+    (minor, maintenance, prerelease) = subVersions(version)
+    print "Minor version: %s" % (minor)
+    print "Maintenance version: %s" % (maintenance)
+    if prerelease:
+        print "Prerelease version: %s%s" % (maintenance, prerelease)
+
+    updateEclipseMetadata(version)
+
+    print "Post-release done successfully."
+
+###############################################################################
+# Parse command-line parameters
+###############################################################################
+
+def helpAndExit():
+    print "Usage: postrelease <version>"
+    sys.exit(1)
+
+if len(sys.argv) != 2:
+    helpAndExit()
+
+version = sys.argv[1]
+
+print "Version: %s" % (version)
+postRelease(version)
+

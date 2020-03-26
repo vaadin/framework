@@ -1,0 +1,239 @@
+#!/usr/bin/python
+
+import sys,os,re
+
+
+###############################################################################
+# Utility scripts
+###############################################################################
+
+def command(cmd):
+    result = os.system(cmd)
+    if result != 0:
+        print "Command failed: %s" % (cmd)
+        sys.exit(1)
+
+###############################################################################
+# Cleanup
+###############################################################################
+def cleanup():
+    print "Cleaning up unzip directory..."
+    command("rm -rf /home/vaadin/staging/unzip/*")
+
+###############################################################################
+# Determine versions
+###############################################################################
+
+def subVersions(version):
+    m = re.match(r'(\d+\.\d+)', version)
+    if not m:
+        print "Unable to determine major version"
+        sys.exit(1)
+    minor = m.group(1)
+
+    m = re.match(r'(\d+\.\d+\.\d+)', version)
+    if not m:
+        print "Unable to determine minor version"
+        sys.exit(1)
+    maintenance = m.group(1)
+
+    m = re.match(r'\d+\.\d+\.\d+(\.pre\d+)', version) or re.match(r'\d+\.\d+\.\d+(\.alpha\d+)', version) or re.match(r'\d+\.\d+\.\d+(\.beta\d+)', version) or re.match(r'\d+\.\d+\.\d+(\.rc\d+)', version)
+    if m:
+        print "This is a prerelease."
+        prerelease = m.group(1)
+    else:
+        prerelease = None
+    return (minor, maintenance, prerelease)
+    
+def parseVersion(version):
+    m = re.match(r'(\d+)\.(\d+)\.(\d+)', version)
+    if m:
+        return (m.group(1), m.group(2), m.group(3))
+
+def str2int(s):
+    try:
+        return int(s)
+    except:
+        return s
+
+def determineReleasePath(version):
+    (minor, maintenance, prerelease) = subVersions(version)
+    if prerelease != None:
+        return "prerelease/%s/%s/%s%s" % (minor, maintenance, maintenance, prerelease)
+    return "release/%s/%s" % (minor, maintenance)
+
+###############################################################################
+# Find the name of the artifact package
+###############################################################################
+def findArtifactPackage(version):
+    allZip = "/home/vaadin/staging/%s/vaadin-all/vaadin-all-%s.zip" % (version,version)
+    allDoc = "/home/vaadin/staging/%s/vaadin-all/vaadin-all-%s-javadoc.jar" % (version, version)
+    
+    if not os.path.exists(allZip):
+      print "Missing %s" % allZip
+      sys.exit(1)
+      
+    if not os.path.exists(allDoc):
+      print "Missing %s" % allDoc
+      sys.exit(1)
+      
+    return allZip
+
+###############################################################################
+# Unpackage
+###############################################################################
+def unpackArtifacts(artifactPackage):
+    print "Unpackaging artifacts from %s..." % artifactPackage
+    command("mkdir -p /home/vaadin/staging/unzip ; cd /home/vaadin/staging/unzip ; unzip -q %s" % artifactPackage)
+
+###############################################################################
+# Install
+###############################################################################
+def install(version):
+    releasePath = determineReleasePath(version)
+    if len(releasePath) < 5:
+        print "FATAL failsafe breach!"
+        sys.exit(1)
+        
+    # Create and cleanup the release path
+    command("mkdir -p /home/vaadin/download/%s" % releasePath)
+    command("rm -rf /home/vaadin/download/%s/*" % releasePath)
+    
+    # Change to the release directory
+    os.chdir("/home/vaadin/download/%s" % releasePath)
+
+    command("mkdir -p other")
+
+    # Cleanup possible old release attempt
+    command("rm -rf demo release-notes.html *.jar docs")
+
+    # Copy the full installation package
+    command("cp /home/vaadin/staging/%s/vaadin-all/vaadin-all-%s.zip ." % (version, version))
+
+    # Copy java doc all
+    javadocname = "/home/vaadin/staging/%s/vaadin-all/vaadin-all-%s-javadoc.jar" % (version, version)
+    command("cp %s ." % javadocname)
+    
+    # Move packages
+    command("mv /home/vaadin/staging/unzip/vaadin-*-%s.jar ." % version)
+
+    # Unpackage various files
+    print "Copying content from installation package..."
+    command("unzip -q vaadin-all-%s.zip 'css/*' 'img/*' 'release-notes.html' 'license.html' 'licenses/*'" % version)
+
+    # Copy java doc all
+    javadocname = "/home/vaadin/staging/%s/vaadin-all/vaadin-all-%s-javadoc.jar" % (version, version)
+    command("cp %s ." % javadocname)
+    
+    # Unpackage javadoc; website uses this
+    print "Extracting documentation from %s..." % javadocname
+    command("mkdir -p docs/api")
+    os.chdir("docs/api")
+    command("unzip -q %s" % javadocname)
+    os.chdir("../..")
+    
+    # Copy the Ivy/Ant template
+    # command("mkdir -p other/ivy-template")
+    # command("for a in /home/vaadin/ivy-template/* ; do f=`basename $a` ;  cat $a|sed 's/#VERSION#/%s/g' > other/ivy-template/$f ; done" % version)
+    # command("cd other/ivy-template/ ; zip ../ivy-template-%s.zip * ; cd ../.." % version)
+    # command("rm -rf other/ivy-template")
+    
+    # Go back
+    os.chdir("/home/vaadin/staging")
+
+###############################################################################
+# checks whether a version is newer than another
+###############################################################################
+def isNewerVersion(v1, v2):
+    (v1_major, v1_minor, v1_maintenance) = parseVersion(v1)
+    (v2_major, v2_minor, v2_maintenance) = parseVersion(v2)
+    return v1_major > v2_major or (v1_major == v2_major and v1_minor > v2_minor) or (v1_major == v2_major and v1_minor == v2_minor and str2int(v1_maintenance) > str2int(v2_maintenance))
+    # if l_major <= n_major and l_minor <= n_minor and l_maintenance < n_maintenance:
+    
+    
+###############################################################################
+# Updated release files and links
+###############################################################################
+def publishRelease(version):
+    releasePath = determineReleasePath(version)
+    (major, maintenance, prerelease) = subVersions(version)
+    if prerelease:
+        print "Updating PRERELEASES file..."
+        fout = open("/home/vaadin/download/PRERELEASES", "w")
+        fout.write("%s\n" % version)
+        fout.close()
+    else:
+        print "Checking LATEST file..."
+        fin = open("/home/vaadin/download/LATEST8", "r")
+        latestVersion = fin.readline()
+        fin.close()
+        if isNewerVersion(version, latestVersion):
+            (v_major, v_minor, v_maintenance) = parseVersion(version)
+            minor = "%s.%s" % (v_major, v_minor)
+            
+	    print "Updating LATEST file..."          
+	    fout = open("/home/vaadin/download/release/%s/LATEST" % (minor), "w")
+	    fout.write("%s\n" % version)
+	    fout.write("%s" % releasePath)
+            fout.close()
+           
+            print "Setting LATEST8 symlink..."
+            command("rm /home/vaadin/download/LATEST8")
+            command("ln -s %s /home/vaadin/download/LATEST8" % ("release/%s/LATEST" % minor))
+            
+            print "Setting current link..."
+            command("rm /home/vaadin/download/current8")
+            command("ln -s %s /home/vaadin/download/current8" % releasePath)
+
+            # TODO check - is this needed by any Eclipse plug-in version
+            print "Adding version to Eclipse VERSION file..."
+            command("(echo %s, ; cat /home/vaadin/download/VERSIONS_8) > /home/vaadin/download/VERSIONS_8_NEW" % version)
+            command("mv /home/vaadin/download/VERSIONS_8_NEW /home/vaadin/download/VERSIONS_8")
+        else:
+            print "LATEST8 contains version newer than the one we're publishing. Not performing update."
+
+    print "Adding version to Eclipse VERSION file..."
+    command("(echo %s, ; cat /home/vaadin/download/VERSIONS) > /home/vaadin/download/VERSIONS_NEW" % version)
+    command("mv /home/vaadin/download/VERSIONS_NEW /home/vaadin/download/VERSIONS")
+
+
+###############################################################################
+# Release
+###############################################################################
+
+def release(version):
+    cleanup()
+    (minor, maintenance, prerelease) = subVersions(version)
+    print "Minor version: %s" % (minor)
+    print "Maintenance version: %s" % (maintenance)
+    if prerelease:
+        print "Prerelease version: %s%s" % (maintenance, prerelease)
+
+    artifactPackage = findArtifactPackage(version)
+
+    unpackArtifacts(artifactPackage)
+    install(version)
+    publishRelease(version)
+    cleanup()
+
+    # Final cleanup action
+    # print "Cleaning away the artifact package..."
+    # command("rm %s" % artifactPackage)
+
+    print "Release done successfully."
+    
+###############################################################################
+# Parse command-line parameters
+###############################################################################
+
+def helpAndExit():
+    print "Usage: mkrelease <version>"
+    sys.exit(1)
+
+if len(sys.argv) != 2:
+    helpAndExit()
+    
+version = sys.argv[1]
+
+print "Version: %s" % (version)
+release(version)

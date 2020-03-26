@@ -1,0 +1,253 @@
+#!/usr/bin/python
+
+import sys,os,re
+
+
+###############################################################################
+# Utility scripts
+###############################################################################
+
+def command(cmd):
+    result = os.system(cmd)
+    if result != 0:
+        print "Command failed: %s" % (cmd)
+        sys.exit(1)
+
+###############################################################################
+# Cleanup
+###############################################################################
+def cleanup():
+    print "Cleaning up unzip directory..."
+    command("rm -rf unzip/*")
+
+###############################################################################
+# Determine versions
+###############################################################################
+
+def subVersions(version):
+    m = re.match(r'(\d+\.\d+)', version)
+    if not m:
+        print "Unable to determine major version"
+        sys.exit(1)
+    minor = m.group(1)
+
+    m = re.match(r'(\d+\.\d+\.\d+)', version)
+    if not m:
+        print "Unable to determine minor version"
+        sys.exit(1)
+    maintenance = m.group(1)
+
+    m = re.match(r'\d+\.\d+\.\d+(\.pre\d+)', version) or re.match(r'\d+\.\d+\.\d+(\.alpha\d+)', version) or re.match(r'\d+\.\d+\.\d+(\.beta\d+)', version) or re.match(r'\d+\.\d+\.\d+(\.rc\d+)', version)
+    if m:
+        print "This is a prerelease."
+        prerelease = m.group(1)
+    else:
+        prerelease = None
+    return (minor, maintenance, prerelease)
+    
+def parseVersion(version):
+    m = re.match(r'(\d+)\.(\d+)\.(\d+)', version)
+    if m:
+        return (m.group(1), m.group(2), m.group(3))
+
+def determineReleasePath(version):
+    (minor, maintenance, prerelease) = subVersions(version)
+    if prerelease != None:
+        return "prerelease/%s/%s/%s%s" % (minor, maintenance, maintenance, prerelease)
+    return "release/%s/%s" % (minor, maintenance)
+
+###############################################################################
+# Find the name of the artifact package
+###############################################################################
+def findArtifactPackage():
+    pin = os.popen("ls vaadin-all-*.zip", "r")
+    packages = map(lambda x: x.strip(), pin.readlines())
+    pin.close()
+    
+    if len(packages) > 1:
+        print "There must be only one artifact package present in home directory."
+        sys.exit(1)
+    
+    return packages[0]
+
+###############################################################################
+# Unpackage
+###############################################################################
+def unpackageArtifacts(artifactPackage):
+    print "Unpackaging artifacts from %s..." % artifactPackage
+    command("cd unzip ; unzip -q ../%s" % artifactPackage)
+
+###############################################################################
+# Install
+###############################################################################
+def install(version):
+    pars = {"version": version}
+
+    releasePath = determineReleasePath(version)
+    if len(releasePath) < 5:
+        print "FATAL failsafe breach!"
+        sys.exit(1)
+        
+    # Create and cleanup the release path
+    command("mkdir -p download/%s" % releasePath)
+    command("rm -rf download/%s/*" % releasePath)
+    
+    # Change to the release directory
+    homedir = os.getcwd()
+    os.chdir("download/" + releasePath)
+
+    command("mkdir -p other")
+
+    # Cleanup possible old release attempt
+    command("rm -rf demo release-notes.html *.jar docs" % pars)
+
+    # Copy the full installation package
+    command("cp ~/vaadin-all-%(version)s.zip ." % pars)
+
+    # Move packages
+    #command("mv ~/unzip/vaadin-all-%(version)s-javadoc.jar other/" % pars)
+    #command("mv ~/unzip/vaadin-%(version)s-liferay.zip other/" % pars)
+    #command("mv ~/unzip/vaadin-%(version)s-sources.jar other/" % pars)
+    command("mv ~/unzip/vaadin-*-%(version)s.jar ." % pars)
+
+    # Unpackage various files
+    print "Copying content from installation package..."
+    command("unzip -q vaadin-all-%(version)s.zip 'css/*' 'img/*' 'release-notes.html'" % pars)
+
+    # Unpackage javadoc; website uses this
+    javadocname = "vaadin-all-%(version)s-javadoc.jar" % pars
+    print "Unpacking documentation from %s..." % javadocname
+    command("mkdir -p docs/api")
+    os.chdir("docs/api")
+    command("unzip -q ~/%s" % javadocname)
+ 
+    # Go back
+    os.chdir(homedir)
+
+###############################################################################
+# checks whether a version is newer than another
+###############################################################################
+def isNewerVersion(v1, v2):
+    (v1_major, v1_minor, v1_maintenance) = parseVersion(v1)
+    (v2_major, v2_minor, v2_maintenance) = parseVersion(v2)
+    return v1_major > v2_major or (v1_major == v2_major and v1_minor > v2_minor) or (v1_major == v2_major and v1_minor == v2_minor and v1_maintenance > v2_maintenance)
+    # if l_major <= n_major and l_minor <= n_minor and l_maintenance < n_maintenance:
+    
+    
+###############################################################################
+# Updated release files and links
+###############################################################################
+def publishRelease(version):
+    releasePath = determineReleasePath(version)
+    (major, maintenance, prerelease) = subVersions(version)
+    if prerelease:
+        print "Updating PRERELEASES file..."
+        fout = open("download/PRERELEASES", "w")
+        fout.write("%s\n" % version)
+        fout.close()
+#    else:
+#        print "Checking LATEST file..."
+#        fin = open("download/LATEST", "r")
+#        latestVersion = fin.readline()
+#        fin.close()
+#        if isNewerVersion(version, latestVersion):
+#            (v_major, v_minor, v_maintenance) = parseVersion(version)
+#            minor = "%s.%s" % (v_major, v_minor)
+#            
+#	    print "Updating LATEST file..."          
+#	    fout = open("download/release/%s/LATEST" % (minor), "w")
+#	    fout.write("%s\n" % version)
+#	    fout.write("%s" % releasePath)
+#            fout.close()
+#           
+#            print "Setting LATEST symlink..."
+#            command("rm download/LATEST")
+#            command("ln -s %s download/LATEST" % ("release/%s/LATEST" % minor))
+#            
+#            print "Setting current link..."
+#            command("rm download/current")
+#            command("ln -s %s download/current" % releasePath)
+#        else:
+#            print "LATEST contains version newer than the one we're publishing. Not performing update."
+
+
+###############################################################################
+# Release
+###############################################################################
+
+def release(version):
+    cleanup()
+    (minor, maintenance, prerelease) = subVersions(version)
+    print "Minit version: %s" % (minor)
+    print "Maintenance version: %s" % (maintenance)
+    if prerelease:
+        print "Prerelease version: %s%s" % (maintenance, prerelease)
+
+    artifactPackage = findArtifactPackage()
+
+    unpackageArtifacts(artifactPackage)
+    install(version)
+    publishRelease(version)
+    cleanup()
+
+    # Final cleanup action
+    # print "Cleaning away the artifact package..."
+    # command("rm %s" % artifactPackage)
+
+    print "Release done successfully."
+    
+###############################################################################
+# Verify
+###############################################################################
+def verifyBook(version):
+    releasePath = "download/" + determineReleasePath(version)
+
+def verifyPrePublish(version):
+    (minor, maintenance, prerelease) = subVersions(version)
+    pass
+
+def verifyPostPublish(version):
+    (minor, maintenance, prerelease) = subVersions(version)
+    pass
+
+def verify(version):
+    verifyPrePublish(version)
+    verifyPostPublish(version)
+
+    print "Release verified as successful."
+
+###############################################################################
+# Parse command-line parameters
+###############################################################################
+
+def helpAndExit():
+    print "Usage: mkrelease <command> <version>"
+    print "Commands: release, verify"
+    sys.exit(1)
+
+if sys.argv[1] == "release" or sys.argv[1] == "verify":
+    cmd = sys.argv[1]
+    del sys.argv[1:2]
+else:
+    helpAndExit()
+
+if len(sys.argv) != 2:
+    helpAndExit()
+
+version = sys.argv[1]
+del sys.argv[1:2]
+
+# TODO Doesn't work because cwd returns true directory
+#cwd = os.getcwd()
+#home = os.environ["HOME"]
+#print cwd, home
+#if cwd != home:
+#    print "Mkrelease must be run in the home directory."
+#    sys.exit(1)
+
+print "Version: %s" % (version)
+
+if cmd == "release":
+    release(version)
+elif cmd == "verify":
+    verify(version)
