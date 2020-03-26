@@ -147,7 +147,7 @@ def install(version):
 def isNewerVersion(v1, v2):
     (v1_major, v1_minor, v1_maintenance) = parseVersion(v1)
     (v2_major, v2_minor, v2_maintenance) = parseVersion(v2)
-    return v1_major > v2_major or (v1_major == v2_major and v1_minor > v2_minor) or (v1_major == v2_major and v1_minor == v2_minor and str2int(v1_maintenance) > str2int(v2_maintenance))
+    return v1_major > v2_major or (v1_major == v2_major and str2int(v1_minor) > str2int(v2_minor)) or (v1_major == v2_major and v1_minor == v2_minor and str2int(v1_maintenance) > str2int(v2_maintenance))
     # if l_major <= n_major and l_minor <= n_minor and l_maintenance < n_maintenance:
     
     
