@@ -5336,7 +5336,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     int escalatorFrozenColumns = grid.escalator
                             .getColumnConfiguration().getFrozenColumnCount();
                     if (gridFrozenColumns > escalatorFrozenColumns
-                            && escalatorFrozenColumns == columnIndex) {
+                            && escalatorFrozenColumns == columnIndex
+                            && grid.getColumns()
+                                    .indexOf(this) < gridFrozenColumns) {
                         grid.escalator.getColumnConfiguration()
                                 .setFrozenColumnCount(++escalatorFrozenColumns);
                     }
