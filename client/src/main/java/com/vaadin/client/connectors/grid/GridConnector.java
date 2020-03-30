@@ -43,10 +43,13 @@ import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.connectors.grid.ColumnConnector.CustomColumn;
+import com.vaadin.client.data.AbstractRemoteDataSource;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.grid.CellReference;
+import com.vaadin.client.widget.grid.DataAvailableEvent;
+import com.vaadin.client.widget.grid.DataAvailableHandler;
 import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
 import com.vaadin.client.widget.grid.events.BodyDoubleClickHandler;
@@ -100,6 +103,8 @@ public class GridConnector extends AbstractListingConnector
      */
     private class GridConnectorClientRpc implements GridClientRpc {
         private final Grid<JsonObject> grid;
+        private HandlerRegistration dataAvailableHandlerRegistration = null;
+        private boolean recalculateScheduled = false;
 
         private GridConnectorClientRpc(Grid<JsonObject> grid) {
             this.grid = grid;
@@ -138,7 +143,51 @@ public class GridConnector extends AbstractListingConnector
 
         @Override
         public void recalculateColumnWidths() {
-            grid.recalculateColumnWidths();
+            if (recalculateScheduled) {
+                return;
+            }
+
+            // Must be scheduled so that possible refreshAll has time to clear
+            // the cache.
+            recalculateScheduled = true;
+            Scheduler.get().scheduleFinally(() -> {
+                // If cache has been cleared, wait for data to become available.
+                // Don't trigger another attempt if there is already a handler
+                // waiting, that one will trigger the call when calculations are
+                // possible and clear out the registration afterwards.
+                if (((AbstractRemoteDataSource<JsonObject>) getDataSource())
+                        .getCachedRange().length() == 0
+                        && getDataSource().size() > 0) {
+                    if (dataAvailableHandlerRegistration == null) {
+                        dataAvailableHandlerRegistration = grid
+                                .addDataAvailableHandler(
+                                        new DataAvailableHandler() {
+
+                                            @Override
+                                            public void onDataAvailable(
+                                                    DataAvailableEvent event) {
+                                                if (event.getAvailableRows()
+                                                        .length() == 0
+                                                        && getDataSource()
+                                                                .size() > 0) {
+                                                    // Cache not populated yet,
+                                                    // wait for next call.
+                                                    return;
+                                                }
+                                                grid.recalculateColumnWidths();
+                                                if (dataAvailableHandlerRegistration != null) {
+                                                    dataAvailableHandlerRegistration
+                                                            .removeHandler();
+                                                    dataAvailableHandlerRegistration = null;
+                                                }
+                                            }
+                                        });
+                    }
+                } else if (dataAvailableHandlerRegistration == null) {
+                    grid.recalculateColumnWidths();
+                }
+                recalculateScheduled = false;
+            });
         }
     }
 
