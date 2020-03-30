@@ -25,11 +25,11 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,12 +46,12 @@ import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Touch;
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -91,8 +91,8 @@ import com.vaadin.client.renderers.WidgetRenderer;
 import com.vaadin.client.ui.FocusUtil;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.dd.DragAndDropHandler;
-import com.vaadin.client.ui.dd.DragAndDropHandler.DragAndDropCallback;
 import com.vaadin.client.ui.dd.DragHandle;
+import com.vaadin.client.ui.dd.DragAndDropHandler.DragAndDropCallback;
 import com.vaadin.client.ui.dd.DragHandle.DragHandleCallback;
 import com.vaadin.client.widget.escalator.Cell;
 import com.vaadin.client.widget.escalator.ColumnConfiguration;
@@ -101,9 +101,9 @@ import com.vaadin.client.widget.escalator.FlyweightCell;
 import com.vaadin.client.widget.escalator.Row;
 import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.escalator.RowVisibilityChangeHandler;
-import com.vaadin.client.widget.escalator.ScrollbarBundle.Direction;
 import com.vaadin.client.widget.escalator.Spacer;
 import com.vaadin.client.widget.escalator.SpacerUpdater;
+import com.vaadin.client.widget.escalator.ScrollbarBundle.Direction;
 import com.vaadin.client.widget.escalator.events.RowHeightChangedEvent;
 import com.vaadin.client.widget.escalator.events.RowHeightChangedHandler;
 import com.vaadin.client.widget.escalator.events.SpacerIndexChangedEvent;
@@ -111,8 +111,6 @@ import com.vaadin.client.widget.escalator.events.SpacerIndexChangedHandler;
 import com.vaadin.client.widget.escalator.events.SpacerVisibilityChangedEvent;
 import com.vaadin.client.widget.escalator.events.SpacerVisibilityChangedHandler;
 import com.vaadin.client.widget.grid.AutoScroller;
-import com.vaadin.client.widget.grid.AutoScroller.AutoScrollerCallback;
-import com.vaadin.client.widget.grid.AutoScroller.ScrollAxis;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.CellStyleGenerator;
 import com.vaadin.client.widget.grid.DataAvailableEvent;
@@ -120,13 +118,15 @@ import com.vaadin.client.widget.grid.DataAvailableHandler;
 import com.vaadin.client.widget.grid.DefaultEditorEventHandler;
 import com.vaadin.client.widget.grid.DetailsGenerator;
 import com.vaadin.client.widget.grid.EditorHandler;
-import com.vaadin.client.widget.grid.EditorHandler.EditorRequest;
 import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widget.grid.GridEventHandler;
 import com.vaadin.client.widget.grid.HeightAwareDetailsGenerator;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.client.widget.grid.RowReference;
 import com.vaadin.client.widget.grid.RowStyleGenerator;
+import com.vaadin.client.widget.grid.AutoScroller.AutoScrollerCallback;
+import com.vaadin.client.widget.grid.AutoScroller.ScrollAxis;
+import com.vaadin.client.widget.grid.EditorHandler.EditorRequest;
 import com.vaadin.client.widget.grid.events.AbstractGridKeyEventHandler;
 import com.vaadin.client.widget.grid.events.AbstractGridMouseEventHandler;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
@@ -175,6 +175,10 @@ import com.vaadin.client.widget.grid.sort.SortHandler;
 import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Escalator.AbstractRowContainer;
 import com.vaadin.client.widgets.Escalator.SubPartArguments;
+import com.vaadin.client.widgets.Grid.EditorDomEvent;
+import com.vaadin.client.widgets.Grid.GridEvent;
+import com.vaadin.client.widgets.Grid.SelectionColumn;
+import com.vaadin.client.widgets.Grid.StaticSectionUpdater;
 import com.vaadin.client.widgets.Grid.Editor.State;
 import com.vaadin.client.widgets.Grid.StaticSection.StaticCell;
 import com.vaadin.client.widgets.Grid.StaticSection.StaticRow;
@@ -184,10 +188,10 @@ import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.shared.ui.grid.GridConstants;
-import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
+import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
@@ -3393,7 +3397,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         Scheduler.get().scheduleDeferred(this);
                     }
                 } else if (currentDataAvailable.isEmpty()
-                        && dataSource.isWaitingForData()) {
+                        && (dataSource.isWaitingForData()
+                                || escalator.getBody().getRowCount() > 0)) {
                     Scheduler.get().scheduleDeferred(this);
                 } else {
                     calculate();
@@ -3406,20 +3411,16 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         /**
          * Calculates and applies column widths, taking into account fixed
-         * widths and column expand rules
+         * widths and column expand rules.
          *
-         * @param immediately
-         *            <code>true</code> if the widths should be executed
-         *            immediately (ignoring lazy loading completely), or
-         *            <code>false</code> if the command should be run after a
-         *            while (duplicate non-immediately invocations are ignored).
          * @see Column#setWidth(double)
          * @see Column#setExpandRatio(int)
          * @see Column#setMinimumWidth(double)
          * @see Column#setMaximumWidth(double)
          */
         public void schedule() {
-            if (!isScheduled && isAttached()) {
+            if (!isScheduled && isAttached() && !(currentDataAvailable.isEmpty()
+                    && escalator.getBody().getRowCount() > 0)) {
                 isScheduled = true;
                 Scheduler.get().scheduleFinally(calculateCommand);
             }
@@ -3434,8 +3435,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             // Make SelectAllCheckbox visible
             getSelectionColumn().ifPresent(col -> {
-                if (getDefaultHeaderRow() == null)
+                if (getDefaultHeaderRow() == null) {
                     return;
+                }
                 HeaderCell headerCell = getDefaultHeaderRow().getCell(col);
                 if (headerCell.getType().equals(GridStaticCellType.WIDGET)) {
                     // SelectAllCheckbox is present already
@@ -7248,6 +7250,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         this.dataSource = dataSource;
         changeHandler = dataSource
                 .addDataChangeHandler(new DataChangeHandler() {
+                    private boolean recalculateColumnWidthsNeeded = false;
+
                     @Override
                     public void dataUpdated(int firstIndex, int numberOfItems) {
                         escalator.getBody().refreshRows(firstIndex,
@@ -7280,11 +7284,23 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                             int numberOfItems) {
                         currentDataAvailable = Range.withLength(firstIndex,
                                 numberOfItems);
+                        if (recalculateColumnWidthsNeeded) {
+                            // Ensure that cache has actually been populated or
+                            // all rows removed, otherwise wait for next call.
+                            if (numberOfItems > 0
+                                    || getDataSource().size() == 0) {
+                                recalculateColumnWidths();
+                                recalculateColumnWidthsNeeded = false;
+                            }
+                        }
                         fireEvent(new DataAvailableEvent(currentDataAvailable));
                     }
 
                     @Override
                     public void resetDataAndSize(int newSize) {
+                        // It might take a while for new data to arrive,
+                        // clear the record of cached rows.
+                        currentDataAvailable = Range.emptyRange();
                         RowContainer body = escalator.getBody();
                         int oldSize = body.getRowCount();
 
@@ -7300,8 +7316,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                                 // Need to recalculate column widths when the
                                 // first row is added to a non-header grid,
                                 // otherwise the checkbox will be aligned in a
-                                // wrong place.
-                                recalculateColumnWidths();
+                                // wrong place. Wait until the cache has been
+                                // populated before making the call.
+                                recalculateColumnWidthsNeeded = true;
                             }
                             body.insertRows(oldSize, newSize - oldSize);
                             cellFocusHandler.rowsAddedToBody(Range
@@ -7320,8 +7337,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                                     visibleRowRange.length());
                         } else {
                             // We won't expect any data more data updates, so
-                            // just make
-                            // the bookkeeping happy
+                            // just make the bookkeeping happy.
                             dataAvailable(0, 0);
                         }
 
@@ -9307,11 +9323,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }, 50);
         }
     }
-    
+
     private void doRefreshOnResize() {
         if (escalator
                 .getInnerWidth() != autoColumnWidthsRecalculator.lastCalculatedInnerWidth) {
-           recalculateColumnWidths();
+            recalculateColumnWidths();
         }
 
         // Vertical resizing could make editor positioning invalid so it
