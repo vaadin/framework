@@ -98,10 +98,6 @@ public class Upload extends AbstractComponent
 
     private int totalBytes;
 
-    private String buttonCaption = "Upload";
-
-    private String buttonStyleName;
-
     /**
      * ProgressListeners to which information about progress is sent during
      * upload
@@ -183,13 +179,6 @@ public class Upload extends AbstractComponent
         }
 
         target.addAttribute("state", isUploading);
-
-        if (buttonCaption != null) {
-            target.addAttribute("buttoncaption", buttonCaption);
-            if (buttonStyleName != null) {
-                target.addAttribute("buttonstylename", buttonStyleName);
-            }
-        }
 
         target.addAttribute("nextid", nextid);
 
@@ -982,17 +971,30 @@ public class Upload extends AbstractComponent
      * @return String to be rendered into button that fires uploading
      */
     public String getButtonCaption() {
-        return buttonCaption;
+        return getState(false).buttonCaption;
     }
 
     /**
-     * Returns the stylename rendered into button that fires uploading.
+     * Returns the style name rendered into button that fires uploading.
      *
-     * @return Stylename to be rendered into button that fires uploading
+     * @return Style name to be rendered into button that fires uploading
      * @since 8.2
      */
     public String getButtonStyleName() {
-        return buttonStyleName;
+        return getState(false).buttonStyleName;
+    }
+
+    /**
+     * Checks whether the caption of the button that fires uploading is rendered
+     * as HTML
+     * <p>
+     * The default is {@code false}, i.e. to render that caption as plain text.
+     *
+     * @return {@code true} if the caption is rendered as HTML, {@code false} if
+     *         rendered as plain text
+     */
+    public boolean isButtonCaptionAsHtml() {
+        return getState(false).buttonCaptionAsHtml;
     }
 
     /**
@@ -1005,8 +1007,8 @@ public class Upload extends AbstractComponent
      * {@link #submitUpload()}.
      * <p>
      * In case the Upload is used in immediate mode using
-     * {@link #setImmediateMode(boolean)}, the file choose (html input with type
-     * "file") is hidden and only the button with this text is shown.
+     * {@link #setImmediateMode(boolean)}, the file chooser (HTML input with
+     * type "file") is hidden and only the button with this text is shown.
      * <p>
      *
      * <p>
@@ -1018,23 +1020,41 @@ public class Upload extends AbstractComponent
      *            text for upload components button.
      */
     public void setButtonCaption(String buttonCaption) {
-        this.buttonCaption = buttonCaption;
-        markAsDirty();
+        getState().buttonCaption = buttonCaption;
     }
 
     /**
      * In addition to the actual file chooser, upload components have button
-     * that starts actual upload progress. This method is used to set a
-     * stylename to that button.
+     * that starts actual upload progress. This method is used to set a style
+     * name to that button.
      *
      * @param buttonStyleName
-     *            styleName for upload components button.
+     *            style name for upload components button.
      * @see #setButtonCaption(String) about when the button is shown / hidden.
      * @since 8.2
      */
     public void setButtonStyleName(String buttonStyleName) {
-        this.buttonStyleName = buttonStyleName;
-        markAsDirty();
+        getState().buttonStyleName = buttonStyleName;
+    }
+
+    /**
+     * In addition to the actual file chooser, upload components have button
+     * that starts actual upload progress. This method is used to set whether
+     * the caption on that button is rendered as HTML.
+     * <p>
+     * If set to {@code true}, the caption is rendered in the browser as HTML
+     * and the developer is responsible for ensuring no harmful HTML is used. If
+     * set to {@code false}, the caption is rendered in the browser as plain
+     * text.
+     * <p>
+     * The default is {@code false}, i.e. to render the caption as plain text.
+     *
+     * @param buttonCaptionAsHtml
+     *            {@code true} if the caption is rendered as HTML, {@code false}
+     *            if rendered as plain text
+     */
+    public void setButtonCaptionAsHtml(boolean buttonCaptionAsHtml) {
+        getState().buttonCaptionAsHtml = buttonCaptionAsHtml;
     }
 
     /**
