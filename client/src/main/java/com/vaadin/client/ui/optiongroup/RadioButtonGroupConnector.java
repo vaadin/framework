@@ -86,7 +86,12 @@ public class RadioButtonGroupConnector
 
     @OnStateChange("readOnly")
     void updateWidgetReadOnly() {
-        getWidget().setEnabled(isEnabled() && !isReadOnly());
+        getWidget().setReadonly(isReadOnly());
+    }
+
+    @OnStateChange("enabled")
+    void updateWidgetEnabled() {
+        getWidget().setEnabled(isEnabled());
     }
 
     @OnStateChange("selectedItemKey")

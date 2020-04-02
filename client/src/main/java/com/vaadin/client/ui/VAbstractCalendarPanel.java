@@ -16,6 +16,8 @@
 
 package com.vaadin.client.ui;
 
+import static com.vaadin.client.DateTimeService.asTwoDigits;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +32,6 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.aria.client.SelectedValue;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -56,13 +57,10 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.util.SharedUtil;
-
-import static com.vaadin.client.DateTimeService.asTwoDigits;
 
 /**
  * Abstract calendar panel to show and select a date using a resolution. The
@@ -764,8 +762,18 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             return true;
         }
 
+        // If dateStrResolution has more year digits than rangeEnd, we need
+        // to pad it in order to be lexicographically compatible
         String dateStrResolution = dateStrResolution(date, minResolution);
-        return rangeEnd.substring(0, dateStrResolution.length())
+        String paddedEnd = rangeEnd.substring(0);
+        int yearDigits = dateStrResolution.indexOf("-");
+        if (yearDigits == -1) {
+            yearDigits = dateStrResolution.length();
+        }
+        while (paddedEnd.indexOf("-") < yearDigits) {
+            paddedEnd = "0" + paddedEnd;
+        }
+        return paddedEnd.substring(0, dateStrResolution.length())
                 .compareTo(dateStrResolution) >= 0;
     }
 
@@ -963,7 +971,13 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      *            resolution of the calendar is changed and no date has been
      *            selected.
      */
+    @SuppressWarnings("rawtypes")
     public void renderCalendar(boolean updateDate) {
+        if (parent instanceof VAbstractPopupCalendar
+                && !((VAbstractPopupCalendar) parent).popup.isShowing()) {
+            // a popup that isn't open cannot possibly need a focus change event
+            updateDate = false;
+        }
         doRenderCalendar(updateDate);
 
         initialRenderDone = true;
@@ -986,11 +1000,15 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 getDateField().getStylePrimaryName() + "-calendarpanel");
 
         if (focusedDate == null) {
-            Date now = new Date();
+            Date date = getDate();
+            if (date == null) {
+                date = new Date();
+            }
             // focusedDate must have zero hours, mins, secs, millisecs
-            focusedDate = new FocusedDate(now.getYear(), now.getMonth(),
-                    now.getDate());
-            displayedMonth = new FocusedDate(now.getYear(), now.getMonth(), 1);
+            focusedDate = new FocusedDate(date.getYear(), date.getMonth(),
+                    date.getDate());
+            displayedMonth = new FocusedDate(date.getYear(), date.getMonth(),
+                    1);
         }
 
         if (updateDate && !isDay(getResolution())
@@ -2114,7 +2132,13 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      */
     public void setRangeEnd(String newRangeEnd) {
         if (!SharedUtil.equals(rangeEnd, newRangeEnd)) {
-            rangeEnd = newRangeEnd;
+            // Dates with year 10000 or more has + prefix, which is not compatible
+            // with format returned by dateStrResolution method
+            if (newRangeEnd.startsWith("+")) {
+                rangeEnd = newRangeEnd.substring(1);
+            } else {
+                rangeEnd = newRangeEnd;
+            }
             if (initialRenderDone) {
                 // Dynamic updates to the range needs to render the calendar to
                 // update the element stylenames

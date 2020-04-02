@@ -148,7 +148,7 @@ public class ValoColorPickerInputFormatsTest extends MultiBrowserTest {
         // verify there are errors
         assertTrue(previewElement.getColorFieldContainsErrors());
         // verify value has not been changed
-        assertEquals(previewElement.getColorFieldValue(), "#xyz");
+        assertEquals("#xyz", previewElement.getColorFieldValue());
     }
 
     private void setColorpickerValue(String value) {

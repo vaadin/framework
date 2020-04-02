@@ -202,7 +202,7 @@ public abstract class VaadinService implements Serializable {
      * @since 8.2
      */
     protected VaadinService() {
-        this.deploymentConfiguration = null;
+        deploymentConfiguration = null;
     }
 
     /**
@@ -622,7 +622,7 @@ public abstract class VaadinService implements Serializable {
      * @param lock
      *            The lock object
      */
-    private void setSessionLock(WrappedSession wrappedSession, Lock lock) {
+    protected void setSessionLock(WrappedSession wrappedSession, Lock lock) {
         if (wrappedSession == null) {
             throw new IllegalArgumentException(
                     "Can't set a lock for a null session");
@@ -640,7 +640,7 @@ public abstract class VaadinService implements Serializable {
      *
      * @return The attribute name for the lock
      */
-    private String getLockAttributeName() {
+    protected String getLockAttributeName() {
         return getServiceName() + ".lock";
     }
 
@@ -1226,13 +1226,17 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Called at the end of a request, after sending the response. Closes
-     * inactive UIs in the given session, removes closed UIs from the session,
-     * and closes the session if it is itself inactive.
+     * Closes inactive UIs in the given session, removes closed UIs from the
+     * session, and closes the session if it is itself inactive. This operation
+     * should not be performed without first acquiring the session lock. By
+     * default called at the end of each request, after sending the response.
      *
      * @param session
+     *            the session to clean up
+     *
+     * @since 8.10
      */
-    void cleanupSession(VaadinSession session) {
+    public void cleanupSession(VaadinSession session) {
         if (isSessionActive(session)) {
             closeInactiveUIs(session);
             removeClosedUIs(session);

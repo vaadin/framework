@@ -4578,7 +4578,7 @@ public class Escalator extends Widget
                 // for a gap if a details row is later closed (e.g. by user)
                 final int addToBottom = Math.min(rowDiff,
                         getRowCount() - logicalTargetIndex);
-                final int addToTop = rowDiff - addToBottom;
+                final int addToTop = Math.max(rowDiff - addToBottom, 0);
 
                 if (addToTop > 0) {
                     fillAndPopulateEscalatorRowsIfNeeded(0,
@@ -4587,8 +4587,30 @@ public class Escalator extends Widget
                     updateTopRowLogicalIndex(-addToTop);
                 }
                 if (addToBottom > 0) {
-                    fillAndPopulateEscalatorRowsIfNeeded(visualTargetIndex,
-                            logicalTargetIndex, addToBottom);
+                    // take into account that rows may have got added to top as
+                    // well, affects visual but not logical indexing
+                    fillAndPopulateEscalatorRowsIfNeeded(
+                            visualTargetIndex + addToTop, logicalTargetIndex,
+                            addToBottom);
+
+                    // adding new rows due to resizing may have created a gap in
+                    // the middle, check whether the existing rows need moving
+                    double rowTop = getRowTop(oldTopRowLogicalIndex);
+                    if (rowTop > getRowTop(visualRowOrder.get(addToTop))) {
+                        for (int i = addToTop; i < visualTargetIndex; i++) {
+
+                            final TableRowElement tr = visualRowOrder.get(i);
+
+                            setRowPosition(tr, 0, rowTop);
+                            rowTop += getDefaultRowHeight();
+                            SpacerContainer.SpacerImpl spacer = spacerContainer
+                                    .getSpacer(oldTopRowLogicalIndex + i);
+                            if (spacer != null) {
+                                spacer.setPosition(0, rowTop);
+                                rowTop += spacer.getHeight();
+                            }
+                        }
+                    }
                 }
             } else if (rowDiff < 0) {
                 // rows need to be removed
@@ -7713,14 +7735,11 @@ public class Escalator extends Widget
     public void scrollToRowAndSpacer(final int rowIndex,
             final ScrollDestination destination, final int padding)
             throws IllegalArgumentException {
-        // wait for the layout phase to finish
-        Scheduler.get().scheduleFinally(() -> {
-            if (rowIndex != -1) {
-                verifyValidRowIndex(rowIndex);
-            }
-            body.scrollToRowSpacerOrBoth(rowIndex, destination, padding,
-                    ScrollType.ROW_AND_SPACER);
-        });
+        if (rowIndex != -1) {
+            verifyValidRowIndex(rowIndex);
+        }
+        body.scrollToRowSpacerOrBoth(rowIndex, destination, padding,
+                ScrollType.ROW_AND_SPACER);
     }
 
     private static void validateScrollDestination(

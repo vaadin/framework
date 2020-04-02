@@ -26,8 +26,6 @@ public class BaseLayoutForSpacingMargin extends BaseLayoutTestUI {
     private void buildLayout() {
         Table t1 = getTestTable();
         Table t2 = getTestTable();
-        t1.setSizeFull();
-        t2.setSizeFull();
         l2.addComponent(t1);
         l2.setMargin(false);
         l2.setSpacing(false);
