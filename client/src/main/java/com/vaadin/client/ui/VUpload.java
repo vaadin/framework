@@ -122,6 +122,15 @@ public class VUpload extends SimplePanel {
 
     private boolean immediateMode;
 
+    /**
+     * Just-in-case option to override the default assumption that if no file
+     * has been selected, no upload attempt should happen. Not part of public
+     * API so can be removed without a warning -- if you have an actual need for
+     * this feature (which is currently only accessible through violator
+     * pattern), let us know.
+     */
+    private boolean allowUploadWithoutFilename = false;
+
     private String acceptMimeTypes;
 
     private Hidden maxfilesize = new Hidden();
@@ -144,6 +153,19 @@ public class VUpload extends SimplePanel {
         setWidget(panel);
         panel.add(maxfilesize);
         panel.add(fu);
+        fu.addChangeHandler(event -> {
+            if (!isImmediateMode()) {
+                setEnabledForSubmitButton(enabled);
+            }
+            if (client != null) {
+                UploadConnector connector = ((UploadConnector) ConnectorMap
+                        .get(client).getConnector(VUpload.this));
+                if (connector.hasEventListener(EventId.CHANGE)) {
+                    connector.getRpcProxy(UploadServerRpc.class)
+                            .change(fu.getFilename());
+                }
+            }
+        });
         submitButton = new VButton();
         submitButton.addClickHandler(event -> {
             if (isImmediateMode()) {
@@ -180,6 +202,7 @@ public class VUpload extends SimplePanel {
                 fu.unsinkEvents(Event.ONCHANGE);
                 fu.unsinkEvents(Event.ONFOCUS);
             }
+            setEnabledForSubmitButton(enabled);
         }
         setStyleName(getElement(), CLASSNAME + "-immediate", immediateMode);
     }
@@ -243,8 +266,14 @@ public class VUpload extends SimplePanel {
     }
 
     private void setEnabledForSubmitButton(boolean enabled) {
-        submitButton.setEnabled(enabled);
-        submitButton.setStyleName(StyleConstants.DISABLED, !enabled);
+        if (enabled && (allowUploadWithoutFilename || isImmediateMode()
+                || (fu.getFilename() != null && !fu.getFilename().isEmpty()))) {
+            submitButton.setEnabled(true);
+            submitButton.setStyleName(StyleConstants.DISABLED, false);
+        } else {
+            submitButton.setEnabled(false);
+            submitButton.setStyleName(StyleConstants.DISABLED, true);
+        }
     }
 
     /**
@@ -266,6 +295,9 @@ public class VUpload extends SimplePanel {
             fu.sinkEvents(Event.ONCHANGE);
         }
         fu.addChangeHandler(event -> {
+            if (!isImmediateMode()) {
+                setEnabledForSubmitButton(enabled);
+            }
             if (client != null) {
                 UploadConnector connector = ((UploadConnector) ConnectorMap
                         .get(client).getConnector(VUpload.this));
@@ -350,8 +382,12 @@ public class VUpload extends SimplePanel {
                     .info("Submit cancelled (disabled or already submitted)");
             return;
         }
-        if (fu.getFilename().isEmpty()) {
+        if (fu.getFilename() == null || fu.getFilename().isEmpty()) {
             getLogger().info("Submitting empty selection (no file)");
+
+            if (!allowUploadWithoutFilename) {
+                return;
+            }
         }
         // flush possibly pending variable changes, so they will be handled
         // before upload
