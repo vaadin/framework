@@ -68,6 +68,7 @@ public class MultiFileUploadTest extends AbstractTestUIWithLog {
 
     private Upload createUpload() {
         Upload upload = new Upload();
+        upload.setImmediateMode(false);
         upload.addChangeListener(changeListener);
         return upload;
     }
