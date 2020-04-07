@@ -31,7 +31,7 @@ public class DateFieldBinderCrossValidationTest extends SingleBrowserTest {
         toFieldText.sendKeys("2018/02/02", Keys.ENTER);
 
         sleep(200);
-        
+
         assertEquals("Error message should contain the information",
                 EXPECTED_ERROR, label.getText());
 
