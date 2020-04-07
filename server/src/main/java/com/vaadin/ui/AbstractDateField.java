@@ -299,7 +299,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * <p>
      * Note: Negative, i.e. BC dates are not supported.
      * <p>
-     * Note: Not remmended to be used mixed with Binder and validators.
+     * Note: It's usually recommended to use only one of the following at the same
+     * time: Range validator with Binder or DateField's setRangeStart check.
      *
      * @param startDate
      *            - the allowed range's start date
@@ -362,7 +363,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * validate. If {@code endDate} is set to {@code null}, any value after
      * {@code startDate} will be accepted by the range.
      * <p>
-     * Note: Not remmended to be used mixed with Binder and validators.
+     * Note: It's usually recommended to use only one of the following at the same
+     * time: Range validator with Binder or DateField's setRangeEnd check.
      *
      * @param endDate
      *            the allowed range's end date (inclusive, based on the current
