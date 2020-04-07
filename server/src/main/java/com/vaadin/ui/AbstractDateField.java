@@ -629,17 +629,17 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      */
     @Override
     public void setValue(T value) {
-	RangeValidator<T> validator = getRangeValidator();
-	ValidationResult result = validator.apply(value,
+        RangeValidator<T> validator = getRangeValidator();
+        ValidationResult result = validator.apply(value,
                 new ValueContext(this, this));
 
         if (result.isError()) {
             throw new IllegalArgumentException(
-                    "value is not withing acceptable range");
+                    "value is not within acceptable range");
         } else {
             currentErrorMessage = null;
             /*
-             * First handle special case when the client side component have a date
+             * First handle special case when the client side component has a date
              * string but value is null (e.g. unparsable date string typed in by the
              * user). No value changes should happen, but we need to do some
              * internal housekeeping.
