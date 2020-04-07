@@ -975,10 +975,6 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     public void renderCalendar(boolean updateDate) {
         if (parent instanceof VAbstractPopupCalendar
                 && !((VAbstractPopupCalendar) parent).popup.isShowing()) {
-            if (getDate() == null) {
-                // no date set, cannot pre-render yet
-                return;
-            }
             // a popup that isn't open cannot possibly need a focus change event
             updateDate = false;
         }

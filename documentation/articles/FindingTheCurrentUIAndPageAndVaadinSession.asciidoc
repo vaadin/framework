@@ -6,6 +6,7 @@ layout: page
 
 [[finding-the-current-ui-and-page-and-vaadin-session]]
 = Finding the current UI and page and vaadin session
+
 There are many cases where you need a reference to the active `UI`, `Page`
 or `VaadinServiceSession`, for instance for showing notifications in a
 click listener. It is possible to get a reference to the component from
