@@ -17,6 +17,9 @@ package com.vaadin.shared.ui.upload;
 
 import com.vaadin.shared.communication.ServerRpc;
 
+/**
+ * Client-to-server RPC interface for Upload.
+ */
 public interface UploadServerRpc extends ServerRpc {
 
     /**

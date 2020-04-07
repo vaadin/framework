@@ -8,6 +8,7 @@ public class GridAlignment extends GridBaseLayoutTestUI {
     protected void setup(VaadinRequest request) {
         buildLayout();
         super.setup(request);
+        layout.setSizeFull();
     }
 
     /**
@@ -16,8 +17,6 @@ public class GridAlignment extends GridBaseLayoutTestUI {
     private void buildLayout() {
         layout.setColumns(3);
         layout.setRows(3);
-        // layout.setHeight("600px");
-        // layout.setWidth("900px");
         for (int i = 0; i < components.length; i++) {
             layout.addComponent(components[i]);
             layout.setComponentAlignment(components[i], alignments[i]);
