@@ -17,10 +17,13 @@ package com.vaadin.shared.ui.upload;
 
 import com.vaadin.shared.communication.ClientRpc;
 
+/**
+ * Server-to-client RPC interface for Upload.
+ */
 public interface UploadClientRpc extends ClientRpc {
 
     /**
-     * Forces the upload the send selected file to the server.
+     * Instructs the upload component to send the selected file to the server.
      */
     void submitUpload();
 }
