@@ -116,10 +116,10 @@ public class Criterion implements Serializable {
      */
     private Criterion(String key, ComparisonOperator operator, String value,
             Payload.ValueType valueType) {
-        this.key = key;
-        this.value = value;
-        this.valueType = valueType;
-        this.operator = operator;
+        setKey(key);
+        setValue(value);
+        setValueType(valueType);
+        setOperator(operator);
     }
 
     /**
@@ -132,12 +132,32 @@ public class Criterion implements Serializable {
     }
 
     /**
+     * Sets the key of the payload to be compared.
+     *
+     * @param key
+     *            key of the payload to be compared
+     */
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    /**
      * Gets the value of the payload to be compared.
      *
      * @return value of the payload to be compared
      */
     public String getValue() {
         return value;
+    }
+
+    /**
+     * Sets the value of the payload to be compared.
+     *
+     * @param value
+     *            value of the payload to be compared
+     */
+    public void setValue(String value) {
+        this.value = value;
     }
 
     /**
@@ -150,12 +170,32 @@ public class Criterion implements Serializable {
     }
 
     /**
+     * Sets the type of the payload value to be compared.
+     *
+     * @param valueType
+     *            type of the payload to be compared
+     */
+    public void setValueType(Payload.ValueType valueType) {
+        this.valueType = valueType;
+    }
+
+    /**
      * Gets the comparison operator.
      *
      * @return operator to be used when comparing payload value with criterion
      */
     public ComparisonOperator getOperator() {
         return operator;
+    }
+
+    /**
+     * Sets the comparison operator.
+     *
+     * @param operator
+     *            comparison operator
+     */
+    public void setOperator(ComparisonOperator operator) {
+        this.operator = operator;
     }
 
     /**

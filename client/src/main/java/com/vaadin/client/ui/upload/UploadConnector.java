@@ -19,13 +19,12 @@ package com.vaadin.client.ui.upload;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.VUpload;
-import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.upload.UploadClientRpc;
-import com.vaadin.shared.ui.upload.UploadServerRpc;
 import com.vaadin.shared.ui.upload.UploadState;
 import com.vaadin.ui.Upload;
 
@@ -35,18 +34,6 @@ public class UploadConnector extends AbstractComponentConnector
 
     public UploadConnector() {
         registerRpc(UploadClientRpc.class, () -> getWidget().submit());
-    }
-
-    @Override
-    protected void init() {
-        super.init();
-
-        getWidget().fu.addChangeHandler(event -> {
-            if (hasEventListener(EventId.CHANGE)) {
-                getRpcProxy(UploadServerRpc.class)
-                        .change(getWidget().fu.getFilename());
-            }
-        });
     }
 
     @Override
@@ -66,17 +53,6 @@ public class UploadConnector extends AbstractComponentConnector
         final String action = client
                 .translateVaadinUri(uidl.getStringVariable("action"));
         upload.element.setAction(action);
-        if (uidl.hasAttribute("buttoncaption")) {
-            upload.submitButton
-                    .setText(uidl.getStringAttribute("buttoncaption"));
-            if (uidl.hasAttribute("buttonstylename")) {
-                upload.submitButton.setStyleName(
-                        uidl.getStringAttribute("buttonstylename"));
-            }
-            upload.submitButton.setVisible(true);
-        } else {
-            upload.submitButton.setVisible(false);
-        }
         upload.fu.setName(upload.paintableId + "_file");
 
         if (!isEnabled()) {
@@ -93,6 +69,29 @@ public class UploadConnector extends AbstractComponentConnector
         super.onStateChanged(stateChangeEvent);
 
         getWidget().disableTitle(hasTooltip());
+    }
+
+    /**
+     * Updates the caption, style name, display mode, and visibility of the
+     * submit button.
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
+     */
+    @OnStateChange({ "buttonCaption", "buttonStyleName",
+            "buttonCaptionAsHtml" })
+    private void updateSubmitButton() {
+        VUpload upload = getWidget();
+        if (getState().buttonCaption != null) {
+            if (getState().buttonCaptionAsHtml) {
+                upload.submitButton.setHtml(getState().buttonCaption);
+            } else {
+                upload.submitButton.setText(getState().buttonCaption);
+            }
+            upload.submitButton.setStyleName(getState().buttonStyleName);
+            upload.submitButton.setVisible(true);
+        } else {
+            upload.submitButton.setVisible(false);
+        }
     }
 
     @Override
