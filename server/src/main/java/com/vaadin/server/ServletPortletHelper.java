@@ -87,15 +87,27 @@ public class ServletPortletHelper implements Serializable {
         }
     }
 
-    private static boolean hasPathPrefix(VaadinRequest request, String prefix) {
+    private static boolean hasPathPrefix(final VaadinRequest request, String prefix) {
         String pathInfo = request.getPathInfo();
 
         if (pathInfo == null) {
             return false;
         }
 
-        if (!prefix.startsWith("/")) {
-            prefix = '/' + prefix;
+        if (pathInfo.startsWith("/")){
+            pathInfo = pathInfo.substring(1);
+        }
+
+        if (pathInfo.endsWith("/")){
+            pathInfo = pathInfo.substring(0, pathInfo.length() - 1);
+        }
+
+        if (prefix.startsWith("/")){
+            prefix = prefix.substring(1);
+        }
+
+        if (prefix.endsWith("/")){
+            prefix = prefix.substring(0, prefix.length() - 1);
         }
 
         if (pathInfo.startsWith(prefix)) {
