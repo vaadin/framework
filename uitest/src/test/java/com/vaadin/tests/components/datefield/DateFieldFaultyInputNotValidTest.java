@@ -6,7 +6,9 @@ import java.time.LocalDate;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.DateFieldElement;
@@ -46,6 +48,7 @@ public class DateFieldFaultyInputNotValidTest extends SingleBrowserTest {
     public void testDateOutOfRange() {
         openTestURL();
         DateFieldElement dateField = $(DateFieldElement.class).first();
+        WebElement dateFieldText = dateField.findElement(By.tagName("input"));
         dateField.setDate(LocalDate.now());
 
         $(ButtonElement.class).first().click();
@@ -53,7 +56,7 @@ public class DateFieldFaultyInputNotValidTest extends SingleBrowserTest {
                 $(NotificationElement.class).first().getText());
         $(NotificationElement.class).first().close();
 
-        dateField.setDate(LocalDate.now().minusDays(7));
+        dateFieldText.sendKeys(LocalDate.now().minusDays(7).toString(), Keys.ENTER);
 
         $(ButtonElement.class).first().click();
         assertEquals("Last week should not be ok", "Fail",

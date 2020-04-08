@@ -234,14 +234,14 @@ public class Design implements Serializable {
                 throw new DesignException("Unknown tag: " + tagName);
             }
             String[] classNameParts = parts[1].split("-");
-            String className = "";
+            StringBuilder className = new StringBuilder();
             for (String classNamePart : classNameParts) {
                 // Split will ignore trailing and multiple dashes but that
                 // should be
                 // ok
                 // <vaadin-button--> will be resolved to <vaadin-button>
                 // <vaadin--button> will be resolved to <vaadin-button>
-                className += SharedUtil.capitalize(classNamePart);
+                className.append(SharedUtil.capitalize(classNamePart));
             }
             String qualifiedClassName = packageName + "." + className;
 

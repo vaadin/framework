@@ -10,6 +10,7 @@ import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DateFieldBinderCrossValidationTest extends SingleBrowserTest {
 
@@ -29,6 +30,8 @@ public class DateFieldBinderCrossValidationTest extends SingleBrowserTest {
         fromFieldText.sendKeys("2019/01/01", Keys.ENTER);
         toFieldText.sendKeys("2018/02/02", Keys.ENTER);
 
+        sleep(200);
+
         assertEquals("Error message should contain the information",
                 EXPECTED_ERROR, label.getText());
 
@@ -36,5 +39,50 @@ public class DateFieldBinderCrossValidationTest extends SingleBrowserTest {
         fromFieldText.sendKeys("2018/01/01", Keys.ENTER);
         assertEquals("Error message should be null", EXPECTED_NULL_ERROR,
                 label.getText());
+    }
+
+    @Test
+    public void dateFieldRangeYearDigitsIncrease() {
+        openTestURL();
+
+        DateFieldElement toField = $(DateFieldElement.class).id("to-field");
+        // This will set the rangeEnd of the fromField
+        WebElement toFieldText = toField.findElement(By.tagName("input"));
+        toFieldText.sendKeys("9999/12/31", Keys.ENTER);
+
+        DateFieldElement fromField = $(DateFieldElement.class).id("from-field");
+        WebElement fromFieldText = fromField.findElement(By.tagName("input"));
+        // Set year to 9999, next year and next month will be on 10000
+        fromFieldText.sendKeys("9999/12/01", Keys.ENTER);
+        fromField.openPopup();
+        waitForElementPresent(By.className("v-datefield-popup"));
+
+        WebElement monthYearLabel = findElement(By.className("v-datefield-calendarpanel-month"));
+
+        // The next month button should be disabled
+        findElement(By.className("v-button-nextmonth")).click();
+        // Test that year has not changed
+        assertTrue("Month label should contain 9999, contains: "+monthYearLabel.getText(),monthYearLabel.getText().contains("9999"));
+
+        // The next year button should be disabled
+        findElement(By.className("v-button-nextyear")).click();
+        // Test that year has not changed
+        assertTrue("Month label should contain 9999, contains: "+monthYearLabel.getText(),monthYearLabel.getText().contains("9999"));
+    }
+
+    @Test
+    public void dateFieldRangeYearBigNumbersPopupOpens() {
+        openTestURL();
+
+        DateFieldElement toField = $(DateFieldElement.class).id("to-field");
+        // This will set the rangeEnd of the fromField
+        WebElement toFieldText = toField.findElement(By.tagName("input"));
+        toFieldText.sendKeys("10000/12/31", Keys.ENTER);
+        DateFieldElement fromField = $(DateFieldElement.class).id("from-field");
+
+        // Test that popup opens
+        fromField.openPopup();
+        waitForElementPresent(By.className("v-datefield-popup"));
+        assertElementPresent(By.className("v-datefield-popup"));
     }
 }
