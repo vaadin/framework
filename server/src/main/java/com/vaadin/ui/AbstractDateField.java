@@ -297,7 +297,10 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * validate. If {@code startDate} is set to {@code null}, any value before
      * {@code endDate} will be accepted by the range
      * <p>
-     * Note: Negative, i.e. BC dates are not supported
+     * Note: Negative, i.e. BC dates are not supported.
+     * <p>
+     * Note: It's usually recommended to use only one of the following at the same
+     * time: Range validator with Binder or DateField's setRangeStart check.
      *
      * @param startDate
      *            - the allowed range's start date
@@ -359,6 +362,9 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * date (taking the resolution into account), the component will not
      * validate. If {@code endDate} is set to {@code null}, any value after
      * {@code startDate} will be accepted by the range.
+     * <p>
+     * Note: It's usually recommended to use only one of the following at the same
+     * time: Range validator with Binder or DateField's setRangeEnd check.
      *
      * @param endDate
      *            the allowed range's end date (inclusive, based on the current
@@ -618,27 +624,38 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *
      * @param value
      *            the new value, may be {@code null}
+     * @throws IllegalArgumentException
+     *            if the value is not within range bounds
      */
     @Override
     public void setValue(T value) {
-        currentErrorMessage = null;
-        /*
-         * First handle special case when the client side component have a date
-         * string but value is null (e.g. unparsable date string typed in by the
-         * user). No value changes should happen, but we need to do some
-         * internal housekeeping.
-         */
-        if (value == null && !getState(false).parsable) {
-            /*
-             * Side-effects of doSetValue clears possible previous strings and
-             * flags about invalid input.
-             */
-            doSetValue(null);
+        RangeValidator<T> validator = getRangeValidator();
+        ValidationResult result = validator.apply(value,
+                new ValueContext(this, this));
 
-            markAsDirty();
-            return;
+        if (result.isError()) {
+            throw new IllegalArgumentException(
+                    "value is not within acceptable range");
+        } else {
+            currentErrorMessage = null;
+            /*
+             * First handle special case when the client side component has a date
+             * string but value is null (e.g. unparsable date string typed in by the
+             * user). No value changes should happen, but we need to do some
+             * internal housekeeping.
+             */
+            if (value == null && !getState(false).parsable) {
+                /*
+                 * Side-effects of doSetValue clears possible previous strings and
+                 * flags about invalid input.
+                 */
+                doSetValue(null);
+
+                markAsDirty();
+                return;
+            }
+            super.setValue(value);
         }
-        super.setValue(value);
     }
 
     /**
@@ -785,8 +802,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     @Override
     protected void doSetValue(T value) {
 
-        this.value = value;
         // Also set the internal dateString
+        this.value = value;
         if (value == null) {
             value = getEmptyValue();
         }

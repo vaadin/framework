@@ -10,11 +10,16 @@ import java.time.LocalDate;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 
 public class DateFieldTestCase {
 
     private AbstractLocalDateField dateField;
     private LocalDate date;
+
+    @Rule
+    public transient ExpectedException exceptionRule = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -39,9 +44,11 @@ public class DateFieldTestCase {
 
     @Test
     public void belowRangeStartIsNotAcceptedAsValue() {
+        LocalDate currentDate = dateField.getValue();
         dateField.setRangeStart(date);
+        exceptionRule.expect(IllegalArgumentException.class);
         dateField.setValue(date.minusDays(1));
-        assertNotNull(dateField.getComponentError());
+        assertThat(dateField.getValue(), is(currentDate));
     }
 
     @Test
@@ -60,8 +67,10 @@ public class DateFieldTestCase {
 
     @Test
     public void aboveRangeEndIsNotAcceptedAsValue() {
+        LocalDate currentDate = dateField.getValue();
         dateField.setRangeEnd(date);
+        exceptionRule.expect(IllegalArgumentException.class);
         dateField.setValue(date.plusDays(1));
-        assertNotNull(dateField.getComponentError());
+        assertThat(dateField.getValue(), is(currentDate));
     }
 }
