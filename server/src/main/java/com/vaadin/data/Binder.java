@@ -928,7 +928,8 @@ public class Binder<BEAN> implements Serializable {
             Objects.requireNonNull(validator, "validator cannot be null");
 
             Validator<? super TARGET> wrappedValidator = ((value, context) -> {
-                if (getBinder().isValidatorsDisabled() || binding.isValidatorsDisabled()) {
+                if (getBinder().isValidatorsDisabled() ||
+                        (binding != null && binding.isValidatorsDisabled())) {
                     return ValidationResult.ok();
                 } else {
                     return validator.apply(value, context);
