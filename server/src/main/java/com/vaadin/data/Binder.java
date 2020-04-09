@@ -1085,7 +1085,7 @@ public class Binder<BEAN> implements Serializable {
 
         private boolean asRequiredSet;
 
-        private boolean validatorsDisabled;
+        private boolean validatorsDisabled = false;
 
         public BindingImpl(BindingBuilderImpl<BEAN, FIELDVALUE, TARGET> builder,
                 ValueProvider<BEAN, TARGET> getter,
