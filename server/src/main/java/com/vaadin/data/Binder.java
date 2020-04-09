@@ -815,6 +815,7 @@ public class Binder<BEAN> implements Serializable {
         private final HasValue<FIELDVALUE> field;
         private BindingValidationStatusHandler statusHandler;
         private boolean isStatusHandlerChanged;
+        private Binding<BEAN, TARGET> binding;
 
         private boolean bound;
 
@@ -870,6 +871,7 @@ public class Binder<BEAN> implements Serializable {
 
             bound = true;
             getBinder().incompleteBindings.remove(getField());
+            this.binding = binding;
 
             return binding;
         }
@@ -904,6 +906,7 @@ public class Binder<BEAN> implements Serializable {
                 Binding binding = ((BindingBuilder) finalBinding).bind(getter,
                         setter);
                 getBinder().boundProperties.put(propertyName, binding);
+                this.binding = binding;
                 return binding;
             } finally {
                 getBinder().incompleteMemberFieldBindings.remove(getField());
