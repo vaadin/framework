@@ -551,13 +551,15 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *            the start year of DST transitions
      * @param endYear
      *            the end year of DST transitions
+     * @since 8.11
      */
     public void setDaylightSavingTimeRange(int startYear, int endYear) {
         if (startYear > endYear) {
             throw new IllegalArgumentException(
                     "The start year from which to begin calculating the "
-                            + "daylight-saving time zone transition dates must be less than or equal the end year."
-                            + "\n" + startYear + " is greater than " + endYear);
+                            + "daylight-saving time zone transition dates must"
+                            + " be less than or equal to the end year.\n"
+                            + startYear + " is greater than " + endYear);
         }
         if (this.startYear == null || this.endYear == null
                 || startYear != this.startYear || endYear != this.endYear) {
