@@ -3926,10 +3926,12 @@ public class VScrollTable extends FlowPanel
         public void onBrowserEvent(Event event) {
             if (enabled) {
                 if (event.getEventTarget().cast() == columnSelector) {
-                    final int left = DOM.getAbsoluteLeft(columnSelector);
-                    final int top = DOM.getAbsoluteTop(columnSelector)
+                    WidgetUtil.TextRectangle clientRect = WidgetUtil
+                            .getBoundingClientRect(columnSelector);
+                    final int left = (int) clientRect.getLeft();
+                    final int top = (int) (clientRect.getTop()
                             + DOM.getElementPropertyInt(columnSelector,
-                                    "offsetHeight");
+                                    "offsetHeight"));
                     client.getContextMenu().showAt(this, left, top);
                 }
             }
