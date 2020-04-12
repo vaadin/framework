@@ -41,6 +41,18 @@ import elemental.json.impl.JsonUtil;
  */
 public final class TimeZoneUtil implements Serializable {
 
+    /**
+     * The default start year (inclusive) from which to calculate the
+     * daylight-saving time zone transition dates.
+     */
+    private static final int STARTING_YEAR = 1980;
+
+    /**
+     * The default value of the number of future years from the current date for
+     * which the daylight-saving time zone transition dates are calculated.
+     */
+    private static final int YEARS_FROM_NOW = 20;
+
     private TimeZoneUtil() {
         // Static utils only
     }
@@ -49,6 +61,32 @@ public final class TimeZoneUtil implements Serializable {
      * Returns a JSON string of the specified {@code zoneId} and {@link Locale},
      * which is used in
      * {@link com.google.gwt.i18n.client.TimeZone#createTimeZone(String)}.
+     *
+     * This method calculates the JSON string from the year
+     * {@value #STARTING_YEAR} until {@value #YEARS_FROM_NOW} years into the
+     * future from the current date.
+     *
+     * @see #toJSON(ZoneId, Locale, int, int)
+     *
+     * @param zoneId
+     *            the {@link ZoneId} to get the daylight transitions from
+     * @param locale
+     *            the locale used to determine the short name of the time zone
+     *
+     * @return the encoded string
+     */
+    public static String toJSON(ZoneId zoneId, Locale locale) {
+        int endYear = LocalDate.now().getYear() + YEARS_FROM_NOW;
+        return toJSON(zoneId, locale, STARTING_YEAR, endYear);
+    }
+
+    /**
+     * Returns a JSON string of the specified {@code zoneId} and {@link Locale},
+     * which is used in
+     * {@link com.google.gwt.i18n.client.TimeZone#createTimeZone(String)}.
+     *
+     * This method calculates the JSON string from {@code startYear} until
+     * {@code startYear}, both inclusive.
      *
      * @param zoneId
      *            the {@link ZoneId} to get the daylight transitions from
@@ -60,6 +98,7 @@ public final class TimeZoneUtil implements Serializable {
      *            the end year of DST transitions
      *
      * @return the encoded string
+     * @since 8.11
      */
     public static String toJSON(ZoneId zoneId, Locale locale, int startYear,
             int endYear) {
