@@ -5324,6 +5324,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
                     final int columnIndex = grid.getVisibleColumns()
                             .indexOf(this);
+                    // Correct collumn index for multiselect mode
+                    if (getSelectionColumn().isPresent()) {
+                        columnIndex--;
+                    }
                     grid.escalator.getColumnConfiguration()
                             .insertColumns(columnIndex, 1);
 
