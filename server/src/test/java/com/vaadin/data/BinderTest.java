@@ -300,6 +300,72 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         // age is written to draft even if firstname validation
         // fails
         assertEquals(age, person.getAge());
+
+        binder.writeBeanAsDraft(person,true);
+        // name is now written despite validation as write was forced
+        assertEquals(fieldValue, person.getFirstName());
+    }
+
+    @Test
+    public void save_bound_bean_disable_validation_binding() throws ValidationException {
+        Binder<Person> binder = new Binder<>();
+        Binding<Person, String> nameBinding = binder.forField(nameField)
+            .withValidator((value,context) -> {
+                if (value.equals("Mike")) return ValidationResult.ok();
+                else return ValidationResult.error("value must be Mike");
+            })
+            .bind(Person::getFirstName, Person::setFirstName);
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
+
+        Person person = new Person();
+
+        String fieldValue = "John";
+        nameField.setValue(fieldValue);
+
+        int age = 10;
+        ageField.setValue("10");
+
+        person.setFirstName("Mark");
+
+        nameBinding.setValidatorsDisabled(true);
+        binder.writeBean(person);
+
+        // name is now written as validation was disabled
+        assertEquals(fieldValue, person.getFirstName());
+        assertEquals(age, person.getAge());
+    }
+
+    @Test
+    public void save_bound_bean_disable_validation_binder() throws ValidationException {
+        Binder<Person> binder = new Binder<>();
+        binder.forField(nameField)
+            .withValidator((value,context) -> {
+                if (value.equals("Mike")) return ValidationResult.ok();
+                else return ValidationResult.error("value must be Mike");
+            })
+            .bind(Person::getFirstName, Person::setFirstName);
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter(""))
+                .bind(Person::getAge, Person::setAge);
+
+        Person person = new Person();
+
+        String fieldValue = "John";
+        nameField.setValue(fieldValue);
+
+        int age = 10;
+        ageField.setValue("10");
+
+        person.setFirstName("Mark");
+
+        binder.setValidatorsDisabled(true);
+        binder.writeBean(person);
+
+        // name is now written as validation was disabled
+        assertEquals(fieldValue, person.getFirstName());
+        assertEquals(age, person.getAge());
     }
 
     @Test
