@@ -1912,7 +1912,7 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Writes successfully converted changes from the bound fields bypassing
-     * all the Validation or all fields passing conversion if forced = true.
+     * all the Validation, or all fields passing conversion if forced = true.
      * If the conversion fails, the value written to the bean will be null.
      *
      * @see #writeBean(Object)
