@@ -30,8 +30,8 @@ public class DateTimeFieldZoneIdFutureSummerDatesTest
     DateTimeFieldElement dateTimeFieldWithVariableRange;
     DateTimeFieldElement dateTimeFieldWithDefaultRange;
 
-    DateFieldElement transitionStartyear;
-    DateFieldElement transitionEndyear;
+    DateFieldElement transitionsStartYear;
+    DateFieldElement transitionsEndYear;
 
     ComboBoxElement zoneIdComboBox;
     ComboBoxElement localeIdComboBox;
@@ -45,9 +45,9 @@ public class DateTimeFieldZoneIdFutureSummerDatesTest
         dateTimeFieldWithDefaultRange = $(DateTimeFieldElement.class)
                 .id(FIXED_RANGE_DATEFIELD_ID);
 
-        transitionStartyear = $(DateFieldElement.class)
+        transitionsStartYear = $(DateFieldElement.class)
                 .id(START_YEAR_DATEFIELD_ID);
-        transitionEndyear = $(DateFieldElement.class).id(END_YEAR_DATEFIELD_ID);
+        transitionsEndYear = $(DateFieldElement.class).id(END_YEAR_DATEFIELD_ID);
 
         zoneIdComboBox = $(ComboBoxElement.class).id(ZONE_ID);
         zoneIdComboBox.selectByText(TESTING_ZONE_ID);
@@ -61,8 +61,8 @@ public class DateTimeFieldZoneIdFutureSummerDatesTest
         final int testingRangeUpperYear = testingRangeCentralYear + 3;
         final int testingRangeLowerYear = testingRangeCentralYear - 3;
 
-        transitionEndyear.setDate(LocalDate.of(testingRangeUpperYear, 1, 1));
-        transitionStartyear.setDate(LocalDate.of(testingRangeLowerYear, 1, 1));
+        transitionsEndYear.setDate(LocalDate.of(testingRangeUpperYear, 1, 1));
+        transitionsStartYear.setDate(LocalDate.of(testingRangeLowerYear, 1, 1));
 
         LocalDateTime testingDateTime = LocalDateTime
                 .of(testingRangeCentralYear, Month.JULY, 1, 0, 0);
@@ -86,8 +86,8 @@ public class DateTimeFieldZoneIdFutureSummerDatesTest
         final int testingRangeUpperYear = testingRangeCentralYear + 3;
         final int testingRangeLowerYear = testingRangeCentralYear - 3;
 
-        transitionEndyear.setDate(LocalDate.of(testingRangeUpperYear, 1, 1));
-        transitionStartyear.setDate(LocalDate.of(testingRangeLowerYear, 1, 1));
+        transitionsEndYear.setDate(LocalDate.of(testingRangeUpperYear, 1, 1));
+        transitionsStartYear.setDate(LocalDate.of(testingRangeLowerYear, 1, 1));
 
         // This year is out of specified range
         LocalDateTime testingDateTime = LocalDateTime

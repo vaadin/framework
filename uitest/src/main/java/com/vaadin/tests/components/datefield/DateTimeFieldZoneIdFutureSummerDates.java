@@ -55,16 +55,16 @@ public class DateTimeFieldZoneIdFutureSummerDates extends AbstractTestUI {
         final ComboBox<Locale> localeIdComboBox = getLocaleIdComboBox();
         addComponent(localeIdComboBox);
 
-        final DateField transitionStartyear = getDateField(
+        final DateField transitionsStartYear = getDateField(
                 START_YEAR_DATEFIELD_ID, INITIAL_START_DATE,
                 RANGE_FORMAT_PATTERN,
-                "DST Transitions start year (inclusive):");
-        addComponent(transitionStartyear);
+                "DST Transitions' start year (inclusive):");
+        addComponent(transitionsStartYear);
 
-        final DateField transitionEndyear = getDateField(END_YEAR_DATEFIELD_ID,
+        final DateField transitionsEndYear = getDateField(END_YEAR_DATEFIELD_ID,
                 INITIAL_END_DATE, RANGE_FORMAT_PATTERN,
-                "DST Transitions End year (inclusive):");
-        addComponent(transitionEndyear);
+                "DST Transitions' end year (inclusive):");
+        addComponent(transitionsEndYear);
 
         String captionVarField = "A DateTimeField with custom start"
                 + " and end years between which DST zone names are displayed:";
@@ -77,25 +77,25 @@ public class DateTimeFieldZoneIdFutureSummerDates extends AbstractTestUI {
 
         addComponent(dateTimeFieldWithCustomRange);
 
-        transitionStartyear.addValueChangeListener(event -> {
+        transitionsStartYear.addValueChangeListener(event -> {
             int startYear = event.getValue().getYear();
-            int endYear = transitionEndyear.getValue().getYear();
+            int endYear = transitionsEndYear.getValue().getYear();
             if (startYear > endYear) {
-                showDateRangeError(transitionStartyear);
+                showDateRangeError(transitionsStartYear);
             } else {
-                clearErrors(transitionStartyear, transitionEndyear);
+                clearErrors(transitionsStartYear, transitionsEndYear);
                 dateTimeFieldWithCustomRange
                         .setDaylightSavingTimeRange(startYear, endYear);
             }
         });
 
-        transitionEndyear.addValueChangeListener(event -> {
-            int startYear = transitionStartyear.getValue().getYear();
+        transitionsEndYear.addValueChangeListener(event -> {
+            int startYear = transitionsStartYear.getValue().getYear();
             int endYear = event.getValue().getYear();
             if (startYear > endYear) {
-                showDateRangeError(transitionEndyear);
+                showDateRangeError(transitionsEndYear);
             } else {
-                clearErrors(transitionStartyear, transitionEndyear);
+                clearErrors(transitionsStartYear, transitionsEndYear);
                 dateTimeFieldWithCustomRange
                         .setDaylightSavingTimeRange(startYear, endYear);
             }
