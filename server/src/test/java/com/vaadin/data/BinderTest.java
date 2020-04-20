@@ -274,8 +274,11 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         Binder<Person> binder = new Binder<>();
         binder.forField(nameField)
             .withValidator((value,context) -> {
-                if (value.equals("Mike")) return ValidationResult.ok();
-                else return ValidationResult.error("value must be Mike");
+                if (value.equals("Mike")) {
+                    return ValidationResult.ok();
+                } else {
+                    return ValidationResult.error("value must be Mike");
+                }
             })
             .bind(Person::getFirstName, Person::setFirstName);
         binder.forField(ageField)
@@ -311,8 +314,11 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         Binder<Person> binder = new Binder<>();
         Binding<Person, String> nameBinding = binder.forField(nameField)
             .withValidator((value,context) -> {
-                if (value.equals("Mike")) return ValidationResult.ok();
-                else return ValidationResult.error("value must be Mike");
+                if (value.equals("Mike")) {
+                    return ValidationResult.ok();
+                } else {
+                    return ValidationResult.error("value must be Mike");
+                }
             })
             .bind(Person::getFirstName, Person::setFirstName);
         binder.forField(ageField)
@@ -342,8 +348,11 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         Binder<Person> binder = new Binder<>();
         binder.forField(nameField)
             .withValidator((value,context) -> {
-                if (value.equals("Mike")) return ValidationResult.ok();
-                else return ValidationResult.error("value must be Mike");
+                if (value.equals("Mike")) {
+                    return ValidationResult.ok();
+                } else {
+                    return ValidationResult.error("value must be Mike");
+                }
             })
             .bind(Person::getFirstName, Person::setFirstName);
         binder.forField(ageField)
