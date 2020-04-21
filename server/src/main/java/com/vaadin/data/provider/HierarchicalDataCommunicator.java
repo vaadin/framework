@@ -381,11 +381,11 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     }
 
     /**
-     * Returns parent index for the row or {@code null}.
+     * Returns parent index for the row or a negative value.
      *
      * @param item
      *            the item to find the parent of
-     * @return the parent index or {@code null} for top-level items
+     * @return the parent index or a negative value for top-level items
      */
     public Integer getParentIndex(T item) {
         return mapper.getParentIndex(item);
