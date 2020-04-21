@@ -573,6 +573,18 @@ public class Tree<T> extends Composite
     public Registration addSelectionListener(SelectionListener<T> listener) {
         return treeGrid.addSelectionListener(listener);
     }
+    
+    /**
+     * Use this tree as a multi select in {@link Binder}. Throws
+     * {@link IllegalStateException} if the tree is not using
+     * {@link SelectionMode#MULTI}.
+     *
+     * @return the multi select wrapper that can be used in binder
+     * @since 8.11
+     */
+    public MultiSelect<T> asMultiSelect() {
+        return treeGrid.asMultiSelect();
+    }
 
     /**
      * Use this tree as a single select in {@link Binder}. Throws
