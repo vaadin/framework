@@ -33,7 +33,20 @@ public class UploadState extends AbstractComponentState {
         primaryStyleName = "v-upload";
     }
 
+    /** Upload component's list of accepted content-types. */
     @DelegateToWidget
     @NoLayout
     public String acceptMimeTypes;
+
+    /** Caption of the button that fires uploading. */
+    public String buttonCaption = "Upload";
+
+    /** Style name of the button that fires uploading. */
+    public String buttonStyleName = "v-button";
+
+    /**
+     * Should the caption of the button that fires uploading be rendered as
+     * HTML.
+     */
+    public boolean buttonCaptionAsHtml;
 }
