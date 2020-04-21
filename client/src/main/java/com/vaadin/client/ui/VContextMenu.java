@@ -21,6 +21,7 @@ import java.util.Locale;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -155,6 +156,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
                 setHeight(Window.getClientHeight() + "px");
             }
             setPopupPosition(menuLeft, menuTop);
+            getElement().getStyle().setPosition(Style.Position.FIXED);
 
             /*
              * Move keyboard focus to menu, deferring the focus setting so the
