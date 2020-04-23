@@ -83,10 +83,12 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li></li>
-	        <li></li>
-	        <li></li>
-	        <li></li>
+		<li>Added Upload button caption HTML content support</li>
+	        <li>Added Tree#asMultiSelect() so that Tree can be used as multiselect field e.g. with Binder</li>
+	        <li>Added methods in Binder to enable / disable binding and binder level Validators on the fly</li>
+	        <li>Added Binder#writeBeanAsDraft method version to write all values passing conversion to the bean</li>
+		<li>Allow AbstractDateField to provide DST zone names over custom ranges</li>
+		<li>Updated hibernate dependency to newer version. Old version caused false positive warning in dependency security check.</li>
         </ul>
 
         </p>
@@ -99,10 +101,12 @@
             to Vaadin Framework 8</a>.
         </p>
 
-        <h2 id="incompatible">No Incompatible or Behavior-altering Changes in @version-minor@</h2>
+        <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h2>
 
         <ul>
-            <li></li>
+            <li>Changed DateField setValue() to throw exception if date is not meeting range check. This also prevents server and client state sync issue.</li>
+	    <li>Upload is now prevented if there is no file selected</li>
+	    <li>Determining Push transport before re-connect should improve Push stability when there is hand over e.g. from WiFi to cable and vice versa</li>
         </ul>
 
         <h2>For incompatible or behavior-altering changes in 8.10, please see <a href="https://vaadin.com/download/release/8.10/8.10.0/release-notes.html#incompatible">8.10 release notes</a></h2>
