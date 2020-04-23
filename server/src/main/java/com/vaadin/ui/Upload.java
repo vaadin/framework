@@ -992,7 +992,7 @@ public class Upload extends AbstractComponent
      *
      * @return {@code true} if the caption is rendered as HTML, {@code false} if
      *         rendered as plain text
-     * @since
+     * @since 8.11
      */
     public boolean isButtonCaptionAsHtml() {
         return getState(false).buttonCaptionAsHtml;
@@ -1057,7 +1057,7 @@ public class Upload extends AbstractComponent
      * @param buttonCaptionAsHtml
      *            {@code true} if the caption is rendered as HTML, {@code false}
      *            if rendered as plain text
-     * @since
+     * @since 8.11
      */
     public void setButtonCaptionAsHtml(boolean buttonCaptionAsHtml) {
         getState().buttonCaptionAsHtml = buttonCaptionAsHtml;
