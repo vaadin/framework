@@ -433,11 +433,17 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         // This had to be here because we might not know the content size before
         // everything is painted into the window
 
-        // centered is this is unset on move/resize
+        // centered if this is unset on move/resize
         window.centered = state.centered;
         // Ensure centering before setting visible (#16486)
         if (window.centered && getState().windowMode != WindowMode.MAXIMIZED) {
-            Scheduler.get().scheduleFinally(() -> getWidget().center());
+            Scheduler.get().scheduleFinally(() -> {
+                // the window may have got removed again before this is
+                // triggered, and centering would re-display it
+                if (getWidget().isShowing()) {
+                    getWidget().center();
+                }
+            });
         }
         window.setVisible(true);
     }
