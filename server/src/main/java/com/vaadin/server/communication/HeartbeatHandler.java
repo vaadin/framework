@@ -62,10 +62,10 @@ public class HeartbeatHandler extends SynchronizedRequestHandler
         if (ui != null) {
             ui.setLastHeartbeatTimestamp(System.currentTimeMillis());
             // Ensure that the browser does not cache heartbeat responses.
-            // iOS 6 Safari requires this (#10370)
+            // iOS 6 Safari requires this (#3226)
             response.setHeader("Cache-Control", "no-cache");
             // If Content-Type is not set, browsers assume text/html and may
-            // complain about the empty response body (#12182)
+            // complain about the empty response body (#4167)
             response.setHeader("Content-Type", "text/plain");
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND,
@@ -88,15 +88,14 @@ public class HeartbeatHandler extends SynchronizedRequestHandler
         if (!ServletPortletHelper.isHeartbeatRequest(request)) {
             return false;
         }
-
-        // Ensure that the browser does not cache expired response.
-        // iOS 6 Safari requires this (#10370)
+        // Ensure that the browser does not cache expired heartbeat responses.
+        // iOS 6 Safari requires this (#3226)
         response.setHeader("Cache-Control", "no-cache");
         // If Content-Type is not set, browsers assume text/html and may
-        // complain about the empty response body (#12182)
+        // complain about the empty response body (#4167)
         response.setHeader("Content-Type", "text/plain");
 
-        response.sendError(HttpServletResponse.SC_NOT_FOUND, "Session expired");
+        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Session expired");
         return true;
     }
 }
