@@ -713,7 +713,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
         builder.append("//]]>");
         mainScriptTag.appendChild(
-                new DataNode(builder.toString(), mainScriptTag.baseUri()));
+                new DataNode(builder.toString()));
         fragmentNodes.add(mainScriptTag);
 
     }
