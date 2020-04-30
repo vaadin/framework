@@ -7398,8 +7398,17 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     private void updateFrozenColumns() {
-        escalator.getColumnConfiguration()
-                .setFrozenColumnCount(getVisibleFrozenColumnCount());
+        int visibleFrozenColumnCount = getVisibleFrozenColumnCount();
+        ColumnConfiguration columnConfiguration = escalator
+                .getColumnConfiguration();
+        if (columnConfiguration.getColumnCount() < visibleFrozenColumnCount) {
+            // new columns may not have got added yet, delay and check the
+            // correct count again
+            Scheduler.get().scheduleFinally(() -> columnConfiguration
+                    .setFrozenColumnCount(getVisibleFrozenColumnCount()));
+        } else {
+            columnConfiguration.setFrozenColumnCount(visibleFrozenColumnCount);
+        }
     }
 
     private int getVisibleFrozenColumnCount() {
