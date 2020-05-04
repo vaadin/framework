@@ -579,15 +579,10 @@ public class Util {
             }
 
             if (connector != null) {
-                // check that inside the rootElement
-                while (browseElement != null && browseElement != rootElement) {
-                    browseElement = browseElement.getParentElement();
-                }
-                if (browseElement != rootElement) {
-                    return null;
-                } else {
+                if (isConnectedToParent(browseElement, rootElement)) {
                     return connector;
                 }
+                return null;
             }
 
             browseElement = browseElement.getParentElement();
@@ -604,6 +599,28 @@ public class Util {
         } else {
             return null;
         }
+    }
+
+    private static boolean isConnectedToParent(Element element,
+            Element rootElement) {
+        Element browseElement = element;
+        // check if inside the rootElement
+        while (browseElement != null && browseElement != rootElement) {
+            browseElement = browseElement.getParentElement();
+        }
+        if (browseElement == rootElement) {
+            return true;
+        }
+        // Not inside the root, possibly inside a VOverlay such as
+        // VWindow instead.
+        @SuppressWarnings("deprecation")
+        VOverlay overlay = WidgetUtil.findWidget(element, VOverlay.class,
+                false);
+        if (overlay != null && overlay.getOwner() != null) {
+            browseElement = overlay.getOwner().getElement();
+            return isConnectedToParent(browseElement, rootElement);
+        }
+        return false;
     }
 
     /**
