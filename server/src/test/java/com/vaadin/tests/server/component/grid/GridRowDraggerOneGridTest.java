@@ -129,12 +129,12 @@ public class GridRowDraggerOneGridTest {
 
     @Test
     public void listDataProvider_calledOnlyOnce() {
-    	
-    	final int[] times= new int[1];
-    	
+
+        final int[] times = new int[1];
+
         source.setItems("0", "1", "2");
-        
-        source.getDataProvider().addDataProviderListener(ev->times[0]++);
+
+        source.getDataProvider().addDataProviderListener(ev -> times[0]++);
 
         dragger.setDropIndexCalculator(event -> {
             return Integer.MAX_VALUE;
@@ -143,8 +143,8 @@ public class GridRowDraggerOneGridTest {
         drop("1", DropLocation.ABOVE, "0");
 
         verifyDataProvider("1", "2", "0");
-        
-        Assert.assertArrayEquals("DataProvider should be invoked only once", new int[] {1}, times);
+
+        Assert.assertArrayEquals("DataProvider should be invoked only once", new int[] { 1 }, times);
     }
 
     @Test
