@@ -105,9 +105,13 @@ public class OnDemandFileDownloader extends FileDownloader {
   }
 
   private StreamResource getResource() {
+    StreamResource result = null;
     this.getSession().lock();
-    StreamResource result = (StreamResource) this.getResource("dl");
-    this.getSession().unlock();
+    try {
+      result = (StreamResource) this.getResource("dl");
+    } finally {
+      this.getSession().unlock();
+    }
     return result;
   }
 }
