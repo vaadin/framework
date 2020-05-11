@@ -104,8 +104,15 @@ public class OnDemandFileDownloader extends FileDownloader {
     return super.handleConnectorRequest(request, response, path);
   }
 
-  private StreamResource getResource () {
-    return (StreamResource) this.getResource("dl");
+  private StreamResource getResource() {
+    StreamResource result = null;
+    this.getSession().lock();
+    try {
+      result = (StreamResource) this.getResource("dl");
+    } finally {
+      this.getSession().unlock();
+    }
+    return result;
   }
 }
 ....

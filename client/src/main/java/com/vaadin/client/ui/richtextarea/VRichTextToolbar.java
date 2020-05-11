@@ -242,7 +242,7 @@ public class VRichTextToolbar extends Composite {
                 final String url = Window.prompt("Enter a link URL:",
                         "http://");
                 if (url != null) {
-                    extended.createLink(url);
+                    createLinkViaJSNI(extended, url);
                 }
             } else if (sender == removeLink) {
                 extended.removeLink();
@@ -273,6 +273,30 @@ public class VRichTextToolbar extends Composite {
                 updateStatus();
             }
         }
+
+        private native void createLinkViaJSNI(
+                RichTextArea.ExtendedFormatter formatter, String url)
+        /*-{
+            var elem = formatter.@com.google.gwt.user.client.ui.impl.RichTextAreaImpl::elem;
+            var wnd = elem.contentWindow;
+            var selectedText = "";
+            if (wnd.getSelection) {
+                selectedText = wnd.getSelection().toString();
+            }
+        
+            wnd.focus();
+            if (selectedText) {
+                // Add url as the href property of the highlighted text
+                wnd.document.execCommand("createLink", false, url);
+            } else {
+                // Insert url both as a new text and its href-property value
+                var range = wnd.document.getSelection().getRangeAt(0)
+                var node = wnd.document.createElement("a");
+                node.innerHTML = url;
+                node.setAttribute("href", url);
+                range.insertNode(node);
+            }
+          }-*/;
     }
 
     private static final RichTextArea.FontSize[] FONT_SIZES_CONSTANTS = {

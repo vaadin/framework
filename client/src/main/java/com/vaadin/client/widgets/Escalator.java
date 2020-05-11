@@ -37,6 +37,7 @@ import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
 import com.google.gwt.core.client.Duration;
+import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.Scheduler;
@@ -2240,6 +2241,10 @@ public class Escalator extends Widget
 
             TableCellElement cellClone = TableCellElement
                     .as((Element) cell.cloneNode(withContent));
+            if (!withContent || columnConfiguration
+                    .getColumnWidth(cell.getCellIndex()) < 0) {
+                clearRelativeWidthContents(cellClone);
+            }
             cellClone.getStyle().clearHeight();
             cellClone.getStyle().clearWidth();
 
@@ -2257,6 +2262,41 @@ public class Escalator extends Widget
             cellClone.removeFromParent();
 
             return requiredWidth;
+        }
+
+        /**
+         * Contents of an element that is configured to have relative width
+         * shouldn't be taken into consideration when measuring minimum widths.
+         * Thus any such contents within the element hierarchy need to be
+         * cleared out for accurate results. The element itself should remain,
+         * however, in case it has styles that affect the end results.
+         *
+         * @param elem
+         *            an element that might have unnecessary content that
+         *            interferes with minimum width calculations
+         */
+        private void clearRelativeWidthContents(Element elem) {
+            try {
+                String width = elem.getStyle().getWidth();
+                if (width != null && width.endsWith("%")) {
+                    if (elem.hasChildNodes()) {
+                        elem.removeAllChildren();
+                        // add a fake child so that :empty behavior doesn't
+                        // change
+                        elem.setInnerHTML("<a/>");
+                    } else {
+                        elem.setInnerHTML(null);
+                    }
+                }
+            } catch (JavaScriptException e) {
+                // no width set, move on
+            }
+            for (int i = 0; i < elem.getChildCount(); ++i) {
+                Node node = elem.getChild(i);
+                if (node instanceof Element) {
+                    clearRelativeWidthContents((Element) node);
+                }
+            }
         }
 
         /**
