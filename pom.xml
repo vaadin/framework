@@ -62,6 +62,16 @@
         </repository>
     </repositories>
 
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    
     <!-- TODO: remove this after maven plugin has been released -->
     <pluginRepositories>
         <pluginRepository>
