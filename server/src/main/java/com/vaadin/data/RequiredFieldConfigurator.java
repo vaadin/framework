@@ -50,7 +50,8 @@ public interface RequiredFieldConfigurator
      */
     public RequiredFieldConfigurator NOT_EMPTY = annotation -> annotation
             .annotationType().getName()
-            .equals("org.hibernate.validator.constraints.NotEmpty");
+            .equals("org.hibernate.validator.constraints.NotEmpty") || annotation
+            .annotationType().getName().equals("javax.validation.constraints.NotEmpty");
 
     /**
      * Configurator which is aware of {@literal Size} annotation with
