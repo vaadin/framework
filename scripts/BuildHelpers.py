@@ -106,12 +106,17 @@ def copyWarFiles(artifactId, resultDir = resultPath, name = None):
 def generateArchetype(archetype, artifactId, repo, logFile, group="testpkg", archetypeGroup="com.vaadin"):
 	# Generate the required command line for archetype generation
 	args = getArgs()
+	print("Parameters for archetype %s:" % (archetype))
+	print("using version %s" % (args.version))
 	cmd = [mavenCmd, "archetype:generate"]
 	cmd.append("-DarchetypeGroupId=%s" % (archetypeGroup))
 	cmd.append("-DarchetypeArtifactId=%s" % (archetype))
 	cmd.append("-DarchetypeVersion=%s" % (args.version))
 	if repo is not None:
 		cmd.append("-DarchetypeRepository=%s" % repo)
+		print("using repository %s" % (repo))
+	else:
+	    print("using no repository")
 	cmd.append("-DgroupId=%s" % (group))
 	cmd.append("-DartifactId=%s" % (artifactId))
 	cmd.append("-Dversion=1.0-SNAPSHOT")
