@@ -6,7 +6,7 @@
     <parent>
         <artifactId>vaadin-test-karaf</artifactId>
         <groupId>com.vaadin</groupId>
-        <version>8.11-SNAPSHOT</version>
+        <version>8.12-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-karaf-bundle2</artifactId>
     <packaging>jar</packaging>
