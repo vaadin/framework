@@ -2158,7 +2158,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 // IllegalStateException may occur if user has scrolled Grid so
                 // that Escalator has updated, and row under Editor is no longer
                 // there
-            }          
+            }
         }
 
         /**
