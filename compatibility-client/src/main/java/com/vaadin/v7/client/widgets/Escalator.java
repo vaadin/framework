@@ -3720,6 +3720,7 @@ public class Escalator extends Widget
                                 visualRowOrder.getLast()) + 1;
                         moveAndUpdateEscalatorRows(Range.withOnly(0),
                                 visualRowOrder.size(), newLogicalIndex);
+                        updateTopRowLogicalIndex(1);
                     }
                 }
             }
