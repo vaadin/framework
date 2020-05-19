@@ -620,7 +620,9 @@ public class ComboBox extends AbstractSelect
         // page length usable for non-null items
         int effectivePageLength = pageLength
                 - (needNullSelectOption && (currentPage == 0) ? 1 : 0);
-        return Math.min(size - 1, first + effectivePageLength - 1);
+        // zero pageLength implies infinite page size
+        return pageLength == 0 ? size - 1
+                : Math.min(size - 1, first + effectivePageLength - 1);
     }
 
     /**
