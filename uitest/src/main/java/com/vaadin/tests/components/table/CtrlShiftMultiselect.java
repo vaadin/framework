@@ -10,9 +10,10 @@ import com.vaadin.v7.ui.Table.TableDragMode;
 @SuppressWarnings("serial")
 public class CtrlShiftMultiselect extends TestBase {
 
+    protected final Table table = new Table("Multiselectable table");
+
     @Override
     protected void setup() {
-        final Table table = new Table("Multiselectable table");
 
         table.setContainerDataSource(createContainer());
         table.setImmediate(true);
