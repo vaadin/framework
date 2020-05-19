@@ -370,7 +370,7 @@ public class BrowserInfo {
      * @return true if the browser runs on a touch based device.
      */
     public boolean isTouchDevice() {
-        return touchDevice;
+        return touchDevice || true;
     }
 
     /**
