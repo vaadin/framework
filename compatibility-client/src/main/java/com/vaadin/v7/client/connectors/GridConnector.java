@@ -911,6 +911,21 @@ public class GridConnector extends AbstractHasComponentsConnector
 
         initialChange = stateChangeEvent.isInitialStateChange();
 
+        if (initialChange) {
+            Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    doUpdateFromStateChangeEvent(stateChangeEvent);
+                }
+            });
+        } else {
+            doUpdateFromStateChangeEvent(stateChangeEvent);
+        }
+    }
+
+    private void doUpdateFromStateChangeEvent(
+            final StateChangeEvent stateChangeEvent) {
+
         // Column updates
         if (stateChangeEvent.hasPropertyChanged("columns")) {
 
@@ -1120,7 +1135,6 @@ public class GridConnector extends AbstractHasComponentsConnector
         }
         cell.setStyleName(cellState.styleName);
     }
-
 
     /**
      * Update columns from the current state.
