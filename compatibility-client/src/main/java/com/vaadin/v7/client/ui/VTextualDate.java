@@ -115,6 +115,8 @@ public class VTextualDate extends VDateField
         if (BrowserInfo.get().isIE()) {
             addDomHandler(this, KeyDownEvent.getType());
         }
+        // Stop the browser from showing its own suggestion popup.
+        WidgetUtil.disableBrowserAutocomplete(text);
         add(text);
     }
 
