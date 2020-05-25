@@ -2045,7 +2045,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
     /** For internal use only. May be removed or replaced in the future. */
     public void updateReadOnly() {
-        suggestionPopup.hide();
+        if (readonly) {
+            suggestionPopup.hide();
+        }
         debug("VComboBox: updateReadOnly()");
         tb.setReadOnly(readonly || !textInputEnabled);
     }
