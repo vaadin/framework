@@ -91,13 +91,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             addDomHandler(this, KeyDownEvent.getType());
         }
         // Stop the browser from showing its own suggestion popup.
-        if (BrowserInfo.get().isChrome()) {
-            // Chrome supports "off" and random number does not work with
-            // Chrome
-            text.getElement().setAttribute("autocomplete", "off");
-        } else {
-            text.getElement().setAttribute("autocomplete", Math.random() + "");
-        }
+        WidgetUtil.disableBrowserAutocomplete(text);
         add(text);
         publishJSHelpers(getElement());
     }
