@@ -268,6 +268,7 @@ $v-table-background-color: null !default;
 
   .#{$primary-stylename}-body {
     border: $v-table-border-width solid $border-color;
+    overflow-anchor: none; /* In Chrome 56+ */
     @include user-select(text);
   }
 
