@@ -2281,20 +2281,33 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
 
-        GeneratedRow generatedRow = rowGenerator != null
-                ? rowGenerator.generateRow(this, id)
-                : null;
-        cells[CELL_GENERATED_ROW][i] = generatedRow;
+        int index = firstIndex + i;
+        int indexInOldBuffer = index - pageBufferFirstIndex;
+        boolean inPageBuffer = index < firstIndexNotInCache
+                && index >= pageBufferFirstIndex
+                && id.equals(pageBuffer[CELL_ITEMID][indexInOldBuffer]);
 
+        GeneratedRow generatedRow = null;
+        if (rowGenerator != null) {
+            if (inPageBuffer) {
+                generatedRow = (GeneratedRow) pageBuffer[CELL_GENERATED_ROW][indexInOldBuffer];
+            } else {
+                generatedRow = rowGenerator.generateRow(this, cells[CELL_ITEMID][i]);
+            }
+            cells[CELL_GENERATED_ROW][i] = generatedRow;
+        }
+
+        int firstNotCollapsed = -1;
         for (int j = 0; j < cols; j++) {
             if (isColumnCollapsed(colids[j])) {
                 continue;
+            } else if (firstNotCollapsed == -1) {
+                firstNotCollapsed = j;
             }
             Property<?> p = null;
             Object value = "";
-            boolean isGeneratedRow = generatedRow != null;
             boolean isGeneratedColumn = columnGenerators.containsKey(colids[j]);
-            boolean isGenerated = isGeneratedRow || isGeneratedColumn;
+            boolean isGenerated = isGeneratedColumn || generatedRow != null;
 
             if (!isGenerated) {
                 try {
@@ -2305,33 +2318,24 @@ public class Table extends AbstractSelect implements Action.Container,
                 }
             }
 
-            if (isGeneratedRow) {
-                if (generatedRow.isSpanColumns() && j > 0) {
-                    value = null;
-                } else if (generatedRow.isSpanColumns() && j == 0
-                        && generatedRow.getValue() instanceof Component) {
-                    value = generatedRow.getValue();
-                } else if (generatedRow.getText().length > j) {
-                    value = generatedRow.getText()[j];
-                }
-            } else {
-                // check if current pageBuffer already has row
-                int index = firstIndex + i;
-                if (p != null || isGenerated) {
-                    int indexInOldBuffer = index - pageBufferFirstIndex;
-                    if (index < firstIndexNotInCache
-                            && index >= pageBufferFirstIndex
-                            && pageBuffer[CELL_GENERATED_ROW][indexInOldBuffer] == null
-                            && id.equals(
-                                    pageBuffer[CELL_ITEMID][indexInOldBuffer])) {
-                        // we already have data in our cache,
-                        // recycle it instead of fetching it via
-                        // getValue/getPropertyValue
+            // check if current pageBuffer already has row
+            if (p != null || isGenerated) {
+                if (inPageBuffer) {
+                    // we already have data in our cache,
+                    // recycle it instead of fetching it via
+                    // getValue/getPropertyValue
+                    if (generatedRow != null) {
+                        value = extractGeneratedValue(generatedRow, j, j == firstNotCollapsed);
+                    } else {
                         value = pageBuffer[CELL_FIRSTCOL + j][indexInOldBuffer];
-                        if (!isGeneratedColumn && iscomponent[j]
-                                || !(value instanceof Component)) {
-                            listenProperty(p, oldListenedProperties);
-                        }
+                    }
+                    if (!isGeneratedColumn && iscomponent[j]
+                            || !(value instanceof Component)) {
+                        listenProperty(p, oldListenedProperties);
+                    }
+                } else {
+                    if (generatedRow != null) {
+                        value = extractGeneratedValue(generatedRow, j, j == firstNotCollapsed);
                     } else {
                         if (isGeneratedColumn) {
                             ColumnGenerator cg = columnGenerators
@@ -2392,6 +2396,20 @@ public class Table extends AbstractSelect implements Action.Container,
             }
             cells[CELL_FIRSTCOL + j][i] = value;
         }
+    }
+
+    private Object extractGeneratedValue(GeneratedRow generatedRow, int index, boolean firstVisibleColumn) {
+        if (generatedRow.isSpanColumns()) {
+            if (firstVisibleColumn) {
+                return generatedRow.getValue();
+            }
+            return null;
+        }
+        String[] text = generatedRow.getText();
+        if (text != null && text.length > index) {
+            return text[index];
+        }
+        return null;
     }
 
     protected void registerComponent(Component component) {
@@ -3989,8 +4007,9 @@ public class Table extends AbstractSelect implements Action.Container,
             target.addAttribute("gen_html",
                     generatedRow.isHtmlContentAllowed());
             target.addAttribute("gen_span", generatedRow.isSpanColumns());
+            // todo: actually gen_widget is never used
             target.addAttribute("gen_widget",
-                    generatedRow.getValue() instanceof Component);
+                    cells[CELL_FIRSTCOL][indexInRowBuffer] instanceof Component);
         }
     }
 
