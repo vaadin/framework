@@ -7416,7 +7416,15 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         // for the escalator the hidden columns are not in the frozen column
         // count, but for grid they are. thus need to convert the index
-        for (int i = 0; i < frozenColumnCount; i++) {
+        int limit = getFrozenColumnCount();
+        if (getSelectionColumn().isPresent()) {
+            // If the grid is in MultiSelect mode, getColumn(0) in the following
+            // for loop returns the selection column. Accordingly, verifying
+            // which frozen columns are visible if the selection column is
+            // present should take this fact into account.
+            limit++;
+        }
+        for (int i = 0; i < limit; i++) {
             if (i >= getColumnCount() || getColumn(i).isHidden()) {
                 numberOfColumns--;
             }
