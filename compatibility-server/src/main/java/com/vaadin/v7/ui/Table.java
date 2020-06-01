@@ -588,6 +588,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private MultiSelectMode multiSelectMode = MultiSelectMode.DEFAULT;
 
+    private boolean multiSelectTouchDetectionEnabled = true;
+
     private boolean rowCacheInvalidated;
 
     private RowGenerator rowGenerator = null;
@@ -3775,6 +3777,10 @@ public class Table extends AbstractSelect implements Action.Container,
         if (isSelectable()) {
             target.addAttribute("selectmode",
                     (isMultiSelect() ? "multi" : "single"));
+            if (isMultiSelect()) {
+                target.addAttribute("touchdetection",
+                        isMultiSelectTouchDetectionEnabled());
+            }
         } else {
             target.addAttribute("selectmode", "none");
         }
@@ -5188,7 +5194,10 @@ public class Table extends AbstractSelect implements Action.Container,
      * <p>
      * Note, that on some clients the mode may not be respected. E.g. on touch
      * based devices CTRL/SHIFT base selection method is invalid, so touch based
-     * browsers always use the {@link MultiSelectMode#SIMPLE}.
+     * browsers always use the {@link MultiSelectMode#SIMPLE} unless touch multi
+     * select is explicitly disabled.
+     *
+     * @see #setMultiSelectTouchDetectionEnabled(boolean)
      *
      * @param mode
      *            The select mode of the table
@@ -5205,6 +5214,31 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public MultiSelectMode getMultiSelectMode() {
         return multiSelectMode;
+    }
+
+    /**
+     * Default behavior on touch-reporting devices is to switch from CTRL/SHIFT
+     * based multi-selection to simple mode, but you can use this method to
+     * explicitly disable the touch device detection. Thus you can keep using
+     * keyboard-based multi selection on hybrid devices that have both a touch
+     * screen and a keyboard.
+     *
+     * @param multiSelectTouchDetectionEnabled
+     *            Whether to enable or disable touch screen detection
+     */
+    public void setMultiSelectTouchDetectionEnabled(
+            boolean multiSelectTouchDetectionEnabled) {
+        this.multiSelectTouchDetectionEnabled = multiSelectTouchDetectionEnabled;
+        markAsDirty();
+    }
+
+    /**
+     * Returns if touch screen detection is used to toggle multi select mode.
+     *
+     * @return If touch screen detection for multi select is enabled
+     */
+    public boolean isMultiSelectTouchDetectionEnabled() {
+        return multiSelectTouchDetectionEnabled;
     }
 
     /**
