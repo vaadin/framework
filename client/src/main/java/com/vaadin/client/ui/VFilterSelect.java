@@ -1553,6 +1553,8 @@ public class VFilterSelect extends Composite
     /** For internal use only. May be removed or replaced in the future. */
     public boolean updateSelectionWhenReponseIsReceived = false;
 
+    private boolean tabPressedWhenPopupOpen = false;
+
     /** For internal use only. May be removed or replaced in the future. */
     public boolean initDone = false;
 
@@ -2200,6 +2202,8 @@ public class VFilterSelect extends Composite
             event.stopPropagation();
             break;
         case KeyCodes.KEY_TAB:
+        	tabPressedWhenPopupOpen = true;
+        	waitingForFilteringResponse = false;                        
         case KeyCodes.KEY_ENTER:
 
             if (!allowNewItem) {
@@ -2480,6 +2484,15 @@ public class VFilterSelect extends Composite
 
         focused = false;
         if (!readonly) {
+            if (tabPressedWhenPopupOpen) {
+                tabPressedWhenPopupOpen = false;
+                waitingForFilteringResponse = false;
+            } else if ((!suggestionPopup.isAttached() && waitingForFilteringResponse)
+                    || suggestionPopup.isJustClosed()) {
+                // typing so fast the popup was never opened, or it's just
+                // closed
+            waitingForFilteringResponse = false;
+            }
             if (textInputEnabled && allowNewItem) {
                 suggestionPopup.menu.doSelectedItemAction();
             }
