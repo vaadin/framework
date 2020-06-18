@@ -255,6 +255,20 @@ public interface Sizeable extends Serializable {
     public void setSizeFull();
 
     /**
+     * Sets the width to 100%.
+     *
+     * @since 8.11
+     */
+    public void setWidthFull();
+
+    /**
+     * Sets the height to 100%.
+     *
+     * @since 8.11
+     */
+    public void setHeightFull();
+
+    /**
      * Clears any size settings.
      */
     public void setSizeUndefined();

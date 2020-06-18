@@ -202,7 +202,7 @@ public abstract class VaadinService implements Serializable {
      * @since 8.2
      */
     protected VaadinService() {
-        this.deploymentConfiguration = null;
+        deploymentConfiguration = null;
     }
 
     /**
@@ -1226,13 +1226,17 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Called at the end of a request, after sending the response. Closes
-     * inactive UIs in the given session, removes closed UIs from the session,
-     * and closes the session if it is itself inactive.
+     * Closes inactive UIs in the given session, removes closed UIs from the
+     * session, and closes the session if it is itself inactive. This operation
+     * should not be performed without first acquiring the session lock. By
+     * default called at the end of each request, after sending the response.
      *
      * @param session
+     *            the session to clean up
+     *
+     * @since 8.10
      */
-    void cleanupSession(VaadinSession session) {
+    public void cleanupSession(VaadinSession session) {
         if (isSessionActive(session)) {
             closeInactiveUIs(session);
             removeClosedUIs(session);
@@ -1755,7 +1759,15 @@ public abstract class VaadinService implements Serializable {
                  * endless loop. This can at least happen if refreshing a
                  * resource when the session has expired.
                  */
-                response.sendError(HttpServletResponse.SC_GONE,
+
+                // Ensure that the browser does not cache expired responses.
+                // iOS 6 Safari requires this (#3226)
+                response.setHeader("Cache-Control", "no-cache");
+                // If Content-Type is not set, browsers assume text/html and may
+                // complain about the empty response body (#4167)
+                response.setHeader("Content-Type", "text/plain");
+
+                response.sendError(HttpServletResponse.SC_FORBIDDEN,
                         "Session expired");
             }
         } catch (IOException e) {

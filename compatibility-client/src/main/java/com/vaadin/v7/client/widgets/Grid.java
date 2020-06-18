@@ -2145,13 +2145,19 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             // sometimes focus handling twists the editor row out of alignment
             // with the grid itself and the position needs to be compensated for
-            TableRowElement rowElement = grid.getEscalator().getBody()
-                .getRowElement(grid.getEditor().getRow());
-            int rowLeft = rowElement.getAbsoluteLeft();
-            int editorLeft = cellWrapper.getAbsoluteLeft();
-            if (editorLeft != rowLeft + frozenWidth) {
-                cellWrapper.getStyle().setLeft(newLeft + rowLeft - editorLeft,
-                    Unit.PX);
+            try {
+                TableRowElement rowElement = grid.getEscalator().getBody()
+                    .getRowElement(grid.getEditor().getRow());
+                int rowLeft = rowElement.getAbsoluteLeft();
+                int editorLeft = cellWrapper.getAbsoluteLeft();
+                if (editorLeft != rowLeft + frozenWidth) {
+                    cellWrapper.getStyle().setLeft(newLeft + rowLeft - editorLeft,
+                        Unit.PX);
+                }
+            } catch (IllegalStateException e) {
+                // IllegalStateException may occur if user has scrolled Grid so
+                // that Escalator has updated, and row under Editor is no longer
+                // there
             }
         }
 
@@ -2934,6 +2940,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private CheckBox selectAllCheckBox;
         private boolean userSelectionAllowed = true;
         private boolean enabled = true;
+        private HandlerRegistration headerClickHandler;
 
         SelectionColumn(final Renderer<Boolean> selectColumnRenderer) {
             super(selectColumnRenderer);
@@ -2987,24 +2994,28 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         });
                 selectAllCheckBox.setValue(selected);
 
-                addHeaderClickHandler(new HeaderClickHandler() {
-                    @Override
-                    public void onClick(GridClickEvent event) {
-                        if (!userSelectionAllowed) {
-                            return;
-                        }
+                headerClickHandler = addHeaderClickHandler(
+                        new HeaderClickHandler() {
+                            @Override
+                            public void onClick(GridClickEvent event) {
+                                if (!userSelectionAllowed) {
+                                    return;
+                                }
 
-                        CellReference<?> targetCell = event.getTargetCell();
-                        int defaultRowIndex = getHeader().getRows()
-                                .indexOf(getDefaultHeaderRow());
+                                CellReference<?> targetCell = event
+                                        .getTargetCell();
+                                int defaultRowIndex = getHeader().getRows()
+                                        .indexOf(getDefaultHeaderRow());
 
-                        if (targetCell.getColumnIndex() == 0 && targetCell
-                                .getRowIndex() == defaultRowIndex) {
-                            selectAllCheckBox.setValue(
-                                    !selectAllCheckBox.getValue(), true);
-                        }
-                    }
-                });
+                                if (targetCell.getColumnIndex() == 0
+                                        && targetCell
+                                                .getRowIndex() == defaultRowIndex) {
+                                    selectAllCheckBox.setValue(
+                                            !selectAllCheckBox.getValue(),
+                                            true);
+                                }
+                            }
+                        });
 
                 // Select all with space when "select all" cell is active
                 addHeaderKeyUpHandler(new HeaderKeyUpHandler() {
@@ -3142,6 +3153,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             // Re-render select checkboxes
             getEscalator().getBody().refreshRows(0,
                     getEscalator().getBody().getRowCount());
+        }
+
+        private void cleanup() {
+            if (headerClickHandler != null) {
+                headerClickHandler.removeHandler();
+                headerClickHandler = null;
+            }
         }
     }
 
@@ -7919,6 +7937,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             final Renderer<Boolean> selectColumnRenderer) {
         if (this.selectColumnRenderer == selectColumnRenderer) {
             return;
+        }
+
+        if (this.selectionColumn != null) {
+            selectionColumn.cleanup();
         }
 
         if (this.selectColumnRenderer != null) {

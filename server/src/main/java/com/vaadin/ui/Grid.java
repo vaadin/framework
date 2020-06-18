@@ -1948,13 +1948,19 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param editable
          *            {@code true} if column is editable; {@code false} if not
          * @return this column
+         * @throws IllegalStateException
+         *            if editable is true and column has no editor binding or
+         *            component defined
          *
          * @see #setEditorComponent(HasValue, Setter)
          * @see #setEditorBinding(Binding)
          */
-        public Column<T, V> setEditable(boolean editable) {
-            Objects.requireNonNull(editorBinding,
-                    "Column has no editor binding or component defined");
+        public Column<T, V> setEditable(boolean editable)
+                throws IllegalStateException {
+            if (editable && editorBinding == null) {
+                throw new IllegalStateException(
+                        "Column has no editor binding or component defined");
+            }
             getState().editable = editable;
             return this;
         }

@@ -510,8 +510,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
         Document document = response.getDocument();
 
-        DocumentType doctype = new DocumentType("html", "", "",
-                document.baseUri());
+        DocumentType doctype = new DocumentType("html", "", "");
         document.child(0).before(doctype);
 
         Element head = document.head();
@@ -712,8 +711,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         appendMainScriptTagContents(context, builder);
 
         builder.append("//]]>");
-        mainScriptTag.appendChild(
-                new DataNode(builder.toString(), mainScriptTag.baseUri()));
+        mainScriptTag.appendChild(new DataNode(builder.toString()));
         fragmentNodes.add(mainScriptTag);
 
     }

@@ -98,10 +98,6 @@ public class Upload extends AbstractComponent
 
     private int totalBytes;
 
-    private String buttonCaption = "Upload";
-
-    private String buttonStyleName;
-
     /**
      * ProgressListeners to which information about progress is sent during
      * upload
@@ -183,13 +179,6 @@ public class Upload extends AbstractComponent
         }
 
         target.addAttribute("state", isUploading);
-
-        if (buttonCaption != null) {
-            target.addAttribute("buttoncaption", buttonCaption);
-            if (buttonStyleName != null) {
-                target.addAttribute("buttonstylename", buttonStyleName);
-            }
-        }
 
         target.addAttribute("nextid", nextid);
 
@@ -982,17 +971,31 @@ public class Upload extends AbstractComponent
      * @return String to be rendered into button that fires uploading
      */
     public String getButtonCaption() {
-        return buttonCaption;
+        return getState(false).buttonCaption;
     }
 
     /**
-     * Returns the stylename rendered into button that fires uploading.
+     * Returns the style name rendered into button that fires uploading.
      *
-     * @return Stylename to be rendered into button that fires uploading
+     * @return Style name to be rendered into button that fires uploading
      * @since 8.2
      */
     public String getButtonStyleName() {
-        return buttonStyleName;
+        return getState(false).buttonStyleName;
+    }
+
+    /**
+     * Checks whether the caption of the button that fires uploading is rendered
+     * as HTML
+     * <p>
+     * The default is {@code false}, i.e. to render that caption as plain text.
+     *
+     * @return {@code true} if the caption is rendered as HTML, {@code false} if
+     *         rendered as plain text
+     * @since 8.11
+     */
+    public boolean isButtonCaptionAsHtml() {
+        return getState(false).buttonCaptionAsHtml;
     }
 
     /**
@@ -1005,8 +1008,8 @@ public class Upload extends AbstractComponent
      * {@link #submitUpload()}.
      * <p>
      * In case the Upload is used in immediate mode using
-     * {@link #setImmediateMode(boolean)}, the file choose (html input with type
-     * "file") is hidden and only the button with this text is shown.
+     * {@link #setImmediateMode(boolean)}, the file chooser (HTML input with
+     * type "file") is hidden and only the button with this text is shown.
      * <p>
      *
      * <p>
@@ -1018,41 +1021,63 @@ public class Upload extends AbstractComponent
      *            text for upload components button.
      */
     public void setButtonCaption(String buttonCaption) {
-        this.buttonCaption = buttonCaption;
-        markAsDirty();
+        getState().buttonCaption = buttonCaption;
     }
 
     /**
      * In addition to the actual file chooser, upload components have button
-     * that starts actual upload progress. This method is used to set a
-     * stylename to that button.
+     * that starts actual upload progress. This method is used to set a style
+     * name to that button.
+     * <p>
+     * Note: Unlike {@code Button.setStyleName()} this method overrides all the
+     * styles from the button. If you wish to preserve the default styles, enter
+     * the style name as {@code "v-button yourStyleName"}.
      *
      * @param buttonStyleName
-     *            styleName for upload components button.
+     *            style name for upload components button.
      * @see #setButtonCaption(String) about when the button is shown / hidden.
      * @since 8.2
      */
     public void setButtonStyleName(String buttonStyleName) {
-        this.buttonStyleName = buttonStyleName;
-        markAsDirty();
+        getState().buttonStyleName = buttonStyleName;
     }
 
     /**
-     * Forces the upload the send selected file to the server.
+     * In addition to the actual file chooser, upload components have button
+     * that starts actual upload progress. This method is used to set whether
+     * the caption on that button is rendered as HTML.
+     * <p>
+     * If set to {@code true}, the caption is rendered in the browser as HTML
+     * and the developer is responsible for ensuring no harmful HTML is used. If
+     * set to {@code false}, the caption is rendered in the browser as plain
+     * text.
+     * <p>
+     * The default is {@code false}, i.e. to render the caption as plain text.
+     *
+     * @param buttonCaptionAsHtml
+     *            {@code true} if the caption is rendered as HTML, {@code false}
+     *            if rendered as plain text
+     * @since 8.11
+     */
+    public void setButtonCaptionAsHtml(boolean buttonCaptionAsHtml) {
+        getState().buttonCaptionAsHtml = buttonCaptionAsHtml;
+    }
+
+    /**
+     * Instructs the upload component to send selected file to the server.
      * <p>
      * In case developer wants to use this feature, he/she will most probably
-     * want to hide the uploads internal submit button by setting its caption to
-     * null with {@link #setButtonCaption(String)} method.
+     * want to hide the upload component's internal submit button by setting its
+     * caption to null with {@link #setButtonCaption(String)} method.
      * <p>
-     * Note, that the upload runs asynchronous. Developer should use normal
-     * upload listeners to trac the process of upload. If the field is empty
-     * uploaded the file name will be empty string and file length 0 in the
-     * upload finished event.
+     * Note that the upload runs asynchronously. Developer should use normal
+     * upload listeners to track the process of upload. If the file name field
+     * is empty, no upload will be triggered.
      * <p>
-     * Also note, that the developer should not remove or modify the upload in
-     * the same user transaction where the upload submit is requested. The
-     * upload may safely be hidden or removed once the upload started event is
-     * fired.
+     * Also note that the developer should not remove or modify the upload
+     * component in the same user transaction where the upload submit is
+     * requested. The upload component can be safely hidden or removed once the
+     * upload started event has been fired.
      */
     public void submitUpload() {
         markAsDirty();

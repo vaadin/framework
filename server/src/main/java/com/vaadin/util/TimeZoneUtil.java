@@ -42,13 +42,14 @@ import elemental.json.impl.JsonUtil;
 public final class TimeZoneUtil implements Serializable {
 
     /**
-     * The start year used to send the time zone transition dates.
+     * The default start year (inclusive) from which to calculate the
+     * daylight-saving time zone transition dates.
      */
     private static final int STARTING_YEAR = 1980;
 
     /**
-     * Till how many years from now, should we send the time zone transition
-     * dates.
+     * The default value of the number of future years from the current date for
+     * which the daylight-saving time zone transition dates are calculated.
      */
     private static final int YEARS_FROM_NOW = 20;
 
@@ -61,6 +62,12 @@ public final class TimeZoneUtil implements Serializable {
      * which is used in
      * {@link com.google.gwt.i18n.client.TimeZone#createTimeZone(String)}.
      *
+     * This method calculates the JSON string from the year
+     * {@value #STARTING_YEAR} until {@value #YEARS_FROM_NOW} years into the
+     * future from the current date.
+     *
+     * @see #toJSON(ZoneId, Locale, int, int)
+     *
      * @param zoneId
      *            the {@link ZoneId} to get the daylight transitions from
      * @param locale
@@ -69,6 +76,32 @@ public final class TimeZoneUtil implements Serializable {
      * @return the encoded string
      */
     public static String toJSON(ZoneId zoneId, Locale locale) {
+        int endYear = LocalDate.now().getYear() + YEARS_FROM_NOW;
+        return toJSON(zoneId, locale, STARTING_YEAR, endYear);
+    }
+
+    /**
+     * Returns a JSON string of the specified {@code zoneId} and {@link Locale},
+     * which is used in
+     * {@link com.google.gwt.i18n.client.TimeZone#createTimeZone(String)}.
+     *
+     * This method calculates the JSON string from {@code startYear} until
+     * {@code startYear}, both inclusive.
+     *
+     * @param zoneId
+     *            the {@link ZoneId} to get the daylight transitions from
+     * @param locale
+     *            the locale used to determine the short name of the time zone
+     * @param startYear
+     *            the start year of DST transitions
+     * @param endYear
+     *            the end year of DST transitions
+     *
+     * @return the encoded string
+     * @since 8.11
+     */
+    public static String toJSON(ZoneId zoneId, Locale locale, int startYear,
+            int endYear) {
         if (zoneId == null || locale == null) {
             return null;
         }
@@ -78,9 +111,8 @@ public final class TimeZoneUtil implements Serializable {
 
         TimeZoneInfo info = new TimeZoneInfo();
 
-        int endYear = LocalDate.now().getYear() + YEARS_FROM_NOW;
         if (timeZone.useDaylightTime()) {
-            for (int year = STARTING_YEAR; year <= endYear; year++) {
+            for (int year = startYear; year <= endYear; year++) {
                 ZonedDateTime i = LocalDateTime.of(year, 1, 1, 0, 0)
                         .atZone(zoneId);
                 while (true) {

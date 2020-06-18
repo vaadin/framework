@@ -35,6 +35,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.LocaleService;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.aria.HandlesAriaCaption;
@@ -115,6 +116,8 @@ public class VTextualDate extends VDateField
         if (BrowserInfo.get().isIE()) {
             addDomHandler(this, KeyDownEvent.getType());
         }
+        // Stop the browser from showing its own suggestion popup.
+        WidgetUtil.disableBrowserAutocomplete(text);
         add(text);
     }
 

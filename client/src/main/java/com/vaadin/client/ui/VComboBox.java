@@ -81,6 +81,7 @@ import com.vaadin.client.ui.aria.HandlesAriaRequired;
 import com.vaadin.client.ui.combobox.ComboBoxConnector;
 import com.vaadin.client.ui.menubar.MenuBar;
 import com.vaadin.client.ui.menubar.MenuItem;
+import com.vaadin.client.ui.orderedlayout.Slot;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.util.SharedUtil;
@@ -899,19 +900,33 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 }
             }
 
-            if (offsetWidth + menuMarginBorderPaddingWidth
-                    + left < VComboBox.this.getAbsoluteLeft()
-                            + VComboBox.this.getOffsetWidth()) {
-                // Popup doesn't reach all the way to the end of the input
-                // field, filtering may have changed the popup width.
-                left = VComboBox.this.getAbsoluteLeft();
+            int comboBoxLeft = VComboBox.this.getAbsoluteLeft();
+            int comboBoxWidth = VComboBox.this.getOffsetWidth();
+            if (hasParentWithUnadjustedHorizontalPositioning()) {
+                // ComboBox itself may be incorrectly positioned, don't try to
+                // adjust horizontal popup position yet. Earlier width
+                // calculations must be performed anyway to avoid flickering.
+                if (top != topPosition) {
+                    // Variable 'left' still contains the original popupLeft,
+                    // 'top' has been updated, thus vertical position needs
+                    // adjusting.
+                    setPopupPosition(left, top);
+                }
+                return;
+            }
+            if (left > comboBoxLeft
+                    || offsetWidth + menuMarginBorderPaddingWidth
+                            + left < comboBoxLeft + comboBoxWidth) {
+                // Popup is positioned too far right or doesn't reach all the
+                // way to the end of the input field, filtering may have changed
+                // the popup width.
+                left = comboBoxLeft;
             }
             if (offsetWidth + menuMarginBorderPaddingWidth + left > Window
                     .getClientWidth()) {
                 // Popup doesn't fit the view, needs to be opened to the left
                 // instead.
-                left = VComboBox.this.getAbsoluteLeft()
-                        + VComboBox.this.getOffsetWidth() - offsetWidth
+                left = comboBoxLeft + comboBoxWidth - offsetWidth
                         - (int) menuMarginBorderPaddingWidth;
             }
             if (left < 0) {
@@ -919,8 +934,55 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 menu.setWidth(Window.getClientWidth() + "px");
             }
 
-            setPopupPosition(left, top);
+            // Only update the position if it has changed.
+            if (top != topPosition || left != getPopupLeft()) {
+                setPopupPosition(left, top);
+            }
             menu.scrollSelectionIntoView();
+        }
+
+        /**
+         * Checks whether there are any {@link VHorizontalLayout}s with
+         * incomplete internal position calculations among this VComboBox's
+         * parents.
+         *
+         * @return {@code true} if unadjusted parents found, {@code false}
+         *         otherwise
+         */
+        private boolean hasParentWithUnadjustedHorizontalPositioning() {
+            /*
+             * If there are any VHorizontalLayouts among this VComboBox's
+             * parents, any spacing or expand ratio may cause incorrect
+             * intermediate positioning. The status of the layout's internal
+             * positioning can be checked from the first slot's margin-left
+             * style, which will be set to 0px if no spacing or expand ratio
+             * adjustments are needed, and to a negative pixel amount if they
+             * are. If the style hasn't been set at all, calculations are still
+             * underway. Popup position shouldn't be adjusted before such
+             * calculations have been finished.
+             *
+             * VVerticalLayout has the same logic but it only affects the
+             * vertical positioning, which is irrelevant for the calculations
+             * here.
+             */
+            Widget toCheck = VComboBox.this;
+            while (toCheck != null && !(toCheck.getParent() instanceof VUI)) {
+                toCheck = toCheck.getParent();
+                if (toCheck instanceof VHorizontalLayout) {
+                    VHorizontalLayout hLayout = (VHorizontalLayout) toCheck;
+                    // because hLayout is a parent it must have at least one
+                    // child widget
+                    Widget slot = hLayout.getWidget(0);
+                    if (slot instanceof Slot && slot.getElement().getStyle()
+                            .getMarginLeft().isEmpty()) {
+                        // margin hasn't been set, layout's internal positioning
+                        // is still being adjusted and ComboBox's position may
+                        // not be final
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         /**
@@ -1376,24 +1438,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
          * @since 7.6.4
          */
         public FilterSelectTextBox() {
-            /*-
-             * Stop the browser from showing its own suggestion popup.
-             *
-             * Using an invalid value instead of "off" as suggested by
-             * https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
-             *
-             * Leaving the non-standard Safari options autocapitalize and
-             * autocorrect untouched since those do not interfere in the same
-             * way, and they might be useful in a combo box where new items are
-             * allowed.
-             */
-            if (BrowserInfo.get().isChrome()) {
-                // Chrome supports "off" and random number does not work with
-                // Chrome
-                getElement().setAttribute("autocomplete", "off");
-            } else {
-                getElement().setAttribute("autocomplete", Math.random() + "");
-            }
+            WidgetUtil.disableBrowserAutocomplete(this);
         }
 
         /**
@@ -1983,6 +2028,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
     /** For internal use only. May be removed or replaced in the future. */
     public void updateReadOnly() {
+        if (readonly) {
+            suggestionPopup.hide();
+        }
         debug("VComboBox: updateReadOnly()");
         tb.setReadOnly(readonly || !textInputEnabled);
     }
