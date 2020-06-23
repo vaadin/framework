@@ -996,7 +996,7 @@ public class Page implements Serializable {
      *             set to {@code false}
      */
     public URI getLocation() throws IllegalStateException {
-        if (location == null && !uI.getSession().getConfiguration()
+        if (location == null && !VaadinSession.getCurrent().getConfiguration()
                 .isSendUrlsAsParameters()) {
             throw new IllegalStateException("Location is not available as the "
                     + Constants.SERVLET_PARAMETER_SENDURLSASPARAMETERS
