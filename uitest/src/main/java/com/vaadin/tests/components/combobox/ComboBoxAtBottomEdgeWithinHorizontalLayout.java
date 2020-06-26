@@ -13,7 +13,7 @@ public class ComboBoxAtBottomEdgeWithinHorizontalLayout extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         ComboBox<Integer> comboBox = new ComboBox<>();
-        comboBox.setItems(Arrays.asList(100, 200, 300, 400, 500));
+        comboBox.setItems(Arrays.asList(102, 205, 302, 402, 500));
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.addComponent(comboBox);
