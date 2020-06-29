@@ -865,7 +865,20 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @return result that contains parsed Date as a value or an error
      */
     protected Result<T> handleUnparsableDateString(String dateString) {
-        return Result.error(getParseErrorMessage());
+        final Date parsedDate;
+        if (this.getDateFormat().contains("w")) {
+            SimpleDateFormat autoCompletionWeekDateFormat = new SimpleDateFormat(this.getDateFormat());
+            try {
+                parsedDate = autoCompletionWeekDateFormat.parse(dateString);
+            } catch (ParseException e) {
+                return Result.error(getParseErrorMessage());
+            }
+            LocalDate date = LocalDate.ofEpochDay((parsedDate.getTime())/24/60/60/1000);
+            date = date.plusDays(7);
+            return Result.ok(date);
+        } else {
+            return Result.error(getParseErrorMessage());
+        }
     }
 
     @Override
