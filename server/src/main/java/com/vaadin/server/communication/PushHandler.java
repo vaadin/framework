@@ -322,7 +322,12 @@ public class PushHandler {
             session = handleConnectionLost(event);
         } finally {
             if (session != null) {
-                session.access(CurrentInstance::clearAll);
+                session.access(new Runnable() {
+                    @Override
+                    public void run() {
+                        CurrentInstance.clearAll();
+                    }
+                });
             }
         }
     }
