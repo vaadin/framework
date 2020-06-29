@@ -443,7 +443,7 @@ public class PushHandler {
                 // can't call ErrorHandler, we (hopefully) don't have a lock
             }
         }
-        return session;        
+        return session; 
     }
 
     private static UI findUiUsingResource(AtmosphereResource resource,
