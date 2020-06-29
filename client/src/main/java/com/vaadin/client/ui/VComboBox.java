@@ -906,7 +906,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 // ComboBox itself may be incorrectly positioned, don't try to
                 // adjust horizontal popup position yet. Earlier width
                 // calculations must be performed anyway to avoid flickering.
-                if (top != topPosition) {
+                if (top != getAbsoluteTop()) {
                     // Variable 'left' still contains the original popupLeft,
                     // 'top' has been updated, thus vertical position needs
                     // adjusting.
@@ -935,7 +935,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             }
 
             // Only update the position if it has changed.
-            if (top != topPosition || left != getPopupLeft()) {
+            if (top != getAbsoluteTop() || left != getPopupLeft()) {
                 setPopupPosition(left, top);
             }
             menu.scrollSelectionIntoView();
