@@ -866,15 +866,20 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      */
     protected Result<T> handleUnparsableDateString(String dateString) {
         final Date parsedDate;
+        // Handle possible week number, which cannot be parsed client side due
+        // limitations in GWT
         if (this.getDateFormat().contains("w")) {
-            SimpleDateFormat autoCompletionWeekDateFormat = new SimpleDateFormat(this.getDateFormat());
+            SimpleDateFormat df = new SimpleDateFormat(this.getDateFormat());
             try {
-                parsedDate = autoCompletionWeekDateFormat.parse(dateString);
+                parsedDate = df.parse(dateString);
             } catch (ParseException e) {
                 return Result.error(getParseErrorMessage());
             }
-            LocalDate date = LocalDate.ofEpochDay((parsedDate.getTime())/24/60/60/1000);
-            date = date.plusDays(7);
+            ZoneId zi = this.getZoneId();
+            if (zi ==  null) {
+                zi = ZoneId.systemDefault();
+            }
+            LocalDate date = Instant.ofEpochMilli(parsedDate.getTime()).atZone(zi).toLocalDate();
             return Result.ok(date);
         } else {
             return Result.error(getParseErrorMessage());
