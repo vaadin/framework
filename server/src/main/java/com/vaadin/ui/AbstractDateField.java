@@ -17,9 +17,7 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -867,25 +865,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @return result that contains parsed Date as a value or an error
      */
     protected Result<T> handleUnparsableDateString(String dateString) {
-        final Date parsedDate;
-        // Handle possible week number, which cannot be parsed client side due
-        // limitations in GWT
-        if (this.getDateFormat().contains("w")) {
-            SimpleDateFormat df = new SimpleDateFormat(this.getDateFormat());
-            try {
-                parsedDate = df.parse(dateString);
-            } catch (ParseException e) {
-                return Result.error(getParseErrorMessage());
-            }
-            ZoneId zi = this.getZoneId();
-            if (zi ==  null) {
-                zi = ZoneId.systemDefault();
-            }
-            LocalDate date = Instant.ofEpochMilli(parsedDate.getTime()).atZone(zi).toLocalDate();
-            return Result.ok(date);
-        } else {
-            return Result.error(getParseErrorMessage());
-        }
+        return Result.error(getParseErrorMessage());
     }
 
     @Override
