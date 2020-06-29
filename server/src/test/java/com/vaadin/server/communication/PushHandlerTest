@@ -38,39 +38,29 @@ public class PushHandlerTest {
 
     @Test
     public void connectionLost_currentInstancesAreCleared()
-            throws SessionExpiredException {
-        try {
-            session = new MockVaadinSession() {
-                @Override
-                public Future<Void> access(Runnable runnable) {
-                    runnable.run();
-                    return Mockito.mock(Future.class);
-                }
-            };
-        } catch (ServiceException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+            throws SessionExpiredException, ServiceException {
+        session = new MockVaadinSession() {
+            @Override
+            public Future<Void> access(Runnable runnable) {
+                runnable.run();
+                return Mockito.mock(Future.class);
+            }
+        };
         VaadinSession.setCurrent(session);
         Assert.assertNotNull(VaadinSession.getCurrent());
         MockVaadinServletService service = null;
-        try {
-            service = new MockVaadinServletService() {
-                @Override
-                public com.vaadin.server.VaadinSession findVaadinSession(
-                        VaadinRequest request) throws SessionExpiredException {
-                    return session;
-                }
+        service = new MockVaadinServletService() {
+            @Override
+            public com.vaadin.server.VaadinSession findVaadinSession(
+                    VaadinRequest request) throws SessionExpiredException {
+                 return session;
+            }
 
-                @Override
-                public UI findUI(VaadinRequest request) {
-                    return null;
-                }
-            };
-        } catch (ServiceException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+            @Override
+            public UI findUI(VaadinRequest request) {
+                return null;
+            }
+        };
 
         service.init();
         PushHandler handler = new PushHandler(service);
