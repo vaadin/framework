@@ -15,9 +15,11 @@
  */
 package com.vaadin.ui;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -26,6 +28,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
+import com.vaadin.data.Result;
 import com.vaadin.data.validator.DateRangeValidator;
 import com.vaadin.data.validator.RangeValidator;
 import com.vaadin.shared.ui.datefield.AbstractTextualDateFieldState;
@@ -162,5 +165,28 @@ public abstract class AbstractLocalDateField
     protected LocalDate toType(TemporalAccessor temporalAccessor) {
         return temporalAccessor == null ? null
                 : LocalDate.from(temporalAccessor);
+    }
+
+    @Override
+    protected Result<LocalDate> handleUnparsableDateString(String dateString) {
+        final Date parsedDate;
+        // Handle possible week number, which cannot be parsed client side due
+        // limitations in GWT
+        if (this.getDateFormat().contains("w")) {
+            SimpleDateFormat df = new SimpleDateFormat(this.getDateFormat());
+            try {
+                parsedDate = df.parse(dateString);
+            } catch (ParseException e) {
+                return Result.error(getParseErrorMessage());
+            }
+            ZoneId zi = this.getZoneId();
+            if (zi ==  null) {
+                zi = ZoneId.systemDefault();
+            }
+            LocalDate date = Instant.ofEpochMilli(parsedDate.getTime()).atZone(zi).toLocalDate();
+            return Result.ok(date);
+        } else {
+            return super.handleUnparsableDateString(dateString);
+        }
     }
 }
