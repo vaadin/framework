@@ -44,6 +44,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
+import com.vaadin.util.CurrentInstance;
 
 import elemental.json.JsonException;
 
@@ -311,11 +312,39 @@ public class PushHandler {
     }
 
     void connectionLost(AtmosphereResourceEvent event) {
+        VaadinSession session = null;
+        try {
+            session = handleConnectionLost(event);
+        } finally {
+            if (session != null) {
+                session.access(new Runnable() {
+                    @Override
+                    public void run() {
+                        CurrentInstance.clearAll();
+                    }
+                });
+            }
+        }
+    }
+
+    private VaadinSession handleConnectionLost(AtmosphereResourceEvent event) {
         // We don't want to use callWithUi here, as it assumes there's a client
         // request active and does requestStart and requestEnd among other
         // things.
+        if (event == null) {
+            getLogger().log(Level.SEVERE,
+                    "Could not get event. This should never happen.");
+            return null;
+        }
 
         AtmosphereResource resource = event.getResource();
+
+        if (resource == null) {
+            getLogger().log(Level.SEVERE,
+                    "Could not get resource. This should never happen.");
+            return null;
+        }
+
         VaadinServletRequest vaadinRequest = new VaadinServletRequest(
                 resource.getRequest(), service);
         VaadinSession session = null;
@@ -325,7 +354,7 @@ public class PushHandler {
         } catch (ServiceException e) {
             getLogger().log(Level.SEVERE,
                     "Could not get session. This should never happen", e);
-            return;
+            return null;
         } catch (SessionExpiredException e) {
             // This happens at least if the server is restarted without
             // preserving the session. After restart the client reconnects, gets
@@ -334,7 +363,7 @@ public class PushHandler {
             getLogger().log(Level.FINER,
                     "Session expired before push disconnect event was received",
                     e);
-            return;
+            return session;
         }
 
         UI ui = null;
@@ -359,13 +388,13 @@ public class PushHandler {
                     getLogger().log(Level.FINE,
                             "Could not get UI. This should never happen,"
                                     + " except when reloading in Firefox and Chrome -"
-                                    + " see http://dev.vaadin.com/ticket/14251.");
-                    return;
+                                    + " see https://github.com/vaadin/framework/issues/5449.");
+                    return session;
                 } else {
                     getLogger().log(Level.INFO,
                             "No UI was found based on data in the request,"
                                     + " but a slower lookup based on the AtmosphereResource succeeded."
-                                    + " See http://dev.vaadin.com/ticket/14251 for more details.");
+                                    + " See https://github.com/vaadin/framework/issues/5449 for more details.");
                 }
             }
 
@@ -410,6 +439,7 @@ public class PushHandler {
                 // can't call ErrorHandler, we (hopefully) don't have a lock
             }
         }
+        return session;
     }
 
     private static UI findUiUsingResource(AtmosphereResource resource,
