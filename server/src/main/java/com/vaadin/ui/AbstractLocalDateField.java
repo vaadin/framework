@@ -171,7 +171,7 @@ public abstract class AbstractLocalDateField
     protected Result<LocalDate> handleUnparsableDateString(String dateString) {
         // Handle possible week number, which cannot be parsed client side due
         // limitations in GWT
-        if (this.getDateFormat().contains("w")) {
+        if (this.getDateFormat() != null && this.getDateFormat().contains("w")) {
             Date parsedDate;
             SimpleDateFormat df = new SimpleDateFormat(this.getDateFormat(),this.getLocale());
             try {
