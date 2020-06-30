@@ -173,7 +173,7 @@ public abstract class AbstractLocalDateField
         // limitations in GWT
         if (this.getDateFormat().contains("w")) {
             Date parsedDate;
-            SimpleDateFormat df = new SimpleDateFormat(this.getDateFormat());
+            SimpleDateFormat df = new SimpleDateFormat(this.getDateFormat(),this.getLocale());
             try {
                 parsedDate = df.parse(dateString);
             } catch (ParseException e) {
