@@ -15,7 +15,7 @@
  */
 package com.vaadin.v7.ui.components.colorpicker;
 
-import java.io.Serializable;
+import com.vaadin.event.SerializableEventListener;
 
 /**
  * The listener interface for receiving colorChange events. The class that is
@@ -30,7 +30,7 @@ import java.io.Serializable;
  * @see ColorChangeEvent
  */
 @Deprecated
-public interface ColorChangeListener extends Serializable {
+public interface ColorChangeListener extends SerializableEventListener {
 
     /**
      * Called when a new color has been selected.
