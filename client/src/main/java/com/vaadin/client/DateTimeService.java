@@ -39,9 +39,9 @@ public class DateTimeService {
 
     private static int[] maxDaysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30,
             31, 30, 31 };
-    private int[] yearDays = { 0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273,
+    private int[] yearDays = { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273,
             304, 334 };
-    private int[] leapYearDays = {0, 0, 31, 60, 91, 121, 152, 182, 213, 244, 274,
+    private int[] leapYearDays = { 0, 31, 60, 91, 121, 152, 182, 213, 244, 274,
             305, 335};
 
     private static final long MILLISECONDS_PER_DAY = 24 * 3600 * 1000;
@@ -396,14 +396,15 @@ public class DateTimeService {
         return result;
     }
 
-    // Calculate number of the week in the year based on Date
-    // Note, support for "ww" is missing GWT DateTimeFormat
-    // and java.util.Calendar is not supported in GWT
-    // Hence DIY method needed
-    // See: https://github.com/vaadin/framework/issues/10603
+    /*
+     * Calculate number of the week in the year based on Date
+     * Note, support for "ww" is missing GWT DateTimeFormat
+     * and java.util.Calendar is not supported in GWT
+     * Hence DIY method needed
+     */
     private String getWeek(Date date) {
         int year = date.getYear()+1900;
-        int month = date.getMonth()+1;
+        int month = date.getMonth();
         int day = date.getDate()+1;
         int weekDay = date.getDay();
         if (weekDay == 6) { 
@@ -417,12 +418,16 @@ public class DateTimeService {
         }
         int week;
         if (leap) {
-            week = (((leapYearDays[month] + day) - (weekDay + 7) % 7 + 7) / 7);
+            week = countWeek(leapYearDays, month, day, weekDay);
         } else {
-            week = (((yearDays[month] + day) - (weekDay + 7) % 7 + 7) / 7);
+            week = countWeek(yearDays, month, day, weekDay);        	
         }
-        return ""+week;
+    	return ""+week;
     }
+
+	private int countWeek(int[] days, int month, int day, int weekDay) {
+		return ((days[month] + day) - (weekDay + 7) % 7 + 7) / 7;
+	}
 
     private String formatWeekNumbers(Date date, String formatStr) {
         if (formatStr.contains("ww")) {
