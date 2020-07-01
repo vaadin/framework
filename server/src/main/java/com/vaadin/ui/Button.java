@@ -16,7 +16,6 @@
 
 package com.vaadin.ui;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Collection;
 
@@ -24,6 +23,7 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.event.Action;
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
@@ -303,7 +303,7 @@ public class Button extends AbstractFocusable
      * @since 3.0
      */
     @FunctionalInterface
-    public interface ClickListener extends Serializable {
+    public interface ClickListener extends SerializableEventListener {
 
         public static final Method BUTTON_CLICK_METHOD = ReflectTools
                 .findMethod(ClickListener.class, "buttonClick",

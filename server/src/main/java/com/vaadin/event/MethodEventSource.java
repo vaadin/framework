@@ -50,8 +50,8 @@ public interface MethodEventSource extends Serializable {
      * @param eventType
      *            the type of the listened event. Events of this type or its
      *            subclasses activate the listener.
-     * @param object
-     *            the object instance who owns the activation method.
+     * @param listener
+     *            the listener instance who owns the activation method.
      * @param method
      *            the activation method.
      * @return a registration object for removing the listener
@@ -62,7 +62,7 @@ public interface MethodEventSource extends Serializable {
      *             if {@code object} is {@code null}
      * @since 8.0
      */
-    public Registration addListener(Class<?> eventType, Object object,
+    public Registration addListener(Class<?> eventType, SerializableEventListener listener,
             Method method);
 
     /**
@@ -86,8 +86,8 @@ public interface MethodEventSource extends Serializable {
      * @param eventType
      *            the type of the listened event. Events of this type or its
      *            subclasses activate the listener.
-     * @param object
-     *            the object instance who owns the activation method.
+     * @param listener
+     *            the listener instance who owns the activation method.
      * @param methodName
      *            the name of the activation method.
      * @return a registration object for removing the listener
@@ -98,7 +98,7 @@ public interface MethodEventSource extends Serializable {
      *             if {@code object} is {@code null}
      * @since 8.0
      */
-    public Registration addListener(Class<?> eventType, Object object,
+    public Registration addListener(Class<?> eventType, SerializableEventListener listener,
             String methodName);
 
     /**
@@ -115,11 +115,11 @@ public interface MethodEventSource extends Serializable {
      *
      * @param eventType
      *            the exact event type the <code>object</code> listens to.
-     * @param target
+     * @param listener
      *            the target object that has registered to listen to events of
      *            type <code>eventType</code> with one or more methods.
      */
-    public void removeListener(Class<?> eventType, Object target);
+    public void removeListener(Class<?> eventType, SerializableEventListener listener);
 
     /**
      * Removes one registered listener method. The given method owned by the

@@ -34,6 +34,7 @@ import java.util.WeakHashMap;
 
 import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
@@ -743,19 +744,19 @@ public abstract class AbstractClientConnector
      * @param eventType
      *            the type of the listened event. Events of this type or its
      *            subclasses activate the listener.
-     * @param target
-     *            the object instance who owns the activation method.
+     * @param listener
+     *            the listener instance who owns the activation method.
      * @param method
      *            the activation method.
      * @return a registration object for removing the listener
      * @since 8.0
      */
     protected Registration addListener(String eventIdentifier,
-            Class<?> eventType, Object target, Method method) {
+            Class<?> eventType, SerializableEventListener listener, Method method) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
-        return eventRouter.addListener(eventType, target, method,
+        return eventRouter.addListener(eventType, listener, method,
                 eventIdentifier, getState());
     }
 
@@ -792,8 +793,8 @@ public abstract class AbstractClientConnector
      *            the identifier of the event to stop listening for
      * @param eventType
      *            the exact event type the <code>object</code> listens to.
-     * @param target
-     *            the target object that has registered to listen to events of
+     * @param listener
+     *            the listener that has registered to listen to events of
      *            type <code>eventType</code> with one or more methods.
      *
      * @since 6.2
@@ -803,9 +804,9 @@ public abstract class AbstractClientConnector
      */
     @Deprecated
     protected void removeListener(String eventIdentifier, Class<?> eventType,
-            Object target) {
+            SerializableEventListener listener) {
         if (eventRouter != null) {
-            eventRouter.removeListener(eventType, target);
+            eventRouter.removeListener(eventType, listener);
             if (!eventRouter.hasListeners(eventType)) {
                 ComponentStateUtil.removeRegisteredEventListener(getState(),
                         eventIdentifier);
@@ -827,19 +828,19 @@ public abstract class AbstractClientConnector
      * @param eventType
      *            the type of the listened event. Events of this type or its
      *            subclasses activate the listener.
-     * @param target
-     *            the object instance who owns the activation method.
+     * @param listener
+     *            the listener instance who owns the activation method.
      * @param method
      *            the activation method.
      * @return a registration object for removing the listener
      */
     @Override
-    public Registration addListener(Class<?> eventType, Object target,
+    public Registration addListener(Class<?> eventType, SerializableEventListener listener,
             Method method) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
-        return eventRouter.addListener(eventType, target, method);
+        return eventRouter.addListener(eventType, listener, method);
     }
 
     /**
@@ -868,7 +869,7 @@ public abstract class AbstractClientConnector
      * @param eventType
      *            the type of the listened event. Events of this type or its
      *            subclasses activate the listener.
-     * @param target
+     * @param listener
      *            the object instance who owns the activation method.
      * @param methodName
      *            the name of the activation method.
@@ -880,12 +881,12 @@ public abstract class AbstractClientConnector
      */
     @Override
     @Deprecated
-    public Registration addListener(Class<?> eventType, Object target,
+    public Registration addListener(Class<?> eventType, SerializableEventListener listener,
             String methodName) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
-        return eventRouter.addListener(eventType, target, methodName);
+        return eventRouter.addListener(eventType, listener, methodName);
     }
 
     /**
@@ -902,17 +903,17 @@ public abstract class AbstractClientConnector
      *
      * @param eventType
      *            the exact event type the <code>object</code> listens to.
-     * @param target
-     *            the target object that has registered to listen to events of
+     * @param listener
+     *            the listener that has registered to listen to events of
      *            type <code>eventType</code> with one or more methods.
      * @deprecated use a {@link Registration} from {@link #addListener} to
      *             remove a listener
      */
     @Deprecated
     @Override
-    public void removeListener(Class<?> eventType, Object target) {
+    public void removeListener(Class<?> eventType, SerializableEventListener listener) {
         if (eventRouter != null) {
-            eventRouter.removeListener(eventType, target);
+            eventRouter.removeListener(eventType, listener);
         }
     }
 

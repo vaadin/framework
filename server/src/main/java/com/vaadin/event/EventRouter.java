@@ -53,13 +53,13 @@ public class EventRouter implements MethodEventSource {
      * use the default documentation from implemented interface.
      */
     @Override
-    public Registration addListener(Class<?> eventType, Object object,
+    public Registration addListener(Class<?> eventType, SerializableEventListener listener,
             Method method) {
-        Objects.requireNonNull(object, "Listener must not be null.");
+        Objects.requireNonNull(listener, "Listener must not be null.");
         if (listenerList == null) {
             listenerList = new LinkedHashSet<>();
         }
-        ListenerMethod listenerMethod = new ListenerMethod(eventType, object,
+        ListenerMethod listenerMethod = new ListenerMethod(eventType, listener,
                 method);
         listenerList.add(listenerMethod);
         return () -> listenerList.remove(listenerMethod);
@@ -91,8 +91,8 @@ public class EventRouter implements MethodEventSource {
      * @param eventType
      *            the type of the listened event. Events of this type or its
      *            subclasses activate the listener.
-     * @param target
-     *            the object instance who owns the activation method.
+     * @param listener
+     *            the listener instance who owns the activation method.
      * @param method
      *            the activation method.
      * @param eventIdentifier
@@ -106,13 +106,13 @@ public class EventRouter implements MethodEventSource {
      *             if {@code target} is {@code null}
      * @since 8.2
      */
-    public Registration addListener(Class<?> eventType, Object target,
+    public Registration addListener(Class<?> eventType, SerializableEventListener listener,
             Method method, String eventIdentifier, SharedState state) {
-        Objects.requireNonNull(target, "Listener must not be null.");
+        Objects.requireNonNull(listener, "Listener must not be null.");
         if (listenerList == null) {
             listenerList = new LinkedHashSet<>();
         }
-        ListenerMethod listenerMethod = new ListenerMethod(eventType, target,
+        ListenerMethod listenerMethod = new ListenerMethod(eventType, listener,
                 method);
         listenerList.add(listenerMethod);
 
@@ -133,13 +133,13 @@ public class EventRouter implements MethodEventSource {
      * here, we use the default documentation from implemented interface.
      */
     @Override
-    public Registration addListener(Class<?> eventType, Object object,
+    public Registration addListener(Class<?> eventType, SerializableEventListener listener,
             String methodName) {
-        Objects.requireNonNull(object, "Listener must not be null.");
+        Objects.requireNonNull(listener, "Listener must not be null.");
         if (listenerList == null) {
             listenerList = new LinkedHashSet<>();
         }
-        ListenerMethod listenerMethod = new ListenerMethod(eventType, object,
+        ListenerMethod listenerMethod = new ListenerMethod(eventType, listener,
                 methodName);
         listenerList.add(listenerMethod);
         return () -> listenerList.remove(listenerMethod);
@@ -151,12 +151,12 @@ public class EventRouter implements MethodEventSource {
      * interface.
      */
     @Override
-    public void removeListener(Class<?> eventType, Object target) {
+    public void removeListener(Class<?> eventType, SerializableEventListener listener) {
         if (listenerList != null) {
             final Iterator<ListenerMethod> i = listenerList.iterator();
             while (i.hasNext()) {
                 final ListenerMethod lm = i.next();
-                if (lm.matches(eventType, target)) {
+                if (lm.matches(eventType, listener)) {
                     i.remove();
                     return;
                 }

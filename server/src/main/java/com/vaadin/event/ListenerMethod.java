@@ -65,7 +65,7 @@ public class ListenerMethod implements EventListener, Serializable {
     /**
      * The object containing the trigger method.
      */
-    private final Object target;
+    private final SerializableEventListener target;
 
     /**
      * The trigger method to call when an event passing the given criteria
@@ -174,7 +174,7 @@ public class ListenerMethod implements EventListener, Serializable {
      *             if <code>method</code> is not a member of <code>target</code>
      *             .
      */
-    public ListenerMethod(Class<?> eventType, Object target, Method method,
+    public ListenerMethod(Class<?> eventType, SerializableEventListener target, Method method,
             Object[] arguments, int eventArgumentIndex)
             throws IllegalArgumentException {
 
@@ -238,7 +238,7 @@ public class ListenerMethod implements EventListener, Serializable {
      *             unless exactly one match <code>methodName</code> is found in
      *             <code>target</code>.
      */
-    public ListenerMethod(Class<?> eventType, Object target, String methodName,
+    public ListenerMethod(Class<?> eventType, SerializableEventListener target, String methodName,
             Object[] arguments, int eventArgumentIndex)
             throws IllegalArgumentException {
 
@@ -301,7 +301,7 @@ public class ListenerMethod implements EventListener, Serializable {
      *             if <code>method</code> is not a member of <code>target</code>
      *             .
      */
-    public ListenerMethod(Class<?> eventType, Object target, Method method,
+    public ListenerMethod(Class<?> eventType, SerializableEventListener target, Method method,
             Object[] arguments) throws IllegalArgumentException {
 
         // Check that the object is of correct type
@@ -347,7 +347,7 @@ public class ListenerMethod implements EventListener, Serializable {
      *             unless exactly one match <code>methodName</code> is found in
      *             <code>object</code>.
      */
-    public ListenerMethod(Class<?> eventType, Object target, String methodName,
+    public ListenerMethod(Class<?> eventType, SerializableEventListener target, String methodName,
             Object[] arguments) throws IllegalArgumentException {
 
         // Find the correct method
@@ -391,7 +391,7 @@ public class ListenerMethod implements EventListener, Serializable {
      *             if <code>method</code> is not a member of <code>object</code>
      *             .
      */
-    public ListenerMethod(Class<?> eventType, Object target, Method method)
+    public ListenerMethod(Class<?> eventType, SerializableEventListener target, Method method)
             throws IllegalArgumentException {
 
         // Checks that the object is of correct type
@@ -446,7 +446,7 @@ public class ListenerMethod implements EventListener, Serializable {
      *             unless exactly one match <code>methodName</code> is found in
      *             <code>target</code>.
      */
-    public ListenerMethod(Class<?> eventType, Object target, String methodName)
+    public ListenerMethod(Class<?> eventType, SerializableEventListener target, String methodName)
             throws IllegalArgumentException {
 
         // Finds the correct method
