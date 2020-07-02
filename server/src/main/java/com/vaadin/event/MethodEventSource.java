@@ -92,8 +92,8 @@ public interface MethodEventSource extends Serializable {
      *             if {@code object} is {@code null}
      * @since 8.12
      */
-    public Registration addListener(Class<?> eventType, SerializableEventListener listener,
-            Method method);
+    public Registration addListener(Class<?> eventType,
+            SerializableEventListener listener, Method method);
 
     /**
      * Registers a new listener with the specified activation method to listen
@@ -165,8 +165,8 @@ public interface MethodEventSource extends Serializable {
      *             if {@code object} is {@code null}
      * @since 8.12
      */
-    public Registration addListener(Class<?> eventType, SerializableEventListener object,
-            String methodName);
+    public Registration addListener(Class<?> eventType,
+            SerializableEventListener object, String methodName);
 
     /**
      * Removes all registered listeners matching the given parameters. Since
@@ -204,11 +204,12 @@ public interface MethodEventSource extends Serializable {
      * @param eventType
      *            the exact event type the <code>object</code> listens to.
      * @param listener
-     *            the listener that has registered to listen to events of
-     *            type <code>eventType</code> with one or more methods.
+     *            the listener that has registered to listen to events of type
+     *            <code>eventType</code> with one or more methods.
      * @since 8.12
      */
-    public void removeListener(Class<?> eventType, SerializableEventListener listener);
+    public void removeListener(Class<?> eventType,
+            SerializableEventListener listener);
 
     /**
      * Removes one registered listener method. The given method owned by the

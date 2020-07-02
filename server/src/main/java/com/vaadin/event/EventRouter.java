@@ -59,8 +59,8 @@ public class EventRouter implements MethodEventSource {
     public Registration addListener(Class<?> eventType, Object object,
             Method method) {
         Objects.requireNonNull(object, "Listener must not be null.");
-        getLogger().log(Level.WARNING,"Adding listeners with type Object is"
-                + " deprecated event should extend SerializableEventListener");
+        getLogger().log(Level.WARNING, "Adding listeners with type Object is"
+                + " deprecated, event listener should extend SerializableEventListener");
         if (listenerList == null) {
             listenerList = new LinkedHashSet<>();
         }
@@ -76,8 +76,8 @@ public class EventRouter implements MethodEventSource {
      * use the default documentation from implemented interface.
      */
     @Override
-    public Registration addListener(Class<?> eventType, SerializableEventListener listener,
-            Method method) {
+    public Registration addListener(Class<?> eventType,
+            SerializableEventListener listener, Method method) {
         Objects.requireNonNull(listener, "Listener must not be null.");
         if (listenerList == null) {
             listenerList = new LinkedHashSet<>();
@@ -110,7 +110,11 @@ public class EventRouter implements MethodEventSource {
      * For more information on the inheritable event mechanism see the
      * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
-     *
+     * 
+     * @deprecated As of 8.12. Use
+     *             {@link #addListener(Class, SerializableEventListener, Method, String, SharedState)}
+     *             instead
+     * 
      * @param eventType
      *            the type of the listened event. Events of this type or its
      *            subclasses activate the listener.
@@ -132,8 +136,8 @@ public class EventRouter implements MethodEventSource {
     @Deprecated
     public Registration addListener(Class<?> eventType, Object target,
             Method method, String eventIdentifier, SharedState state) {
-        getLogger().log(Level.WARNING,"Adding listeners with type Object is"
-                + " deprecated event should extend SerializableEventListener");
+        getLogger().log(Level.WARNING, "Adding listeners with type Object is"
+                + " deprecated, event listener should extend SerializableEventListener");
         if (listenerList == null) {
             listenerList = new LinkedHashSet<>();
         }
@@ -193,8 +197,9 @@ public class EventRouter implements MethodEventSource {
      *             if {@code target} is {@code null}
      * @since 8.12
      */
-    public Registration addListener(Class<?> eventType, SerializableEventListener listener,
-            Method method, String eventIdentifier, SharedState state) {
+    public Registration addListener(Class<?> eventType,
+            SerializableEventListener listener, Method method,
+            String eventIdentifier, SharedState state) {
         if (listenerList == null) {
             listenerList = new LinkedHashSet<>();
         }
@@ -223,8 +228,8 @@ public class EventRouter implements MethodEventSource {
     public Registration addListener(Class<?> eventType, Object object,
             String methodName) {
         Objects.requireNonNull(object, "Listener must not be null.");
-        getLogger().log(Level.WARNING,"Adding listeners with type Object is"
-                + " deprecated event should extend SerializableEventListener");
+        getLogger().log(Level.WARNING, "Adding listeners with type Object is"
+                + " deprecated, event listener should extend SerializableEventListener");
         if (listenerList == null) {
             listenerList = new LinkedHashSet<>();
         }
@@ -240,8 +245,8 @@ public class EventRouter implements MethodEventSource {
      * here, we use the default documentation from implemented interface.
      */
     @Override
-    public Registration addListener(Class<?> eventType, SerializableEventListener listener,
-            String methodName) {
+    public Registration addListener(Class<?> eventType,
+            SerializableEventListener listener, String methodName) {
         Objects.requireNonNull(listener, "Listener must not be null.");
         if (listenerList == null) {
             listenerList = new LinkedHashSet<>();
@@ -278,7 +283,8 @@ public class EventRouter implements MethodEventSource {
      * interface.
      */
     @Override
-    public void removeListener(Class<?> eventType, SerializableEventListener listener) {
+    public void removeListener(Class<?> eventType,
+            SerializableEventListener listener) {
         removeListener(eventType, (Object) listener);
     }
 

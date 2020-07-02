@@ -171,8 +171,7 @@ public class ListenerMethod implements EventListener, Serializable {
      *            will not be passed to the trigger method, though it is still
      *            called.
      * @throws IllegalArgumentException
-     *             if <code>method</code> is not a member of <code>target</code>
-     *             .
+     *             if <code>method</code> is not a member of <code>target</code>.
      */
     @Deprecated
     public ListenerMethod(Class<?> eventType, Object target, Method method,
@@ -237,13 +236,14 @@ public class ListenerMethod implements EventListener, Serializable {
      *            will not be passed to the trigger method, though it is still
      *            called.
      * @throws IllegalArgumentException
-     *             if <code>method</code> is not a member of <code>target</code>
-     *             .
+     *             if <code>method</code> is not a member of <code>target</code>.
      */
-    public ListenerMethod(Class<?> eventType, SerializableEventListener listener, Method method,
+    public ListenerMethod(Class<?> eventType,
+            SerializableEventListener listener, Method method,
             Object[] arguments, int eventArgumentIndex)
             throws IllegalArgumentException {
-        this(eventType,(Object) listener,method,arguments,eventArgumentIndex);
+        this(eventType, (Object) listener, method, arguments,
+                eventArgumentIndex);
     }
 
     /**
@@ -346,10 +346,12 @@ public class ListenerMethod implements EventListener, Serializable {
      *             unless exactly one match <code>methodName</code> is found in
      *             <code>target</code>.
      */
-    public ListenerMethod(Class<?> eventType, SerializableEventListener listener, String methodName,
+    public ListenerMethod(Class<?> eventType,
+            SerializableEventListener listener, String methodName,
             Object[] arguments, int eventArgumentIndex)
             throws IllegalArgumentException {
-        this(eventType,(Object) listener, methodName, arguments, eventArgumentIndex);
+        this(eventType, (Object) listener, methodName, arguments,
+                eventArgumentIndex);
     }
 
     /**
@@ -375,8 +377,7 @@ public class ListenerMethod implements EventListener, Serializable {
      * @param arguments
      *            the arguments to be passed to the trigger method.
      * @throws IllegalArgumentException
-     *             if <code>method</code> is not a member of <code>target</code>
-     *             .
+     *             if <code>method</code> is not a member of <code>target</code>.
      */
     @Deprecated
     public ListenerMethod(Class<?> eventType, Object target, Method method,
@@ -419,12 +420,12 @@ public class ListenerMethod implements EventListener, Serializable {
      * @param arguments
      *            the arguments to be passed to the trigger method.
      * @throws IllegalArgumentException
-     *             if <code>method</code> is not a member of <code>target</code>
-     *             .
+     *             if <code>method</code> is not a member of <code>target</code>.
      */
-    public ListenerMethod(Class<?> eventType, SerializableEventListener listener, Method method,
+    public ListenerMethod(Class<?> eventType,
+            SerializableEventListener listener, Method method,
             Object[] arguments) throws IllegalArgumentException {
-        this(eventType,(Object) listener, method, arguments);
+        this(eventType, (Object) listener, method, arguments);
     }
 
     /**
@@ -507,9 +508,10 @@ public class ListenerMethod implements EventListener, Serializable {
      *             unless exactly one match <code>methodName</code> is found in
      *             <code>object</code>.
      */
-    public ListenerMethod(Class<?> eventType, SerializableEventListener listener, String methodName,
+    public ListenerMethod(Class<?> eventType,
+            SerializableEventListener listener, String methodName,
             Object[] arguments) throws IllegalArgumentException {
-        this(eventType,(Object) listener,methodName,arguments);
+        this(eventType, (Object) listener, methodName, arguments);
     }
 
     /**
@@ -532,8 +534,7 @@ public class ListenerMethod implements EventListener, Serializable {
      * @param method
      *            the trigger method.
      * @throws IllegalArgumentException
-     *             if <code>method</code> is not a member of <code>object</code>
-     *             .
+     *             if <code>method</code> is not a member of <code>object</code>.
      */
     @Deprecated
     public ListenerMethod(Class<?> eventType, Object target, Method method)
@@ -585,12 +586,12 @@ public class ListenerMethod implements EventListener, Serializable {
      * @param method
      *            the trigger method.
      * @throws IllegalArgumentException
-     *             if <code>method</code> is not a member of <code>object</code>
-     *             .
+     *             if <code>method</code> is not a member of <code>object</code>.
      */
-    public ListenerMethod(Class<?> eventType, SerializableEventListener listener, Method method)
+    public ListenerMethod(Class<?> eventType,
+            SerializableEventListener listener, Method method)
             throws IllegalArgumentException {
-        this(eventType,(Object) listener, method);
+        this(eventType, (Object) listener, method);
     }
 
     /**
@@ -679,9 +680,10 @@ public class ListenerMethod implements EventListener, Serializable {
      *             unless exactly one match <code>methodName</code> is found in
      *             <code>target</code>.
      */
-    public ListenerMethod(Class<?> eventType, SerializableEventListener listener, String methodName)
+    public ListenerMethod(Class<?> eventType,
+            SerializableEventListener listener, String methodName)
             throws IllegalArgumentException {
-        this(eventType,(Object) listener, methodName);
+        this(eventType, (Object) listener, methodName);
     }
 
     /**
@@ -760,7 +762,7 @@ public class ListenerMethod implements EventListener, Serializable {
      * @return <code>true</code> if <code>target</code> is the same object as
      *         the one stored in this object, <code>eventType</code> equals with
      *         the event type stored in this object and <code>method</code>
-     *         equals with the method stored in this object
+     *         equals with the method stored in this object.
      */
     public boolean matches(Class<?> eventType, Object target, Method method) {
         return (this.target == target) && (eventType.equals(this.eventType)

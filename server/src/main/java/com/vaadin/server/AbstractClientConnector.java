@@ -736,9 +736,10 @@ public abstract class AbstractClientConnector
      * For more information on the inheritable event mechanism see the
      * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
-     * @deprecated As of 8.12. Use strongly typed 
-     * {@link #addListener(String, Class, SerializableEventListener, Method)} 
-     * method instead.
+     * 
+     * @deprecated As of 8.12. Use strongly typed
+     *             {@link #addListener(String, Class, SerializableEventListener, Method)}
+     *             method instead.
      *
      * @param eventIdentifier
      *            the identifier of the event to listen for
@@ -791,7 +792,8 @@ public abstract class AbstractClientConnector
      * @since 8.12
      */
     protected Registration addListener(String eventIdentifier,
-            Class<?> eventType, SerializableEventListener listener, Method method) {
+            Class<?> eventType, SerializableEventListener listener,
+            Method method) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
@@ -863,9 +865,10 @@ public abstract class AbstractClientConnector
      * For more information on the inheritable event mechanism see the
      * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
-     * @deprecated As of 8.12. Use strongly typed 
-     * {@link #addListener(Class, SerializableEventListener, Method)}
-     * method instead.
+     * 
+     * @deprecated As of 8.12. Use strongly typed
+     *             {@link #addListener(Class, SerializableEventListener, Method)}
+     *             method instead.
      *
      * @param eventType
      *            the type of the listened event. Events of this type or its
@@ -909,8 +912,8 @@ public abstract class AbstractClientConnector
      */
 
     @Override
-    public Registration addListener(Class<?> eventType, SerializableEventListener listener,
-            Method method) {
+    public Registration addListener(Class<?> eventType,
+            SerializableEventListener listener, Method method) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
@@ -949,8 +952,10 @@ public abstract class AbstractClientConnector
      *            the name of the activation method.
      * @return a registration object for removing the listener
      * @deprecated As of 7.0. This method should be avoided. Use
-     *             {@link #addListener(Class, SerializableEventListener, Method)} or
-     *             {@link #addListener(String, Class, SerializableEventListener, Method)} instead.
+     *             {@link #addListener(Class, SerializableEventListener, Method)}
+     *             or
+     *             {@link #addListener(String, Class, SerializableEventListener, Method)}
+     *             instead.
      * @since 8.0
      */
     @Override
@@ -995,14 +1000,16 @@ public abstract class AbstractClientConnector
      *            the name of the activation method.
      * @return a registration object for removing the listener
      * @deprecated As of 7.0. This method should be avoided. Use
-     *             {@link #addListener(Class, SerializableEventListener, Method)} or
-     *             {@link #addListener(String, Class, SerializableEventListener, Method)} instead.
+     *             {@link #addListener(Class, SerializableEventListener, Method)}
+     *             or
+     *             {@link #addListener(String, Class, SerializableEventListener, Method)}
+     *             instead.
      * @since 8.12
      */
     @Override
     @Deprecated
-    public Registration addListener(Class<?> eventType, SerializableEventListener listener,
-            String methodName) {
+    public Registration addListener(Class<?> eventType,
+            SerializableEventListener listener, String methodName) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
@@ -1052,15 +1059,16 @@ public abstract class AbstractClientConnector
      * @param eventType
      *            the exact event type the <code>object</code> listens to.
      * @param listener
-     *            the listener that has registered to listen to events of
-     *            type <code>eventType</code> with one or more methods.
+     *            the listener that has registered to listen to events of type
+     *            <code>eventType</code> with one or more methods.
      * @deprecated use a {@link Registration} from {@link #addListener} to
      *             remove a listener
      * @since 8.12
      */
     @Deprecated
     @Override
-    public void removeListener(Class<?> eventType, SerializableEventListener listener) {
+    public void removeListener(Class<?> eventType,
+            SerializableEventListener listener) {
         if (eventRouter != null) {
             eventRouter.removeListener(eventType, listener);
         }
