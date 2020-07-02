@@ -999,7 +999,9 @@ public abstract class AbstractClientConnector
      * @param methodName
      *            the name of the activation method.
      * @return a registration object for removing the listener
-     * @deprecated As of 7.0. This method should be avoided. Use
+     * @deprecated This method has only been added for ease of migration and
+     *             should be avoided in new code. This method should be avoided.
+     *             Use
      *             {@link #addListener(Class, SerializableEventListener, Method)}
      *             or
      *             {@link #addListener(String, Class, SerializableEventListener, Method)}
