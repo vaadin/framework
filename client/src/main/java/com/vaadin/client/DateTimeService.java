@@ -420,14 +420,14 @@ public class DateTimeService {
         if (leap) {
             week = countWeek(leapYearDays, month, day, weekDay);
         } else {
-            week = countWeek(yearDays, month, day, weekDay);        	
+            week = countWeek(yearDays, month, day, weekDay);
         }
-    	return ""+week;
+        return ""+week;
     }
 
-	private int countWeek(int[] days, int month, int day, int weekDay) {
-		return ((days[month] + day) - (weekDay + 7) % 7 + 7) / 7;
-	}
+    private int countWeek(int[] days, int month, int day, int weekDay) {
+        return ((days[month] + day) - (weekDay + 7) % 7 + 7) / 7;
+    }
 
     private String formatWeekNumbers(Date date, String formatStr) {
         if (formatStr.contains("ww")) {
