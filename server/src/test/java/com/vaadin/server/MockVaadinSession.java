@@ -18,6 +18,10 @@ public class MockVaadinSession extends VaadinSession {
         super(service);
     }
 
+    public MockVaadinSession() throws ServiceException {
+        super(new MockVaadinServletService());
+    }
+
     @Override
     public void close() {
         super.close();
