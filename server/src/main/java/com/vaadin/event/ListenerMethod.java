@@ -65,7 +65,7 @@ public class ListenerMethod implements EventListener, Serializable {
     /**
      * The object containing the trigger method.
      */
-    private final SerializableEventListener target;
+    private final Object target;
 
     /**
      * The trigger method to call when an event passing the given criteria
@@ -174,7 +174,8 @@ public class ListenerMethod implements EventListener, Serializable {
      *             if <code>method</code> is not a member of <code>target</code>
      *             .
      */
-    public ListenerMethod(Class<?> eventType, SerializableEventListener target, Method method,
+    @Deprecated
+    public ListenerMethod(Class<?> eventType, Object target, Method method,
             Object[] arguments, int eventArgumentIndex)
             throws IllegalArgumentException {
 
@@ -205,6 +206,44 @@ public class ListenerMethod implements EventListener, Serializable {
         this.method = method;
         this.arguments = arguments;
         this.eventArgumentIndex = eventArgumentIndex;
+    }
+
+    /**
+     * <p>
+     * Constructs a new event listener from a trigger method, it's arguments and
+     * the argument index specifying which one is replaced with the event object
+     * when the trigger method is called.
+     * </p>
+     *
+     * <p>
+     * This constructor gets the trigger method as a parameter so it does not
+     * need to reflect to find it out.
+     * </p>
+     *
+     * @param eventType
+     *            the event type that is listener listens to. All events of this
+     *            kind (or its subclasses) result in calling the trigger method.
+     * @param listener
+     *            the listener instance that contains the trigger method
+     * @param method
+     *            the trigger method
+     * @param arguments
+     *            the arguments to be passed to the trigger method
+     * @param eventArgumentIndex
+     *            An index to the argument list. This index points out the
+     *            argument that is replaced with the event object before the
+     *            argument set is passed to the trigger method. If the
+     *            eventArgumentIndex is negative, the triggering event object
+     *            will not be passed to the trigger method, though it is still
+     *            called.
+     * @throws IllegalArgumentException
+     *             if <code>method</code> is not a member of <code>target</code>
+     *             .
+     */
+    public ListenerMethod(Class<?> eventType, SerializableEventListener listener, Method method,
+            Object[] arguments, int eventArgumentIndex)
+            throws IllegalArgumentException {
+        this(eventType,(Object) listener,method,arguments,eventArgumentIndex);
     }
 
     /**
@@ -238,7 +277,8 @@ public class ListenerMethod implements EventListener, Serializable {
      *             unless exactly one match <code>methodName</code> is found in
      *             <code>target</code>.
      */
-    public ListenerMethod(Class<?> eventType, SerializableEventListener target, String methodName,
+    @Deprecated
+    public ListenerMethod(Class<?> eventType, Object target, String methodName,
             Object[] arguments, int eventArgumentIndex)
             throws IllegalArgumentException {
 
@@ -277,6 +317,43 @@ public class ListenerMethod implements EventListener, Serializable {
 
     /**
      * <p>
+     * Constructs a new event listener from a trigger method name, it's
+     * arguments and the argument index specifying which one is replaced with
+     * the event object. The actual trigger method is reflected from
+     * <code>object</code>, and <code>java.lang.IllegalArgumentException</code>
+     * is thrown unless exactly one match is found.
+     * </p>
+     *
+     * @param eventType
+     *            the event type that is listener listens to. All events of this
+     *            kind (or its subclasses) result in calling the trigger method.
+     * @param listener
+     *            the listener instance that contains the trigger method.
+     * @param methodName
+     *            the name of the trigger method. If the object does not contain
+     *            the method or it contains more than one matching methods
+     *            <code>java.lang.IllegalArgumentException</code> is thrown.
+     * @param arguments
+     *            the arguments to be passed to the trigger method.
+     * @param eventArgumentIndex
+     *            An index to the argument list. This index points out the
+     *            argument that is replaced with the event object before the
+     *            argument set is passed to the trigger method. If the
+     *            eventArgumentIndex is negative, the triggering event object
+     *            will not be passed to the trigger method, though it is still
+     *            called.
+     * @throws IllegalArgumentException
+     *             unless exactly one match <code>methodName</code> is found in
+     *             <code>target</code>.
+     */
+    public ListenerMethod(Class<?> eventType, SerializableEventListener listener, String methodName,
+            Object[] arguments, int eventArgumentIndex)
+            throws IllegalArgumentException {
+        this(eventType,(Object) listener, methodName, arguments, eventArgumentIndex);
+    }
+
+    /**
+     * <p>
      * Constructs a new event listener from the trigger method and it's
      * arguments. Since the the index to the replaced parameter is not specified
      * the event triggering this listener will not be passed to the trigger
@@ -301,7 +378,8 @@ public class ListenerMethod implements EventListener, Serializable {
      *             if <code>method</code> is not a member of <code>target</code>
      *             .
      */
-    public ListenerMethod(Class<?> eventType, SerializableEventListener target, Method method,
+    @Deprecated
+    public ListenerMethod(Class<?> eventType, Object target, Method method,
             Object[] arguments) throws IllegalArgumentException {
 
         // Check that the object is of correct type
@@ -316,6 +394,37 @@ public class ListenerMethod implements EventListener, Serializable {
         this.method = method;
         this.arguments = arguments;
         eventArgumentIndex = -1;
+    }
+
+    /**
+     * <p>
+     * Constructs a new event listener from the trigger method and it's
+     * arguments. Since the the index to the replaced parameter is not specified
+     * the event triggering this listener will not be passed to the trigger
+     * method.
+     * </p>
+     *
+     * <p>
+     * This constructor gets the trigger method as a parameter so it does not
+     * need to reflect to find it out.
+     * </p>
+     *
+     * @param eventType
+     *            the event type that is listener listens to. All events of this
+     *            kind (or its subclasses) result in calling the trigger method.
+     * @param listener
+     *            the listener instance that contains the trigger method.
+     * @param method
+     *            the trigger method.
+     * @param arguments
+     *            the arguments to be passed to the trigger method.
+     * @throws IllegalArgumentException
+     *             if <code>method</code> is not a member of <code>target</code>
+     *             .
+     */
+    public ListenerMethod(Class<?> eventType, SerializableEventListener listener, Method method,
+            Object[] arguments) throws IllegalArgumentException {
+        this(eventType,(Object) listener, method, arguments);
     }
 
     /**
@@ -347,7 +456,8 @@ public class ListenerMethod implements EventListener, Serializable {
      *             unless exactly one match <code>methodName</code> is found in
      *             <code>object</code>.
      */
-    public ListenerMethod(Class<?> eventType, SerializableEventListener target, String methodName,
+    @Deprecated
+    public ListenerMethod(Class<?> eventType, Object target, String methodName,
             Object[] arguments) throws IllegalArgumentException {
 
         // Find the correct method
@@ -366,6 +476,40 @@ public class ListenerMethod implements EventListener, Serializable {
         this.target = target;
         this.arguments = arguments;
         eventArgumentIndex = -1;
+    }
+
+    /**
+     * <p>
+     * Constructs a new event listener from a trigger method name and it's
+     * arguments. Since the the index to the replaced parameter is not specified
+     * the event triggering this listener will not be passed to the trigger
+     * method.
+     * </p>
+     *
+     * <p>
+     * The actual trigger method is reflected from <code>listener</code>, and
+     * <code>java.lang.IllegalArgumentException</code> is thrown unless exactly
+     * one match is found.
+     * </p>
+     *
+     * @param eventType
+     *            the event type that is listener listens to. All events of this
+     *            kind (or its subclasses) result in calling the trigger method.
+     * @param listener
+     *            the listener instance that contains the trigger method.
+     * @param methodName
+     *            the name of the trigger method. If the object does not contain
+     *            the method or it contains more than one matching methods
+     *            <code>java.lang.IllegalArgumentException</code> is thrown.
+     * @param arguments
+     *            the arguments to be passed to the trigger method.
+     * @throws IllegalArgumentException
+     *             unless exactly one match <code>methodName</code> is found in
+     *             <code>object</code>.
+     */
+    public ListenerMethod(Class<?> eventType, SerializableEventListener listener, String methodName,
+            Object[] arguments) throws IllegalArgumentException {
+        this(eventType,(Object) listener,methodName,arguments);
     }
 
     /**
@@ -391,7 +535,8 @@ public class ListenerMethod implements EventListener, Serializable {
      *             if <code>method</code> is not a member of <code>object</code>
      *             .
      */
-    public ListenerMethod(Class<?> eventType, SerializableEventListener target, Method method)
+    @Deprecated
+    public ListenerMethod(Class<?> eventType, Object target, Method method)
             throws IllegalArgumentException {
 
         // Checks that the object is of correct type
@@ -422,6 +567,34 @@ public class ListenerMethod implements EventListener, Serializable {
 
     /**
      * <p>
+     * Constructs a new event listener from a trigger method. Since the argument
+     * list is unspecified no parameters are passed to the trigger method when
+     * the listener is triggered.
+     * </p>
+     *
+     * <p>
+     * This constructor gets the trigger method as a parameter so it does not
+     * need to reflect to find it out.
+     * </p>
+     *
+     * @param eventType
+     *            the event type that is listener listens to. All events of this
+     *            kind (or its subclasses) result in calling the trigger method.
+     * @param listener
+     *            the listener instance that contains the trigger method.
+     * @param method
+     *            the trigger method.
+     * @throws IllegalArgumentException
+     *             if <code>method</code> is not a member of <code>object</code>
+     *             .
+     */
+    public ListenerMethod(Class<?> eventType, SerializableEventListener listener, Method method)
+            throws IllegalArgumentException {
+        this(eventType,(Object) listener, method);
+    }
+
+    /**
+     * <p>
      * Constructs a new event listener from a trigger method name. Since the
      * argument list is unspecified no parameters are passed to the trigger
      * method when the listener is triggered.
@@ -446,7 +619,8 @@ public class ListenerMethod implements EventListener, Serializable {
      *             unless exactly one match <code>methodName</code> is found in
      *             <code>target</code>.
      */
-    public ListenerMethod(Class<?> eventType, SerializableEventListener target, String methodName)
+    @Deprecated
+    public ListenerMethod(Class<?> eventType, Object target, String methodName)
             throws IllegalArgumentException {
 
         // Finds the correct method
@@ -477,6 +651,37 @@ public class ListenerMethod implements EventListener, Serializable {
             throw new IllegalArgumentException(
                     "Method requires unknown parameters");
         }
+    }
+
+    /**
+     * <p>
+     * Constructs a new event listener from a trigger method name. Since the
+     * argument list is unspecified no parameters are passed to the trigger
+     * method when the listener is triggered.
+     * </p>
+     *
+     * <p>
+     * The actual trigger method is reflected from <code>listener</code>, and
+     * <code>java.lang.IllegalArgumentException</code> is thrown unless exactly
+     * one match is found.
+     * </p>
+     *
+     * @param eventType
+     *            the event type that is listener listens to. All events of this
+     *            kind (or its subclasses) result in calling the trigger method.
+     * @param listener
+     *            the listener instance that contains the trigger method.
+     * @param methodName
+     *            the name of the trigger method. If the object does not contain
+     *            the method or it contains more than one matching methods
+     *            <code>java.lang.IllegalArgumentException</code> is thrown.
+     * @throws IllegalArgumentException
+     *             unless exactly one match <code>methodName</code> is found in
+     *             <code>target</code>.
+     */
+    public ListenerMethod(Class<?> eventType, SerializableEventListener listener, String methodName)
+            throws IllegalArgumentException {
+        this(eventType,(Object) listener, methodName);
     }
 
     /**
