@@ -78,7 +78,14 @@ public class EventRouter implements MethodEventSource {
     @Override
     public Registration addListener(Class<?> eventType, SerializableEventListener listener,
             Method method) {
-        return addListener(eventType, (Object) listener, method);
+        Objects.requireNonNull(listener, "Listener must not be null.");
+        if (listenerList == null) {
+            listenerList = new LinkedHashSet<>();
+        }
+        ListenerMethod listenerMethod = new ListenerMethod(eventType, listener,
+                method);
+        listenerList.add(listenerMethod);
+        return () -> listenerList.remove(listenerMethod);
     }
 
     /**
@@ -188,7 +195,22 @@ public class EventRouter implements MethodEventSource {
      */
     public Registration addListener(Class<?> eventType, SerializableEventListener listener,
             Method method, String eventIdentifier, SharedState state) {
-        return addListener(eventType,(Object) listener, method, eventIdentifier, state);
+        if (listenerList == null) {
+            listenerList = new LinkedHashSet<>();
+        }
+        ListenerMethod listenerMethod = new ListenerMethod(eventType, listener,
+                method);
+        listenerList.add(listenerMethod);
+
+        Registration registration = ComponentStateUtil
+                .addRegisteredEventListener(state, eventIdentifier);
+
+        return () -> {
+            listenerList.remove(listenerMethod);
+            if (!hasListeners(eventType)) {
+                registration.remove();
+            }
+        };
     }
 
     /*
@@ -220,7 +242,14 @@ public class EventRouter implements MethodEventSource {
     @Override
     public Registration addListener(Class<?> eventType, SerializableEventListener listener,
             String methodName) {
-        return addListener(eventType, (Object) listener, methodName);
+        Objects.requireNonNull(listener, "Listener must not be null.");
+        if (listenerList == null) {
+            listenerList = new LinkedHashSet<>();
+        }
+        ListenerMethod listenerMethod = new ListenerMethod(eventType, listener,
+                methodName);
+        listenerList.add(listenerMethod);
+        return () -> listenerList.remove(listenerMethod);
     }
 
     /*
