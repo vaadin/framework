@@ -21,6 +21,7 @@ import java.io.Serializable;
 import com.vaadin.data.Binder;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.ValueProvider;
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.server.Setter;
 
 /**
@@ -281,7 +282,7 @@ public interface Property<T> extends Serializable {
      * @since 3.0
      */
     @Deprecated
-    public interface ValueChangeListener extends Serializable {
+    public interface ValueChangeListener extends SerializableEventListener {
 
         /**
          * Notifies this listener that the Property's value has changed.
@@ -373,7 +374,7 @@ public interface Property<T> extends Serializable {
      * @since 3.0
      */
     @Deprecated
-    public interface ReadOnlyStatusChangeListener extends Serializable {
+    public interface ReadOnlyStatusChangeListener extends SerializableEventListener {
 
         /**
          * Notifies this listener that a Property's read-only status has

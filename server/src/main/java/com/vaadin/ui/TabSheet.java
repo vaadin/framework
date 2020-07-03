@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -37,6 +36,7 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.event.HasUserOriginated;
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.Resource;
@@ -851,7 +851,7 @@ public class TabSheet extends AbstractComponentContainer
      * @since 3.0
      */
     @FunctionalInterface
-    public interface SelectedTabChangeListener extends Serializable {
+    public interface SelectedTabChangeListener extends SerializableEventListener {
 
         /**
          * Selected (shown) tab in tab sheet has has been changed.
