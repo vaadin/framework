@@ -15,8 +15,7 @@
  */
 package com.vaadin.ui.components.grid;
 
-import java.io.Serializable;
-
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.ui.Grid;
 
 /**
@@ -29,7 +28,7 @@ import com.vaadin.ui.Grid;
  * @see Editor#addSaveListener(EditorSaveListener)
  */
 @FunctionalInterface
-public interface EditorSaveListener<T> extends Serializable {
+public interface EditorSaveListener<T> extends SerializableEventListener {
 
     /**
      * Called when the editor is saved.

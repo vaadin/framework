@@ -80,7 +80,7 @@ public class SortEvent<T extends SortOrder<?>> extends Component.Event
      *            the type of the sorting information
      */
     @FunctionalInterface
-    public interface SortListener<T extends SortOrder<?>> extends Serializable {
+    public interface SortListener<T extends SortOrder<?>> extends SerializableEventListener {
         /**
          * Called when the sort order has changed.
          *

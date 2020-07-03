@@ -15,8 +15,7 @@
  */
 package com.vaadin.ui.components.grid;
 
-import java.io.Serializable;
-
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.ui.Grid;
 
 /**
@@ -32,7 +31,7 @@ import com.vaadin.ui.Grid;
  *            the bean type
  */
 @FunctionalInterface
-public interface EditorCancelListener<T> extends Serializable {
+public interface EditorCancelListener<T> extends SerializableEventListener {
 
     /**
      * Called when the editor is cancelled.

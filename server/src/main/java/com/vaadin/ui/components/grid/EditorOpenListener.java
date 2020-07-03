@@ -15,8 +15,7 @@
  */
 package com.vaadin.ui.components.grid;
 
-import java.io.Serializable;
-
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.ui.Grid;
 
 /**
@@ -32,7 +31,7 @@ import com.vaadin.ui.Grid;
  * @see Editor#addOpenListener(EditorOpenListener)
  */
 @FunctionalInterface
-public interface EditorOpenListener<T> extends Serializable {
+public interface EditorOpenListener<T> extends SerializableEventListener {
 
     /**
      * Called when the editor is opened.

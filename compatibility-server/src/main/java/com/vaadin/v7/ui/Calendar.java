@@ -43,6 +43,7 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
@@ -182,7 +183,7 @@ public class Calendar extends AbstractLegacyComponent
     private String weeklyCaptionFormat = null;
 
     /** Map from event ids to event handlers */
-    private final Map<String, EventListener> handlers;
+    private final Map<String, SerializableEventListener> handlers;
 
     /**
      * Drop Handler for Vaadin DD. By default null.
@@ -303,7 +304,7 @@ public class Calendar extends AbstractLegacyComponent
     public Calendar(String caption, CalendarEventProvider eventProvider) {
         registerRpc(rpc);
         setCaption(caption);
-        handlers = new HashMap<String, EventListener>();
+        handlers = new HashMap<String, SerializableEventListener>();
         setDefaultHandlers();
         currentCalendar.setTime(new Date());
         setEventProvider(eventProvider);
@@ -1429,7 +1430,7 @@ public class Calendar extends AbstractLegacyComponent
      *            The method on the lister to call when the event is triggered
      */
     protected void setHandler(String eventId, Class<?> eventType,
-            EventListener listener, Method listenerMethod) {
+            SerializableEventListener listener, Method listenerMethod) {
         if (handlers.get(eventId) != null) {
             removeListener(eventId, eventType, handlers.get(eventId));
             handlers.remove(eventId);
