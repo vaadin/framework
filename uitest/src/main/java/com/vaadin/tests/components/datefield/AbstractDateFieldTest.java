@@ -64,6 +64,7 @@ public abstract class AbstractDateFieldTest<T extends AbstractLocalDateField>
                 getDatePattern(new Locale("fi", "FI"), DateFormat.MEDIUM));
         options.put(getDatePattern(new Locale("fi", "FI"), DateFormat.SHORT),
                 getDatePattern(new Locale("fi", "FI"), DateFormat.SHORT));
+        options.put("ww yyyy", "ww yyyy");
 
         createSelectAction("Date format", category, options, "-",
                 dateFormatCommand);
