@@ -3,12 +3,11 @@ package com.vaadin.tests.components.grid;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.grid.HeightMode;
-import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
@@ -16,8 +15,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 
-@Widgetset("com.vaadin.DefaultWidgetSet")
-public class GridSizeChange extends AbstractReindeerTestUI {
+public class GridSizeChange extends AbstractTestUI {
 
     private Grid<Integer> grid;
     private List<Integer> data;

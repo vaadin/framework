@@ -4387,9 +4387,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     private boolean refreshBodyRequested = false;
 
-    private boolean resizeRequested = false;
-    private boolean resizeRefreshScheduled = false;
-
     private DragAndDropHandler.DragAndDropCallback headerCellDndCallback = new DragAndDropCallback() {
 
         private final AutoScrollerCallback autoScrollerCallback = new AutoScrollerCallback() {
@@ -9325,38 +9322,23 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /*
          * Delay calculation to be deferred so Escalator can do it's magic.
          */
-        resizeRequested = true;
-        if (!resizeRefreshScheduled) {
-            resizeRefreshScheduled = true;
-            Scheduler.get().scheduleFixedDelay(() -> {
-                if (!resizeRequested) {
-                    doRefreshOnResize();
-                    resizeRefreshScheduled = false;
-                    return false;
-                } else {
-                    resizeRequested = false;
-                    return true;
-                }
-            }, 50);
-        }
-    }
+        Scheduler.get().scheduleFinally(() -> {
+            if (escalator
+                    .getInnerWidth() != autoColumnWidthsRecalculator.lastCalculatedInnerWidth) {
+                recalculateColumnWidths();
+            }
 
-    private void doRefreshOnResize() {
-        if (escalator
-                .getInnerWidth() != autoColumnWidthsRecalculator.lastCalculatedInnerWidth) {
-            recalculateColumnWidths();
-        }
+            // Vertical resizing could make editor positioning invalid so it
+            // needs to be recalculated on resize
+            if (isEditorActive()) {
+                editor.updateVerticalScrollPosition();
+            }
 
-        // Vertical resizing could make editor positioning invalid so it
-        // needs to be recalculated on resize
-        if (isEditorActive()) {
-            editor.updateVerticalScrollPosition();
-        }
-
-        // if there is a resize, we need to refresh the body to avoid an
-        // off-by-one error which occurs when the user scrolls all the
-        // way to the bottom.
-        refreshBody();
+            // if there is a resize, we need to refresh the body to avoid an
+            // off-by-one error which occurs when the user scrolls all the
+            // way to the bottom.
+            refreshBody();
+        });
     }
 
     private double getEscalatorInnerHeight() {
