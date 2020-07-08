@@ -94,6 +94,8 @@ import com.vaadin.client.widget.escalator.SpacerUpdater;
 import com.vaadin.client.widget.escalator.events.RowHeightChangedEvent;
 import com.vaadin.client.widget.escalator.events.SpacerIndexChangedEvent;
 import com.vaadin.client.widget.escalator.events.SpacerVisibilityChangedEvent;
+import com.vaadin.client.widget.grid.events.EscalatorSizeChangeHandler;
+import com.vaadin.client.widget.grid.events.EscalatorSizeChangeHandler.EscalatorSizeChangeEvent;
 import com.vaadin.client.widget.grid.events.ScrollEvent;
 import com.vaadin.client.widget.grid.events.ScrollHandler;
 import com.vaadin.client.widgets.Escalator.JsniUtil.TouchHandlerBundle;
@@ -7513,10 +7515,17 @@ public class Escalator extends Widget
 
     @Override
     public void setWidth(final String width) {
+        String oldWidth = getElement().getStyle().getProperty("width");
         if (width != null && !width.isEmpty()) {
             super.setWidth(width);
+            if (!width.equals(oldWidth)) {
+                fireEscalatorSizeChangeEvent();
+            }
         } else {
             super.setWidth(DEFAULT_WIDTH);
+            if (!DEFAULT_WIDTH.equals(oldWidth)) {
+                fireEscalatorSizeChangeEvent();
+            }
         }
 
         recalculateElementSizes();
@@ -7558,7 +7567,11 @@ public class Escalator extends Widget
         final int escalatorRowsBefore = body.visualRowOrder.size();
 
         if (height != null && !height.isEmpty()) {
+            String oldHeight = getElement().getStyle().getProperty("height");
             super.setHeight(height);
+            if (!height.equals(oldHeight)) {
+                fireEscalatorSizeChangeEvent();
+            }
         } else {
             if (getHeightMode() == HeightMode.UNDEFINED) {
                 int newHeightByRows = body.getRowCount();
@@ -7568,7 +7581,12 @@ public class Escalator extends Widget
                 }
                 return;
             } else {
+                String oldHeight = getElement().getStyle()
+                        .getProperty("height");
                 super.setHeight(DEFAULT_HEIGHT);
+                if (!DEFAULT_HEIGHT.equals(oldHeight)) {
+                    fireEscalatorSizeChangeEvent();
+                }
             }
         }
 
@@ -7853,6 +7871,25 @@ public class Escalator extends Widget
         }
 
         return array;
+    }
+
+    /**
+     * FOR INTERNAL USE ONLY, MAY GET REMOVED OR MODIFIED AT ANY TIME!
+     * <p>
+     * Adds an event handler that gets notified when the Escalator size changes.
+     *
+     * @param escalatorSizeChangeHandler
+     *            the event handler
+     * @return a handler registration for the added handler
+     */
+    public HandlerRegistration addEscalatorSizeChangeHandler(
+            EscalatorSizeChangeHandler escalatorSizeChangeHandler) {
+        return addHandler(escalatorSizeChangeHandler,
+                EscalatorSizeChangeEvent.TYPE);
+    }
+
+    private void fireEscalatorSizeChangeEvent() {
+        fireEvent(new EscalatorSizeChangeEvent());
     }
 
     /**
