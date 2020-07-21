@@ -4294,6 +4294,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      */
     private DataSource<T> dataSource;
     private Registration changeHandler;
+    private boolean recalculateColumnWidthsNeeded = false;
 
     /**
      * Currently available row range in DataSource.
@@ -5319,8 +5320,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 } else {
                     this.hidden = hidden;
 
-                    int columnIndex = grid.getVisibleColumns()
-                            .indexOf(this);
+                    int columnIndex = grid.getVisibleColumns().indexOf(this);
                     grid.escalator.getColumnConfiguration()
                             .insertColumns(columnIndex, 1);
 
@@ -6408,6 +6408,15 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
         });
 
+        escalator.addVerticalScrollbarVisibilityChangeHandler(event -> {
+            if (!(currentDataAvailable.isEmpty()
+                    && escalator.getBody().getRowCount() > 0)) {
+                recalculateColumnWidths();
+            } else {
+                recalculateColumnWidthsNeeded = true;
+            }
+        });
+
         // Default action on SelectionEvents. Refresh the body so changed
         // become visible.
         addSelectionHandler(new SelectionHandler<T>() {
@@ -7247,7 +7256,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         this.dataSource = dataSource;
         changeHandler = dataSource
                 .addDataChangeHandler(new DataChangeHandler() {
-                    private boolean recalculateColumnWidthsNeeded = false;
 
                     @Override
                     public void dataUpdated(int firstIndex, int numberOfItems) {

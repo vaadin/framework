@@ -26,7 +26,7 @@ public class GridSizeChange extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         grid = new Grid<>();
         data = new ArrayList<>();
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 8; ++i) {
             data.add(i);
             ++counter;
         }
@@ -39,8 +39,8 @@ public class GridSizeChange extends AbstractTestUI {
 
         // set height mode and height
         grid.setHeightMode(HeightMode.ROW);
-        grid.setHeightByRows(10);
-        grid.setWidth(90, Unit.PIXELS);
+        grid.setHeightByRows(8);
+        grid.setWidth(100, Unit.PIXELS);
 
         // create a tabsheet with one tab and place grid inside
         VerticalLayout tab = new VerticalLayout();
