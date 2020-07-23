@@ -98,6 +98,8 @@ import com.vaadin.client.widget.grid.events.EscalatorSizeChangeHandler;
 import com.vaadin.client.widget.grid.events.EscalatorSizeChangeHandler.EscalatorSizeChangeEvent;
 import com.vaadin.client.widget.grid.events.ScrollEvent;
 import com.vaadin.client.widget.grid.events.ScrollHandler;
+import com.vaadin.client.widget.grid.events.VerticalScrollbarVisibilityChangeHandler;
+import com.vaadin.client.widget.grid.events.VerticalScrollbarVisibilityChangeHandler.VerticalScrollbarVisibilityChangeEvent;
 import com.vaadin.client.widgets.Escalator.JsniUtil.TouchHandlerBundle;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.ui.grid.HeightMode;
@@ -7291,6 +7293,29 @@ public class Escalator extends Widget
         root.appendChild(verticalScrollbar.getElement());
         verticalScrollbar.addScrollHandler(scrollHandler);
         verticalScrollbar.setScrollbarThickness(scrollbarThickness);
+        verticalScrollbar
+                .addVisibilityHandler(new ScrollbarBundle.VisibilityHandler() {
+
+                    private boolean queued = false;
+
+                    @Override
+                    public void visibilityChanged(
+                            ScrollbarBundle.VisibilityChangeEvent event) {
+                        if (queued) {
+                            return;
+                        }
+                        queued = true;
+
+                        /*
+                         * We either lost or gained a scrollbar. In either case,
+                         * we may need to update the column widths.
+                         */
+                        Scheduler.get().scheduleFinally(() -> {
+                            fireVerticalScrollbarVisibilityChangeEvent();
+                            queued = false;
+                        });
+                    }
+                });
 
         root.appendChild(horizontalScrollbar.getElement());
         horizontalScrollbar.addScrollHandler(scrollHandler);
@@ -7871,6 +7896,26 @@ public class Escalator extends Widget
         }
 
         return array;
+    }
+
+    /**
+     * FOR INTERNAL USE ONLY, MAY GET REMOVED OR MODIFIED AT ANY TIME!
+     * <p>
+     * Adds an event handler that gets notified when the visibility of the
+     * vertical scrollbar changes.
+     *
+     * @param verticalScrollbarVisibilityChangeHandler
+     *            the event handler
+     * @return a handler registration for the added handler
+     */
+    public HandlerRegistration addVerticalScrollbarVisibilityChangeHandler(
+            VerticalScrollbarVisibilityChangeHandler verticalScrollbarVisibilityChangeHandler) {
+        return addHandler(verticalScrollbarVisibilityChangeHandler,
+                VerticalScrollbarVisibilityChangeEvent.TYPE);
+    }
+
+    private void fireVerticalScrollbarVisibilityChangeEvent() {
+        fireEvent(new VerticalScrollbarVisibilityChangeEvent());
     }
 
     /**

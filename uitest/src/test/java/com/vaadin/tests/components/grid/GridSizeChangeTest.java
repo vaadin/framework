@@ -41,23 +41,27 @@ public class GridSizeChangeTest extends MultiBrowserTest {
 
         assertGridWithinTabSheet();
         ensureVerticalScrollbar(true);
+        ensureHorizontalScrollbar(false);
 
         $(ButtonElement.class).caption("Remove row").first().click();
         // height matches rows -> no scrollbar
 
         assertGridWithinTabSheet();
         ensureVerticalScrollbar(false);
+        ensureHorizontalScrollbar(false);
 
         $(ButtonElement.class).caption("Reduce width").first().click();
         // column too wide -> scrollbar
 
         assertGridWithinTabSheet();
+        ensureVerticalScrollbar(false);
         ensureHorizontalScrollbar(true);
 
         $(ButtonElement.class).caption("Increase width").first().click();
         // column fits -> no scrollbar
 
         assertGridWithinTabSheet();
+        ensureVerticalScrollbar(false);
         ensureHorizontalScrollbar(false);
 
         $(ButtonElement.class).caption("Add row").first().click();
@@ -65,12 +69,14 @@ public class GridSizeChangeTest extends MultiBrowserTest {
 
         assertGridWithinTabSheet();
         ensureVerticalScrollbar(true);
+        ensureHorizontalScrollbar(false);
 
         $(ButtonElement.class).caption("Increase height").first().click();
         // height matches rows -> no scrollbar
 
         assertGridWithinTabSheet();
         ensureVerticalScrollbar(false);
+        ensureHorizontalScrollbar(false);
     }
 
     private void ensureVerticalScrollbar(boolean displayed) {
