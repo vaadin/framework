@@ -47,6 +47,7 @@ public class MessageSender {
 
     private ApplicationConnection connection;
     private boolean hasActiveRequest = false;
+    private boolean resynchronizeRequested = false;
 
     /**
      * Counter for the messages send to the server. First sent message has id 0.
@@ -98,7 +99,7 @@ public class MessageSender {
     private void doSendInvocationsToServer() {
 
         ServerRpcQueue serverRpcQueue = getServerRpcQueue();
-        if (serverRpcQueue.isEmpty()) {
+        if (serverRpcQueue.isEmpty() && !resynchronizeRequested) {
             return;
         }
 
@@ -110,7 +111,7 @@ public class MessageSender {
         JsonArray reqJson = serverRpcQueue.toJson();
         serverRpcQueue.clear();
 
-        if (reqJson.length() == 0) {
+        if (reqJson.length() == 0 && !resynchronizeRequested) {
             // Nothing to send, all invocations were filtered out (for
             // non-existing connectors)
             getLogger().warning(
@@ -123,6 +124,11 @@ public class MessageSender {
             extraJson.put(ApplicationConstants.WIDGETSET_VERSION_ID,
                     Version.getFullVersion());
             connection.getConfiguration().setWidgetsetVersionSent();
+        }
+        if (resynchronizeRequested) {
+            getLogger().info("Resynchronizing from server");
+            extraJson.put(ApplicationConstants.RESYNCHRONIZE_ID, true);
+            resynchronizeRequested = false;
         }
         if (showLoadingIndicator) {
             connection.getLoadingIndicator().trigger();
@@ -239,7 +245,8 @@ public class MessageSender {
         hasActiveRequest = false;
 
         if (connection.isApplicationRunning()) {
-            if (getServerRpcQueue().isFlushPending()) {
+            if (getServerRpcQueue().isFlushPending()
+                    || resynchronizeRequested) {
                 sendInvocationsToServer();
             }
             runPostRequestHooks(connection.getConfiguration().getRootPanelId());
@@ -350,10 +357,9 @@ public class MessageSender {
      */
     public void resynchronize() {
         getMessageHandler().onResynchronize();
-        getLogger().info("Resynchronizing from server");
-        JsonObject resyncParam = Json.createObject();
-        resyncParam.put(ApplicationConstants.RESYNCHRONIZE_ID, true);
-        send(Json.createArray(), resyncParam);
+        getLogger().info("Resynchronize from server requested");
+        resynchronizeRequested = true;
+        sendInvocationsToServer();
     }
 
     /**
