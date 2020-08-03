@@ -1001,11 +1001,15 @@ public class Page implements Serializable {
             throw new IllegalStateException("Location is not available as the "
                     + Constants.SERVLET_PARAMETER_SENDURLSASPARAMETERS
                     + " parameter is configured as false");
-        } else if (location == null && !VaadinSession.getCurrent().getConfiguration()
-                .isSendUrlsAsParameters()) {
+        } else if (location == null && VaadinSession.getCurrent() != null && !VaadinSession
+                   .getCurrent().getConfiguration().isSendUrlsAsParameters()) {
             throw new IllegalStateException("Location is not available as the "
                     + Constants.SERVLET_PARAMETER_SENDURLSASPARAMETERS
                     + " parameter is configured as false");
+        } else if (location == null && VaadinSession.getCurrent() == null) {
+            throw new IllegalStateException("Location is not available as the "
+                    + Constants.SERVLET_PARAMETER_SENDURLSASPARAMETERS
+                    + " parameter state cannot be determined");
         }
         return location;
     }
