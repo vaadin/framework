@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.server.NoInputStreamException;
 import com.vaadin.server.NoOutputStreamException;
 import com.vaadin.server.PaintException;
@@ -555,7 +556,7 @@ public class Upload extends AbstractLegacyComponent
      * @since 5.0
      */
     @Deprecated
-    public interface StartedListener extends Serializable {
+    public interface StartedListener extends SerializableEventListener {
 
         /**
          * Upload has started.
@@ -573,7 +574,7 @@ public class Upload extends AbstractLegacyComponent
      * @since 3.0
      */
     @Deprecated
-    public interface FinishedListener extends Serializable {
+    public interface FinishedListener extends SerializableEventListener {
 
         /**
          * Upload has finished.
@@ -591,7 +592,7 @@ public class Upload extends AbstractLegacyComponent
      * @since 3.0
      */
     @Deprecated
-    public interface FailedListener extends Serializable {
+    public interface FailedListener extends SerializableEventListener {
 
         /**
          * Upload has finished unsuccessfully.
@@ -609,7 +610,7 @@ public class Upload extends AbstractLegacyComponent
      * @since 3.0
      */
     @Deprecated
-    public interface SucceededListener extends Serializable {
+    public interface SucceededListener extends SerializableEventListener {
 
         /**
          * Upload successful.
@@ -626,7 +627,7 @@ public class Upload extends AbstractLegacyComponent
      * @since 7.2
      */
     @Deprecated
-    public interface ChangeListener extends Serializable {
+    public interface ChangeListener extends SerializableEventListener {
 
         Method FILENAME_CHANGED = ReflectTools.findMethod(ChangeListener.class,
                 "filenameChanged", ChangeEvent.class);

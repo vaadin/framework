@@ -18,12 +18,12 @@ package com.vaadin.ui;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Registration;
@@ -95,7 +95,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * Listener triggered when a login occurs in a {@link LoginForm}.
      */
     @FunctionalInterface
-    public interface LoginListener extends Serializable {
+    public interface LoginListener extends SerializableEventListener {
         /**
          * Event method invoked when the login button is pressed in a login
          * form.

@@ -18,6 +18,7 @@ package com.vaadin.v7.event;
 import java.io.Serializable;
 import java.util.List;
 
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Component;
 import com.vaadin.v7.data.sort.SortOrder;
@@ -78,7 +79,7 @@ public class SortEvent extends Component.Event {
      */
     @FunctionalInterface
     @Deprecated
-    public interface SortListener extends Serializable {
+    public interface SortListener extends SerializableEventListener {
         /**
          * Called when the sort order has changed.
          *

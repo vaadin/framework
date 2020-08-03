@@ -16,11 +16,11 @@
 
 package com.vaadin.ui;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.HasUserOriginated;
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
@@ -572,7 +572,7 @@ public class Notification extends AbstractExtension {
      * @since 8.2
      */
     @FunctionalInterface
-    public interface CloseListener extends Serializable {
+    public interface CloseListener extends SerializableEventListener {
         /**
          * Use {@link CloseEvent#getNotification()} to get a reference to the
          * {@link Notification} that was closed.

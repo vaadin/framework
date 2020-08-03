@@ -41,6 +41,7 @@ import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.MouseEvents.ClickEvent;
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DragSource;
 import com.vaadin.event.dd.DropHandler;
@@ -5430,7 +5431,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * headerClick method is called when the user presses a header column cell.
      */
     @Deprecated
-    public interface HeaderClickListener extends Serializable {
+    public interface HeaderClickListener extends SerializableEventListener {
 
         /**
          * Called when a user clicks a header column cell.
@@ -5447,7 +5448,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * footerClick method is called when the user presses a footer column cell.
      */
     @Deprecated
-    public interface FooterClickListener extends Serializable {
+    public interface FooterClickListener extends SerializableEventListener {
 
         /**
          * Called when a user clicks a footer column cell.
@@ -5684,7 +5685,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Interface for listening to column resize events.
      */
     @Deprecated
-    public interface ColumnResizeListener extends Serializable {
+    public interface ColumnResizeListener extends SerializableEventListener {
 
         /**
          * This method is triggered when the column has been resized.
@@ -5773,7 +5774,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Interface for listening to column reorder events.
      */
     @Deprecated
-    public interface ColumnReorderListener extends Serializable {
+    public interface ColumnReorderListener extends SerializableEventListener {
 
         /**
          * This method is triggered when the column has been reordered.
@@ -5825,7 +5826,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @since 7.6
      */
     @Deprecated
-    public interface ColumnCollapseListener extends Serializable {
+    public interface ColumnCollapseListener extends SerializableEventListener {
 
         /**
          * This method is triggered when the collapse state for a column has

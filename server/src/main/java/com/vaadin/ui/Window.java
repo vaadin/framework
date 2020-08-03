@@ -16,7 +16,6 @@
 
 package com.vaadin.ui;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +35,7 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.event.MouseEvents.ClickEvent;
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
@@ -496,7 +496,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      * </p>
      */
     @FunctionalInterface
-    public interface CloseListener extends Serializable {
+    public interface CloseListener extends SerializableEventListener {
         /**
          * Called when the user closes a window. Use
          * {@link CloseEvent#getWindow()} to get a reference to the
@@ -599,7 +599,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      * {@link WindowMode#MAXIMIZED}) or restored ({@link WindowMode#NORMAL} ).
      */
     @FunctionalInterface
-    public interface WindowModeChangeListener extends Serializable {
+    public interface WindowModeChangeListener extends SerializableEventListener {
 
         public static final Method windowModeChangeMethod = ReflectTools
                 .findMethod(WindowModeChangeListener.class, "windowModeChanged",
@@ -699,7 +699,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier {
      * @see com.vaadin.ui.Window.ResizeEvent
      */
     @FunctionalInterface
-    public interface ResizeListener extends Serializable {
+    public interface ResizeListener extends SerializableEventListener {
         public void windowResized(ResizeEvent e);
     }
 

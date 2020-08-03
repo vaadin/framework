@@ -377,6 +377,15 @@ public class GridConnector extends AbstractListingConnector
             getLayoutManager().layoutNow();
         });
 
+        // Handling Escalator size changes
+        grid.getEscalator().addEscalatorSizeChangeHandler(event -> {
+            getLayoutManager().setNeedsMeasure(GridConnector.this);
+            if (!getConnection().getMessageHandler().isUpdatingState()
+                    && !getLayoutManager().isLayoutRunning()) {
+                getLayoutManager().layoutNow();
+            }
+        });
+
         /* Item click events */
         grid.addBodyClickHandler(itemClickHandler);
         grid.addBodyDoubleClickHandler(itemClickHandler);
