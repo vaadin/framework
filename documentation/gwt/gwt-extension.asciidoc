@@ -51,6 +51,8 @@ public class CapsLockWarning extends AbstractExtension {
     public static void addTo(PasswordField field) {
         new CapsLockWarning().extend(field);
     }
+    
+    // NOTE: you only need one of the above, not all of them
 }
 ----
 
