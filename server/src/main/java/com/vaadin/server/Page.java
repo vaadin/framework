@@ -999,7 +999,7 @@ public class Page implements Serializable {
     public URI getLocation() throws IllegalStateException {
         if (location == null) {
             if (uI.getSession() != null && !uI.getSession().getConfiguration()
-                    .isSendUrlsAsParameters()) {
+                       .isSendUrlsAsParameters()) {
                 throw new IllegalStateException("Location is not available as the "
                         + Constants.SERVLET_PARAMETER_SENDURLSASPARAMETERS
                         + " parameter is configured as false");
@@ -1007,8 +1007,8 @@ public class Page implements Serializable {
                 throw new IllegalStateException("Location is not available as the "
                         + Constants.SERVLET_PARAMETER_SENDURLSASPARAMETERS
                         + " parameter state cannot be determined");
-            } else if (VaadinSession.getCurrent() != null && !VaadinSession
-                       .getCurrent().getConfiguration().isSendUrlsAsParameters()) {
+            } else if (!VaadinSession.getCurrent().getConfiguration()
+                       .isSendUrlsAsParameters()) {
                 throw new IllegalStateException("Location is not available as the "
                         + Constants.SERVLET_PARAMETER_SENDURLSASPARAMETERS
                         + " parameter is configured as false");
