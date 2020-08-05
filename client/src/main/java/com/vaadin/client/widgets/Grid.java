@@ -5287,7 +5287,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *         otherwise
          */
         public boolean isResizable() {
-            return resizable;
+            return grid.isEnabled() && resizable;
         }
 
         /**
