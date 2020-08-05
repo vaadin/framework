@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.shared.Registration;
 import com.vaadin.util.ReflectTools;
 
@@ -98,7 +99,7 @@ public interface HasComponents extends Component, Iterable<Component> {
      * Component attach listener interface.
      */
     @FunctionalInterface
-    public interface ComponentAttachListener extends Serializable {
+    public interface ComponentAttachListener extends SerializableEventListener {
 
         public static final Method attachMethod = ReflectTools.findMethod(
                 ComponentAttachListener.class, "componentAttachedToContainer",
@@ -117,7 +118,7 @@ public interface HasComponents extends Component, Iterable<Component> {
      * Component detach listener interface.
      */
     @FunctionalInterface
-    public interface ComponentDetachListener extends Serializable {
+    public interface ComponentDetachListener extends SerializableEventListener {
 
         public static final Method detachMethod = ReflectTools.findMethod(
                 ComponentDetachListener.class, "componentDetachedFromContainer",

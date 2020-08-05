@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.EventListener;
 
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.util.ReflectTools;
 import com.vaadin.v7.shared.ui.calendar.CalendarEventId;
 import com.vaadin.v7.ui.Calendar;
@@ -123,7 +124,7 @@ public interface CalendarComponentEvents extends Serializable {
      *
      */
     @Deprecated
-    public interface EventMoveHandler extends EventListener, Serializable {
+    public interface EventMoveHandler extends SerializableEventListener {
 
         /** Trigger method for the MoveEvent. */
         public static final Method eventMoveMethod = ReflectTools.findMethod(
@@ -231,7 +232,7 @@ public interface CalendarComponentEvents extends Serializable {
 
     /** RangeSelectHandler handles RangeSelectEvent. */
     @Deprecated
-    public interface RangeSelectHandler extends EventListener, Serializable {
+    public interface RangeSelectHandler extends SerializableEventListener {
 
         /** Trigger method for the RangeSelectEvent. */
         public static final Method rangeSelectMethod = ReflectTools.findMethod(
@@ -314,7 +315,7 @@ public interface CalendarComponentEvents extends Serializable {
 
     /** ForwardHandler handles ForwardEvent. */
     @Deprecated
-    public interface ForwardHandler extends EventListener, Serializable {
+    public interface ForwardHandler extends SerializableEventListener {
 
         /** Trigger method for the ForwardEvent. */
         public static final Method forwardMethod = ReflectTools.findMethod(
@@ -351,7 +352,7 @@ public interface CalendarComponentEvents extends Serializable {
 
     /** BackwardHandler handles BackwardEvent. */
     @Deprecated
-    public interface BackwardHandler extends EventListener, Serializable {
+    public interface BackwardHandler extends SerializableEventListener {
 
         /** Trigger method for the BackwardEvent. */
         public static final Method backwardMethod = ReflectTools.findMethod(
@@ -396,7 +397,7 @@ public interface CalendarComponentEvents extends Serializable {
 
     /** DateClickHandler handles DateClickEvent. */
     @Deprecated
-    public interface DateClickHandler extends EventListener, Serializable {
+    public interface DateClickHandler extends SerializableEventListener {
 
         /** Trigger method for the DateClickEvent. */
         public static final Method dateClickMethod = ReflectTools.findMethod(
@@ -441,7 +442,7 @@ public interface CalendarComponentEvents extends Serializable {
 
     /** EventClickHandler handles EventClick. */
     @Deprecated
-    public interface EventClickHandler extends EventListener, Serializable {
+    public interface EventClickHandler extends SerializableEventListener {
 
         /** Trigger method for the EventClick. */
         public static final Method eventClickMethod = ReflectTools.findMethod(
@@ -510,7 +511,7 @@ public interface CalendarComponentEvents extends Serializable {
 
     /** WeekClickHandler handles WeekClicks. */
     @Deprecated
-    public interface WeekClickHandler extends EventListener, Serializable {
+    public interface WeekClickHandler extends SerializableEventListener {
 
         /** Trigger method for the WeekClick. */
         public static final Method weekClickMethod = ReflectTools.findMethod(
@@ -615,7 +616,7 @@ public interface CalendarComponentEvents extends Serializable {
      * Handler for EventResize event.
      */
     @Deprecated
-    public interface EventResizeHandler extends EventListener, Serializable {
+    public interface EventResizeHandler extends SerializableEventListener {
 
         /** Trigger method for the EventResize. */
         public static final Method eventResizeMethod = ReflectTools.findMethod(

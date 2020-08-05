@@ -3,6 +3,7 @@ package com.vaadin.tests.minitutorials.v7a3;
 import java.lang.reflect.Method;
 import java.util.EventObject;
 
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.tests.widgetset.client.minitutorials.v7a3.RefresherRpc;
 import com.vaadin.tests.widgetset.client.minitutorials.v7a3.RefresherState;
@@ -10,7 +11,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.util.ReflectTools;
 
 public class Refresher extends AbstractExtension {
-    public interface RefreshListener {
+    public interface RefreshListener extends SerializableEventListener {
         static Method METHOD = ReflectTools.findMethod(RefreshListener.class,
                 "refresh", RefreshEvent.class);
 

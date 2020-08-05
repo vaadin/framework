@@ -54,6 +54,7 @@ public class ServletUIInitHandlerTest {
                     session);
             session.setCommunicationManager(communicationManager);
             session.setConfiguration(deploymentConfiguration);
+            session.setCurrent(session);
             session.addUIProvider(new UIProvider() {
 
                 @Override

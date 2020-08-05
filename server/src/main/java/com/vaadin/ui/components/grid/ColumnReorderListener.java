@@ -15,8 +15,7 @@
  */
 package com.vaadin.ui.components.grid;
 
-import java.io.Serializable;
-
+import com.vaadin.event.SerializableEventListener;
 import com.vaadin.ui.Grid;
 
 /**
@@ -26,7 +25,7 @@ import com.vaadin.ui.Grid;
  * @since 8.0
  */
 @FunctionalInterface
-public interface ColumnReorderListener extends Serializable {
+public interface ColumnReorderListener extends SerializableEventListener {
 
     /**
      * Called when the columns of the grid have been reordered.
