@@ -6496,6 +6496,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 !enabled || editorOpen);
         getEscalator().setScrollLocked(Direction.HORIZONTAL, !enabled);
 
+        refreshHeader();
+
         fireEvent(new GridEnabledEvent(enabled));
     }
 
