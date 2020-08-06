@@ -979,13 +979,15 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         // is opened. Only done for in-memory data providers for performance
         // reasons.
         if (dataProvider instanceof InMemoryDataProvider) {
-            if (dataProviderListener != null) dataProviderListener.remove();
-            dataProviderListener = dataProvider.addDataProviderListener(event -> {
-                if ((!(event instanceof DataChangeEvent.DataRefreshEvent))
-                        && (getPageLength() == 0)) {
-                    getState().forceDataSourceUpdate = true;
-                }
-            });
+            if (dataProviderListener != null)
+                dataProviderListener.remove();
+            dataProviderListener = dataProvider
+                    .addDataProviderListener(event -> {
+                        if ((!(event instanceof DataChangeEvent.DataRefreshEvent))
+                                && (getPageLength() == 0)) {
+                            getState().forceDataSourceUpdate = true;
+                        }
+                    });
         }
     }
 
