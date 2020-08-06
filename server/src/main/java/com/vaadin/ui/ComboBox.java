@@ -245,6 +245,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         // Just ignore when neither setDataProvider nor setItems has been called
     };
 
+    private Registration dataProviderListener = null;
+
     /**
      * Constructs an empty combo box without a caption. The content of the combo
      * box can be set with {@link #setDataProvider(DataProvider)} or
@@ -977,7 +979,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         // is opened. Only done for in-memory data providers for performance
         // reasons.
         if (dataProvider instanceof InMemoryDataProvider) {
-            dataProvider.addDataProviderListener(event -> {
+            if (dataProviderListener != null) dataProviderListener.remove();
+            dataProviderListener = dataProvider.addDataProviderListener(event -> {
                 if ((!(event instanceof DataChangeEvent.DataRefreshEvent))
                         && (getPageLength() == 0)) {
                     getState().forceDataSourceUpdate = true;
