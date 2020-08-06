@@ -5287,7 +5287,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *         otherwise
          */
         public boolean isResizable() {
-            return resizable;
+            return grid.isEnabled() && resizable;
         }
 
         /**
@@ -6495,6 +6495,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         getEscalator().setScrollLocked(Direction.VERTICAL,
                 !enabled || editorOpen);
         getEscalator().setScrollLocked(Direction.HORIZONTAL, !enabled);
+
+        getHeader().requestSectionRefresh();
 
         fireEvent(new GridEnabledEvent(enabled));
     }
