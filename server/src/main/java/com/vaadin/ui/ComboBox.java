@@ -889,7 +889,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         updateSelectedItemIcon(getValue());
 
         DataProvider<T, ?> dataProvider = getDataProvider();
-        if (dataProvider != null && dataProviderListener != null) {
+        if (dataProvider != null && dataProviderListener == null) {
             setupDataProviderListener(dataProvider);
         }
     }
