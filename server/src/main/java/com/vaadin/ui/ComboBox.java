@@ -958,7 +958,10 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     @Override
     public DataProvider<T, ?> getDataProvider() {
-        return internalGetDataProvider();
+        if (this.getDataCommunicator() != null) {
+            return internalGetDataProvider();
+        }
+        return null;
     }
 
     @Override
