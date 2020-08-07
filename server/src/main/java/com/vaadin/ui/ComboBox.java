@@ -897,6 +897,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     @Override
     public void detach() {
         dataProviderListener.remove();
+        dataProviderListener = null;
         super.detach();
     }
 
