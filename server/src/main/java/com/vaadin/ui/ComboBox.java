@@ -887,6 +887,17 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
         // Update icon for ConnectorResource
         updateSelectedItemIcon(getValue());
+
+        DataProvider<T, ?> dataProvider = getDataProvider();
+        if (dataProvider != null && dataProviderListener != null) {
+            setupDataProviderListener(dataProvider);
+        }
+    }
+
+    @Override
+    public void detach() {
+        super.detach();
+        dataProviderListener.remove();
     }
 
     @Override
@@ -972,6 +983,11 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         filterSlot = filter -> providerFilterSlot
                 .accept(convertOrNull.apply(filter));
 
+        setupDataProviderListener(dataProvider);
+    }
+
+    private <C> void setupDataProviderListener(
+            DataProvider<T, C> dataProvider) {
         // This workaround is done to fix issue #11642 for unpaged comboboxes.
         // Data sources for on the client need to be updated after data provider
         // refreshAll so that serverside selection works even before the
