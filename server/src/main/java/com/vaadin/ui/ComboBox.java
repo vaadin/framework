@@ -245,6 +245,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         // Just ignore when neither setDataProvider nor setItems has been called
     };
 
+    private Registration dataProviderListener = null;
+
     /**
      * Constructs an empty combo box without a caption. The content of the combo
      * box can be set with {@link #setDataProvider(DataProvider)} or
@@ -885,6 +887,20 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
         // Update icon for ConnectorResource
         updateSelectedItemIcon(getValue());
+
+        DataProvider<T, ?> dataProvider = getDataProvider();
+        if (dataProvider != null && dataProviderListener == null) {
+            setupDataProviderListener(dataProvider);
+        }
+    }
+
+    @Override
+    public void detach() {
+        if (dataProviderListener != null) {
+            dataProviderListener.remove();
+            dataProviderListener = null;
+        }
+        super.detach();
     }
 
     @Override
@@ -945,7 +961,10 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     @Override
     public DataProvider<T, ?> getDataProvider() {
-        return internalGetDataProvider();
+        if (this.getDataCommunicator() != null) {
+            return internalGetDataProvider();
+        }
+        return null;
     }
 
     @Override
@@ -970,6 +989,11 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         filterSlot = filter -> providerFilterSlot
                 .accept(convertOrNull.apply(filter));
 
+        setupDataProviderListener(dataProvider);
+    }
+
+    private <C> void setupDataProviderListener(
+            DataProvider<T, C> dataProvider) {
         // This workaround is done to fix issue #11642 for unpaged comboboxes.
         // Data sources for on the client need to be updated after data provider
         // refreshAll so that serverside selection works even before the
@@ -977,12 +1001,16 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         // is opened. Only done for in-memory data providers for performance
         // reasons.
         if (dataProvider instanceof InMemoryDataProvider) {
-            dataProvider.addDataProviderListener(event -> {
-                if ((!(event instanceof DataChangeEvent.DataRefreshEvent))
-                        && (getPageLength() == 0)) {
-                    getState().forceDataSourceUpdate = true;
-                }
-            });
+            if (dataProviderListener != null) {
+                dataProviderListener.remove();
+            }
+            dataProviderListener = dataProvider
+                    .addDataProviderListener(event -> {
+                        if ((!(event instanceof DataChangeEvent.DataRefreshEvent))
+                                && (getPageLength() == 0)) {
+                            getState().forceDataSourceUpdate = true;
+                        }
+                    });
         }
     }
 
