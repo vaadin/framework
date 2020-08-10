@@ -996,11 +996,22 @@ public class Page implements Serializable {
      *             set to {@code false}
      */
     public URI getLocation() throws IllegalStateException {
-        if (location == null && !uI.getSession().getConfiguration()
-                .isSendUrlsAsParameters()) {
-            throw new IllegalStateException("Location is not available as the "
-                    + Constants.SERVLET_PARAMETER_SENDURLSASPARAMETERS
-                    + " parameter is configured as false");
+        if (location == null) {
+            if (uI.getSession() != null && !uI.getSession().getConfiguration()
+                       .isSendUrlsAsParameters()) {
+                throw new IllegalStateException("Location is not available as the "
+                        + Constants.SERVLET_PARAMETER_SENDURLSASPARAMETERS
+                        + " parameter is configured as false");
+            } else if (VaadinSession.getCurrent() == null) {
+                throw new IllegalStateException("Location is not available as the "
+                        + Constants.SERVLET_PARAMETER_SENDURLSASPARAMETERS
+                        + " parameter state cannot be determined");
+            } else if (!VaadinSession.getCurrent().getConfiguration()
+                       .isSendUrlsAsParameters()) {
+                throw new IllegalStateException("Location is not available as the "
+                        + Constants.SERVLET_PARAMETER_SENDURLSASPARAMETERS
+                        + " parameter is configured as false");
+            }
         }
         return location;
     }
