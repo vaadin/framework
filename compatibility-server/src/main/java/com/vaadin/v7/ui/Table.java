@@ -2399,14 +2399,29 @@ public class Table extends AbstractSelect implements Action.Container,
         }
     }
 
+    /**
+     * Extracts cell value from generated row
+     *
+     * @param generatedRow generated row
+     * @param index column index
+     * @param firstVisibleColumn whether the column is first visible column in the table (i.e. previous columns are hidden)
+     * @return cell value
+     */
     private Object extractGeneratedValue(GeneratedRow generatedRow, int index, boolean firstVisibleColumn) {
+        Object value = generatedRow.getValue();
+        String[] text = generatedRow.getText();
         if (generatedRow.isSpanColumns()) {
             if (firstVisibleColumn) {
-                return generatedRow.getValue();
+                if (value instanceof Component) {
+                    return value;
+                }
+                if (text != null && text.length > 0) {
+                    return text[0];
+                }
             }
             return null;
         }
-        String[] text = generatedRow.getText();
+
         if (text != null && text.length > index) {
             return text[index];
         }
