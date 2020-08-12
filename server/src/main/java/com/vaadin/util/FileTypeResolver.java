@@ -17,7 +17,6 @@
 package com.vaadin.util;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
@@ -37,7 +36,6 @@ import com.vaadin.server.ThemeResource;
  * @author Vaadin Ltd.
  * @since 3.0
  */
-@SuppressWarnings("serial")
 public class FileTypeResolver {
 
     /**
@@ -52,9 +50,40 @@ public class FileTypeResolver {
     public static String DEFAULT_MIME_TYPE = "application/octet-stream";
 
     /**
-     * Initial file extension to mime-type mapping.
+     * Initial MIME-type to file extension mapping where the MIME type starts
+     * with {@code application/vnd}. Separate from the main mapping in order to
+     * limit the amount of long lines for the sake of readability.
      */
-    private static final String INITIAL_EXT_TO_MIME_MAP = "application/cu-seeme                            csm cu,"
+    private static final String INITIAL_APPLICATION_VND_MIME_TO_EXT_MAPPING = ""
+            + "application/vnd.ms-access                                                    mdb,"
+            + "application/vnd.ms-excel                                                     xls xlb,"
+            + "application/vnd.ms-excel.addin.macroEnabled.12                               xlam,"
+            + "application/vnd.ms-excel.sheet.binary.macroEnabled.12                        xlsb,"
+            + "application/vnd.ms-excel.sheet.macroEnabled.12                               xlsm,"
+            + "application/vnd.ms-excel.template.macroEnabled.12                            xltm,"
+            + "application/vnd.ms-powerpoint                                                ppt pps pot,"
+            + "application/vnd.ms-powerpoint.addin.macroEnabled.12                          ppam,"
+            + "application/vnd.ms-powerpoint.presentation.macroEnabled.12                   pptm,"
+            + "application/vnd.ms-powerpoint.slideshow.macroEnabled.12                      ppsm,"
+            + "application/vnd.ms-powerpoint.template.macroEnabled.12                       potm,"
+            + "application/vnd.ms-word.document.macroEnabled.12                             docm,"
+            + "application/vnd.ms-word.template.macroEnabled.12                             dotm,"
+            + "application/vnd.openxmlformats-officedocument.presentationml.presentation    pptx,"
+            + "application/vnd.openxmlformats-officedocument.presentationml.slideshow       ppsx,"
+            + "application/vnd.openxmlformats-officedocument.presentationml.template        potx,"
+            + "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet            xlsx,"
+            + "application/vnd.openxmlformats-officedocument.spreadsheetml.template         xltx,"
+            + "application/vnd.openxmlformats-officedocument.wordprocessingml.document      docx,"
+            + "application/vnd.openxmlformats-officedocument.wordprocessingml.template      dotx,"
+            + "application/vnd.wap.wmlc                                                     wmlc,"
+            + "application/vnd.wap.wmlscriptc                                               wmlsc,";
+
+    /**
+     * Initial MIME-type to file extension mapping that will get parsed into a
+     * file extension to MIME-type map.
+     */
+    private static final String INITIAL_MIME_TO_EXT_MAPPING = ""
+            + "application/cu-seeme                            csm cu,"
             + "application/dsptype                             tsp,"
             + "application/futuresplash                        spl,"
             + "application/mac-binhex40                        hqx,"
@@ -66,10 +95,7 @@ public class FileTypeResolver {
             + "application/pgp-signature                       pgp,"
             + "application/postscript                          ps ai eps,"
             + "application/rtf                                 rtf,"
-            + "application/vnd.ms-excel                        xls xlb,"
-            + "application/vnd.ms-powerpoint                   ppt pps pot,"
-            + "application/vnd.wap.wmlc                        wmlc,"
-            + "application/vnd.wap.wmlscriptc                  wmlsc,"
+            + INITIAL_APPLICATION_VND_MIME_TO_EXT_MAPPING
             + "application/wordperfect5.1                      wp5,"
             + "application/zip                                 zip,"
             + "application/x-123                               wk,"
@@ -137,17 +163,17 @@ public class FileTypeResolver {
             + "application/x-x509-ca-cert                      crt,"
             + "audio/basic                                     au snd,"
             + "audio/midi                                      mid midi,"
+            + "audio/mp4                                       m4a,"
             + "audio/mpeg                                      mpga mpega mp2 mp3,"
             + "audio/mpegurl                                   m3u,"
+            + "audio/ogg                                       ogg,"
             + "audio/prs.sid                                   sid,"
+            + "audio/x-aac                                     aac,"
             + "audio/x-aiff                                    aif aiff aifc,"
             + "audio/x-gsm                                     gsm,"
             + "audio/x-pn-realaudio                            ra rm ram,"
             + "audio/x-scpls                                   pls,"
             + "audio/x-wav                                     wav,"
-            + "audio/ogg                                       ogg,"
-            + "audio/mp4                                       m4a,"
-            + "audio/x-aac                                     aac,"
             + "image/bitmap                                    bmp,"
             + "image/gif                                       gif,"
             + "image/ief                                       ief,"
@@ -198,14 +224,14 @@ public class FileTypeResolver {
             + "video/dl                                        dl,"
             + "video/fli                                       fli,"
             + "video/gl                                        gl,"
+            + "video/mp4                                       mp4,"
             + "video/mpeg                                      mpeg mpg mpe,"
+            + "video/ogg                                       ogv,"
             + "video/quicktime                                 qt mov,"
             + "video/x-mng                                     mng,"
             + "video/x-ms-asf                                  asf asx,"
             + "video/x-msvideo                                 avi,"
             + "video/x-sgi-movie                               movie,"
-            + "video/ogg                                       ogv,"
-            + "video/mp4                                       mp4,"
             + "x-world/x-vrml                                  vrm vrml wrl";
 
     /**
@@ -217,7 +243,7 @@ public class FileTypeResolver {
 
         // Initialize extension to MIME map
         final StringTokenizer lines = new StringTokenizer(
-                INITIAL_EXT_TO_MIME_MAP, ",");
+                INITIAL_MIME_TO_EXT_MAPPING, ",");
         while (lines.hasMoreTokens()) {
             final String line = lines.nextToken();
             final StringTokenizer exts = new StringTokenizer(line);
