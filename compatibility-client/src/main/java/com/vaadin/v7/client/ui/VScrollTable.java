@@ -4417,7 +4417,7 @@ public class VScrollTable extends FlowPanel
                         .getOffsetWidth() + getHeaderPadding();
                 if (columnIndex < 0) {
                     columnIndex = 0;
-                    for (Widget widget : tHead) {
+                    for (Widget widget : tFoot) {
                         if (widget == this) {
                             break;
                         }
