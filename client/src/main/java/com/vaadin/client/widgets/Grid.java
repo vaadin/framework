@@ -6733,7 +6733,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     public <C extends Column<?, T>> C addColumn(C column, int index) {
         if (column == selectionColumn) {
             throw new IllegalArgumentException(
-                    "The selection column many " + "not be added manually");
+                    "The selection column may not be added manually");
         } else if (selectionColumn != null && index == 0) {
             throw new IllegalStateException("A column cannot be inserted "
                     + "before the selection column");
