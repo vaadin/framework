@@ -246,6 +246,10 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     margin-left: 0;
   }
 
+  &:not([aria-hidden="true"]) ~ td .v-caption {
+    margin-left: round($v-unit-size/2);
+  }
+
   &:focus {
     outline: none;
 
@@ -441,6 +445,10 @@ $v-tabsheet-content-animation-enabled: $v-animations-enabled !default;
     td:first-child .v-caption,
     [aria-hidden="true"] + td .v-caption {
       margin-left: 0;
+    }
+
+    :not([aria-hidden="true"]) ~ td .v-caption {
+      margin-left: $tab-spacing or first-number($v-border) * -1;
     }
 
     @if $frame-inactive-tabs {
