@@ -22,13 +22,16 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.DirectionalManagedLayout;
 import com.vaadin.client.HasComponentsConnector;
+import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.ui.orderedlayout.VerticalLayoutConnector;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.ui.Composite;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * Connector for the Composite component.
@@ -114,6 +117,11 @@ public class CompositeConnector extends AbstractHasComponentsConnector
         } else if (childConnector instanceof DirectionalManagedLayout) {
             ((DirectionalManagedLayout) childConnector).layoutHorizontally();
             ((DirectionalManagedLayout) childConnector).layoutVertically();
+        } else {
+            getLayoutManager().setNeedsMeasureRecursively(childConnector);
+            if (!getLayoutManager().isLayoutRunning()) {
+                getLayoutManager().layoutNow();
+            }
         }
     }
 
