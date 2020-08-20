@@ -37,7 +37,6 @@ import com.google.gwt.user.client.Window;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
-import com.vaadin.client.DirectionalManagedLayout;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
@@ -263,7 +262,6 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
          */
         if (hasContent) {
             Element layoutElement = content.getWidget().getElement();
-
             Style childStyle = layoutElement.getStyle();
 
             if (content.isRelativeHeight()) {
