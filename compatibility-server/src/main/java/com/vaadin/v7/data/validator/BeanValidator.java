@@ -67,30 +67,35 @@ public class BeanValidator implements Validator {
     protected static class SimpleContext implements Context, Serializable {
 
         private final Object value;
-        private final ConstraintDescriptor<?> descriptor;
+        private final ConstraintViolation<?> violation;
 
         /**
          * Create a simple immutable message interpolator context.
          *
          * @param value
          *            value being validated
-         * @param descriptor
-         *            ConstraintDescriptor corresponding to the constraint being
+         * @param violation
+         *            ConstraintViolation corresponding to the constraint being
          *            validated
          */
-        public SimpleContext(Object value, ConstraintDescriptor<?> descriptor) {
+        public SimpleContext(Object value, ConstraintViolation<?> violation) {
             this.value = value;
-            this.descriptor = descriptor;
+            this.violation = violation;
         }
 
         @Override
         public ConstraintDescriptor<?> getConstraintDescriptor() {
-            return descriptor;
+            return violation.getConstraintDescriptor();
         }
 
         @Override
         public Object getValidatedValue() {
             return value;
+        }
+
+        @Override
+        public <T> T unwrap(Class<T> type) {
+            return violation.unwrap(type);
         }
 
     }
@@ -128,7 +133,7 @@ public class BeanValidator implements Validator {
                         .getMessageInterpolator()
                         .interpolate(violation.getMessageTemplate(),
                                 new SimpleContext(value,
-                                        violation.getConstraintDescriptor()),
+                                        violation),
                                 locale);
                 causes[i] = new InvalidValueException(msg);
                 ++i;
