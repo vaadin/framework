@@ -68,7 +68,7 @@ public class BeanValidator implements Validator {
 
         private final Object value;
         private final ConstraintViolation<?> violation;
-        private final ConstraintDescriptor<?> description;
+        private final ConstraintDescriptor<?> descriptor;
 
         /**
          * Create a simple immutable message interpolator context.
@@ -82,18 +82,18 @@ public class BeanValidator implements Validator {
         public SimpleContext(Object value, ConstraintViolation<?> violation) {
             this.value = value;
             this.violation = violation;
-            this.description = violation.getConstraintDescriptor();
+            this.descriptor = violation.getConstraintDescriptor();
         }
 
-        public SimpleContext(Object value, ConstraintDescriptor<?> description) {
+        public SimpleContext(Object value, ConstraintDescriptor<?> descriptor) {
             this.value = value;
-            this.description = description;
+            this.descriptor = descriptor;
             this.violation = null;
         }
 
         @Override
         public ConstraintDescriptor<?> getConstraintDescriptor() {
-            return description;
+            return descriptor;
         }
 
         @Override
@@ -106,7 +106,13 @@ public class BeanValidator implements Validator {
             if (violation != null) {
                 return violation.unwrap(type);
             } else {
-                return null;
+               try {
+                    return type.newInstance();
+                } catch (InstantiationException e) {
+                    throw new ValidationException();
+                } catch (IllegalAccessException e) {
+                    throw new ValidationException();
+                }
             }
         }
 
