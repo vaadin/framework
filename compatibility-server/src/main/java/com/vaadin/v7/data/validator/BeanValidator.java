@@ -23,6 +23,7 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.MessageInterpolator.Context;
 import javax.validation.Validation;
+import javax.validation.ValidationException;
 import javax.validation.ValidatorFactory;
 import javax.validation.metadata.ConstraintDescriptor;
 
