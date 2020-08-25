@@ -114,11 +114,6 @@ public class CompositeConnector extends AbstractHasComponentsConnector
         } else if (childConnector instanceof DirectionalManagedLayout) {
             ((DirectionalManagedLayout) childConnector).layoutHorizontally();
             ((DirectionalManagedLayout) childConnector).layoutVertically();
-        } else {
-            getLayoutManager().setNeedsMeasureRecursively(childConnector);
-            if (!getLayoutManager().isLayoutRunning()) {
-                getLayoutManager().layoutNow();
-            }
         }
     }
 

@@ -282,13 +282,6 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
             } else {
                 childStyle.clearPosition();
             }
-            if (!getChildren().isEmpty()) {
-                ComponentConnector childConnector = (ComponentConnector) getChildren()
-                        .get(0);
-                if (childConnector instanceof SimpleManagedLayout) {
-                    ((SimpleManagedLayout) childConnector).layout();
-                }
-            }
         }
 
     }

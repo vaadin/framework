@@ -1,22 +1,18 @@
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertNotEquals;
+
+import org.junit.Test;
+
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.WindowElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import org.junit.Test;
-
-import static org.junit.Assert.assertNotEquals;
 
 @TestCategory("grid")
 public class GridColumnWidthInsideWindowCompositeContentTest
         extends SingleBrowserTest {
-
-    @Override
-    protected Class<?> getUIClass() {
-        return GridColumnWidthInsideWindowCompositeContent.class;
-    }
 
     @Test
     public void widthAfterExpansion() throws InterruptedException {
@@ -34,7 +30,6 @@ public class GridColumnWidthInsideWindowCompositeContentTest
         assertNotEquals(
                 "Expected Grid cell to be resized after Window was expanded",
                 initialWidth, newWidth);
-
     }
 
     @Test
