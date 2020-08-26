@@ -1230,8 +1230,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     public void updateContentsSize() {
         LayoutManager layoutManager = getLayoutManager();
-        layoutManager
-                .setNeedsMeasure(ConnectorMap.get(client).getConnector(this));
+        layoutManager.setNeedsMeasureRecursively(
+                ConnectorMap.get(client).getConnector(this));
         layoutManager.layoutNow();
     }
 
