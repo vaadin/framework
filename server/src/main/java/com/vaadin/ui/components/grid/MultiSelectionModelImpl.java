@@ -131,15 +131,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
         return getState(false).selectAllCheckBoxVisible;
     }
 
-    /**
-     * Returns whether all items are selected or not.
-     * <p>
-     * This is only {@code true} if user has selected all rows with the select
-     * all checkbox on client side, or if {@link #selectAll()} has been used
-     * from server side.
-     *
-     * @return {@code true} if all selected, {@code false} if not
-     */
+    @Override
     public boolean isAllSelected() {
         return getState(false).allSelected;
     }

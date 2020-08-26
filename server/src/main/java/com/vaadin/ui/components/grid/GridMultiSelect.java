@@ -188,6 +188,20 @@ public class GridMultiSelect<T> implements MultiSelect<T> {
     }
 
     /**
+     * Returns whether all items are selected or not.
+     * <p>
+     * This is only {@code true} if user has selected all rows with the select
+     * all checkbox on client side, or if {@link #selectAll()} has been used
+     * from server side.
+     *
+     * @return {@code true} if all selected, {@code false} if not
+     * @since 8.12.0
+     */
+    public boolean isAllSelected() {
+        return model.isAllSelected();
+    }
+
+    /**
      * Checks if the user is allowed to change the selection.
      * <p>
      * The check is done only for the client side actions. It doesn't affect
