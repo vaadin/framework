@@ -18,7 +18,7 @@ The true power of Valo lies in its configurability with parameters, functions,
 and Sass mixins. You can use the built-in definitions in your own themes or
 override the defaults. Detailed documentation of the available mixins,
 functions, and variables can be found in the Valo API documentation available at
-http://vaadin.com/valo.
+https://vaadin.com/api/valo/.
 
 [[themes.valo.use]]
 == Basic Use
