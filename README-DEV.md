@@ -65,9 +65,9 @@ The following preferences need to be set to keep the project consistent. You nee
 
 1. Open *Window* -> *Preferences* (Windows) or *Eclipse* -> *Preferences* (Mac)
 1. Go to *Java* -> *Code Style* -> *Clean Up*
-   - Import /eclipse/VaadinCleanup.xml
+   - Import [eclipse/VaadinCleanup.xml](/eclipse/VaadinCleanup.xml)
 1. Go to *Java* -> *Code Style* -> *Formatter*
-   - Import /eclipse/VaadinJavaConventions.xml
+   - Import [eclipse/VaadinJavaConventions.xml](/eclipse/VaadinJavaConventions.xml)
 
 #### Save actions
 
@@ -161,7 +161,7 @@ For Eclipse users, see [Eclipse Quick Setup](#eclipse-quick-setup).
 1. Have a coffee break while IDEA is loading dependencies and indexing the project
 1. Run Maven targets <code>clean</code> and <code>install</code> using *Maven Projects* tool window to compile the whole project
 
-Unfortunately there is no easy way to replicate [Eclipse workspace preferences](#workspace-preferences) in their entirety in IDEA, but you can use [Eclipse Code Formatter plugin](https://plugins.jetbrains.com/plugin/6546-eclipse-code-formatter) to import /eclipse/VaadinCleanup.xml and /eclipse/VaadinJavaConventions.xml as a starting point.
+Unfortunately there is no easy way to replicate [Eclipse workspace preferences](#workspace-preferences) in their entirety in IDEA, but you can use [Eclipse Code Formatter plugin](https://plugins.jetbrains.com/plugin/6546-eclipse-code-formatter) to import [eclipse/VaadinCleanup.xml](/eclipse/VaadinCleanup.xml) and [eclipse/VaadinJavaConventions.xml](/eclipse/VaadinJavaConventions.xml) as a starting point.
 
 ### Running a specific UI test
 
