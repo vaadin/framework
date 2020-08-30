@@ -4038,7 +4038,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public void setColumns(Collection<String> columnIds) {
         Objects.requireNonNull(columnIds, "columnIds can't be null");
-        setColumns((String[]) columnIds.toArray());
+        String[] columns = columnIds.toArray(new String[columnIds.size()]);
+        setColumns(columns);
     }
 
     private String getGeneratedIdentifier() {
