@@ -136,6 +136,10 @@ public abstract class AbstractTB3Test extends ParallelTest {
         int h = SCREENSHOT_HEIGHT;
 
         try {
+            if (BrowserUtil.isChrome(getDesiredCapabilities())) {
+                // Chrome 85 keeps failing in this task...
+                sleep(200);
+            }
             testBench().resizeViewPortTo(w, h);
         } catch (UnsupportedOperationException e) {
             // Opera does not support this...
@@ -365,6 +369,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      *         {@link org.openqa.selenium.JavascriptExecutor#executeScript(String, Object...)}
      *         returns
      */
+    @Override
     protected Object executeScript(String script, Object... args) {
         return ((JavascriptExecutor) getDriver()).executeScript(script, args);
     }
