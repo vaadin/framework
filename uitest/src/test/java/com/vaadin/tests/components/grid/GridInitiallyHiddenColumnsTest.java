@@ -39,6 +39,7 @@ public class GridInitiallyHiddenColumnsTest extends SingleBrowserTest {
     @Test
     public void ensureCorrectlyRenderedAllInitiallyHidden() {
         openTestURL("debug&allHidden");
+        waitUntilLoadingIndicatorNotVisible();
         GridElement grid = $(GridElement.class).first();
 
         getSidebarOpenButton(grid).click();
