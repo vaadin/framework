@@ -69,6 +69,10 @@ public class BeanValidator implements Validator<Object> {
             return violation.getInvalidValue();
         }
 
+        @Override
+        public <T> T unwrap(Class<T> type) {
+            return violation.unwrap(type);
+        }
     }
 
     private String propertyName;

@@ -23,6 +23,7 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.MessageInterpolator.Context;
 import javax.validation.Validation;
+import javax.validation.ValidationException;
 import javax.validation.ValidatorFactory;
 import javax.validation.metadata.ConstraintDescriptor;
 
@@ -67,6 +68,7 @@ public class BeanValidator implements Validator {
     protected static class SimpleContext implements Context, Serializable {
 
         private final Object value;
+        private final ConstraintViolation<?> violation;
         private final ConstraintDescriptor<?> descriptor;
 
         /**
@@ -74,13 +76,20 @@ public class BeanValidator implements Validator {
          *
          * @param value
          *            value being validated
-         * @param descriptor
-         *            ConstraintDescriptor corresponding to the constraint being
+         * @param violation
+         *            ConstraintViolation corresponding to the constraint being
          *            validated
          */
+        public SimpleContext(Object value, ConstraintViolation<?> violation) {
+            this.value = value;
+            this.violation = violation;
+            this.descriptor = violation.getConstraintDescriptor();
+        }
+
         public SimpleContext(Object value, ConstraintDescriptor<?> descriptor) {
             this.value = value;
             this.descriptor = descriptor;
+            this.violation = null;
         }
 
         @Override
@@ -91,6 +100,21 @@ public class BeanValidator implements Validator {
         @Override
         public Object getValidatedValue() {
             return value;
+        }
+
+        @Override
+        public <T> T unwrap(Class<T> type) {
+            if (violation != null) {
+                return violation.unwrap(type);
+            } else {
+               try {
+                    return type.newInstance();
+                } catch (InstantiationException e) {
+                    throw new ValidationException();
+                } catch (IllegalAccessException e) {
+                    throw new ValidationException();
+                }
+            }
         }
 
     }
@@ -128,7 +152,7 @@ public class BeanValidator implements Validator {
                         .getMessageInterpolator()
                         .interpolate(violation.getMessageTemplate(),
                                 new SimpleContext(value,
-                                        violation.getConstraintDescriptor()),
+                                        violation),
                                 locale);
                 causes[i] = new InvalidValueException(msg);
                 ++i;
