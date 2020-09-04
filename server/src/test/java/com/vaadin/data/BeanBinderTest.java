@@ -167,11 +167,12 @@ public class BeanBinderTest
         private TextField mydate = new TextField();
     }
 
-    public interface Interface {
+    public interface TestInterface {
         int getProperty();
     }
 
-    public interface InterfaceWithOverwrittenMethod extends Interface {
+    public interface TestInterfaceWithOverwrittenMethod extends TestInterface {
+        @Override
         int getProperty();
     }
 
@@ -545,6 +546,24 @@ public class BeanBinderTest
         assertTrue(binder.validate().isOk());
     }
 
+    @Test
+    public void interface_extension_with_overwritten_property() {
+        Binder<TestInterfaceWithOverwrittenMethod> binder = new Binder<>(
+                TestInterfaceWithOverwrittenMethod.class);
+        IntegerTextField field = new IntegerTextField();
+
+        binder.bind(field, "property");
+        TestInterfaceWithOverwrittenMethod bean = new TestInterfaceWithOverwrittenMethod() {
+            @Override
+            public int getProperty() {
+                return 5;
+            }
+        };
+        binder.setBean(bean);
+
+        assertEquals(Integer.valueOf(5), field.getValue());
+    }
+
     private void assertInvalid(HasValue<?> field, String message) {
         BinderValidationStatus<?> status = binder.validate();
         List<BindingValidationStatus<?>> errors = status
@@ -552,11 +571,5 @@ public class BeanBinderTest
         assertEquals(1, errors.size());
         assertSame(field, errors.get(0).getField());
         assertEquals(message, errors.get(0).getMessage().get());
-    }
-
-    @Test
-    public void interface_extension_with_overwritten_property() {
-        Binder<InterfaceWithOverwrittenMethod> binder =
-                new Binder<>(InterfaceWithOverwrittenMethod.class);
     }
 }
