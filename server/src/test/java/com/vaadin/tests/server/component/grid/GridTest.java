@@ -571,6 +571,25 @@ public class GridTest {
     }
 
     @Test
+    public void setColumns_addColumns_v2_beangrid() {
+        Grid<Person> grid = new Grid<>(Person.class);
+
+        // Remove so we can add it back
+        grid.removeColumn("name");
+
+        List<String> columnIds = new ArrayList<>();
+        columnIds.add("born");
+        columnIds.add("name");
+
+        grid.setColumns(columnIds);
+
+        List<Column<Person, ?>> columns = grid.getColumns();
+        assertEquals(2, columns.size());
+        assertEquals("born", columns.get(0).getId());
+        assertEquals("name", columns.get(1).getId());
+    }    
+
+    @Test
     public void setColumnOrder_byColumn() {
         grid.setColumnOrder(randomColumn, lengthColumn);
 
