@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import com.vaadin.data.BeanBinderTest.RequiredConstraints.SubConstraint;
 import com.vaadin.data.BeanBinderTest.RequiredConstraints.SubSubConstraint;
+import com.vaadin.data.BinderInstanceFieldTest.IntegerTextField;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.tests.data.bean.BeanToValidate;
 import com.vaadin.ui.CheckBoxGroup;
