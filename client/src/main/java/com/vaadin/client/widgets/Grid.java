@@ -6540,8 +6540,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
         }
         if (visibleNewColumns > 0) {
+            int escalatorIndex = index;
+            for (int existingColumn = 0; existingColumn < index; existingColumn++) {
+                if (getColumn(existingColumn).isHidden()) {
+                    escalatorIndex--;
+                }
+            }
             final ColumnConfiguration columnConfiguration = this.escalator.getColumnConfiguration();
-            columnConfiguration.insertColumns(index, visibleNewColumns);
+            columnConfiguration.insertColumns(escalatorIndex, visibleNewColumns);
         }
 
         for (final Column<?, T> column : columnCollection) {
