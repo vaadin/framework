@@ -2250,13 +2250,13 @@ public class Escalator extends Widget
 
             cell.getParentElement().insertBefore(cellClone, cell);
             double requiredWidth = getBoundingWidth(cellClone);
-            if (BrowserInfo.get().isIE()) {
-                /*
-                 * IE browsers have some issues with subpixels. Occasionally
-                 * content is overflown even if not necessary. Increase the
-                 * counted required size by 0.01 just to be on the safe side.
-                 */
-                requiredWidth += 0.01;
+
+            if (requiredWidth > 0) {
+                // add one pixel to avoid subpixel issues
+                // (overflow, unnecessary ellipsis...)
+                requiredWidth += 1;
+                // round up to a fraction that the current browser can handle
+                requiredWidth = WidgetUtil.roundSizeUp(requiredWidth);
             }
 
             cellClone.removeFromParent();
