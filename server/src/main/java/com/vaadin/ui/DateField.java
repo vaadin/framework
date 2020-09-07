@@ -56,7 +56,8 @@ public class DateField extends AbstractLocalDateField {
      *            the LocalDate value.
      */
     public DateField(LocalDate value) {
-        super(null, value);
+        super();
+        setValue(value);
     }    
 
     /**
