@@ -58,7 +58,7 @@ public class DateField extends AbstractLocalDateField {
     public DateField(LocalDate value) {
         super();
         setValue(value);
-    }    
+    }
 
     /**
      * Constructs an empty <code>DateField</code> with caption.
