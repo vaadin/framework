@@ -15,6 +15,7 @@ public class FontIconsTest extends MultiBrowserTest {
     @Test
     public void checkScreenshot() throws IOException {
         openTestURL();
+        waitUntilLoadingIndicatorNotVisible();
         compareScreen("allVaadinIcons");
     }
 
