@@ -69,6 +69,11 @@ public class EmailValidatorTest extends ValidatorTestBase {
     }
 
     @Test
+    public void testEmailValidatorWithBadInput() {
+        assertFails("a@a.m5qRt8zLxQG4mMeu9yKZm5qRt8zLxQG4mMeu9yKZm5qRt8zLxQG4mMeu9yKZ&",validator("validator not halting on bad input"));
+    }
+
+    @Test
     public void testLongTldPasses() {
         assertPasses("joonas@vaadin.management", shouldNotFail());
     }
