@@ -50,6 +50,17 @@ public class DateField extends AbstractLocalDateField {
     }
 
     /**
+     * Constructs a new <code>DateField</code> with initial date value.
+     *
+     * @param value
+     *            the LocalDate value.
+     */
+    public DateField(LocalDate value) {
+        super();
+        setValue(value);
+    }
+
+    /**
      * Constructs an empty <code>DateField</code> with caption.
      *
      * @param caption
