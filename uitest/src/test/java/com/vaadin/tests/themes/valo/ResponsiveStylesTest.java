@@ -52,7 +52,7 @@ public class ResponsiveStylesTest extends MultiBrowserTest {
         WebElement wideMenu = menus.get(WIDE_ELEMENT_INDEX);
         int wideWidth = wideMenu.getSize().width;
         assertThat(wideWidth, equalTo(WIDE_WIDTH));
-        sleep(200);
+        sleep(300);
 
         compareScreen("defaultMenuWidths");
     }
