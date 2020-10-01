@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+import org.openqa.selenium.NoSuchElementException;
 
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
@@ -107,7 +108,14 @@ public class GridClientColumnPropertiesTest
         GridElement gridElement = getGridElement();
 
         // Scroll first row out of view
-        gridElement.getRow(50);
+        try {
+            gridElement.getRow(50);
+        } catch (NoSuchElementException e) {
+            // FIXME: timing issue, scrolling works as expected but sometimes
+            // the element isn't added in time to be returned. A second call
+            // would return it without extra scrolling but we don't actually
+            // need it. Should work without this workaround, but not a blocker.
+        }
 
         // Enable broken renderer for the first row
         selectMenuPath("Component", "Columns", "Column 0", "Broken renderer");
