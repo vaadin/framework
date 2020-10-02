@@ -14,6 +14,7 @@ public class MenuBarIconsTest extends SingleBrowserTest {
     @Test
     public void fontIconsRendered() {
         openTestURL();
+        waitUntilLoadingIndicatorNotVisible();
         MenuBarElement menu = $(MenuBarElement.class).id("fontIcon");
         WebElement moreItem = menu
                 .findElements(By.className("v-menubar-menuitem")).get(3);
@@ -35,6 +36,7 @@ public class MenuBarIconsTest extends SingleBrowserTest {
         assertFontIcon(FontAwesome.MOTORCYCLE, moreItem);
 
         moreItem.click();
+        waitForElementPresent(By.className("v-menubar-submenu"));
         WebElement filler5 = moreItem.findElement(By.vaadin("#Filler 5"));
         assertFontIcon(FontAwesome.ANGELLIST, filler5);
 
@@ -43,6 +45,7 @@ public class MenuBarIconsTest extends SingleBrowserTest {
     @Test
     public void imageIconsRendered() throws Exception {
         openTestURL();
+        waitUntilLoadingIndicatorNotVisible();
         MenuBarElement menu = $(MenuBarElement.class).id("image");
         WebElement moreItem = menu
                 .findElements(By.className("v-menubar-menuitem")).get(3);
@@ -58,11 +61,12 @@ public class MenuBarIconsTest extends SingleBrowserTest {
         assertImage(image, hasSubElement.findElement(By.vaadin("#Sub item")));
         // Close sub menu
         hasSubElement.click();
-        
+
         sleep(500);
         assertImage(image, moreItem);
 
         moreItem.click();
+        waitForElementPresent(By.className("v-menubar-submenu"));
         WebElement filler5 = moreItem.findElement(By.vaadin("#Filler 5"));
         assertImage(image, filler5);
 
