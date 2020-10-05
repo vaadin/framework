@@ -7311,12 +7311,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         RowContainer body = escalator.getBody();
                         int oldSize = body.getRowCount();
 
-                        // Hide all details.
-                        Set<Integer> oldDetails = new HashSet<>(visibleDetails);
-                        for (int i : oldDetails) {
-                            setDetailsVisible(i, false);
-                        }
-
                         if (newSize > oldSize) {
                             if (oldSize == 0 && !isHeaderVisible()) {
                                 // Fixes framework/issues/11607
