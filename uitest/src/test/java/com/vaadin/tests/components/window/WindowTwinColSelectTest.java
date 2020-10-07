@@ -1,5 +1,8 @@
 package com.vaadin.tests.components.window;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -8,14 +11,12 @@ import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.TwinColSelectElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 public class WindowTwinColSelectTest extends MultiBrowserTest {
 
     @Test
     public void testBothVisibleInitially() {
         openTestURL();
+        waitUntilLoadingIndicatorNotVisible();
         TwinColSelectElement twinColSelect = $(TwinColSelectElement.class)
                 .first();
         WebElement optionsElement = twinColSelect.getOptionsElement();

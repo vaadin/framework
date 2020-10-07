@@ -314,14 +314,51 @@
                         <categories.exclude>${categories.exclude}</categories.exclude>
                         <browserstack.identifier>${browserstack.identifier}</browserstack.identifier>
                     </systemPropertyVariables>
-                    <includes>
-                        <include>**/AllTB3Tests.java</include>
-                    </includes>
                 </configuration>
                 <executions>
                     <execution>
+                        <id>no-components</id>
+                        <configuration>
+                            <includes>
+                                <include>**/LimitedTB3TestsNonComponent.java</include>
+                            </includes>
+                        </configuration>
                         <goals>
                             <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>components-no-grid</id>
+                        <configuration>
+                            <includes>
+                                <include>**/LimitedTB3TestsComponentsNoGrid.java</include>
+                            </includes>
+                        </configuration>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>grid-only</id>
+                        <configuration>
+                            <includes>
+                                <include>**/LimitedTB3TestsComponentsGridOnly.java</include>
+                            </includes>
+                        </configuration>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>verify</id>
+                        <configuration>
+                            <includes>
+                                <include>**/LimitedTB3TestsNonComponent.java</include>
+                                <include>**/LimitedTB3TestsComponentsNoGrid.java</include>
+                                <include>**/LimitedTB3TestsComponentsGridOnly.java</include>
+                            </includes>
+                        </configuration>
+                        <goals>
                             <goal>verify</goal>
                         </goals>
                     </execution>

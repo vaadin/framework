@@ -11,6 +11,7 @@ import com.vaadin.tests.widgetset.server.LayoutDuringStateUpdateComponent;
 public class LayoutDuringStateUpdateConnector extends AbstractComponentConnector
         implements PostLayoutListener {
     private int layoutCount = 0;
+    private String changeLog = "";
 
     @Override
     protected void init() {
@@ -29,13 +30,22 @@ public class LayoutDuringStateUpdateConnector extends AbstractComponentConnector
 
         try {
             getLayoutManager().layoutNow();
+
+            // these should never be reached
+            if (changeLog.isEmpty()) {
+                changeLog += " properties: ";
+            }
+            for (String property : stateChangeEvent.getChangedProperties()) {
+                changeLog += property + ", ";
+            }
         } catch (AssertionError e) {
             // Ignore
         }
     }
 
     private void updateLabelText() {
-        getWidget().setText("Layout phase count: " + layoutCount);
+        getWidget().setText("Layout phase count: " + layoutCount + changeLog);
+        changeLog = "";
     }
 
     @Override

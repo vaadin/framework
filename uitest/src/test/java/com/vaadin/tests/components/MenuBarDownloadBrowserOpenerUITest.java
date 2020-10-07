@@ -5,7 +5,12 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.MenuBarElement;
 import com.vaadin.testbench.parallel.Browser;
@@ -21,19 +26,51 @@ public class MenuBarDownloadBrowserOpenerUITest extends MultiBrowserTest {
     @Test
     public void testTriggerExtension() {
         openTestURL();
-        MenuBarElement first = $(MenuBarElement.class).first();
-        first.clickItem("TestExtension", "RunMe");
+        MenuBarElement menu = $(MenuBarElement.class).first();
+        clickItem(menu, "TestExtension", "RunMe");
         checkAndCloseAlert();
 
-        first.clickItem("TestExtension", "AddTrigger");
-        first.clickItem("TestExtension", "RunMe");
+        clickItem(menu, "TestExtension", "AddTrigger");
+        clickItem(menu, "TestExtension", "RunMe");
         checkAndCloseAlert();
         checkAndCloseAlert();
 
         sleep(500);
-        first.clickItem("TestExtension", "RemoveTrigger");
-        first.clickItem("TestExtension", "RunMe");
+        clickItem(menu, "TestExtension", "RemoveTrigger");
+        clickItem(menu, "TestExtension", "RunMe");
         checkAndCloseAlert();
+    }
+
+    private void clickItem(MenuBarElement menu, String... captions) {
+        // click each given menu item in turn
+        for (String caption : captions) {
+            // wait for the menu item to become available
+            waitUntil(new ExpectedCondition<Boolean>() {
+                @Override
+                public Boolean apply(WebDriver arg0) {
+                    List<WebElement> captionElements = findElements(
+                            By.className("v-menubar-menuitem-caption"));
+                    for (WebElement captionElement : captionElements) {
+                        try {
+                            if (captionElement.getText().equals(caption)) {
+                                return true;
+                            }
+                        } catch (WebDriverException e) {
+                            // stale, detached element is not visible
+                        }
+                    }
+                    return false;
+                }
+
+                @Override
+                public String toString() {
+                    // Expected condition failed: waiting for ...
+                    return caption + " to be available";
+                }
+            });
+            // menu item was found, click it
+            menu.clickItem(caption);
+        }
     }
 
     private void checkAndCloseAlert() {

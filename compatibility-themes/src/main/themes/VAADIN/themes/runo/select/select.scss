@@ -49,6 +49,10 @@ $select-button-negative-width: -25px;
 	outline: 5px auto -webkit-focus-ring-color;
 	outline-offset: -4px;
 }
+.v-ch & .#{$primaryStyleName}-focus {
+	/* remove safari focus outline offset for chrome (evaluates also as safari) */
+	outline-offset: 0;
+}
 .#{$primaryStyleName}-button {
 	width: $select-button-width;
 	margin-right: $select-button-negative-width;

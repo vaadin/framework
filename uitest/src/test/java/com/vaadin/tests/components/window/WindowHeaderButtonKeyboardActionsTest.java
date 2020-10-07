@@ -1,5 +1,7 @@
 package com.vaadin.tests.components.window;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 
 import org.junit.Test;
@@ -11,8 +13,6 @@ import org.openqa.selenium.interactions.Actions;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.WindowElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-
-import static org.junit.Assert.assertTrue;
 
 public class WindowHeaderButtonKeyboardActionsTest extends SingleBrowserTest {
 
@@ -191,10 +191,7 @@ public class WindowHeaderButtonKeyboardActionsTest extends SingleBrowserTest {
 
         // click button with mouse and wait
         closeButton.click();
-        sleep(200);
-
-        assertTrue("Window is not closed when focused element is clicked",
-                findElements(By.className("v-window")).size() == 0);
+        waitForElementNotPresent(By.className("v-window"));
     }
 
     // Tests for maximize-restore button
