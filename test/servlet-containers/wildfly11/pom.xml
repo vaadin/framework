@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-servlet-containers-test</artifactId>
-        <version>8.12-SNAPSHOT</version>
+        <version>8.13-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-test-wildfly11-server</artifactId>
     <name>Vaadin Wildfly 11 Test</name>
