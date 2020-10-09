@@ -684,10 +684,9 @@ public abstract class AbstractClientConnector
             } else if (!(resource instanceof ConnectorResource)) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND,
                         "Resource is no longer present");
-                getLogger().log(Level.INFO,
-                        "The resource '" + key + "' is a " +
-                                resource.getClass().getSimpleName() +
-                                " now; it is no longer a ConnectorResource and request could not be handled");
+                getLogger().log(Level.INFO, "The resource '" + key + "' is a "
+                        + resource.getClass().getSimpleName()
+                        + " now; it is no longer a ConnectorResource and request could not be handled");
                 return true;
             }
             stream = ((ConnectorResource) resource).getStream();
