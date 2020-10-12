@@ -790,9 +790,16 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         if (!isLocked()) {
             scrollPos = newScrollPos;
             scrollEventFirer.scheduleEvent();
-        } else if (scrollPos != newScrollPos) {
-            // we need to actually undo the setting of the scroll.
-            internalSetScrollPos(toInt32(scrollPos));
+        } else {
+            if (scrollPos != newScrollPos) {
+                // we need to actually undo the setting of the scroll.
+                internalSetScrollPos(toInt32(scrollPos));
+            }
+            if (scrollInProgress != null) {
+                // cancel the in-progress indicator
+                scrollInProgress.removeHandler();
+                scrollInProgress = null;
+            }
         }
     }
 
