@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.WeakHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
@@ -50,6 +52,8 @@ import com.vaadin.util.ReflectTools;
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * An abstract base class for ClientConnector implementations. This class
  * provides all the basic functionality required for connectors.
@@ -59,6 +63,11 @@ import elemental.json.JsonValue;
  */
 public abstract class AbstractClientConnector
         implements ClientConnector, MethodEventSource {
+
+    private static Logger getLogger() {
+        return Logger.getLogger(AbstractClientConnector.class.getName());
+    }
+
     /**
      * A map from client to server RPC interface class name to the RPC call
      * manager that handles incoming RPC calls for that interface.
@@ -669,11 +678,18 @@ public abstract class AbstractClientConnector
         VaadinSession session = getSession();
         session.lock();
         try {
-            ConnectorResource resource = (ConnectorResource) getResource(key);
+            Resource resource = getResource(key);
             if (resource == null) {
                 return false;
+            } else if (!(resource instanceof ConnectorResource)) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND,
+                        "Resource is no longer present");
+                getLogger().log(Level.INFO, "The resource '" + key + "' is a "
+                        + resource.getClass().getSimpleName()
+                        + " now; it is no longer a ConnectorResource and request could not be handled");
+                return true;
             }
-            stream = resource.getStream();
+            stream = ((ConnectorResource) resource).getStream();
         } finally {
             session.unlock();
         }
