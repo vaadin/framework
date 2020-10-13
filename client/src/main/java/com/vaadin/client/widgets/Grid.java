@@ -2040,9 +2040,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 // overlay from the bottom
                 editorOverlay.insertFirst(messageAndButtonsWrapper);
                 int gridHeight = grid.getElement().getOffsetHeight();
-                editorOverlay.getStyle().setBottom(
-                        gridHeight - overlayTop - tr.getOffsetHeight(),
-                        Unit.PX);
+                double borderHeight = WidgetUtil
+                        .getBorderBottomThickness(editorOverlay);
+                editorOverlay.getStyle().setBottom(gridHeight - overlayTop
+                        - tr.getOffsetHeight() + borderHeight, Unit.PX);
                 editorOverlay.getStyle().clearTop();
             }
 
