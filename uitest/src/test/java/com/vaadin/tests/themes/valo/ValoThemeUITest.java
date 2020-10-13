@@ -265,6 +265,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
         }
 
         $(ButtonElement.class).caption(link).first().click();
+        waitUntilLoadingIndicatorNotVisible();
         CssLayoutElement content = wrap(CssLayoutElement.class,
                 findElement(By.className("valo-content")));
         LabelElement captionElem = content.$(LabelElement.class).first();
@@ -285,6 +286,7 @@ public class ValoThemeUITest extends MultiBrowserTest {
 
         testBenchElement(testMenu).scroll(top);
         testBenchElement(testMenu).scrollLeft(left);
+        waitUntilLoadingIndicatorNotVisible();
     }
 
     @Override
