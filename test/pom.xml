@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring.boot.version>1.5.9.RELEASE</spring.boot.version>
-        <selenium.version>3.141.59</selenium.version>
+        <selenium.version>3.14.0</selenium.version>
 
         <!-- Don't care about coding style for tests -->
         <sonar.skip>true</sonar.skip>
