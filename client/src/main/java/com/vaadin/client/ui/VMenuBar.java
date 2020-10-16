@@ -1066,6 +1066,7 @@ public class VMenuBar extends FocusableFlowPanel implements
                 getElement().setAttribute("role", "separator");
             } else {
                 super.setStyleName(primaryStyleName + "-menuitem");
+                getElement().setId(getId());
                 if (isCheckable()) {
                     getElement().setAttribute("role", "menuitemcheckbox");
                     getElement().setAttribute("aria-checked",
