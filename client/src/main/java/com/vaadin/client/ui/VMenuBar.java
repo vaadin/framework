@@ -1089,7 +1089,7 @@ public class VMenuBar extends FocusableFlowPanel implements
             return parentMenu;
         }
 
-        public VMenuBar getRootMenu() {
+        private VMenuBar getRootMenu() {
             VMenuBar rootMenu = getParentMenu();
             while (rootMenu.getParentMenu() != null) {
                 rootMenu = rootMenu.getParentMenu();
