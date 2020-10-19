@@ -23,22 +23,22 @@ public class MenuBarIconsTest extends SingleBrowserTest {
 
         assertFontIcon(FontAwesome.MAIL_REPLY_ALL,
                 menu.findElement(By.vaadin("#Main")));
-        WebElement hasSubElement = menu.findElement(By.vaadin("#Has sub"));
+        WebElement hasSubElement = menu.findElement(By.id("fontIcon-3"));
         assertFontIcon(FontAwesome.SUBWAY, hasSubElement);
         assertFontIcon(FontAwesome.ANGELLIST,
-                menu.findElement(By.vaadin("#Filler 0")));
+                menu.findElement(By.id("fontIcon-5")));
 
         hasSubElement.click();
 
         assertFontIcon(FontAwesome.AMBULANCE,
-                hasSubElement.findElement(By.vaadin("#Sub item")));
+                hasSubElement.findElement(By.id("fontIcon-4")));
         // Close sub menu
         hasSubElement.click();
 
         assertFontIcon(FontAwesome.MOTORCYCLE, moreItem);
 
         moreItem.click();
-        WebElement filler5 = moreItem.findElement(By.vaadin("#Filler 5"));
+        WebElement filler5 = moreItem.findElement(By.id("fontIcon-10"));
         assertFontIcon(FontAwesome.ANGELLIST, filler5);
 
     }
