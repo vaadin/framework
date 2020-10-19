@@ -1066,6 +1066,7 @@ public class VMenuBar extends FocusableFlowPanel implements
                 getElement().setAttribute("role", "separator");
             } else {
                 super.setStyleName(primaryStyleName + "-menuitem");
+                String menuBarId = getRootMenu().getElement().getId();
                 if (menuBarId != null && !menuBarId.isEmpty()) {
                     getElement().setId(menuBarId+"-"+getId());
                 }
