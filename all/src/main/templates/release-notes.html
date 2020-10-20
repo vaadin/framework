@@ -82,16 +82,27 @@
         <p>Vaadin Framework @version-minor@ includes many major and minor
             enhancements. Below is a list of the most notable changes:</p>
 
+        <h3>Enhancements</h3>
+	    
         <ul>
-		<li>Recalculate column widths when vertical scrollbar hidden/shown</li>
-		<li>Add support for "ww" in date format</li>
-		<li>All updates to Escalator size should get reported to LayoutManager</li>
-		<li>Ensure type safety and serializable nature of all the listeners</li>
-		<li>Add convenience overloading for <tt>setColumn</tt></li>
-		<li>Add API to detect if <tt>GridMultiSelect</tt> select-all checkbox is checked</li>
-		<li>Added missing MIME types to <tt>FileTypeResolver</tt></li>
+                <li>Recalculate column widths when vertical scrollbar hidden/shown</li>
+                <li>Add support for "ww" in date format</li>
+                <li>All updates to Escalator size should get reported to LayoutManager</li>
+                <li>Ensure type safety and serializable nature of all the listeners</li>
+                <li>Add convenience overloading for <tt>setColumn</tt></li>
+                <li>Add API to detect if <tt>GridMultiSelect</tt> select-all checkbox is checked</li>
+                <li>Added missing MIME types to <tt>FileTypeResolver</tt></li>
         </ul>
 
+        <h3>Bug fixes</h3>
+	    
+        <ul>
+                <li>Bump JUnit from 4.12 to 4.13.1 to avoid false positive security alerts</li>
+                <li>Take border into account in Grid editor position when it opens upwards</li>
+                <li>Log informative message instead of failing with ClassCastException when polling an obsolete resource</li>
+                <li>When a Grid gets scroll-locked, cancel the scrollInProgress handler</li>
+        </ul>
+	    
         </p>
 
         <p>
@@ -105,7 +116,7 @@
         <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h2>
 
         <ul>
-            <li></li>
+            <li>Fixed potential security issue related method used by framework by updating Hibernate dependency to version 5.3.6.</li>
         </ul>
 
         <h2>For incompatible or behavior-altering changes in 8.11, please see <a href="https://vaadin.com/download/release/8.11/8.11.0/release-notes.html#incompatible">8.11 release notes</a></h2>
