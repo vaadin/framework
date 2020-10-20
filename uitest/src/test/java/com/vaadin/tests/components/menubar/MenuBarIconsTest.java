@@ -30,16 +30,15 @@ public class MenuBarIconsTest extends SingleBrowserTest {
                 menu.findElement(By.id("fontIcon-5")));
 
         hasSubElement.click();
-        waitForElementPresent(By.className("v-menubar-submenu"));
-        assertFontIcon(FontAwesome.AMBULANCE,
-                findElement(By.id("fontIcon-4")));
+        waitForElementPresent(By.id("fontIcon-4"));
+        assertFontIcon(FontAwesome.AMBULANCE, findElement(By.id("fontIcon-4")));
         // Close sub menu
         hasSubElement.click();
 
         assertFontIcon(FontAwesome.MOTORCYCLE, moreItem);
 
         moreItem.click();
-        waitForElementPresent(By.className("v-menubar-submenu"));
+        waitForElementPresent(By.id("fontIcon-10"));
         WebElement filler5 = findElement(By.id("fontIcon-10"));
         assertFontIcon(FontAwesome.ANGELLIST, filler5);
 
