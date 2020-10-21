@@ -1066,10 +1066,6 @@ public class VMenuBar extends FocusableFlowPanel implements
                 getElement().setAttribute("role", "separator");
             } else {
                 super.setStyleName(primaryStyleName + "-menuitem");
-                String menuBarId = getRootMenu().getElement().getId();
-                if (menuBarId != null && !menuBarId.isEmpty()) {
-                    getElement().setId(menuBarId+"-"+getId());
-                }
                 if (isCheckable()) {
                     getElement().setAttribute("role", "menuitemcheckbox");
                     getElement().setAttribute("aria-checked",
@@ -1087,14 +1083,6 @@ public class VMenuBar extends FocusableFlowPanel implements
 
         public VMenuBar getParentMenu() {
             return parentMenu;
-        }
-
-        private VMenuBar getRootMenu() {
-            VMenuBar rootMenu = getParentMenu();
-            while (rootMenu.getParentMenu() != null) {
-                rootMenu = rootMenu.getParentMenu();
-            }
-            return rootMenu;
         }
 
         public void setCommand(Command command) {
