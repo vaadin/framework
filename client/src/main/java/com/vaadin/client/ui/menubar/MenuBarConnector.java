@@ -139,6 +139,11 @@ public class MenuBarConnector extends AbstractComponentConnector
                     currentItem.setId("" + itemId);
                     currentItem.updateFromUIDL(item, client);
 
+                    String domId = getState().id;
+                    if (domId != null && !domId.isEmpty()) {
+                        currentItem.getElement().setId(domId+"-"+itemId);
+                    }
+
                     if (item.getChildCount() > 0) {
                         menuStack.push(currentMenu);
                         iteratorStack.push(itr);
