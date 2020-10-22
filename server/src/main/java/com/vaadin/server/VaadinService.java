@@ -1865,7 +1865,7 @@ public abstract class VaadinService implements Serializable {
         }
     }
 
-    private static boolean checkAtmosphereSupport() {
+    private boolean checkAtmosphereSupport() {
         String rawVersion = AtmospherePushConnection.getAtmosphereVersion();
         if (rawVersion == null) {
             return false;
