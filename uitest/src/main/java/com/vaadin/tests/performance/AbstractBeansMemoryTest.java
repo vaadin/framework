@@ -1,6 +1,8 @@
 package com.vaadin.tests.performance;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
@@ -23,8 +25,6 @@ import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-
-import jdk.nashorn.internal.ir.debug.ObjectSizeCalculator;
 
 /**
  * @author Vaadin Ltd
@@ -140,10 +140,25 @@ public abstract class AbstractBeansMemoryTest<T extends AbstractComponent>
 
         HasComponents container = component.getParent();
         setParent(component, null);
-        memoryLabel.setValue(
-                String.valueOf(ObjectSizeCalculator.getObjectSize(component)));
+        memoryLabel.setValue(String.valueOf(getObjectSize(component)));
 
         setParent(component, container);
+    }
+
+    private static long getObjectSize(Object object) {
+        try {
+            final Class<?> clazz = Class.forName(
+                    "jdk.nashorn.internal.ir.debug.ObjectSizeCalculator");
+            final Method method = clazz.getDeclaredMethod("getObjectSize",
+                    Object.class);
+            return ((long) method.invoke(null, object));
+        } catch (ClassNotFoundException e) {
+            // JDK 11+ doesn't have this class
+            return -1L;
+        } catch (NoSuchMethodException | InvocationTargetException
+                | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void setParent(Component component, Component parent) {
