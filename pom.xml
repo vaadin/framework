@@ -373,7 +373,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.8.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
@@ -656,7 +656,12 @@
             <!-- Default build profile that runs all modules. -->
             <id>default</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <!--
+                this way the profile stays active even if the jdk9 profile activates.
+                See https://stackoverflow.com/questions/5309379/how-to-keep-maven-profiles-which-are-activebydefault-active-even-if-another-prof
+                for more details.
+                -->
+                <file><exists>.</exists></file>
             </activation>
             <modules>
                 <module>shared</module>
@@ -967,6 +972,15 @@
             <id>measurements</id>
             <properties>
                 <skipTests>true</skipTests>
+            </properties>
+        </profile>
+        <profile>
+            <id>jdk9</id>
+            <activation>
+                <jdk>[9,</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.release>8</maven.compiler.release>
             </properties>
         </profile>
     </profiles>
