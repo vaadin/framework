@@ -384,13 +384,17 @@ public class MenuBar extends AbstractComponent
      * cursor is moved over the menu. In this mode the menu also closes itself
      * if the mouse is moved out of the opened menu.
      * <p>
-     * Note, that on touch devices the menu still opens on a click event.
+     * Note, that on touch devices auto open will be disabled and the menu still
+     * opens on a click event.
      *
      * @param autoOpenTopLevelMenu
      *            true if menus should be opened without click, the default is
      *            false
      */
     public void setAutoOpen(boolean autoOpenTopLevelMenu) {
+        if (getUI().getPage().getWebBrowser().isTouchDevice()) {
+            return;
+        }
         if (autoOpenTopLevelMenu != openRootOnHover) {
             openRootOnHover = autoOpenTopLevelMenu;
             markAsDirty();
