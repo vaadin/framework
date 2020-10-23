@@ -23,6 +23,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
@@ -59,6 +60,10 @@ public class MenuBarConnector extends AbstractComponentConnector
 
         widget.openRootOnHover = uidl
                 .getBooleanAttribute(MenuBarConstants.OPEN_ROOT_MENU_ON_HOWER);
+        if (BrowserInfo.get().isAndroid() || BrowserInfo.get().isIOS()) {
+            // fixes https://github.com/vaadin/framework/issues/5873
+            widget.openRootOnHover = false;
+        }
 
         widget.enabled = isEnabled();
 
