@@ -1285,7 +1285,10 @@ public class Binder<BEAN> implements Serializable {
                 result.ifOk(value -> {
                     setter.accept(bean, value);
                     if (value != null) {
-                        getField().setValue(convertToFieldType(value));
+                        FIELDVALUE converted = convertToFieldType(value);
+                        if (!field.getValue().equals(converted)) {
+                            getField().setValue(converted);
+                        }
                     }
                 });
             }
