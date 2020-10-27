@@ -15,6 +15,16 @@
  */
 package com.vaadin.client.ui.ui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -91,17 +101,8 @@ import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.UI;
-import elemental.client.Browser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
+import elemental.client.Browser;
 
 @Connect(value = UI.class, loadStyle = LoadStyle.EAGER)
 public class UIConnector extends AbstractSingleComponentContainerConnector
@@ -922,6 +923,11 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      */
     public void showServerDesign(ServerConnector connector) {
         getRpcProxy(DebugWindowServerRpc.class).showServerDesign(connector);
+    }
+
+    @OnStateChange("thoroughSizeCheck")
+    void onThoroughSizeChckChange() {
+        getLayoutManager().setThoroughSizeChck(getState().thoroughSizeCheck);
     }
 
     @OnStateChange("theme")

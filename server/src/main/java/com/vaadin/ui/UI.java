@@ -2022,6 +2022,40 @@ public abstract class UI extends AbstractSingleComponentContainer
     }
 
     /**
+     * Returns whether LayoutManager uses thorough size check that evaluates the
+     * presence of the element and uses calculated size, or defaults to a
+     * slightly faster check that can result in incorrect size information if
+     * the check is triggered while a transform animation is ongoing. This can
+     * happen e.g. when a PopupView is opened.
+     * <p>
+     * By default, the thorough size check is enabled.
+     *
+     * @return {@code true} if thorough size check enabled, {@code false} if not
+     * @since
+     */
+    public boolean isUsingThoroughSizeCheck() {
+        return getState(false).thoroughSizeCheck;
+    }
+
+    /**
+     * Set whether LayoutManager should use thorough size check that evaluates
+     * the presence of the element and uses calculated size, or default to a
+     * slightly faster check that can result in incorrect size information if
+     * the check is triggered while a transform animation is ongoing. This can
+     * happen e.g. when a PopupView is opened.
+     * <p>
+     * By default, the thorough size check is enabled.
+     *
+     * @param thoroughSizeCheck
+     *            {@code true} if thorough size check enabled, {@code false} if
+     *            not
+     * @since
+     */
+    public void setUsingThoroughSizeCheck(boolean thoroughSizeCheck) {
+        getState().thoroughSizeCheck = thoroughSizeCheck;
+    }
+
+    /**
      * Event which is fired when the ordering of the windows is updated.
      * <p>
      * The other way to listen window position for specific window is
