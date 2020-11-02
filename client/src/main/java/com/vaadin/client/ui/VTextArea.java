@@ -67,6 +67,17 @@ public class VTextArea extends VTextField implements DragImageModifier {
     }
 
     public void setRows(int rows) {
+        // See: https://github.com/vaadin/framework/issues/10138
+        if (BrowserInfo.get().isFirefox()) {
+            rows = rows - 1;
+        }
+        // See: https://github.com/vaadin/framework/issues/7878
+        if (BrowserInfo.get().isIE() || BrowserInfo.get().isEdge()
+                || BrowserInfo.get().isFirefox()) {
+            if (rows < 1) {
+                rows = 1;
+            }
+        }
         getTextAreaElement().setRows(rows);
     }
 
