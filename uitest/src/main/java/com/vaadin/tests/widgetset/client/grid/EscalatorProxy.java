@@ -86,6 +86,14 @@ public class EscalatorProxy extends Escalator {
                 throws IllegalArgumentException {
             columnConfiguration.setColumnWidths(indexWidthMap);
         }
+
+        @Override
+        public void setColumnWidths(Map<Integer, Double> indexWidthMap,
+                boolean recalculateElementSizes)
+                throws IllegalArgumentException {
+            columnConfiguration.setColumnWidths(indexWidthMap,
+                    recalculateElementSizes);
+        }
     }
 
     private class BodyRowContainerProxy extends RowContainerProxy
