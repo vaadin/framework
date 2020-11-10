@@ -143,7 +143,8 @@ public interface ColumnConfiguration {
     public double getColumnWidth(int index) throws IllegalArgumentException;
 
     /**
-     * Sets widths for a set of columns.
+     * Sets widths for a set of columns. Triggers element size recalculation for
+     * elements that require manual calculations.
      *
      * @param indexWidthMap
      *            a map from column index to its respective width to be set. If
@@ -158,6 +159,26 @@ public interface ColumnConfiguration {
      */
     public void setColumnWidths(Map<Integer, Double> indexWidthMap)
             throws IllegalArgumentException;
+
+    /**
+     * Sets widths for a set of columns.
+     *
+     * @param indexWidthMap
+     *            a map from column index to its respective width to be set. If
+     *            the given width for a column index is negative, the column is
+     *            resized-to-fit.
+     * @param recalculateElementSizes
+     *            should the element size recalculation be triggered for
+     *            elements that require manual calculation
+     * @throws IllegalArgumentException
+     *             if {@code indexWidthMap} is {@code null}
+     * @throws IllegalArgumentException
+     *             if any column index in {@code indexWidthMap} is invalid
+     * @throws NullPointerException
+     *             If any value in the map is <code>null</code>
+     */
+    public void setColumnWidths(Map<Integer, Double> indexWidthMap,
+            boolean recalculateElementSizes) throws IllegalArgumentException;
 
     /**
      * Returns the actual width of a column.
