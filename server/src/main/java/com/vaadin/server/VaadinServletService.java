@@ -26,8 +26,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import com.vaadin.pro.licensechecker.LicenseChecker;
 import com.vaadin.server.communication.PushRequestHandler;
 import com.vaadin.server.communication.ServletBootstrapHandler;
 import com.vaadin.server.communication.ServletUIInitHandler;
@@ -35,12 +35,22 @@ import com.vaadin.ui.UI;
 
 public class VaadinServletService extends VaadinService {
     private final VaadinServlet servlet;
+    private static final String PROJECT_NAME = "vaadin-framework";
 
     public VaadinServletService(VaadinServlet servlet,
             DeploymentConfiguration deploymentConfiguration)
             throws ServiceException {
         super(deploymentConfiguration);
         this.servlet = servlet;
+        verifyLicense(deploymentConfiguration.isProductionMode());
+    }
+
+    private void verifyLicense(boolean productionMode) {
+        if (!productionMode) {
+            String frameworkVersion = com.vaadin.shared.Version
+                    .getFullVersion();
+            LicenseChecker.checkLicense(PROJECT_NAME, frameworkVersion);
+        }
     }
 
     @Override
