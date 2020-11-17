@@ -153,9 +153,17 @@ public class GridClientRenderers extends MultiBrowserTest {
         testBench().disableWaitForVaadin();
 
         // Test initial renderering with contentVisible = False
-        TestBenchElement cell = getGrid().getCell(51, 1);
+        TestBenchElement cell;
+        try {
+            cell = getGrid().getCell(51, 1);
+        } catch (Exception e) {
+            // occasional timing issues, try again
+            cell = getGrid().getCell(51, 1);
+        }
         String backgroundColor = cell.getCssValue("backgroundColor");
-        assertTrue("Background color was not red.", colorRed.equals(backgroundColor) || "red".equals(backgroundColor));
+        assertTrue("Background color was not red.",
+                colorRed.equals(backgroundColor)
+                        || "red".equals(backgroundColor));
 
         // data arrives...
         sleep((int) (latency * SLEEP_MULTIPLIER));
