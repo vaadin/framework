@@ -85,7 +85,6 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
         super(target);
 
         // Create drag data generator
-        // Create drag data generator
         dragDataGenerator = new DataGenerator<T>() {
             /**
              * Drag data generator. Appends drag data to row data json if generator
