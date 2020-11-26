@@ -48,7 +48,7 @@
         <!-- Dependency unpack directory -->
         <dependency.unpack.directory>${project.build.directory}/dependency-unpack</dependency.unpack.directory>
  
-        <jetty.version>9.4.17.v20190418</jetty.version>
+        <jetty.version>9.4.34.v20201102</jetty.version>
 
         <!-- Sonar properties -->
         <sonar.java.source>8</sonar.java.source>
