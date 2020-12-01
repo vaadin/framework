@@ -17,28 +17,29 @@ public class MenuBarIconsTest extends SingleBrowserTest {
     @Test
     public void fontIconsRendered() {
         openTestURL();
+        waitUntilLoadingIndicatorNotVisible();
         MenuBarElement menu = $(MenuBarElement.class).id("fontIcon");
         WebElement moreItem = menu
                 .findElements(By.className("v-menubar-menuitem")).get(3);
 
         assertFontIcon(FontAwesome.MAIL_REPLY_ALL,
                 menu.findElement(By.vaadin("#Main")));
-        WebElement hasSubElement = menu.findElement(By.vaadin("#Has sub"));
+        WebElement hasSubElement = menu.findElement(By.id("fontIcon-3"));
         assertFontIcon(FontAwesome.SUBWAY, hasSubElement);
         assertFontIcon(FontAwesome.ANGELLIST,
-                menu.findElement(By.vaadin("#Filler 0")));
+                menu.findElement(By.id("fontIcon-5")));
 
         hasSubElement.click();
-
-        assertFontIcon(FontAwesome.AMBULANCE,
-                hasSubElement.findElement(By.vaadin("#Sub item")));
+        waitForElementPresent(By.id("fontIcon-4"));
+        assertFontIcon(FontAwesome.AMBULANCE, findElement(By.id("fontIcon-4")));
         // Close sub menu
         hasSubElement.click();
 
         assertFontIcon(FontAwesome.MOTORCYCLE, moreItem);
 
         moreItem.click();
-        WebElement filler5 = moreItem.findElement(By.vaadin("#Filler 5"));
+        waitForElementPresent(By.id("fontIcon-10"));
+        WebElement filler5 = findElement(By.id("fontIcon-10"));
         assertFontIcon(FontAwesome.ANGELLIST, filler5);
 
     }
@@ -50,6 +51,7 @@ public class MenuBarIconsTest extends SingleBrowserTest {
                 BrowserUtil.isPhantomJS(getDesiredCapabilities()));
 
         openTestURL();
+        waitUntilLoadingIndicatorNotVisible();
         MenuBarElement menu = $(MenuBarElement.class).id("image");
         WebElement moreItem = menu
                 .findElements(By.className("v-menubar-menuitem")).get(4);
@@ -66,6 +68,7 @@ public class MenuBarIconsTest extends SingleBrowserTest {
         // Close sub menu
         hasSubElement.click();
 
+        sleep(500);
         assertImage(image, moreItem);
 
         moreItem.click();
