@@ -509,7 +509,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.forField(rentField).withConverter(new EuroConverter(""))
                 .bind(Person::getRent, Person::setRent);
         binder.setBean(item);
-        rentField.setValue("10.5");
+        rentField.setValue("10,5");
 
         assertEquals("€ 10,50", ageField.getValue());
     }
