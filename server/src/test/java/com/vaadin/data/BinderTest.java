@@ -512,7 +512,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         item.setRent(rent);
 
         assertEquals("€ 10,50", ageField.getValue());
-    }    
+    }
 
     @Test
     public void beanBinder_nullRepresentationIsNotDisabled() {
