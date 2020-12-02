@@ -505,7 +505,9 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     @Test
     public void withConverter_writeBackValue() {
         BigDecimal rent = BigDecimal.valueOf(10.5d);
-        binder.forField(this.ageField).withConverter(new EuroConverter(""))
+        ageField.setValue("");
+        binder.forField(this.ageField).withNullRepresentation("")
+                .withConverter(new EuroConverter(""))
                 .bind(Person::getRent, Person::setRent);
         binder.setBean(item);
         item.setRent(rent);
@@ -1523,5 +1525,5 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
             }
             return super.convertToModel(value, context);
         }
-    }    
+    }
 }
