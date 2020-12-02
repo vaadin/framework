@@ -504,12 +504,12 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
     @Test
     public void withConverter_writeBackValue() {
-        BigDecimal rent = BigDecimal.valueOf(10.5d);
-        ageField.setValue("");
-        binder.forField(this.ageField).withConverter(new EuroConverter(""))
+        TextField rentField = new TextField();
+        rentField.setValue("");
+        binder.forField(rentField).withConverter(new EuroConverter(""))
                 .bind(Person::getRent, Person::setRent);
         binder.setBean(item);
-        item.setRent(rent);
+        rentField.setValue("10.5");
 
         assertEquals("€ 10,50", ageField.getValue());
     }
