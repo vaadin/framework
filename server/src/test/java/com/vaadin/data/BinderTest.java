@@ -510,9 +510,9 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .withNullRepresentation(BigDecimal.valueOf(0d))
                 .bind(Person::getRent, Person::setRent);
         binder.setBean(item);
-        rentField.setValue("10,5");
+        rentField.setValue("10");
 
-        assertEquals("€ 10,50", rentField.getValue());
+        assertEquals("€ 10.50", rentField.getValue());
     }
 
     @Test
