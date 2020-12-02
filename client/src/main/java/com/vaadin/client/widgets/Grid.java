@@ -3462,10 +3462,27 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private boolean columnsAreGuaranteedToBeWiderThanGrid() {
             double freeSpace = escalator.getInnerWidth();
             for (Column<?, ?> column : getVisibleColumns()) {
+                /*
+                 * Check the width and min width and ensure that no column can
+                 * be expected to be narrower than what the resize handler
+                 * requires, if one is present.
+                 */
                 if (column.getWidth() >= 0) {
-                    freeSpace -= column.getWidth();
+                    if (column.isResizable() && resizeHandleWidth > 0) {
+                        freeSpace -= Math.max(resizeHandleWidth,
+                                column.getWidth());
+                    } else {
+                        freeSpace -= column.getWidth();
+                    }
                 } else if (column.getMinimumWidth() >= 0) {
-                    freeSpace -= column.getMinimumWidth();
+                    if (column.isResizable() && resizeHandleWidth > 0) {
+                        freeSpace -= Math.max(resizeHandleWidth,
+                                column.getMinimumWidth());
+                    } else {
+                        freeSpace -= column.getMinimumWidth();
+                    }
+                } else if (column.isResizable() && resizeHandleWidth > 0) {
+                    freeSpace -= resizeHandleWidth;
                 }
             }
             return freeSpace < 0;
@@ -3482,7 +3499,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 selfWidths.put(index, columns.get(index).getWidth());
             }
             Grid.this.escalator.getColumnConfiguration()
-                    .setColumnWidths(selfWidths);
+                    .setColumnWidths(selfWidths, true);
 
             /*
              * Step 2: Make sure that each column ends up obeying their min/max
@@ -3508,7 +3525,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 }
             }
             Grid.this.escalator.getColumnConfiguration()
-                    .setColumnWidths(constrainedWidths);
+                    .setColumnWidths(constrainedWidths, true);
         }
 
         private void applyColumnWidthsWithExpansion() {
@@ -3530,15 +3547,21 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             for (Column<?, T> column : visibleColumns) {
                 final double widthAsIs = column.getWidth();
                 final boolean isFixedWidth = widthAsIs >= 0;
-                // Check for max width just to be sure we don't break the limits
-                final double widthFixed = Math.max(
-                        Math.min(getMaxWidth(column), widthAsIs),
-                        column.getMinimumWidth());
                 defaultExpandRatios = defaultExpandRatios
                         && (column.getExpandRatio() == -1
                                 || column == selectionColumn);
 
                 if (isFixedWidth) {
+                    // Check for min & max width just to be sure we don't break
+                    // the limits
+                    double widthFixed = Math.max(
+                            Math.min(getMaxWidth(column), widthAsIs),
+                            column.getMinimumWidth());
+                    if (column.isResizable() && resizeHandleWidth > 0) {
+                        // Ensure the resize handle fits
+                        widthFixed = Math.max(widthFixed, resizeHandleWidth);
+                    }
+
                     columnSizes.put(visibleColumns.indexOf(column), widthFixed);
                     reservedPixels += widthFixed;
                 } else {
@@ -3547,7 +3570,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 }
             }
 
-            setColumnSizes(columnSizes);
+            /*
+             * Set column sizes so that it's possible to measure non-fixed
+             * actual sizes without previously applied expand ratio tweaks, but
+             * don't trigger the element size recalculation before the rest of
+             * this method has also been processed.
+             */
+            setColumnSizes(columnSizes, false);
 
             for (Column<?, T> column : nonFixedColumns) {
                 final int expandRatio = defaultExpandRatios ? 1
@@ -3555,9 +3584,21 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 final double maxWidth = getMaxWidth(column);
                 double newWidth;
                 if (column.isMinimumWidthFromContent()) {
-                    newWidth = Math.min(maxWidth, column.getWidthActual());
+                    if (column.isResizable() && resizeHandleWidth > 0) {
+                        // Ensure the resize handle fits
+                        newWidth = Math.max(
+                                Math.min(maxWidth, column.getWidthActual()),
+                                resizeHandleWidth);
+                    } else {
+                        newWidth = Math.min(maxWidth, column.getWidthActual());
+                    }
                 } else {
-                    newWidth = 0;
+                    if (column.isResizable() && resizeHandleWidth > 0) {
+                        // Ensure the resize handle fits
+                        newWidth = resizeHandleWidth;
+                    } else {
+                        newWidth = 0;
+                    }
                 }
 
                 boolean shouldExpand = newWidth < maxWidth && expandRatio > 0
@@ -3580,8 +3621,15 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (pixelsToDistribute <= 0 || totalRatios <= 0) {
                 if (pixelsToDistribute <= 0) {
                     // Set column sizes for expanding columns
-                    setColumnSizes(columnSizes);
+                    setColumnSizes(columnSizes, true);
                 }
+                /*
+                 * If pixelsToDistribute > 0 the element size recalculation
+                 * isn't done at all, even if some column sizes were set
+                 * earlier, but this doesn't appear to be detrimental while
+                 * attempting to trigger the recalculation here breaks a
+                 * GridEditRow test.
+                 */
 
                 return;
             }
@@ -3617,7 +3665,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             } while (aColumnHasMaxedOut);
 
             if (totalRatios <= 0 && columnsToExpand.isEmpty()) {
-                setColumnSizes(columnSizes);
+                setColumnSizes(columnSizes, true);
                 return;
             }
             assert pixelsToDistribute > 0 : "We've run out of pixels to distribute ("
@@ -3722,12 +3770,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             } while (minWidthsCausedReflows);
 
             // Finally set all the column sizes.
-            setColumnSizes(columnSizes);
+            setColumnSizes(columnSizes, true);
         }
 
-        private void setColumnSizes(Map<Integer, Double> columnSizes) {
+        private void setColumnSizes(Map<Integer, Double> columnSizes,
+                boolean recalculateElementSizes) {
             // Set all widths at once
-            escalator.getColumnConfiguration().setColumnWidths(columnSizes);
+            escalator.getColumnConfiguration().setColumnWidths(columnSizes,
+                    recalculateElementSizes);
         }
 
         private int getExpandRatio(Column<?, ?> column,
@@ -4388,6 +4438,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             (RowReference<Object>) rowReference);
 
     private boolean refreshBodyRequested = false;
+
+    private double resizeHandleWidth = 0;
 
     private DragAndDropHandler.DragAndDropCallback headerCellDndCallback = new DragAndDropCallback() {
 
@@ -6056,6 +6108,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     final DragHandle dragger = new DragHandle(
                             getStylePrimaryName() + "-column-resize-handle");
                     dragger.addTo(td);
+                    // Save the newest resize handle's width with the assumption
+                    // that all the resize handles are the same size. This is
+                    // used in column's minimum width calculations, so the
+                    // border of the cell is also included.
+                    resizeHandleWidth = dragger.getElement().getOffsetWidth()
+                            + WidgetUtil.getBorderLeftAndRightThickness(td);
 
                     // Common functionality for drag handle callback
                     // implementations

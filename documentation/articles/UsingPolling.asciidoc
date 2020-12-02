@@ -6,6 +6,7 @@ layout: page
 
 [[using-polling]]
 = Using Polling
+
 To set up polling for your UI, you only need to set a poll interval
 using `UI.setPollInterval(timeout)`. By doing this the browser will poll
 the server each "timeout" ms and retrieve any possibly pending changes.
