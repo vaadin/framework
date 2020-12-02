@@ -11,6 +11,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -1524,6 +1526,26 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 value = "0";
             }
             return super.convertToModel(value, context);
+        }
+
+        @Override
+        public String convertToPresentation(BigDecimal value,
+                ValueContext context) {
+            if (value == null) {
+                return convertToPresentation(BigDecimal.ZERO, context);
+            }
+            return "€ " + super.convertToPresentation(value, context);
+        }
+
+        @Override
+        protected NumberFormat getFormat(Locale locale) {
+            // Always display currency with two decimals
+            NumberFormat format = super.getFormat(locale);
+            if (format instanceof DecimalFormat) {
+                ((DecimalFormat) format).setMaximumFractionDigits(2);
+                ((DecimalFormat) format).setMinimumFractionDigits(2);
+            }
+            return format;
         }
     }
 }
