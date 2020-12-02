@@ -12,7 +12,7 @@ public class NoApplicationClassTest extends SingleBrowserTest {
     @Test
     public void testInvalidApplicationClass() {
         openTestURL();
-        String exceptionMessage = getDriver().findElement(By.xpath("//pre[2]"))
+        String exceptionMessage = getDriver().findElement(By.xpath("//pre[1]"))
                 .getText();
         String expected = "ServletException: java.lang.ClassNotFoundException: ClassThatIsNotPresent";
         assertTrue(String.format(

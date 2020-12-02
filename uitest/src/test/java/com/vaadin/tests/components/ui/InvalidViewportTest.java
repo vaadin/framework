@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.ui;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -16,7 +16,8 @@ public class InvalidViewportTest extends SingleBrowserTest {
 
         WebElement heading = findElement(By.tagName("h2"));
 
-        assertEquals("HTTP ERROR 500", heading.getText());
+        assertTrue("Unexpected heading: " + heading.getText(),
+                heading.getText().startsWith("HTTP ERROR 500"));
     }
 
 }
