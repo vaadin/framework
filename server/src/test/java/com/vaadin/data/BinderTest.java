@@ -10,6 +10,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -25,6 +26,7 @@ import org.junit.rules.ExpectedException;
 
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.Binder.BindingBuilder;
+import com.vaadin.data.converter.StringToBigDecimalConverter;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.data.validator.NotEmptyValidator;
@@ -499,6 +501,17 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         ageField.setValue(salary.toString());
         assertEquals(11, salary.intValue());
     }
+
+    @Test
+    public void withConverter_writeBackValue() {
+        BigDecimal rent = BigDecimal.valueOf(10.5d);
+        binder.forField(this.ageField).withConverter(new EuroConverter(""))
+                .bind(Person::getRent, Person::setRent);
+        binder.setBean(item);
+        item.setRent(rent);
+
+        assertEquals("€ 10,50", ageField.getValue());
+    }    
 
     @Test
     public void beanBinder_nullRepresentationIsNotDisabled() {
@@ -1483,4 +1496,32 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .bind(AtomicReference::get, AtomicReference::set);
         return binder;
     }
+
+    /**
+     * A converter that adds/removes the euro sign and formats currencies with
+     * two decimal places.
+     */
+    public class EuroConverter extends StringToBigDecimalConverter {
+
+        public EuroConverter() {
+            super("defaultErrorMessage");
+        }
+
+        public EuroConverter(String errorMessage) {
+            super(errorMessage);
+        }
+
+        @Override
+        public Result<BigDecimal> convertToModel(String value,
+                ValueContext context) {
+            if (value.isEmpty()) {
+                return Result.ok(null);
+            }
+            value = value.replaceAll("[€\\s]", "").trim();
+            if (value.isEmpty()) {
+                value = "0";
+            }
+            return super.convertToModel(value, context);
+        }
+    }    
 }
