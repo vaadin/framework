@@ -512,7 +512,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.setBean(item);
         rentField.setValue("10,5");
 
-        assertEquals("€ 10,50", ageField.getValue());
+        assertEquals("€ 10,50", rentField.getValue());
     }
 
     @Test
