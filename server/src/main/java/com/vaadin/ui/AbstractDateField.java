@@ -160,7 +160,14 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                                 }
                             }
                         } else {
-                            setValue(newDate, true);
+                            RangeValidator<T> validator = getRangeValidator();
+                            ValidationResult result = validator.apply(newDate,
+                                    new ValueContext());
+                            if (!result.isError()) {
+                                setValue(newDate, true);
+                            } else {
+                                doSetValue(newDate);
+                            }
                         }
                     }
                 }
