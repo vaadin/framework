@@ -1282,7 +1282,15 @@ public class Binder<BEAN> implements Serializable {
 
             Result<TARGET> result = doConversion();
             if (!isReadOnly()) {
-                result.ifOk(value -> setter.accept(bean, value));
+                result.ifOk(value -> {
+                    setter.accept(bean, value);
+                    if (value != null) {
+                        FIELDVALUE converted = convertToFieldType(value);
+                        if (!field.getValue().equals(converted)) {
+                            getField().setValue(converted);
+                        }
+                    }
+                });
             }
             return toValidationStatus(result);
         }
