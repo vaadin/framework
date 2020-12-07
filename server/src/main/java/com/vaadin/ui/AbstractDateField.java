@@ -163,7 +163,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                             RangeValidator<T> validator = getRangeValidator();
                             ValidationResult result = validator.apply(newDate,
                                     new ValueContext());
-                            if (getValueChangeWithRangeCheck() || !result.isError()) {
+                            if (!isPreventInvalidInput() || !result.isError()) {
                                 setValue(newDate, true);
                             } else {
                                 doSetValue(newDate);
@@ -236,7 +236,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
     private String dateOutOfRangeMessage = "Date is out of allowed range";
 
-    private boolean valueChangeWithRangeCheck = true;
+    private boolean preventInvalidInput = false;
 
     /* Constructors */
 
@@ -1121,28 +1121,26 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     }
 
     /**
-     * Control whether value change event is emitted when user input value does
-     * not meet the integraged range validator.
-     * 
-     * @param valueChangeWithRangeCheck
-     *            Set to false to disable the value change event.
+     * Control whether value change event is emitted when user input value 
+     * does not meet the integrated range validator.
+     *
+     * @param preventInvalidInput Set to false to disable the value change event.
      *
      * @since 8.13
      */
-    public void setValueChangeWithRangeCheck(
-            boolean valueChangeWithRangeCheck) {
-        this.valueChangeWithRangeCheck = valueChangeWithRangeCheck;
+    public void setPreventInvalidInput(boolean preventInvalidInput) {
+        this.preventInvalidInput = preventInvalidInput;
     }
 
     /**
-     * Check whether value change is emitted when user input value does not meet
-     * integrated range validator. The default is true.
-     * 
+     * Check whether value change is emitted when user input value does
+     * not meet integrated range validator. The default is false.
+     *
      * @return a Boolean value
      *
      * @since 8.13
      */
-    public boolean getValueChangeWithRangeCheck() {
-        return valueChangeWithRangeCheck;
+    public boolean isPreventInvalidInput() {
+        return preventInvalidInput;
     }
 }
