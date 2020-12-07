@@ -1987,6 +1987,13 @@ public abstract class UI extends AbstractSingleComponentContainer
             getState().enableMobileHTML5DnD = enabled;
 
             if (isMobileHtml5DndEnabled()) {
+                if (VaadinService.getCurrentRequest() == null) {
+                    getState().enableMobileHTML5DnD = false;
+                    throw new IllegalStateException("HTML5 DnD cannot be "
+                            + "enabled for mobile devices when current "
+                            + "VaadinRequest cannot be accessed. Call this "
+                            + "method from init(VaadinRequest) to ensure access.");
+                }
                 loadMobileHtml5DndPolyfill();
             }
         }
