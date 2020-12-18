@@ -69,6 +69,7 @@ public class LayoutManager {
         }
     };
     private boolean everythingNeedsMeasure = false;
+    private boolean thoroughSizeCheck = true;
 
     /**
      * Sets the application connection this instance is connected to. Called
@@ -83,6 +84,24 @@ public class LayoutManager {
                     "LayoutManager connection can never be changed");
         }
         this.connection = connection;
+    }
+
+    /**
+     * Set whether the measuring should use a thorough size check that evaluates
+     * the presence of the element and uses calculated size, or default to a
+     * slightly faster check that can result in incorrect size information if
+     * the check is triggered while a transform animation is ongoing. This can
+     * happen e.g. when a PopupView is opened.
+     * <p>
+     * By default, the thorough size check is enabled.
+     *
+     * @param thoroughSizeCheck
+     *            {@code true} if thorough size check enabled, {@code false} if
+     *            not
+     * @since
+     */
+    public void setThoroughSizeChck(boolean thoroughSizeCheck) {
+        this.thoroughSizeCheck = thoroughSizeCheck;
     }
 
     /**
@@ -822,7 +841,8 @@ public class LayoutManager {
 
     private MeasureResult measuredAndUpdate(Element element,
             MeasuredSize measuredSize) {
-        MeasureResult measureResult = measuredSize.measure(element);
+        MeasureResult measureResult = measuredSize.measure(element,
+                thoroughSizeCheck);
         if (measureResult.isChanged()) {
             notifyListenersAndDepdendents(element,
                     measureResult.isWidthChanged(),
