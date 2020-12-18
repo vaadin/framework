@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import com.vaadin.data.BeanBinderTest.RequiredConstraints.SubConstraint;
 import com.vaadin.data.BeanBinderTest.RequiredConstraints.SubSubConstraint;
+import com.vaadin.data.BinderInstanceFieldTest.IntegerTextField;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.tests.data.bean.BeanToValidate;
 import com.vaadin.ui.CheckBoxGroup;
@@ -165,6 +166,15 @@ public class BeanBinderTest
 
     public static class PersonForm {
         private TextField mydate = new TextField();
+    }
+
+    public interface TestInterface {
+        int getProperty();
+    }
+
+    public interface TestInterfaceWithOverwrittenMethod extends TestInterface {
+        @Override
+        int getProperty();
     }
 
     @Before
@@ -535,6 +545,24 @@ public class BeanBinderTest
         assertFalse(binder.validate().isOk());
         field.setValue("overtencharacters");
         assertTrue(binder.validate().isOk());
+    }
+
+    @Test
+    public void interface_extension_with_overwritten_property() {
+        Binder<TestInterfaceWithOverwrittenMethod> binder = new Binder<>(
+                TestInterfaceWithOverwrittenMethod.class);
+        IntegerTextField field = new IntegerTextField();
+
+        binder.bind(field, "property");
+        TestInterfaceWithOverwrittenMethod bean = new TestInterfaceWithOverwrittenMethod() {
+            @Override
+            public int getProperty() {
+                return 5;
+            }
+        };
+        binder.setBean(bean);
+
+        assertEquals(Integer.valueOf(5), field.getValue());
     }
 
     private void assertInvalid(HasValue<?> field, String message) {

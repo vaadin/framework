@@ -27,12 +27,16 @@ public class EscalatorRemoveAndAddRowsTest
         selectMenuPath(GENERAL, POPULATE_COLUMN_ROW);
 
         scrollVerticallyTo(99999);
+        waitUntilLoadingIndicatorNotVisible();
+
         assertTrue("Escalator is not scrolled to bottom.",
                 isElementPresent(By.xpath("//td[text() = 'Row 99: 0,99']")));
 
         selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, REMOVE_ALL_INSERT_SCROLL);
 
         scrollVerticallyTo(99999);
+        waitUntilLoadingIndicatorNotVisible();
+
         assertTrue("Escalator is not scrolled to bottom.",
                 isElementPresent(By.xpath("//td[text() = 'Row 29: 0,129']")));
     }

@@ -365,6 +365,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      *         {@link org.openqa.selenium.JavascriptExecutor#executeScript(String, Object...)}
      *         returns
      */
+    @Override
     protected Object executeScript(String script, Object... args) {
         return ((JavascriptExecutor) getDriver()).executeScript(script, args);
     }

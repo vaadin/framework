@@ -867,8 +867,8 @@ public class Escalator extends Widget
             double headerHeight = header.getHeightOfSection();
             double vScrollbarHeight = Math.max(0,
                     tableWrapperHeight - footerHeight - headerHeight);
-            verticalScrollbar.setOffsetSize(vScrollbarHeight);
-            verticalScrollbar.setScrollSize(scrollContentHeight);
+            verticalScrollbar.setOffsetSizeAndScrollSize(vScrollbarHeight,
+                    scrollContentHeight);
 
             /*
              * If decreasing the amount of frozen columns, and scrolled to the
@@ -884,8 +884,8 @@ public class Escalator extends Widget
                             columnConfiguration.getColumnCount()));
             double frozenPixels = scrollContentWidth - unfrozenPixels;
             double hScrollOffsetWidth = tableWrapperWidth - frozenPixels;
-            horizontalScrollbar.setOffsetSize(hScrollOffsetWidth);
-            horizontalScrollbar.setScrollSize(unfrozenPixels);
+            horizontalScrollbar.setOffsetSizeAndScrollSize(hScrollOffsetWidth,
+                    unfrozenPixels);
             horizontalScrollbar.getElement().getStyle().setLeft(frozenPixels,
                     Unit.PX);
             horizontalScrollbar.setScrollPos(prevScrollPos);
@@ -1524,7 +1524,8 @@ public class Escalator extends Widget
                             Integer col = Integer.valueOf(i);
                             colWidths.put(col, width);
                         }
-                        getColumnConfiguration().setColumnWidths(colWidths);
+                        getColumnConfiguration().setColumnWidths(colWidths,
+                                true);
                     });
                 }
             }
@@ -2254,13 +2255,13 @@ public class Escalator extends Widget
 
             cell.getParentElement().insertBefore(cellClone, cell);
             double requiredWidth = getBoundingWidth(cellClone);
-            if (BrowserInfo.get().isIE()) {
-                /*
-                 * IE browsers have some issues with subpixels. Occasionally
-                 * content is overflown even if not necessary. Increase the
-                 * counted required size by 0.01 just to be on the safe side.
-                 */
-                requiredWidth += 0.01;
+
+            if (requiredWidth > 0) {
+                // add one pixel to avoid subpixel issues
+                // (overflow, unnecessary ellipsis...)
+                requiredWidth += 1;
+                // round up to a fraction that the current browser can handle
+                requiredWidth = WidgetUtil.roundSizeUp(requiredWidth);
             }
 
             cellClone.removeFromParent();
@@ -2486,7 +2487,7 @@ public class Escalator extends Widget
                  */
                 verticalScrollbar.setOffsetSize(
                         heightOfEscalator - header.getHeightOfSection()
-                                - footer.getHeightOfSection());
+                                - footer.getHeightOfSection() + 1);
 
                 body.verifyEscalatorCount();
                 body.spacerContainer.updateSpacerDecosVisibility();
@@ -2604,21 +2605,8 @@ public class Escalator extends Widget
 
         @Override
         protected void sectionHeightCalculated() {
-            double headerHeight = header.getHeightOfSection();
-            double footerHeight = footer.getHeightOfSection();
-            int vscrollHeight = (int) Math
-                    .floor(heightOfEscalator - headerHeight - footerHeight);
-
-            final boolean horizontalScrollbarNeeded = columnConfiguration
-                    .calculateRowWidth() > widthOfEscalator;
-            if (horizontalScrollbarNeeded) {
-                vscrollHeight -= horizontalScrollbar.getScrollbarThickness();
-            }
-
             footerDeco.getStyle().setHeight(footer.getHeightOfSection(),
                     Unit.PX);
-
-            verticalScrollbar.setOffsetSize(vscrollHeight);
         }
     }
 
@@ -5745,7 +5733,7 @@ public class Escalator extends Widget
                     Integer col = Integer.valueOf(i);
                     colWidths.put(col, width);
                 }
-                getColumnConfiguration().setColumnWidths(colWidths);
+                getColumnConfiguration().setColumnWidths(colWidths, true);
             }
 
             // Adjust scrollbar
@@ -5839,11 +5827,18 @@ public class Escalator extends Widget
         public void setColumnWidth(int index, double px)
                 throws IllegalArgumentException {
             setColumnWidths(Collections.singletonMap(Integer.valueOf(index),
-                    Double.valueOf(px)));
+                    Double.valueOf(px)), true);
         }
 
         @Override
         public void setColumnWidths(Map<Integer, Double> indexWidthMap)
+                throws IllegalArgumentException {
+            setColumnWidths(indexWidthMap, true);
+        }
+
+        @Override
+        public void setColumnWidths(Map<Integer, Double> indexWidthMap,
+                boolean recalculateElementSizes)
                 throws IllegalArgumentException {
 
             if (indexWidthMap == null) {
@@ -5874,7 +5869,9 @@ public class Escalator extends Widget
                 body.reapplyColumnWidths();
                 footer.reapplyColumnWidths();
 
-                recalculateElementSizes();
+                if (recalculateElementSizes) {
+                    recalculateElementSizes();
+                }
 
             } finally {
                 Profiler.leave(

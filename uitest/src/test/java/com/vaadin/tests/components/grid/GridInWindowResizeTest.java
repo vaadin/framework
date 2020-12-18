@@ -13,6 +13,8 @@ public class GridInWindowResizeTest extends SingleBrowserTest {
     @Test
     public void resizeWindow() {
         openTestURL();
+        waitUntilLoadingIndicatorNotVisible();
+
         GridElement grid = $(GridElement.class).first();
         int col1WidthBefore = grid.getCell(0, 0).getSize().getWidth();
         $(ButtonElement.class).caption("resize").first().click();

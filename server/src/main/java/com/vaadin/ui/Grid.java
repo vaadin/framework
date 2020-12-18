@@ -4032,6 +4032,28 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 .forEach(this::removeColumn);
     }
 
+    /**
+     * Sets the columns and their order based on their column ids provided that
+     * collection supports preserving of the order. Columns currently in this
+     * grid that are not present in the collection of column ids are removed.
+     * This includes any column that has no id. Similarly, any new column in
+     * columns will be added to this grid. New columns can only be added for a
+     * <code>Grid</code> created using {@link Grid#Grid(Class)} or
+     * {@link #withPropertySet(PropertySet)}.
+     *
+     *
+     * @param columnIds
+     *            the column ids to set
+     *
+     * @see Column#setId(String)
+     * @see #setColumns(String...)
+     */
+    public void setColumns(Collection<String> columnIds) {
+        Objects.requireNonNull(columnIds, "columnIds can't be null");
+        String[] columns = columnIds.toArray(new String[columnIds.size()]);
+        setColumns(columns);
+    }
+
     private String getGeneratedIdentifier() {
         String columnId = "" + counter;
         counter++;

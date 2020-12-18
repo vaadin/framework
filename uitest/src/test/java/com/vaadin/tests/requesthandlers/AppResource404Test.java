@@ -39,7 +39,10 @@ public class AppResource404Test extends MultiBrowserTest {
         assertTrue("Page does not contain the given text",
                 driver.getPageSource().contains("HTTP ERROR 404"));
         assertTrue("Page does not contain the given text",
-                driver.getPageSource().contains("Problem accessing /run/APP/"));
+                driver.getPageSource().contains("/run/APP/"));
+        assertTrue("Page does not contain the given text",
+                driver.getPageSource().contains(
+                        "Request was not handled by any registered handler."));
     }
 
     @Test

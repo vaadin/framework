@@ -4417,7 +4417,7 @@ public class VScrollTable extends FlowPanel
                         .getOffsetWidth() + getHeaderPadding();
                 if (columnIndex < 0) {
                     columnIndex = 0;
-                    for (Widget widget : tHead) {
+                    for (Widget widget : tFoot) {
                         if (widget == this) {
                             break;
                         }
@@ -6735,7 +6735,8 @@ public class VScrollTable extends FlowPanel
                             addSpannedCell(uidl, cell.toString(), aligns[0], "",
                                     htmlContentAllowed, false, null, colCount);
                         } else {
-                            addSpannedCell(uidl, (Widget) cell, aligns[0], "",
+                            final ComponentConnector cellContent = client.getPaintable((UIDL) cell);
+                            addSpannedCell(uidl, cellContent.getWidget(), aligns[0], "",
                                     false, colCount);
                         }
                         break;

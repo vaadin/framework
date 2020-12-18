@@ -10,7 +10,7 @@
     <artifactId>vaadin-root</artifactId>
     <name>vaadin-root</name>
     <packaging>pom</packaging>
-    <version>8.12-SNAPSHOT</version>
+    <version>8.13-SNAPSHOT</version>
 
     <prerequisites>
         <maven>3.1.0</maven>
@@ -30,7 +30,7 @@
         <vaadin.plugin.version>8.7-SNAPSHOT</vaadin.plugin.version>
 
         <!-- Used in OSGi manifests -->
-        <javax.validation.version>1.0.0.GA</javax.validation.version>
+        <javax.validation.version>2.0.1.Final</javax.validation.version>
         <jsoup.version>1.11.2</jsoup.version>
         <javax.portlet.version>2.0</javax.portlet.version>
         <vaadin.sass.version>0.9.13</vaadin.sass.version>
@@ -48,7 +48,7 @@
         <!-- Dependency unpack directory -->
         <dependency.unpack.directory>${project.build.directory}/dependency-unpack</dependency.unpack.directory>
  
-        <jetty.version>9.4.17.v20190418</jetty.version>
+        <jetty.version>9.4.35.v20201120</jetty.version>
 
         <!-- Sonar properties -->
         <sonar.java.source>8</sonar.java.source>
@@ -193,7 +193,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>4.13.1</version>
                 <exclusions>
                     <exclusion>
                         <artifactId>hamcrest-core</artifactId>
@@ -229,7 +229,7 @@
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-validator</artifactId>
-                <version>4.3.2.Final</version>
+                <version>5.3.6.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.jsoup</groupId>
@@ -357,6 +357,12 @@
             <artifactId>hibernate-validator</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.el</artifactId>
+            <version>3.0.0</version>
+            <scope>test</scope>
+        </dependency>	
     </dependencies>
     <build>
         <pluginManagement>

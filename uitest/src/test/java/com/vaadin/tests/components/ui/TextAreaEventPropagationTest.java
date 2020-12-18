@@ -25,8 +25,17 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
         Actions builder = new Actions(driver);
         builder.click(textArea);
         builder.sendKeys(textArea, "first line asdf");
+        builder.perform();
+        waitUntilLoadingIndicatorNotVisible();
+
         builder.sendKeys(Keys.ENTER);
+        builder.perform();
+        waitUntilLoadingIndicatorNotVisible();
+
         builder.sendKeys(textArea, "second line jkl;");
+        builder.perform();
+        waitUntilLoadingIndicatorNotVisible();
+
         builder.perform();
 
         // Should not have triggered shortcut
@@ -41,9 +50,16 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
         Actions builder = new Actions(driver);
         builder.click(textArea);
         builder.sendKeys(textArea, "first line asdf");
+        builder.perform();
+        waitUntilLoadingIndicatorNotVisible();
+
         builder.sendKeys(Keys.ESCAPE);
+        builder.perform();
+        waitUntilLoadingIndicatorNotVisible();
+
         builder.sendKeys(textArea, "second line jkl;");
         builder.perform();
+        waitUntilLoadingIndicatorNotVisible();
 
         assertEquals("1. Escape button pressed", getLogRow(0));
     }
@@ -56,11 +72,16 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
         builder2.click(textField);
 
         builder2.sendKeys("third line");
-        sleep(100);
+        builder2.perform();
+        waitUntilLoadingIndicatorNotVisible();
+
         builder2.sendKeys(Keys.ENTER);
-        sleep(100);
+        builder2.perform();
+        waitUntilLoadingIndicatorNotVisible();
+
         builder2.sendKeys(Keys.ESCAPE);
         builder2.perform();
+        waitUntilLoadingIndicatorNotVisible();
 
         assertEquals("1. Enter button pressed", getLogRow(1));
         assertEquals("2. Escape button pressed", getLogRow(0));
@@ -74,9 +95,12 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
         builder2.click(textField);
 
         builder2.sendKeys("third line");
-        builder2.sendKeys(Keys.ENTER);
-
         builder2.perform();
+        waitUntilLoadingIndicatorNotVisible();
+
+        builder2.sendKeys(Keys.ENTER);
+        builder2.perform();
+        waitUntilLoadingIndicatorNotVisible();
 
         assertEquals("1. Enter button pressed", getLogRow(0));
     }

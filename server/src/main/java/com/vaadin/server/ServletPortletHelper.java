@@ -98,6 +98,10 @@ public class ServletPortletHelper implements Serializable {
             prefix = '/' + prefix;
         }
 
+        if (!pathInfo.endsWith("/") && prefix.endsWith("/")) {
+            pathInfo += '/';
+        }
+
         if (pathInfo.startsWith(prefix)) {
             return true;
         }

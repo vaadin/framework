@@ -42,6 +42,10 @@ public class ScrolledTabSheetResizeTest extends MultiBrowserTest {
                 }
                 failed = true;
                 exceptions.append(i + ": " + e.getMessage());
+                if (e.getCause() != null && e.getCause().getMessage() != null
+                        && !e.getCause().getMessage().trim().isEmpty()) {
+                    exceptions.append(" - " + e.getCause().getMessage());
+                }
             } catch (AssertionError e) {
                 if (failed) {
                     exceptions.append(" --- ");
@@ -70,6 +74,10 @@ public class ScrolledTabSheetResizeTest extends MultiBrowserTest {
                 }
                 failed = true;
                 exceptions.append(i + ": " + e.getMessage());
+                if (e.getCause() != null && e.getCause().getMessage() != null
+                        && !e.getCause().getMessage().trim().isEmpty()) {
+                    exceptions.append(" - " + e.getCause().getMessage());
+                }
             } catch (AssertionError e) {
                 if (failed) {
                     exceptions.append(" --- ");
@@ -86,9 +94,11 @@ public class ScrolledTabSheetResizeTest extends MultiBrowserTest {
     private void testResize(int start)
             throws IOException, InterruptedException {
         testBench().resizeViewPortTo(start, 600);
+        waitUntilLoadingIndicatorNotVisible();
 
         int iterations = 0;
         while (scrollRight() && iterations < 50) {
+            waitUntilLoadingIndicatorNotVisible();
             ++iterations;
         }
 
@@ -108,6 +118,7 @@ public class ScrolledTabSheetResizeTest extends MultiBrowserTest {
         // assertNoExtraRoom(start);
 
         testBench().resizeViewPortTo(start + 150, 600);
+        waitUntilLoadingIndicatorNotVisible();
 
         assertNoExtraRoom(start + 150);
     }

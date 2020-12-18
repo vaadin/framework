@@ -354,8 +354,6 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     private final ScrollEventFirer scrollEventFirer = new ScrollEventFirer();
 
-    private HandlerRegistration scrollSizeTemporaryScrollHandler;
-    private HandlerRegistration offsetSizeTemporaryScrollHandler;
     private HandlerRegistration scrollInProgress;
 
     private ScrollbarBundle() {
@@ -417,27 +415,18 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      *
      * @param px
      *            the length of the scrollbar in pixels
+     * @see #setOffsetSizeAndScrollSize(double, double)
      */
     public final void setOffsetSize(final double px) {
-
-        /*
-         * This needs to be made step-by-step because IE8 flat-out refuses to
-         * fire a scroll event when the scroll size becomes smaller than the
-         * offset size. All other browser need to suffer alongside.
-         */
 
         boolean newOffsetSizeIsGreaterThanScrollSize = px > getScrollSize();
         boolean offsetSizeBecomesGreaterThanScrollSize = showsScrollHandle()
                 && newOffsetSizeIsGreaterThanScrollSize;
+
         if (offsetSizeBecomesGreaterThanScrollSize && getScrollPos() != 0) {
-            if (offsetSizeTemporaryScrollHandler != null) {
-                offsetSizeTemporaryScrollHandler.removeHandler();
-            }
-            // must be a field because Java insists.
-            offsetSizeTemporaryScrollHandler = addScrollHandler(
-                    event -> setOffsetSizeNow(px));
             setScrollPos(0);
-        } else {
+            setOffsetSizeNow(px);
+        } else if (px != getOffsetSize()) {
             setOffsetSizeNow(px);
         }
     }
@@ -447,9 +436,50 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         recalculateMaxScrollPos();
         forceScrollbar(showsScrollHandle());
         fireVisibilityChangeIfNeeded();
-        if (offsetSizeTemporaryScrollHandler != null) {
-            offsetSizeTemporaryScrollHandler.removeHandler();
-            offsetSizeTemporaryScrollHandler = null;
+    }
+
+    /**
+     * Sets the length of the scrollbar and the amount of pixels the scrollbar
+     * needs to be able to scroll through.
+     *
+     * @param offsetPx
+     *            the length of the scrollbar in pixels
+     * @param scrollPx
+     *            the number of pixels the scrollbar should be able to scroll
+     *            through
+     */
+    public final void setOffsetSizeAndScrollSize(final double offsetPx,
+            final double scrollPx) {
+
+        boolean newOffsetSizeIsGreaterThanScrollSize = offsetPx > scrollPx;
+        boolean offsetSizeBecomesGreaterThanScrollSize = showsScrollHandle()
+                && newOffsetSizeIsGreaterThanScrollSize;
+
+        boolean needsMoreHandling = false;
+        if (offsetSizeBecomesGreaterThanScrollSize && getScrollPos() != 0) {
+            setScrollPos(0);
+            if (offsetPx != getOffsetSize()) {
+                internalSetOffsetSize(Math.max(0, offsetPx));
+            }
+            if (scrollPx != getScrollSize()) {
+                internalSetScrollSize(Math.max(0, scrollPx));
+            }
+            needsMoreHandling = true;
+        } else {
+            if (offsetPx != getOffsetSize()) {
+                internalSetOffsetSize(Math.max(0, offsetPx));
+                needsMoreHandling = true;
+            }
+            if (scrollPx != getScrollSize()) {
+                internalSetScrollSize(Math.max(0, scrollPx));
+                needsMoreHandling = true;
+            }
+        }
+
+        if (needsMoreHandling) {
+            recalculateMaxScrollPos();
+            forceScrollbar(showsScrollHandle());
+            fireVisibilityChangeIfNeeded();
         }
     }
 
@@ -626,43 +656,18 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * @param px
      *            the number of pixels the scrollbar should be able to scroll
      *            through
+     * @see #setOffsetSizeAndScrollSize(double, double)
      */
     public final void setScrollSize(final double px) {
-
-        /*
-         * This needs to be made step-by-step because IE8 flat-out refuses to
-         * fire a scroll event when the scroll size becomes smaller than the
-         * offset size. All other browser need to suffer alongside.
-         *
-         * This really should be changed to not use any temporary scroll
-         * handlers at all once IE8 support is dropped, like now done only for
-         * Firefox.
-         */
 
         boolean newScrollSizeIsSmallerThanOffsetSize = px <= getOffsetSize();
         boolean scrollSizeBecomesSmallerThanOffsetSize = showsScrollHandle()
                 && newScrollSizeIsSmallerThanOffsetSize;
+
         if (scrollSizeBecomesSmallerThanOffsetSize && getScrollPos() != 0) {
-            /*
-             * For whatever reason, Firefox loses the scroll event in this case
-             * and the onscroll handler is never called (happens when reducing
-             * size from 1000 items to 1 while being scrolled a bit down, see
-             * #19802). Based on the comment above, only IE8 should really use
-             * 'delayedSizeSet'
-             */
-            boolean delayedSizeSet = !BrowserInfo.get().isFirefox();
-            if (delayedSizeSet) {
-                if (scrollSizeTemporaryScrollHandler != null) {
-                    scrollSizeTemporaryScrollHandler.removeHandler();
-                }
-                scrollSizeTemporaryScrollHandler = addScrollHandler(
-                        event -> setScrollSizeNow(px));
-            }
             setScrollPos(0);
-            if (!delayedSizeSet) {
-                setScrollSizeNow(px);
-            }
-        } else {
+            setScrollSizeNow(px);
+        } else if (px != getScrollSize()) {
             setScrollSizeNow(px);
         }
     }
@@ -672,10 +677,6 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         recalculateMaxScrollPos();
         forceScrollbar(showsScrollHandle());
         fireVisibilityChangeIfNeeded();
-        if (scrollSizeTemporaryScrollHandler != null) {
-            scrollSizeTemporaryScrollHandler.removeHandler();
-            scrollSizeTemporaryScrollHandler = null;
-        }
     }
 
     /**
@@ -790,9 +791,16 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         if (!isLocked()) {
             scrollPos = newScrollPos;
             scrollEventFirer.scheduleEvent();
-        } else if (scrollPos != newScrollPos) {
-            // we need to actually undo the setting of the scroll.
-            internalSetScrollPos(toInt32(scrollPos));
+        } else {
+            if (scrollPos != newScrollPos) {
+                // we need to actually undo the setting of the scroll.
+                internalSetScrollPos(toInt32(scrollPos));
+            }
+            if (scrollInProgress != null) {
+                // cancel the in-progress indicator
+                scrollInProgress.removeHandler();
+                scrollInProgress = null;
+            }
         }
     }
 
@@ -906,8 +914,6 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     public boolean isWorkPending() {
         // Need to include scrollEventFirer.isBeingFired as it might use
         // requestAnimationFrame - which is not automatically checked
-        return scrollSizeTemporaryScrollHandler != null
-                || offsetSizeTemporaryScrollHandler != null
-                || scrollInProgress != null || scrollEventFirer.isBeingFired;
+        return scrollInProgress != null || scrollEventFirer.isBeingFired;
     }
 }

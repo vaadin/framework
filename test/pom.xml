@@ -5,13 +5,13 @@
     <groupId>com.vaadin</groupId>
     <artifactId>vaadin-test</artifactId>
     <name>vaadin-test</name>
-    <version>8.12-SNAPSHOT</version>
+    <version>8.13-SNAPSHOT</version>
 
     <packaging>pom</packaging>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <jetty.version>9.3.7.v20160115</jetty.version>
+        <jetty.version>9.4.35.v20201120</jetty.version>
         <phantomjs.version>2.1.1</phantomjs.version>
         <vaadin.version>${project.version}</vaadin.version>
         <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
@@ -79,7 +79,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>4.13.1</version>
             </dependency>
 
             <!-- Override Selenium version from Spring Boot -->

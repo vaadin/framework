@@ -1987,6 +1987,13 @@ public abstract class UI extends AbstractSingleComponentContainer
             getState().enableMobileHTML5DnD = enabled;
 
             if (isMobileHtml5DndEnabled()) {
+                if (VaadinService.getCurrentRequest() == null) {
+                    getState().enableMobileHTML5DnD = false;
+                    throw new IllegalStateException("HTML5 DnD cannot be "
+                            + "enabled for mobile devices when current "
+                            + "VaadinRequest cannot be accessed. Call this "
+                            + "method from init(VaadinRequest) to ensure access.");
+                }
                 loadMobileHtml5DndPolyfill();
             }
         }
@@ -2012,6 +2019,40 @@ public abstract class UI extends AbstractSingleComponentContainer
                 vaadinLocation + ApplicationConstants.MOBILE_DND_POLYFILL_JS));
 
         getRpcProxy(PageClientRpc.class).initializeMobileHtml5DndPolyfill();
+    }
+
+    /**
+     * Returns whether LayoutManager uses thorough size check that evaluates the
+     * presence of the element and uses calculated size, or defaults to a
+     * slightly faster check that can result in incorrect size information if
+     * the check is triggered while a transform animation is ongoing. This can
+     * happen e.g. when a PopupView is opened.
+     * <p>
+     * By default, the thorough size check is enabled.
+     *
+     * @return {@code true} if thorough size check enabled, {@code false} if not
+     * @since
+     */
+    public boolean isUsingThoroughSizeCheck() {
+        return getState(false).thoroughSizeCheck;
+    }
+
+    /**
+     * Set whether LayoutManager should use thorough size check that evaluates
+     * the presence of the element and uses calculated size, or default to a
+     * slightly faster check that can result in incorrect size information if
+     * the check is triggered while a transform animation is ongoing. This can
+     * happen e.g. when a PopupView is opened.
+     * <p>
+     * By default, the thorough size check is enabled.
+     *
+     * @param thoroughSizeCheck
+     *            {@code true} if thorough size check enabled, {@code false} if
+     *            not
+     * @since
+     */
+    public void setUsingThoroughSizeCheck(boolean thoroughSizeCheck) {
+        getState().thoroughSizeCheck = thoroughSizeCheck;
     }
 
     /**

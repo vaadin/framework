@@ -71,6 +71,7 @@ public class ResponsiveUITest extends MultiBrowserTest {
     @Test
     public void testResizingWindowReflowsLayout() throws Exception {
         openTestURL();
+        waitUntilLoadingIndicatorNotVisible();
 
         assertEquals("401px-600px",
                 $(".v-csslayout-grid.first").getAttribute("width-range"));
@@ -78,6 +79,7 @@ public class ResponsiveUITest extends MultiBrowserTest {
                 $(".v-csslayout-grid.second").getAttribute("width-range"));
 
         testBench().resizeViewPortTo(1224, 768);
+        waitUntilLoadingIndicatorNotVisible();
 
         assertEquals("601-800",
                 $(".v-csslayout-grid.first").getAttribute("width-range"));
@@ -85,6 +87,7 @@ public class ResponsiveUITest extends MultiBrowserTest {
                 $(".v-csslayout-grid.second").getAttribute("width-range"));
 
         testBench().resizeViewPortTo(674, 768);
+        waitUntilLoadingIndicatorNotVisible();
 
         assertEquals("201px-400px",
                 $(".v-csslayout-grid.first").getAttribute("width-range"));
