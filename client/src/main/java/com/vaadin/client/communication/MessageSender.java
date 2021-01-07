@@ -127,6 +127,7 @@ public class MessageSender {
         }
         if (resynchronizeRequested) {
             getLogger().info("Resynchronizing from server");
+            getMessageHandler().onResynchronize();
             extraJson.put(ApplicationConstants.RESYNCHRONIZE_ID, true);
             resynchronizeRequested = false;
         }
@@ -356,7 +357,6 @@ public class MessageSender {
      * state from the server
      */
     public void resynchronize() {
-        getMessageHandler().onResynchronize();
         getLogger().info("Resynchronize from server requested");
         resynchronizeRequested = true;
         sendInvocationsToServer();
