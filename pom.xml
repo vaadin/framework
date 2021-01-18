@@ -98,10 +98,6 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-        <repository>
-            <id>atmosphere-staging</id>
-            <url>https://oss.sonatype.org/content/repositories/comvaadin-4197/</url>
-        </repository>
     </repositories>
 
     <organization>
