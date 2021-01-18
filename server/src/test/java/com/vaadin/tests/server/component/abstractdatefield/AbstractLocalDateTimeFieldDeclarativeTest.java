@@ -25,15 +25,19 @@ import com.vaadin.ui.AbstractLocalDateTimeField;
 public abstract class AbstractLocalDateTimeFieldDeclarativeTest<T extends AbstractLocalDateTimeField>
         extends AbstractFieldDeclarativeTest<T, LocalDateTime> {
 
-    protected DateTimeFormatter DATE_FORMATTER = DateTimeFormatter
-            .ofPattern("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+    // field initialised with DateTimeResolution.MINUTE, seconds get truncated
+    protected DateTimeFormatter VALUE_DATE_FORMATTER = DateTimeFormatter
+            .ofPattern("yyyy-MM-dd HH:mm:00", Locale.ROOT);
+    // only field value conforms to resolution, range keeps the initial values
+    protected DateTimeFormatter RANGE_DATE_FORMATTER = DateTimeFormatter
+            .ofPattern("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
 
     @Override
     public void valueDeserialization()
             throws InstantiationException, IllegalAccessException {
         LocalDateTime value = LocalDateTime.of(2003, 02, 27, 10, 37, 43);
         String design = String.format("<%s value='%s'/>", getComponentTag(),
-                DATE_FORMATTER.format(value));
+                VALUE_DATE_FORMATTER.format(value));
 
         T component = getComponentClass().newInstance();
         component.setValue(value);
@@ -57,8 +61,8 @@ public abstract class AbstractLocalDateTimeFieldDeclarativeTest<T extends Abstra
                 "<%s show-iso-week-numbers range-end='%s' range-start='%s' "
                         + "date-out-of-range-message='%s' resolution='%s' "
                         + "date-format='%s' lenient parse-error-message='%s'/>",
-                getComponentTag(), DATE_FORMATTER.format(end),
-                DATE_FORMATTER.format(start), dateOutOfRange,
+                getComponentTag(), RANGE_DATE_FORMATTER.format(end),
+                RANGE_DATE_FORMATTER.format(start), dateOutOfRange,
                 resolution.name().toLowerCase(Locale.ROOT), dateFormat,
                 parseErrorMsg);
 
@@ -82,7 +86,7 @@ public abstract class AbstractLocalDateTimeFieldDeclarativeTest<T extends Abstra
             throws InstantiationException, IllegalAccessException {
         LocalDateTime value = LocalDateTime.of(2003, 02, 27, 23, 12, 34);
         String design = String.format("<%s value='%s' readonly/>",
-                getComponentTag(), DATE_FORMATTER.format(value));
+                getComponentTag(), VALUE_DATE_FORMATTER.format(value));
 
         T component = getComponentClass().newInstance();
         component.setValue(value);
