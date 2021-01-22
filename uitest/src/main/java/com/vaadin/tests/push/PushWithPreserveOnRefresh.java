@@ -3,12 +3,13 @@ package com.vaadin.tests.push;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Push;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Label;
 
 @PreserveOnRefresh
-@Push
+@Push(transport = Transport.WEBSOCKET_XHR)
 public class PushWithPreserveOnRefresh extends AbstractReindeerTestUI {
 
     private Log log = new Log(5);
@@ -16,6 +17,7 @@ public class PushWithPreserveOnRefresh extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
+        setTheme("valo");
         // Internal parameter sent by vaadinBootstrap.js,
         addComponent(new Label("window.name: " + request.getParameter("v-wn")));
         addComponent(new Label("UI id: " + getUIId()));
