@@ -111,8 +111,8 @@ public abstract class AbstractLocalDateTimeField
     @Override
     protected RangeValidator<LocalDateTime> getRangeValidator() {
         return new DateTimeRangeValidator(getDateOutOfRangeMessage(),
-                getDate(getRangeStart(), getResolution()),
-                getDate(getRangeEnd(), getResolution()));
+                adjustToResolution(getRangeStart(), getResolution()),
+                adjustToResolution(getRangeEnd(), getResolution()));
     }
 
     @Override
@@ -143,7 +143,8 @@ public abstract class AbstractLocalDateTimeField
         return Date.from(date.toInstant(ZoneOffset.UTC));
     }
 
-    private LocalDateTime getDate(LocalDateTime date,
+    @Override
+    protected LocalDateTime adjustToResolution(LocalDateTime date,
             DateTimeResolution forResolution) {
         if (date == null) {
             return null;

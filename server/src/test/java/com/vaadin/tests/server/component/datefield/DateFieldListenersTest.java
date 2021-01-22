@@ -1,12 +1,14 @@
 package com.vaadin.tests.server.component.datefield;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.Map;
 
 import org.junit.Test;
 
+import com.vaadin.data.validator.DateTimeRangeValidator;
 import com.vaadin.data.validator.RangeValidator;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -39,7 +41,9 @@ public class DateFieldListenersTest extends AbstractListenerMethodsTestBase {
 
         @Override
         protected RangeValidator<LocalDateTime> getRangeValidator() {
-            return null;
+            return new DateTimeRangeValidator(getDateOutOfRangeMessage(),
+                    adjustToResolution(getRangeStart(), getResolution()),
+                    adjustToResolution(getRangeEnd(), getResolution()));
         }
 
         @Override
@@ -60,6 +64,32 @@ public class DateFieldListenersTest extends AbstractListenerMethodsTestBase {
         @Override
         protected LocalDateTime toType(TemporalAccessor temporalAccessor) {
             return LocalDateTime.from(temporalAccessor);
+        }
+
+        @Override
+        protected LocalDateTime adjustToResolution(LocalDateTime date,
+                DateTimeResolution forResolution) {
+            if (date == null) {
+                return null;
+            }
+            switch (forResolution) {
+            case YEAR:
+                return date.withDayOfYear(1).toLocalDate().atStartOfDay();
+            case MONTH:
+                return date.withDayOfMonth(1).toLocalDate().atStartOfDay();
+            case DAY:
+                return date.toLocalDate().atStartOfDay();
+            case HOUR:
+                return date.truncatedTo(ChronoUnit.HOURS);
+            case MINUTE:
+                return date.truncatedTo(ChronoUnit.MINUTES);
+            case SECOND:
+                return date.truncatedTo(ChronoUnit.SECONDS);
+            default:
+                assert false : "Unexpected resolution argument "
+                        + forResolution;
+                return null;
+            }
         }
     }
 

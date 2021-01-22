@@ -14,6 +14,7 @@ import com.vaadin.data.Binder;
 import com.vaadin.data.ValidationException;
 import com.vaadin.data.ValueContext;
 import com.vaadin.data.converter.LocalDateTimeToDateConverter;
+import com.vaadin.shared.ui.datefield.DateTimeResolution;
 import com.vaadin.ui.DateTimeField;
 
 public class LocalDateTimeToDateConverterTest extends AbstractConverterTest {
@@ -59,7 +60,15 @@ public class LocalDateTimeToDateConverterTest extends AbstractConverterTest {
         BeanWithDate bean = new BeanWithDate();
         binder.writeBean(bean);
 
-        assertEquals(DATE, bean.getDate());
+        assertEquals(DateTimeResolution.MINUTE, dateField.getResolution());
+
+        // create a comparison date that matches the resolution
+        Calendar calendar = Calendar
+                .getInstance(TimeZone.getTimeZone(ZoneOffset.UTC));
+        calendar.clear();
+        calendar.set(2017, Calendar.JANUARY, 1, 1, 1, 0);
+        Date date = calendar.getTime();
+        assertEquals(date, bean.getDate());
     }
 
     public static class BeanWithDate {
