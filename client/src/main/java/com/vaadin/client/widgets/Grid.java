@@ -77,7 +77,6 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.WidgetUtil;
@@ -3456,7 +3455,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             // Update latest width to prevent recalculate on height change.
             lastCalculatedInnerWidth = escalator.getInnerWidth();
-            lastCalculatedInnerHeight = getEscalatorInnerHeight();
+            lastCalculatedInnerHeight = escalator.getInnerHeight();
         }
 
         private boolean columnsAreGuaranteedToBeWiderThanGrid() {
@@ -9402,11 +9401,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             // way to the bottom.
             refreshBody();
         });
-    }
-
-    private double getEscalatorInnerHeight() {
-        return new ComputedStyle(getEscalator().getTableWrapper())
-                .getHeightIncludingBorderPadding();
     }
 
     /**
