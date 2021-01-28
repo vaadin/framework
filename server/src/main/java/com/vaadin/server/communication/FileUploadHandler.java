@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.NoInputStreamException;
@@ -273,8 +275,10 @@ public class FileUploadHandler implements RequestHandler {
             streamVariable = uI.getConnectorTracker()
                     .getStreamVariable(connectorId, variableName);
             String secKey = uI.getConnectorTracker().getSeckey(streamVariable);
-            if (secKey == null || !secKey.equals(parts[3])) {
-                // TODO Should rethink error handling
+            String securityKey = parts[3];
+            if (secKey == null || !MessageDigest.isEqual(
+                    secKey.getBytes(StandardCharsets.UTF_8),
+                    securityKey.getBytes(StandardCharsets.UTF_8))) {
                 return true;
             }
 
