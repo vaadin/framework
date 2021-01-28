@@ -18,6 +18,8 @@ package com.vaadin.server.communication;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -522,7 +524,9 @@ public class PushHandler {
             String requestPushId) {
 
         String sessionPushId = session.getPushId();
-        if (requestPushId == null || !requestPushId.equals(sessionPushId)) {
+        if (requestPushId == null || !MessageDigest.isEqual(
+                requestPushId.getBytes(StandardCharsets.UTF_8),
+                sessionPushId.getBytes(StandardCharsets.UTF_8))) {
             return false;
         }
         return true;
