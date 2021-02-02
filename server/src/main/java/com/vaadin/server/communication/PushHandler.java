@@ -18,7 +18,6 @@ package com.vaadin.server.communication;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -58,6 +57,8 @@ import elemental.json.JsonException;
 public class PushHandler {
 
     private int longPollingSuspendTimeout = -1;
+
+    private static final String UTF8 = "UTF-8";
 
     /**
      * Callback interface used internally to process an event with the
@@ -488,8 +489,8 @@ public class PushHandler {
 
         String sessionPushId = session.getPushId();
         if (requestPushId == null || !MessageDigest.isEqual(
-                requestPushId.getBytes(StandardCharsets.UTF_8),
-                sessionPushId.getBytes(StandardCharsets.UTF_8))) {
+                requestPushId.getBytes(UTF8),
+                sessionPushId.getBytes(UTF8))) {
             return false;
         }
         return true;
