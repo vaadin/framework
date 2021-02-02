@@ -485,7 +485,7 @@ public class PushHandler {
      * @return {@code true} if the id is valid, {@code false} otherwise
      */
     private static boolean isPushIdValid(VaadinSession session,
-            String requestPushId) {
+            String requestPushId) throws IOException {
 
         String sessionPushId = session.getPushId();
         if (requestPushId == null || !MessageDigest.isEqual(
