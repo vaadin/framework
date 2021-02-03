@@ -28,7 +28,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1763,9 +1762,15 @@ public abstract class VaadinService implements Serializable {
                 .isXsrfProtectionEnabled()) {
             String sessionToken = session.getCsrfToken();
 
-            if (sessionToken == null || !MessageDigest.isEqual(
-                    sessionToken.getBytes(StandardCharsets.UTF_8),
-                    requestToken.getBytes(StandardCharsets.UTF_8))) {
+            try {
+                if (sessionToken == null || !MessageDigest.isEqual(
+                        sessionToken.getBytes("UTF-8"),
+                        requestToken.getBytes("UTF-8"))) {
+                    return false;
+                }
+            } catch (UnsupportedEncodingException e) {
+                getLogger().log(Level.WARNING,
+                        "Session token was not UTF-8, this should never happen.");
                 return false;
             }
         }
