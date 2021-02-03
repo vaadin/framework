@@ -743,6 +743,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     private final String csrfToken = UUID.randomUUID().toString();
 
+    /*
+     * This token should be handled with care since it's used to protect against
+     * cross-site attacks in addition to general identifier duty.
+     */
     private final String pushId = UUID.randomUUID().toString();
 
     /**
