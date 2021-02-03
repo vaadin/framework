@@ -18,6 +18,7 @@ package com.vaadin.server.communication;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,6 +57,8 @@ import elemental.json.JsonException;
 public class PushHandler {
 
     private int longPollingSuspendTimeout = -1;
+
+    private static final String UTF8 = "UTF-8";
 
     /**
      * Callback interface used internally to process an event with the
@@ -471,7 +474,9 @@ public class PushHandler {
     }
 
     /**
-     * Checks whether a given push id matches the session's push id.
+     * Checks whether a given push id matches the session's push id. The
+     * comparison is done using a time-constant method since the push id is used
+     * to protect against cross-site attacks.
      *
      * @param session
      *            the vaadin session for which the check should be done
@@ -480,10 +485,12 @@ public class PushHandler {
      * @return {@code true} if the id is valid, {@code false} otherwise
      */
     private static boolean isPushIdValid(VaadinSession session,
-            String requestPushId) {
+            String requestPushId) throws IOException {
 
         String sessionPushId = session.getPushId();
-        if (requestPushId == null || !requestPushId.equals(sessionPushId)) {
+        if (requestPushId == null || !MessageDigest.isEqual(
+                requestPushId.getBytes(UTF8),
+                sessionPushId.getBytes(UTF8))) {
             return false;
         }
         return true;
