@@ -325,9 +325,6 @@ public class ServerRpcHandler implements Serializable {
      */
     protected void handleInvocations(UI ui, int lastSyncIdSeenByClient,
             JsonArray invocationsData) {
-        // TODO PUSH Refactor so that this is not needed
-        LegacyCommunicationManager manager = ui.getSession()
-                .getCommunicationManager();
 
         try {
             ConnectorTracker connectorTracker = ui.getConnectorTracker();
