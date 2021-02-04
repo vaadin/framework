@@ -29,6 +29,8 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -1962,7 +1964,9 @@ public abstract class VaadinService implements Serializable {
                 .isXsrfProtectionEnabled()) {
             String sessionToken = session.getCsrfToken();
 
-            if (sessionToken == null || !sessionToken.equals(requestToken)) {
+            if (sessionToken == null || !MessageDigest.isEqual(
+                    sessionToken.getBytes(StandardCharsets.UTF_8),
+                    requestToken.getBytes(StandardCharsets.UTF_8))) {
                 return false;
             }
         }
