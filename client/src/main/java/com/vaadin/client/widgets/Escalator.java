@@ -7160,6 +7160,8 @@ public class Escalator extends Widget
 
     private final ElementPositionBookkeeper positions = new ElementPositionBookkeeper();
 
+    private Map<Element, ComputedStyle> computedStyleMap = new HashMap<>();
+
     /**
      * Creates a new Escalator widget instance.
      */
@@ -7249,14 +7251,28 @@ public class Escalator extends Widget
     private double getBoundingWidth(Element element) {
         // Gets the current width, including border and padding, for the element
         // while ignoring any transforms applied to the element (e.g. scale)
-        return new ComputedStyle(element).getWidthIncludingBorderPadding();
+        if (!computedStyleMap.containsKey(element)) {
+            if (computedStyleMap.isEmpty()) {
+                // ensure the next event loop calculates the sizes anew
+                Scheduler.get().scheduleDeferred(() -> clearComputedStyles());
+            }
+            computedStyleMap.put(element, new ComputedStyle(element));
+        }
+        return computedStyleMap.get(element).getWidthIncludingBorderPadding();
     }
 
     private double getBoundingHeight(Element element) {
         // Gets the current height, including border and padding, for the
         // element while ignoring any transforms applied to the element (e.g.
         // scale)
-        return new ComputedStyle(element).getHeightIncludingBorderPadding();
+        if (!computedStyleMap.containsKey(element)) {
+            if (computedStyleMap.isEmpty()) {
+                // ensure the next event loop calculates the sizes anew
+                Scheduler.get().scheduleDeferred(() -> clearComputedStyles());
+            }
+            computedStyleMap.put(element, new ComputedStyle(element));
+        }
+        return computedStyleMap.get(element).getHeightIncludingBorderPadding();
     }
 
     private int getBodyRowCount() {
@@ -8303,6 +8319,25 @@ public class Escalator extends Widget
      */
     public double getInnerWidth() {
         return getBoundingWidth(tableWrapper);
+    }
+
+    /**
+     * Gets the escalator's inner height. This is the entire height in pixels,
+     * without the horizontal scrollbar.
+     *
+     * @return escalator's inner height
+     */
+    public double getInnerHeight() {
+        return getBoundingHeight(tableWrapper);
+    }
+
+    /**
+     * FOR INTERNAL USE ONLY, MAY GET REMOVED OR MODIFIED AT ANY TIME!
+     * <p>
+     * Clears the computed styles.
+     */
+    void clearComputedStyles() {
+        computedStyleMap.clear();
     }
 
     /**
