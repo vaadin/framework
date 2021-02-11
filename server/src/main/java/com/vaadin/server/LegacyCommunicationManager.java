@@ -232,8 +232,23 @@ public class LegacyCommunicationManager implements Serializable {
         if (cache == null) {
             cache = new ClientCache();
             uiToClientCache.put(uiId, cache);
+            uI.addDetachListener(event -> removeClientCache(uI));
         }
         return cache;
+    }
+
+    /**
+     * Clear out client cache for the given UI. This should be called when the
+     * UI is detached and the cache becomes obsolete.
+     *
+     * @param uI
+     *            the UI whose client cache should be removed
+     * @deprecated because this cleanup is only needed for a deprecated feature
+     */
+    @Deprecated
+    private void removeClientCache(UI uI) {
+        Integer uiId = Integer.valueOf(uI.getUIId());
+        uiToClientCache.remove(uiId);
     }
 
     /**
