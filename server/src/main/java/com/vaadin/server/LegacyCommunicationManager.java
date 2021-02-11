@@ -29,6 +29,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.server.ClientConnector.ConnectorErrorEvent;
+import com.vaadin.server.ClientConnector.DetachEvent;
+import com.vaadin.server.ClientConnector.DetachListener;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JavaScriptConnectorState;
 import com.vaadin.shared.communication.SharedState;
@@ -189,14 +191,34 @@ public class LegacyCommunicationManager implements Serializable {
      * @deprecated As of 7.1. See #11410.
      */
     @Deprecated
-    public ClientCache getClientCache(UI uI) {
+    public ClientCache getClientCache(final UI uI) {
         Integer uiId = Integer.valueOf(uI.getUIId());
         ClientCache cache = uiToClientCache.get(uiId);
         if (cache == null) {
             cache = new ClientCache();
             uiToClientCache.put(uiId, cache);
+            uI.addDetachListener(new DetachListener() {
+                @Override
+                public void detach(DetachEvent event) {
+                    removeClientCache(uI);
+                }
+            });
         }
         return cache;
+    }
+
+    /**
+     * Clear out client cache for the given UI. This should be called when the
+     * UI is detached and the cache becomes obsolete.
+     *
+     * @param uI
+     *            the UI whose client cache should be removed
+     * @deprecated because this cleanup is only needed for a deprecated feature
+     */
+    @Deprecated
+    private void removeClientCache(UI uI) {
+        Integer uiId = Integer.valueOf(uI.getUIId());
+        uiToClientCache.remove(uiId);
     }
 
     /**
