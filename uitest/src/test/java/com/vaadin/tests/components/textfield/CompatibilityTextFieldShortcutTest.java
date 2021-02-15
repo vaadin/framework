@@ -21,7 +21,7 @@ public class CompatibilityTextFieldShortcutTest extends SingleBrowserTest {
     public void focusAndPressF8() {
         openTestURL();
 
-        WebElement textFieldText = findElement(By.className("input"));
+        WebElement textFieldText = findElement(By.tagName("input"));
         $(ButtonElement.class).first().click();
 
         waitForElementVisible(By.className("focus-label"));
