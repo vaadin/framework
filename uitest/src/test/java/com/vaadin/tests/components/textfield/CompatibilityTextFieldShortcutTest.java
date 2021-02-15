@@ -9,7 +9,6 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.NotificationElement;
-import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class CompatibilityTextFieldShortcutTest extends SingleBrowserTest {
@@ -22,12 +21,11 @@ public class CompatibilityTextFieldShortcutTest extends SingleBrowserTest {
     public void focusAndPressF8() {
         openTestURL();
 
-        TextFieldElement textField = $(TextFieldElement.class).first();
-        WebElement textFieldText = textField.findElement(By.tagName("input"));
+        WebElement textFieldText = findElement(By.className("input"));
         $(ButtonElement.class).first().click();
 
         waitForElementVisible(By.className("focus-label"));
-        textField.setValue(TEXTFIELD_VALUE);
+        textFieldText.sendKeys(TEXTFIELD_VALUE);
 
         textFieldText.sendKeys(Keys.F8);
 
