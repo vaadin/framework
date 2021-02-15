@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
@@ -14,7 +15,8 @@ import com.vaadin.tests.tb3.SingleBrowserTest;
 public class CompatibilityTextFieldShortcutTest extends SingleBrowserTest {
 
     private static final String TEXTFIELD_VALUE = "input";
-    private static final String NOTIFICATION = "Received F8: "+TEXTFIELD_VALUE;
+    private static final String NOTIFICATION = "Received F8: "
+            + TEXTFIELD_VALUE;
 
     @Test
     public void focusAndPressF8() {
@@ -22,8 +24,8 @@ public class CompatibilityTextFieldShortcutTest extends SingleBrowserTest {
 
         TextFieldElement textField = $(TextFieldElement.class).first();
         WebElement textFieldText = textField.findElement(By.tagName("input"));
-        textField.focus();
-        
+        $(ButtonElement.class).first().click();
+
         waitForElementVisible(By.className("focus-label"));
         textField.setValue(TEXTFIELD_VALUE);
 
@@ -33,4 +35,3 @@ public class CompatibilityTextFieldShortcutTest extends SingleBrowserTest {
                 $(NotificationElement.class).first().getCaption());
     }
 }
-
