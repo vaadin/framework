@@ -21,10 +21,9 @@ public class CompatibilityTextFieldShortcutTest extends SingleBrowserTest {
         openTestURL();
 
         TextFieldElement textField = $(TextFieldElement.class).first();
-        textField.focus();
-        textField.setValue(TEXTFIELD_VALUE);
-
         WebElement textFieldText = textField.findElement(By.tagName("input"));
+        textFieldText.click();
+        textField.setValue(TEXTFIELD_VALUE);
 
         textFieldText.sendKeys(Keys.F8);
 
