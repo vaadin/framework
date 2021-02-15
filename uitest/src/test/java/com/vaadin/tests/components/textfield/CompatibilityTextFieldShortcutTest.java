@@ -22,7 +22,9 @@ public class CompatibilityTextFieldShortcutTest extends SingleBrowserTest {
 
         TextFieldElement textField = $(TextFieldElement.class).first();
         WebElement textFieldText = textField.findElement(By.tagName("input"));
-        textFieldText.click();
+        textField.focus();
+        
+        waitForElementVisible(By.className("focus-label"));
         textField.setValue(TEXTFIELD_VALUE);
 
         textFieldText.sendKeys(Keys.F8);
@@ -31,3 +33,4 @@ public class CompatibilityTextFieldShortcutTest extends SingleBrowserTest {
                 $(NotificationElement.class).first().getCaption());
     }
 }
+
