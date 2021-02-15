@@ -26,12 +26,13 @@ public class CompatibilityTextFieldShortcut extends AbstractTestUI {
         };
 
         textField.addFocusListener(e -> {
-            System.out.println("Focused");
             listenerRegistration = textField.addShortcutListener(c);
+            Label label = new Label("Focused");
+            label.addStyleName("focus-label");
+            addComponent(label);
         });
 
         textField.addBlurListener(e -> {
-            System.out.println("Blurred");
             listenerRegistration.remove();
         });
 
