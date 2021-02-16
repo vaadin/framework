@@ -44,6 +44,6 @@ public class CompatibilityTextFieldShortcut extends AbstractTestUI {
         button.addClickListener(event -> {
             textField.focus();
         });
-        addComponents(label, textField);
+        addComponents(label, textField, button);
     }
 }
