@@ -24,7 +24,7 @@ public class DateFieldPreventInvalidInput extends AbstractTestUI {
         dateField.addValueChangeListener(event -> {
             value.setValue(dateField.getValue().toString());
         });
-        addComponents(dateField,label,button);
+        addComponents(dateField,value,button);
     }
 
 }
