@@ -27,13 +27,12 @@ public class DateFieldPreventInvalidInputTest extends SingleBrowserTest {
 
         // DateField is set not accept invalid input, this date is not in range
         dateTextbox.sendKeys("01/01/21", Keys.TAB);
-        assertEquals("Expected value un-changed", "no-value", label.getText());
+        assertEquals("no-value", label.getText());
 
         // Set DateField accept invalid input
         button.click();
 
         dateTextbox.sendKeys("01/01/21", Keys.TAB);
-        Assert.assertNotEquals("Expected value changed", "no-value",
-                label.getText());
+        Assert.assertNotEquals("no-value", label.getText());
     }
 }
