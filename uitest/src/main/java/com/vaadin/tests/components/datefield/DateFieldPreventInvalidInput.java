@@ -20,7 +20,8 @@ public class DateFieldPreventInvalidInput extends AbstractTestUI {
             dateField.clear();
             dateField.setPreventInvalidInput(false);
         });
-        Label value = new Label("no-value");
+        Label value = new Label();
+        value.setValue("no-value");
         dateField.addValueChangeListener(event -> {
             value.setValue(dateField.getValue().toString());
         });
