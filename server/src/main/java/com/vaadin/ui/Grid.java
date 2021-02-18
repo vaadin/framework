@@ -1262,6 +1262,18 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         /**
+         * Gets the function to get presentations from the value of data in this
+         * column, based on the row item.
+         *
+         * @return the presentation provider function
+         *
+         * @since
+         */
+        public ValueProvider<V, ?> getPresentationProvider() {
+            return presentationProvider;
+        }
+
+        /**
          * Sets whether the user can sort this column or not. Whether the column
          * is actually sortable after {@code setSortable(true)} depends on the
          * {@link DataProvider} and the defined sort order for this column. When

@@ -18,6 +18,7 @@ package com.vaadin.client;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 
 public class MeasuredSize {
@@ -186,7 +187,44 @@ public class MeasuredSize {
         return paddings[3];
     }
 
+    /**
+     * Measures paddings, margins, border, height, and weight of the given
+     * element and stores the results within this {@link MeasuredSize} object.
+     * The measurements are unreliable if the element or any of its parents are
+     * in the middle of a transform animation.
+     *
+     * @param element
+     *            element to be measured
+     * @return data object for whether the width or height of the given element
+     *         has changed since previous measure
+     * @see {@link #measure(Element, boolean)}
+     */
     public MeasureResult measure(Element element) {
+        return measure(element, false);
+    }
+
+    /**
+     * Measures paddings, margins, border, height, and weight of the given
+     * element and stores the results within this {@link MeasuredSize} object.
+     *
+     * @param element
+     *            element to be measured
+     * @param thoroughSizeCheck
+     *            {@code true} if the measuring should use the more reliable
+     *            size check that requires ensuring that the element is still
+     *            present in the DOM tree, {@code false} for the slightly faster
+     *            check that will give incorrect size information if this method
+     *            is called while the element or any of its parents are in the
+     *            middle of a transform animation.
+     * @return data object for whether the width or height of the given element
+     *         has changed since previous measure
+     */
+    public MeasureResult measure(Element element, boolean thoroughSizeCheck) {
+        if (thoroughSizeCheck
+                && !Document.get().getBody().isOrHasChild(element)) {
+            return new MeasureResult(false, false);
+        }
+
         Profiler.enter("MeasuredSize.measure");
         boolean heightChanged = false;
         boolean widthChanged = false;
@@ -239,7 +277,15 @@ public class MeasuredSize {
         Profiler.leave("Measure borders");
 
         Profiler.enter("Measure height");
-        double requiredHeight = WidgetUtil.getRequiredHeightDouble(element);
+        double requiredHeight;
+        if (thoroughSizeCheck) {
+            requiredHeight = computedStyle.getHeightIncludingBorderPadding();
+            if (Double.isNaN(requiredHeight)) {
+                requiredHeight = 0;
+            }
+        } else {
+            requiredHeight = WidgetUtil.getRequiredHeightDouble(element);
+        }
         double outerHeight = requiredHeight + sumHeights(margins);
         double oldHeight = height;
         if (setOuterHeight(outerHeight)) {
@@ -249,7 +295,15 @@ public class MeasuredSize {
         Profiler.leave("Measure height");
 
         Profiler.enter("Measure width");
-        double requiredWidth = WidgetUtil.getRequiredWidthDouble(element);
+        double requiredWidth;
+        if (thoroughSizeCheck) {
+            requiredWidth = computedStyle.getWidthIncludingBorderPadding();
+            if (Double.isNaN(requiredWidth)) {
+                requiredWidth = 0;
+            }
+        } else {
+            requiredWidth = WidgetUtil.getRequiredWidthDouble(element);
+        }
         double outerWidth = requiredWidth + sumWidths(margins);
         double oldWidth = width;
         if (setOuterWidth(outerWidth)) {

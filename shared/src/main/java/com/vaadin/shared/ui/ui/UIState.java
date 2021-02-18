@@ -85,13 +85,22 @@ public class UIState extends AbstractSingleComponentContainerState {
         // Default is 1 for legacy reasons
         tabIndex = 1;
     }
-
     /**
      * Enable Mobile HTML5 DnD support.
      *
      * @since 8.1
      */
     public boolean enableMobileHTML5DnD = false;
+    /**
+     * Should the more thorough size check be in use in LayoutManager
+     * calculations. If this value is changed to {@code false}, the size
+     * calculations can result in incorrect values if they are triggered while a
+     * transform animation is ongoing. This can happen e.g. when a PopupView is
+     * opened.
+     *
+     * @since
+     */
+    public boolean thoroughSizeCheck = true;
 
     public static class LoadingIndicatorConfigurationState
             implements Serializable {

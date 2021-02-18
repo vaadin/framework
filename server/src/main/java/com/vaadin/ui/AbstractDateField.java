@@ -38,9 +38,9 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.googlecode.gentyref.GenericTypeReflector;
 import org.jsoup.nodes.Element;
 
+import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValidationResult;
 import com.vaadin.data.Validator;
@@ -186,7 +186,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     };
 
     /**
-     * The default start year (inclusive) from which to calculate the 
+     * The default start year (inclusive) from which to calculate the
      * daylight-saving time zone transition dates.
      */
     private static final int DEFAULT_START_YEAR = 1980;
@@ -332,8 +332,9 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * <p>
      * Note: Negative, i.e. BC dates are not supported.
      * <p>
-     * Note: It's usually recommended to use only one of the following at the same
-     * time: Range validator with Binder or DateField's setRangeStart check.
+     * Note: It's usually recommended to use only one of the following at the
+     * same time: Range validator with Binder or DateField's setRangeStart
+     * check.
      *
      * @param startDate
      *            - the allowed range's start date
@@ -386,8 +387,11 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *            the resolution to set, not {@code null}
      */
     public void setResolution(R resolution) {
-        this.resolution = resolution;
-        updateResolutions();
+        if (!resolution.equals(this.resolution)) {
+            this.resolution = resolution;
+            setValue(adjustToResolution(getValue(), resolution));
+            updateResolutions();
+        }
     }
 
     /**
@@ -396,8 +400,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * validate. If {@code endDate} is set to {@code null}, any value after
      * {@code startDate} will be accepted by the range.
      * <p>
-     * Note: It's usually recommended to use only one of the following at the same
-     * time: Range validator with Binder or DateField's setRangeEnd check.
+     * Note: It's usually recommended to use only one of the following at the
+     * same time: Range validator with Binder or DateField's setRangeEnd check.
      *
      * @param endDate
      *            the allowed range's end date (inclusive, based on the current
@@ -554,8 +558,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * inclusive) between which to calculate the daylight-saving time zone
      * transition dates. Both parameters are used when '{@code z}' is included
      * inside the {@link #setDateFormat(String)}, they would have no effect
-     * otherwise. Specifically, these parameters determine the range of years in 
-     * which zone names are are adjusted to show the daylight saving names. 
+     * otherwise. Specifically, these parameters determine the range of years in
+     * which zone names are are adjusted to show the daylight saving names.
      *
      * If no values are provided, by default {@link startYear} is set to
      * {@value #DEFAULT_START_YEAR}, and {@link endYear} is set to
@@ -713,12 +717,13 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @param value
      *            the new value, may be {@code null}
      * @throws IllegalArgumentException
-     *            if the value is not within range bounds
+     *             if the value is not within range bounds
      */
     @Override
     public void setValue(T value) {
+        T adjusted = adjustToResolution(value, getResolution());
         RangeValidator<T> validator = getRangeValidator();
-        ValidationResult result = validator.apply(value,
+        ValidationResult result = validator.apply(adjusted,
                 new ValueContext(this, this));
 
         if (result.isError()) {
@@ -727,24 +732,39 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         } else {
             currentErrorMessage = null;
             /*
-             * First handle special case when the client side component has a date
-             * string but value is null (e.g. unparsable date string typed in by the
-             * user). No value changes should happen, but we need to do some
-             * internal housekeeping.
+             * First handle special case when the client side component has a
+             * date string but value is null (e.g. unparsable date string typed
+             * in by the user). No value changes should happen, but we need to
+             * do some internal housekeeping.
              */
-            if (value == null && !getState(false).parsable) {
+            if (adjusted == null && !getState(false).parsable) {
                 /*
-                 * Side-effects of doSetValue clears possible previous strings and
-                 * flags about invalid input.
+                 * Side-effects of doSetValue clears possible previous strings
+                 * and flags about invalid input.
                  */
                 doSetValue(null);
 
                 markAsDirty();
                 return;
             }
-            super.setValue(value);
+            super.setValue(adjusted);
         }
     }
+
+    /**
+     * Adjusts the given date to the given resolution. Any values that are more
+     * specific than the given resolution are truncated to their default values.
+     *
+     * @param date
+     *            the date to adjust, can be {@code null}
+     * @param resolution
+     *            the resolution to be used in the adjustment, can be
+     *            {@code null}
+     * @return an adjusted date that matches the given resolution, or
+     *         {@code null} if the given date, resolution, or both were
+     *         {@code null}
+     */
+    protected abstract T adjustToResolution(T date, R resolution);
 
     /**
      * Checks whether ISO 8601 week numbers are shown in the date selector.
@@ -829,7 +849,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                             .info("cannot parse " + design.attr("value")
                                     + " as date");
                 }
-                doSetValue(date);
+                doSetValue(adjustToResolution(date, getResolution()));
             } else {
                 throw new RuntimeException("Cannot detect resoluton type "
                         + Optional.ofNullable(dateType).map(Type::getTypeName)
