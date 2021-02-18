@@ -16,19 +16,18 @@ import com.vaadin.tests.tb3.SingleBrowserTest;
 public class DateFieldPreventInvalidInputTest extends SingleBrowserTest {
 
     @Test
-    public void modifyValueAndPressEnter() {
+    public void modifyValueAndPressTab() {
         openTestURL();
         DateFieldElement dateField = $(DateFieldElement.class).first();
 
         WebElement dateTextbox = dateField
                 .findElement(By.className("v-textfield"));
         ButtonElement button = $(ButtonElement.class).first();
-        LabelElement label = $(LabelElement.class).first();
+        LabelElement label = $(LabelElement.class).id("value");
 
         // DateField is set not accept invalid input, this date is not in range
         dateTextbox.click();
         dateTextbox.sendKeys("01/01/21", Keys.TAB);
-        sleep(100);
         assertEquals("no-value", label.getText());
 
         // Set DateField accept invalid input
@@ -36,7 +35,6 @@ public class DateFieldPreventInvalidInputTest extends SingleBrowserTest {
 
         dateTextbox.click();
         dateTextbox.sendKeys("01/01/21", Keys.TAB);
-        sleep(100);
         Assert.assertNotEquals("no-value", label.getText());
     }
 }
