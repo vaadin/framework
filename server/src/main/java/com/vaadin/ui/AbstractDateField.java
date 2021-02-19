@@ -160,7 +160,14 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                                 }
                             }
                         } else {
-                            setValue(newDate, true);
+                            RangeValidator<T> validator = getRangeValidator();
+                            ValidationResult result = validator.apply(newDate,
+                                    new ValueContext());
+                            if (!isPreventInvalidInput() || !result.isError()) {
+                                setValue(newDate, true);
+                            } else {
+                                doSetValue(newDate);
+                            }
                         }
                     }
                 }
@@ -228,6 +235,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     private String defaultParseErrorMessage = "Date format not recognized";
 
     private String dateOutOfRangeMessage = "Date is out of allowed range";
+
+    private boolean preventInvalidInput = false;
 
     /* Constructors */
 
@@ -1129,5 +1138,29 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      */
     public void getAssistiveLabel(AccessibleElement element) {
         getState(false).assistiveLabels.get(element);
+    }
+
+    /**
+     * Control whether value change event is emitted when user input value 
+     * does not meet the integrated range validator.
+     *
+     * @param preventInvalidInput Set to false to disable the value change event.
+     *
+     * @since 8.13
+     */
+    public void setPreventInvalidInput(boolean preventInvalidInput) {
+        this.preventInvalidInput = preventInvalidInput;
+    }
+
+    /**
+     * Check whether value change is emitted when user input value does
+     * not meet integrated range validator. The default is false.
+     *
+     * @return a Boolean value
+     *
+     * @since 8.13
+     */
+    public boolean isPreventInvalidInput() {
+        return preventInvalidInput;
     }
 }
