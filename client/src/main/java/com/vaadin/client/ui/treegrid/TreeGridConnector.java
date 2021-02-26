@@ -208,7 +208,7 @@ public class TreeGridConnector extends GridConnector {
                             .getVisibleRowRange();
                     getDataSource().ensureAvailability(
                             visibleRowRange.getStart(),
-                            visibleRowRange.getEnd());
+                            visibleRowRange.length());
                 }
                 checkExpand();
             }
@@ -222,7 +222,7 @@ public class TreeGridConnector extends GridConnector {
                             .getVisibleRowRange();
                     getDataSource().ensureAvailability(
                             visibleRowRange.getStart(),
-                            visibleRowRange.getEnd());
+                            visibleRowRange.length());
                 }
                 checkExpand();
             }
