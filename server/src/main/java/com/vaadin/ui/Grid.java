@@ -4762,7 +4762,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             for (Column<T, ?> c : getColumns()) {
                 HeaderCell headerCell = getDefaultHeaderRow().getCell(c);
                 if (headerCell.getCellType() == GridStaticCellType.TEXT) {
-                    c.setCaption(headerCell.getText());
+                    String text = headerCell.getText();
+                    c.setCaption(text == null ? "" : text);
                 }
             }
         }
