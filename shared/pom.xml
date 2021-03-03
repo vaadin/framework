@@ -37,15 +37,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>net.revelc.code.formatter</groupId>
-                <artifactId>formatter-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>com.github.dantwining.whitespace-maven-plugin</groupId>
-                <artifactId>whitespace-maven-plugin</artifactId>
-            </plugin>
-
             <!-- Generated Version.java -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

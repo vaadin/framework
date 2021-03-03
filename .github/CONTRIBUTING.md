@@ -14,8 +14,6 @@ Unless the issue is specific to a single version of the Framework, you should al
 
 In your repo, make a new branch from `master`. Make your code changes in that branch, and once you're done make a pull request to the `vaadin/framework` branch `master`.
 
-The `vaadin/framework` project uses `formatter-maven-plugin` to format the code. It will be executed as part of the Maven build. Make sure to run `mvn compile` before making the commit.
-
 We recommend making sure that the "Allow edits from maintainers" checkbox on the pull request page is checked. This allows us to commit minor fixes, like correcting typos, without bothering you.
 
 ### Getting feedback and responding to it
