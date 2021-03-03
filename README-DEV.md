@@ -119,7 +119,6 @@ After that is done, you should have 9 of 28 save actions activated and listed as
 Run <code>install</code> maven goal for the project root to get started.
 In Eclipse this is done by right-clicking on the project root in Project Explorer and choosing *Run As* -> *Maven Build...*. If you choose to skip tests you may need to run the <code>install</code> maven goal for `vaadin-uitest` project separately.
 * Note that the first compilation takes a while to finish as Maven downloads dependencies used in the projects.
-* In some Windows environments the compilation doesn't respect the `core.autocrlf=false` and the workspace preferences listed in the previous section, and running <code>install</code> converts all line endings from six core projects (root, `vaadin-client`, `vaadin-server`,  `vaadin-shared`, `vaadin-testbench-api`, `vaadin-uitest`) to Windows-style. As a quick-and-dirty workaround you can change the line endings back through *File* -> *Convert Line Delimiters To* -> *Unix* and comment out references to plugins `net.revelc.code.formatter` and `com.github.dantwining.whitespace-maven-plugin` from each affected module's pom.xml (root project references them twice) to prevent it from happening again. *Do not* include those changes or any files with Windows-style line endings in any pull request. Because you consequently lose the formatting benefits of those plugins, you also need to be more careful about not including irrelevant formatting changes in your commits.
 
 Now the project should compile without further configuration.
 
