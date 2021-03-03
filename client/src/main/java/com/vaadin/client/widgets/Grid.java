@@ -1973,6 +1973,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         // editor overlay since the original one is hidden by
                         // the overlay
                         final CheckBox checkBox = GWT.create(CheckBox.class);
+                        checkBox.setStylePrimaryName(grid.getStylePrimaryName()
+                                + "-selection-checkbox");
+
+                        // label of checkbox should only be visible for
+                        // assistive devices
+                        checkBox.addStyleName("v-assistive-device-only-label");
+
                         checkBox.setValue(
                                 grid.isSelected(pinnedRowHandle.getRow()));
                         checkBox.sinkEvents(Event.ONCLICK);
