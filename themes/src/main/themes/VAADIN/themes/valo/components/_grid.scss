@@ -474,7 +474,7 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
         padding-right: $v-grid-cell-padding-horizontal / 2;
       }
 
-      input[type="checkbox"] {
+      :not(.v-assistive-device-only-label).v-widget > input[type="checkbox"] {
         margin-left: $v-grid-cell-padding-horizontal;
       }
 
@@ -750,7 +750,7 @@ $v-grid-drag-indicator-color: $v-focus-color;
       padding-right: round($v-grid-cell-padding-horizontal / 2);
     }
 
-    .v-checkbox {
+    .v-checkbox.v-widget {
       margin: 0 round($v-grid-cell-padding-horizontal / 2) 0 $v-grid-cell-padding-horizontal;
 
 	  > input[type="checkbox"] {
