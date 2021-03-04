@@ -24,6 +24,7 @@ public class DateFieldHeaderScrollWithFrozenTest extends MultiBrowserTest {
         GridCellElement frozenElement = gridElement.getHeaderCell(1, 1);
 
         gridElement.getHorizontalScroller().scrollLeft(60);
+        sleep(100); // wait for scrolling to finish
 
         int buttonRight = buttonElement.getLocation().getX()
                 + buttonElement.getRect().getWidth();
