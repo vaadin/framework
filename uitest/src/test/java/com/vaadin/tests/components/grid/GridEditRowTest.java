@@ -67,6 +67,8 @@ public class GridEditRowTest extends MultiBrowserTest {
         assertRowContents(0);
 
         waitForElementVisible(By.className("v-grid-editor"));
+        // wait for position corrections
+        sleep(100);
 
         assertEditorWithinGrid();
     }
@@ -80,6 +82,8 @@ public class GridEditRowTest extends MultiBrowserTest {
         editLastRow();
 
         waitForElementVisible(By.className("v-grid-editor"));
+        // wait for position corrections
+        sleep(100);
 
         assertRowContents(3);
         assertEditorWithinGrid();
@@ -94,6 +98,8 @@ public class GridEditRowTest extends MultiBrowserTest {
         editLastRow();
 
         waitForElementVisible(By.className("v-grid-editor"));
+        // wait for position corrections
+        sleep(100);
 
         assertRowContents(91);
         assertEditorWithinGrid();
