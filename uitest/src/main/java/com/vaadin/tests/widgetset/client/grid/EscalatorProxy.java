@@ -117,6 +117,11 @@ public class EscalatorProxy extends Escalator {
         }
 
         @Override
+        public void resetSpacer(int rowIndex) {
+            rowContainer.resetSpacer(rowIndex);
+        }
+
+        @Override
         public void setSpacerUpdater(SpacerUpdater spacerUpdater)
                 throws IllegalArgumentException {
             rowContainer.setSpacerUpdater(spacerUpdater);

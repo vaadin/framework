@@ -86,6 +86,16 @@ public interface RowContainer {
         boolean spacerExists(int rowIndex);
 
         /**
+         * Updates the spacer corresponding with the given rowIndex to currently
+         * provided contents.
+         *
+         * @since
+         * @param rowIndex
+         *            the row index for the spacer in need of updating
+         */
+        void resetSpacer(int rowIndex);
+
+        /**
          * Sets a new spacer updater.
          * <p>
          * Spacers that are currently visible will be updated, i.e.

@@ -4997,7 +4997,17 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     @Override
     protected void internalSetDataProvider(DataProvider<T, ?> dataProvider) {
+        boolean newProvider = getDataProvider() != dataProvider;
         super.internalSetDataProvider(dataProvider);
+        if (newProvider) {
+            Set<T> oldVisibleDetails = new HashSet<>(
+                    detailsManager.visibleDetails);
+            oldVisibleDetails.forEach(item -> {
+                // close all old details even if the same item exists in the new
+                // provider
+                detailsManager.setDetailsVisible(item, false);
+            });
+        }
         for (Column<T, ?> column : getColumns()) {
             column.updateSortable();
         }

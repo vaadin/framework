@@ -702,6 +702,7 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                 // updated, replace reference
                 indexToDetailConnectorId.put(rowIndex, id);
                 newOrUpdatedDetails = true;
+                getWidget().resetVisibleDetails(rowIndex);
             }
         } else {
             // new Details content, listeners will get attached to the connector
