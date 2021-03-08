@@ -4834,13 +4834,16 @@ public class Escalator extends Widget
              * Start at -1 to include a spacer that is rendered above the
              * viewport, but its parent row is still not shown
              */
+            int addedSpacers = 0;
             for (int i = -1; i < visualRowOrder.size(); i++) {
                 SpacerContainer.SpacerImpl spacer = spacers
                         .remove(Integer.valueOf(getTopRowLogicalIndex() + i));
 
                 if (spacer != null) {
-                    orderedBodyRows.add(i + 1, spacer.getRootElement());
+                    orderedBodyRows.add(i + 1 + addedSpacers,
+                            spacer.getRootElement());
                     spacer.show();
+                    ++addedSpacers;
                 }
             }
             /*
