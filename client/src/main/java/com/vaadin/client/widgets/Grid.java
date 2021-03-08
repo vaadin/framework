@@ -9662,6 +9662,17 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
+     * Reset the details row with current contents.
+     *
+     * @since
+     * @param rowIndex
+     *            the index of the row for which details should be reset
+     */
+    public void resetVisibleDetails(int rowIndex) {
+        escalator.getBody().resetSpacer(rowIndex);
+    }
+
+    /**
      * Update details row height.
      *
      * @since 8.1.3
