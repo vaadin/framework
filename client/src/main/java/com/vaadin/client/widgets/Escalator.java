@@ -1672,7 +1672,6 @@ public class Escalator extends Widget
          * @see #hasColumnAndRowData()
          */
         @Override
-        // overridden because of JavaDoc
         public void refreshRows(final int index, final int numberOfRows) {
             Range rowRange = Range.withLength(index, numberOfRows);
             Range colRange = Range.withLength(0,
