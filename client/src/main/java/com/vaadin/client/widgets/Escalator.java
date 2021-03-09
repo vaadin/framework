@@ -6118,10 +6118,8 @@ public class Escalator extends Widget
                 root.getStyle().setHeight(height + defaultCellBorderBottomSize,
                         Unit.PX);
 
-                if (!delayRepositioning) {
-                    // move the visible spacers getRow row onwards.
-                    shiftSpacerPositionsAfterRow(getRow(), heightDiff);
-                }
+                // move the visible spacers getRow row onwards.
+                shiftSpacerPositionsAfterRow(getRow(), heightDiff);
 
                 /*
                  * If we're growing, we'll adjust the scroll size first, then
@@ -6187,7 +6185,7 @@ public class Escalator extends Widget
                             tBodyScrollTop + moveDiff);
                     verticalScrollbar.setScrollPosByDelta(moveDiff);
 
-                } else if (!delayRepositioning) {
+                } else {
                     body.shiftRowPositions(getRow(), heightDiff);
                 }
 
@@ -6345,8 +6343,6 @@ public class Escalator extends Widget
         /** Width of the spacers' decos. Calculated once then cached. */
         private double spacerDecoWidth = 0.0D;
 
-        private boolean delayRepositioning = false;
-
         public void setSpacer(int rowIndex, double height)
                 throws IllegalArgumentException {
 
@@ -6389,18 +6385,9 @@ public class Escalator extends Widget
 
         void resetSpacer(int rowIndex) {
             if (spacerExists(rowIndex)) {
-                delayRepositioning = true;
-                double oldHeight = getSpacer(rowIndex).getHeight();
-                removeSpacer(rowIndex);
-                // real height will be determined later
-                insertNewSpacer(rowIndex, 0);
-                // reposition content below this point to match lack of height,
-                // otherwise later repositioning will fail
-                if (oldHeight > 0) {
-                    shiftSpacerPositionsAfterRow(rowIndex, -oldHeight);
-                    body.shiftRowPositions(rowIndex, -oldHeight);
-                }
-                delayRepositioning = false;
+                SpacerImpl spacer = getSpacer(rowIndex);
+                destroySpacerContent(spacer);
+                initSpacerContent(spacer);
             }
         }
 
