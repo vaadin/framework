@@ -89,7 +89,7 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>license-checker</artifactId>
-            <version>1.0.5</version>
+            <version>1.2.0</version>
         </dependency>
 
         <!-- Jsoup for BootstrapHandler -->
