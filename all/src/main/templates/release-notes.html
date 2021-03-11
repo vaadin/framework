@@ -83,7 +83,10 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-		<li></li>
+		<li>Optimize Grid performance, by re-using ComputedStyles in Escalator when possible.</li>
+		<li>Add API to prevent invalid input when integrated range validator is used in DateField</li>
+		<li>Add getter for presentationProvider in Grid.Column</li>
+		<li>Fixed LayoutManager size calculations during transform.</li>
         </ul>
 
         </p>
@@ -99,7 +102,8 @@
         <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h2>
 
         <ul>
-            <li></li>
+            <li>Fix: Updating Grid's item set when details rows are open.</li>
+            <li>DateField value now actively adjusts to the set resolution.</li>
         </ul>
 
         <h2>For incompatible or behavior-altering changes in 8.12, please see <a href="https://vaadin.com/download/release/8.12/8.12.0/release-notes.html#incompatible">8.11 release notes</a></h2>
