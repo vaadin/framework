@@ -98,7 +98,7 @@ public class UIState extends AbstractSingleComponentContainerState {
      * transform animation is ongoing. This can happen e.g. when a PopupView is
      * opened.
      *
-     * @since
+     * @since 8.13
      */
     public boolean thoroughSizeCheck = true;
 

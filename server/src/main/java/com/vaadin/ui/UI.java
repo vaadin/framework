@@ -2031,7 +2031,7 @@ public abstract class UI extends AbstractSingleComponentContainer
      * By default, the thorough size check is enabled.
      *
      * @return {@code true} if thorough size check enabled, {@code false} if not
-     * @since
+     * @since 8.13
      */
     public boolean isUsingThoroughSizeCheck() {
         return getState(false).thoroughSizeCheck;
@@ -2049,7 +2049,7 @@ public abstract class UI extends AbstractSingleComponentContainer
      * @param thoroughSizeCheck
      *            {@code true} if thorough size check enabled, {@code false} if
      *            not
-     * @since
+     * @since 8.13
      */
     public void setUsingThoroughSizeCheck(boolean thoroughSizeCheck) {
         getState().thoroughSizeCheck = thoroughSizeCheck;
