@@ -98,7 +98,7 @@ public class LayoutManager {
      * @param thoroughSizeCheck
      *            {@code true} if thorough size check enabled, {@code false} if
      *            not
-     * @since
+     * @since 8.13
      */
     public void setThoroughSizeChck(boolean thoroughSizeCheck) {
         this.thoroughSizeCheck = thoroughSizeCheck;

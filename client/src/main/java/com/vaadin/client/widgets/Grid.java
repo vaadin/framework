@@ -9664,7 +9664,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Reset the details row with current contents.
      *
-     * @since
+     * @since 8.13
      * @param rowIndex
      *            the index of the row for which details should be reset
      */
