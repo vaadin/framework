@@ -1267,7 +1267,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @return the presentation provider function
          *
-         * @since
+         * @since 8.13
          */
         public ValueProvider<V, ?> getPresentationProvider() {
             return presentationProvider;
