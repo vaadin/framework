@@ -35,6 +35,11 @@ package com.vaadin.v7.data.validator;
 @Deprecated
 public class EmailValidator extends RegexpValidator {
 
+    private static final String PATTERN = "^" + "([a-zA-Z0-9_\\.\\-+])+" // local
+            + "@" + "[a-zA-Z0-9-.]+" // domain
+            + "\\." + "[a-zA-Z0-9-]{2,}" // tld
+            + "$";
+
     /**
      * Creates a validator for checking that a string is a syntactically valid
      * e-mail address.
@@ -43,7 +48,6 @@ public class EmailValidator extends RegexpValidator {
      *            the message to display in case the value does not validate.
      */
     public EmailValidator(String errorMessage) {
-        super("^([a-zA-Z0-9_\\.\\-+])+@(([a-zA-Z0-9-])+\\.)+([a-zA-Z0-9]{2,4})+$",
-                true, errorMessage);
+        super(PATTERN, true, errorMessage);
     }
 }
