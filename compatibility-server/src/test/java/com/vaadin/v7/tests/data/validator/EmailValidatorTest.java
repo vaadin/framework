@@ -30,4 +30,9 @@ public class EmailValidatorTest {
     public void testEmailValidatorWithOkEmail() {
         assertTrue(validator.isValid("my.name@email.com"));
     }
+
+    @Test
+    public void testEmailValidatorWithBadInput() {
+        Assert.assertFalse(validator.isValid("a@a.m5qRt8zLxQG4mMeu9yKZm5qRt8zLxQG4mMeu9yKZm5qRt8zLxQG4mMeu9yKZ&"));
+    }
 }
