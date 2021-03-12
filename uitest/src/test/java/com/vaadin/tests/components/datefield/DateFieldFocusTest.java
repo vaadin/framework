@@ -23,9 +23,13 @@ public class DateFieldFocusTest extends MultiBrowserTest {
         // open DateField popup
         dateField.findElement(By.className("v-datefield-button")).click();
         waitUntilLoadingIndicatorNotVisible();
+        // and a bit more
+        sleep(100);
         // close DateField popup
         dateField.findElement(By.className("v-datefield-button")).click();
         waitUntilLoadingIndicatorNotVisible();
+        // and a bit more
+        sleep(100);
 
         assertEquals("1. focused", getLogRow(0));
         textField.focus();
