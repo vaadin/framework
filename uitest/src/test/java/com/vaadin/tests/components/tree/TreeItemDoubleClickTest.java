@@ -17,13 +17,24 @@ public class TreeItemDoubleClickTest extends MultiBrowserTest {
         openTestURL();
         String caption = "Tree Item 2";
         doubleClick(getTreeNodeByCaption(caption));
-        assertLogText("Double Click " + caption);
+        try {
+            assertLogText("Double Click " + caption);
+        } catch (AssertionError e) {
+            // double click is flaky, try again
+            doubleClick(getTreeNodeByCaption(caption));
+            assertLogText("Double Click " + caption);
+        }
 
         changeImmediate();
 
         caption = "Tree Item 3";
         doubleClick(getTreeNodeByCaption(caption));
-        assertLogText("Double Click " + caption);
+        try {
+            assertLogText("Double Click " + caption);
+        } catch (AssertionError e) {
+            doubleClick(getTreeNodeByCaption(caption));
+            assertLogText("Double Click " + caption);
+        }
     }
 
     private void changeImmediate() {
@@ -36,9 +47,9 @@ public class TreeItemDoubleClickTest extends MultiBrowserTest {
                 .findElement(By.xpath("//span[text() = '" + caption + "']"));
     }
 
-    private void doubleClick(WebElement element) {
+    private void doubleClick(WebElement element) throws InterruptedException {
         new Actions(getDriver()).doubleClick(element).build().perform();
-
+        sleep(100);
     }
 
     private void assertLogText(String text) {

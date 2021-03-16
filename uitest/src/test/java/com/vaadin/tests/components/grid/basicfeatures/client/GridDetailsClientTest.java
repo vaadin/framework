@@ -79,6 +79,7 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
 
         selectMenuPath(SET_GENERATOR);
         toggleDetailsFor(100);
+        waitForElementPresent(By.className("gwt-Button"));
 
         // scroll a bit beyond so we see below.
         getGridElement().scrollToRow(101);
