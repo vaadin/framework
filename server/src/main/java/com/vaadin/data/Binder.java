@@ -287,8 +287,8 @@ public class Binder<BEAN> implements Serializable {
                 boolean convertBackToPresentation);
 
         /**
-         * Returns if in case of converter used in binding, the value is
-         * converted back to the presentation in the field.
+         * Returns whether the value is converted back to the presentation in
+         * the field when a converter is used in binding.
          * 
          * @return A boolean value
          *
