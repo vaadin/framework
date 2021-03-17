@@ -273,6 +273,28 @@ public class Binder<BEAN> implements Serializable {
          * @since 8.11
          */
         public boolean isValidatorsDisabled();
+
+        /**
+         * Define whether in case of converter used in binding, the value should
+         * be converted back to the presentation in the field.
+         *
+         * @param convertBackToPresentation
+         *            A boolean value
+         *
+         * @since 8.13
+         */
+        public void setConvertBackToPresentation(
+                boolean convertBackToPresentation);
+
+        /**
+         * Returns if in case of converter used in binding, the value is
+         * converted back to the presentation in the field.
+         * 
+         * @return A boolean value
+         *
+         * @since 8.13
+         */
+        public boolean isConvertBackToPresentation();
     }
 
     /**
@@ -1092,6 +1114,8 @@ public class Binder<BEAN> implements Serializable {
 
         private boolean validatorsDisabled = false;
 
+        private boolean convertBackToPresentation = true;
+        
         public BindingImpl(BindingBuilderImpl<BEAN, FIELDVALUE, TARGET> builder,
                 ValueProvider<BEAN, TARGET> getter,
                 Setter<BEAN, TARGET> setter) {
@@ -1272,10 +1296,12 @@ public class Binder<BEAN> implements Serializable {
 
         /**
          * Write the field value by invoking the setter function on the given
-         * bean, if the value passes all registered validators.
+         * bean, if the value passes all registered validators. Write value back
+         * to the field as well if {@code isConvertBackToPresentation()} is
+         * true.
          *
          * @param bean
-         *            the bean to set the property value to
+         *            the bean to set the property value to, not null
          */
         private BindingValidationStatus<TARGET> writeFieldValue(BEAN bean) {
             assert bean != null;
@@ -1284,7 +1310,7 @@ public class Binder<BEAN> implements Serializable {
             if (!isReadOnly()) {
                 result.ifOk(value -> {
                     setter.accept(bean, value);
-                    if (value != null) {
+                    if (convertBackToPresentation && value != null) { {
                         FIELDVALUE converted = convertToFieldType(value);
                         if (!Objects.equals(field.getValue(), converted)) {
                             getField().setValue(converted);
@@ -1391,6 +1417,17 @@ public class Binder<BEAN> implements Serializable {
         @Override
         public boolean isValidatorsDisabled() {
             return validatorsDisabled;
+        }
+
+        @Override
+        public void setConvertBackToPresentation(
+                boolean convertBackToPresentation) {
+            this.convertBackToPresentation = convertBackToPresentation;
+        }
+
+        @Override
+        public boolean isConvertBackToPresentation() {
+            return convertBackToPresentation;
         }
     }
 
