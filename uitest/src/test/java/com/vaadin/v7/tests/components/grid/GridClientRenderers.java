@@ -49,7 +49,7 @@ public class GridClientRenderers extends MultiBrowserTest {
         return path;
     }
 
-    @ServerClass("com.vaadin.tests.widgetset.server.grid.GridClientColumnRenderers.GridController")
+    @ServerClass("com.vaadin.tests.widgetset.server.v7.grid.GridClientColumnRenderers.GridController")
     public static class MyClientGridElement extends GridElement {
     }
 

@@ -97,12 +97,15 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         assertFalse("No spacers should be shown at the start",
                 spacersAreFoundInDom());
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        waitForElementPresent(By.className("v-escalator-spacer"));
         assertNotNull("Spacer should be shown after setting it", getSpacer(1));
     }
 
     @Test
     public void closeVisibleSpacer() {
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        waitForElementPresent(By.className("v-escalator-spacer"));
+        assertNotNull("Unexpectedly missing spacer from row 1", getSpacer(1));
         selectMenuPath(FEATURES, SPACERS, ROW_1, REMOVE);
         assertNull("Spacer should not exist after removing it", getSpacer(1));
     }
@@ -111,6 +114,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     public void spacerPushesVisibleRowsDown() {
         double oldTop = getElementTop(getBodyRow(2));
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        waitForElementPresent(By.className("v-escalator-spacer"));
         double newTop = getElementTop(getBodyRow(2));
 
         assertGreater("Row below a spacer was not pushed down", newTop, oldTop);
@@ -123,6 +127,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_BEGINNING);
 
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        waitForElementPresent(By.className("v-escalator-spacer"));
         double oldTop = getElementTop(getSpacer(1));
         selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_BEGINNING);
         double newTop = getElementTop(getSpacer(2));
@@ -138,6 +143,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_BEGINNING);
 
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        waitForElementPresent(By.className("v-escalator-spacer"));
         double oldTop = getElementTop(getSpacer(1));
         selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_END);
         double newTop = getElementTop(getSpacer(1));
@@ -153,6 +159,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_BEGINNING);
 
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        waitForElementPresent(By.className("v-escalator-spacer"));
         double spacerTop = getElementTop(getSpacer(1));
         selectMenuPath(COLUMNS_AND_ROWS, BODY_ROWS, ADD_ONE_ROW_TO_END);
         double rowTop = getElementTop(getBodyRow(2));
@@ -175,6 +182,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         scrollVerticallyTo(999999);
         long oldBottomScrollTop = getScrollTop();
         selectMenuPath(FEATURES, SPACERS, ROW_99, SET_100PX);
+        waitForElementPresent(By.className("v-escalator-spacer"));
 
         assertEquals(
                 "Adding a spacer underneath the current viewport should "
@@ -194,6 +202,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     @Test
     public void removingRowAboveSpacerMovesSpacerUp() {
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        waitForElementPresent(By.className("v-escalator-spacer"));
         WebElement spacer = getSpacer(1);
         double originalElementTop = getElementTop(spacer);
 
@@ -225,6 +234,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     public void spacersAreFixedInViewport_firstFreezeThenScroll() {
         selectMenuPath(FEATURES, FROZEN_COLUMNS, FREEZE_1_COLUMN);
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        waitForElementPresent(By.className("v-escalator-spacer"));
         assertEquals(
                 "Spacer's left position should've been 0 at the " + "beginning",
                 0d, getElementLeft(getSpacer(1)), WidgetUtil.PIXEL_EPSILON);
@@ -244,6 +254,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
         int scrollTo = 10;
         scrollHorizontallyTo(scrollTo);
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        waitForElementPresent(By.className("v-escalator-spacer"));
         assertEquals(
                 "Spacer's left position should've been " + scrollTo
                         + " after scrolling " + scrollTo + "px",
@@ -384,6 +395,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
 
         selectMenuPath(FEATURES, SPACERS, FOCUSABLE_UPDATER);
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        waitForElementPresent(By.className("v-escalator-spacer"));
 
         WebElement inputElement = getEscalator()
                 .findElement(By.tagName("input"));
@@ -401,6 +413,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     @Test
     public void spacersAreInsertedInCorrectDomPosition() {
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        waitForElementPresent(By.className("v-escalator-spacer"));
 
         WebElement tbody = getEscalator().findElement(By.tagName("tbody"));
         WebElement spacer = getChild(tbody, 2);
@@ -414,6 +427,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     public void spacersAreInCorrectDomPositionAfterScroll()
             throws InterruptedException {
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        waitForElementPresent(By.className("v-escalator-spacer"));
 
         scrollVerticallyTo(40); // roughly two rows' worth
 
@@ -483,6 +497,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     public void spacerOpenedInViewGetsFocus() {
         selectMenuPath(FEATURES, SPACERS, FOCUSABLE_UPDATER);
         selectMenuPath(FEATURES, SPACERS, ROW_1, SET_100PX);
+        waitForElementPresent(By.className("v-escalator-spacer"));
         tryToTabIntoFocusUpdaterElement();
         WebElement focusedElement = getFocusedElement();
         assertEquals("input", focusedElement.getTagName());
