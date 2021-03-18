@@ -275,8 +275,8 @@ public class Binder<BEAN> implements Serializable {
         public boolean isValidatorsDisabled();
 
         /**
-         * Define whether in case of converter used in binding, the value should
-         * be converted back to the presentation in the field.
+         * Define whether the value should be converted back to the presentation
+         * in the field when a converter is used in binding.
          *
          * @param convertBackToPresentation
          *            A boolean value
@@ -1115,7 +1115,7 @@ public class Binder<BEAN> implements Serializable {
         private boolean validatorsDisabled = false;
 
         private boolean convertBackToPresentation = true;
-        
+
         public BindingImpl(BindingBuilderImpl<BEAN, FIELDVALUE, TARGET> builder,
                 ValueProvider<BEAN, TARGET> getter,
                 Setter<BEAN, TARGET> setter) {
