@@ -531,7 +531,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         assertNotEquals("€ 10.00", rentField.getValue());
     }
-    
+
     @Test
     public void beanBinder_nullRepresentationIsNotDisabled() {
         Binder<Person> binder = new Binder<>(Person.class);
