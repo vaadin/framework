@@ -26,24 +26,24 @@ public class GridScrollTest extends GridBasicFeaturesTest {
         selectMenuPath("Settings", "Clear log");
         $(GridElement.class).first().scrollToRow(40);
         assertEquals("Log row did not contain expected item request",
-                "0. Requested items 0 - 86", getLogRow(0));
+                "0. Requested items 0 - 91", getLogRow(0));
         assertEquals("There should be only one log row", " ", getLogRow(1));
         selectMenuPath("Settings", "Clear log");
         $(GridElement.class).first().scrollToRow(100);
         assertEquals("Log row did not contain expected item request",
-                "0. Requested items 47 - 146", getLogRow(0));
+                "0. Requested items 43 - 151", getLogRow(0));
         assertEquals("There should be only one log row", " ", getLogRow(1));
         selectMenuPath("Settings", "Clear log");
         $(GridElement.class).first().scrollToRow(300);
         assertEquals("Log row did not contain expected item request",
-                "0. Requested items 247 - 346", getLogRow(0));
+                "0. Requested items 243 - 351", getLogRow(0));
         assertEquals("There should be only one log row", " ", getLogRow(1));
     }
 
     @Test
     public void workPendingWhileScrolling() {
         openTestURL("theme=valo");
-        String script = "var c = window.vaadin.clients.runcomvaadintestscomponentsgridbasicfeaturesGridBasicFeatures;\n"
+        String script = "var c = window.vaadin.clients.runcomvaadinv7testscomponentsgridbasicfeaturesGridBasicFeatures;\n"
                 // Scroll down and cause lazy loading
                 + "c.getElementByPath(\"//Grid[0]#cell[21]\"); \n"
                 + "return c.isActive();";

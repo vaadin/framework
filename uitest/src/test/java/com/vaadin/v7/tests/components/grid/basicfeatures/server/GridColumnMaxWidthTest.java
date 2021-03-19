@@ -14,9 +14,9 @@ public class GridColumnMaxWidthTest extends GridBasicFeaturesTest {
         openTestURL();
 
         selectMenuPath("Component", "Columns",
-                "All columns expanding, Col 0 has max width of 30px");
+                "All columns expanding, Col 0 has max width of 40px");
 
-        assertEquals("Column 0 did not obey max width of 30px.", 30,
+        assertEquals("Column 0 did not obey max width of 40px.", 40,
                 getGridElement().getCell(0, 0).getSize().getWidth());
     }
 }

@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.Random;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.server.DefaultErrorHandler;
+import com.vaadin.server.ErrorHandler;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.AbstractComponentTest;
@@ -34,6 +36,8 @@ import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.v7.data.sort.Sort;
 import com.vaadin.v7.data.sort.SortOrder;
 import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.event.FieldEvents.BlurNotifier;
+import com.vaadin.v7.event.FieldEvents.FocusNotifier;
 import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.event.SelectionEvent;
@@ -74,7 +78,8 @@ import com.vaadin.v7.ui.renderers.NumberRenderer;
  * @author Vaadin Ltd
  */
 @Theme("valo")
-public class GridBasicFeatures extends AbstractComponentTest<Grid> {
+public class GridBasicFeatures extends AbstractComponentTest<Grid>
+        implements ErrorHandler {
 
     public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4 = "Row numbers for 3/4";
     public static final String ROW_STYLE_GENERATOR_NONE = "None";
@@ -231,6 +236,59 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
             return detailsMap.get(itemId);
         }
     };
+
+    public GridBasicFeatures() {
+        super();
+        setErrorHandler(this);
+    }
+
+    @Override
+    protected void createActions() {
+        super.createActions();
+        createFocusActions();
+    }
+
+    private void createFocusActions() {
+        focusListenerCommand = new Command<Grid, Boolean>() {
+
+            private boolean focusListenerAdded = false;
+
+            @Override
+            public void execute(Grid c, Boolean value, Object data) {
+                FocusNotifier focusNotifier = c;
+                if (value) {
+                    focusNotifier.addFocusListener(GridBasicFeatures.this);
+                    focusListenerAdded = true;
+                } else if (focusListenerAdded) {
+                    focusNotifier.removeFocusListener(GridBasicFeatures.this);
+                    focusListenerAdded = false;
+                }
+            }
+        };
+        blurListenerCommand = new Command<Grid, Boolean>() {
+
+            private boolean blurListenerAdded = false;
+
+            @Override
+            public void execute(Grid c, Boolean value, Object data) {
+                BlurNotifier bn = c;
+                if (value) {
+                    bn.addBlurListener(GridBasicFeatures.this);
+                    blurListenerAdded = true;
+                } else if (blurListenerAdded) {
+                    bn.removeBlurListener(GridBasicFeatures.this);
+                    blurListenerAdded = false;
+                }
+            }
+        };
+
+        if (FocusNotifier.class.isAssignableFrom(getTestClass())) {
+            createFocusListener(CATEGORY_LISTENERS);
+        }
+        if (BlurNotifier.class.isAssignableFrom(getTestClass())) {
+            createBlurListener(CATEGORY_LISTENERS);
+        }
+    }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -654,10 +712,10 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 });
 
         LinkedHashMap<String, ContentMode> contentModes = new LinkedHashMap<String, ContentMode>();
-        contentModes.put("None", null);
+        contentModes.put("None (Default)", null);
         // Abusing an unused value for this special case
         contentModes.put("Plain text", ContentMode.TEXT);
-        contentModes.put("Preformatted(Default)", ContentMode.PREFORMATTED);
+        contentModes.put("Preformatted", ContentMode.PREFORMATTED);
         contentModes.put("HTML", ContentMode.HTML);
 
         createSelectAction("Row description generator", "State", contentModes,
@@ -1264,7 +1322,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                     }
                 });
 
-        createClickAction("All columns expanding, Col 0 has max width of 30px",
+        createClickAction("All columns expanding, Col 0 has max width of 40px",
                 "Columns", new Command<Grid, Boolean>() {
 
                     @Override
@@ -1272,7 +1330,7 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         for (Column col : grid.getColumns()) {
                             col.setWidthUndefined();
                         }
-                        grid.getColumns().get(0).setMaximumWidth(30);
+                        grid.getColumns().get(0).setMaximumWidth(40);
                     }
                 }, null);
         createBooleanAction("Simple resize mode", "Columns", false,
@@ -1651,6 +1709,16 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     @Override
     protected Class<Grid> getTestClass() {
         return Grid.class;
+    }
+
+    @Override
+    public void error(com.vaadin.server.ErrorEvent event) {
+        final Throwable throwable = DefaultErrorHandler
+                .findRelevantThrowable(event.getThrowable());
+
+        log("Exception occurred, " + throwable.getClass().getName() + ": "
+                + throwable.getMessage());
+        throwable.printStackTrace();
     }
 
 }

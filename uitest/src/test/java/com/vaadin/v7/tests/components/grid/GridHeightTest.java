@@ -145,7 +145,7 @@ public class GridHeightTest extends MultiBrowserTest {
             } else if (GridHeight.FULL.equals(detailsRowHeight)) {
                 result = 131;
             } else if (GridHeight.UNDEFINED.equals(detailsRowHeight)) {
-                result = 100;
+                result = 136;
             }
         } else if (GridHeight.ROW3.equals(gridHeight)
                 || GridHeight.FULL.equals(gridHeight)) {

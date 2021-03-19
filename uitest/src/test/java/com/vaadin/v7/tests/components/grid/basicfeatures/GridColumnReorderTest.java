@@ -309,35 +309,47 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
-        dragAndDropColumnHeader(0, 0, 4, CellSide.RIGHT);
-        selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
-        scrollGridHorizontallyTo(0);
-        assertColumnHeaderOrder(1, 2, 3, 4, 5);
+        assertColumnHeaderOrder(0, 1, 2, 3, 4, 5);
 
         // when then
-        dragAndDropColumnHeader(0, 1, 4, CellSide.LEFT);
+        dragAndDropColumnHeader(0, 0, 4, CellSide.RIGHT);
+        // joined cells push drag to apply after the join
+        assertColumnHeaderOrder(1, 2, 3, 4, 5, 0);
+
+        selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
         scrollGridHorizontallyTo(0);
-        assertColumnHeaderOrder(1, 2, 3, 4, 5);
+        // new join doesn't affect column order
+        assertColumnHeaderOrder(1, 2, 3, 4, 5, 0);
+
+        dragAndDropColumnHeader(0, 0, 4, CellSide.LEFT);
+        scrollGridHorizontallyTo(0);
+        // joined cells push drag to apply before any joins
+        assertColumnHeaderOrder(1, 2, 3, 4, 5, 0);
 
         dragAndDropColumnHeader(0, 2, 4, CellSide.LEFT);
         scrollGridHorizontallyTo(0);
-        assertColumnHeaderOrder(1, 2, 3, 4, 5);
+        // could drag within the first join but not out of the second
+        assertColumnHeaderOrder(1, 2, 3, 4, 5, 0);
 
         dragAndDropColumnHeader(0, 3, 4, CellSide.RIGHT);
         scrollGridHorizontallyTo(0);
-        assertColumnHeaderOrder(1, 2, 3, 5, 4);
+        // second join not involved so drag within first join succeeds
+        assertColumnHeaderOrder(1, 2, 3, 5, 4, 0);
 
         dragAndDropColumnHeader(0, 4, 2, CellSide.RIGHT);
         scrollGridHorizontallyTo(0);
-        assertColumnHeaderOrder(1, 2, 3, 4, 5);
+        // back to previous order
+        assertColumnHeaderOrder(1, 2, 3, 4, 5, 0);
 
         dragAndDropColumnHeader(2, 3, 4, CellSide.RIGHT);
         scrollGridHorizontallyTo(0);
-        assertColumnHeaderOrder(1, 2, 3, 5, 4);
+        // second join not involved so drag within first join succeeds
+        assertColumnHeaderOrder(1, 2, 3, 5, 4, 0);
 
         dragAndDropColumnHeader(2, 4, 2, CellSide.RIGHT);
         scrollGridHorizontallyTo(0);
-        assertColumnHeaderOrder(1, 2, 3, 4, 5);
+        // back to previous order
+        assertColumnHeaderOrder(1, 2, 3, 4, 5, 0);
     }
 
     @Test
@@ -348,22 +360,34 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
+        assertColumnHeaderOrder(0, 1, 2, 3, 4, 5);
+
+        // move first column after the join
         dragAndDropColumnHeader(0, 0, 4, CellSide.RIGHT);
         scrollGridHorizontallyTo(0);
+        assertColumnHeaderOrder(1, 2, 3, 4, 5, 0);
+
+        // move current second column after the join
         dragAndDropColumnHeader(0, 1, 4, CellSide.RIGHT);
         scrollGridHorizontallyTo(0);
+        assertColumnHeaderOrder(1, 3, 4, 5, 0, 2);
+
         selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
-        assertColumnHeaderOrder(1, 3, 4, 5, 2);
+        // column headers 3 and 4 combined, no effect to order
+        assertColumnHeaderOrder(1, 3, 4, 5, 0, 2);
 
         // when then
         dragAndDropColumnHeader(0, 1, 4, CellSide.LEFT);
-        assertColumnHeaderOrder(1, 4, 3, 5, 2);
+        // drag stops to the farthest point within the join
+        assertColumnHeaderOrder(1, 4, 3, 5, 0, 2);
 
         dragAndDropColumnHeader(0, 2, 4, CellSide.LEFT);
-        assertColumnHeaderOrder(1, 4, 3, 5, 2);
+        // second attempt with the already dragged column makes no difference
+        assertColumnHeaderOrder(1, 4, 3, 5, 0, 2);
 
         dragAndDropColumnHeader(0, 2, 0, CellSide.LEFT);
-        assertColumnHeaderOrder(1, 3, 4, 5, 2);
+        // drag stops to the earliest point within the join
+        assertColumnHeaderOrder(1, 3, 4, 5, 0, 2);
     }
 
     @Test
@@ -378,7 +402,8 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         dragAndDropColumnHeader(0, 3, 1, CellSide.RIGHT);
 
         // then
-        assertColumnHeaderOrder(0, 3, 1, 2, 4);
+        // joined cells push the drag to apply after the join
+        assertColumnHeaderOrder(0, 1, 2, 3, 4);
     }
 
     @Test
@@ -589,14 +614,16 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Header", "Row 2", "Join columns 3, 4, 5");
         selectMenuPath("Component", "Header", "Append row");
         selectMenuPath("Component", "Header", "Row 3", "Join columns 1, 2");
-        assertColumnHeaderOrder(0, 1, 2, 3, 4);
+        assertColumnHeaderOrder(0, 1, 2, 3, 4, 5);
 
         // when
         dragAndDropColumnHeader(1, 3, 1, CellSide.RIGHT);
         scrollGridHorizontallyTo(0);
 
         // then
-        assertColumnHeaderOrder(0, 3, 4, 5, 1);
+        // attempted to drag out of join, no change
+        // it's not possible to drag the whole joined block
+        assertColumnHeaderOrder(0, 1, 2, 3, 4, 5);
 
         // when
         scrollGridHorizontallyTo(100);
@@ -604,14 +631,16 @@ public class GridColumnReorderTest extends GridBasicClientFeaturesTest {
         scrollGridHorizontallyTo(0);
 
         // then
-        assertColumnHeaderOrder(0, 1, 2, 3, 4);
+        // attempted to drag out of join, moved as leftmost within
+        assertColumnHeaderOrder(0, 1, 2, 4, 3, 5);
 
         // when
         dragAndDropColumnHeader(0, 0, 3, CellSide.LEFT);
         scrollGridHorizontallyTo(0);
 
         // then
-        assertColumnHeaderOrder(1, 2, 0, 3, 4);
+        // dragged from outside of joins to between the joins, no problem
+        assertColumnHeaderOrder(1, 2, 0, 4, 3, 5);
     }
 
     private void toggleSortableColumn(int index) {

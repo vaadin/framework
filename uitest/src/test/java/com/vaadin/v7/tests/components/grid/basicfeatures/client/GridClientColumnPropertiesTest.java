@@ -135,7 +135,7 @@ public class GridClientColumnPropertiesTest
     @Test
     public void testColumnWidths_onColumnReorder_columnWidthsKeptTheSame() {
         // given
-        openTestURL();
+        openTestURL("theme=reindeer");
         GridElement gridElement = getGridElement();
         List<GridCellElement> headerCells = gridElement.getHeaderCells(0);
 
@@ -146,6 +146,7 @@ public class GridClientColumnPropertiesTest
 
         // when
         selectMenuPath("Component", "State", "Reverse grid columns");
+        sleep(100); // wait for layouting
 
         // then
         gridElement = getGridElement();
@@ -153,11 +154,12 @@ public class GridClientColumnPropertiesTest
         final int size = headerCells.size();
         for (int i = 0; i < size; i++) {
             // Avoid issues with inaccuracies regarding subpixels.
+            // Increase leeway to 4 pixels for HTML header inaccuracies.
             assertEquals(
                     "Column widths don't match after reset, index after flip "
-                            + i,
+                            + i + ",",
                     columnWidths.get(i),
-                    headerCells.get(size - 1 - i).getSize().getWidth(), 1.0d);
+                    headerCells.get(size - 1 - i).getSize().getWidth(), 4.0d);
         }
 
     }

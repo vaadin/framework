@@ -11,8 +11,8 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.parallel.TestCategory;
@@ -56,7 +56,7 @@ public class WidgetRenderersTest extends MultiBrowserTest {
                 buttonCell.isFocused());
 
         // avoid clicking on the button
-        buttonCell.click(buttonCell.getSize().getWidth() - 10, 5);
+        buttonCell.click();
         assertTrue("cell should be focused after focusing",
                 buttonCell.isFocused());
 

@@ -46,6 +46,7 @@ import org.jsoup.select.Elements;
 import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.FocusAndBlurServerRpcDecorator;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.SerializableEventListener;
@@ -4807,6 +4808,8 @@ public class Grid extends AbstractComponent
      */
     private void initGrid() {
         setSelectionMode(getDefaultSelectionMode());
+
+        registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
 
         registerRpc(new GridServerRpc() {
 
