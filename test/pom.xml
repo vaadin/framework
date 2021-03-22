@@ -21,10 +21,10 @@
         <spring.boot.version>1.5.9.RELEASE</spring.boot.version>
         <selenium.version>3.14.0</selenium.version>
 
-        <!-- Don't care about coding style for tests -->
+        <!-- Don't care about coding style for tests. -->
         <sonar.skip>true</sonar.skip>
 
-        <!-- Allow installing for local testing purposes -->
+        <!-- Allow installing for local testing purposes. -->
         <install.skip>true</install.skip>
     </properties>
 
