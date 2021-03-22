@@ -11,7 +11,7 @@
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
         <failOnMissingWebXml>false</failOnMissingWebXml>
-        <jetty.version>9.3.7.v20160115</jetty.version>
+        <jetty.version>9.4.38.v20210224</jetty.version>
         <phantomjs.version>2.1.1</phantomjs.version>
         <testbench.version>4.2.2</testbench.version>
         <testbench.api.version>7.7.14</testbench.api.version>
