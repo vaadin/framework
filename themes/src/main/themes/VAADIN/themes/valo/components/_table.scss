@@ -290,6 +290,7 @@ $v-table-background-color: null !default;
 
   .#{$primary-stylename}-table td {
     border-top: $v-table-border-width solid $border-color;
+    box-sizing: border-box;
   }
 
   .#{$primary-stylename}-table tr:first-child > td {
