@@ -2,7 +2,7 @@
  *
  * @group table
  */
-$v-table-row-height: $v-unit-size !default;
+$v-table-row-height: calc($v-unit-size + 1px) !default;
 
 /**
  *
