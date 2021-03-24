@@ -697,7 +697,7 @@ $v-table-background-color: null !default;
 
   .#{$primary-stylename}-row-drag-top .#{$primary-stylename}-cell-content,
   .#{$primary-stylename}-row-drag-bottom .#{$primary-stylename}-cell-content {
-    height: $v-table-row-height - 1px;
+    height: $v-table-body-row-height - 1px;
   }
 }
 
