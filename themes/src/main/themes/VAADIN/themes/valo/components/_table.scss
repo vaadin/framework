@@ -295,6 +295,7 @@ $v-table-background-color: null !default;
   }
 
   .#{$primary-stylename}-table tr:first-child > td {
+    height: $v-table-row-height;
     border-top: none;
   }
 
