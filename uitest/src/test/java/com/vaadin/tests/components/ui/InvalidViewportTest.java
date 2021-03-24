@@ -15,7 +15,8 @@ public class InvalidViewportTest extends SingleBrowserTest {
 
         WebElement heading = findElement(By.tagName("h2"));
 
-        Assert.assertEquals("HTTP ERROR 500", heading.getText());
+        Assert.assertTrue("Unexpected heading: " + heading.getText(),
+                heading.getText().startsWith("HTTP ERROR 500"));
     }
 
 }

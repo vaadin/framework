@@ -32,12 +32,14 @@ public class AppResource404Test extends MultiBrowserTest {
         openTestURL();
         $(LinkElement.class).get(2).click(5, 5);
         disableWaitingAndWait();
-        Assert.assertTrue("Page does not contain the given text",
+        String errorText = "Page does not contain the given text";
+        Assert.assertTrue(errorText,
                 driver.getPageSource().contains("HTTP ERROR 404"));
-        if (!BrowserUtil.isIE(getDesiredCapabilities())) {
-        	Assert.assertTrue("Page does not contain the given text",
-                driver.getPageSource().contains("Problem accessing /run/APP/"));
-        }
+        Assert.assertTrue(errorText,
+                driver.getPageSource().contains("/run/APP/"));
+        Assert.assertTrue(errorText,
+                driver.getPageSource().contains(
+                        "Request was not handled by any registered handler"));
     }
 
     @Test
