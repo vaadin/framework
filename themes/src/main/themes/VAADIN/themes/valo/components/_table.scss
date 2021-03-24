@@ -540,7 +540,7 @@ $v-table-background-color: null !default;
 
   .#{$primary-stylename}-row-drag-bottom td.#{$primary-stylename}-cell-content {
     border-bottom: 2px solid $v-focus-color;
-    height: $v-table-row-height - 2px;
+    height: $v-table-body-row-height - 2px;
   }
 
   .#{$primary-stylename}-row-drag-bottom .#{$primary-stylename}-cell-wrapper {
@@ -549,7 +549,7 @@ $v-table-background-color: null !default;
 
   .#{$primary-stylename}-row-drag-top td.#{$primary-stylename}-cell-content {
     border-top: 2px solid $v-focus-color;
-    height: $v-table-row-height - 2px + $v-table-border-width;
+    height: $v-table-body-row-height - 2px + $v-table-border-width;
   }
 
   .#{$primary-stylename}-row-drag-top .#{$primary-stylename}-cell-wrapper {
