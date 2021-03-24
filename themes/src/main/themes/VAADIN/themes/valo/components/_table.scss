@@ -2,13 +2,14 @@
  *
  * @group table
  */
-$v-table-row-height: round($v-unit-size + 1px) !default;
+$v-table-border-width: first-number($v-border) !default;
 
 /**
  *
  * @group table
  */
-$v-table-border-width: first-number($v-border) !default;
+$v-table-row-height: $v-unit-size !default;
+$v-table-body-row-height: round($v-table-row-height + $v-table-border-width) !default;
 
 /**
  *
@@ -240,7 +241,7 @@ $v-table-background-color: null !default;
   .#{$primary-stylename}-cell-content {
     border-left: $v-table-border-width solid $border-color;
     overflow: hidden;
-    height: $v-table-row-height;
+    height: $v-table-body-row-height;
     vertical-align: middle;
 
     &:first-child {
