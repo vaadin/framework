@@ -1,5 +1,8 @@
 package com.vaadin.tests.components.grid;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.VaadinRequest;
@@ -10,11 +13,7 @@ import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.renderers.TextRenderer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class GridNullSafeNestedPropertyColumn extends AbstractTestUI {
@@ -26,6 +25,8 @@ public class GridNullSafeNestedPropertyColumn extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
+        setErrorHandler(null);
+
         Grid<Person> grid = new Grid<>(Person.class);
         grid.setSizeFull();
 
