@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
@@ -104,10 +103,9 @@ public class GridColumnResizeTest extends GridBasicFeaturesTest {
     private void dragResizeColumn(int columnIndex, int posX, int offset) {
         GridCellElement headerCell = getGridElement().getHeaderCell(0,
                 columnIndex);
-        Dimension size = headerCell.getSize();
         new Actions(getDriver())
-                .moveToElement(headerCell, size.getWidth() + posX,
-                        size.getHeight() / 2)
+                .moveToElement(headerCell.findElement(
+                        By.className("v-grid-column-resize-handle")))
                 .clickAndHold().moveByOffset(offset, 0).release().perform();
     }
 

@@ -137,7 +137,7 @@ public class GridClientRenderers extends MultiBrowserTest {
         // Chrome uses RGB instead of RGBA
         String colorRed = "rgba(255, 0, 0, 1)";
         String colorWhite = "rgba(255, 255, 255, 1)";
-        String colorDark = "rgba(239, 240, 241, 1)";
+        String colorDark = "rgba(245, 245, 245, 1)";
 
         openTestURL();
 
@@ -173,7 +173,7 @@ public class GridClientRenderers extends MultiBrowserTest {
 
         // Cell should no longer be red
         backgroundColor = cell.getCssValue("backgroundColor");
-        assertTrue("Background color was not reset",
+        assertTrue("Background color was not reset: " + backgroundColor,
                 backgroundColor.equals(colorWhite)
                         || backgroundColor.equals(colorDark));
     }

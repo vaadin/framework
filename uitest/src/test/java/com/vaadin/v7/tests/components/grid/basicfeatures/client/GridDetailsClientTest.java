@@ -192,8 +192,13 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
         toggleDetailsFor(100);
         scrollToRow(100, ScrollDestination.ANY);
 
-        Range validScrollRange = Range.between(1691, 1706);
-        assertTrue(validScrollRange.contains(getGridVerticalScrollPos()));
+        Range validScrollRange = Range.between(3538, 3558);
+        int gridVerticalScrollPos = getGridVerticalScrollPos();
+        assertTrue(
+                "Grid scrolled to " + gridVerticalScrollPos
+                        + " (should be between " + validScrollRange.getStart()
+                        + " and " + validScrollRange.getEnd() + ")",
+                validScrollRange.contains(gridVerticalScrollPos));
     }
 
     @Test
@@ -203,8 +208,13 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
         scrollGridVerticallyTo(999999);
         scrollToRow(100, ScrollDestination.ANY);
 
-        Range validScrollRange = Range.between(1981, 2001);
-        assertTrue(validScrollRange.contains(getGridVerticalScrollPos()));
+        Range validScrollRange = Range.between(3781, 3801);
+        int gridVerticalScrollPos = getGridVerticalScrollPos();
+        assertTrue(
+                "Grid scrolled to " + gridVerticalScrollPos
+                        + " (should be between " + validScrollRange.getStart()
+                        + " and " + validScrollRange.getEnd() + ")",
+                validScrollRange.contains(gridVerticalScrollPos));
     }
 
     @Test
@@ -221,8 +231,13 @@ public class GridDetailsClientTest extends GridBasicClientFeaturesTest {
         toggleDetailsFor(999);
         scrollToRow(999, ScrollDestination.START);
 
-        Range expectedRange = Range.withLength(19671, 20);
-        assertTrue(expectedRange.contains(getGridVerticalScrollPos()));
+        Range expectedRange = Range.withLength(37700, 20);
+        int gridVerticalScrollPos = getGridVerticalScrollPos();
+        assertTrue(
+                "Grid scrolled to " + gridVerticalScrollPos
+                        + " (should be between " + expectedRange.getStart()
+                        + " and " + expectedRange.getEnd() + ")",
+                expectedRange.contains(gridVerticalScrollPos));
     }
 
     private void scrollToRow(int rowIndex, ScrollDestination destination) {

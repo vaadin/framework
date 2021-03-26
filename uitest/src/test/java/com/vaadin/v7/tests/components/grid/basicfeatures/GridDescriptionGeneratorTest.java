@@ -15,120 +15,133 @@ public class GridDescriptionGeneratorTest extends GridBasicFeaturesTest {
     @Test
     public void testCellDescription() {
         openTestURL();
-        selectMenuPath("Component", "State", "Cell description generator");
+        selectCellGenerator("HTML");
 
-        getGridElement().getCell(1, 0).showTooltip();
-        String tooltipText = findElement(By.className("v-tooltip-text"))
-                .getText();
+        showCellTooltip(1, 0);
         assertEquals("Tooltip text", "Cell tooltip for row 1, column 0",
-                tooltipText);
+                getTooltipText());
 
-        getGridElement().getCell(1, 1).showTooltip();
+        showCellTooltip(1, 1);
         assertTrue("Tooltip should not be present in cell (1, 1) ",
-                findElement(By.className("v-tooltip-text")).getText()
-                        .isEmpty());
+                getTooltipText().isEmpty());
     }
 
     @Test
     public void testRowDescription() {
         openTestURL();
-        selectMenuPath("Component", "State", "Row description generator");
+        selectRowGenerator("HTML");
 
-        getGridElement().getCell(5, 3).showTooltip();
-        String tooltipText = findElement(By.className("v-tooltip-text"))
-                .getText();
-        assertEquals("Tooltip text", "Row tooltip for row 5", tooltipText);
+        showCellTooltip(5, 3);
+        assertEquals("Tooltip text", "Row tooltip for row 5", getTooltipText());
 
-        getGridElement().getCell(15, 3).showTooltip();
-        tooltipText = findElement(By.className("v-tooltip-text")).getText();
-        assertEquals("Tooltip text", "Row tooltip for row 15", tooltipText);
+        showCellTooltip(15, 3);
+        assertEquals("Tooltip text", "Row tooltip for row 15",
+                getTooltipText());
     }
 
     @Test
     public void testRowAndCellDescription() {
         openTestURL();
-        selectMenuPath("Component", "State", "Row description generator");
-        selectMenuPath("Component", "State", "Cell description generator");
+        selectRowGenerator("HTML");
+        selectCellGenerator("HTML");
 
-        getGridElement().getCell(5, 0).showTooltip();
-        String tooltipText = findElement(By.className("v-tooltip-text"))
-                .getText();
+        showCellTooltip(5, 0);
         assertEquals("Tooltip text", "Cell tooltip for row 5, column 0",
-                tooltipText);
+                getTooltipText());
 
-        getGridElement().getCell(5, 3).showTooltip();
-        tooltipText = findElement(By.className("v-tooltip-text")).getText();
-        assertEquals("Tooltip text", "Row tooltip for row 5", tooltipText);
+        showCellTooltip(5, 3);
+        assertEquals("Tooltip text", "Row tooltip for row 5", getTooltipText());
     }
 
     @Test
-    public void testContentTypes() {
+    public void testContentTypesCell() {
         openTestURL();
-
-        selectCellGenerator("Default");
-        showCellTooltip(1, 0);
-        /*
-         * When porting this to the v7 version in Framework 8, the default
-         * should be changed to PREFORMATTED to preserve the more secure default
-         * that has accidentally been used there.
-         */
-        assertHtmlTooltipShown();
-
-        selectRowGenerator("Default");
-        showCellTooltip(1, 1);
-        /*
-         * When porting this to the v7 version in Framework 8, the default
-         * should be changed to PREFORMATTED to preserve the more secure default
-         * that has accidentally been used there.
-         */
-        assertHtmlTooltipShown();
+        assertEquals("Unexpected tooltip,", "", getTooltipText());
 
         selectCellGenerator("Plain text");
         showCellTooltip(2, 0);
-        assertPlainTooltipShown();
-
-        selectRowGenerator("Plain text");
-        showCellTooltip(2, 1);
         assertPlainTooltipShown();
 
         selectCellGenerator("Preformatted");
         showCellTooltip(3, 0);
         assertPreTooltipShown();
 
-        selectRowGenerator("Preformatted");
-        showCellTooltip(3, 1);
-        assertPreTooltipShown();
-
         selectCellGenerator("HTML");
         showCellTooltip(4, 0);
         assertHtmlTooltipShown();
 
+        selectCellGenerator("None (Default)");
+        showCellTooltip(1, 0);
+        assertEquals("Unexpected tooltip,", "", getTooltipText());
+    }
+
+    @Test
+    public void testContentTypesRow() {
+        openTestURL();
+        assertEquals("Unexpected tooltip,", "", getTooltipText());
+
+        selectRowGenerator("Plain text");
+        showCellTooltip(2, 1);
+        assertPlainTooltipShown();
+
+        selectRowGenerator("Preformatted");
+        showCellTooltip(3, 1);
+        assertPreTooltipShown();
+
         selectRowGenerator("HTML");
         showCellTooltip(4, 1);
         assertHtmlTooltipShown();
+
+        selectRowGenerator("None (Default)");
+        showCellTooltip(1, 1);
+        assertEquals("Unexpected tooltip,", "", getTooltipText());
     }
 
     private void assertPreTooltipShown() {
-        assertTrue("Tooltip should contain <b> as text",
-                getTooltipText().contains("<b>"));
-        assertTrue("Tooltip should contain a newline",
-                getTooltipText().contains("\n"));
+        try {
+            assertTrue("Tooltip should contain <b> as text",
+                    getTooltipText().contains("<b>"));
+            assertTrue("Tooltip should contain a newline",
+                    getTooltipText().contains("\n"));
+        } catch (AssertionError e) {
+            // showing tooltips is somewhat flaky, try again with another cell
+            showCellTooltip(5, 0);
+            assertTrue("Tooltip should contain <b> as text",
+                    getTooltipText().contains("<b>"));
+            assertTrue("Tooltip should contain a newline",
+                    getTooltipText().contains("\n"));
+        }
     }
 
     private void assertPlainTooltipShown() {
-        assertTrue("Tooltip should contain <b> as text",
-                getTooltipText().contains("<b>"));
-        assertFalse("Tooltip should not contain a newline",
-                getTooltipText().contains("\n"));
+        try {
+            assertTrue("Tooltip should contain <b> as text",
+                    getTooltipText().contains("<b>"));
+            assertFalse("Tooltip should not contain a newline",
+                    getTooltipText().contains("\n"));
+        } catch (AssertionError e) {
+            // showing tooltips is somewhat flaky, try again with another cell
+            showCellTooltip(5, 0);
+            assertTrue("Tooltip should contain <b> tag",
+                    isElementPresent(By.cssSelector(".v-tooltip-text b")));
+        }
     }
 
     private void assertHtmlTooltipShown() {
-        assertTrue("Tooltip should contain <b> tag",
-                isElementPresent(By.cssSelector(".v-tooltip-text b")));
+        try {
+            assertTrue("Tooltip should contain <b> tag",
+                    isElementPresent(By.cssSelector(".v-tooltip-text b")));
+        } catch (AssertionError e) {
+            // showing tooltips is somewhat flaky, try again with another cell
+            showCellTooltip(5, 0);
+            assertTrue("Tooltip should contain <b> tag",
+                    isElementPresent(By.cssSelector(".v-tooltip-text b")));
+        }
     }
 
     private void showCellTooltip(int row, int col) {
         getGridElement().getCell(row, col).showTooltip();
+        sleep(200);
     }
 
     private void selectCellGenerator(String name) {

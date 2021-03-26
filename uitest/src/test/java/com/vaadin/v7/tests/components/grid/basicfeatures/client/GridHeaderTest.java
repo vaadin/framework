@@ -11,7 +11,6 @@ import java.util.Locale;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
@@ -232,10 +231,11 @@ public class GridHeaderTest extends GridStaticSectionTest {
 
         selectMenuPath("Component", "Columns", "Column 0", "Header Type",
                 "Widget Header");
+        selectMenuPath("Component", "Columns", "Column 0", "Width", "200px");
         GridCellElement widgetCell = getGridElement().getHeaderCell(0, 0);
         WebElement button = widgetCell.findElement(By.className("gwt-Button"));
 
-        new Actions(getDriver()).moveToElement(button, 5, 5).click().perform();
+        button.click();
 
         assertEquals("clicked", button.getText().toLowerCase(Locale.ROOT));
     }
@@ -246,6 +246,7 @@ public class GridHeaderTest extends GridStaticSectionTest {
 
         selectMenuPath("Component", "Columns", "Column 0", "Header Type",
                 "Widget Header");
+        selectMenuPath("Component", "Columns", "Column 0", "Width", "200px");
 
         selectMenuPath("Component", "Columns", "Column 0", "Sortable");
 
@@ -254,7 +255,7 @@ public class GridHeaderTest extends GridStaticSectionTest {
 
         assertNotEquals("clicked", button.getText().toLowerCase(Locale.ROOT));
 
-        new Actions(getDriver()).moveToElement(button, 5, 5).click().perform();
+        button.click();
 
         assertEquals("clicked", button.getText().toLowerCase(Locale.ROOT));
     }

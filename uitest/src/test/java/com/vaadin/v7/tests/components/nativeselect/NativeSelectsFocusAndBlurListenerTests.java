@@ -32,9 +32,8 @@ public class NativeSelectsFocusAndBlurListenerTests extends MultiBrowserTest {
         getDriver().findElement(By.tagName("body")).click();
 
         // Somehow selectByText causes focus + blur + focus + blur on
-        // Chrome/PhantomJS
-        if (BrowserUtil.isChrome(getDesiredCapabilities())
-                || BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
+        // PhantomJS
+        if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
             assertEquals("4. FocusEvent", getLogRow(1));
             assertEquals("5. BlurEvent", getLogRow(0));
         } else {
