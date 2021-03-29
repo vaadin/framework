@@ -754,6 +754,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent> extends
         return options;
     }
 
+    @Override
     protected void log(String msg) {
         log.log(msg);
     }

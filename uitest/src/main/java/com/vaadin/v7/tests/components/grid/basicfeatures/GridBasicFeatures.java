@@ -14,8 +14,6 @@ import java.util.Map;
 import java.util.Random;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.server.DefaultErrorHandler;
-import com.vaadin.server.ErrorHandler;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.AbstractComponentTest;
@@ -78,8 +76,7 @@ import com.vaadin.v7.ui.renderers.NumberRenderer;
  * @author Vaadin Ltd
  */
 @Theme("valo")
-public class GridBasicFeatures extends AbstractComponentTest<Grid>
-        implements ErrorHandler {
+public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
     public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4 = "Row numbers for 3/4";
     public static final String ROW_STYLE_GENERATOR_NONE = "None";
@@ -236,11 +233,6 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid>
             return detailsMap.get(itemId);
         }
     };
-
-    public GridBasicFeatures() {
-        super();
-        setErrorHandler(this);
-    }
 
     @Override
     protected void createActions() {
@@ -1709,16 +1701,6 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid>
     @Override
     protected Class<Grid> getTestClass() {
         return Grid.class;
-    }
-
-    @Override
-    public void error(com.vaadin.server.ErrorEvent event) {
-        final Throwable throwable = DefaultErrorHandler
-                .findRelevantThrowable(event.getThrowable());
-
-        log("Exception occurred, " + throwable.getClass().getName() + ": "
-                + throwable.getMessage());
-        throwable.printStackTrace();
     }
 
 }

@@ -60,9 +60,11 @@ public class UIAccessTest extends MultiBrowserTest {
         $(ButtonElement.class).get(2).click();
 
         assertTrue(logContainsText("0. Throwing exception in access"));
-        assertTrue(logContainsText("1. firstFuture is done? true"));
         assertTrue(logContainsText(
-                "2. Got exception from firstFuture: java.lang.RuntimeException: Catch me if you can"));
+                "1. Exception occurred, java.lang.RuntimeException: Catch me if you can"));
+        assertTrue(logContainsText("2. firstFuture is done? true"));
+        assertTrue(logContainsText(
+                "3. Got exception from firstFuture: java.lang.RuntimeException: Catch me if you can"));
     }
 
     @Test
