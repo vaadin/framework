@@ -1043,7 +1043,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
                     headerDragPending = event;
                     bubble = false;
-                } else if (type == Event.ONMOUSEMOVE
+                } else if ((type == Event.ONMOUSEMOVE || type == Event.ONTOUCHMOVE)
                         && headerDragPending != null) {
                     // ie won't work unless this is set here
                     dragging = true;
@@ -1051,7 +1051,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                     onDragEvent(event);
                     headerDragPending = null;
                     bubble = false;
-                } else if (type != Event.ONMOUSEMOVE) {
+                } else if (type != Event.ONMOUSEMOVE && type != Event.ONTOUCHMOVE) {
                     // The event can propagate to the parent in case it is a
                     // mouse move event. This is needed for tooltips to work in
                     // header and footer, see Ticket #19073
