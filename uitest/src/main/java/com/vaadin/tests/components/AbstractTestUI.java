@@ -3,6 +3,8 @@ package com.vaadin.tests.components;
 import java.io.File;
 
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.server.DefaultErrorHandler;
+import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.WebBrowser;
@@ -19,11 +21,13 @@ import com.vaadin.ui.PushConfiguration;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
-public abstract class AbstractTestUI extends UI {
+public abstract class AbstractTestUI extends UI implements ErrorHandler {
 
     @Override
     public void init(VaadinRequest request) {
         getPage().setTitle(getClass().getName());
+
+        setErrorHandler(this);
 
         Label label = new Label(getTestDescription(), ContentMode.HTML);
         label.setWidth("100%");
@@ -226,5 +230,19 @@ public abstract class AbstractTestUI extends UI {
                 accessSynchronously(runnable);
             }
         }.start();
+    }
+
+    @Override
+    public void error(com.vaadin.server.ErrorEvent event) {
+        final Throwable throwable = DefaultErrorHandler
+                .findRelevantThrowable(event.getThrowable());
+
+        log("Exception occurred, " + throwable.getClass().getName() + ": "
+                + throwable.getMessage());
+        throwable.printStackTrace();
+    }
+
+    protected void log(String message) {
+        // NOP
     }
 }

@@ -22,14 +22,14 @@ public class UndefinedHeightSubWindowAndContentTest extends MultiBrowserTest {
 
         WindowElement window = $(WindowElement.class).first();
         int height = window.getSize().getHeight();
-        assertTrue("Window height with validation failure",
-                161 <= height && height <= 164);
+        assertTrue("Window height with validation failure, height: " + height,
+                196 <= height && height <= 198);
 
         textField.setValue("valid");
         textField.sendKeys(Keys.ENTER);
         height = window.getSize().getHeight();
-        assertTrue("Window height with validation success",
-                136 <= height && height <= 139);
+        assertTrue("Window height with validation success, height: " + height,
+                171 <= height && height <= 173);
     }
 
 }

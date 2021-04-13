@@ -14,6 +14,7 @@ public abstract class AbstractTestUIWithLog extends AbstractTestUI {
         ((VerticalLayout) getContent()).addComponent(log, 0);
     }
 
+    @Override
     protected void log(String message) {
         log.log(message);
     }

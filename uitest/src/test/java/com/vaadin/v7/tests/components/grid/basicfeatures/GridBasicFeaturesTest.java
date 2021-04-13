@@ -144,19 +144,39 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
 
     protected void dragAndDropDefaultColumnHeader(int draggedColumnHeaderIndex,
             int onTopOfColumnHeaderIndex, CellSide cellSide) {
-        GridCellElement columnHeader = getDefaultColumnHeader(
+        GridCellElement dragHeaderCell = getDefaultColumnHeader(
+                draggedColumnHeaderIndex);
+        GridCellElement targetHeaderCell = getDefaultColumnHeader(
                 onTopOfColumnHeaderIndex);
-        new Actions(getDriver())
-                .clickAndHold(getDefaultColumnHeader(draggedColumnHeaderIndex))
-                .moveToElement(columnHeader, getHorizontalOffsetForDragAndDrop(
-                        columnHeader, cellSide), 0)
-                .release().perform();
+        int horizontalOffsetForDragAndDrop = getHorizontalOffsetForDragAndDrop(
+                targetHeaderCell, cellSide);
+        if (dragHeaderCell.findElements(By.className("gwt-HTML")).isEmpty()) {
+            // no selectable header caption, drag freely
+            new Actions(getDriver()).clickAndHold(dragHeaderCell)
+                    .moveToElement(targetHeaderCell,
+                            horizontalOffsetForDragAndDrop, 0)
+                    .release().perform();
+        } else {
+            // avoid clicking on the caption or the text gets selected and the
+            // drag won't happen
+            WebElement dragHeaderCaption = dragHeaderCell
+                    .findElement(By.className("gwt-HTML"));
+            new Actions(getDriver())
+                    .moveToElement(dragHeaderCaption,
+                            dragHeaderCaption.getSize().getWidth() + 5, 5)
+                    .clickAndHold()
+                    .moveToElement(targetHeaderCell,
+                            horizontalOffsetForDragAndDrop, 0)
+                    .release().perform();
+        }
     }
 
     private int getHorizontalOffsetForDragAndDrop(GridCellElement columnHeader,
             CellSide cellSide) {
         if (cellSide == CellSide.LEFT) {
-            return 5;
+            // FIXME: Selenium drag is handled differently than manual drag for
+            // some reason, this should work with 5 but doesn't.
+            return -1;
         } else {
             int half = columnHeader.getSize().getWidth() / 2;
             return half + (half / 2);
@@ -166,27 +186,57 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
     protected void dragAndDropColumnHeader(int headerRow,
             int draggedColumnHeaderIndex, int onTopOfColumnHeaderIndex,
             CellSide cellSide) {
-        GridCellElement headerCell = getGridElement().getHeaderCell(headerRow,
-                onTopOfColumnHeaderIndex);
-        new Actions(getDriver())
-                .clickAndHold(getGridElement().getHeaderCell(headerRow,
-                        draggedColumnHeaderIndex))
-                .moveToElement(headerCell,
-                        getHorizontalOffsetForDragAndDrop(headerCell, cellSide),
-                        0)
-                .release().perform();
+        GridCellElement dragHeaderCell = getGridElement()
+                .getHeaderCell(headerRow, draggedColumnHeaderIndex);
+        GridCellElement targetHeaderCell = getGridElement()
+                .getHeaderCell(headerRow, onTopOfColumnHeaderIndex);
+        int horizontalOffsetForDragAndDrop = getHorizontalOffsetForDragAndDrop(
+                targetHeaderCell, cellSide);
+        if (dragHeaderCell.findElements(By.className("gwt-HTML")).isEmpty()) {
+            // no selectable header caption, drag freely
+            new Actions(getDriver()).clickAndHold(dragHeaderCell)
+                    .moveToElement(targetHeaderCell,
+                            horizontalOffsetForDragAndDrop, 0)
+                    .release().perform();
+        } else {
+            // avoid clicking on the caption or the text gets selected and the
+            // drag won't happen
+            WebElement dragHeaderCaption = dragHeaderCell
+                    .findElement(By.className("gwt-HTML"));
+            new Actions(getDriver())
+                    .moveToElement(dragHeaderCaption,
+                            dragHeaderCaption.getSize().getWidth() + 5, 5)
+                    .clickAndHold()
+                    .moveToElement(targetHeaderCell,
+                            horizontalOffsetForDragAndDrop, 0)
+                    .release().perform();
+        }
     }
 
     protected void dragAndDropColumnHeader(int headerRow,
             int draggedColumnHeaderIndex, int onTopOfColumnHeaderIndex,
             int horizontalOffset) {
-        GridCellElement headerCell = getGridElement().getHeaderCell(headerRow,
-                onTopOfColumnHeaderIndex);
-        new Actions(getDriver())
-                .clickAndHold(getGridElement().getHeaderCell(headerRow,
-                        draggedColumnHeaderIndex))
-                .moveToElement(headerCell, horizontalOffset, 0).release()
-                .perform();
+        GridCellElement dragHeaderCell = getGridElement()
+                .getHeaderCell(headerRow, draggedColumnHeaderIndex);
+        GridCellElement targetHeaderCell = getGridElement()
+                .getHeaderCell(headerRow, onTopOfColumnHeaderIndex);
+        if (dragHeaderCell.findElements(By.className("gwt-HTML")).isEmpty()) {
+            // no selectable header caption, drag freely
+            new Actions(getDriver()).clickAndHold(dragHeaderCell)
+                    .moveToElement(targetHeaderCell, horizontalOffset, 0)
+                    .release().perform();
+        } else {
+            // avoid clicking on the caption or the text gets selected and the
+            // drag won't happen
+            WebElement dragHeaderCaption = dragHeaderCell
+                    .findElement(By.className("gwt-HTML"));
+            new Actions(getDriver())
+                    .moveToElement(dragHeaderCaption,
+                            dragHeaderCaption.getSize().getWidth() + 5, 5)
+                    .clickAndHold()
+                    .moveToElement(targetHeaderCell, horizontalOffset, 0)
+                    .release().perform();
+        }
     }
 
     protected void assertColumnIsSorted(int index) {

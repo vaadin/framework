@@ -62,9 +62,11 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
 
     @Test
     public void testMouseOpeningClosing() {
+        selectMenuPath("Component", "Columns", "Column 2", "Width", "200px");
 
         getGridElement().getCell(4, 0).doubleClick();
         assertNotNull(getEditor());
+        sleep(100); // wait for layouting
 
         // Move focus to the third input field
         getEditor().findElements(By.className("gwt-TextBox")).get(2).click();
@@ -73,17 +75,18 @@ public class GridEditorClientTest extends GridBasicClientFeaturesTest {
         getSaveButton().click();
 
         // Make sure the editor went away
-        assertNull(getEditor());
+        assertNull("Editor still exists", getEditor());
 
         // Check that focus has moved to cell 4,2 - the last one that was
         // focused in Editor
-        assertTrue(getGridElement().getCell(4, 2).isFocused());
+        assertTrue("Cell (4, 2) is not focused.",
+                getGridElement().getCell(4, 2).isFocused());
 
         // Disable editor
         selectMenuPath("Component", "Editor", "Enabled");
 
         getGridElement().getCell(4, 0).doubleClick();
-        assertNull(getEditor());
+        assertNull("Editor still exists", getEditor());
     }
 
     @Test

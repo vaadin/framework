@@ -518,6 +518,21 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     }
 
     @Test
+    public void withConverter_writeBackValueDisabled() {
+        TextField rentField = new TextField();
+        rentField.setValue("");
+        Binding<Person, BigDecimal> binding = binder.forField(rentField)
+                .withConverter(new EuroConverter(""))
+                .withNullRepresentation(BigDecimal.valueOf(0d))
+                .bind(Person::getRent, Person::setRent);
+        binder.setBean(item);
+        binding.setConvertBackToPresentation(false);
+        rentField.setValue("10");
+
+        assertNotEquals("€ 10.00", rentField.getValue());
+    }
+
+    @Test
     public void beanBinder_nullRepresentationIsNotDisabled() {
         Binder<Person> binder = new Binder<>(Person.class);
         binder.forField(nameField).bind("firstName");

@@ -11,7 +11,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <jetty.version>9.4.35.v20201120</jetty.version>
+        <jetty.version>9.4.38.v20210224</jetty.version>
         <phantomjs.version>2.1.1</phantomjs.version>
         <vaadin.version>${project.version}</vaadin.version>
         <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
@@ -21,10 +21,10 @@
         <spring.boot.version>1.5.9.RELEASE</spring.boot.version>
         <selenium.version>3.14.0</selenium.version>
 
-        <!-- Don't care about coding style for tests -->
+        <!-- Don't care about coding style for tests. -->
         <sonar.skip>true</sonar.skip>
 
-        <!-- Allow installing for local testing purposes -->
+        <!-- Allow installing for local testing purposes. -->
         <install.skip>true</install.skip>
     </properties>
 

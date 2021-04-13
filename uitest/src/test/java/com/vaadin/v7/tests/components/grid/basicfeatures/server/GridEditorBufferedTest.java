@@ -273,6 +273,7 @@ public class GridEditorBufferedTest extends GridEditorTest {
 
         getGridElement().getCell(4, 0).doubleClick();
         assertEditorOpen();
+        sleep(100); // wait for layouting
 
         getCancelButton().click();
         assertEditorClosed();

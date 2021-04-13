@@ -21,7 +21,6 @@ public class GridDetailsUpdateItemsTest extends MultiBrowserTest {
         ButtonElement button = $(ButtonElement.class).first();
 
         String details0 = grid.getDetails(0).getText();
-        System.out.println("details: " + details0);
 
         // change the contents
         button.click();

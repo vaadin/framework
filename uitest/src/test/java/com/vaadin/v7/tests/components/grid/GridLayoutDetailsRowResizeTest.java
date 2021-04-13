@@ -74,7 +74,7 @@ public class GridLayoutDetailsRowResizeTest extends MultiBrowserTest {
 
     @Test
     public void testMultipleDetailsRows() {
-        openTestURL();
+        openTestURL("theme=reindeer"); // doesn't fit with Valo
         waitForElementPresent(By.className("v-grid"));
 
         ButtonElement detailsButton = $(ButtonElement.class)
@@ -138,8 +138,9 @@ public class GridLayoutDetailsRowResizeTest extends MultiBrowserTest {
 
     private void assertDetailsRowHeight(int layoutHeight) {
         // check that details row height matches layout height (1px leeway)
+        int cellBordersHeight = 2;
         WebElement detailsRow = findElement(By.className("v-grid-spacer"));
         assertThat("Unexpected details row height", (double) layoutHeight,
-                closeTo(detailsRow.getSize().height, 1d));
+                closeTo(detailsRow.getSize().height - cellBordersHeight, 1d));
     }
 }

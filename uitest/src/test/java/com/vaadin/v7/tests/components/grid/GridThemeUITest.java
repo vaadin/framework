@@ -6,9 +6,9 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.GridElement;
-import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.testbench.elements.NativeSelectElement;
@@ -70,15 +70,13 @@ public class GridThemeUITest extends MultiBrowserThemeTest {
     private void openEditor(GridCellElement targetCell) {
         new Actions(getDriver()).doubleClick(targetCell).perform();
         try {
-            if (grid.getEditor().isDisplayed()) {
-                return;
-            }
+            waitForElementPresent(By.className("v-grid-editor"));
         } catch (Exception e) {
-
+            // Double-click is flaky, try again...
+            new Actions(getDriver()).doubleClick(targetCell).perform();
+            waitForElementPresent(By.className("v-grid-editor"));
         }
 
-        // Try again if IE happen to fail..
-        new Actions(getDriver()).doubleClick(targetCell).perform();
     }
 
     private void selectPage(String string) {

@@ -308,6 +308,17 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>compatibility</id>
+                        <configuration>
+                            <includes>
+                                <include>**/LimitedTB3TestsCompatibility.java</include>
+                            </includes>
+                        </configuration>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
                         <id>no-components</id>
                         <configuration>
                             <includes>
@@ -344,6 +355,7 @@
                         <id>verify</id>
                         <configuration>
                             <includes>
+                                <include>**/LimitedTB3TestsCompatibility.java</include>
                                 <include>**/LimitedTB3TestsNonComponent.java</include>
                                 <include>**/LimitedTB3TestsComponentsNoGrid.java</include>
                                 <include>**/LimitedTB3TestsComponentsGridOnly.java</include>

@@ -30,12 +30,15 @@ public class UploadChangeListenerTest extends MultiBrowserTest {
 
         upload.click();
 
-        assertEquals("2. finished", getLogRow(0));
+        assertEquals("2. finished", getLogRow(1));
+        assertEquals(
+                "3. Exception occurred, com.vaadin.server.UploadException: Upload failed",
+                getLogRow(0));
 
         tempFile = createTempFile();
         fillPathToUploadInput(tempFile.getPath());
 
-        assertEquals("3. change", getLogRow(0));
+        assertEquals("4. change", getLogRow(0));
     }
 
     /**

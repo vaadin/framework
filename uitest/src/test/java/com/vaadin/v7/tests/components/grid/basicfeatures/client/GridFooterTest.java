@@ -9,7 +9,6 @@ import java.util.Locale;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeatures;
@@ -190,6 +189,7 @@ public class GridFooterTest extends GridStaticSectionTest {
         openTestURL();
 
         selectMenuPath("Component", "Footer", "Append row");
+        selectMenuPath("Component", "Columns", "Column 0", "Width", "200px");
 
         selectMenuPath("Component", "Columns", "Column 0", "Footer Type",
                 "Widget Footer");
@@ -198,7 +198,7 @@ public class GridFooterTest extends GridStaticSectionTest {
 
         assertNotEquals("clicked", button.getText().toLowerCase(Locale.ROOT));
 
-        new Actions(getDriver()).moveToElement(button, 5, 5).click().perform();
+        button.click();
 
         assertEquals("clicked", button.getText().toLowerCase(Locale.ROOT));
     }

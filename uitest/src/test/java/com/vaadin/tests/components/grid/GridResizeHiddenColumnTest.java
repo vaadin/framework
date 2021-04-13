@@ -62,6 +62,7 @@ public class GridResizeHiddenColumnTest extends MultiBrowserTest {
         // Click on "Last Name" menu item
         action.click(visibilityToggle).perform();
         waitUntilLoadingIndicatorNotVisible();
+        sleep(100); // wait for layouting
 
         // Check if column "Last Name" is visible
         headerCells = grid.getHeaderCells(0);

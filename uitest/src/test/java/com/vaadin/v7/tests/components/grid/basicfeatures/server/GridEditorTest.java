@@ -57,7 +57,7 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
         assertEditorClosed();
         boolean thrown = logContainsText(
                 "Exception occurred, java.lang.IllegalStateException");
-        assertTrue("IllegalStateException thrown", thrown);
+        assertTrue("IllegalStateException not thrown", thrown);
     }
 
     @Test
@@ -67,7 +67,7 @@ public abstract class GridEditorTest extends GridBasicFeaturesTest {
         assertEditorOpen();
         boolean thrown = logContainsText(
                 "Exception occurred, java.lang.IllegalStateException");
-        assertTrue("IllegalStateException thrown", thrown);
+        assertTrue("IllegalStateException not thrown", thrown);
     }
 
     @Test
