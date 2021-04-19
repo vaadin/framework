@@ -60,6 +60,7 @@ public class VTextArea extends VTextField implements DragImageModifier {
         super(DOM.createTextArea());
         setStyleName(CLASSNAME);
         addKeyDownHandler(enterDownHandler);
+        getElement().getStyle().setOverflowX(Overflow.HIDDEN);
     }
 
     public TextAreaElement getTextAreaElement() {
@@ -76,7 +77,8 @@ public class VTextArea extends VTextField implements DragImageModifier {
         }
         if (wordWrap) {
             getElement().removeAttribute("wrap");
-            getElement().getStyle().clearOverflow();
+            getElement().getStyle().clearOverflowY();
+            getElement().getStyle().setOverflowX(Overflow.HIDDEN);
             getElement().getStyle().clearWhiteSpace();
         } else {
             getElement().setAttribute("wrap", "off");
