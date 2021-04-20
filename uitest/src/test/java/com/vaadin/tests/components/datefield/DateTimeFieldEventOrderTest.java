@@ -28,7 +28,10 @@ public class DateTimeFieldEventOrderTest extends SingleBrowserTest {
                 By.className("v-datefield-calendarpanel-time"))
                         .findElements(By.tagName("select"));
 
-        new Select(timeSelects.get(0)).selectByValue("09");
+        Select select = new Select(timeSelects.get(0));
+        select.selectByValue("09");
+        // selectByValue is flaky, repeat to ensure selection actually happens
+        select.selectByValue("09");
 
         findElement(By.id("test-button")).click();
         waitUntil(new ExpectedCondition<Boolean>() {
