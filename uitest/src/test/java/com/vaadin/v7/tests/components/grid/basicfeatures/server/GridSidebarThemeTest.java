@@ -3,6 +3,7 @@ package com.vaadin.v7.tests.components.grid.basicfeatures.server;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
@@ -27,9 +28,12 @@ public class GridSidebarThemeTest extends GridBasicFeaturesTest {
 
     private void runTestSequence(String theme) throws IOException {
         openTestURL("theme=" + theme);
+        waitUntilLoadingIndicatorNotVisible();
 
         compareScreen(theme + "-SidebarClosed");
         getSidebarOpenButton().click();
+        waitForElementPresent(By.className("v-grid-sidebar-content"));
+        sleep(100); // wait for animations to finish
 
         compareScreen(theme + "-SidebarOpen");
 
@@ -55,6 +59,7 @@ public class GridSidebarThemeTest extends GridBasicFeaturesTest {
         compareScreen(theme + "-OnMouseOverHiddenToggle");
 
         getSidebarOpenButton().click();
+        waitForElementNotPresent(By.className("v-grid-sidebar-content"));
 
         compareScreen(theme + "-SidebarClosed2");
     }
