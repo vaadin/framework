@@ -189,4 +189,11 @@ public interface EditorHandler<T> {
      *         editable
      */
     public Widget getWidget(Grid.Column<?, T> column);
+
+    /**
+     * Called by the editor's event handler when editing is shifting to a new
+     * row in order to check the validity of the binder's value.
+     *
+     */
+    public void checkValidity();
 }

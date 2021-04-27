@@ -70,4 +70,13 @@ public interface EditorClientRpc extends ClientRpc {
      *
      */
     void setErrorMessage(String errorMessage, List<String> errorColumnsIds);
+
+    /**
+     * Confirms the valid status of the binder so as to determine whether to
+     * allow the pending navigation action.
+     *
+     * @param isValid
+     *            true if the binder value is valid
+     */
+    void confirmValidity(boolean isValid);
 }

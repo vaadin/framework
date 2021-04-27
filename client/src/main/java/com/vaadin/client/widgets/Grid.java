@@ -1416,6 +1416,15 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              *         done, false otherwise
              */
             boolean handleEvent(EditorDomEvent<T> event);
+
+            /**
+             * Confirms the valid status of the binder so as to determine
+             * whether to allow pending navigation action.
+             *
+             * @param isValid
+             *            true if the binder value is valid
+             */
+            void confirmValidity(boolean isValid);
         }
 
         protected enum State {

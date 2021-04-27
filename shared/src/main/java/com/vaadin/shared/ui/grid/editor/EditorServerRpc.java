@@ -53,4 +53,11 @@ public interface EditorServerRpc extends ServerRpc {
      *            after save action, otherwise it represents a cancel action
      */
     void cancel(boolean afterBeingSaved);
+
+    /**
+     * Asks the server to check the validity of the current values in the
+     * editor. When a check-validity request is sent, the server must respond
+     * with a {@link EditorClientRpc#confirmValidity(boolean) confirm call}.
+     */
+    void checkValidity();
 }
