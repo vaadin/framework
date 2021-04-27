@@ -67,8 +67,6 @@
                                 <argument>-classpath</argument>
                                 <classpath />
 
-                                <argument>com.vaadin.buildhelpers.GeneratePackageExports</argument>
-
                                 <argument>${project.build.directory}/${project.build.finalName}.${project.packaging}</argument>
                                 <argument>VAADIN/widgetsets</argument>
                             </arguments>
