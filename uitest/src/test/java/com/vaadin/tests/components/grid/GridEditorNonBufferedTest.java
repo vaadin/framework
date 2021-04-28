@@ -48,6 +48,10 @@ public class GridEditorNonBufferedTest extends MultiBrowserTest {
     @Test
     public void testEscClosesEditor() {
         openEditor(5, 1);
+
+        assertTrue("Editor should be opened with a TextField",
+                isElementPresent(TextFieldElement.class));
+
         new Actions(getDriver()).sendKeys(Keys.ESCAPE).perform();
 
         assertFalse("Editor should be closed",
