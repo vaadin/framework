@@ -229,6 +229,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
                 int newRowIndex = rowIndex + delta.rowDelta;
                 if (newRowIndex != event.getRowIndex()) {
                     triggerValueChangeEvent(event);
+                    setWidgetEnabled(event.getEditorWidget(), false);
                     event.getEditor().getHandler().checkValidity();
                     pendingEdit = new PendingEdit(event, newRowIndex, colIndex);
                 } else {
@@ -466,12 +467,20 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
                             + " no pending edit object was found ");
             return;
         }
+        setWidgetEnabled(pendingEdit.pendingEvent.getEditorWidget(), true);
         if (isValid) {
             editRow(pendingEdit.pendingEvent, pendingEdit.pendingRowIndex,
                     pendingEdit.pendingColIndex);
+        } else {
+            pendingEdit.pendingEvent.getEditorWidget().getElement().focus();
         }
 
         pendingEdit = null;
+    }
+
+    private void setWidgetEnabled(Widget widget, boolean widgetEnabled) {
+        final ComponentConnector connector = Util.findConnectorFor(widget);
+        connector.setWidgetEnabled(widgetEnabled);
     }
 
     private static final Logger getLogger() {
