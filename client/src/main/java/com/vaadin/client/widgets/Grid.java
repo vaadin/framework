@@ -1422,7 +1422,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              * whether to allow pending navigation action.
              *
              * @param isValid
-             *            true if the binder value is valid
+             *            {@code true} if the binder value is valid
              */
             void confirmValidity(boolean isValid);
         }
