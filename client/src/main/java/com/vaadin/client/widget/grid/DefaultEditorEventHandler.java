@@ -480,7 +480,9 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
 
     private void setWidgetEnabled(Widget widget, boolean widgetEnabled) {
         final ComponentConnector connector = Util.findConnectorFor(widget);
-        connector.setWidgetEnabled(widgetEnabled);
+        if (connector.getState().enabled) {
+            connector.setWidgetEnabled(widgetEnabled);
+        }
     }
 
     private static final Logger getLogger() {
