@@ -85,7 +85,6 @@ public class GridEditorNonBuffered extends AbstractReindeerTestUIWithLog {
                 .bind(Person::getFirstName, Person::setFirstName);
         firstNameColumn.setEditorBinding(firstNamebinding);
 
-
         TextField lastNameEditor = new TextField();
         Binding<Person, String> lastNamebinding = binder
                 .forField(lastNameEditor)
