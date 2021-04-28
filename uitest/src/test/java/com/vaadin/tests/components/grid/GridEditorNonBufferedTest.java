@@ -37,9 +37,6 @@ public class GridEditorNonBufferedTest extends MultiBrowserTest {
     @Test
     public void testEditor() {
         openEditor(5, 1);
-        new Actions(getDriver()).sendKeys(Keys.ESCAPE).perform();
-
-        openEditor(10, 1);
 
         assertTrue("Editor should be opened with a TextField",
                 isElementPresent(TextFieldElement.class));
@@ -49,7 +46,16 @@ public class GridEditorNonBufferedTest extends MultiBrowserTest {
     }
 
     @Test
-    public void preventNavigationToNewRowIfEditorValueIsInvalid() {
+    public void testEscClosesEditor() {
+        openEditor(5, 1);
+        new Actions(getDriver()).sendKeys(Keys.ESCAPE).perform();
+
+        assertFalse("Editor should be closed",
+                isElementPresent(TextFieldElement.class));
+    }
+
+    @Test
+    public void preventNavigationToNextRowIfEditorValueIsInvalid() {
         // Test with navigation to next row
         openEditor(5, 2);
         WebElement field = findElement(By.className("v-textfield-focus"));
@@ -63,16 +69,18 @@ public class GridEditorNonBufferedTest extends MultiBrowserTest {
         assertEquals(
                 "Last Name: " + GridEditorNonBuffered.VALIDATION_ERROR_MESSAGE,
                 editorMessage);
+    }
 
-        new Actions(getDriver()).sendKeys(Keys.ESCAPE).perform();
-
+    @Test
+    public void preventNavigationToPrevRowIfEditorValueIsInvalid() {
         // Test with navigation to previous row
         openEditor(5, 1);
-        field = findElement(By.className("v-textfield-focus"));
+        WebElement field = findElement(By.className("v-textfield-focus"));
+        String selectAll = Keys.chord(Keys.CONTROL, "a");
         field.sendKeys(selectAll);
         field.sendKeys(Keys.DELETE);
         field.sendKeys(Keys.chord(Keys.SHIFT, Keys.TAB));
-        editorMessage = getEditorMessage();
+        String editorMessage = getEditorMessage();
 
         assertEquals(
                 "First Name: " + GridEditorNonBuffered.VALIDATION_ERROR_MESSAGE,
