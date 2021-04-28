@@ -44,14 +44,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>vaadin-buildhelpers</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-
     </dependencies>
 
     <build>
@@ -212,36 +204,6 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>generate-export-package</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <classpathScope>compile</classpathScope>
-                            <executable>${java.home}/bin/java</executable>
-                            <arguments>
-                                <argument>-Dvaadin.version=${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</argument>
-                                <argument>-DincludeNumberPackages=1</argument>
-
-                                <argument>-classpath</argument>
-                                <classpath />
-
-                                <argument>com.vaadin.buildhelpers.GeneratePackageExports</argument>
-
-                                <argument>${project.build.directory}/${project.build.finalName}.${project.packaging}
-                                </argument>
-                                <argument>com/vaadin</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
