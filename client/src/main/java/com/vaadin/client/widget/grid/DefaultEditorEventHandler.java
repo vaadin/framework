@@ -229,6 +229,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
                 int newRowIndex = rowIndex + delta.rowDelta;
                 if (newRowIndex != event.getRowIndex()) {
                     triggerValueChangeEvent(event);
+                    // disable until validity check is done
                     setWidgetEnabled(event.getEditorWidget(), false);
                     event.getEditor().getHandler().checkValidity();
                     pendingEdit = new PendingEdit(event, newRowIndex, colIndex);
@@ -480,6 +481,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
 
     private void setWidgetEnabled(Widget widget, boolean widgetEnabled) {
         final ComponentConnector connector = Util.findConnectorFor(widget);
+        // only enable widget if it hasn't been disabled programmatically
         if (connector.getState().enabled) {
             connector.setWidgetEnabled(widgetEnabled);
         }
