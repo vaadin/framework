@@ -15,6 +15,10 @@
  */
 package com.vaadin.client.widget.grid;
 
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
@@ -29,8 +33,6 @@ import com.vaadin.client.ui.FocusUtil;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Editor;
 import com.vaadin.client.widgets.Grid.EditorDomEvent;
-
-import java.util.List;
 
 /**
  * The default handler for Grid editor events. Offers several overridable
@@ -51,6 +53,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
     private int lastTouchEventX = -1;
     private int lastTouchEventY = -1;
     private int lastTouchEventRow = -1;
+    private PendingEdit pendingEdit;
 
     /**
      * Returns whether the given event is a touch event that should open the
@@ -223,7 +226,16 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
                     }
                 }
 
-                editRow(event, rowIndex + delta.rowDelta, colIndex);
+                int newRowIndex = rowIndex + delta.rowDelta;
+                if (newRowIndex != event.getRowIndex()) {
+                    triggerValueChangeEvent(event);
+                    // disable until validity check is done
+                    setWidgetEnabled(event.getEditorWidget(), false);
+                    event.getEditor().getHandler().checkValidity();
+                    pendingEdit = new PendingEdit(event, newRowIndex, colIndex);
+                } else {
+                    editRow(event, newRowIndex, colIndex);
+                }
             }
 
             return changed;
@@ -401,10 +413,6 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         // Limit colIndex between 0 and colCount - 1
         colIndex = Math.max(0, Math.min(colCount - 1, colIndex));
 
-        if (rowIndex != event.getRowIndex()) {
-            triggerValueChangeEvent(event);
-        }
-
         event.getEditor().editRow(rowIndex, colIndex);
     }
 
@@ -450,5 +458,54 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
                 && editor.isBuffered();
 
         return handled || swallowEvent;
+    }
+
+    @Override
+    public void confirmValidity(boolean isValid) {
+        if (pendingEdit == null) {
+            getLogger().log(Level.SEVERE,
+                    "An editor's validation confirmation was received, but"
+                            + " no pending edit object was found ");
+            return;
+        }
+        setWidgetEnabled(pendingEdit.pendingEvent.getEditorWidget(), true);
+        if (isValid) {
+            editRow(pendingEdit.pendingEvent, pendingEdit.pendingRowIndex,
+                    pendingEdit.pendingColIndex);
+        } else {
+            pendingEdit.pendingEvent.getEditorWidget().getElement().focus();
+        }
+
+        pendingEdit = null;
+    }
+
+    private void setWidgetEnabled(Widget widget, boolean widgetEnabled) {
+        final ComponentConnector connector = Util.findConnectorFor(widget);
+        // only enable widget if it hasn't been disabled programmatically
+        if (connector.getState().enabled) {
+            connector.setWidgetEnabled(widgetEnabled);
+        }
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(DefaultEditorEventHandler.class.getName());
+    }
+
+    private final class PendingEdit {
+        private EditorDomEvent<T> pendingEvent;
+        private int pendingRowIndex;
+        private int pendingColIndex;
+
+        private PendingEdit(EditorDomEvent<T> pendingEvent, int pendingRowIndex,
+                int pendingColIndex) {
+            if (pendingEvent == null) {
+                throw new IllegalArgumentException(
+                        "The pending event cannot be null");
+            }
+            this.pendingEvent = pendingEvent;
+            this.pendingRowIndex = pendingRowIndex;
+            this.pendingColIndex = pendingColIndex;
+        }
+
     }
 }
