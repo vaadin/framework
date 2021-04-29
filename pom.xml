@@ -95,7 +95,6 @@
     </scm>
 
     <modules>
-        <module>buildhelpers</module>
         <module>shared</module>
         <module>push</module>
         <module>server</module>
