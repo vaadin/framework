@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.util.List;
 
-import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.JavascriptExecutor;
 
 import com.vaadin.testbench.elements.HorizontalLayoutElement;
 import com.vaadin.tests.layouts.layouttester.BaseIconTest;
@@ -25,9 +25,12 @@ public class HIconTest extends BaseIconTest {
         HorizontalLayoutElement lastOfRow1 = layouts.get(3);
         HorizontalLayoutElement lastOfRow2 = layouts.get(7);
 
-        // scroll to both to ensure both contents are fully in view
-        new Actions(driver).moveToElement(lastOfRow1).build().perform();
-        new Actions(driver).moveToElement(lastOfRow2).build().perform();
+        // scroll to both to ensure both contents are fully in view,
+        // moveToElement fails on Firefox since the component is out of viewport
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView(true);", lastOfRow1);
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView(true);", lastOfRow2);
 
         compareScreen("icon-scrolled");
     }

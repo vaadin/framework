@@ -342,7 +342,10 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         GridCellElement draggedHeaderCell = getGridElement().getHeaderCell(0,
                 1);
         final int xOffset = 500;
-        new Actions(getDriver()).moveToElement(draggedHeaderCell, 20, 10)
+        new Actions(getDriver())
+                .moveToElement(draggedHeaderCell,
+                        getXOffset(draggedHeaderCell, 20),
+                        getYOffset(draggedHeaderCell, 10))
                 .clickAndHold().moveByOffset(xOffset, 0).build().perform();
 
         WebElement floatingDragElement = findElement(
