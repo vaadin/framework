@@ -30,8 +30,9 @@ public class DateTimeFieldEventOrderTest extends SingleBrowserTest {
 
         Select select = new Select(timeSelects.get(0));
         select.selectByValue("09");
-        // selectByValue is flaky, repeat to ensure selection actually happens
-        select.selectByValue("09");
+        // selecting is flaky, try index selection too to ensure selection
+        // actually happens
+        select.selectByIndex(9);
 
         findElement(By.id("test-button")).click();
         waitUntil(new ExpectedCondition<Boolean>() {
