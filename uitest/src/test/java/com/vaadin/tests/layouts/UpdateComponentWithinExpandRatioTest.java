@@ -23,9 +23,10 @@ public class UpdateComponentWithinExpandRatioTest extends MultiBrowserTest {
         button.click();
         waitUntilLoadingIndicatorNotVisible();
 
+        // allow small discrepancies
         assertEquals("Button's position changed unexpectedly", initialX,
-                button.getLocation().getX());
+                button.getLocation().getX(), 5);
         assertEquals("ProgressBar's width changed unexpectedly", initialWidth,
-                pb.getSize().getWidth());
+                pb.getSize().getWidth(), 5);
     }
 }

@@ -147,7 +147,7 @@ public class GridClientRenderers extends MultiBrowserTest {
 
         // Test initial renderering with contentVisible = False
         TestBenchElement cell = getGrid().getCell(51, 1);
-        String backgroundColor = cell.getCssValue("backgroundColor");
+        String backgroundColor = cell.getCssValue("background-color");
         assertEquals("Background color was not red.", colorRed,
                 backgroundColor);
 
@@ -156,7 +156,7 @@ public class GridClientRenderers extends MultiBrowserTest {
 
         // Content becomes visible
         cell = getGrid().getCell(51, 1);
-        backgroundColor = cell.getCssValue("backgroundColor");
+        backgroundColor = cell.getCssValue("background-color");
         assertNotEquals("Background color was red.", colorRed, backgroundColor);
 
         // scroll down, new cells becomes contentVisible = False
@@ -164,7 +164,7 @@ public class GridClientRenderers extends MultiBrowserTest {
 
         // Cell should be red (setContentVisible set cell red)
         cell = getGrid().getCell(55, 1);
-        backgroundColor = cell.getCssValue("backgroundColor");
+        backgroundColor = cell.getCssValue("background-color");
         assertEquals("Background color was not red.", colorRed,
                 backgroundColor);
 
@@ -172,7 +172,7 @@ public class GridClientRenderers extends MultiBrowserTest {
         sleep((int) (latency * SLEEP_MULTIPLIER));
 
         // Cell should no longer be red
-        backgroundColor = cell.getCssValue("backgroundColor");
+        backgroundColor = cell.getCssValue("background-color");
         assertTrue("Background color was not reset: " + backgroundColor,
                 backgroundColor.equals(colorWhite)
                         || backgroundColor.equals(colorDark));

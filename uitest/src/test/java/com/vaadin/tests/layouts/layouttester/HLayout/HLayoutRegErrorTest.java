@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.util.List;
 
-import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.JavascriptExecutor;
 
 import com.vaadin.testbench.elements.HorizontalLayoutElement;
 import com.vaadin.tests.layouts.layouttester.BaseLayoutRegErrorTest;
@@ -29,18 +29,25 @@ public class HLayoutRegErrorTest extends BaseLayoutRegErrorTest {
         HorizontalLayoutElement lastOfRow1 = layouts.get(4);
         HorizontalLayoutElement lastOfRow2 = layouts.get(9);
 
-        // scroll to both to ensure both contents are fully in view
-        new Actions(driver).moveToElement(group3row1).build().perform();
-        new Actions(driver).moveToElement(group3row2).build().perform();
+        // scroll to both to ensure both contents are fully in view,
+        // moveToElement fails on Firefox since the component is out of viewport
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView(true);", group3row1);
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView(true);", group3row2);
         // scroll back to get the previous group at the left edge
-        new Actions(driver).moveToElement(group2row1).build().perform();
-        new Actions(driver).moveToElement(group2row2).build().perform();
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView(true);", group2row1);
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView(true);", group2row2);
 
         compareScreen("RegError-Scrolled-Middle");
 
         // scroll to last ones
-        new Actions(driver).moveToElement(lastOfRow1).build().perform();
-        new Actions(driver).moveToElement(lastOfRow2).build().perform();
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView(true);", lastOfRow1);
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView(true);", lastOfRow2);
 
         compareScreen("RegError-Scrolled-End");
     }
