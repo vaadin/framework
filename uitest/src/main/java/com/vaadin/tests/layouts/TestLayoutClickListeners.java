@@ -125,7 +125,9 @@ public class TestLayoutClickListeners extends AbstractReindeerTestUIWithLog {
             gl.addComponent(l);
         }
         for (int i = nr; i < nr * 2; i++) {
-            gl.addComponent(new TextField("This is tf" + i, "this is tf " + i));
+            TextField tf = new TextField("This is tf" + i, "this is tf " + i);
+            tf.setWidth("130px");
+            gl.addComponent(tf);
         }
     }
 

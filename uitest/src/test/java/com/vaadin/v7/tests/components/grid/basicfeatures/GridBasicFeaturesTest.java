@@ -223,7 +223,8 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
         if (dragHeaderCell.findElements(By.className("gwt-HTML")).isEmpty()) {
             // no selectable header caption, drag freely
             new Actions(getDriver()).clickAndHold(dragHeaderCell)
-                    .moveToElement(targetHeaderCell, horizontalOffset, 0)
+                    .moveToElement(targetHeaderCell,
+                            getXOffset(targetHeaderCell, horizontalOffset), 0)
                     .release().perform();
         } else {
             // avoid clicking on the caption or the text gets selected and the
@@ -234,7 +235,8 @@ public abstract class GridBasicFeaturesTest extends MultiBrowserTest {
                     .moveToElement(dragHeaderCaption,
                             dragHeaderCaption.getSize().getWidth() + 5, 5)
                     .clickAndHold()
-                    .moveToElement(targetHeaderCell, horizontalOffset, 0)
+                    .moveToElement(targetHeaderCell,
+                            getXOffset(targetHeaderCell, horizontalOffset), 0)
                     .release().perform();
         }
     }
