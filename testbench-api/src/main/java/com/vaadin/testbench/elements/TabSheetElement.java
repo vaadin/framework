@@ -26,6 +26,7 @@ import com.vaadin.testbench.TestBench;
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elementsbase.AbstractElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
+import com.vaadin.testbench.parallel.BrowserUtil;
 
 @ServerClass("com.vaadin.ui.TabSheet")
 public class TabSheetElement extends AbstractComponentContainerElement {
@@ -122,7 +123,13 @@ public class TabSheetElement extends AbstractComponentContainerElement {
         }
         // If neither text nor icon caption was found, click at a position that
         // is unlikely to close the tab.
-        ((TestBenchElement) tabCell).click(-5, 0);
+        if (BrowserUtil.isIE(getCapabilities())) {
+            // old default, offset calculated from top left
+            ((TestBenchElement) tabCell).click(10, 10);
+        } else {
+            // w3c compliant, offset calculated from middle
+            ((TestBenchElement) tabCell).click(-5, 0);
+        }
     }
 
     /**
