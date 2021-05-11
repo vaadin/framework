@@ -35,7 +35,7 @@
         <javax.portlet.version>2.0</javax.portlet.version>
         <vaadin.sass.version>0.9.13</vaadin.sass.version>
         <!-- Note that this should be kept in sync with the class Constants -->
-        <atmosphere.runtime.version>2.4.30.vaadin3</atmosphere.runtime.version>
+        <atmosphere.runtime.version>2.4.30.vaadin4</atmosphere.runtime.version>
 
         <!-- OSGi -->
         <osgi.execution.environment>JavaSE-1.8</osgi.execution.environment>
@@ -97,6 +97,10 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
+        </repository>
+        <repository>
+            <id>atmosphere-staging</id>
+            <url>https://oss.sonatype.org/content/repositories/comvaadin-4359/</url>
         </repository>
         <repository>
             <id>atmosphere-client-staging</id>
