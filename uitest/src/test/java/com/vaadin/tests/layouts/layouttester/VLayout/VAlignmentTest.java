@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.util.List;
 
-import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.JavascriptExecutor;
 
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.layouts.layouttester.BaseAlignmentTest;
@@ -23,7 +23,9 @@ public class VAlignmentTest extends BaseAlignmentTest {
         assertEquals(9, textFields.size());
         TextFieldElement lastTextField = textFields.get(8);
 
-        new Actions(driver).moveToElement(lastTextField).build().perform();
+        // moveToElement fails on Firefox since the component is out of viewport
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView(true);", lastTextField);
 
         compareScreen("alignment-scrolled");
     }

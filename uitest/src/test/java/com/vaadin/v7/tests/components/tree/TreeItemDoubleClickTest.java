@@ -49,7 +49,8 @@ public class TreeItemDoubleClickTest extends MultiBrowserTest {
     }
 
     private void doubleClick(WebElement element) {
-        new Actions(getDriver()).doubleClick(element).build().perform();
+        new Actions(getDriver()).moveToElement(element).doubleClick().build()
+                .perform();
         sleep(100);
     }
 
