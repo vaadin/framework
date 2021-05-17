@@ -35,7 +35,7 @@
         <javax.portlet.version>2.0</javax.portlet.version>
         <vaadin.sass.version>0.9.13</vaadin.sass.version>
         <!-- Note that this should be kept in sync with the class Constants -->
-        <atmosphere.runtime.version>2.4.30.vaadin3</atmosphere.runtime.version>
+        <atmosphere.runtime.version>2.4.30.vaadin4</atmosphere.runtime.version>
 
         <!-- OSGi -->
         <osgi.execution.environment>JavaSE-1.8</osgi.execution.environment>
@@ -188,7 +188,7 @@
                 <groupId>com.vaadin.external.atmosphere.client</groupId>
                 <artifactId>javascript</artifactId>
                 <type>war</type>
-                <version>2.3.2.vaadin1</version>
+                <version>2.3.2.vaadin2</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
