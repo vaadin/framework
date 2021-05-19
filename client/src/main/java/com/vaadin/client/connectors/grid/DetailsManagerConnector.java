@@ -634,6 +634,12 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
 
         boolean newOrUpdatedDetails = refreshRange(availableAndVisible);
 
+        // the update may have affected details row contents and size,
+        // recalculation and triggering of any pending navigation
+        // confirmations etc. is needed
+        triggerDelayedRepositioning(availableAndVisible.getStart(),
+                availableAndVisible.length());
+
         markDetailsAddedOrUpdatedForDelayedAlertToGrid(newOrUpdatedDetails);
     }
 
