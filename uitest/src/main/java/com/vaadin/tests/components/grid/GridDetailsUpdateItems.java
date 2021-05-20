@@ -48,7 +48,7 @@ public class GridDetailsUpdateItems extends AbstractTestUI {
         }
         mainLayout.addComponent(grid);
 
-        Button clickButton = new Button("Change items", event -> {
+        Button changeButton1 = new Button("Change with details", event -> {
             List<Collection<String>> itemsOverwrite = Arrays
                     .asList(secondCollection, fourthCollection);
             grid.setItems(itemsOverwrite);
@@ -56,7 +56,13 @@ public class GridDetailsUpdateItems extends AbstractTestUI {
                 grid.setDetailsVisible(tmp, true);
             }
         });
-        mainLayout.addComponent(clickButton);
+        mainLayout.addComponent(changeButton1);
+        Button changeButton2 = new Button("Change without details", event -> {
+            List<Collection<String>> itemsOverwrite = Arrays
+                    .asList(secondCollection, fourthCollection);
+            grid.setItems(itemsOverwrite);
+        });
+        mainLayout.addComponent(changeButton2);
 
         return mainLayout;
     }
