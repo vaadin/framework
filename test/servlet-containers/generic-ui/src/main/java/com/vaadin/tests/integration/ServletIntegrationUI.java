@@ -1,5 +1,7 @@
 package com.vaadin.tests.integration;
 
+import java.io.Serializable;
+
 import com.vaadin.annotations.DesignRoot;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.ClassResource;
@@ -15,7 +17,7 @@ import com.vaadin.ui.declarative.Design;
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class ServletIntegrationUI extends UI {
 
-    public static class Country {
+    public static class Country implements Serializable {
         private final String name;
         private final String id;
         private final Resource icon;
