@@ -943,6 +943,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
     /**
      * Writes the contents of the given resourceUrl in the response. Can be
      * overridden to add/modify response headers and similar.
+     * <p>
+     * WARNING: note that this should not be used for a {@code resourceUrl} that
+     * represents a directory! For security reasons, the directory contents
+     * should not be ever written into the {@code response}, and the
+     * implementation which is used for setting the content length relies on
+     * {@link URLConnection#getContentLength()} method which returns incorrect
+     * values for directories.
      *
      * @param request
      *            The request for the resource
