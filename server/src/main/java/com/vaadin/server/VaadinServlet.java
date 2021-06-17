@@ -31,15 +31,22 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -189,6 +196,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     private VaadinServletService servletService;
+
+    // Mapped uri is for the jar file
+    static final Map<URI, Integer> openFileSystems = new HashMap<>();
+    private static final Object fileSystemLock = new Object();
 
     /**
      * Called by the servlet container to indicate to a servlet that the servlet
@@ -842,10 +853,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         // security check: do not permit navigation out of the VAADIN
-        // directory
+        // directory or into any directory rather than a file
         if (!isAllowedVAADINResourceUrl(request, resourceUrl)) {
             getLogger().log(Level.INFO,
-                    "Requested resource [{0}] not accessible in the VAADIN directory or access to it is forbidden.",
+                    "Requested resource [{0}] is a directory, "
+                            + "is not within the VAADIN directory, "
+                            + "or access to it is forbidden.",
                     filename);
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
@@ -1094,7 +1107,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
         // directory
         if (!isAllowedVAADINResourceUrl(request, scssUrl)) {
             getLogger().log(Level.INFO,
-                    "Requested resource [{0}] not accessible in the VAADIN directory or access to it is forbidden.",
+                    "Requested resource [{0}] is a directory, "
+                            + "is not within the VAADIN directory, "
+                            + "or access to it is forbidden.",
                     filename);
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
@@ -1203,7 +1218,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     /**
      * Check whether a URL obtained from a classloader refers to a valid static
-     * resource in the directory VAADIN.
+     * resource in the directory VAADIN. Directories do not count as valid
+     * resources.
      *
      * Warning: Overriding of this method is not recommended, but is possible to
      * support non-default classloaders or servers that may produce URLs
@@ -1223,6 +1239,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Deprecated
     protected boolean isAllowedVAADINResourceUrl(HttpServletRequest request,
             URL resourceUrl) {
+        if (resourceUrl == null || resourceIsDirectory(resourceUrl)) {
+            return false;
+        }
         String resourcePath = resourceUrl.getPath();
         if ("jar".equals(resourceUrl.getProtocol())) {
             // This branch is used for accessing resources directly from the
@@ -1260,6 +1279,123 @@ public class VaadinServlet extends HttpServlet implements Constants {
                     "Accepted access to a file using a class loader: {0}",
                     resourceUrl);
             return true;
+        }
+    }
+
+    private boolean resourceIsDirectory(URL resource) {
+        if (resource.getPath().endsWith("/")) {
+            return true;
+        }
+        URI resourceURI = null;
+        try {
+            resourceURI = resource.toURI();
+        } catch (URISyntaxException e) {
+            getLogger().log(Level.FINE,
+                    "Syntax error in uri from getStaticResource", e);
+            // Return false as we couldn't determine if the resource is a
+            // directory.
+            return false;
+        }
+
+        if ("jar".equals(resource.getProtocol())) {
+            // Get the file path in jar
+            final String pathInJar = resource.getPath()
+                    .substring(resource.getPath().indexOf('!') + 1);
+            try {
+                FileSystem fileSystem = getFileSystem(resourceURI);
+                // Get the file path inside the jar.
+                final Path path = fileSystem.getPath(pathInJar);
+
+                return Files.isDirectory(path);
+            } catch (IOException e) {
+                getLogger().log(Level.FINE, "failed to read jar file contents",
+                        e);
+            } finally {
+                closeFileSystem(resourceURI);
+            }
+        }
+
+        // If not a jar check if a file path directory.
+        return "file".equals(resource.getProtocol())
+                && Files.isDirectory(Paths.get(resourceURI));
+    }
+
+    /**
+     * Get the file URI for the resource jar file. Returns give URI if
+     * URI.scheme is not of type jar.
+     *
+     * The URI for a file inside a jar is composed as
+     * 'jar:file://...pathToJar.../jarFile.jar!/pathToFile'
+     *
+     * the first step strips away the initial scheme 'jar:' leaving us with
+     * 'file://...pathToJar.../jarFile.jar!/pathToFile' from which we remove the
+     * inside jar path giving the end result
+     * 'file://...pathToJar.../jarFile.jar'
+     *
+     * @param resourceURI
+     *            resource URI to get file URI for
+     * @return file URI for resource jar or given resource if not a jar schemed
+     *         URI
+     */
+    private URI getFileURI(URI resourceURI) {
+        if (!"jar".equals(resourceURI.getScheme())) {
+            return resourceURI;
+        }
+        try {
+            String scheme = resourceURI.getRawSchemeSpecificPart();
+            int jarPartIndex = scheme.indexOf("!/");
+            if (jarPartIndex != -1) {
+                scheme = scheme.substring(0, jarPartIndex);
+            }
+            return new URI(scheme);
+        } catch (URISyntaxException syntaxException) {
+            throw new IllegalArgumentException(syntaxException.getMessage(),
+                    syntaxException);
+        }
+    }
+
+    // Package protected for feature verification purpose
+    FileSystem getFileSystem(URI resourceURI) throws IOException {
+        synchronized (fileSystemLock) {
+            URI fileURI = getFileURI(resourceURI);
+            if (!fileURI.getScheme().equals("file")) {
+                throw new IOException("Can not read scheme '"
+                        + fileURI.getScheme() + "' for resource " + resourceURI
+                        + " and will determine this as not a folder");
+            }
+
+            if (openFileSystems.computeIfPresent(fileURI,
+                    (key, value) -> value + 1) != null) {
+                // Get filesystem is for the file to get the correct provider
+                return FileSystems.getFileSystem(resourceURI);
+            }
+            // Opened filesystem is for the file to get the correct provider
+            FileSystem fileSystem = FileSystems.newFileSystem(resourceURI,
+                    Collections.emptyMap());
+            openFileSystems.put(fileURI, 1);
+            return fileSystem;
+        }
+    }
+
+    // Package protected for feature verification purpose
+    void closeFileSystem(URI resourceURI) {
+        synchronized (fileSystemLock) {
+            try {
+                URI fileURI = getFileURI(resourceURI);
+                final Integer locks = openFileSystems.computeIfPresent(fileURI,
+                        (key, value) -> value - 1);
+                if (locks != null && locks == 0) {
+                    openFileSystems.remove(fileURI);
+                    // Get filesystem is for the file to get the correct
+                    // provider
+                    FileSystems.getFileSystem(resourceURI).close();
+                }
+            } catch (IOException ioe) {
+                getLogger().log(Level.SEVERE,
+                        "Failed to close FileSystem for '{}'", resourceURI);
+                getLogger().log(Level.INFO, "Exception closing FileSystem",
+                        ioe);
+            }
         }
     }
 
@@ -1357,6 +1493,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
     /**
      * Returns the relative path at which static files are served for a request
      * (if any).
+     * <p>
+     * NOTE: This method does not check whether the requested resource is a
+     * directory and as such not a valid VAADIN resource.
      *
      * @param request
      *            HTTP request
