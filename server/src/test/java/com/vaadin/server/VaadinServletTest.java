@@ -1,14 +1,53 @@
 package com.vaadin.server;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 
+/**
+ * Tests for {@link VaadinServlet}.
+ * <p>
+ * NOTE: some of these tests are not thread safe. Add
+ * {@code @net.jcip.annotations.NotThreadSafe} to this class if this module is
+ * converted to use {@code maven-failsafe-plugin} for parallelization.
+ */
 public class VaadinServletTest {
+
+    @After
+    public void tearDown() {
+        Assert.assertNull(VaadinService.getCurrent());
+    }
 
     @Test
     public void testGetLastPathParameter() {
@@ -111,13 +150,305 @@ public class VaadinServletTest {
 
     }
 
+    @Test
+    @SuppressWarnings("deprecation")
+    public void directoryIsNotResourceRequest() throws Exception {
+        VaadinServlet servlet = new VaadinServlet();
+        servlet.init(new MockServletConfig());
+        // this request isn't actually used for anything within the
+        // isAllowedVAADINResourceUrl calls, no need to configure it
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
+        final TemporaryFolder folder = TemporaryFolder.builder().build();
+        folder.create();
+
+        try {
+            File vaadinFolder = folder.newFolder("VAADIN");
+            vaadinFolder.createNewFile();
+
+            // generate URL so it is not ending with / so that we test the
+            // correct method
+            String rootAbsolutePath = folder.getRoot().getAbsolutePath()
+                    .replaceAll("\\\\", "/");
+            if (rootAbsolutePath.endsWith("/")) {
+                rootAbsolutePath = rootAbsolutePath.substring(0,
+                        rootAbsolutePath.length() - 1);
+            }
+            final URL folderPath = new URL("file:///" + rootAbsolutePath);
+
+            assertFalse("Folder on disk should not be an allowed resource.",
+                    servlet.isAllowedVAADINResourceUrl(request, folderPath));
+
+            // Test any path ending with / to be seen as a directory
+            assertFalse(
+                    "Fake should not check the file system nor be an allowed resource.",
+                    servlet.isAllowedVAADINResourceUrl(request,
+                            new URL("file:///fake/")));
+
+            File archiveFile = createArchive(folder);
+            Path tempArchive = archiveFile.toPath();
+
+            assertFalse(
+                    "Folder 'VAADIN' in jar should not be an allowed resource.",
+                    servlet.isAllowedVAADINResourceUrl(
+                            request, new URL(
+                                    "jar:file:///"
+                                            + tempArchive.toString()
+                                                    .replaceAll("\\\\", "/")
+                                            + "!/VAADIN")));
+
+            assertFalse(
+                    "File 'file.txt' inside jar should not be an allowed resource.",
+                    servlet.isAllowedVAADINResourceUrl(
+                            request, new URL(
+                                    "jar:file:///"
+                                            + tempArchive.toString()
+                                                    .replaceAll("\\\\", "/")
+                                            + "!/file.txt")));
+
+            assertTrue(
+                    "File 'file.txt' inside VAADIN folder within jar should be an allowed resource.",
+                    servlet.isAllowedVAADINResourceUrl(request,
+                            new URL("jar:file:///" + tempArchive.toString()
+                                    .replaceAll("\\\\", "/")
+                                    + "!/VAADIN/file.txt")));
+            assertFalse(
+                    "File 'file.txt' outside of a jar should not be an allowed resource.",
+                    servlet.isAllowedVAADINResourceUrl(request, new URL(
+                            "file:///" + rootAbsolutePath + "/file.txt")));
+
+            assertTrue(
+                    "File 'file.txt' inside VAADIN folder outside of a jar should be an allowed resource.",
+                    servlet.isAllowedVAADINResourceUrl(request,
+                            new URL("file:///" + rootAbsolutePath
+                                    + "/VAADIN/file.txt")));
+
+        } finally {
+            folder.delete();
+        }
+    }
+
+    @Test
+    public void openingJarFileSystemForDifferentFilesInSameJar_existingFileSystemIsUsed()
+            throws IOException, URISyntaxException, ServletException {
+        assertTrue("Can not run concurrently with other test",
+                VaadinServlet.openFileSystems.isEmpty());
+
+        VaadinServlet servlet = new VaadinServlet();
+        servlet.init(new MockServletConfig());
+
+        final TemporaryFolder folder = TemporaryFolder.builder().build();
+        folder.create();
+
+        try {
+            File archiveFile = createArchive(folder);
+            String tempArchivePath = archiveFile.toPath().toString()
+                    .replaceAll("\\\\", "/");
+
+            final URL folderResourceURL = new URL(
+                    "jar:file:///" + tempArchivePath + "!/VAADIN");
+
+            final URL fileResourceURL = new URL(
+                    "jar:file:///" + tempArchivePath + "!/file.txt");
+
+            servlet.getFileSystem(folderResourceURL.toURI());
+            servlet.getFileSystem(fileResourceURL.toURI());
+
+            assertEquals("Same file should be marked for both resources",
+                    (Integer) 2, VaadinServlet.openFileSystems.entrySet()
+                            .iterator().next().getValue());
+            servlet.closeFileSystem(folderResourceURL.toURI());
+            assertEquals("Closing resource should be removed from jar uri",
+                    (Integer) 1, VaadinServlet.openFileSystems.entrySet()
+                            .iterator().next().getValue());
+            servlet.closeFileSystem(fileResourceURL.toURI());
+            assertTrue("Closing last resource should clear marking",
+                    VaadinServlet.openFileSystems.isEmpty());
+
+            try {
+                FileSystems.getFileSystem(folderResourceURL.toURI());
+                fail("Jar FileSystem should have been closed");
+            } catch (FileSystemNotFoundException fsnfe) {
+                // This should happen as we should not have an open FileSystem
+                // here.
+            }
+        } finally {
+            folder.delete();
+        }
+    }
+
+    @Test
+    public void concurrentRequestsToJarResources_checksAreCorrect()
+            throws IOException, InterruptedException, ExecutionException,
+            URISyntaxException, ServletException {
+        assertTrue("Can not run concurrently with other test",
+                VaadinServlet.openFileSystems.isEmpty());
+
+        VaadinServlet servlet = new VaadinServlet();
+        servlet.init(new MockServletConfig());
+        // this request isn't actually used for anything within the
+        // isAllowedVAADINResourceUrl calls, no need to configure it
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+
+        final TemporaryFolder folder = TemporaryFolder.builder().build();
+        folder.create();
+
+        try {
+            File archiveFile = createArchive(folder);
+            String tempArchivePath = archiveFile.toPath().toString()
+                    .replaceAll("\\\\", "/");
+
+            final URL fileNotResourceURL = new URL(
+                    "jar:file:///" + tempArchivePath + "!/file.txt");
+            final String fileNotResourceErrorMessage = "File file.text outside "
+                    + "folder 'VAADIN' in jar should not be a static resource.";
+
+            checkAllowedVAADINResourceConcurrently(servlet, request,
+                    fileNotResourceURL, fileNotResourceErrorMessage, false);
+            ensureFileSystemsCleared(fileNotResourceURL);
+
+            URL folderNotResourceURL = new URL(
+                    "jar:file:///" + tempArchivePath + "!/VAADIN");
+            String folderNotResourceErrorMessage = "Folder 'VAADIN' in "
+                    + "jar should not be a static resource.";
+
+            checkAllowedVAADINResourceConcurrently(servlet, request,
+                    folderNotResourceURL, folderNotResourceErrorMessage, false);
+            ensureFileSystemsCleared(folderNotResourceURL);
+
+            URL fileIsResourceURL = new URL(
+                    "jar:file:///" + tempArchivePath + "!/VAADIN/file.txt");
+            String fileIsResourceErrorMessage = "File 'file.txt' inside "
+                    + "VAADIN folder within jar should be a static resource.";
+
+            checkAllowedVAADINResourceConcurrently(servlet, request,
+                    fileIsResourceURL, fileIsResourceErrorMessage, true);
+            ensureFileSystemsCleared(fileIsResourceURL);
+        } finally {
+            folder.delete();
+        }
+    }
+
     private HttpServletRequest createServletRequest(String servletPath,
             String pathInfo) {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         Mockito.when(request.getServletPath()).thenReturn(servletPath);
         Mockito.when(request.getPathInfo()).thenReturn(pathInfo);
-        Mockito.when(request.getRequestURI()).thenReturn("/context"+pathInfo);
+        Mockito.when(request.getRequestURI()).thenReturn("/context" + pathInfo);
         Mockito.when(request.getContextPath()).thenReturn("/context");
         return request;
+    }
+
+    /**
+     * Creates an archive file {@code fake.jar} that contains two
+     * {@code file.txt} files, one of which resides inside {@code VAADIN}
+     * directory.
+     *
+     * @param folder
+     *            temporary folder that should house the archive file
+     * @return the archive file
+     * @throws IOException
+     */
+    private File createArchive(TemporaryFolder folder) throws IOException {
+        File archiveFile = new File(folder.getRoot(), "fake.jar");
+        archiveFile.createNewFile();
+        Path tempArchive = archiveFile.toPath();
+
+        try (ZipOutputStream zipOutputStream = new ZipOutputStream(
+                Files.newOutputStream(tempArchive))) {
+            // Create a file to the zip
+            zipOutputStream.putNextEntry(new ZipEntry("/file.txt"));
+            zipOutputStream.closeEntry();
+            // Create a directory to the zip
+            zipOutputStream.putNextEntry(new ZipEntry("VAADIN/"));
+            zipOutputStream.closeEntry();
+            // Create a file to the directory
+            zipOutputStream.putNextEntry(new ZipEntry("VAADIN/file.txt"));
+            zipOutputStream.closeEntry();
+        }
+        return archiveFile;
+    }
+
+    /**
+     * Performs the resource URL validity check in five threads simultaneously,
+     * and ensures that the results match the given expected value.
+     *
+     * @param servlet
+     *            VaadinServlet instance
+     * @param request
+     *            HttpServletRequest instance (does not need to be properly
+     *            initialized)
+     * @param resourceURL
+     *            the resource URL to validate
+     * @param resourceErrorMessage
+     *            the error message if the validity check results don't match
+     *            the expected value
+     * @param expected
+     *            expected value from the validity check
+     *
+     * @throws InterruptedException
+     * @throws ExecutionException
+     */
+    @SuppressWarnings("deprecation")
+    private void checkAllowedVAADINResourceConcurrently(VaadinServlet servlet,
+            HttpServletRequest request, URL resourceURL,
+            String resourceErrorMessage, boolean expected)
+            throws InterruptedException, ExecutionException {
+        int THREADS = 5;
+
+        List<Callable<Result>> fileNotResource = IntStream.range(0, THREADS)
+                .mapToObj(i -> {
+                    Callable<Result> callable = () -> {
+                        try {
+                            if (expected != servlet.isAllowedVAADINResourceUrl(
+                                    request, resourceURL)) {
+                                throw new IllegalArgumentException(
+                                        resourceErrorMessage);
+                            }
+                        } catch (Exception e) {
+                            return new Result(e);
+                        }
+                        return new Result(null);
+                    };
+                    return callable;
+                }).collect(Collectors.toList());
+
+        ExecutorService executor = Executors.newFixedThreadPool(THREADS);
+        List<Future<Result>> futures = executor.invokeAll(fileNotResource);
+        List<String> exceptions = new ArrayList<>();
+
+        executor.shutdown();
+
+        for (Future<Result> resultFuture : futures) {
+            Result result = resultFuture.get();
+            if (result.exception != null) {
+                exceptions.add(result.exception.getMessage());
+            }
+        }
+
+        assertTrue("There were exceptions in concurrent calls {" + exceptions
+                + "}", exceptions.isEmpty());
+    }
+
+    private void ensureFileSystemsCleared(URL fileResourceURL)
+            throws URISyntaxException {
+        assertFalse("URI should have been cleared",
+                VaadinServlet.openFileSystems
+                        .containsKey(fileResourceURL.toURI()));
+        try {
+            FileSystems.getFileSystem(fileResourceURL.toURI());
+            fail("FileSystem for file resource should be closed");
+        } catch (FileSystemNotFoundException fsnfe) {
+            // This should happen as we should not have an open FileSystem
+            // here.
+        }
+    }
+
+    private static class Result {
+        final Exception exception;
+
+        Result(Exception exception) {
+            this.exception = exception;
+        }
     }
 }
