@@ -49,15 +49,25 @@ import elemental.json.JsonValue;
  */
 public class JsonEncoder {
 
+    private JsonEncoder() {
+        // private constructor to prevent initialization
+    }
+
     /**
      * Encode a value to a JSON representation for transport from the client to
      * the server.
      *
      * @param value
      *            value to convert
+     * @param type
+     *            type information, not needed for all encoding tasks, such as
+     *            encoding a String
      * @param connection
+     *            application connection providing the context, not needed for
+     *            all encoding tasks, such as encoding a String
      * @return JSON representation of the value
      */
+    @SuppressWarnings("unchecked")
     public static JsonValue encode(Object value, Type type,
             ApplicationConnection connection) {
         if (null == value) {
@@ -80,17 +90,17 @@ public class JsonEncoder {
         } else if (value instanceof Character) {
             return Json.create(String.valueOf(value));
         } else if (value instanceof Object[] && type == null) {
-            // Non-legacy arrays handed by generated serializer
+            // Non-legacy arrays handled by generated serializer
             return encodeLegacyObjectArray((Object[]) value, connection);
         } else if (value instanceof Enum) {
-            return encodeEnum((Enum<?>) value, connection);
+            return encodeEnum((Enum<?>) value);
         } else if (value instanceof Map) {
-            return encodeMap((Map) value, type, connection);
+            return encodeMap((Map<Object, Object>) value, type, connection);
         } else if (value instanceof Connector) {
             Connector connector = (Connector) value;
             return Json.create(connector.getConnectorId());
         } else if (value instanceof Collection) {
-            return encodeCollection((Collection) value, type, connection);
+            return encodeCollection((Collection<?>) value, type, connection);
         } else if (value instanceof UidlValue) {
             return encodeVariableChange((UidlValue) value, connection);
         } else {
@@ -254,8 +264,7 @@ public class JsonEncoder {
         return jsonMap;
     }
 
-    private static JsonValue encodeEnum(Enum<?> e,
-            ApplicationConnection connection) {
+    private static JsonValue encodeEnum(Enum<?> e) {
         return Json.create(e.toString());
     }
 
@@ -270,8 +279,8 @@ public class JsonEncoder {
         return jsonArray;
     }
 
-    private static JsonArray encodeCollection(Collection collection, Type type,
-            ApplicationConnection connection) {
+    private static JsonArray encodeCollection(Collection<?> collection,
+            Type type, ApplicationConnection connection) {
         JsonArray jsonArray = Json.createArray();
         int idx = 0;
         for (Object o : collection) {

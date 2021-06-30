@@ -21,16 +21,15 @@ import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.renderers.DateRenderer;
 
+@SuppressWarnings("deprecation")
 public class GridThemeUI extends AbstractTestUIWithLog {
-
-    private Grid grid;
 
     protected static String[] columns = { "firstName", "lastName", "gender",
             "birthDate", "age", "alive", "address.streetAddress",
             "address.postalCode", "address.city", "address.country" };
 
     protected BeanItemContainer<ComplexPerson> container = ComplexPerson
-            .createContainer(100);;
+            .createContainer(100);
     {
         container.addNestedContainerBean("address");
     }
@@ -113,7 +112,8 @@ public class GridThemeUI extends AbstractTestUIWithLog {
             b.setSizeFull();
             row.join("address.streetAddress", "address.postalCode",
                     "address.city", "address.country").setComponent(b);
-            // TODO: revert back to 25 when #16597 is fixed..
+            // NOTE: can't set column width that is too narrow to accommodate
+            // cell paddings, e.g. 25 would not be enough for Valo
             getColumn("age").setWidth(42);
             removeColumn("salary");
             setEditorEnabled(true);

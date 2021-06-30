@@ -491,6 +491,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * Assigns relative sizes to the children that should expand based on their
      * expand ratios.
      */
+    @SuppressWarnings("deprecation")
     public void updateExpandedSizes() {
         // Ensure the expand wrapper is in place
         if (expandWrapper == null) {
@@ -651,8 +652,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
                                 totalSize += size;
                             }
                         } else {
-                            int max = -1;
-                            max = layoutManager.getOuterWidth(
+                            int max = layoutManager.getOuterWidth(
                                     slot.getWidget().getElement());
                             if (slot.hasCaption()) {
                                 int max2 = layoutManager.getOuterWidth(

@@ -76,6 +76,7 @@ import com.vaadin.v7.ui.renderers.NumberRenderer;
  * @author Vaadin Ltd
  */
 @Theme("valo")
+@SuppressWarnings("deprecation")
 public class GridBasicFeatures extends AbstractComponentTest<Grid> {
 
     public static final String ROW_STYLE_GENERATOR_ROW_NUMBERS_FOR_3_OF_4 = "Row numbers for 3/4";
@@ -1017,7 +1018,6 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
     protected void createColumnActions() {
         createCategory("Columns", null);
         for (int c = 0; c < COLUMNS; c++) {
-            final int index = c;
             createCategory(getColumnProperty(c), "Columns");
 
             createClickAction("Add / Remove", getColumnProperty(c),

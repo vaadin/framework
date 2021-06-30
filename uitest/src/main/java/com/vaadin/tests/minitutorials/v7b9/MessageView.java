@@ -9,7 +9,6 @@ import com.vaadin.ui.VerticalLayout;
 
 public class MessageView extends Panel implements View {
     public static final String NAME = "message";
-    private Layout layout;
 
     public MessageView() {
         super(new VerticalLayout());

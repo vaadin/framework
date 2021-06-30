@@ -275,8 +275,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              */
             public void setText(String text) {
                 detach();
-                this.content = text;
-                this.type = GridStaticCellType.TEXT;
+                content = text;
+                type = GridStaticCellType.TEXT;
                 section.requestSectionRefresh();
             }
 
@@ -355,8 +355,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             public void setHtml(String html) {
                 detach();
 
-                this.content = html;
-                this.type = GridStaticCellType.HTML;
+                content = html;
+                type = GridStaticCellType.HTML;
                 section.requestSectionRefresh();
             }
 
@@ -388,13 +388,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              *            null).
              */
             public void setWidget(Widget widget) {
-                if (this.content == widget) {
+                if (content == widget) {
                     return;
                 }
 
                 detach();
-                this.content = widget;
-                this.type = GridStaticCellType.WIDGET;
+                content = widget;
+                type = GridStaticCellType.WIDGET;
                 section.requestSectionRefresh();
             }
 
@@ -7937,9 +7937,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
                         cell = new Cell(rowIndex, colIndex, cellElement);
                     } catch (IllegalStateException exception) {
-                        // IllegalStateException may occur if user has scrolled Grid so
-                        // that Escalator has updated, and row under Editor is no longer
-                        // there
+                        // IllegalStateException may occur if user has scrolled
+                        // Grid so that Escalator has updated, and row under
+                        // Editor is no longer there
                         return;
                     }
                 } else {

@@ -204,9 +204,8 @@ public class GAEVaadinServlet extends VaadinServlet {
         }
 
         boolean locked = false;
-        MemcacheService memcache = null;
         String mutex = MUTEX_BASE + session.getId();
-        memcache = MemcacheServiceFactory.getMemcacheService();
+        MemcacheService memcache = MemcacheServiceFactory.getMemcacheService();
         try {
             // try to get lock
             long started = System.currentTimeMillis();

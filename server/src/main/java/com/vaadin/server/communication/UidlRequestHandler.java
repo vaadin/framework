@@ -46,6 +46,7 @@ import elemental.json.JsonException;
  * @author Vaadin Ltd
  * @since 7.1
  */
+@SuppressWarnings("deprecation")
 public class UidlRequestHandler extends SynchronizedRequestHandler
         implements SessionExpiredHandler {
 
@@ -89,7 +90,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler
         try {
             rpcHandler.handleRpc(uI, request.getReader(), request);
 
-            writeUidl(request, response, uI, stringWriter);
+            writeUidl(response, uI, stringWriter);
         } catch (JsonException e) {
             getLogger().log(Level.SEVERE, "Error writing JSON to response", e);
             // Refresh on client side
@@ -117,8 +118,8 @@ public class UidlRequestHandler extends SynchronizedRequestHandler
         UIInitHandler.commitJsonResponse(request, response, json);
     }
 
-    private void writeUidl(VaadinRequest request, VaadinResponse response,
-            UI ui, Writer writer) throws IOException {
+    private void writeUidl(VaadinResponse response, UI ui, Writer writer)
+            throws IOException {
         openJsonMessage(writer, response);
 
         new UidlWriter().write(ui, writer, false);

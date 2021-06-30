@@ -511,16 +511,16 @@ public class ConnectorBundleLoaderFactory extends Generator {
         writeInvokers(logger, w, bundle);
         writeParamTypes(w, bundle);
         writeProxys(w, bundle);
-        writeMethodAttributes(logger, w, bundle);
+        writeMethodAttributes(w, bundle);
 
         w.println("%s(store);", loadNativeJsMethodName);
 
         // Must use Java code to generate Type data (because of Type[]), doing
         // this after the JS property data has been initialized
-        writePropertyTypes(logger, w, bundle);
+        writePropertyTypes(w, bundle);
         writeSerializers(logger, w, bundle);
         writePresentationTypes(w, bundle);
-        writeDelegateToWidget(logger, w, bundle);
+        writeDelegateToWidget(w, bundle);
         writeOnStateChangeHandlers(logger, w, bundle);
     }
 
@@ -652,8 +652,8 @@ public class ConnectorBundleLoaderFactory extends Generator {
         }
     }
 
-    private void writeDelegateToWidget(TreeLogger logger,
-            SplittingSourceWriter w, ConnectorBundle bundle) {
+    private void writeDelegateToWidget(SplittingSourceWriter w,
+            ConnectorBundle bundle) {
         Map<JClassType, Set<Property>> needsDelegateToWidget = bundle
                 .getNeedsDelegateToWidget();
         for (Entry<JClassType, Set<Property>> entry : needsDelegateToWidget
@@ -713,7 +713,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
         }
     }
 
-    private void writePropertyTypes(TreeLogger logger, SplittingSourceWriter w,
+    private void writePropertyTypes(SplittingSourceWriter w,
             ConnectorBundle bundle) {
         Set<Property> properties = bundle.getNeedsProperty();
         for (Property property : properties) {
@@ -729,8 +729,8 @@ public class ConnectorBundleLoaderFactory extends Generator {
         }
     }
 
-    private void writeMethodAttributes(TreeLogger logger,
-            SplittingSourceWriter w, ConnectorBundle bundle) {
+    private void writeMethodAttributes(SplittingSourceWriter w,
+            ConnectorBundle bundle) {
         for (Entry<JClassType, Map<JMethod, Set<MethodAttribute>>> typeEntry : bundle
                 .getMethodAttributes().entrySet()) {
             JClassType type = typeEntry.getKey();
@@ -879,7 +879,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
                     TreeLogger methodLogger = typeLogger.branch(Type.DEBUG,
                             "Invoking " + method.getName() + " using jsni");
                     // Must use JSNI to access non-public methods
-                    writeJsniInvoker(methodLogger, w, type, method);
+                    writeJsniInvoker(methodLogger, w, method);
                 }
 
                 w.println(");");
@@ -890,7 +890,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
     }
 
     private void writeJsniInvoker(TreeLogger logger, SplittingSourceWriter w,
-            JClassType type, JMethod method) throws UnableToCompleteException {
+            JMethod method) throws UnableToCompleteException {
         w.println("new JsniInvoker() {");
         w.indent();
 
