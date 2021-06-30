@@ -49,8 +49,6 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
     /** The field. */
     private final TextField field;
 
-    /** The old value. */
-    private String oldValue;
     private Registration valueChangeListenerRegistration = null;
 
     private boolean readOnly;
@@ -96,8 +94,6 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
         field.setValue(colorCSS);
         field.setComponentError(null);
 
-        oldValue = colorCSS;
-
         // Re-register listener
         valueChangeListenerRegistration = field
                 .addValueChangeListener(this::valueChange);
@@ -121,6 +117,7 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public Registration addValueChangeListener(
             ValueChangeListener<Color> listener) {
         Objects.requireNonNull(listener, "listener cannot be null");
@@ -141,7 +138,6 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
              */
             color = ColorUtil.stringToColor(value);
 
-            oldValue = value;
             fireEvent(new ValueChangeEvent<>(this, oldColor,
                     event.isUserOriginated()));
         } catch (NumberFormatException e) {

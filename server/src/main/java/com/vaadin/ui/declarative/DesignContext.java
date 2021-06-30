@@ -354,10 +354,14 @@ public class DesignContext implements Serializable {
      * Returns the default instance for the given class. The instance must not
      * be modified by the caller.
      *
+     * @param <T>
+     *            a component class
      * @param component
+     *            the component that determines the class
      * @return the default instance for the given class. The return value must
      *         not be modified by the caller
      */
+    @SuppressWarnings("unchecked")
     public <T> T getDefaultInstance(Component component) {
         // If the root is a @DesignRoot component, it can't use itself as a
         // reference or the written design will be empty
@@ -385,6 +389,9 @@ public class DesignContext implements Serializable {
     /**
      * Reads and stores the mappings from prefixes to package names from meta
      * tags located under <head> in the html document.
+     *
+     * @param doc
+     *            the document
      */
     protected void readPackageMappings(Document doc) {
         Element head = doc.head();
@@ -848,7 +855,8 @@ public class DesignContext implements Serializable {
             String value) {
         Map<String, String> map = customAttributes.get(component);
         if (map == null) {
-            customAttributes.put(component, map = new HashMap<>());
+            map = new HashMap<>();
+            customAttributes.put(component, map);
         }
         map.put(attribute, value);
     }

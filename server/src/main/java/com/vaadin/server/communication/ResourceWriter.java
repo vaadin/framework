@@ -26,7 +26,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.server.JsonPaintTarget;
-import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.UI;
 
@@ -52,10 +51,6 @@ public class ResourceWriter implements Serializable {
      */
     public void write(UI ui, Writer writer, JsonPaintTarget target)
             throws IOException {
-
-        // TODO PUSH Refactor so that this is not needed
-        LegacyCommunicationManager manager = ui.getSession()
-                .getCommunicationManager();
 
         // Precache custom layouts
 

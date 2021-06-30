@@ -456,14 +456,14 @@ public class TouchScrollDelegate implements NativePreviewHandler {
                 }
                 deltaScrollTop = overscroll - origScrollTop;
             }
-            quickSetScrollPosition(0, deltaScrollTop);
+            quickSetScrollPosition(deltaScrollTop);
             moved = true;
             event.preventDefault();
             event.stopPropagation();
         }
     }
 
-    private void quickSetScrollPosition(int deltaX, int deltaY) {
+    private void quickSetScrollPosition(int deltaY) {
         deltaScrollPos = deltaY;
         if (ANDROID_WITH_BROKEN_SCROLL_TOP) {
             deltaY += origScrollTop;
@@ -500,7 +500,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
                 : Math.abs(origY - lastClientY) >= SIGNIFICANT_MOVE_THRESHOLD;
     }
 
-    private void onTouchEnd(NativeEvent event) {
+    private void onTouchEnd() {
         if (!moved) {
             activeScrollDelegate = null;
             handlerRegistration.removeHandler();
@@ -532,17 +532,14 @@ public class TouchScrollDelegate implements NativePreviewHandler {
             if (pixelsPerMs < 0) {
                 pixelsToMove = -pixelsToMove;
             }
-            // getLogger().info("pixels to move" + pixelsToMove);
 
             finalY = currentY + pixelsToMove;
 
             if (finalY > maxFinalY + getMaxOverScroll()) {
-                // getLogger().info("To max overscroll");
                 finalY = getMaxFinalY() + getMaxOverScroll();
                 int fixedPixelsToMove = finalY - currentY;
                 pixelsToMove = fixedPixelsToMove;
             } else if (finalY < 0 - getMaxOverScroll()) {
-                // getLogger().info("to min overscroll");
                 finalY = -getMaxOverScroll();
                 int fixedPixelsToMove = finalY - currentY;
                 pixelsToMove = fixedPixelsToMove;
@@ -552,7 +549,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         }
         if (duration == -1) {
             // did not keep in side borders or was outside borders, calculate
-            // a good enough duration based on pixelsToBeMoved.
+            // a good enough duration based on pixelsToMove.
             duration = getAnimationTimeForDistance(pixelsToMove);
         }
         if (duration > MAX_DURATION) {
@@ -690,7 +687,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
                 if (moved) {
                     event.cancel();
                 }
-                onTouchEnd(event.getNativeEvent());
+                onTouchEnd();
             }
             break;
         case Event.ONMOUSEMOVE:

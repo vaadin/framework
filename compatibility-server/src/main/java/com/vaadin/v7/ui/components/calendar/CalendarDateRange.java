@@ -36,8 +36,6 @@ public class CalendarDateRange implements Serializable {
 
     private Date end;
 
-    private final transient TimeZone tz;
-
     /**
      * Constructor.
      *
@@ -45,12 +43,13 @@ public class CalendarDateRange implements Serializable {
      *            The start date and time of the date range
      * @param end
      *            The end date and time of the date range
+     * @param tz
+     *            Time zone. Unused.
      */
     public CalendarDateRange(Date start, Date end, TimeZone tz) {
         super();
         this.start = start;
         this.end = end;
-        this.tz = tz;
     }
 
     /**

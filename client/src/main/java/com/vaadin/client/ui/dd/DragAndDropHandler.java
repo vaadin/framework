@@ -116,11 +116,11 @@ public class DragAndDropHandler {
                 // End drag if ESC is pressed
                 int keyCode = event.getNativeEvent().getKeyCode();
                 if (keyCode == KeyCodes.KEY_ESCAPE) {
-                    cancelDrag(event);
+                    cancelDrag();
                 }
                 break;
             case Event.ONTOUCHCANCEL:
-                cancelDrag(event);
+                cancelDrag();
                 break;
             case Event.ONTOUCHEND:
             case Event.ONMOUSEUP:
@@ -236,7 +236,7 @@ public class DragAndDropHandler {
         }
     }
 
-    private void cancelDrag(NativePreviewEvent event) {
+    private void cancelDrag() {
         callback.onDragCancel();
         callback.onDragEnd();
         stopDrag();

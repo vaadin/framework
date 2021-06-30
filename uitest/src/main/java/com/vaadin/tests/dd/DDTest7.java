@@ -19,6 +19,7 @@ import com.vaadin.v7.event.DataBoundTransferable;
 import com.vaadin.v7.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.v7.ui.Table;
 
+@SuppressWarnings("deprecation")
 public class DDTest7 extends TestBase {
 
     java.util.Random r = new java.util.Random(1);
@@ -135,11 +136,12 @@ public class DDTest7 extends TestBase {
 
             }
 
+            @SuppressWarnings("unchecked")
             private void moveAfter(IndexedContainer containerDataSource,
                     Object itemId, Object idAfter) {
                 try {
-                    IndexedContainer clone = null;
-                    clone = (IndexedContainer) containerDataSource.clone();
+                    IndexedContainer clone = (IndexedContainer) containerDataSource
+                            .clone();
                     containerDataSource.removeItem(itemId);
                     Item newItem = containerDataSource.addItemAfter(idAfter,
                             itemId);
@@ -158,6 +160,7 @@ public class DDTest7 extends TestBase {
 
     }
 
+    @SuppressWarnings("unchecked")
     private void populateTable() {
         table.addContainerProperty("Name", String.class, "");
         table.addContainerProperty("Weight", Integer.class, 0);

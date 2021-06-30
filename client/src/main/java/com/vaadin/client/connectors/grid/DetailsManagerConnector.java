@@ -54,11 +54,12 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd
  * @since 8.0
  */
+@SuppressWarnings("deprecation")
 @Connect(DetailsManager.class)
 public class DetailsManagerConnector extends AbstractExtensionConnector {
 
     /* Map for tracking which details are open on which row */
-    private TreeMap<Integer, String> indexToDetailConnectorId = new TreeMap<>();
+    private Map<Integer, String> indexToDetailConnectorId = new TreeMap<>();
     /* For listening data changes that originate from DataSource. */
     private Registration dataChangeRegistration;
     /* For listening spacer index changes that originate from Escalator. */
@@ -266,7 +267,6 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     /**
      * Height aware details generator for client-side Grid.
      */
-    @SuppressWarnings("deprecation")
     private class CustomDetailsGenerator
             implements HeightAwareDetailsGenerator {
 

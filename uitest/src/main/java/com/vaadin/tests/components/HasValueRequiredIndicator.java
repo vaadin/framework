@@ -22,10 +22,8 @@ import com.vaadin.ui.VerticalLayout;
  * @author Vaadin Ltd
  *
  */
-public abstract class HasValueRequiredIndicator<C extends HasValue & Component>
+public abstract class HasValueRequiredIndicator<C extends HasValue<?> & Component>
         extends AbstractTestUI {
-
-    private static final List<Class<? extends Layout>> LAYOUTS = getVaadinLayouts();
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -70,6 +68,7 @@ public abstract class HasValueRequiredIndicator<C extends HasValue & Component>
         if (type instanceof Class<?>) {
             Class<?> clazz = (Class<?>) type;
             try {
+                @SuppressWarnings("unchecked")
                 C component = (C) clazz.newInstance();
                 initValue(component);
                 component.setRequiredIndicatorVisible(true);

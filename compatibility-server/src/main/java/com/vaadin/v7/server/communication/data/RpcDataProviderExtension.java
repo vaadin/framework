@@ -52,10 +52,10 @@ import elemental.json.JsonObject;
 
 /**
  * Provides Vaadin server-side container data source to a
- * {@link com.vaadin.v7.client.connectors.GridConnector GridConnector}. This is currently
- * implemented as an Extension hardcoded to support a specific connector type.
- * This will be changed once framework support for something more flexible has
- * been implemented.
+ * {@link com.vaadin.v7.client.connectors.GridConnector GridConnector}. This is
+ * currently implemented as an Extension hardcoded to support a specific
+ * connector type. This will be changed once framework support for something
+ * more flexible has been implemented.
  *
  * @since 7.4
  * @author Vaadin Ltd
@@ -152,10 +152,10 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
     /**
      * A class to listen to changes in property values in the Container added
-     * with {@link Grid#setContainerDatasource(com.vaadin.v7.data.Container.Indexed)
-     * Grid#setContainerDatasource(Container.Indexed)},
-     * and notifies the data source to update the client-side representation
-     * of the modified item.
+     * with
+     * {@link Grid#setContainerDatasource(com.vaadin.v7.data.Container.Indexed)
+     * Grid#setContainerDatasource(Container.Indexed)}, and notifies the data
+     * source to update the client-side representation of the modified item.
      * <p>
      * One instance of this class can (and should) be reused for all the
      * properties in an item, since this class will inform that the entire row
@@ -166,8 +166,8 @@ public class RpcDataProviderExtension extends AbstractExtension {
      * value changes, an instance of this class needs to be attached to each and
      * every Item's Property in the container.
      *
-     * @see Grid#addValueChangeListener(com.vaadin.v7.data.Container, Object, Object)
-     *      Grid#addValueChangeListener(Container, Object, Object)
+     * @see Grid#addValueChangeListener(com.vaadin.v7.data.Container, Object,
+     *      Object) Grid#addValueChangeListener(Container, Object, Object)
      * @see Grid#valueChangeListeners
      */
     private class GridValueChangeListener implements ValueChangeListener {
@@ -389,15 +389,14 @@ public class RpcDataProviderExtension extends AbstractExtension {
 
             Item item = container.getItem(itemId);
 
-            rows.set(i, getRowData(getGrid().getColumns(), itemId, item));
+            rows.set(i, getRowData(itemId, item));
         }
         rpc.setRowData(firstRowToPush, rows);
 
         activeItemHandler.addActiveItems(itemIds);
     }
 
-    private JsonObject getRowData(Collection<Column> columns, Object itemId,
-            Item item) {
+    private JsonObject getRowData(Object itemId, Item item) {
 
         final JsonObject rowObject = Json.createObject();
         for (DataGenerator dg : dataGenerators) {
@@ -530,14 +529,13 @@ public class RpcDataProviderExtension extends AbstractExtension {
         }
 
         Collection<Object> activeItemIds = activeItemHandler.getActiveItemIds();
-        List<Column> columns = getGrid().getColumns();
         JsonArray rowData = Json.createArray();
         int i = 0;
         for (Object itemId : itemIds) {
             if (activeItemIds.contains(itemId)) {
                 Item item = container.getItem(itemId);
                 if (item != null) {
-                    JsonObject row = getRowData(columns, itemId, item);
+                    JsonObject row = getRowData(itemId, item);
                     rowData.set(i++, row);
                 }
             }

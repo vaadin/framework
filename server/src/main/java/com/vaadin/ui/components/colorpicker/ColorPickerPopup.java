@@ -15,7 +15,6 @@
  */
 package com.vaadin.ui.components.colorpicker;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -28,19 +27,19 @@ import com.vaadin.data.HasValue;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.colorpicker.Color;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Slider;
-import com.vaadin.ui.Layout;
+import com.vaadin.ui.AbstractColorPicker.Coordinates2Color;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.HasComponents;
-import com.vaadin.ui.AbstractColorPicker.Coordinates2Color;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.HasComponents;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.Slider;
 import com.vaadin.ui.Slider.ValueOutOfBoundsException;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
 /**
  * A component that represents color selection popup within a color picker.
@@ -205,11 +204,6 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
         // Add the history
         history.setWidth("97%");
         history.setHeight("22px");
-
-        // Create the default colors
-        List<Color> defaultColors = new ArrayList<>();
-        defaultColors.add(Color.BLACK);
-        defaultColors.add(Color.WHITE);
 
         // Create the history
         VerticalLayout innerContainer = new VerticalLayout();
@@ -503,6 +497,7 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public Registration addValueChangeListener(
             ValueChangeListener<Color> listener) {
         Objects.requireNonNull(listener, "listener cannot be null");

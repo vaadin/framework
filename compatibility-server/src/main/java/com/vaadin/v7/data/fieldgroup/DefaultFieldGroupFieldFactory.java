@@ -44,8 +44,9 @@ import com.vaadin.v7.ui.TextField;
  * instance.
  *
  * @author Vaadin Ltd
- * @deprecated As of 8.0, no direct replacement available. {@link Binder#forMemberField(HasValue)} and
- * {@link Binder#bindInstanceFields(Object)} should be used instead.
+ * @deprecated As of 8.0, no direct replacement available.
+ *             {@link Binder#forMemberField(HasValue)} and
+ *             {@link Binder#bindInstanceFields(Object)} should be used instead.
  */
 @Deprecated
 public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
@@ -68,12 +69,13 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
         return INSTANCE;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public <T extends Field> T createField(Class<?> type, Class<T> fieldType) {
         if (Enum.class.isAssignableFrom(type)) {
             return createEnumField(type, fieldType);
         } else if (Date.class.isAssignableFrom(type)) {
-            return createDateField(type, fieldType);
+            return createDateField(fieldType);
         } else if (Boolean.class.isAssignableFrom(type)
                 || boolean.class.isAssignableFrom(type)) {
             return createBooleanField(fieldType);
@@ -94,7 +96,8 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
         return rta;
     }
 
-    private <T extends Field> T createEnumField(Class<?> type,
+    @SuppressWarnings({ "unchecked" })
+    private <T extends Field<?>> T createEnumField(Class<?> type,
             Class<T> fieldType) {
         // Determine first if we should (or can) create a select for the enum
         Class<AbstractSelect> selectClass = null;
@@ -106,7 +109,7 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
 
         if (selectClass != null) {
             AbstractSelect s = createCompatibleSelect(selectClass);
-            populateWithEnumData(s, (Class<? extends Enum>) type);
+            populateWithEnumData(s, (Class<? extends Enum<?>>) type);
             return (T) s;
         } else if (AbstractTextField.class.isAssignableFrom(fieldType)) {
             return (T) createAbstractTextField(
@@ -116,9 +119,8 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
-    private <T extends Field> T createDateField(Class<?> type,
-            Class<T> fieldType) {
+    @SuppressWarnings({ "unchecked" })
+    private <T extends Field<?>> T createDateField(Class<T> fieldType) {
         AbstractField<?> field;
 
         if (InlineDateField.class.isAssignableFrom(fieldType)) {
@@ -177,10 +179,12 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
      *            the type of the field
      * @return true if any AbstractSelect can be assigned to the field
      */
+    @SuppressWarnings("rawtypes")
     protected boolean anySelect(Class<? extends Field> fieldType) {
         return anyField(fieldType) || fieldType == AbstractSelect.class;
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     protected <T extends Field> T createBooleanField(Class<T> fieldType) {
         if (fieldType.isAssignableFrom(CheckBox.class)) {
             CheckBox cb = new CheckBox(null);
@@ -194,6 +198,7 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     protected <T extends AbstractTextField> T createAbstractTextField(
             Class<T> fieldType) {
         if (fieldType == AbstractTextField.class) {
@@ -222,6 +227,7 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
      * @return A field capable of editing the data or null if no field could be
      *         created
      */
+    @SuppressWarnings("rawtypes")
     protected <T extends Field> T createDefaultField(Class<?> type,
             Class<T> fieldType) {
         if (fieldType.isAssignableFrom(TextField.class)) {
@@ -239,6 +245,7 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
      * @param enumClass
      *            The Enum class to use
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     protected void populateWithEnumData(AbstractSelect select,
             Class<? extends Enum> enumClass) {
         select.removeAllItems();
@@ -247,7 +254,6 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
         }
         select.addContainerProperty(CAPTION_PROPERTY_ID, String.class, "");
         select.setItemCaptionPropertyId(CAPTION_PROPERTY_ID);
-        @SuppressWarnings("unchecked")
         EnumSet<?> enumSet = EnumSet.allOf(enumClass);
         for (Object r : enumSet) {
             Item newItem = select.addItem(r);

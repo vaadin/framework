@@ -464,8 +464,7 @@ public class ComboBox extends AbstractSelect
             assert filteredSize >= 0;
             currentPage = adjustCurrentPage(currentPage, needNullSelectOption,
                     indexToEnsureInView, filteredSize);
-            int first = getFirstItemIndexOnCurrentPage(needNullSelectOption,
-                    filteredSize);
+            int first = getFirstItemIndexOnCurrentPage(needNullSelectOption);
             int last = getLastItemIndexOnCurrentPage(needNullSelectOption,
                     filteredSize, first);
 
@@ -562,8 +561,7 @@ public class ComboBox extends AbstractSelect
             int size = options.size();
             currentPage = adjustCurrentPage(currentPage, needNullSelectOption,
                     indexToEnsureInView, size);
-            int first = getFirstItemIndexOnCurrentPage(needNullSelectOption,
-                    size);
+            int first = getFirstItemIndexOnCurrentPage(needNullSelectOption);
             int last = getLastItemIndexOnCurrentPage(needNullSelectOption, size,
                     first);
             return options.subList(first, last + 1);
@@ -581,14 +579,10 @@ public class ComboBox extends AbstractSelect
      *            true if a null option should be shown before any other options
      *            (takes up the first slot on the first page, not counted in
      *            index)
-     * @param size
-     *            number of items after filtering (not including the null item,
-     *            if any)
      * @return first item to show on the UI (index to the filtered list of
      *         options, not taking the null item into consideration if any)
      */
-    private int getFirstItemIndexOnCurrentPage(boolean needNullSelectOption,
-            int size) {
+    private int getFirstItemIndexOnCurrentPage(boolean needNullSelectOption) {
         // Not all options are visible, find out which ones are on the
         // current "page".
         int first = currentPage * pageLength;

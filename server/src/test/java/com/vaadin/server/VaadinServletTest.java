@@ -233,7 +233,7 @@ public class VaadinServletTest {
     public void isAllowedVAADINResource_jarWarFileScheme_detectsAsStaticResources()
             throws IOException, URISyntaxException, ServletException {
         assertTrue("Can not run concurrently with other test",
-                VaadinServlet.openFileSystems.isEmpty());
+                VaadinServlet.OPEN_FILE_SYSTEMS.isEmpty());
 
         VaadinServlet servlet = new VaadinServlet();
         servlet.init(new MockServletConfig());
@@ -276,7 +276,7 @@ public class VaadinServletTest {
     public void isAllowedVAADINResource_jarInAJar_detectsAsStaticResources()
             throws IOException, URISyntaxException, ServletException {
         assertTrue("Can not run concurrently with other test",
-                VaadinServlet.openFileSystems.isEmpty());
+                VaadinServlet.OPEN_FILE_SYSTEMS.isEmpty());
 
         VaadinServlet servlet = new VaadinServlet();
         servlet.init(new MockServletConfig());
@@ -325,7 +325,7 @@ public class VaadinServletTest {
     public void openingJarFileSystemForDifferentFilesInSameJar_existingFileSystemIsUsed()
             throws IOException, URISyntaxException, ServletException {
         assertTrue("Can not run concurrently with other test",
-                VaadinServlet.openFileSystems.isEmpty());
+                VaadinServlet.OPEN_FILE_SYSTEMS.isEmpty());
 
         VaadinServlet servlet = new VaadinServlet();
         servlet.init(new MockServletConfig());
@@ -348,15 +348,15 @@ public class VaadinServletTest {
             servlet.getFileSystem(fileResourceURL.toURI());
 
             assertEquals("Same file should be marked for both resources",
-                    (Integer) 2, VaadinServlet.openFileSystems.entrySet()
+                    (Integer) 2, VaadinServlet.OPEN_FILE_SYSTEMS.entrySet()
                             .iterator().next().getValue());
             servlet.closeFileSystem(folderResourceURL.toURI());
             assertEquals("Closing resource should be removed from jar uri",
-                    (Integer) 1, VaadinServlet.openFileSystems.entrySet()
+                    (Integer) 1, VaadinServlet.OPEN_FILE_SYSTEMS.entrySet()
                             .iterator().next().getValue());
             servlet.closeFileSystem(fileResourceURL.toURI());
             assertTrue("Closing last resource should clear marking",
-                    VaadinServlet.openFileSystems.isEmpty());
+                    VaadinServlet.OPEN_FILE_SYSTEMS.isEmpty());
 
             try {
                 FileSystems.getFileSystem(folderResourceURL.toURI());
@@ -375,7 +375,7 @@ public class VaadinServletTest {
             throws IOException, InterruptedException, ExecutionException,
             URISyntaxException, ServletException {
         assertTrue("Can not run concurrently with other test",
-                VaadinServlet.openFileSystems.isEmpty());
+                VaadinServlet.OPEN_FILE_SYSTEMS.isEmpty());
 
         VaadinServlet servlet = new VaadinServlet();
         servlet.init(new MockServletConfig());
@@ -547,7 +547,7 @@ public class VaadinServletTest {
     private void ensureFileSystemsCleared(URL fileResourceURL)
             throws URISyntaxException {
         assertFalse("URI should have been cleared",
-                VaadinServlet.openFileSystems
+                VaadinServlet.OPEN_FILE_SYSTEMS
                         .containsKey(fileResourceURL.toURI()));
         try {
             FileSystems.getFileSystem(fileResourceURL.toURI());

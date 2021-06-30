@@ -140,7 +140,7 @@ public class TabSheet extends AbstractComponentContainer
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
 
         // expand horizontally by default
-        setWidth(100, UNITS_PERCENTAGE);
+        setWidth(100, Unit.PERCENTAGE);
         setCloseHandler(TabSheet::removeComponent);
     }
 
@@ -450,8 +450,7 @@ public class TabSheet extends AbstractComponentContainer
 
     @Override
     public void moveComponentsFrom(ComponentContainer source) {
-        for (final Iterator<Component> i = source.getComponentIterator(); i
-                .hasNext();) {
+        for (final Iterator<Component> i = source.iterator(); i.hasNext();) {
             final Component c = i.next();
             String caption = null;
             Resource icon = null;
@@ -644,8 +643,7 @@ public class TabSheet extends AbstractComponentContainer
      */
     private boolean updateSelection() {
         Component originalSelection = selected;
-        for (final Iterator<Component> i = getComponentIterator(); i
-                .hasNext();) {
+        for (final Iterator<Component> i = iterator(); i.hasNext();) {
             final Component component = i.next();
 
             Tab tab = tabs.get(component);
@@ -851,7 +849,8 @@ public class TabSheet extends AbstractComponentContainer
      * @since 3.0
      */
     @FunctionalInterface
-    public interface SelectedTabChangeListener extends SerializableEventListener {
+    public interface SelectedTabChangeListener
+            extends SerializableEventListener {
 
         /**
          * Selected (shown) tab in tab sheet has has been changed.
@@ -1015,11 +1014,15 @@ public class TabSheet extends AbstractComponentContainer
 
         /**
          * Gets the caption for the tab.
+         *
+         * @return the caption
          */
         public String getCaption();
 
         /**
          * Gets the icon for the tab.
+         *
+         * @return tue icon resource
          */
         public Resource getIcon();
 
@@ -1036,6 +1039,8 @@ public class TabSheet extends AbstractComponentContainer
          *
          * @param icon
          *            the icon to set
+         * @param iconAltText
+         *            the alt text
          */
         public void setIcon(Resource icon, String iconAltText);
 
@@ -1043,6 +1048,8 @@ public class TabSheet extends AbstractComponentContainer
          * Gets the icon alt text for the tab.
          *
          * @since 7.2
+         *
+         * @return the alt text
          */
         public String getIconAlternateText();
 
@@ -1114,11 +1121,15 @@ public class TabSheet extends AbstractComponentContainer
          * TODO currently not sent to the client
          *
          * @see AbstractComponent#setComponentError(ErrorMessage)
+         *
+         * @return the error message
          */
         public ErrorMessage getComponentError();
 
         /**
          * Get the component related to the Tab.
+         *
+         * @return the component
          */
         public Component getComponent();
 
@@ -1407,6 +1418,7 @@ public class TabSheet extends AbstractComponentContainer
      * The default CloseHandler for TabSheet will only remove the tab.
      *
      * @param handler
+     *            the close handler that should be used
      */
     public void setCloseHandler(CloseHandler handler) {
         closeHandler = handler;
@@ -1434,7 +1446,8 @@ public class TabSheet extends AbstractComponentContainer
      *
      * @param tab
      *            The tab
-     * @return
+     * @return the index of the given tab, or -1 if there is no such tab in this
+     *         tabsheet
      */
     public int getTabPosition(Tab tab) {
         return components.indexOf(tab.getComponent());
@@ -1659,7 +1672,7 @@ public class TabSheet extends AbstractComponentContainer
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
         TabSheet def = designContext.getDefaultInstance(this);
-        Attributes attr = design.attributes();
+        design.attributes();
 
         // write tabs
         if (!designContext.shouldWriteChildren(this, def)) {
