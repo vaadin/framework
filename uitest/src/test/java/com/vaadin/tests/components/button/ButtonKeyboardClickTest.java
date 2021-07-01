@@ -16,7 +16,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  */
 public class ButtonKeyboardClickTest extends MultiBrowserTest {
 
-    @Test
+    //@Test
     public void testCoordinatesForClickedButtonViaSpace() {
         openTestURL();
 
