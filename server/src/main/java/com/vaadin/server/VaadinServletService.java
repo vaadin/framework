@@ -54,7 +54,7 @@ public class VaadinServletService extends VaadinService {
      * @since 8.2
      */
     protected VaadinServletService() {
-        this.servlet = null;
+        servlet = null;
     }
 
     @Override
@@ -249,9 +249,12 @@ public class VaadinServletService extends VaadinService {
             // security check: do not permit navigation out of the VAADIN
             // directory
             if (!getServlet().isAllowedVAADINResourceUrl(null, resourceUrl)) {
-                throw new IOException(String.format(
-                        "Requested resource [{0}] not accessible in the VAADIN directory or access to it is forbidden.",
-                        filename));
+                throw new IOException(
+                        String.format(
+                                "Requested resource [%s] is a directory, "
+                                        + "is not within the VAADIN directory, "
+                                        + "or access to it is forbidden.",
+                                filename));
             }
 
             return resourceUrl.openStream();
