@@ -3,11 +3,13 @@ package com.vaadin.tests.components.treegrid;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hamcrest.core.StringStartsWith;
+import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TreeGridElement;
-import com.vaadin.tests.performance.TreeGridMemory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class TreeGridHugeTreeTest extends SingleBrowserTest {
@@ -67,8 +69,10 @@ public class TreeGridHugeTreeTest extends SingleBrowserTest {
 
     @Test
     public void collapsed_subtrees_outside_of_cache_stay_expanded() {
+        Assume.assumeThat(System.getProperty("java.specification.version"),
+                new StringStartsWith("1.8"));
         getDriver().get(StringUtils.strip(getBaseURL(), "/")
-                + TreeGridMemory.PATH + "?items=200&initiallyExpanded");
+                + "/tree-grid-memory/?items=200&initiallyExpanded");
         grid = $(TreeGridElement.class).first();
 
         String[] cellTexts = new String[100];

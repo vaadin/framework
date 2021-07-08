@@ -373,7 +373,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.7.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
@@ -898,6 +898,36 @@
             <properties>
                 <skipTests>true</skipTests>
             </properties>
+        </profile>
+        <profile>
+            <id>java10</id>
+            <activation>
+                <jdk>10</jdk>
+            </activation>
+            <properties>
+                <maven.compiler.release>8</maven.compiler.release>
+            </properties>
+            <modules>
+                <module>shared</module>
+                <module>push</module>
+                <module>server</module>
+                <module>client</module>
+                <module>client-compiler</module>
+                <module>client-compiled</module>
+                <module>themes</module>
+                <module>uitest</module>
+                <module>liferay</module>
+                <module>liferay-integration</module>
+                <module>osgi-integration</module>
+                <module>all</module>
+                <module>compatibility-server</module>
+                <module>compatibility-server-gae</module>
+                <module>compatibility-client</module>
+                <module>compatibility-shared</module>
+                <module>compatibility-themes</module>
+                <module>testbench-api</module>
+                <module>bom</module>
+            </modules>
         </profile>
     </profiles>
 
