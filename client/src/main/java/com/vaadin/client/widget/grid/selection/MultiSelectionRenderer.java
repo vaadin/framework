@@ -618,8 +618,10 @@ public class MultiSelectionRenderer<T>
 
         CheckBoxEventHandler handler = new CheckBoxEventHandler(checkBox);
 
-        // label of checkbox should only be visible for assistive devices
-        checkBox.addStyleName("v-assistive-device-only-label");
+        if (grid.isAssistiveDeviceOnlyText()) {
+            // label of checkbox should only be visible for assistive devices
+            checkBox.addStyleName("v-assistive-device-only-label");
+        }
 
         // Sink events
         checkBox.sinkBitlessEvent(BrowserEvents.MOUSEDOWN);
@@ -642,8 +644,12 @@ public class MultiSelectionRenderer<T>
     public void render(final RendererCellReference cell, final Boolean data,
             CheckBox checkBox) {
         checkBox.setValue(data, false);
-        // this should be a temp fix.
-        checkBox.setText("Selects row number " + getDOMRowIndex(cell) + ".");
+
+        if (grid.isAssistiveDeviceOnlyText()) {
+            // this should be a temp fix.
+            checkBox.setText("Selects row number " + getDOMRowIndex(cell) + ".");
+        }
+
         boolean editorOpen = grid.isEditorActive();
         boolean editorBuffered = grid.isEditorBuffered();
         checkBox.setEnabled(

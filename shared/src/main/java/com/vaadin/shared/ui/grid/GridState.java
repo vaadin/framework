@@ -80,6 +80,14 @@ public class GridState extends AbstractSingleSelectState {
     public static final String JSONKEY_ROWDESCRIPTION = "rd";
 
     /**
+     * The key in which a row's select assistive device label can be found.
+     *
+     * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int,
+     *      elemental.json.JsonArray)
+     */
+    public static final String JSONKEY_ROWSELECTASSISTIVELABEL = "rsal";
+
+    /**
      * The key in which a cell's description can be found.
      *
      * @see com.vaadin.shared.data.DataProviderRpc#setRowData(int,
@@ -181,4 +189,12 @@ public class GridState extends AbstractSingleSelectState {
      * @since 8.2
      */
     public ContentMode rowDescriptionContentMode;
+
+    /** Whether the the multiselect checkboxes should have assistive device
+     * only text.
+     *
+     * @since
+     */
+    @DelegateToWidget
+    public boolean assistiveDeviceOnlyText;
 }
