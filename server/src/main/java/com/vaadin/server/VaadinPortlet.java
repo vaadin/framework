@@ -574,7 +574,7 @@ public class VaadinPortlet extends GenericPortlet
             return new VaadinLiferayRequest(request, service);
         }
 
-        if (portalInfo.contains("websphere portal")) {
+        if (portalInfo.contains("websphere portal") || portalInfo.contains("hcl digital experience")) {
             return new VaadinWebSpherePortalRequest(request, service);
         }
         if (portalInfo.contains("weblogic portal")) {
