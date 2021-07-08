@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.textfield;
 
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.event.InputEvent;
 import com.vaadin.client.ui.VTextField;
 import com.vaadin.shared.ui.Connect;
@@ -47,4 +48,13 @@ public class TextFieldConnector extends AbstractTextFieldConnector {
         return (VTextField) super.getWidget();
     }
 
+    @OnStateChange({"readOnly", "enabled"})
+    private void onReadOnlyChanged() {
+        VTextField widget = getWidget();
+        widget.readOnly = isReadOnly();
+        widget.enabled = isEnabled();
+        widget.setReadOnly(isReadOnly());
+        widget.setEnabled(isEnabled());
+        widget.setPlaceholder(getState().placeholder);
+    } 
 }
