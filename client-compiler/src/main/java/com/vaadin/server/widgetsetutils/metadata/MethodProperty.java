@@ -53,7 +53,7 @@ public class MethodProperty extends Property {
         Set<String> getters = new HashSet<>();
         List<JMethod> setters = getSetters(type, getters);
         for (JMethod setter : setters) {
-            String getter = findGetter(type, setter);
+            String getter = findGetter(setter);
             properties.add(new MethodProperty(setter.getEnclosingType(), setter,
                     getters.contains(getter) ? getter : null));
         }
@@ -118,8 +118,7 @@ public class MethodProperty extends Property {
 
     }
 
-    private static String findGetter(JClassType beanType,
-            JMethod setterMethod) {
+    private static String findGetter(JMethod setterMethod) {
         JType setterParameterType = setterMethod.getParameterTypes()[0];
         String fieldName = setterMethod.getName().substring(3);
         if (setterParameterType.getQualifiedSourceName()

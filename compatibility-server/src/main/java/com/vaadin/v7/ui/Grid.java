@@ -212,7 +212,8 @@ public class Grid extends AbstractComponent
      * @since 7.5.0
      */
     @Deprecated
-    public interface ColumnVisibilityChangeListener extends SerializableEventListener {
+    public interface ColumnVisibilityChangeListener
+            extends SerializableEventListener {
         /**
          * Called when a column has become hidden or unhidden.
          *
@@ -567,6 +568,7 @@ public class Grid extends AbstractComponent
             }
         }
 
+        @SuppressWarnings("rawtypes")
         @Override
         protected <T extends Field> T build(String caption, Class<?> dataType,
                 Class<T> fieldType) throws BindException {
@@ -630,6 +632,7 @@ public class Grid extends AbstractComponent
             return INSTANCE;
         }
 
+        @SuppressWarnings("rawtypes")
         @Override
         public <T extends Field> T createField(Class<?> type,
                 Class<T> fieldType) {
@@ -649,6 +652,7 @@ public class Grid extends AbstractComponent
             return super.createCompatibleSelect(fieldType);
         }
 
+        @SuppressWarnings("rawtypes")
         @Override
         protected void populateWithEnumData(AbstractSelect select,
                 Class<? extends Enum> enumClass) {
@@ -2364,7 +2368,8 @@ public class Grid extends AbstractComponent
             Renderer<?> renderer = column.getRenderer();
 
             Item item = cell.getItem();
-            Property itemProperty = item.getItemProperty(cell.getPropertyId());
+            Property<?> itemProperty = item
+                    .getItemProperty(cell.getPropertyId());
             Object modelValue = itemProperty == null ? null
                     : itemProperty.getValue();
 
@@ -2505,6 +2510,7 @@ public class Grid extends AbstractComponent
              *            The cells to merge. Must be from the same row.
              * @return The remaining visible cell after the merge
              */
+            @SuppressWarnings("unchecked")
             public CELLTYPE join(CELLTYPE... cells) {
                 if (cells.length < 2) {
                     throw new IllegalArgumentException(
@@ -3776,6 +3782,7 @@ public class Grid extends AbstractComponent
             return converter;
         }
 
+        @SuppressWarnings("unchecked")
         private <T> boolean internalSetRenderer(Renderer<T> renderer) {
 
             Converter<? extends T, ?> converter;
@@ -4410,6 +4417,7 @@ public class Grid extends AbstractComponent
          *            the locale to use in conversion
          * @return an encoded value ready to be sent to the client
          */
+        @SuppressWarnings("unchecked")
         public static <T> JsonValue encodeValue(Object modelValue,
                 Renderer<T> renderer, Converter<?, ?> converter,
                 Locale locale) {
@@ -4437,7 +4445,6 @@ public class Grid extends AbstractComponent
             } else {
                 assert presentationType
                         .isAssignableFrom(converter.getPresentationType());
-                @SuppressWarnings("unchecked")
                 Converter<T, Object> safeConverter = (Converter<T, Object>) converter;
                 presentationValue = safeConverter.convertToPresentation(
                         modelValue, safeConverter.getPresentationType(),
@@ -4687,13 +4694,6 @@ public class Grid extends AbstractComponent
      * after the constructor has been run.
      */
     private SelectionModel selectionModel;
-
-    /**
-     * Used to know whether selection change events originate from the server or
-     * the client so the selection change handler knows whether the changes
-     * should be sent to the client.
-     */
-    private boolean applyingSelectionFromClient;
 
     private final Header header = new Header(this);
     private final Footer footer = new Footer(this);
@@ -6739,7 +6739,8 @@ public class Grid extends AbstractComponent
      * @since 7.6
      */
 
-    public void setCellDescriptionGenerator(CellDescriptionGenerator generator) {
+    public void setCellDescriptionGenerator(
+            CellDescriptionGenerator generator) {
         setCellDescriptionGenerator(generator, ContentMode.PREFORMATTED);
     }
 
@@ -6760,12 +6761,13 @@ public class Grid extends AbstractComponent
      * @since 8.3.2
      */
     public void setCellDescriptionGenerator(CellDescriptionGenerator generator,
-                                            ContentMode contentMode) {
+            ContentMode contentMode) {
         if (contentMode == null) {
             throw new IllegalArgumentException("Content mode cannot be null");
         }
         cellDescriptionGenerator = generator;
-        getState().hasDescriptions = (generator != null || rowDescriptionGenerator != null);
+        getState().hasDescriptions = (generator != null
+                || rowDescriptionGenerator != null);
         getState().cellTooltipContentMode = contentMode;
         datasourceExtension.refreshCache();
     }
@@ -6811,7 +6813,7 @@ public class Grid extends AbstractComponent
      * @since 7.6
      */
     public void setRowDescriptionGenerator(RowDescriptionGenerator generator) {
-        setRowDescriptionGenerator(generator, ContentMode.PREFORMATTED );
+        setRowDescriptionGenerator(generator, ContentMode.PREFORMATTED);
     }
 
     /**
@@ -6832,7 +6834,7 @@ public class Grid extends AbstractComponent
      * @since 8.3.2
      */
     public void setRowDescriptionGenerator(RowDescriptionGenerator generator,
-                                           ContentMode contentMode) {
+            ContentMode contentMode) {
         if (contentMode == null) {
             throw new IllegalArgumentException("Content mode cannot be null");
         }
@@ -6934,6 +6936,7 @@ public class Grid extends AbstractComponent
      * @throws UnsupportedOperationException
      *             if the container does not support adding new items
      */
+    @SuppressWarnings("unchecked")
     public Object addRow(Object... values) {
         if (values == null) {
             throw new IllegalArgumentException("Values cannot be null");

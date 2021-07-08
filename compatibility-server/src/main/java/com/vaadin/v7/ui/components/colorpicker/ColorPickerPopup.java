@@ -16,7 +16,6 @@
 package com.vaadin.v7.ui.components.colorpicker;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -161,6 +160,9 @@ public class ColorPickerPopup extends Window
 
     /**
      * Instantiates a new color picker popup.
+     *
+     * @param initialColor
+     *            initially selected color
      */
     public ColorPickerPopup(Color initialColor) {
         this();
@@ -208,11 +210,6 @@ public class ColorPickerPopup extends Window
         // Add the history
         history.setWidth("97%");
         history.setHeight("22px");
-
-        // Create the default colors
-        List<Color> defaultColors = new ArrayList<Color>();
-        defaultColors.add(Color.BLACK);
-        defaultColors.add(Color.WHITE);
 
         // Create the history
         VerticalLayout innerContainer = new VerticalLayout();

@@ -46,6 +46,7 @@ import com.vaadin.v7.ui.TwinColSelect;
  * <p>
  * {@link VaadinIconSet} is the newer one for testing valo+vaadin icons.
  */
+@SuppressWarnings("deprecation")
 public class FontIcons extends AbstractReindeerTestUI {
 
     @Override
@@ -171,9 +172,9 @@ public class FontIcons extends AbstractReindeerTestUI {
         menu.setIcon(icon);
         menu.setCaption("MenuBar");
         MenuItem mi = menu.addItem("File", icon, null);
+        mi.addItem("Item", icon, null);
         MenuItem smi = mi.addItem("Item", icon, null);
-        smi = mi.addItem("Item", icon, null);
-        smi = smi.addItem("Item", icon, null);
+        smi.addItem("Item", icon, null);
         gl.addComponent(menu);
 
         // Tree, caption + item + subitem + action icons

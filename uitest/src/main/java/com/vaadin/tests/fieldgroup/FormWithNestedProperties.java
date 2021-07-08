@@ -5,16 +5,14 @@ import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
-import com.vaadin.tests.util.Log;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.TextField;
 
+@SuppressWarnings("deprecation")
 public class FormWithNestedProperties
         extends AbstractBeanFieldGroupTest<Person> {
-
-    private Log log = new Log(5);
 
     private TextField firstName = new TextField("First name");
     private TextField lastName = new TextField("Last name");
@@ -32,8 +30,8 @@ public class FormWithNestedProperties
         super.setup();
 
         setFieldBinder(new BeanFieldGroup<>(Person.class));
-        country = (NativeSelect) getFieldBinder().buildAndBind("country",
-                "address.country", NativeSelect.class);
+        country = getFieldBinder().buildAndBind("country", "address.country",
+                NativeSelect.class);
         getFieldBinder().bindMemberFields(this);
         addComponent(firstName);
         addComponent(lastName);

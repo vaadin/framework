@@ -641,6 +641,7 @@ public class GridLayout extends AbstractLayout
          * Constructs an <code>OverlapsException</code>.
          *
          * @param existingArea
+         *            the existing area that needs overlapping
          */
         public OverlapsException(Area existingArea) {
             this.existingArea = existingArea;
@@ -698,6 +699,7 @@ public class GridLayout extends AbstractLayout
          * detail message.
          *
          * @param areaOutOfBounds
+         *            the area that exceeds the bounds of the grid
          */
         public OutOfBoundsException(Area areaOutOfBounds) {
             super(String.format("%s, layout dimension: %sx%s", areaOutOfBounds,
@@ -837,6 +839,7 @@ public class GridLayout extends AbstractLayout
      * by GridLayout.
      *
      * @param cursorX
+     *            current cursor x-position
      */
     public void setCursorX(int cursorX) {
         this.cursorX = cursorX;
@@ -1058,7 +1061,9 @@ public class GridLayout extends AbstractLayout
      * @see #setWidth(float, Unit)
      *
      * @param columnIndex
+     *            The column index, starting from 0 for the leftmost row.
      * @param ratio
+     *            the expand ratio
      */
     public void setColumnExpandRatio(int columnIndex, float ratio) {
         columnExpandRatio.put(columnIndex, ratio);
@@ -1072,6 +1077,7 @@ public class GridLayout extends AbstractLayout
      * @see #setColumnExpandRatio(int, float)
      *
      * @param columnIndex
+     *            The column index, starting from 0 for the leftmost row.
      * @return the expand ratio, 0.0f by default
      */
     public float getColumnExpandRatio(int columnIndex) {
@@ -1103,6 +1109,7 @@ public class GridLayout extends AbstractLayout
      * @param rowIndex
      *            The row index, starting from 0 for the topmost row.
      * @param ratio
+     *            the expand ratio
      */
     public void setRowExpandRatio(int rowIndex, float ratio) {
         rowExpandRatio.put(rowIndex, ratio);
@@ -1195,6 +1202,7 @@ public class GridLayout extends AbstractLayout
      * MarginInfo )
      */
     @Override
+    @SuppressWarnings("deprecation")
     public void setMargin(MarginInfo marginInfo) {
         getState().marginsBitmask = marginInfo.getBitMask();
     }
@@ -1205,6 +1213,7 @@ public class GridLayout extends AbstractLayout
      * @see com.vaadin.ui.Layout.MarginHandler#getMargin()
      */
     @Override
+    @SuppressWarnings("deprecation")
     public MarginInfo getMargin() {
         return new MarginInfo(getState(false).marginsBitmask);
     }
@@ -1430,7 +1439,7 @@ public class GridLayout extends AbstractLayout
         }
 
         if (components.isEmpty()) {
-            writeEmptyColsAndRows(design, designContext);
+            writeEmptyColsAndRows(design);
             return;
         }
 
@@ -1566,10 +1575,8 @@ public class GridLayout extends AbstractLayout
      * components in the {@link GridLayout}
      *
      * @param design
-     * @param designContext
      */
-    private void writeEmptyColsAndRows(Element design,
-            DesignContext designContext) {
+    private void writeEmptyColsAndRows(Element design) {
         int rowCount = getState(false).rows;
         int colCount = getState(false).columns;
 

@@ -52,8 +52,6 @@ import java.util.jar.Manifest;
  */
 public class ClassPathExplorer {
 
-    private static final String VAADIN_ADDON_VERSION_ATTRIBUTE = "Vaadin-Package-Version";
-
     /**
      * File filter that only accepts directories.
      */

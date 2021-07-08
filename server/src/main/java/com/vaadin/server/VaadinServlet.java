@@ -78,7 +78,7 @@ import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({ "deprecation", "serial" })
 public class VaadinServlet extends HttpServlet implements Constants {
 
     private class ScssCacheEntry implements Serializable {
@@ -197,9 +197,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     private VaadinServletService servletService;
 
-    // Mapped uri is for the jar file
-    static final Map<URI, Integer> openFileSystems = new HashMap<>();
-    private static final Object fileSystemLock = new Object();
+    /**
+     * Mapped uri is for the jar file.
+     * <p>
+     * FOR INTERNAL USE ONLY, may get renamed or removed.
+     */
+    static final Map<URI, Integer> OPEN_FILE_SYSTEMS = new HashMap<>();
+    private static final Object FILE_SYSTEM_LOCK = new Object();
 
     /**
      * Called by the servlet container to indicate to a servlet that the servlet
@@ -696,6 +700,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * servers).
      *
      * @param servletContext
+     *            the {@link ServletContext} in which this servlet is running
      * @param path
      *            the resource path.
      * @return the resource path.
@@ -706,8 +711,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Deprecated
     protected static String getResourcePath(ServletContext servletContext,
             String path) {
-        String resultPath = null;
-        resultPath = servletContext.getRealPath(path);
+        String resultPath = servletContext.getRealPath(path);
         if (resultPath != null) {
             return resultPath;
         } else {
@@ -729,7 +733,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * e.g. '(' and ')', so values should be safe in javascript too.
      *
      * @param themeName
-     * @return
+     *            name of the theme
+     * @return name of the theme without special characters
      *
      * @deprecated As of 7.0. Will likely change or be removed in a future
      *             version
@@ -782,7 +787,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     /**
      * Returns the default theme. Must never return null.
      *
-     * @return
+     * @return default theme name
      */
     public static String getDefaultTheme() {
         return DEFAULT_THEME_NAME;
@@ -825,7 +830,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @param response
      *            The response
      * @throws IOException
+     *             if an I/O exception occurs
      * @throws ServletException
+     *             if a servlet exception occurs
      *
      * @since 8.5
      */
@@ -971,6 +978,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @param resourceUrl
      *            The url to send
      * @throws IOException
+     *             if an I/O exception occurs
      */
     protected void writeStaticResourceResponse(HttpServletRequest request,
             HttpServletResponse response, URL resourceUrl) throws IOException {
@@ -1228,8 +1236,11 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * outside the VAADIN directory if the method is overridden.
      *
      * @param request
+     *            current request
      * @param resourceUrl
-     * @return
+     *            URL of the resource to validate
+     * @return {@code true} if the resource is a valid VAADIN resource,
+     *         {@code false} otherwise
      *
      * @since 6.6.7
      *
@@ -1356,7 +1367,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     // Package protected for feature verification purpose
     FileSystem getFileSystem(URI resourceURI) throws IOException {
-        synchronized (fileSystemLock) {
+        synchronized (FILE_SYSTEM_LOCK) {
             URI fileURI = getFileURI(resourceURI);
             if (!fileURI.getScheme().equals("file")) {
                 throw new IOException("Can not read scheme '"
@@ -1364,7 +1375,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                         + " and will determine this as not a folder");
             }
 
-            Integer locks = openFileSystems.computeIfPresent(fileURI,
+            Integer locks = OPEN_FILE_SYSTEMS.computeIfPresent(fileURI,
                     (key, value) -> value + 1);
             if (locks != null) {
                 // Get filesystem is for the file to get the correct provider
@@ -1373,20 +1384,20 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // Opened filesystem is for the file to get the correct provider
             FileSystem fileSystem = FileSystems.newFileSystem(resourceURI,
                     Collections.emptyMap());
-            openFileSystems.put(fileURI, 1);
+            OPEN_FILE_SYSTEMS.put(fileURI, 1);
             return fileSystem;
         }
     }
 
     // Package protected for feature verification purpose
     void closeFileSystem(URI resourceURI) {
-        synchronized (fileSystemLock) {
+        synchronized (FILE_SYSTEM_LOCK) {
             try {
                 URI fileURI = getFileURI(resourceURI);
-                Integer locks = openFileSystems.computeIfPresent(fileURI,
+                Integer locks = OPEN_FILE_SYSTEMS.computeIfPresent(fileURI,
                         (key, value) -> value - 1);
                 if (locks != null && locks == 0) {
-                    openFileSystems.remove(fileURI);
+                    OPEN_FILE_SYSTEMS.remove(fileURI);
                     // Get filesystem is for the file to get the correct
                     // provider
                     FileSystems.getFileSystem(resourceURI).close();
@@ -1459,7 +1470,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     /**
      * @param request
-     * @return
+     *            the request that is to be evaluated
+     * @return request type
      *
      * @deprecated As of 7.0. This is no longer used and only provided for
      *             backwards compatibility. Each {@link RequestHandler} can
@@ -1574,6 +1586,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      *
      * @param request
      *            the HTTP request.
+     * @return current application URL
      * @throws MalformedURLException
      *             if the application is denied access to the persistent data
      *             store represented by the given URL.
@@ -1687,6 +1700,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * characters" to keep the text somewhat readable.
      *
      * @param unsafe
+     *            the string that needs to be made safe
      * @return a safe string to be added inside an html tag
      *
      * @deprecated As of 7.0. Will likely change or be removed in a future
@@ -1714,10 +1728,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     private static boolean isSafe(char c) {
         return //
-        c > 47 && c < 58 || // alphanum
-                c > 64 && c < 91 || // A-Z
-                c > 96 && c < 123 // a-z
-        ;
+        (c > 47 && c < 58) || // alphanum
+                (c > 64 && c < 91) || // A-Z
+                (c > 96 && c < 123); // a-z
     }
 
     private static final Logger getLogger() {

@@ -44,6 +44,7 @@ import com.vaadin.client.ValueMap;
  *
  * @since 7.1.4
  */
+@SuppressWarnings("deprecation")
 public class AnalyzeLayoutsPanel extends FlowPanel {
 
     private List<SelectConnectorListener> listeners = new ArrayList<>();
@@ -88,19 +89,19 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
                     + "states, but reported here as they might be.</em>"));
             if (!zeroHeightComponents.isEmpty()) {
                 add(new HTML("<p><strong>Vertically zero size:</strong></p>"));
-                printClientSideDetectedIssues(zeroHeightComponents, ac);
+                printClientSideDetectedIssues(zeroHeightComponents);
             }
             if (!zeroWidthComponents.isEmpty()) {
                 add(new HTML(
                         "<p><strong>Horizontally zero size:</strong></p>"));
-                printClientSideDetectedIssues(zeroWidthComponents, ac);
+                printClientSideDetectedIssues(zeroWidthComponents);
             }
         }
 
     }
 
     private void printClientSideDetectedIssues(
-            Set<ComponentConnector> zeroSized, ApplicationConnection ac) {
+            Set<ComponentConnector> zeroSized) {
 
         // keep track of already highlighted parents
         HashSet<String> parents = new HashSet<>();
