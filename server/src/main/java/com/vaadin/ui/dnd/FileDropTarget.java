@@ -169,18 +169,15 @@ public class FileDropTarget<T extends AbstractComponent>
      * @return Extended component.
      */
     @Override
-    @SuppressWarnings("unchecked")
     public T getParent() {
         return super.getParent();
     }
 
     private class FileReceiver implements StreamVariable {
 
-        private final String id;
         private Html5File file;
 
         public FileReceiver(String id, Html5File file) {
-            this.id = id;
             this.file = file;
         }
 

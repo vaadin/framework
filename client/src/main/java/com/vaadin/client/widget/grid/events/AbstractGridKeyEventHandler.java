@@ -26,18 +26,48 @@ import com.vaadin.client.widgets.Grid.AbstractGridKeyEvent;
  */
 public abstract interface AbstractGridKeyEventHandler extends EventHandler {
 
+    /**
+     * Handler for Grid key down events.
+     */
     public abstract interface GridKeyDownHandler
             extends AbstractGridKeyEventHandler {
+        /**
+         * Perform actions that should happen when a key down event is triggered
+         * within a Grid.
+         *
+         * @param event
+         *            the key down event
+         */
         public void onKeyDown(GridKeyDownEvent event);
     }
 
+    /**
+     * Handler for Grid key up events.
+     */
     public abstract interface GridKeyUpHandler
             extends AbstractGridKeyEventHandler {
+        /**
+         * Perform actions that should happen when a key up event is triggered
+         * within a Grid.
+         *
+         * @param event
+         *            the key up event
+         */
         public void onKeyUp(GridKeyUpEvent event);
     }
 
+    /**
+     * Handler for Grid key press events.
+     */
     public abstract interface GridKeyPressHandler
             extends AbstractGridKeyEventHandler {
+        /**
+         * Perform actions that should happen when a key press event is
+         * triggered within a Grid.
+         *
+         * @param event
+         *            the key press event
+         */
         public void onKeyPress(GridKeyPressEvent event);
     }
 

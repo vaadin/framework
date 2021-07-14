@@ -144,6 +144,18 @@ public class FlyweightRow implements Row {
     private double[] columnWidths = null;
     private final List<FlyweightCell> cells = new ArrayList<>();
 
+    /**
+     * Configure this FlyweightRow for the current use. This method is expected
+     * to be called multiple times during the Grid's life-cycle.
+     *
+     * @param e
+     *            the root element for this row
+     * @param row
+     *            the row index
+     * @param columnWidths
+     *            widths for each column on the row
+     * @see FlyweightRow
+     */
     public void setup(final TableRowElement e, final int row,
             double[] columnWidths) {
         element = e;
@@ -186,6 +198,15 @@ public class FlyweightRow implements Row {
         return element;
     }
 
+    /**
+     * Adds cell representations (i.e. new columns) for the indicated cell range
+     * and updates the subsequent indexing.
+     *
+     * @param index
+     *            start index of the range
+     * @param numberOfColumns
+     *            length of the range
+     */
     public void addCells(final int index, final int numberOfColumns) {
         for (int i = 0; i < numberOfColumns; i++) {
             final int col = index + i;
@@ -194,6 +215,15 @@ public class FlyweightRow implements Row {
         updateRestOfCells(index + numberOfColumns);
     }
 
+    /**
+     * Removes cell representations (i.e. removed columns) from the indicated
+     * cell range and updates the subsequent indexing.
+     *
+     * @param index
+     *            start index of the range
+     * @param numberOfColumns
+     *            length of the range
+     */
     public void removeCells(final int index, final int numberOfColumns) {
         cells.subList(index, index + numberOfColumns).clear();
         updateRestOfCells(index);

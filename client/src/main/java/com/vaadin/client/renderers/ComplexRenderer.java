@@ -37,6 +37,9 @@ import com.vaadin.client.widget.grid.RendererCellReference;
  * Also provides a helper method for hiding the cell contents by overriding
  * {@link #setContentVisible(FlyweightCell, boolean)}
  *
+ * @param <T>
+ *            the column data type
+ *
  * @since 7.4.0
  * @author Vaadin Ltd
  */

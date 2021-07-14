@@ -31,6 +31,11 @@ public class SpacerIndexChangedEvent
      */
     public static final Type<SpacerIndexChangedHandler> TYPE = new Type<>();
 
+    /**
+     * Returns the associated handler type.
+     *
+     * @return the handler type
+     */
     public static final Type<SpacerIndexChangedHandler> getType() {
         return TYPE;
     }

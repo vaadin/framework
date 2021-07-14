@@ -23,6 +23,9 @@ import com.vaadin.client.widgets.Grid;
 /**
  * Generic class to perform selections when clicking on cells in body of Grid.
  *
+ * @param <T>
+ *            the type of the items in the Grid
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -39,6 +42,7 @@ public class ClickSelectHandler<T> {
             if (!grid.getSelectionModel().isSelectionAllowed()) {
                 return;
             }
+            @SuppressWarnings("unchecked")
             T row = (T) event.getTargetCell().getRow();
             if (!grid.isSelected(row)) {
                 grid.select(row);

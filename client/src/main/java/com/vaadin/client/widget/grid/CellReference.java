@@ -38,6 +38,12 @@ public class CellReference<T> {
     private Grid.Column<?, T> column;
     private final RowReference<T> rowReference;
 
+    /**
+     * Constructs a new cell reference for the given row.
+     *
+     * @param rowReference
+     *            the row that requires a new cell
+     */
     public CellReference(RowReference<T> rowReference) {
         this.rowReference = rowReference;
     }

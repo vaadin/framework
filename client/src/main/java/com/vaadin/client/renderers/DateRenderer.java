@@ -37,14 +37,29 @@ public class DateRenderer implements Renderer<Date> {
     private TimeZone timeZone = TimeZone
             .createTimeZone(new Date().getTimezoneOffset());
 
+    /**
+     * Constructs a renderer for displaying date data.
+     */
     public DateRenderer() {
         this(PredefinedFormat.DATE_TIME_SHORT);
     }
 
+    /**
+     * Constructs a renderer for displaying date data.
+     *
+     * @param format
+     *            the required display format
+     */
     public DateRenderer(PredefinedFormat format) {
         this(DateTimeFormat.getFormat(format));
     }
 
+    /**
+     * Constructs a renderer for displaying date data.
+     *
+     * @param format
+     *            the required display format
+     */
     public DateRenderer(DateTimeFormat format) {
         setFormat(format);
     }

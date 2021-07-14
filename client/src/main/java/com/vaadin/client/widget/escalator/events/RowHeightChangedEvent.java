@@ -31,6 +31,11 @@ public class RowHeightChangedEvent extends GwtEvent<RowHeightChangedHandler> {
      */
     public static final Type<RowHeightChangedHandler> TYPE = new Type<>();
 
+    /**
+     * Returns the associated handler type.
+     *
+     * @return the handler type
+     */
     public static final Type<RowHeightChangedHandler> getType() {
         return TYPE;
     }

@@ -54,6 +54,7 @@ public class RendererCellReference extends CellReference<Object> {
      * @param column
      *            the column to reference
      */
+    @SuppressWarnings("unchecked")
     public void set(FlyweightCell cell, int columnIndex,
             Grid.Column<?, ?> column) {
         this.cell = cell;

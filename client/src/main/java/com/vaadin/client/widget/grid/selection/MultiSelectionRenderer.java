@@ -42,7 +42,6 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.renderers.ClickableRenderer;
 import com.vaadin.client.widget.grid.CellReference;
@@ -58,7 +57,7 @@ import com.vaadin.client.widgets.Grid;
  *
  * @author Vaadin Ltd
  * @param <T>
- *            the type of the associated grid
+ *            the type of the items in the associated Grid
  * @since 7.4
  */
 public class MultiSelectionRenderer<T>
@@ -195,6 +194,9 @@ public class MultiSelectionRenderer<T>
                     removeNativeHandler();
                     event.cancel();
                 }
+                break;
+            default:
+                // NOP
                 break;
             }
         }
@@ -525,6 +527,9 @@ public class MultiSelectionRenderer<T>
             case Event.ONTOUCHCANCEL:
                 stop();
                 break;
+            default:
+                // NOP
+                break;
             }
         };
 
@@ -599,6 +604,13 @@ public class MultiSelectionRenderer<T>
 
     private final AutoScrollHandler autoScrollHandler = new AutoScrollHandler();
 
+    /**
+     * Constructs a renderer for a selection column with multi-selection
+     * CheckBoxes.
+     *
+     * @param grid
+     *            the parent grid
+     */
     public MultiSelectionRenderer(final Grid<T> grid) {
         this.grid = grid;
     }
@@ -785,10 +797,27 @@ public class MultiSelectionRenderer<T>
                 + getTheadElement().getOffsetHeight() + 1;
     }
 
+    /**
+     * Checks whether the given row is selected.
+     *
+     * @param logicalRow
+     *            logical index of the row to check
+     * @return {@code true} if the current selection model considers the row
+     *         selected, {@code false} otherwise
+     */
     protected boolean isSelected(final int logicalRow) {
         return grid.isSelected(grid.getDataSource().getRow(logicalRow));
     }
 
+    /**
+     * Updates selection status for the given row.
+     *
+     * @param logicalRow
+     *            logical index of the row to update
+     * @param select
+     *            {@code true} if the row should be marked selected,
+     *            {@code false} otherwise
+     */
     protected void setSelected(final int logicalRow, final boolean select) {
         T row = grid.getDataSource().getRow(logicalRow);
         if (select) {

@@ -37,12 +37,20 @@ public class ColumnResizeEvent<T> extends GwtEvent<ColumnResizeHandler<T>> {
     private Column<?, T> column;
 
     /**
+     * Constructs a resize event for a grid column.
+     *
      * @param column
+     *            the updated column
      */
     public ColumnResizeEvent(Column<?, T> column) {
         this.column = column;
     }
 
+    /**
+     * Returns the associated handler type.
+     *
+     * @return the handler type
+     */
     public static final Type<ColumnResizeHandler<?>> getType() {
         return TYPE;
     }

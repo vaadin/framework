@@ -47,9 +47,6 @@ import elemental.json.JsonObject;
 @Connect(EditorImpl.class)
 public class EditorConnector extends AbstractExtensionConnector {
 
-    private Integer currentEditedRow = null;
-    private boolean waitingForAvailableData = false;
-
     /**
      * EditorHandler for communicating with the server-side implementation.
      */
@@ -132,7 +129,6 @@ public class EditorConnector extends AbstractExtensionConnector {
                 // a confirmation from the server
                 rpc.cancel(afterBeingSaved);
             }
-            currentEditedRow = null;
         }
 
         @Override

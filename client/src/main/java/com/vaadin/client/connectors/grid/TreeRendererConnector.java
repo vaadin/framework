@@ -33,6 +33,7 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd
  * @since 8.1
  */
+@SuppressWarnings("deprecation")
 @Connect(TreeRenderer.class)
 public class TreeRendererConnector
         extends AbstractGridRendererConnector<String> {
