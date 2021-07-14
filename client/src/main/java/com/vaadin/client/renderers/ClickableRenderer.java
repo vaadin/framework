@@ -211,6 +211,8 @@ public abstract class ClickableRenderer<T, W extends Widget>
      *
      * @param handler
      *            the click handler to be added
+     * @return the handler registration, can be stored in order to remove the
+     *         handler later
      */
     public HandlerRegistration addClickHandler(
             RendererClickHandler<?> handler) {

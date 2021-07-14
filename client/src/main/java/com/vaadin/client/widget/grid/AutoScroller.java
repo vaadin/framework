@@ -73,7 +73,11 @@ public class AutoScroller {
         void onAutoScrollReachedMax();
     }
 
+    /**
+     * Scroll direction for automatic scrolling.
+     */
     public enum ScrollAxis {
+        /** Scroll should happen to the direction indicated by the name. */
         VERTICAL, HORIZONTAL
     }
 
@@ -130,6 +134,9 @@ public class AutoScroller {
             case Event.ONTOUCHCANCEL:
                 // TODO investigate if this works as desired
                 stop();
+                break;
+            default:
+                // NOP
                 break;
             }
         }
@@ -437,6 +444,9 @@ public class AutoScroller {
         case Event.ONTOUCHCANCEL:
             stop();
             break;
+        default:
+            // NOP
+            break;
         }
     };
 
@@ -606,6 +616,11 @@ public class AutoScroller {
         }
     }
 
+    /**
+     * Returns how wide the frozen columns are all counted together.
+     *
+     * @return the width of frozen columns
+     */
     public double getFrozenColumnsWidth() {
         double value = 0;
 

@@ -56,6 +56,9 @@ import com.vaadin.shared.util.SharedUtil;
  * ds.asList().addAll(Arrays.asList(5, 6, 7));
  * </pre>
  *
+ * @param <T>
+ *            the type of the items in the grid
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -356,6 +359,7 @@ public class ListDataSource<T> implements DataSource<T> {
      * @param rows
      *            The rows to initially add to the data source
      */
+    @SuppressWarnings("unchecked")
     public ListDataSource(T... rows) {
         if (rows == null) {
             ds = new ArrayList<>();

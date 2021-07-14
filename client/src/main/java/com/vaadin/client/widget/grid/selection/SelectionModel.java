@@ -26,11 +26,17 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd.
  *
  * @param <T>
- *            the type of the items to select
+ *            the type of the items in the Grid
  * @since 8.0
  */
 public interface SelectionModel<T> {
 
+    /**
+     * Selection model that does not allow any selection.
+     *
+     * @param <T>
+     *            the type of the items to select
+     */
     public static class NoSelectionModel<T> implements SelectionModel<T> {
 
         @Override

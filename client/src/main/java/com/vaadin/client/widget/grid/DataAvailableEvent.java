@@ -27,8 +27,15 @@ import com.vaadin.shared.Range;
 public class DataAvailableEvent extends GwtEvent<DataAvailableHandler> {
 
     private Range rowsAvailable;
+    /** Handler type for DataAvailableEvents. */
     public static final Type<DataAvailableHandler> TYPE = new Type<>();
 
+    /**
+     * Constructs a data availability event for the given row range.
+     *
+     * @param rowsAvailable
+     *            the range of available rows
+     */
     public DataAvailableEvent(Range rowsAvailable) {
         this.rowsAvailable = rowsAvailable;
     }

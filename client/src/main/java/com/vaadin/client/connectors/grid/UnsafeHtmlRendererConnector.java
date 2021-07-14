@@ -30,6 +30,9 @@ import com.vaadin.shared.ui.grid.renderers.HtmlRendererState;
 public class UnsafeHtmlRendererConnector
         extends AbstractGridRendererConnector<String> {
 
+    /**
+     * Constructs a renderer for unsafe html content.
+     */
     public static class UnsafeHtmlRenderer implements Renderer<String> {
         @Override
         public void render(RendererCellReference cell, String data) {

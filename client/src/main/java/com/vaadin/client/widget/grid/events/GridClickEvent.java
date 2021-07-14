@@ -30,6 +30,7 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
  */
 public class GridClickEvent extends AbstractGridMouseEvent<GridClickHandler> {
 
+    /** DOM event type. */
     public static final Type<GridClickHandler> TYPE = new Type<GridClickHandler>(
             BrowserEvents.CLICK, new GridClickEvent());
 
@@ -42,6 +43,11 @@ public class GridClickEvent extends AbstractGridMouseEvent<GridClickHandler> {
     /**
      * @deprecated This constructor's arguments are no longer used. Use the
      *             no-args constructor instead.
+     *
+     * @param grid
+     *            the grid the event occurred in, not used
+     * @param targetCell
+     *            the cell the event targets, not used
      */
     @Deprecated
     public GridClickEvent(Grid<?> grid, CellReference<?> targetCell) {

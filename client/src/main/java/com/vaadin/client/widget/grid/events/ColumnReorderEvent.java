@@ -36,6 +36,11 @@ public class ColumnReorderEvent<T> extends GwtEvent<ColumnReorderHandler<T>> {
      */
     private static final Type<ColumnReorderHandler<?>> TYPE = new Type<>();
 
+    /**
+     * Returns the associated handler type.
+     *
+     * @return the handler type
+     */
     public static final Type<ColumnReorderHandler<?>> getType() {
         return TYPE;
     }
@@ -46,6 +51,17 @@ public class ColumnReorderEvent<T> extends GwtEvent<ColumnReorderHandler<T>> {
 
     private final boolean userOriginated;
 
+    /**
+     * Constructs a reorder event for grid columns.
+     *
+     * @param oldColumnOrder
+     *            the old order
+     * @param newColumnOrder
+     *            the new order
+     * @param userOriginated
+     *            {@code true} if the event was triggered by user interaction,
+     *            {@code false} otherwise
+     */
     public ColumnReorderEvent(List<Column<?, T>> oldColumnOrder,
             List<Column<?, T>> newColumnOrder, boolean userOriginated) {
         this.oldColumnOrder = oldColumnOrder;

@@ -29,6 +29,7 @@ import com.vaadin.client.widget.grid.RendererCellReference;
  */
 public class ImageRenderer extends ClickableRenderer<String, Image> {
 
+    /** Placeholder URL for the image. Used if URL data is set to null. */
     public static final String TRANSPARENT_GIF_1PX = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
     @Override

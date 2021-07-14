@@ -38,15 +38,24 @@ import com.vaadin.client.widgets.Grid.EditorDomEvent;
  * The default handler for Grid editor events. Offers several overridable
  * protected methods for easier customization.
  *
+ * @param <T>
+ *            The row type of the grid. The row type is the POJO type from where
+ *            the data is retrieved into the column cells.
+ *
  * @since 7.6
  * @author Vaadin Ltd
  */
 public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
 
+    /** Default key code for showing the editor. */
     public static final int KEYCODE_OPEN = KeyCodes.KEY_ENTER;
+    /** Default key code for moving the editor up or down. */
     public static final int KEYCODE_MOVE_VERTICAL = KeyCodes.KEY_ENTER;
+    /** Default key code for hiding the editor. */
     public static final int KEYCODE_CLOSE = KeyCodes.KEY_ESCAPE;
+    /** Default key code for moving cursor horizontally within the editor. */
     public static final int KEYCODE_MOVE_HORIZONTAL = KeyCodes.KEY_TAB;
+    /** Default key code for triggering save in buffered mode. */
     public static final int KEYCODE_BUFFERED_SAVE = KeyCodes.KEY_ENTER;
 
     private double lastTouchEventTime = 0;
@@ -134,9 +143,12 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
      * Specifies the direction at which the focus should move.
      */
     public enum CursorMoveDelta {
+        /** Move focus one step to the direction indicated by name. */
         UP(-1, 0), RIGHT(0, 1), DOWN(1, 0), LEFT(0, -1);
 
+        /** Vertical change. */
         public final int rowDelta;
+        /** Horizontal change. */
         public final int colDelta;
 
         CursorMoveDelta(int rowDelta, int colDelta) {
@@ -144,6 +156,12 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
             this.colDelta = colDelta;
         }
 
+        /**
+         * Returns whether the cursor move has either horizontal or vertical
+         * changes.
+         *
+         * @return {@code true} if there are changes, {@code false} otherwise
+         */
         public boolean isChanged() {
             return rowDelta != 0 || colDelta != 0;
         }
@@ -267,6 +285,15 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         return -1;
     }
 
+    /**
+     * Checks whether the field within the given editor column is editable.
+     *
+     * @param grid
+     *            the grid that is being edited
+     * @param column
+     *            the column to investigate
+     * @return {@code true} if the field is editable, {@code false} otherwise
+     */
     protected boolean isEditable(Grid<T> grid, Grid.Column<?, T> column) {
         if (!column.isEditable()) {
             return false;
@@ -403,6 +430,19 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         return false;
     }
 
+    /**
+     * Opens the editor over the row with the given index and attempts to focus
+     * the editor widget in the given column index. If the given indices are
+     * outside of the existing range, the closest value within the range is
+     * used.
+     *
+     * @param event
+     *            the wrapped DOM event
+     * @param rowIndex
+     *            index of the row to edit
+     * @param colIndex
+     *            index of the editor column to focus
+     */
     protected void editRow(EditorDomEvent<T> event, int rowIndex,
             int colIndex) {
         int rowCount = event.getGrid().getDataSource().size();

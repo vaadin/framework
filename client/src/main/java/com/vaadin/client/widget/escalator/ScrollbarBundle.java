@@ -111,6 +111,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * The orientation of the scrollbar.
      */
     public enum Direction {
+        /** Scrollbar orientation, indicated by the name. */
         VERTICAL, HORIZONTAL;
     }
 
@@ -147,8 +148,12 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         void visibilityChanged(VisibilityChangeEvent event);
     }
 
+    /**
+     * Event for scrollbar visibility changes.
+     */
     public static class VisibilityChangeEvent
             extends GwtEvent<VisibilityHandler> {
+        /** Event type. */
         public static final Type<VisibilityHandler> TYPE = new Type<ScrollbarBundle.VisibilityHandler>() {
             @Override
             public String toString() {
@@ -335,8 +340,14 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         }
     }
 
+    /** Root element for the scrollbar-composition. */
     protected final Element root = DOM.createDiv();
+    /**
+     * Scroll size element. The size of this element determines the number of
+     * pixels the scrollbar is able to scroll through
+     */
     protected final Element scrollSizeElement = DOM.createDiv();
+    /** Is the scrollbar "invisible" (thickness set to 0). */
     protected boolean isInvisibleScrollbar = false;
 
     private double scrollPos = 0;
@@ -362,6 +373,12 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         root.setTabIndex(-1);
     }
 
+    /**
+     * Returns the width (for horizontal) or height (for vertical) css property
+     * for the scroll size element.
+     *
+     * @return the relevant size property based on orientation
+     */
     protected abstract String internalGetScrollSize();
 
     /**
@@ -495,6 +512,10 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * is hidden, so the event must be fired manually.
      * <p>
      * When IE8 support is dropped, this should really be simplified.
+     *
+     * @param enable
+     *            {@code true} if the scrollbar should be forced to be visible,
+     *            {@code false} otherwise.
      */
     protected void forceScrollbar(boolean enable) {
         if (enable) {
@@ -512,6 +533,15 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         internalForceScrollbar(enable);
     }
 
+    /**
+     * Sets the overflow-x (for horizontal) or overflow-y (for vertical)
+     * property to {@code "scroll"} if enabled, or clears the property if
+     * disabled.
+     *
+     * @param enable
+     *            {@code true} if the overflow property should be set,
+     *            {@code false} otherwise.
+     */
     protected abstract void internalForceScrollbar(boolean enable);
 
     /**
@@ -523,6 +553,12 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         return parseCssDimensionToPixels(internalGetOffsetSize());
     }
 
+    /**
+     * Returns the width (for horizontal) or height (for vertical) css property
+     * for the root element.
+     *
+     * @return the relevant size property based on orientation
+     */
     public abstract String internalGetOffsetSize();
 
     /**
@@ -765,6 +801,10 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         return getScrollSize() - getOffsetSize() > WidgetUtil.PIXEL_EPSILON;
     }
 
+    /**
+     * Calculates and sets maximum scroll position based on the current scroll
+     * size and the scrollbar's length.
+     */
     public void recalculateMaxScrollPos() {
         double scrollSize = getScrollSize();
         double offsetSize = getOffsetSize();
@@ -804,6 +844,11 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         }
     }
 
+    /**
+     * Returns the handler manager for this scrollbar bundle.
+     *
+     * @return the handler manager
+     */
     protected HandlerManager getHandlerManager() {
         if (handlerManager == null) {
             handlerManager = new HandlerManager(this);

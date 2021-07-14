@@ -31,6 +31,11 @@ public class SpacerVisibilityChangedEvent
      */
     public static final Type<SpacerVisibilityChangedHandler> TYPE = new Type<>();
 
+    /**
+     * Returns the associated handler type.
+     *
+     * @return the handler type
+     */
     public static final Type<SpacerVisibilityChangedHandler> getType() {
         return TYPE;
     }

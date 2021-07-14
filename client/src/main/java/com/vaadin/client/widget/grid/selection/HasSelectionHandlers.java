@@ -20,6 +20,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
 /**
  * Marker interface for widgets that fires selection events.
  *
+ * @param <T>
+ *            the type of the items in the Grid
+ *
  * @author Vaadin Ltd
  * @since 7.4
  */
