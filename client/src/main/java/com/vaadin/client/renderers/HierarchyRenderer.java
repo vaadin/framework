@@ -91,6 +91,7 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
     private static final String CLASS_EXPANDED = "expanded";
     private static final String CLASS_DEPTH = "depth-";
 
+    @SuppressWarnings("rawtypes")
     private Renderer innerRenderer;
 
     /**
@@ -148,6 +149,7 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
         return new HierarchyItem(nodeStyleName);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public void render(RendererCellReference cell, Object data, Widget widget) {
 
@@ -234,6 +236,7 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
      * @param innerRenderer
      *            Renderer to be wrapped.
      */
+    @SuppressWarnings("rawtypes")
     public void setInnerRenderer(Renderer innerRenderer) {
         this.innerRenderer = innerRenderer;
     }
@@ -243,12 +246,18 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
      *
      * @return Wrapped renderer.
      */
+    @SuppressWarnings("rawtypes")
     public Renderer getInnerRenderer() {
         return innerRenderer;
     }
 
     /**
      * Decides whether the element was rendered by {@link HierarchyRenderer}.
+     *
+     * @param element
+     *            the element to check
+     * @return {@code true} if the element was rendered by a HierarchyRenderer,
+     *         {@code false} otherwise.
      */
     public static boolean isElementInHierarchyWidget(Element element) {
         Widget w = WidgetUtil.findWidget(element);

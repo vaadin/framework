@@ -31,6 +31,7 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
  */
 public class GridKeyUpEvent extends AbstractGridKeyEvent<GridKeyUpHandler> {
 
+    /** DOM event type. */
     public static final Type<GridKeyUpHandler> TYPE = new Type<GridKeyUpHandler>(
             BrowserEvents.KEYUP, new GridKeyUpEvent());
 
@@ -43,6 +44,11 @@ public class GridKeyUpEvent extends AbstractGridKeyEvent<GridKeyUpHandler> {
     /**
      * @deprecated This constructor's arguments are no longer used. Use the
      *             no-args constructor instead.
+     *
+     * @param grid
+     *            the grid the event occurred in, not used
+     * @param targetCell
+     *            the cell the event targets, not used
      */
     @Deprecated
     public GridKeyUpEvent(Grid<?> grid, CellReference<?> targetCell) {

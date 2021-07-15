@@ -38,6 +38,9 @@ import elemental.json.JsonValue;
 @Connect(com.vaadin.ui.Grid.Column.class)
 public class ColumnConnector extends AbstractExtensionConnector {
 
+    /**
+     * Class for representing a custom column.
+     */
     public abstract static class CustomColumn
             extends Column<Object, JsonObject> {
 
@@ -48,6 +51,11 @@ public class ColumnConnector extends AbstractExtensionConnector {
             this.connectorId = connectorId;
         }
 
+        /**
+         * Returns the id for the corresponding connector.
+         *
+         * @return the id for the connector
+         */
         public String getConnectorId() {
             return connectorId;
         }

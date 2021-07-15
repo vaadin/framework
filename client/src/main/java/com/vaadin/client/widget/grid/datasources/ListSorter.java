@@ -43,6 +43,12 @@ public class ListSorter<T> {
     private Map<Grid.Column<?, T>, Comparator<?>> comparators;
     private HandlerRegistration sortHandlerRegistration;
 
+    /**
+     * Constructs a sorting facility for the given Grid.
+     *
+     * @param grid
+     *            the Grid that needs sort handling
+     */
     public ListSorter(Grid<T> grid) {
 
         if (grid == null) {
@@ -76,6 +82,8 @@ public class ListSorter<T> {
      * and Dates). Any existing comparator can be removed by passing in a
      * non-null GridColumn and a null Comparator.
      *
+     * @param <C>
+     *            the column data type
      * @param column
      *            a grid column. May not be null.
      * @param comparator
@@ -98,6 +106,8 @@ public class ListSorter<T> {
     /**
      * Retrieve the comparator assigned for a specific grid column.
      *
+     * @param <C>
+     *            the column data type
      * @param column
      *            a grid column. May not be null.
      * @return a comparator, or null if no comparator for the specified grid
@@ -126,6 +136,7 @@ public class ListSorter<T> {
      * @param order
      *            the sort order list provided by the grid sort event
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private void sort(final List<SortOrder> order) {
         DataSource<T> ds = grid.getDataSource();
         if (!(ds instanceof ListDataSource)) {
