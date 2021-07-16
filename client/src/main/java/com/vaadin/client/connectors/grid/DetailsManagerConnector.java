@@ -143,7 +143,8 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             boolean scrollToFirst = numberOfRows == 1
                     && latestVisibleRowRange.contains(firstRowIndex);
 
-            if (!newVisibleRowRange.equals(latestVisibleRowRange)) {
+            if (!newVisibleRowRange.equals(latestVisibleRowRange)
+                    || updatedRange.equals(newVisibleRowRange)) {
                 // update visible range
                 latestVisibleRowRange = newVisibleRowRange;
 
