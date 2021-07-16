@@ -2129,21 +2129,19 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 updateVerticalScrollPosition();
             });
 
+            addEditorAndContents(gridElement, tr);
+            updateSizeAndPosition(gridElement, tr);
+        }
+
+        private void addEditorAndContents(DivElement gridElement,
+                TableRowElement tr) {
             gridElement.appendChild(editorOverlay);
             editorOverlay.appendChild(frozenCellWrapper);
             editorOverlay.appendChild(cellWrapper);
             editorOverlay.appendChild(messageAndButtonsWrapper);
 
             updateBufferedStyleName();
-
-            // Add class name with selected modifier if the editor is being
-            // opened on selected row, see #11634
-            String selectedStylename = styleName + "-selected";
-            if (grid.isSelected(grid.getDataSource().getRow(getRow()))) {
-                cellWrapper.addClassName(selectedStylename);
-            } else {
-                cellWrapper.removeClassName(selectedStylename);
-            }
+            updateSelectedStyleName();
 
             int frozenColumns = grid.getVisibleFrozenColumnCount();
             double frozenColumnsWidth = 0;
@@ -2248,6 +2246,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
 
             setMessageAndButtonsWrapperVisible(isBuffered());
+        }
+
+        private void updateSizeAndPosition(DivElement gridElement,
+                TableRowElement tr) {
 
             updateHorizontalScrollPosition();
 
@@ -2359,6 +2361,17 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             } else {
                 editorOverlay.removeClassName("buffered");
                 editorOverlay.addClassName("unbuffered");
+            }
+        }
+
+        private void updateSelectedStyleName() {
+            // Add class name with selected modifier if the editor is being
+            // opened on selected row, see #11634
+            String selectedStylename = styleName + "-selected";
+            if (grid.isSelected(grid.getDataSource().getRow(getRow()))) {
+                cellWrapper.addClassName(selectedStylename);
+            } else {
+                cellWrapper.removeClassName(selectedStylename);
             }
         }
 
@@ -3913,6 +3926,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     .setColumnWidths(constrainedWidths, true);
         }
 
+        @SuppressWarnings("unchecked")
         private void applyColumnWidthsWithExpansion() {
             boolean defaultExpandRatios = true;
             int totalRatios = 0;
@@ -4019,6 +4033,46 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 return;
             }
 
+            Object[] result = handleMaximumWidths(totalRatios,
+                    pixelsToDistribute, defaultExpandRatios, columnsToExpand,
+                    visibleColumns, columnSizes);
+            if (result.length != 3) {
+                // everything handled already
+                return;
+            }
+            // update values based on maximum width handling
+            totalRatios = (int) result[0];
+            pixelsToDistribute = (double) result[1];
+            columnSizes = (Map<Integer, Double>) result[2];
+
+            assert pixelsToDistribute > 0 : "We've run out of pixels to distribute ("
+                    + pixelsToDistribute + "px to " + totalRatios
+                    + " ratios between " + columnsToExpand.size() + " columns)";
+            assert totalRatios > 0 && !columnsToExpand
+                    .isEmpty() : "Bookkeeping out of sync. Ratios: "
+                            + totalRatios + " Columns: "
+                            + columnsToExpand.size();
+
+            /*
+             * If we still have anything left, distribute the remaining pixels
+             * to the remaining columns.
+             */
+            columnSizes = distributeRemainingPixels(totalRatios,
+                    pixelsToDistribute, defaultExpandRatios, columnsToExpand,
+                    visibleColumns, columnSizes);
+
+            columnSizes = handleMinimumWidths(defaultExpandRatios,
+                    columnsToExpand, visibleColumns, columnSizes);
+
+            // Finally set all the column sizes.
+            setColumnSizes(columnSizes, true);
+        }
+
+        private Object[] handleMaximumWidths(int totalRatios,
+                double pixelsToDistribute, final boolean defaultExpandRatios,
+                final Set<Column<?, T>> columnsToExpand,
+                final List<Column<?, T>> visibleColumns,
+                final Map<Integer, Double> columnSizes) {
             /*
              * Check for columns that hit their max width. Adjust
              * pixelsToDistribute and totalRatios accordingly. Recheck. Stop
@@ -4051,20 +4105,20 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             if (totalRatios <= 0 && columnsToExpand.isEmpty()) {
                 setColumnSizes(columnSizes, true);
-                return;
+                // nothing left to handle
+                return new Object[] {};
             }
-            assert pixelsToDistribute > 0 : "We've run out of pixels to distribute ("
-                    + pixelsToDistribute + "px to " + totalRatios
-                    + " ratios between " + columnsToExpand.size() + " columns)";
-            assert totalRatios > 0 && !columnsToExpand
-                    .isEmpty() : "Bookkeeping out of sync. Ratios: "
-                            + totalRatios + " Columns: "
-                            + columnsToExpand.size();
+            // this must return exactly 3 objects in this precise order
+            return new Object[] { totalRatios, pixelsToDistribute,
+                    columnSizes };
+        }
 
-            /*
-             * If we still have anything left, distribute the remaining pixels
-             * to the remaining columns.
-             */
+        private Map<Integer, Double> distributeRemainingPixels(int totalRatios,
+                final double pixelsToDistribute,
+                final boolean defaultExpandRatios,
+                final Set<Column<?, T>> columnsToExpand,
+                final List<Column<?, T>> visibleColumns,
+                final Map<Integer, Double> columnSizes) {
             final double widthPerRatio;
             int leftOver = 0;
             if (BrowserInfo.getBrowserString().contains("PhantomJS")) {
@@ -4093,6 +4147,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             assert totalRatios == 0 : "Bookkeeping error: there were still some ratios left undistributed: "
                     + totalRatios;
 
+            return columnSizes;
+        }
+
+        private Map<Integer, Double> handleMinimumWidths(
+                final boolean defaultExpandRatios,
+                final Set<Column<?, T>> columnsToExpand,
+                final List<Column<?, T>> visibleColumns,
+                final Map<Integer, Double> columnSizes) {
             /*
              * Check the guarantees for minimum width and scoot back the columns
              * that don't care.
@@ -4138,7 +4200,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                  * Now we need to shrink the remaining columns according to
                  * their ratios. Recalculate the sum of remaining ratios.
                  */
-                totalRatios = 0;
+                int totalRatios = 0;
                 for (Column<?, ?> column : columnsToExpand) {
                     totalRatios += getExpandRatio(column, defaultExpandRatios);
                 }
@@ -4154,8 +4216,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             } while (minWidthsCausedReflows);
 
-            // Finally set all the column sizes.
-            setColumnSizes(columnSizes, true);
+            return columnSizes;
         }
 
         private void setColumnSizes(Map<Integer, Double> columnSizes,
@@ -6533,161 +6594,181 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     resizeHandleWidth = dragger.getElement().getOffsetWidth()
                             + WidgetUtil.getBorderLeftAndRightThickness(td);
 
-                    // Common functionality for drag handle callback
-                    // implementations
-                    abstract class AbstractDHCallback
-                            implements DragHandleCallback {
-                        protected Column<?, T> col = getVisibleColumn(column);
-                        protected double initialWidth = 0;
-                        protected double minCellWidth;
-                        protected double width;
+                    final DragHandleCallback simpleResizeMode = createSimpleResizeModeCallback(
+                            column, dragger, resizeElement);
 
-                        protected void dragStarted() {
-                            initialWidth = col.getWidthActual();
-                            width = initialWidth;
-
-                            minCellWidth = escalator.getMinCellWidth(
-                                    getVisibleColumns().indexOf(col));
-                            for (Column<?, T> c : getVisibleColumns()) {
-                                if (selectionColumn == c) {
-                                    // Don't modify selection column.
-                                    continue;
-                                }
-
-                                if (c.getWidth() < 0) {
-                                    c.setWidth(c.getWidthActual());
-                                    fireEvent(new ColumnResizeEvent<>(c));
-                                }
-                            }
-
-                            WidgetUtil.setTextSelectionEnabled(getElement(),
-                                    false);
-                        }
-
-                        protected void dragEnded() {
-                            WidgetUtil.setTextSelectionEnabled(getElement(),
-                                    true);
-                        }
-                    }
-
-                    final DragHandleCallback simpleResizeMode = new AbstractDHCallback() {
-                        @Override
-                        protected void dragEnded() {
-                            super.dragEnded();
-                            dragger.getElement().removeChild(resizeElement);
-                        }
-
-                        @Override
-                        public void onStart() {
-                            dragStarted();
-                            dragger.getElement().appendChild(resizeElement);
-                            resizeElement.getStyle().setLeft(
-                                    (dragger.getElement().getOffsetWidth()
-                                            - resizeElement.getOffsetWidth())
-                                            * .5,
-                                    Unit.PX);
-                            resizeElement.getStyle().setHeight(
-                                    col.grid.getOffsetHeight(), Unit.PX);
-                        }
-
-                        @Override
-                        public void onUpdate(double deltaX, double deltaY) {
-                            width = Math.max(minCellWidth,
-                                    initialWidth + deltaX);
-                            resizeElement.getStyle().setLeft(
-                                    (dragger.getElement().getOffsetWidth()
-                                            - resizeElement.getOffsetWidth())
-                                            * .5 + (width - initialWidth),
-                                    Unit.PX);
-                        }
-
-                        @Override
-                        public void onCancel() {
-                            dragEnded();
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            dragEnded();
-                            col.setWidth(width);
-
-                            // Need to wait for column width recalculation
-                            // scheduled by setWidth() before firing the event
-                            Scheduler.get().scheduleDeferred(() -> fireEvent(
-                                    new ColumnResizeEvent<>(col)));
-                        }
-                    };
-
-                    final DragHandleCallback animatedResizeMode = new AbstractDHCallback() {
-                        @Override
-                        public void onStart() {
-                            dragStarted();
-                        }
-
-                        @Override
-                        public void onUpdate(double deltaX, double deltaY) {
-                            width = Math.max(minCellWidth,
-                                    initialWidth + deltaX);
-                            col.setWidth(width);
-                        }
-
-                        @Override
-                        public void onCancel() {
-                            dragEnded();
-                            col.setWidth(initialWidth);
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            dragEnded();
-                            col.setWidth(width);
-                            fireEvent(new ColumnResizeEvent<>(col));
-                        }
-                    };
+                    final DragHandleCallback animatedResizeMode = createAnimatedResizeModeCallback(
+                            column);
 
                     // DragHandle gets assigned a 'master callback' that
-                    // delegates
-                    // functionality to the correct case-specific implementation
-                    dragger.setCallback(new DragHandleCallback() {
-
-                        private DragHandleCallback currentCallback;
-
-                        @Override
-                        public void onStart() {
-                            switch (getColumnResizeMode()) {
-                            case SIMPLE:
-                                currentCallback = simpleResizeMode;
-                                break;
-                            case ANIMATED:
-                                currentCallback = animatedResizeMode;
-                                break;
-                            default:
-                                throw new UnsupportedOperationException(
-                                        "Support for current column resize mode is not yet implemented");
-                            }
-
-                            currentCallback.onStart();
-                        }
-
-                        @Override
-                        public void onUpdate(double deltaX, double deltaY) {
-                            currentCallback.onUpdate(deltaX, deltaY);
-                        }
-
-                        @Override
-                        public void onCancel() {
-                            currentCallback.onCancel();
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            currentCallback.onComplete();
-                        }
-                    });
+                    // delegates functionality to the correct case-specific
+                    // implementation
+                    dragger.setCallback(createResizeModeAwareDragHandleCallback(
+                            simpleResizeMode, animatedResizeMode));
                 }
 
                 cellFocusHandler.updateFocusedCellStyle(cell, container);
             }
+        }
+
+        // Common functionality for drag handle callback
+        // implementations
+        private abstract class AbstractDHCallback
+                implements DragHandleCallback {
+            protected Column<?, T> col;
+            protected double initialWidth = 0;
+            protected double minCellWidth;
+            protected double width;
+
+            AbstractDHCallback(int column) {
+                col = getVisibleColumn(column);
+            }
+
+            protected void dragStarted() {
+                initialWidth = col.getWidthActual();
+                width = initialWidth;
+
+                minCellWidth = escalator
+                        .getMinCellWidth(getVisibleColumns().indexOf(col));
+                for (Column<?, T> c : getVisibleColumns()) {
+                    if (selectionColumn == c) {
+                        // Don't modify selection column.
+                        continue;
+                    }
+
+                    if (c.getWidth() < 0) {
+                        c.setWidth(c.getWidthActual());
+                        fireEvent(new ColumnResizeEvent<>(c));
+                    }
+                }
+
+                WidgetUtil.setTextSelectionEnabled(getElement(), false);
+            }
+
+            protected void dragEnded() {
+                WidgetUtil.setTextSelectionEnabled(getElement(), true);
+            }
+        }
+
+        private DragHandleCallback createSimpleResizeModeCallback(
+                final int column, final DragHandle dragger,
+                final DivElement resizeElement) {
+            return new AbstractDHCallback(column) {
+                @Override
+                protected void dragEnded() {
+                    super.dragEnded();
+                    dragger.getElement().removeChild(resizeElement);
+                }
+
+                @Override
+                public void onStart() {
+                    dragStarted();
+                    dragger.getElement().appendChild(resizeElement);
+                    resizeElement.getStyle()
+                            .setLeft((dragger.getElement().getOffsetWidth()
+                                    - resizeElement.getOffsetWidth()) * .5,
+                                    Unit.PX);
+                    resizeElement.getStyle()
+                            .setHeight(col.grid.getOffsetHeight(), Unit.PX);
+                }
+
+                @Override
+                public void onUpdate(double deltaX, double deltaY) {
+                    width = Math.max(minCellWidth, initialWidth + deltaX);
+                    resizeElement.getStyle()
+                            .setLeft(
+                                    (dragger.getElement().getOffsetWidth()
+                                            - resizeElement.getOffsetWidth())
+                                            * .5 + (width - initialWidth),
+                                    Unit.PX);
+                }
+
+                @Override
+                public void onCancel() {
+                    dragEnded();
+                }
+
+                @Override
+                public void onComplete() {
+                    dragEnded();
+                    col.setWidth(width);
+
+                    // Need to wait for column width recalculation
+                    // scheduled by setWidth() before firing the event
+                    Scheduler.get().scheduleDeferred(
+                            () -> fireEvent(new ColumnResizeEvent<>(col)));
+                }
+            };
+        }
+
+        private DragHandleCallback createAnimatedResizeModeCallback(
+                final int column) {
+            return new AbstractDHCallback(column) {
+                @Override
+                public void onStart() {
+                    dragStarted();
+                }
+
+                @Override
+                public void onUpdate(double deltaX, double deltaY) {
+                    width = Math.max(minCellWidth, initialWidth + deltaX);
+                    col.setWidth(width);
+                }
+
+                @Override
+                public void onCancel() {
+                    dragEnded();
+                    col.setWidth(initialWidth);
+                }
+
+                @Override
+                public void onComplete() {
+                    dragEnded();
+                    col.setWidth(width);
+                    fireEvent(new ColumnResizeEvent<>(col));
+                }
+            };
+        }
+
+        private DragHandleCallback createResizeModeAwareDragHandleCallback(
+                final DragHandleCallback simpleResizeMode,
+                final DragHandleCallback animatedResizeMode) {
+            return new DragHandleCallback() {
+
+                private DragHandleCallback currentCallback;
+
+                @Override
+                public void onStart() {
+                    switch (getColumnResizeMode()) {
+                    case SIMPLE:
+                        currentCallback = simpleResizeMode;
+                        break;
+                    case ANIMATED:
+                        currentCallback = animatedResizeMode;
+                        break;
+                    default:
+                        throw new UnsupportedOperationException(
+                                "Support for current column resize mode is not yet implemented");
+                    }
+
+                    currentCallback.onStart();
+                }
+
+                @Override
+                public void onUpdate(double deltaX, double deltaY) {
+                    currentCallback.onUpdate(deltaX, deltaY);
+                }
+
+                @Override
+                public void onCancel() {
+                    currentCallback.onCancel();
+                }
+
+                @Override
+                public void onComplete() {
+                    currentCallback.onComplete();
+                }
+            };
         }
 
         private void addAriaLabelToHeaderRow(FlyweightCell cell) {
