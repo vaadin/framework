@@ -39,6 +39,7 @@ import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -1382,10 +1383,22 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 return FileSystems.getFileSystem(resourceURI);
             }
             // Opened filesystem is for the file to get the correct provider
-            FileSystem fileSystem = FileSystems.newFileSystem(resourceURI,
-                    Collections.emptyMap());
+            FileSystem fileSystem = getNewOrExistingFileSystem(resourceURI);
             OPEN_FILE_SYSTEMS.put(fileURI, 1);
             return fileSystem;
+        }
+    }
+
+    private FileSystem getNewOrExistingFileSystem(URI resourceURI)
+            throws IOException {
+        try {
+            return FileSystems.newFileSystem(resourceURI,
+                    Collections.emptyMap());
+        } catch (FileSystemAlreadyExistsException fsaee) {
+            getLogger().log(Level.FINER,
+                    "Tried to get new filesystem, but it already existed for target uri.",
+                    fsaee);
+            return FileSystems.getFileSystem(resourceURI);
         }
     }
 

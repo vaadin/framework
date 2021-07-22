@@ -10,11 +10,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.FileSystem;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -319,6 +321,42 @@ public class VaadinServletTest {
         } finally {
             folder.delete();
         }
+    }
+
+    @Test
+    public void openFileServerExistsForZip_openingNewDoesNotFail()
+            throws IOException, URISyntaxException {
+        assertTrue("Can not run concurrently with other test",
+                VaadinServlet.OPEN_FILE_SYSTEMS.isEmpty());
+
+        VaadinServlet servlet = new VaadinServlet();
+
+        final TemporaryFolder folder = TemporaryFolder.builder().build();
+        folder.create();
+
+        try {
+            Path tempArchive = createJAR(folder).toPath();
+
+            final FileSystem fileSystem = FileSystems
+                    .newFileSystem(
+                            new URL("jar:file:///" + tempArchive.toString()
+                                    .replaceAll("\\\\", "/") + "!/").toURI(),
+                            Collections.emptyMap());
+
+            final URL folderResourceURL = new URL("jar:file:///"
+                    + tempArchive.toString().replaceAll("\\\\", "/")
+                    + "!/VAADIN");
+
+            try {
+                servlet.getFileSystem(folderResourceURL.toURI());
+            } finally {
+                servlet.closeFileSystem(folderResourceURL.toURI());
+                fileSystem.close();
+            }
+        } finally {
+            folder.delete();
+        }
+
     }
 
     @Test
