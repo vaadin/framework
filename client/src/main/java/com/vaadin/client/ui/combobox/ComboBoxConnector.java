@@ -42,6 +42,11 @@ import com.vaadin.ui.ComboBox;
 
 import elemental.json.JsonObject;
 
+/**
+ * A connector class for the ComboBox component.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(ComboBox.class)
 public class ComboBoxConnector extends AbstractListingConnector
         implements SimpleManagedLayout {

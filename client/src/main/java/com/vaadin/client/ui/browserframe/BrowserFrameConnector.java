@@ -22,6 +22,11 @@ import com.vaadin.shared.ui.AbstractEmbeddedState;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.browserframe.BrowserFrameState;
 
+/**
+ * A connector class for the BrowserFrame component.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(com.vaadin.ui.BrowserFrame.class)
 public class BrowserFrameConnector extends AbstractComponentConnector {
 

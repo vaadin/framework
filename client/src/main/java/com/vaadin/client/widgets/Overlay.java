@@ -64,9 +64,24 @@ public class Overlay extends PopupPanel {
         super.onAttach();
     }
 
+    /**
+     * Data object for storing position and size information.
+     */
     public static class PositionAndSize {
         private int left, top, width, height;
 
+        /**
+         * Constructs a data object for storing position and size information.
+         *
+         * @param left
+         *            pixel value for left css property
+         * @param top
+         *            pixel value for top css property
+         * @param width
+         *            pixel value for width css property
+         * @param height
+         *            pixel value for height css property
+         */
         public PositionAndSize(int left, int top, int width, int height) {
             super();
             setLeft(left);
@@ -75,26 +90,59 @@ public class Overlay extends PopupPanel {
             setHeight(height);
         }
 
+        /**
+         * Returns the pixel value for left css property.
+         *
+         * @return left value
+         */
         public int getLeft() {
             return left;
         }
 
+        /**
+         * Sets the pixel value for left css property.
+         *
+         * @param left
+         *            value to set
+         */
         public void setLeft(int left) {
             this.left = left;
         }
 
+        /**
+         * Returns the pixel value for top css property.
+         *
+         * @return top value
+         */
         public int getTop() {
             return top;
         }
 
+        /**
+         * Sets the pixel value for top css property.
+         *
+         * @param top
+         *            value to set
+         */
         public void setTop(int top) {
             this.top = top;
         }
 
+        /**
+         * Returns the pixel value for width css property.
+         *
+         * @return width value
+         */
         public int getWidth() {
             return width;
         }
 
+        /**
+         * Sets the pixel value for width css property.
+         *
+         * @param width
+         *            value to set
+         */
         public void setWidth(int width) {
             if (width < 0) {
                 width = 0;
@@ -103,10 +151,21 @@ public class Overlay extends PopupPanel {
             this.width = width;
         }
 
+        /**
+         * Returns the pixel value for height css property.
+         *
+         * @return height value
+         */
         public int getHeight() {
             return height;
         }
 
+        /**
+         * Sets the pixel value for height css property.
+         *
+         * @param height
+         *            value to set
+         */
         public void setHeight(int height) {
             if (height < 0) {
                 height = 0;
@@ -115,6 +174,17 @@ public class Overlay extends PopupPanel {
             this.height = height;
         }
 
+        /**
+         * Offset the set values from center by given progress to create the
+         * state of a single animation frame. Each frame needs to be initialized
+         * from the beginning, since calling this method for a second time
+         * without resetting the size and position values would lead to
+         * incorrect end results.
+         *
+         * @param progress
+         *            A value between 0.0 and 1.0, indicating the progress of
+         *            the animation (0=start, 1=end).
+         */
         public void setAnimationFromCenterProgress(double progress) {
             left += (int) (width * (1.0 - progress) / 2.0);
             top += (int) (height * (1.0 - progress) / 2.0);
@@ -123,7 +193,7 @@ public class Overlay extends PopupPanel {
         }
     }
 
-    /*
+    /**
      * The z-index value from where all overlays live. This can be overridden in
      * any extending class.
      */
@@ -177,21 +247,55 @@ public class Overlay extends PopupPanel {
 
     private List<Command> runOnClose = new ArrayList<>();
 
+    /**
+     * Constructs a floating popup overlay element.
+     *
+     * @see Overlay
+     */
     public Overlay() {
         super();
         adjustZIndex();
     }
 
+    /**
+     * Constructs a floating popup overlay element.
+     *
+     * @param autoHide
+     *            {@code true} if the overlay should be automatically hidden
+     *            when the user clicks outside of it or the history token
+     *            changes.
+     *
+     * @see Overlay
+     */
     public Overlay(boolean autoHide) {
         super(autoHide);
         adjustZIndex();
     }
 
+    /**
+     * Constructs a floating popup overlay element.
+     *
+     * @param autoHide
+     *            {@code true} if the overlay should be automatically hidden
+     *            when the user clicks outside of it or the history token
+     *            changes.
+     * @param modal
+     *            {@code true} if keyboard or mouse events that do not target
+     *            the Overlay or its children should be ignored
+     *
+     * @see Overlay
+     */
     public Overlay(boolean autoHide, boolean modal) {
         super(autoHide, modal);
         adjustZIndex();
     }
 
+    /**
+     * Is there a shim iframe behind the overlay, allowing PDFs and applets to
+     * be covered by overlays.
+     *
+     * @return {@code true} if a shim element exists, {@code false} otherwise
+     */
     protected boolean isShimElementEnabled() {
         return shimElement != null;
     }
@@ -362,7 +466,7 @@ public class Overlay extends PopupPanel {
         return leftFix;
     }
 
-    /*
+    /**
      * A "thread local" of sorts, set temporarily so that OverlayImpl knows
      * which Overlay is using it, so that it can be attached to the correct
      * overlay container.
@@ -560,6 +664,9 @@ public class Overlay extends PopupPanel {
         e.getStyle().setHeight(positionAndSize.getHeight(), Unit.PX);
     }
 
+    /**
+     * An {@link Animation} class for overlay resizing needs.
+     */
     protected class ResizeAnimation extends Animation {
         @Override
         protected void onUpdate(double progress) {

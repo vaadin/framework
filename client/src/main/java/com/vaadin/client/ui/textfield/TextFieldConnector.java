@@ -23,7 +23,9 @@ import com.vaadin.shared.ui.textfield.TextFieldState;
 import com.vaadin.ui.TextField;
 
 /**
- * Connector class for TextField.
+ * Connector class for TextField. Eagerly loaded.
+ *
+ * @author Vaadin Ltd
  */
 @Connect(value = TextField.class, loadStyle = LoadStyle.EAGER)
 public class TextFieldConnector extends AbstractTextFieldConnector {

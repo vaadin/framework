@@ -36,13 +36,22 @@ import com.vaadin.client.ui.SubPartAware;
 public class VColorPickerGradient extends FocusPanel implements
         MouseDownHandler, MouseUpHandler, MouseMoveHandler, SubPartAware {
 
-    /** Set the CSS class name to allow styling. */
+    /** Default class name for this widget. */
     public static final String CLASSNAME = "v-colorpicker-gradient";
-    public static final String CLASSNAME_BACKGROUND = CLASSNAME + "-background";
-    public static final String CLASSNAME_FOREGROUND = CLASSNAME + "-foreground";
-    public static final String CLASSNAME_LOWERBOX = CLASSNAME + "-lowerbox";
-    public static final String CLASSNAME_HIGHERBOX = CLASSNAME + "-higherbox";
+    /**
+     * Default class name for the container sub-element that contains all other
+     * sub-elements within this widget.
+     */
     public static final String CLASSNAME_CONTAINER = CLASSNAME + "-container";
+    /** Default class name for the background element within this widget. */
+    public static final String CLASSNAME_BACKGROUND = CLASSNAME + "-background";
+    /** Default class name for the foreground element within this widget. */
+    public static final String CLASSNAME_FOREGROUND = CLASSNAME + "-foreground";
+    /** Default class name for the lowerbox element within this widget. */
+    public static final String CLASSNAME_LOWERBOX = CLASSNAME + "-lowerbox";
+    /** Default class name for the higherbox element within this widget. */
+    public static final String CLASSNAME_HIGHERBOX = CLASSNAME + "-higherbox";
+    /** Default class name for the clicklayer element within this widget. */
     public static final String CLASSNAME_CLICKLAYER = CLASSNAME + "-clicklayer";
     private static final String CLICKLAYER_ID = "clicklayer";
 
@@ -106,6 +115,8 @@ public class VColorPickerGradient extends FocusPanel implements
 
     /**
      * Returns the latest x-coordinate for pressed-down mouse cursor.
+     *
+     * @return the latest x-coordinate
      */
     public int getCursorX() {
         return cursorX;
@@ -113,6 +124,8 @@ public class VColorPickerGradient extends FocusPanel implements
 
     /**
      * Returns the latest y-coordinate for pressed-down mouse cursor.
+     *
+     * @return the latest y-coordinate
      */
     public int getCursorY() {
         return cursorY;
@@ -122,6 +135,7 @@ public class VColorPickerGradient extends FocusPanel implements
      * Sets the given css color as the background.
      *
      * @param bgColor
+     *            the color to set
      */
     public void setBGColor(String bgColor) {
         if (bgColor == null) {
@@ -163,7 +177,9 @@ public class VColorPickerGradient extends FocusPanel implements
      * cross elements.
      *
      * @param x
+     *            x-coordinate
      * @param y
+     *            y-coordinate
      */
     public void setCursor(int x, int y) {
         cursorX = x;
@@ -192,6 +208,7 @@ public class VColorPickerGradient extends FocusPanel implements
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public com.google.gwt.user.client.Element getSubPartElement(
             String subPart) {
@@ -202,6 +219,7 @@ public class VColorPickerGradient extends FocusPanel implements
         return null;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public String getSubPartName(
             com.google.gwt.user.client.Element subElement) {

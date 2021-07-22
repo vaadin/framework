@@ -31,6 +31,9 @@ import com.vaadin.ui.ProgressBar;
 @Connect(ProgressBar.class)
 public class ProgressBarConnector extends AbstractFieldConnector {
 
+    /**
+     * Constructs a connector for a ProgressBar component.
+     */
     public ProgressBarConnector() {
         super();
     }

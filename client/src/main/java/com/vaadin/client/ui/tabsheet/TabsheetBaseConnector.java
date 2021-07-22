@@ -27,6 +27,12 @@ import com.vaadin.client.ui.VTabsheetBase;
 import com.vaadin.shared.ui.tabsheet.TabState;
 import com.vaadin.shared.ui.tabsheet.TabsheetState;
 
+/**
+ * An abstract connector class for components that share features with a
+ * TabSheet.
+ *
+ * @author Vaadin Ltd
+ */
 public abstract class TabsheetBaseConnector
         extends AbstractComponentContainerConnector {
 

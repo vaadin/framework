@@ -72,7 +72,9 @@ public class VColorPickerGrid extends AbsolutePanel
      * For internal use only. May be renamed or removed in a future release.
      *
      * @param rowCount
+     *            how many rows the grid should have
      * @param columnCount
+     *            how many columns the grid should have
      */
     public void updateGrid(int rowCount, int columnCount) {
         rows = rowCount;
@@ -89,8 +91,11 @@ public class VColorPickerGrid extends AbsolutePanel
      * For internal use only. May be renamed or removed in a future release.
      *
      * @param changedColor
+     *            the changed colors
      * @param changedX
+     *            the x-coordinates for the changed colors
      * @param changedY
+     *            the y-coordinates for the changed colors
      */
     public void updateColor(String[] changedColor, String[] changedX,
             String[] changedY) {
@@ -112,6 +117,8 @@ public class VColorPickerGrid extends AbsolutePanel
 
     /**
      * Returns currently selected x-coordinate of the grid.
+     *
+     * @return the selected x-coordinate
      */
     public int getSelectedX() {
         return selectedX;
@@ -119,16 +126,20 @@ public class VColorPickerGrid extends AbsolutePanel
 
     /**
      * Returns currently selected y-coordinate of the grid.
+     *
+     * @return the selected y-coordinate
      */
     public int getSelectedY() {
         return selectedY;
     }
 
     /**
-     * Returns true if the colors have been successfully updated at least once,
-     * false otherwise.
+     * Checks whether the colors have been successfully updated at least once.
      * <p>
      * For internal use only. May be renamed or removed in a future release.
+     *
+     * @return {@code true} if the colors have been successfully updated at
+     *         least once, {@code false} otherwise
      */
     public boolean isGridLoaded() {
         return gridLoaded;

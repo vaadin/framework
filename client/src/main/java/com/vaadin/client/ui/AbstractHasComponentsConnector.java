@@ -24,6 +24,11 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
 import com.vaadin.client.HasComponentsConnector;
 
+/**
+ * Base class for component connectors whose widget is a component container.
+ *
+ * @author Vaadin Ltd
+ */
 public abstract class AbstractHasComponentsConnector
         extends AbstractComponentConnector
         implements HasComponentsConnector, ConnectorHierarchyChangeHandler {

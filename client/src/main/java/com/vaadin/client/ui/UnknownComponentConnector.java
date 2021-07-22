@@ -18,6 +18,12 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.core.client.GWT;
 
+/**
+ * A placeholder connector class for when a component's connector cannot be
+ * determined.
+ *
+ * @author Vaadin Ltd
+ */
 public class UnknownComponentConnector extends AbstractComponentConnector {
 
     @Override
@@ -30,10 +36,26 @@ public class UnknownComponentConnector extends AbstractComponentConnector {
         return (VUnknownComponent) super.getWidget();
     }
 
+    /**
+     * Updates the placeholder widget's caption to mention the component whose
+     * connector cannot be determined.
+     *
+     * @param serverClassName
+     *            the class name of the component
+     */
     public void setServerSideClassName(String serverClassName) {
         getWidget().setCaption(createMessage(serverClassName));
     }
 
+    /**
+     * Creates a message that warns about the issue with the named component and
+     * gives debugging hints.
+     *
+     * @param serverClassName
+     *            the class name of the component whose connector cannot be
+     *            determined.
+     * @return the warning message
+     */
     public static String createMessage(String serverClassName) {
         return "Widgetset '" + GWT.getModuleName()
                 + "' does not contain an implementation for " + serverClassName

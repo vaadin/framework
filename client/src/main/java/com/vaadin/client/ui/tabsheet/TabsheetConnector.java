@@ -29,10 +29,18 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.tabsheet.TabsheetClientRpc;
 import com.vaadin.ui.TabSheet;
 
+/**
+ * A connector class for the TabSheet component.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(TabSheet.class)
 public class TabsheetConnector extends TabsheetBaseConnector
         implements SimpleManagedLayout, MayScrollChildren {
 
+    /**
+     * Constructs a connector for a TabSheet component.
+     */
     public TabsheetConnector() {
         registerRpc(TabsheetClientRpc.class, () -> {
             for (int i = 0; i < getState().tabs.size(); ++i) {

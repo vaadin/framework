@@ -164,6 +164,8 @@ public class TreeGrid<T> extends Grid<T>
      * @see TreeGrid#TreeGrid()
      * @see TreeGrid#TreeGrid(Class)
      *
+     * @param <BEAN>
+     *            the tree grid bean type
      * @param propertySet
      *            the property set implementation to use, not {@code null}
      * @return a new tree grid using the provided property set, not {@code null}
@@ -202,7 +204,7 @@ public class TreeGrid<T> extends Grid<T>
 
     /**
      * This method is inherited from Grid but should never be called directly
-     * with a TreeGrid
+     * with a TreeGrid.
      */
     @Override
     @Deprecated
@@ -212,7 +214,7 @@ public class TreeGrid<T> extends Grid<T>
 
     /**
      * This method is inherited from Grid but should never be called directly
-     * with a TreeGrid
+     * with a TreeGrid.
      */
     @Deprecated
     @Override
@@ -344,6 +346,7 @@ public class TreeGrid<T> extends Grid<T>
      * @param items
      *            the items to expand
      */
+    @SuppressWarnings("unchecked")
     public void expand(T... items) {
         expand(Arrays.asList(items));
     }
@@ -434,6 +437,7 @@ public class TreeGrid<T> extends Grid<T>
      * @param items
      *            the collection of items to collapse
      */
+    @SuppressWarnings("unchecked")
     public void collapse(T... items) {
         collapse(Arrays.asList(items));
     }

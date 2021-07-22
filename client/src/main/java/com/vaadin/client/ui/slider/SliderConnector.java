@@ -27,10 +27,18 @@ import com.vaadin.shared.ui.slider.SliderServerRpc;
 import com.vaadin.shared.ui.slider.SliderState;
 import com.vaadin.ui.Slider;
 
+/**
+ * A connector class for the Slider component.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(Slider.class)
 public class SliderConnector extends AbstractFieldConnector
         implements ValueChangeHandler<Double> {
 
+    /**
+     * RPC instance for Slider's client-to-server calls.
+     */
     protected SliderServerRpc rpc = RpcProxy.create(SliderServerRpc.class,
             this);
 

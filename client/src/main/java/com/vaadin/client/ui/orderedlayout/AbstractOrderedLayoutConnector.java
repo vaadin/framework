@@ -60,6 +60,7 @@ public abstract class AbstractOrderedLayoutConnector
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this) {
 
+        @SuppressWarnings("deprecation")
         @Override
         protected ComponentConnector getChildComponent(
                 com.google.gwt.user.client.Element element) {
@@ -236,6 +237,7 @@ public abstract class AbstractOrderedLayoutConnector
         updateInternalState();
     }
 
+    @SuppressWarnings("deprecation")
     private void updateCaptionInternal(ComponentConnector child) {
         Slot slot = getWidget().getSlot(child.getWidget());
 
@@ -360,6 +362,7 @@ public abstract class AbstractOrderedLayoutConnector
      * com.vaadin.client.ui.AbstractComponentConnector#onStateChanged(com.vaadin
      * .client.communication.StateChangeEvent)
      */
+    @SuppressWarnings("deprecation")
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);

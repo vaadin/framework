@@ -21,6 +21,11 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.passwordfield.PasswordFieldState;
 import com.vaadin.ui.PasswordField;
 
+/**
+ * A connector class for the PasswordField component.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(PasswordField.class)
 public class PasswordFieldConnector extends TextFieldConnector {
 

@@ -55,7 +55,8 @@ public class TreeGrid extends Grid<JsonObject> {
      * Body updater that adds additional style to each row containing depth
      * information inside the hierarchy.
      */
-    protected class BodyUpdater extends Grid.BodyUpdater {
+    protected class BodyUpdater extends Grid<JsonObject>.BodyUpdater {
+        @SuppressWarnings({ "rawtypes", "unchecked" })
         @Override
         public void update(Row row, Iterable cellsToUpdate) {
             super.update(row, cellsToUpdate);
@@ -99,6 +100,11 @@ public class TreeGrid extends Grid<JsonObject> {
     /**
      * Method for accessing the private {@link Grid#focusCell(int, int)} method
      * from this package.
+     *
+     * @param rowIndex
+     *            index of row to focus
+     * @param columnIndex
+     *            index (excluding hidden columns) of cell to focus
      */
     public native void focusCell(int rowIndex, int columnIndex)
     /*-{
@@ -108,6 +114,11 @@ public class TreeGrid extends Grid<JsonObject> {
     /**
      * Method for accessing the private
      * {@link Grid#isElementInChildWidget(Element)} method from this package.
+     *
+     * @param e
+     *            the element to check
+     * @return {@code true} if the element is located within a child widget of
+     *         this TreeGrid, {@code false} otherwise.
      */
     public native boolean isElementInChildWidget(Element e)
     /*-{

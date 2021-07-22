@@ -31,7 +31,7 @@ import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.ui.Composite;
 
 /**
- * Connector for the Composite component.
+ * Connector for the Composite component. Eagerly loaded.
  *
  * @author Vaadin Ltd
  * @since 8.1

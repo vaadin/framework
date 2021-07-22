@@ -42,6 +42,11 @@ import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelRpc;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState.SplitterState;
 
+/**
+ * An abstract connector class for the SplitPanel components.
+ *
+ * @author Vaadin Ltd
+ */
 public abstract class AbstractSplitPanelConnector extends
         AbstractComponentContainerConnector implements SimpleManagedLayout {
 
@@ -99,6 +104,7 @@ public abstract class AbstractSplitPanelConnector extends
             return super.shouldFireEvent(event);
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         protected com.google.gwt.user.client.Element getRelativeToElement() {
             return DOM.asOld(getWidget().splitter);
@@ -144,10 +150,6 @@ public abstract class AbstractSplitPanelConnector extends
         panel.setPositionReversed(splitterState.positionReversed);
 
         panel.setLocked(splitterState.locked);
-
-        // This is needed at least for cases like #3458 to take
-        // appearing/disappearing scrollbars into account.
-        getConnection().runDescendentsLayout(panel);
 
         getLayoutManager().setNeedsLayout(this);
 

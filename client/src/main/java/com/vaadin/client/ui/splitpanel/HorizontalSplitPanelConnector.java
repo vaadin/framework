@@ -21,6 +21,11 @@ import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.splitpanel.HorizontalSplitPanelState;
 import com.vaadin.ui.HorizontalSplitPanel;
 
+/**
+ * A connector class for the HorizontalSplitPanel component. Eagerly loaded.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(value = HorizontalSplitPanel.class, loadStyle = LoadStyle.EAGER)
 public class HorizontalSplitPanelConnector extends AbstractSplitPanelConnector {
 

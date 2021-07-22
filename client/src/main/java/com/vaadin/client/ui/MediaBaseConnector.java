@@ -22,6 +22,11 @@ import com.vaadin.shared.ui.AbstractMediaState;
 import com.vaadin.shared.ui.MediaControl;
 import com.vaadin.shared.ui.PreloadMode;
 
+/**
+ * Base class for media component connectors.
+ *
+ * @author Vaadin Ltd
+ */
 public abstract class MediaBaseConnector extends AbstractComponentConnector {
 
     @Override

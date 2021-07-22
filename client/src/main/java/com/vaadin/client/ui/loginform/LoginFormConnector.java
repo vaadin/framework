@@ -21,7 +21,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
@@ -37,6 +36,11 @@ import com.vaadin.shared.ui.loginform.LoginFormConstants;
 import com.vaadin.shared.ui.loginform.LoginFormRpc;
 import com.vaadin.shared.ui.loginform.LoginFormState;
 
+/**
+ * A connector class for the LoginForm component.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(com.vaadin.ui.LoginForm.class)
 public class LoginFormConnector
         extends AbstractSingleComponentContainerConnector {
@@ -111,8 +115,8 @@ public class LoginFormConnector
                     || externalId.startsWith("gwt-")) {
                 element.setId(id);
             }
-            DOM.setElementAttribute(element, "name", id);
-            DOM.setElementAttribute(element, "autocomplete", "on");
+            element.setAttribute("name", id);
+            element.setAttribute("autocomplete", "on");
 
             return textField;
         } else {

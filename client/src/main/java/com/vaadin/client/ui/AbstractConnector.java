@@ -186,6 +186,8 @@ public abstract class AbstractConnector
     /**
      * Unregisters an implementation for a server to client RPC interface.
      *
+     * @param <T>
+     *            The type of the RPC interface that is being unregistered
      * @param rpcInterface
      *            RPC interface
      * @param implementation
@@ -211,6 +213,7 @@ public abstract class AbstractConnector
      * @return A proxy object which can be used to invoke the RPC method on the
      *         server.
      */
+    @SuppressWarnings("unchecked")
     protected <T extends ServerRpc> T getRpcProxy(Class<T> rpcInterface) {
         String name = rpcInterface.getName();
         if (!rpcProxyMap.containsKey(name)) {
@@ -219,6 +222,7 @@ public abstract class AbstractConnector
         return (T) rpcProxyMap.get(name);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends ClientRpc> Collection<T> getRpcImplementations(
             String rpcInterfaceId) {
@@ -260,6 +264,12 @@ public abstract class AbstractConnector
 
     }
 
+    /**
+     * Ensure there is a handler manager. If one doesn't exist before this
+     * method is called, it gets created.
+     *
+     * @return the handler manager
+     */
     protected HandlerManager ensureHandlerManager() {
         if (handlerManager == null) {
             handlerManager = new HandlerManager(this);
@@ -402,6 +412,13 @@ public abstract class AbstractConnector
 
     }
 
+    /**
+     * Find the type of the state for the given connector.
+     *
+     * @param connector
+     *            the connector whose state type to find
+     * @return the state type
+     */
     public static Type getStateType(ServerConnector connector) {
         try {
             return TypeData.getType(connector.getClass()).getMethod("getState")
@@ -506,6 +523,7 @@ public abstract class AbstractConnector
     }
 
     private static class FullStateChangeEvent extends StateChangeEvent {
+        @SuppressWarnings("deprecation")
         public FullStateChangeEvent(ServerConnector connector) {
             super(connector, FastStringSet.create());
         }

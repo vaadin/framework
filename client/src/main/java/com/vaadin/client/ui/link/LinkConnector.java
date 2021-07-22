@@ -26,6 +26,11 @@ import com.vaadin.shared.ui.link.LinkConstants;
 import com.vaadin.shared.ui.link.LinkState;
 import com.vaadin.ui.Link;
 
+/**
+ * A connector class for the Link component.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(Link.class)
 public class LinkConnector extends AbstractComponentConnector {
 

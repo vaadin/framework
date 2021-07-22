@@ -43,6 +43,11 @@ import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
 import com.vaadin.shared.ui.orderedlayout.FormLayoutState;
 import com.vaadin.ui.FormLayout;
 
+/**
+ * A connector class for FormLayout.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(FormLayout.class)
 public class FormLayoutConnector extends AbstractLayoutConnector
         implements PostLayoutListener {
@@ -54,6 +59,7 @@ public class FormLayoutConnector extends AbstractLayoutConnector
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this) {
 
+        @SuppressWarnings("deprecation")
         @Override
         protected ComponentConnector getChildComponent(
                 com.google.gwt.user.client.Element element) {
@@ -154,6 +160,7 @@ public class FormLayoutConnector extends AbstractLayoutConnector
         return (FormLayoutState) super.getState();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);

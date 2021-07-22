@@ -36,6 +36,7 @@ import com.vaadin.client.widgets.Grid;
  */
 public class TreeGridDoubleClickEvent extends GridDoubleClickEvent {
 
+    /** DOM event type. */
     public static final Type<GridDoubleClickHandler> TYPE = new Type<>(
             BrowserEvents.DBLCLICK, new TreeGridDoubleClickEvent());
 

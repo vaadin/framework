@@ -75,6 +75,7 @@ import com.vaadin.shared.ui.window.WindowRole;
  *
  * @author Vaadin Ltd
  */
+@SuppressWarnings("deprecation")
 public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         ScrollHandler, KeyDownHandler, FocusHandler, BlurHandler, Focusable {
 
@@ -85,12 +86,14 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     private static boolean orderingDefered;
 
+    /** The default classname for this widget. */
     public static final String CLASSNAME = "v-window";
 
     private static final String MODAL_WINDOW_OPEN_CLASSNAME = "v-modal-window-open";
 
     private static final int STACKING_OFFSET_PIXELS = 15;
 
+    /** The default z-index value from where all windows start up from. */
     public static final int Z_INDEX = 10000;
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -208,6 +211,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     private VLazyExecutor delayedContentsSizeUpdater = new VLazyExecutor(200,
             () -> updateContentsSize());
 
+    /**
+     * Constructs a widget for a sub-window.
+     */
     public VWindow() {
         super(false, false); // no autohide, not modal
 
@@ -296,6 +302,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
     }
 
+    /**
+     * Rearranges the window order to place this one on the top.
+     */
     public void bringToFront() {
         bringToFront(true);
     }
@@ -367,9 +376,12 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     /**
-     * Returns window position in list of opened and shown windows.
+     * Returns window position in list of opened and shown windows. The highest
+     * index indicates the window that is on top.
      *
      * @since 8.0
+     *
+     * @return the position index
      */
     public final int getWindowOrder() {
         return windowOrder.indexOf(this);
@@ -383,6 +395,12 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
     }
 
+    /**
+     * Returns the modality curtain element. If one doesn't exist before this
+     * method is called, the element is created.
+     *
+     * @return the modality curtain element
+     */
     protected com.google.gwt.user.client.Element getModalityCurtain() {
         if (modalityCurtain == null) {
             modalityCurtain = DOM.createDiv();
@@ -391,37 +409,39 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         return DOM.asOld(modalityCurtain);
     }
 
+    /**
+     * Constructs the DOM structure for this widget.
+     */
     protected void constructDOM() {
         setStyleName(CLASSNAME);
 
         topTabStop = DOM.createDiv();
-        DOM.setElementAttribute(topTabStop, "tabindex", "0");
+        topTabStop.setAttribute("tabindex", "0");
 
         header = DOM.createDiv();
-        DOM.setElementProperty(header, "className", CLASSNAME + "-outerheader");
+        header.setPropertyString("className", CLASSNAME + "-outerheader");
         headerText = DOM.createDiv();
-        DOM.setElementProperty(headerText, "className", CLASSNAME + "-header");
+        headerText.setPropertyString("className", CLASSNAME + "-header");
         contents = DOM.createDiv();
-        DOM.setElementProperty(contents, "className", CLASSNAME + "-contents");
+        contents.setPropertyString("className", CLASSNAME + "-contents");
         footer = DOM.createDiv();
-        DOM.setElementProperty(footer, "className", CLASSNAME + "-footer");
+        footer.setPropertyString("className", CLASSNAME + "-footer");
         resizeBox = DOM.createDiv();
-        DOM.setElementProperty(resizeBox, "className",
-                CLASSNAME + "-resizebox");
+        resizeBox.setPropertyString("className", CLASSNAME + "-resizebox");
         closeBox = DOM.createDiv();
         maximizeRestoreBox = DOM.createDiv();
-        DOM.setElementProperty(maximizeRestoreBox, "className",
+        maximizeRestoreBox.setPropertyString("className",
                 CLASSNAME + "-maximizebox");
-        DOM.setElementAttribute(maximizeRestoreBox, "tabindex", "0");
-        DOM.setElementProperty(closeBox, "className", CLASSNAME + "-closebox");
-        DOM.setElementAttribute(closeBox, "tabindex", "0");
+        maximizeRestoreBox.setAttribute("tabindex", "0");
+        closeBox.setPropertyString("className", CLASSNAME + "-closebox");
+        closeBox.setAttribute("tabindex", "0");
         DOM.appendChild(footer, resizeBox);
 
         bottomTabStop = DOM.createDiv();
-        DOM.setElementAttribute(bottomTabStop, "tabindex", "0");
+        bottomTabStop.setAttribute("tabindex", "0");
 
         wrapper = DOM.createDiv();
-        DOM.setElementProperty(wrapper, "className", CLASSNAME + "-wrap");
+        wrapper.setPropertyString("className", CLASSNAME + "-wrap");
 
         DOM.appendChild(wrapper, topTabStop);
         DOM.appendChild(wrapper, header);
@@ -651,7 +671,13 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param draggable
+     *            {@code true} if this window should be draggable, {@code false}
+     *            otherwise
+     */
     public void setDraggable(boolean draggable) {
         if (this.draggable == draggable) {
             return;
@@ -686,12 +712,11 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         this.closable = closable;
         if (closable) {
-            DOM.setElementProperty(closeBox, "className",
-                    CLASSNAME + "-closebox");
+            closeBox.setPropertyString("className", CLASSNAME + "-closebox");
 
         } else {
-            DOM.setElementProperty(closeBox, "className", CLASSNAME
-                    + "-closebox " + CLASSNAME + "-closebox-disabled");
+            closeBox.setPropertyString("className", CLASSNAME + "-closebox "
+                    + CLASSNAME + "-closebox-disabled");
 
         }
 
@@ -748,7 +773,13 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         fireOrderEvent(update);
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param modality
+     *            {@code true} if this window should be modal, {@code false}
+     *            otherwise
+     */
     public void setVaadinModality(boolean modality) {
         vaadinModality = modality;
         if (vaadinModality) {
@@ -858,21 +889,36 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         return curtain;
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param resizability
+     *            {@code true} if this window should be resizable, {@code false}
+     *            otherwise
+     */
     public void setResizable(boolean resizability) {
         resizable = resizability;
         if (resizability) {
-            DOM.setElementProperty(footer, "className", CLASSNAME + "-footer");
-            DOM.setElementProperty(resizeBox, "className",
-                    CLASSNAME + "-resizebox");
+            footer.setPropertyString("className", CLASSNAME + "-footer");
+            resizeBox.setPropertyString("className", CLASSNAME + "-resizebox");
         } else {
-            DOM.setElementProperty(footer, "className",
+            footer.setPropertyString("className",
                     CLASSNAME + "-footer " + CLASSNAME + "-footer-noresize");
-            DOM.setElementProperty(resizeBox, "className", CLASSNAME
-                    + "-resizebox " + CLASSNAME + "-resizebox-disabled");
+            resizeBox.setPropertyString("className", CLASSNAME + "-resizebox "
+                    + CLASSNAME + "-resizebox-disabled");
         }
     }
 
+    /**
+     * Updates the visibility and styles for the element that doubles up as the
+     * maximize and the restore button depending on the mode.
+     *
+     * @param visible
+     *            {@code true} if the button should be visible, {@code false}
+     *            otherwise
+     * @param windowMode
+     *            current mode for this window
+     */
     public void updateMaximizeRestoreClassName(boolean visible,
             WindowMode windowMode) {
         String className;
@@ -887,8 +933,17 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         maximizeRestoreBox.setClassName(className);
     }
 
-    // TODO this will eventually be removed, currently used to avoid updating to
-    // server side.
+    /**
+     * Sets the popup's position relative to the browser's client area.
+     *
+     * TODO this will eventually be removed, currently used to avoid updating to
+     * server side.
+     *
+     * @param left
+     *            the left position, in pixels
+     * @param top
+     *            the top position, in pixels
+     */
     public void setPopupPositionNoUpdate(int left, int top) {
         if (top < 0) {
             // ensure window is not moved out of browser window from top of the
@@ -916,14 +971,40 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
     }
 
+    /**
+     * Sets the caption for this window.
+     *
+     * @param c
+     *            the caption to set
+     */
     public void setCaption(String c) {
         setCaption(c, null);
     }
 
+    /**
+     * Sets the caption and the caption icon for this window.
+     *
+     * @param c
+     *            the caption to set
+     * @param iconURL
+     *            the URL for the icon to set
+     */
     public void setCaption(String c, String iconURL) {
         setCaption(c, iconURL, false);
     }
 
+    /**
+     * Sets the caption and the caption icon for this window, and determines
+     * whether the caption should be displayed as HTML or as plain text.
+     *
+     * @param c
+     *            the caption to set
+     * @param iconURL
+     *            the URL for the icon to set
+     * @param asHtml
+     *            {@code true} if displayed as HTML, {@code false} if displayed
+     *            as plain text
+     */
     public void setCaption(String c, String iconURL, boolean asHtml) {
         String html;
         if (asHtml) {
@@ -1043,7 +1124,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
                     headerDragPending = event;
                     bubble = false;
-                } else if ((type == Event.ONMOUSEMOVE || type == Event.ONTOUCHMOVE)
+                } else if ((type == Event.ONMOUSEMOVE
+                        || type == Event.ONTOUCHMOVE)
                         && headerDragPending != null) {
                     // ie won't work unless this is set here
                     dragging = true;
@@ -1051,7 +1133,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                     onDragEvent(event);
                     headerDragPending = null;
                     bubble = false;
-                } else if (type != Event.ONMOUSEMOVE && type != Event.ONTOUCHMOVE) {
+                } else if (type != Event.ONMOUSEMOVE
+                        && type != Event.ONTOUCHMOVE) {
                     // The event can propagate to the parent in case it is a
                     // mouse move event. This is needed for tooltips to work in
                     // header and footer, see Ticket #19073
@@ -1228,6 +1311,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
     }
 
+    /**
+     * Relayouts this window and its contents.
+     */
     public void updateContentsSize() {
         LayoutManager layoutManager = getLayoutManager();
         layoutManager.setNeedsMeasureRecursively(
@@ -1551,7 +1637,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      *
      * @since 7.1.9
      *
-     * @return {@link HandlerRegistration} used to remove the handler
+     * @param handler
+     *            the handler to add
+     * @return registration object that can be used to deregister the handler
      */
     public HandlerRegistration addMoveHandler(WindowMoveHandler handler) {
         return addHandler(handler, WindowMoveEvent.getType());
@@ -1562,7 +1650,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      *
      * @since 8.0
      *
-     * @return registration object to deregister the handler
+     * @param handler
+     *            the handler to add
+     * @return registration object that can be used to deregister the handler
      */
     public static HandlerRegistration addWindowOrderHandler(
             WindowOrderHandler handler) {

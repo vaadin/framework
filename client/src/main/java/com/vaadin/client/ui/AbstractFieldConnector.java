@@ -18,6 +18,11 @@ package com.vaadin.client.ui;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.shared.AbstractFieldState;
 
+/**
+ * Base class for field connectors.
+ *
+ * @author Vaadin Ltd
+ */
 public abstract class AbstractFieldConnector extends AbstractComponentConnector
         implements HasRequiredIndicator {
 
@@ -31,6 +36,7 @@ public abstract class AbstractFieldConnector extends AbstractComponentConnector
         return getState().required && !isReadOnly();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void updateWidgetStyleNames() {
         super.updateWidgetStyleNames();

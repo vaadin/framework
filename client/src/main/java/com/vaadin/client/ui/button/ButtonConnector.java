@@ -32,6 +32,11 @@ import com.vaadin.shared.ui.button.ButtonServerRpc;
 import com.vaadin.shared.ui.button.ButtonState;
 import com.vaadin.ui.Button;
 
+/**
+ * A connector class for the Button component. Eagerly loaded.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(value = Button.class, loadStyle = LoadStyle.EAGER)
 public class ButtonConnector extends AbstractComponentConnector
         implements ClickHandler {

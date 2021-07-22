@@ -23,6 +23,11 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.ui.CustomComponent;
 
+/**
+ * A connector class for the CustomComponent component base. Eagerly loaded.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(value = CustomComponent.class, loadStyle = LoadStyle.EAGER)
 public class CustomComponentConnector extends AbstractHasComponentsConnector {
 

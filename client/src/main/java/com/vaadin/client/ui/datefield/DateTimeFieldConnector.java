@@ -51,6 +51,7 @@ public class DateTimeFieldConnector extends
         return (LocalDateTimeFieldState) super.getState();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void updateListeners() {
         super.updateListeners();

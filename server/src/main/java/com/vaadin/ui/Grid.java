@@ -632,6 +632,14 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             return (AbstractGridExtensionState) super.getState(markAsDirty);
         }
 
+        /**
+         * Returns the internal id for given column. This id should not be
+         * confused with the user-defined identifier.
+         *
+         * @param column
+         *            the column
+         * @return internal id of given column
+         */
         protected String getInternalIdForColumn(Column<T, ?> column) {
             return getParent().getInternalIdForColumn(column);
         }
@@ -2761,6 +2769,20 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         return beanType;
     }
 
+    /**
+     * Sends a {@link ColumnVisibilityChangeEvent} to all listeners.
+     *
+     * @param <V>
+     *            the column value type
+     * @param column
+     *            the column that changed its visibility
+     * @param hidden
+     *            {@code true} if the column was hidden, {@code false} if it
+     *            became visible
+     * @param userOriginated
+     *            {@code true} if the event was triggered by an UI interaction,
+     *            {@code false} otherwise
+     */
     public <V> void fireColumnVisibilityChangeEvent(Column<T, V> column,
             boolean hidden, boolean userOriginated) {
         fireEvent(new ColumnVisibilityChangeEvent(this, column, hidden,
