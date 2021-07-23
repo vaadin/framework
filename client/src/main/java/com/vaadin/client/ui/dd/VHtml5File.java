@@ -28,24 +28,37 @@ import com.google.gwt.core.client.JavaScriptObject;
 @Deprecated
 public class VHtml5File extends JavaScriptObject {
 
+    /** Singleton. */
     protected VHtml5File() {
     }
 
+    /**
+     * Returns the name value.
+     *
+     * @return the name
+     */
     public final native String getName()
     /*-{
         return this.name;
      }-*/;
 
+    /**
+     * Returns the type value.
+     *
+     * @return the type
+     */
     public final native String getType()
     /*-{
         return this.type;
      }-*/;
 
-    /*
+    /**
      * Browser implementations support files >2GB dropped and report the value
      * as long. Due to JSNI limitations this value needs to be sent as double
      * and then cast back to a long value.
      * www.gwtproject.org/doc/latest/DevGuideCodingBasicsJSNI.html#important
+     *
+     * @return the size
      */
     public final native double getSize()
     /*-{

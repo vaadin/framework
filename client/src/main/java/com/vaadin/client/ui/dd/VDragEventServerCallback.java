@@ -26,6 +26,14 @@ import com.vaadin.shared.ui.dnd.DropTargetRpc;
 @Deprecated
 public interface VDragEventServerCallback {
 
+    /**
+     * Handle the server response for drag and drop.
+     *
+     * @param accepted
+     *            {@code true} if the target accepts the transferable
+     * @param response
+     *            DnD data within the server response
+     */
     public void handleResponse(boolean accepted, UIDL response);
 
 }

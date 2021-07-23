@@ -66,21 +66,35 @@ public class VDragEvent {
         id = eventId++;
     }
 
+    /**
+     * Returns the VTransferable instance that represents the original dragged
+     * element.
+     *
+     * @return the transferable instance
+     */
     public VTransferable getTransferable() {
         return transferable;
     }
 
     /**
-     * Returns the the latest {@link NativeEvent} that relates to this drag and
-     * drop operation. For example on {@link VDropHandler#dragEnter(VDragEvent)}
-     * this is commonly a {@link MouseOverEvent}.
+     * Returns the latest {@link NativeEvent} that relates to this drag and drop
+     * operation. For example on {@link VDropHandler#dragEnter(VDragEvent)} this
+     * is commonly a {@link MouseOverEvent}.
      *
-     * @return
+     * @return the latest event
      */
     public NativeEvent getCurrentGwtEvent() {
         return currentGwtEvent;
     }
 
+    /**
+     * Sets the latest {@link NativeEvent} that relates to this drag and drop
+     * operation. For example on {@link VDropHandler#dragEnter(VDragEvent)} this
+     * is commonly a {@link MouseOverEvent}.
+     *
+     * @param event
+     *            the latest event
+     */
     public void setCurrentGwtEvent(NativeEvent event) {
         currentGwtEvent = event;
     }
@@ -114,6 +128,9 @@ public class VDragEvent {
     /**
      * @deprecated As of 7.2, call or override {@link #setElementOver(Element)}
      *             instead
+     * @param targetElement
+     *            target element over which DnD event has happened
+     * @see #getElementOver()
      */
     @Deprecated
     public void setElementOver(
@@ -123,6 +140,9 @@ public class VDragEvent {
 
     /**
      * @since 7.2
+     * @param targetElement
+     *            target element over which DnD event has happened
+     * @see #getElementOver()
      */
     public void setElementOver(Element targetElement) {
         setElementOver(DOM.asOld(targetElement));
@@ -142,6 +162,9 @@ public class VDragEvent {
      * to HTML5 DataTransfer
      *
      * @param node
+     *            a cloned node or other representation of the original element
+     *            that is dragged
+     *
      * @deprecated As of 7.2, call or override {@link #setDragImage(Element)}
      *             instead
      */
@@ -164,6 +187,8 @@ public class VDragEvent {
      * to HTML5 DataTransfer
      *
      * @param node
+     *            a cloned node or other representation of the original element
+     *            that is dragged
      *
      * @since 7.2
      */
@@ -178,7 +203,7 @@ public class VDragEvent {
      *
      * TODO clean up when drop handler changes
      *
-     * @return
+     * @return the drop details
      */
     public Map<String, Object> getDropDetails() {
         return dropDetails;
@@ -241,6 +266,7 @@ public class VDragEvent {
      * Automatically tries to create a proxy image from given element.
      *
      * @param element
+     *            the original element that is dragged
      * @param alignImageToEvent
      *            if true, proxy image is aligned to start event, else next to
      *            mouse cursor
@@ -284,6 +310,7 @@ public class VDragEvent {
      * Automatically tries to create a proxy image from given element.
      *
      * @param element
+     *            the original element that is dragged
      * @param alignImageToEvent
      *            if true, proxy image is aligned to start event, else next to
      *            mouse cursor

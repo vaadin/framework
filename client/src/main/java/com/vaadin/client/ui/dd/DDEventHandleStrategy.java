@@ -209,6 +209,9 @@ public class DDEventHandleStrategy {
             // prevent text selection on IE
             event.getNativeEvent().preventDefault();
             return true;
+        default:
+            // NOP
+            break;
         }
         return false;
     }
@@ -271,6 +274,9 @@ public class DDEventHandleStrategy {
             break;
         case Event.ONMOUSEUP:
             handleMouseUp(targetElement, event, mediator);
+            break;
+        default:
+            // NOP
             break;
         }
     }
@@ -360,6 +366,9 @@ public class DDEventHandleStrategy {
      *
      * @param mediator
      *            VDragAndDropManager data accessor
+     * @param clearServerCallback
+     *            {@code true} if server communication callback should be
+     *            cleaned up, {@code false} otherwise
      */
     protected void handleDragLeave(DDManagerMediator mediator,
             boolean clearServerCallback) {

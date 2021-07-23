@@ -29,10 +29,21 @@ import com.vaadin.ui.dnd.DropTargetExtension;
 public class VAcceptCriteria {
     private static VAcceptCriterionFactory impl;
 
+    /** Singleton. */
+    private VAcceptCriteria() {
+    }
+
     static {
         impl = GWT.create(VAcceptCriterionFactory.class);
     }
 
+    /**
+     * Returns the accept criterion that matches the given identifier.
+     *
+     * @param name
+     *            the identifier
+     * @return the accept criterion
+     */
     public static VAcceptCriterion get(String name) {
         return impl.get(name);
     }

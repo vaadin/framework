@@ -28,5 +28,12 @@ import com.vaadin.ui.dnd.DropTargetExtension;
 @Deprecated
 public abstract class VAcceptCriterionFactory {
 
+    /**
+     * Returns the accept criterion that matches the given identifier.
+     *
+     * @param name
+     *            the identifier
+     * @return the accept criterion
+     */
     public abstract VAcceptCriterion get(String name);
 }

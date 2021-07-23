@@ -22,8 +22,31 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 
+/**
+ * Utility class for drag and drop handling.
+ *
+ * @author Vaadin Ltd
+ */
 public class DDUtil {
 
+    /** Utility classes shouldn't be instantiated. */
+    private DDUtil() {
+    }
+
+    /**
+     * Get vertical drop location.
+     *
+     * @param element
+     *            the drop target element
+     * @param event
+     *            the latest {@link NativeEvent} that relates to this drag
+     *            operation
+     * @param topBottomRatio
+     *            the ratio that determines how big portion of the element on
+     *            each end counts for indicating desire to drop above or below
+     *            the element rather than on top of it
+     * @return the drop location
+     */
     public static VerticalDropLocation getVerticalDropLocation(Element element,
             NativeEvent event, double topBottomRatio) {
         int offsetHeight = element.getOffsetHeight();
@@ -31,6 +54,22 @@ public class DDUtil {
                 topBottomRatio);
     }
 
+    /**
+     * Get vertical drop location.
+     *
+     * @param element
+     *            the drop target element
+     * @param offsetHeight
+     *            the height of an element relative to the layout
+     * @param event
+     *            the latest {@link NativeEvent} that relates to this drag
+     *            operation
+     * @param topBottomRatio
+     *            the ratio that determines how big portion of the element on
+     *            each end counts for indicating desire to drop above or below
+     *            the element rather than on top of it
+     * @return the drop location
+     */
     public static VerticalDropLocation getVerticalDropLocation(Element element,
             int offsetHeight, NativeEvent event, double topBottomRatio) {
         int clientY = WidgetUtil.getTouchOrMouseClientY(event);
@@ -38,6 +77,22 @@ public class DDUtil {
                 topBottomRatio);
     }
 
+    /**
+     * Get vertical drop location.
+     *
+     * @param element
+     *            the drop target element
+     * @param offsetHeight
+     *            the height of an element relative to the layout
+     * @param clientY
+     *            the y-coordinate of the latest event that relates to this drag
+     *            operation
+     * @param topBottomRatio
+     *            the ratio that determines how big portion of the element on
+     *            each end counts for indicating desire to drop above or below
+     *            the element rather than on top of it
+     * @return the drop location
+     */
     public static VerticalDropLocation getVerticalDropLocation(Element element,
             int offsetHeight, int clientY, double topBottomRatio) {
 
@@ -57,6 +112,20 @@ public class DDUtil {
         }
     }
 
+    /**
+     * Get horizontal drop location.
+     *
+     * @param element
+     *            the drop target element
+     * @param event
+     *            the latest {@link NativeEvent} that relates to this drag
+     *            operation
+     * @param leftRightRatio
+     *            the ratio that determines how big portion of the element on
+     *            each end counts for indicating desire to drop beside the
+     *            element rather than on top of it
+     * @return the drop location
+     */
     public static HorizontalDropLocation getHorizontalDropLocation(
             Element element, NativeEvent event, double leftRightRatio) {
         int clientX = WidgetUtil.getTouchOrMouseClientX(event);

@@ -28,15 +28,29 @@ import com.vaadin.client.extensions.DropTargetExtensionConnector;
  */
 @Deprecated
 public class VHtml5DragEvent extends NativeEvent {
+    /** Singleton. */
     protected VHtml5DragEvent() {
     }
 
+    /**
+     * Returns type values, or {@code ["Text","Url","Html"]} if types are not
+     * supported.
+     *
+     * @return types
+     */
     public final native JsArrayString getTypes()
     /*-{
         // IE does not support types, return some basic values
         return this.dataTransfer.types ? this.dataTransfer.types : ["Text","Url","Html"];
      }-*/;
 
+    /**
+     * Returns the data for the given type as text.
+     *
+     * @param type
+     *            the type whose data to retrieve
+     * @return the data as text
+     */
     public final native String getDataAsText(String type)
     /*-{
          var v = this.dataTransfer.getData(type);
@@ -47,8 +61,11 @@ public class VHtml5DragEvent extends NativeEvent {
      * Works on FF 3.6 and possibly with gears.
      *
      * @param index
-     * @return
+     *            the index of the file to get
+     * @return the file as text
+     * @deprecated this method is no longer used internally
      */
+    @Deprecated
     public final native String getFileAsString(int index)
     /*-{
         if (this.dataTransfer.files.length > 0 && this.dataTransfer.files[0].getAsText) {
@@ -57,6 +74,12 @@ public class VHtml5DragEvent extends NativeEvent {
         return null;
     }-*/;
 
+    /**
+     * Sets the drop effect value.
+     *
+     * @param effect
+     *            the drop effect
+     */
     public final native void setDropEffect(String effect)
     /*-{
         try {
@@ -64,21 +87,45 @@ public class VHtml5DragEvent extends NativeEvent {
         } catch (e) {}
      }-*/;
 
+    /**
+     * Returns whether drop effect is allowed or not.
+     *
+     * @return {@code true} id drop effect is allowed, {@code false} otherwise
+     */
     public final native String getEffectAllowed()
     /*-{
             return this.dataTransfer.effectAllowed;
      }-*/;
 
+    /**
+     * Sets whether drop effect is allowed or not.
+     *
+     * @param effect
+     *            {@code true} id drop effect should be allowed, {@code false}
+     *            otherwise
+     */
     public final native void setEffectAllowed(String effect)
     /*-{
             this.dataTransfer.effectAllowed = effect;
      }-*/;
 
+    /**
+     * Returns the transfer file count.
+     *
+     * @return the file count
+     */
     public final native int getFileCount()
     /*-{
             return this.dataTransfer.files ? this.dataTransfer.files.length : 0;
      }-*/;
 
+    /**
+     * Returns the file indicated by the given index.
+     *
+     * @param fileIndex
+     *            the index of the file
+     * @return the file
+     */
     public final native VHtml5File getFile(int fileIndex)
     /*-{
             return this.dataTransfer.files[fileIndex];
@@ -88,6 +135,11 @@ public class VHtml5DragEvent extends NativeEvent {
      * Detects if dropped element is a file. <br>
      * Always returns <code>true</code> on Safari even if the dropped element is
      * a folder.
+     *
+     * @param fileIndex
+     *            the index of the element to check
+     * @return {@code true} if the dropped element is a file, {@code false}
+     *         otherwise
      */
     public final native boolean isFile(int fileIndex)
     /*-{
@@ -113,6 +165,14 @@ public class VHtml5DragEvent extends NativeEvent {
         return true;
     }-*/;
 
+    /**
+     * Adds a data String with the given flavor identifier.
+     *
+     * @param flavor
+     *            the identifier
+     * @param data
+     *            the data
+     */
     public final native void setHtml5DataFlavor(String flavor, String data)
     /*-{
         this.dataTransfer.setData(flavor, data);

@@ -61,14 +61,42 @@ public class VTransferable {
         this.component = component;
     }
 
+    /**
+     * Returns previously saved data that is referred to by the given
+     * identifier.
+     *
+     * @param dataFlavor
+     *            the identifier for the data object
+     * @return the data object, or {@code null} if not found
+     *
+     * @see #setData(String, Object)
+     */
     public Object getData(String dataFlavor) {
         return variables.get(dataFlavor);
     }
 
+    /**
+     * Stores any type of named data that can be useful during the DnD
+     * operation.
+     *
+     * @param dataFlavor
+     *            the identifier for the data object, should not be {@code null}
+     * @param value
+     *            the data to store, should not be {@code null}
+     */
     public void setData(String dataFlavor, Object value) {
         variables.put(dataFlavor, value);
     }
 
+    /**
+     * Returns a collection of stored identifiers that each correspond with one
+     * stored data object.
+     *
+     * @return the collection of identifiers, can be empty if no data has been
+     *         stored yet
+     *
+     * @see #setData(String, Object)
+     */
     public Collection<String> getDataFlavors() {
         return variables.keySet();
     }

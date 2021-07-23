@@ -42,6 +42,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      * details about {@link AcceptCriterion} are saved.
      *
      * @param uidl
+     *            the accept criterion UIDL
      */
     public void updateAcceptRules(UIDL uidl) {
         criterioUIDL = uidl;
@@ -107,9 +108,19 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      * drag is on a valid drop location.
      *
      * @param drag
+     *            the drag event
      */
     protected abstract void dragAccepted(VDragEvent drag);
 
+    /**
+     * Validates the given drag event when all existing DnD-related tasks are
+     * completed, and triggers the callback if the validation was successful.
+     *
+     * @param cb
+     *            the callback that handles acceptance if the target is valid
+     * @param event
+     *            the drag event
+     */
     protected void validate(final VAcceptCallback cb, final VDragEvent event) {
         Command checkCriteria = () -> acceptCriteria.accept(event, criterioUIDL,
                 cb);
