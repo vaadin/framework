@@ -20,11 +20,27 @@ import com.vaadin.client.LayoutManager;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.ui.ManagedLayout;
 
+/**
+ * A slot class implementation for ManagedLayout cells.
+ *
+ * @author Vaadin Ltd
+ */
 public class ComponentConnectorLayoutSlot extends VLayoutSlot {
 
     final ComponentConnector child;
     final ManagedLayout layout;
 
+    /**
+     * Constructs a slot instance for a ManagedLayout cell.
+     *
+     * @param baseClassName
+     *            the base class name of the layout
+     * @param child
+     *            the connector of the child component whose widget should be
+     *            set to this slot, should not be {@code null}
+     * @param layout
+     *            the managed layout that contains this slot
+     */
     public ComponentConnectorLayoutSlot(String baseClassName,
             ComponentConnector child, ManagedLayout layout) {
         super(baseClassName, child.getWidget());
@@ -32,6 +48,12 @@ public class ComponentConnectorLayoutSlot extends VLayoutSlot {
         this.layout = layout;
     }
 
+    /**
+     * Returns the connector of the child component that has been assigned to
+     * this slot.
+     *
+     * @return the content connector
+     */
     public ComponentConnector getChild() {
         return child;
     }
@@ -52,6 +74,11 @@ public class ComponentConnectorLayoutSlot extends VLayoutSlot {
                 : 0;
     }
 
+    /**
+     * Returns the layout manager for the managed layout.
+     *
+     * @return layout manager
+     */
     public LayoutManager getLayoutManager() {
         return layout.getLayoutManager();
     }
@@ -70,11 +97,25 @@ public class ComponentConnectorLayoutSlot extends VLayoutSlot {
         }
     }
 
+    /**
+     * Reports the expected outer height to the LayoutManager.
+     *
+     * @param allocatedHeight
+     *            the height to set (including margins, borders and paddings) in
+     *            pixels
+     */
     @Override
     protected void reportActualRelativeHeight(int allocatedHeight) {
         getLayoutManager().reportOuterHeight(child, allocatedHeight);
     }
 
+    /**
+     * Reports the expected outer width to the LayoutManager.
+     *
+     * @param allocatedWidth
+     *            the width to set (including margins, borders and paddings) in
+     *            pixels
+     */
     @Override
     protected void reportActualRelativeWidth(int allocatedWidth) {
         getLayoutManager().reportOuterWidth(child, allocatedWidth);

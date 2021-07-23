@@ -78,6 +78,7 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
      * {@link #updateFromUIDL(UIDL, ApplicationConnection)} method as is and
      * customizing only listeners logic.
      */
+    @SuppressWarnings("deprecation")
     protected void updateListeners() {
         FocusChangeListener listener;
         if (isResolutionMonthOrHigher()) {
@@ -104,6 +105,7 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
      */
     protected abstract boolean isResolutionMonthOrHigher();
 
+    @SuppressWarnings("unchecked")
     @Override
     public VAbstractPopupCalendar<PANEL, R> getWidget() {
         return (VAbstractPopupCalendar<PANEL, R>) super.getWidget();
@@ -179,7 +181,14 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
         getWidget().popup.setStyleName(styleName, add);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated This will be removed once styles are no longer added with
+     *             prefixes.
+     */
     @Override
+    @Deprecated
     protected void setWidgetStyleNameWithPrefix(String prefix, String styleName,
             boolean add) {
         super.setWidgetStyleNameWithPrefix(prefix, styleName, add);

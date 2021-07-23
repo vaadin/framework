@@ -50,6 +50,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     // this must be set at construction time and not changed afterwards
     private VAbstractOrderedLayout layout;
 
+    /** The default classname for this widget. */
     public static final String SLOT_CLASSNAME = "v-slot";
 
     private Element spacer;
@@ -189,10 +190,22 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
         }
     }
 
+    /**
+     * Returns the caption resize listener for this slot if one has been set.
+     *
+     * @return the listener or {@code null} if not set
+     */
     public ElementResizeListener getCaptionResizeListener() {
         return captionResizeListener;
     }
 
+    /**
+     * Sets the caption resize listener for this slot.
+     *
+     * @param captionResizeListener
+     *            the listener to set, or {@code null} to remove a previously
+     *            set listener
+     */
     public void setCaptionResizeListener(
             ElementResizeListener captionResizeListener) {
         detachListeners();
@@ -200,10 +213,22 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
         attachListeners();
     }
 
+    /**
+     * Returns the widget resize listener for this slot if one has been set.
+     *
+     * @return the listener or {@code null} if not set
+     */
     public ElementResizeListener getWidgetResizeListener() {
         return widgetResizeListener;
     }
 
+    /**
+     * Sets the widget resize listener for this slot.
+     *
+     * @param widgetResizeListener
+     *            the listener to set, or {@code null} to remove a previously
+     *            set listener
+     */
     public void setWidgetResizeListener(
             ElementResizeListener widgetResizeListener) {
         detachListeners();
@@ -211,10 +236,23 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
         attachListeners();
     }
 
+    /**
+     * Returns the spacing element resize listener for this slot if one has been
+     * set.
+     *
+     * @return the listener or {@code null} if not set
+     */
     public ElementResizeListener getSpacingResizeListener() {
         return spacingResizeListener;
     }
 
+    /**
+     * Sets the spacing element resize listener for this slot.
+     *
+     * @param spacingResizeListener
+     *            the listener to set, or {@code null} to remove a previously
+     *            set listener
+     */
     public void setSpacingResizeListener(
             ElementResizeListener spacingResizeListener) {
         detachListeners();
@@ -225,6 +263,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     /**
      * Returns the alignment for the slot.
      *
+     * @return the alignment
      */
     public AlignmentInfo getAlignment() {
         return alignment;
@@ -339,14 +378,17 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     /**
      * Get the element which is added to make the spacing.
      *
-     * @return
+     * @return the spacing element
      */
+    @SuppressWarnings("deprecation")
     public com.google.gwt.user.client.Element getSpacingElement() {
         return DOM.asOld(spacer);
     }
 
     /**
      * Does the slot have spacing.
+     *
+     * @return {@code true} if the slot has spacing, {@code false} otherwise
      */
     public boolean hasSpacing() {
         return getSpacingElement() != null;
@@ -354,6 +396,9 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
 
     /**
      * Get the vertical amount in pixels of the spacing.
+     *
+     * @return the height of the spacing element or zero if this slot doesn't
+     *         have spacing
      */
     protected int getVerticalSpacing() {
         if (spacer == null) {
@@ -367,7 +412,8 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     /**
      * Get the horizontal amount of pixels of the spacing.
      *
-     * @return
+     * @return the width of the spacing element or zero if this slot doesn't
+     *         have spacing
      */
     protected int getHorizontalSpacing() {
         if (spacer == null) {
@@ -405,6 +451,8 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
 
     /**
      * Get the position of the caption relative to the slot.
+     *
+     * @return the position
      */
     public CaptionPosition getCaptionPosition() {
         return captionPosition;
@@ -686,6 +734,8 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
 
     /**
      * Does the slot have a caption.
+     *
+     * @return {@code true} if the slot has a caption, {@code false} otherwise
      */
     public boolean hasCaption() {
         return caption != null;
@@ -693,7 +743,10 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
 
     /**
      * Get the slots caption element.
+     *
+     * @return the caption element or {@code null} if there is no caption
      */
+    @SuppressWarnings("deprecation")
     public com.google.gwt.user.client.Element getCaptionElement() {
         return DOM.asOld(caption);
     }
@@ -712,6 +765,12 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
         updateRelativeSize(relativeWidth, "width");
     }
 
+    /**
+     * Returns whether the slot's width is relative.
+     *
+     * @return {@code true} if the slot uses relative width, {@code false} if
+     *         the slot has a static width
+     */
     public boolean hasRelativeWidth() {
         return relativeWidth;
     }
@@ -730,6 +789,12 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
         updateRelativeSize(relativeHeight, "height");
     }
 
+    /**
+     * Returns whether the slot's height is relative.
+     *
+     * @return {@code true} if the slot uses relative height, {@code false} if
+     *         the slot has a static height
+     */
     public boolean hasRelativeHeight() {
         return relativeHeight;
     }
@@ -789,6 +854,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
      *
      * @see com.google.gwt.user.client.ui.SimplePanel#getContainerElement()
      */
+    @SuppressWarnings("deprecation")
     @Override
     protected com.google.gwt.user.client.Element getContainerElement() {
         if (captionWrap == null) {
@@ -824,6 +890,15 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
         }
     }
 
+    /**
+     * Returns whether this slot has relative size in the indicated direction.
+     *
+     * @param vertical
+     *            {@code true} if the height should be checked, {@code false} if
+     *            the width should be checked
+     * @return {@code true} if the slot's indicated dimension is relative,
+     *         {@code false} otherwise
+     */
     public boolean isRelativeInDirection(boolean vertical) {
         if (vertical) {
             return hasRelativeHeight();

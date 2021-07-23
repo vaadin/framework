@@ -16,6 +16,18 @@
 
 package com.vaadin.client.ui.layout;
 
+/**
+ * Event listener for element resize events.
+ *
+ * @author Vaadin Ltd
+ */
 public interface ElementResizeListener {
-    public void onElementResize(ElementResizeEvent e);
+
+    /**
+     * Perform actions after element resize.
+     *
+     * @param event
+     *            the element resize event
+     */
+    public void onElementResize(ElementResizeEvent event);
 }

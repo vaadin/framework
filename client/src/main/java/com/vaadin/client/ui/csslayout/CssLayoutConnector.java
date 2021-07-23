@@ -45,6 +45,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this) {
 
+        @SuppressWarnings("deprecation")
         @Override
         protected ComponentConnector getChildComponent(
                 com.google.gwt.user.client.Element element) {

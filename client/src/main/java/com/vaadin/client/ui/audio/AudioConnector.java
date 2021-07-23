@@ -27,6 +27,11 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.audio.AudioState;
 import com.vaadin.ui.Audio;
 
+/**
+ * A connector class for the Audio component.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(Audio.class)
 public class AudioConnector extends MediaBaseConnector {
 

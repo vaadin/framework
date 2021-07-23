@@ -30,6 +30,11 @@ import com.vaadin.shared.ui.button.ButtonServerRpc;
 import com.vaadin.shared.ui.button.NativeButtonState;
 import com.vaadin.ui.NativeButton;
 
+/**
+ * A connector class for the NativeButton component.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(NativeButton.class)
 public class NativeButtonConnector extends AbstractComponentConnector
         implements ClickHandler {

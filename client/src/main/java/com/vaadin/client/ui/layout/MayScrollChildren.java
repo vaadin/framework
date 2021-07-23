@@ -17,6 +17,12 @@ package com.vaadin.client.ui.layout;
 
 import com.vaadin.client.HasComponentsConnector;
 
+/**
+ * An interface that indicates that the associated component or layout can have
+ * scrollbars if the child contents won't fit otherwise.
+ *
+ * @author Vaadin Ltd
+ */
 public interface MayScrollChildren extends HasComponentsConnector {
 
 }

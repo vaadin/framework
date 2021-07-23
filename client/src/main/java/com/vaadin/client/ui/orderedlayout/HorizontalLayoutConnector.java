@@ -23,7 +23,9 @@ import com.vaadin.ui.HorizontalLayout;
 
 /**
  * Connects the client widget {@link VHorizontalLayout} with the Vaadin server
- * side counterpart {@link HorizontalLayout}.
+ * side counterpart {@link HorizontalLayout}. Eagerly loaded.
+ *
+ * @author Vaadin Ltd
  */
 @Connect(value = HorizontalLayout.class, loadStyle = LoadStyle.EAGER)
 public class HorizontalLayoutConnector extends AbstractOrderedLayoutConnector {

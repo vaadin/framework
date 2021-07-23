@@ -39,6 +39,11 @@ import com.vaadin.shared.ui.embedded.EmbeddedServerRpc;
 import com.vaadin.shared.ui.embedded.EmbeddedState;
 import com.vaadin.ui.Embedded;
 
+/**
+ * A connector class for the Embedded component.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(Embedded.class)
 public class EmbeddedConnector extends AbstractComponentConnector {
 
@@ -46,6 +51,7 @@ public class EmbeddedConnector extends AbstractComponentConnector {
     private ObjectElement objectElement;
     private String resourceUrl;
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
@@ -243,6 +249,7 @@ public class EmbeddedConnector extends AbstractComponentConnector {
         return (EmbeddedState) super.getState();
     }
 
+    /** Click event handler for sending click data to the server. */
     protected final ClickEventHandler clickEventHandler = new ClickEventHandler(
             this) {
 

@@ -33,6 +33,11 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.customfield.CustomFieldState;
 import com.vaadin.ui.CustomField;
 
+/**
+ * A connector class for the CustomField component.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(value = CustomField.class)
 public class CustomFieldConnector extends AbstractFieldConnector
         implements HasComponentsConnector, ConnectorHierarchyChangeHandler {

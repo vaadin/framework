@@ -414,10 +414,33 @@ public class LayoutDependencyTree {
 
     private final ApplicationConnection connection;
 
+    /**
+     * Constructs a layout dependency helper class.
+     *
+     * @param connection
+     *            the current application connection instance, should not be
+     *            {@code null}
+     *
+     * @see LayoutDependencyTree
+     */
     public LayoutDependencyTree(ApplicationConnection connection) {
         this.connection = connection;
     }
 
+    /**
+     * Informs this LayoutDependencyTree that the size of a component might have
+     * changed and it needs measuring in both directions, or that the measuring
+     * is no longer necessary. If there are blockers, measuring will be delayed
+     * and cannot be disabled before the blockers have been removed.
+     *
+     * @param connector
+     *            the connector of the component whose size might have changed,
+     *            should not be {@code null}
+     * @param needsMeasure
+     *            {@code true} if measuring should be enabled, {@code false} if
+     *            measuring should be disabled (disabling is only effective if
+     *            there are no blockers)
+     */
     public void setNeedsMeasure(ComponentConnector connector,
             boolean needsMeasure) {
         setNeedsHorizontalMeasure(connector, needsMeasure);
@@ -426,7 +449,12 @@ public class LayoutDependencyTree {
 
     /**
      * @param connectorId
+     *            the connector id of the component whose size might have
+     *            changed
      * @param needsMeasure
+     *            {@code true} if measuring should be enabled, {@code false} if
+     *            measuring should be disabled (disabling is only effective if
+     *            there are no blockers)
      *
      * @deprecated As of 7.4.2, use
      *             {@link #setNeedsMeasure(ComponentConnector, boolean)} for
@@ -443,12 +471,40 @@ public class LayoutDependencyTree {
         setNeedsMeasure(connector, needsMeasure);
     }
 
+    /**
+     * Informs this LayoutDependencyTree that the horizontal size of a component
+     * might have changed and it needs measuring, or that the measuring is no
+     * longer necessary. If there are blockers, measuring will be delayed and
+     * cannot be disabled before the blockers have been removed.
+     *
+     * @param connector
+     *            the connector of the component whose horizontal size might
+     *            have changed, should not be {@code null}
+     * @param needsMeasure
+     *            {@code true} if measuring should be enabled, {@code false} if
+     *            measuring should be disabled (disabling is only effective if
+     *            there are no blockers)
+     */
     public void setNeedsHorizontalMeasure(ComponentConnector connector,
             boolean needsMeasure) {
         LayoutDependency dependency = getDependency(connector, HORIZONTAL);
         dependency.setNeedsMeasure(needsMeasure);
     }
 
+    /**
+     * @param connectorId
+     *            the connector id of the component whose horizontal size might
+     *            have changed
+     * @param needsMeasure
+     *            {@code true} if measuring should be enabled, {@code false} if
+     *            measuring should be disabled (disabling is only effective if
+     *            there are no blockers)
+     *
+     * @deprecated Use
+     *             {@link #setNeedsHorizontalMeasure(ComponentConnector, boolean)}
+     *             for improved performance.
+     */
+    @Deprecated
     public void setNeedsHorizontalMeasure(String connectorId,
             boolean needsMeasure) {
         // Ensure connector exists
@@ -461,12 +517,40 @@ public class LayoutDependencyTree {
         setNeedsHorizontalMeasure(connector, needsMeasure);
     }
 
+    /**
+     * Informs this LayoutDependencyTree that the vertical size of a component
+     * might have changed and it needs measuring, or that the measuring is no
+     * longer necessary. If there are blockers, measuring will be delayed and
+     * cannot be disabled before the blockers have been removed.
+     *
+     * @param connector
+     *            the connector of the component whose vertical size might have
+     *            changed, should not be {@code null}
+     * @param needsMeasure
+     *            {@code true} if measuring should be enabled, {@code false} if
+     *            measuring should be disabled (disabling is only effective if
+     *            there are no blockers)
+     */
     public void setNeedsVerticalMeasure(ComponentConnector connector,
             boolean needsMeasure) {
         LayoutDependency dependency = getDependency(connector, VERTICAL);
         dependency.setNeedsMeasure(needsMeasure);
     }
 
+    /**
+     * @param connectorId
+     *            the connector id of the component whose vertical size might
+     *            have changed
+     * @param needsMeasure
+     *            {@code true} if measuring should be enabled, {@code false} if
+     *            measuring should be disabled (disabling is only effective if
+     *            there are no blockers)
+     *
+     * @deprecated Use
+     *             {@link #setNeedsVerticalMeasure(ComponentConnector, boolean)}
+     *             for improved performance.
+     */
+    @Deprecated
     public void setNeedsVerticalMeasure(String connectorId,
             boolean needsMeasure) {
         // Ensure connector exists
@@ -518,7 +602,12 @@ public class LayoutDependencyTree {
 
     /**
      * @param layout
+     *            the managed layout whose horizontal size might have changed,
+     *            should not be {@code null}
      * @param needsLayout
+     *            {@code true} if layouting should be enabled, {@code false} if
+     *            layouting should be disabled (disabling is only effective if
+     *            there are no blockers)
      *
      * @deprecated As of 7.0.1, use
      *             {@link #setNeedsHorizontalLayout(String, boolean)} for
@@ -530,6 +619,21 @@ public class LayoutDependencyTree {
         setNeedsHorizontalLayout(layout.getConnectorId(), needsLayout);
     }
 
+    /**
+     * Informs this LayoutDependencyTree that the horizontal size of a managed
+     * layout might have changed and it needs layouting, or that the layouting
+     * is no longer necessary. If there are blockers, layouting will be delayed
+     * and cannot be disabled before the blockers have been removed. Logs a
+     * warning if no dependency is found.
+     *
+     * @param connectorId
+     *            the connector id of the managed layout whose horizontal size
+     *            might have changed
+     * @param needsLayout
+     *            {@code true} if layouting should be enabled, {@code false} if
+     *            layouting should be disabled (disabling is only effective if
+     *            there are no blockers)
+     */
     public void setNeedsHorizontalLayout(String connectorId,
             boolean needsLayout) {
         LayoutDependency dependency = getDependency(connectorId, HORIZONTAL);
@@ -543,7 +647,12 @@ public class LayoutDependencyTree {
 
     /**
      * @param layout
+     *            the managed layout whose vertical size might have changed,
+     *            should not be {@code null}
      * @param needsLayout
+     *            {@code true} if layouting should be enabled, {@code false} if
+     *            layouting should be disabled (disabling is only effective if
+     *            there are no blockers)
      *
      * @deprecated As of 7.0.1, use
      *             {@link #setNeedsVerticalLayout(String, boolean)} for improved
@@ -555,6 +664,21 @@ public class LayoutDependencyTree {
         setNeedsVerticalLayout(layout.getConnectorId(), needsLayout);
     }
 
+    /**
+     * Informs this LayoutDependencyTree that the vertical size of a managed
+     * layout might have changed and it needs layouting, or that the layouting
+     * is no longer necessary. If there are blockers, layouting will be delayed
+     * and cannot be disabled before the blockers have been removed. Logs a
+     * warning if no dependency is found.
+     *
+     * @param connectorId
+     *            the connector id of the managed layout whose vertical size
+     *            might have changed
+     * @param needsLayout
+     *            {@code true} if layouting should be enabled, {@code false} if
+     *            layouting should be disabled (disabling is only effective if
+     *            there are no blockers)
+     */
     public void setNeedsVerticalLayout(String connectorId,
             boolean needsLayout) {
         LayoutDependency dependency = getDependency(connectorId, VERTICAL);
@@ -567,24 +691,68 @@ public class LayoutDependencyTree {
 
     }
 
+    /**
+     * Marks the managed layout as layouted horizontally and propagates the need
+     * of horizontal measuring for any components that might have got their size
+     * changed as a result. If there are blockers, nothing is done.
+     *
+     * @param layout
+     *            the managed layout whose horizontal layouting has been done,
+     *            should not be {@code null}
+     */
     public void markAsHorizontallyLayouted(ManagedLayout layout) {
         LayoutDependency dependency = getDependency(layout.getConnectorId(),
                 HORIZONTAL);
         dependency.markAsLayouted();
     }
 
+    /**
+     * Marks the managed layout as layouted vertically and propagates the need
+     * of vertical measuring for any components that might have got their size
+     * changed as a result. If there are blockers, nothing is done.
+     *
+     * @param layout
+     *            the managed layout whose vertical layouting has been done,
+     *            should not be {@code null}
+     */
     public void markAsVerticallyLayouted(ManagedLayout layout) {
         LayoutDependency dependency = getDependency(layout.getConnectorId(),
                 VERTICAL);
         dependency.markAsLayouted();
     }
 
+    /**
+     * Marks the component's height as changed. Iterates through all components
+     * whose vertical size depends on this component's size. If the dependent is
+     * a managed layout triggers need for vertical layouting, otherwise triggers
+     * need for vertical measuring for any dependent components of that
+     * component in turn. Finally triggers horizontal measuring for the
+     * scrolling boundary, in case vertical scrollbar has appeared or
+     * disappeared due the height change.
+     *
+     * @param connector
+     *            the connector of the component whose height has changed,
+     *            should not be {@code null}
+     */
     public void markHeightAsChanged(ComponentConnector connector) {
         LayoutDependency dependency = getDependency(connector.getConnectorId(),
                 VERTICAL);
         dependency.markSizeAsChanged();
     }
 
+    /**
+     * Marks the component's width as changed. Iterates through all components
+     * whose horizontal size depends on this component's size. If the dependent
+     * is a managed layout triggers need for horizontal layouting, otherwise
+     * triggers need for horizontal measuring for any dependent components of
+     * that component in turn. Finally triggers vertical measuring for the
+     * scrolling boundary, in case horizontal scrollbar has appeared or
+     * disappeared due the width change.
+     *
+     * @param connector
+     *            the connector of the component whose width has changed, should
+     *            not be {@code null}
+     */
     public void markWidthAsChanged(ComponentConnector connector) {
         LayoutDependency dependency = getDependency(connector.getConnectorId(),
                 HORIZONTAL);
@@ -641,21 +809,42 @@ public class LayoutDependencyTree {
         return b.toString();
     }
 
+    /**
+     * Returns whether there are any components waiting for either horizontal or
+     * vertical measuring.
+     *
+     * @return {@code true} if either measure queue contains anything,
+     *         {@code false} otherwise
+     */
     public boolean hasConnectorsToMeasure() {
         return !measureQueueInDirection[HORIZONTAL].isEmpty()
                 || !measureQueueInDirection[VERTICAL].isEmpty();
     }
 
+    /**
+     * Returns whether there are any managed layouts waiting for horizontal
+     * layouting.
+     *
+     * @return {@code true} if horizontal layouting queue is not empty,
+     *         {@code false} otherwise
+     */
     public boolean hasHorizontalConnectorToLayout() {
         return !getLayoutQueue(HORIZONTAL).isEmpty();
     }
 
+    /**
+     * Returns whether there are any managed layouts waiting for vertical
+     * layouting.
+     *
+     * @return {@code true} if vertical layouting queue is not empty,
+     *         {@code false} otherwise
+     */
     public boolean hasVerticaConnectorToLayout() {
         return !getLayoutQueue(VERTICAL).isEmpty();
     }
 
     /**
-     * @return
+     * @return array of managed layouts waiting for horizontal layouting
      * @deprecated As of 7.0.1, use {@link #getHorizontalLayoutTargetsJsArray()}
      *             for improved performance.
      */
@@ -665,7 +854,7 @@ public class LayoutDependencyTree {
     }
 
     /**
-     * @return
+     * @return array of managed layouts waiting for vertical layouting
      * @deprecated As of 7.0.1, use {@link #getVerticalLayoutTargetsJsArray()}
      *             for improved performance.
      */
@@ -686,16 +875,28 @@ public class LayoutDependencyTree {
         return result;
     }
 
+    /**
+     * Returns a JsArrayString array of connectorIds for managed layouts that
+     * are waiting for horizontal layouting.
+     *
+     * @return JsArrayString of connectorIds
+     */
     public JsArrayString getHorizontalLayoutTargetsJsArray() {
         return getLayoutQueue(HORIZONTAL).dump();
     }
 
+    /**
+     * Returns a JsArrayString array of connectorIds for managed layouts that
+     * are waiting for vertical layouting.
+     *
+     * @return JsArrayString of connectorIds
+     */
     public JsArrayString getVerticalLayoutTargetsJsArray() {
         return getLayoutQueue(VERTICAL).dump();
     }
 
     /**
-     * @return
+     * @return connectors that are waiting for measuring
      * @deprecated As of 7.0.1, use {@link #getMeasureTargetsJsArray()} for
      *             improved performance.
      */
@@ -713,6 +914,12 @@ public class LayoutDependencyTree {
         return targets;
     }
 
+    /**
+     * Returns a JsArrayString array of connectorIds for components that are
+     * waiting for either horizontal or vertical measuring.
+     *
+     * @return JsArrayString of connectorIds
+     */
     public JsArrayString getMeasureTargetsJsArray() {
         FastStringSet allMeasuredTargets = FastStringSet.create();
         allMeasuredTargets.addAll(getMeasureQueue(HORIZONTAL));
@@ -720,6 +927,13 @@ public class LayoutDependencyTree {
         return allMeasuredTargets.dump();
     }
 
+    /**
+     * Logs horizontal and vertical {@link LayoutDependency} state for the given
+     * connector.
+     *
+     * @param connector
+     *            the connector whose state to log, should not be {@code null}
+     */
     public void logDependencyStatus(ComponentConnector connector) {
         getLogger().info("====");
         String connectorId = connector.getConnectorId();
@@ -727,6 +941,15 @@ public class LayoutDependencyTree {
         getLogger().info(getDependency(connectorId, VERTICAL).toString());
     }
 
+    /**
+     * Returns whether all required layouting and measuring has been done for
+     * this component to both directions and there are no more blockers waiting
+     * for handling.
+     *
+     * @param connector
+     *            the connector to check, should not be {@code null}
+     * @return {@code true} if nothing is pending, {@code false} otherwise
+     */
     public boolean noMoreChangesExpected(ComponentConnector connector) {
         return getDependency(connector.getConnectorId(), HORIZONTAL)
                 .noMoreChangesExpected()
@@ -734,6 +957,16 @@ public class LayoutDependencyTree {
                         .noMoreChangesExpected();
     }
 
+    /**
+     * Returns the scrolling boundary for this component. If a cached value is
+     * available, the check isn't performed again. If no cached value exists,
+     * iterates through the component hierarchy until the closest parent that
+     * implements {@link MayScrollChildren} has been found.
+     *
+     * @param connector
+     *            the connector to check, should not be {@code null}
+     * @return the closest scrolling parent or {@code null} if not found
+     */
     public ComponentConnector getScrollingBoundary(
             ComponentConnector connector) {
         LayoutDependency dependency = getDependency(connector.getConnectorId(),

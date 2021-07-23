@@ -82,6 +82,11 @@ public abstract class AbstractTextFieldConnector extends AbstractFieldConnector
         }
     }
 
+    /**
+     * Returns the internal value change handler.
+     *
+     * @return the value change handler
+     */
     protected ValueChangeHandler getValueChangeHandler() {
         return valueChangeHandler;
     }

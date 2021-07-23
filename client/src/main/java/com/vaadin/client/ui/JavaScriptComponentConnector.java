@@ -24,6 +24,11 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.JavaScriptComponentState;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 
+/**
+ * A connector class for JavaScript components.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(AbstractJavaScriptComponent.class)
 public final class JavaScriptComponentConnector extends
         AbstractComponentConnector implements HasJavaScriptConnectorHelper {

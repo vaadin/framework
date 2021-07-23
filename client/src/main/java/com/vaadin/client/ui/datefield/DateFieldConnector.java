@@ -23,6 +23,8 @@ import com.vaadin.shared.ui.datefield.LocalDateFieldState;
 import com.vaadin.ui.AbstractLocalDateField;
 
 /**
+ * A connector class for the abstract AbstractLocalDateField component.
+ *
  * @author Vaadin Ltd
  *
  */

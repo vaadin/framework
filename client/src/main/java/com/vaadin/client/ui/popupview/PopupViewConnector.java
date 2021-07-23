@@ -35,6 +35,12 @@ import com.vaadin.shared.ui.popupview.PopupViewServerRpc;
 import com.vaadin.shared.ui.popupview.PopupViewState;
 import com.vaadin.ui.PopupView;
 
+/**
+ * A connector class for the PopupView component.
+ *
+ * @author Vaadin Ltd
+ */
+@SuppressWarnings("deprecation")
 @Connect(PopupView.class)
 public class PopupViewConnector extends AbstractHasComponentsConnector
         implements PostLayoutListener, VisibilityChangeHandler {

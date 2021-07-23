@@ -27,6 +27,11 @@ import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.label.LabelState;
 import com.vaadin.ui.Label;
 
+/**
+ * A connector class for the Label component. Eagerly loaded.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(value = Label.class, loadStyle = LoadStyle.EAGER)
 public class LabelConnector extends AbstractComponentConnector {
 
@@ -59,6 +64,10 @@ public class LabelConnector extends AbstractComponentConnector {
             sinkOnloads = true;
             widget.setHTML(getState().text);
             break;
+        default:
+            throw new IllegalStateException(
+                    "A new content mode has been added without configuring handling for it: "
+                            + getState().contentMode.name());
         }
         Profiler.leave("LabelConnector.onStateChanged update content");
 
