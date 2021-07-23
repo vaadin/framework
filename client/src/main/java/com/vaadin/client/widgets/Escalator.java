@@ -4729,7 +4729,6 @@ public class Escalator extends Widget
                 return;
             }
 
-            int oldTopRowLogicalIndex = getTopRowLogicalIndex();
             int oldVisualRangeLength = visualRowOrder.size();
 
             final int maxVisibleRowCount = getMaxVisibleRowCount();
@@ -4740,132 +4739,141 @@ public class Escalator extends Widget
 
             if (rowDiff > 0) {
                 // more rows are needed
-
-                // calculate the indexes for adding rows below the last row of
-                // the visual range
-                final int visualTargetIndex = oldVisualRangeLength;
-                final int logicalTargetIndex;
-                if (!visualRowOrder.isEmpty()) {
-                    logicalTargetIndex = oldTopRowLogicalIndex
-                            + visualTargetIndex;
-                } else {
-                    logicalTargetIndex = 0;
-                }
-
-                // prioritise adding to the bottom so that there's less chance
-                // for a gap if a details row is later closed (e.g. by user)
-                final int addToBottom = Math.min(rowDiff,
-                        getRowCount() - logicalTargetIndex);
-                final int addToTop = Math.max(rowDiff - addToBottom, 0);
-
-                if (addToTop > 0) {
-                    fillAndPopulateEscalatorRowsIfNeeded(0,
-                            oldTopRowLogicalIndex - addToTop, addToTop);
-
-                    updateTopRowLogicalIndex(-addToTop);
-                }
-                if (addToBottom > 0) {
-                    // take into account that rows may have got added to top as
-                    // well, affects visual but not logical indexing
-                    fillAndPopulateEscalatorRowsIfNeeded(
-                            visualTargetIndex + addToTop, logicalTargetIndex,
-                            addToBottom);
-
-                    // adding new rows due to resizing may have created a gap in
-                    // the middle, check whether the existing rows need moving
-                    double rowTop = getRowTop(oldTopRowLogicalIndex);
-                    if (rowTop > getRowTop(visualRowOrder.get(addToTop))) {
-                        for (int i = addToTop; i < visualTargetIndex; i++) {
-
-                            final TableRowElement tr = visualRowOrder.get(i);
-
-                            setRowPosition(tr, 0, rowTop);
-                            rowTop += getDefaultRowHeight();
-                            SpacerContainer.SpacerImpl spacer = spacerContainer
-                                    .getSpacer(oldTopRowLogicalIndex + i);
-                            if (spacer != null) {
-                                spacer.setPosition(0, rowTop);
-                                rowTop += spacer.getHeight();
-                            }
-                        }
-                    }
-                }
+                handleAddingRequiredRows(rowDiff);
             } else if (rowDiff < 0) {
                 // rows need to be removed
-
-                // prioritise removing rows from above the viewport as they are
-                // less likely to be needed in a hurry -- the rows below are
-                // more likely to slide into view when spacer contents are
-                // updated
-
-                // top of visible area before any rows are actually added
-                double scrollTop = getScrollTop();
-
-                // visual index of the first actually visible row, including
-                // spacer
-                int oldFirstVisibleVisualIndex = -1;
-                ListIterator<TableRowElement> iter = visualRowOrder
-                        .listIterator(0);
-                for (int i = 0; i < visualRowOrder.size(); ++i) {
-                    if (positions.getTop(iter.next()) > scrollTop) {
-                        break;
-                    }
-                    oldFirstVisibleVisualIndex = i;
-                }
-
-                int rowsToRemoveFromAbove = Math.max(0, Math
-                        .min(Math.abs(rowDiff), oldFirstVisibleVisualIndex));
-
-                boolean spacersRemovedFromAbove = false;
-                if (rowsToRemoveFromAbove > 0) {
-                    double initialSpacerHeightSum = spacerContainer
-                            .getSpacerHeightsSum();
-                    iter = visualRowOrder.listIterator(0);
-                    for (int i = 0; i < rowsToRemoveFromAbove; ++i) {
-                        final Element first = iter.next();
-                        first.removeFromParent();
-                        iter.remove();
-
-                        spacerContainer.removeSpacer(oldTopRowLogicalIndex + i);
-                    }
-                    spacersRemovedFromAbove = initialSpacerHeightSum != spacerContainer
-                            .getSpacerHeightsSum();
-                }
-
-                // if there weren't enough rows above, remove the rest from
-                // below
-                int rowsToRemoveFromBelow = Math.abs(rowDiff)
-                        - rowsToRemoveFromAbove;
-                if (rowsToRemoveFromBelow > 0) {
-                    iter = visualRowOrder.listIterator(visualRowOrder.size());
-                    for (int i = 1; i <= rowsToRemoveFromBelow; ++i) {
-                        final Element last = iter.previous();
-                        last.removeFromParent();
-                        iter.remove();
-
-                        spacerContainer.removeSpacer(oldTopRowLogicalIndex
-                                + oldVisualRangeLength - i);
-                    }
-                }
-
-                updateTopRowLogicalIndex(rowsToRemoveFromAbove);
-
-                if (spacersRemovedFromAbove) {
-                    updateRowPositions(oldTopRowLogicalIndex, 0,
-                            visualRowOrder.size());
-                }
-
-                // removing rows might cause a gap at the bottom
-                adjustScrollPositionIfNeeded();
-            }
-
-            if (rowDiff != 0) {
-                scroller.recalculateScrollbarsForVirtualViewport();
-
-                fireRowVisibilityChangeEvent();
+                handleRemovingExcessRows(rowDiff);
             }
 
             Profiler.leave("Escalator.BodyRowContainer.verifyEscalatorCount");
+        }
+
+        private void handleAddingRequiredRows(final int rowDiff) {
+            int oldTopRowLogicalIndex = getTopRowLogicalIndex();
+
+            // calculate the indexes for adding rows below the last row of
+            // the visual range
+            final int visualTargetIndex = visualRowOrder.size();
+            final int logicalTargetIndex;
+            if (!visualRowOrder.isEmpty()) {
+                logicalTargetIndex = oldTopRowLogicalIndex + visualTargetIndex;
+            } else {
+                logicalTargetIndex = 0;
+            }
+
+            // prioritise adding to the bottom so that there's less chance
+            // for a gap if a details row is later closed (e.g. by user)
+            final int addToBottom = Math.min(rowDiff,
+                    getRowCount() - logicalTargetIndex);
+            final int addToTop = Math.max(rowDiff - addToBottom, 0);
+
+            if (addToTop > 0) {
+                fillAndPopulateEscalatorRowsIfNeeded(0,
+                        oldTopRowLogicalIndex - addToTop, addToTop);
+
+                updateTopRowLogicalIndex(-addToTop);
+            }
+            if (addToBottom > 0) {
+                // take into account that rows may have got added to top as
+                // well, affects visual but not logical indexing
+                fillAndPopulateEscalatorRowsIfNeeded(
+                        visualTargetIndex + addToTop, logicalTargetIndex,
+                        addToBottom);
+
+                // adding new rows due to resizing may have created a gap in
+                // the middle, check whether the existing rows need moving
+                double rowTop = getRowTop(oldTopRowLogicalIndex);
+                if (rowTop > getRowTop(visualRowOrder.get(addToTop))) {
+                    for (int i = addToTop; i < visualTargetIndex; i++) {
+
+                        final TableRowElement tr = visualRowOrder.get(i);
+
+                        setRowPosition(tr, 0, rowTop);
+                        rowTop += getDefaultRowHeight();
+                        SpacerContainer.SpacerImpl spacer = spacerContainer
+                                .getSpacer(oldTopRowLogicalIndex + i);
+                        if (spacer != null) {
+                            spacer.setPosition(0, rowTop);
+                            rowTop += spacer.getHeight();
+                        }
+                    }
+                }
+            }
+
+            scroller.recalculateScrollbarsForVirtualViewport();
+            fireRowVisibilityChangeEvent();
+        }
+
+        private void handleRemovingExcessRows(final int rowDiff) {
+            // prioritise removing rows from above the viewport as they are
+            // less likely to be needed in a hurry -- the rows below are
+            // more likely to slide into view when spacer contents are
+            // updated
+
+            int oldTopRowLogicalIndex = getTopRowLogicalIndex();
+            final int oldVisualRangeLength = visualRowOrder.size();
+
+            // top of visible area before any rows are actually added
+            double scrollTop = getScrollTop();
+
+            // visual index of the first actually visible row, including
+            // spacer
+            int oldFirstVisibleVisualIndex = -1;
+            ListIterator<TableRowElement> iter = visualRowOrder.listIterator(0);
+            for (int i = 0; i < visualRowOrder.size(); ++i) {
+                if (positions.getTop(iter.next()) > scrollTop) {
+                    break;
+                }
+                oldFirstVisibleVisualIndex = i;
+            }
+
+            int rowsToRemoveFromAbove = Math.max(0,
+                    Math.min(Math.abs(rowDiff), oldFirstVisibleVisualIndex));
+
+            boolean spacersRemovedFromAbove = false;
+            if (rowsToRemoveFromAbove > 0) {
+                double initialSpacerHeightSum = spacerContainer
+                        .getSpacerHeightsSum();
+                iter = visualRowOrder.listIterator(0);
+                for (int i = 0; i < rowsToRemoveFromAbove; ++i) {
+                    final Element first = iter.next();
+                    first.removeFromParent();
+                    iter.remove();
+
+                    spacerContainer.removeSpacer(oldTopRowLogicalIndex + i);
+                }
+                spacersRemovedFromAbove = initialSpacerHeightSum != spacerContainer
+                        .getSpacerHeightsSum();
+            }
+
+            // if there weren't enough rows above, remove the rest from
+            // below
+            int rowsToRemoveFromBelow = Math.abs(rowDiff)
+                    - rowsToRemoveFromAbove;
+            if (rowsToRemoveFromBelow > 0) {
+                iter = visualRowOrder.listIterator(visualRowOrder.size());
+                for (int i = 1; i <= rowsToRemoveFromBelow; ++i) {
+                    final Element last = iter.previous();
+                    last.removeFromParent();
+                    iter.remove();
+
+                    spacerContainer.removeSpacer(
+                            oldTopRowLogicalIndex + oldVisualRangeLength - i);
+                }
+            }
+
+            updateTopRowLogicalIndex(rowsToRemoveFromAbove);
+
+            if (spacersRemovedFromAbove) {
+                updateRowPositions(oldTopRowLogicalIndex, 0,
+                        visualRowOrder.size());
+            }
+
+            // removing rows might cause a gap at the bottom
+            adjustScrollPositionIfNeeded();
+
+            scroller.recalculateScrollbarsForVirtualViewport();
+            fireRowVisibilityChangeEvent();
         }
 
         @Override
