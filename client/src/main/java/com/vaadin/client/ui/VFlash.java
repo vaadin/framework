@@ -21,29 +21,58 @@ import java.util.Map;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.WidgetUtil;
 
+/**
+ * Widget class for the Flash component.
+ *
+ * @author Vaadin Ltd
+ *
+ * @deprecated No modern browsers support Flash content anymore.
+ */
+@Deprecated
 public class VFlash extends HTML {
 
+    /** Default classname for this widget. */
     public static final String CLASSNAME = "v-flash";
 
+    /** @see #setSource(String) */
     protected String source;
+    /** @see #setAlternateText(String) */
     protected String altText;
+    /** @see #setClassId(String) */
     protected String classId;
+    /** @see #setCodebase(String) */
     protected String codebase;
+    /** @see #setCodetype(String) */
     protected String codetype;
+    /** @see #setStandby(String) */
     protected String standby;
+    /** @see #setArchive(String) */
     protected String archive;
+    /** @see #setEmbedParams(Map) */
     protected Map<String, String> embedParams = new HashMap<>();
+    /** Determines whether {@link #rebuildIfNeeded()} does anything. */
     protected boolean needsRebuild = false;
+    /** @see #setWidth(String) */
     protected String width;
+    /** @see #setHeight(String) */
     protected String height;
 
     private int slotOffsetHeight = -1;
     private int slotOffsetWidth = -1;
 
+    /**
+     * Default constructor.
+     */
     public VFlash() {
         setStyleName(CLASSNAME);
     }
 
+    /**
+     * Set the resource representing the Flash content that should be displayed.
+     *
+     * @param source
+     *            the resource URL
+     */
     public void setSource(String source) {
         if (this.source != source) {
             this.source = source;
@@ -51,6 +80,14 @@ public class VFlash extends HTML {
         }
     }
 
+    /**
+     * Sets this component's alternate text that can be presented instead of the
+     * component's normal content for accessibility purposes.
+     *
+     * @param altText
+     *            a short, human-readable description of this component's
+     *            content
+     */
     public void setAlternateText(String altText) {
         if (this.altText != altText) {
             this.altText = altText;
@@ -58,6 +95,14 @@ public class VFlash extends HTML {
         }
     }
 
+    /**
+     * Set the class id that is required for ActiveX to recognize the flash.
+     * This is a predefined value which ActiveX recognizes and must be the given
+     * value.
+     *
+     * @param classId
+     *            the classId
+     */
     public void setClassId(String classId) {
         if (this.classId != classId) {
             this.classId = classId;
@@ -65,6 +110,17 @@ public class VFlash extends HTML {
         }
     }
 
+    /**
+     * This attribute specifies the base path used to resolve relative URIs
+     * specified by the classid, data, and archive attributes. The default value
+     * is the base URI of the current document.
+     *
+     * @param codebase
+     *            The base path
+     *
+     * @see #setClassId(String)
+     * @see #setArchive(String)
+     */
     public void setCodebase(String codebase) {
         if (this.codebase != codebase) {
             this.codebase = codebase;
@@ -72,6 +128,16 @@ public class VFlash extends HTML {
         }
     }
 
+    /**
+     * This attribute specifies the content type of data expected when
+     * downloading the object specified by classid. This attribute is optional
+     * but recommended when classid is specified since it allows the user agent
+     * to avoid loading information for unsupported content types. The default
+     * value is the value of the type attribute.
+     *
+     * @param codetype
+     *            the codetype to set.
+     */
     public void setCodetype(String codetype) {
         if (this.codetype != codetype) {
             this.codetype = codetype;
@@ -79,6 +145,12 @@ public class VFlash extends HTML {
         }
     }
 
+    /**
+     * Sets standby.
+     *
+     * @param standby
+     *            the standby text
+     */
     public void setStandby(String standby) {
         if (this.standby != standby) {
             this.standby = standby;
@@ -86,6 +158,18 @@ public class VFlash extends HTML {
         }
     }
 
+    /**
+     * This attribute may be used to specify a space-separated list of URIs for
+     * archives containing resources relevant to the object, which may include
+     * the resources specified by the classid and data attributes. Preloading
+     * archives will generally result in reduced load times for objects.
+     * Archives specified as relative URIs should be interpreted relative to the
+     * codebase attribute.
+     *
+     * @param archive
+     *            Space-separated list of URIs with resources relevant to the
+     *            object
+     */
     public void setArchive(String archive) {
         if (this.archive != archive) {
             this.archive = archive;
@@ -122,6 +206,15 @@ public class VFlash extends HTML {
         }
     }
 
+    /**
+     * Sets the map of object parameters. Parameters are optional information,
+     * and they are passed to the instantiated object. Parameters are are stored
+     * as name value pairs. Calling this method for a second time overrides the
+     * previously given map.
+     *
+     * @param params
+     *            the parameter map
+     */
     public void setEmbedParams(Map<String, String> params) {
         if (params == null) {
             if (!embedParams.isEmpty()) {
@@ -159,6 +252,11 @@ public class VFlash extends HTML {
 
     }
 
+    /**
+     * Creates the embed String.
+     *
+     * @return the embed String
+     */
     protected String createFlashEmbed() {
         /*
          * To ensure cross-browser compatibility we are using the twice-cooked

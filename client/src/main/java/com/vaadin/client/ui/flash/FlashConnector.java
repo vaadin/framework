@@ -24,6 +24,14 @@ import com.vaadin.shared.ui.AbstractEmbeddedState;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.flash.FlashState;
 
+/**
+ * A connector class for the Flash component.
+ *
+ * @author Vaadin Ltd
+ *
+ * @deprecated No modern browsers support Flash content anymore.
+ */
+@Deprecated
 @Connect(com.vaadin.ui.Flash.class)
 public class FlashConnector extends AbstractComponentConnector {
 

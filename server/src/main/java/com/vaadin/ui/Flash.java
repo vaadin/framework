@@ -32,8 +32,9 @@ import com.vaadin.ui.declarative.DesignContext;
  *
  * @author Vaadin Ltd.
  * @since 7.0
+ * @deprecated No modern browsers support Flash content anymore.
  */
-@SuppressWarnings("serial")
+@Deprecated
 public class Flash extends AbstractEmbedded {
 
     /**
@@ -212,6 +213,8 @@ public class Flash extends AbstractEmbedded {
      * information, and they are passed to the instantiated object. Parameters
      * are are stored as name value pairs.
      *
+     * @param name
+     *            name of the parameter
      * @return the Value of parameter or null if not found.
      */
     public String getParameter(String name) {
