@@ -35,6 +35,7 @@ import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperServerRpc;
 import com.vaadin.ui.DragAndDropWrapper;
 
 /**
+ * A connector class for the DragAndDropWrapper.
  *
  * @author Vaadin Ltd
  * @deprecated Replaced in 8.1 with {@link DragSourceExtensionConnector} and

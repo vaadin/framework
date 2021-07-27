@@ -33,8 +33,11 @@ public abstract class VAcceptCriterion {
      * transferable. If drop target is valid, callback is used.
      *
      * @param drag
+     *            the drag event
      * @param configuration
+     *            accept criterion UIDL
      * @param callback
+     *            the callback that handles acceptance if the target is valid
      */
     public void accept(final VDragEvent drag, UIDL configuration,
             final VAcceptCallback callback) {
@@ -53,8 +56,28 @@ public abstract class VAcceptCriterion {
         }
     }
 
+    /**
+     * Returns whether a client-side check accepts the drop attempt.
+     *
+     * @param drag
+     *            the drag event
+     * @param configuration
+     *            accept criterion UIDL
+     * @return {@code true} if a drop attempt is accepted, {@code false}
+     *         otherwise
+     */
     protected abstract boolean accept(VDragEvent drag, UIDL configuration);
 
+    /**
+     * Returns whether a server side check is needed for determining acceptance.
+     *
+     * @param drag
+     *            the drag event
+     * @param criterioUIDL
+     *            accept criterion UIDL
+     * @return {@code true} if a server side check is needed, {@code false}
+     *         otherwise
+     */
     public boolean needsServerSideCheck(VDragEvent drag, UIDL criterioUIDL) {
         return false;
     }

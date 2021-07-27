@@ -32,6 +32,9 @@ public interface VAcceptCallback {
      * icon or empahsis the target if the target accepts the transferable. If
      * the drag and drop operation ends or the {@link VAbstractDropHandler} has
      * changed before response arrives, the method is never called.
+     *
+     * @param event
+     *            the drag event
      */
     public void accepted(VDragEvent event);
 
