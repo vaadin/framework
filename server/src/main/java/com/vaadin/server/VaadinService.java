@@ -604,9 +604,14 @@ public abstract class VaadinService implements Serializable {
     /**
      * Locks the given session for this service instance. Typically you want to
      * call {@link VaadinSession#lock()} instead of this method.
+     * <p>
+     * Note: Overriding this method is not recommended, for custom lock storage 
+     * strategy override {@link #getSessionLock(WrappedSession)} and
+     * {@link #setSessionLock(WrappedSession,Lock)} instead.
      *
      * @param wrappedSession
      *            The session to lock
+     * @return Lock instance
      *
      * @throws IllegalStateException
      *             if the session is invalidated before it can be locked
@@ -648,15 +653,20 @@ public abstract class VaadinService implements Serializable {
      * Releases the lock for the given session for this service instance.
      * Typically you want to call {@link VaadinSession#unlock()} instead of this
      * method.
+     * <p>
+     * Note: Overriding this method is not recommended, for custom lock storage 
+     * strategy override {@link #getSessionLock(WrappedSession)} and
+     * {@link #setSessionLock(WrappedSession,Lock)} instead.
      *
      * @param wrappedSession
-     *            The session to unlock
+     *            The session to unlock, used only with assert
+     * @param lock
+     *            Lock instance to unlock
      */
-    protected void unlockSession(WrappedSession wrappedSession) {
+    protected void unlockSession(WrappedSession wrappedSession, Lock lock) {
         assert getSessionLock(wrappedSession) != null;
-        assert ((ReentrantLock) getSessionLock(wrappedSession))
-                .isHeldByCurrentThread() : "Trying to unlock the session but it has not been locked by this thread";
-        getSessionLock(wrappedSession).unlock();
+        assert ((ReentrantLock) lock).isHeldByCurrentThread() : "Trying to unlock the session but it has not been locked by this thread";
+        lock.unlock();
     }
 
     private VaadinSession findOrCreateVaadinSession(VaadinRequest request)
