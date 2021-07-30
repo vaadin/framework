@@ -605,14 +605,18 @@ public abstract class VaadinService implements Serializable {
      * Locks the given session for this service instance. Typically you want to
      * call {@link VaadinSession#lock()} instead of this method.
      * <p>
-     * Note: Overriding this method is not recommended, for custom lock storage 
+     * Note: The method has been changed to return lock instance in Vaadin
+     * 7.7.27. If you have overriden this method, you need to update your
+     * implementation.
+     * <p>
+     * Note: Overriding this method is not recommended, for custom lock storage
      * strategy override {@link #getSessionLock(WrappedSession)} and
      * {@link #setSessionLock(WrappedSession,Lock)} instead.
-     *
+     * 
      * @param wrappedSession
      *            The session to lock
      * @return Lock instance
-     *
+     * 
      * @throws IllegalStateException
      *             if the session is invalidated before it can be locked
      */
@@ -686,7 +690,7 @@ public abstract class VaadinService implements Serializable {
             return doFindOrCreateVaadinSession(request,
                     requestCanCreateSession);
         } finally {
-            lock.unlock();
+            unlockSession(wrappedSession, lock);
         }
 
     }
