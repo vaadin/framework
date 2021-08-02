@@ -658,6 +658,10 @@ public abstract class VaadinService implements Serializable {
      * Typically you want to call {@link VaadinSession#unlock()} instead of this
      * method.
      * <p>
+     * Note: The method and its signature has been changed to get lock instance
+     * as parameter in Vaadin 7.7.27. If you have overriden this method, you need
+     * to update your implementation.
+     * <p>
      * Note: Overriding this method is not recommended, for custom lock storage 
      * strategy override {@link #getSessionLock(WrappedSession)} and
      * {@link #setSessionLock(WrappedSession,Lock)} instead.
