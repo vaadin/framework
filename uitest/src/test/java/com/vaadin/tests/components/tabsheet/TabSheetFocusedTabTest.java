@@ -24,22 +24,53 @@ public class TabSheetFocusedTabTest extends MultiBrowserTest {
 
         getTab(1).click();
 
-        assertTrue(isFocused(getTab(1)));
+        assertTrue("Tab 1 should have been focused but wasn't.",
+                isFocused(getTab(1)));
 
         new Actions(getDriver()).sendKeys(Keys.ARROW_RIGHT).perform();
 
-        assertFalse(isFocused(getTab(1)));
-        assertTrue(isFocused(getTab(3)));
+        assertFalse("Tab 1 was focused but shouldn't have been.",
+                isFocused(getTab(1)));
+        assertTrue("Tab 3 should have been focused but wasn't.",
+                isFocused(getTab(3)));
 
         getTab(5).click();
 
-        assertFalse(isFocused(getTab(3)));
-        assertTrue(isFocused(getTab(5)));
+        assertFalse("Tab 3 was focused but shouldn't have been.",
+                isFocused(getTab(3)));
+        assertTrue("Tab 5 should have been focused but wasn't.",
+                isFocused(getTab(5)));
 
         getTab(1).click();
 
-        assertFalse(isFocused(getTab(5)));
-        assertTrue(isFocused(getTab(1)));
+        assertFalse("Tab 5 was focused but shouldn't have been.",
+                isFocused(getTab(5)));
+        assertTrue("Tab 1 should have been focused but wasn't.",
+                isFocused(getTab(1)));
+    }
+
+    @Test
+    public void scrollingChangesFocusedTab() {
+        openTestURL();
+
+        getTab(7).click();
+
+        assertTrue("Tab 7 should have been focused but wasn't.",
+                isFocused(getTab(7)));
+
+        findElement(By.className("v-tabsheet-scrollerNext")).click();
+
+        assertFalse("Tab 7 was focused but shouldn't have been.",
+                isFocused(getTab(7)));
+        assertTrue("Tab 3 should have been focused but wasn't.",
+                isFocused(getTab(3)));
+
+        new Actions(getDriver()).sendKeys(Keys.ARROW_RIGHT).perform();
+
+        assertFalse("Tab 3 was focused but shouldn't have been.",
+                isFocused(getTab(3)));
+        assertTrue("Tab 5 should have been focused but wasn't.",
+                isFocused(getTab(5)));
     }
 
     private WebElement getTab(int index) {
@@ -49,7 +80,6 @@ public class TabSheetFocusedTabTest extends MultiBrowserTest {
     }
 
     private boolean isFocused(WebElement tab) {
-
         return tab.getAttribute("class").contains("v-tabsheet-tabitem-focus");
     }
 

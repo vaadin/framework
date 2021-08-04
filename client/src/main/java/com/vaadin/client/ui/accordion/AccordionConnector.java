@@ -56,6 +56,7 @@ public class AccordionConnector extends TabsheetBaseConnector
             StackItem selectedItem = widget
                     .getStackItem(widget.selectedItemIndex);
 
+            // Only the visible child widget is present in the collection.
             ComponentConnector contentConnector = getChildComponents().get(0);
             if (contentConnector != null) {
                 selectedItem.setContent(contentConnector.getWidget());

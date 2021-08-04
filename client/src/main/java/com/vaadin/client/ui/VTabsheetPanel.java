@@ -27,12 +27,11 @@ import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 
 /**
  * A panel that displays all of its child widgets in a 'deck', where only one
- * can be visible at a time. It is used by
- * {@link com.vaadin.client.ui.VTabsheet}.
+ * can be visible at a time. It is used by {@link VTabsheet}.
  *
- * This class has the same basic functionality as the GWT DeckPanel
- * {@link com.google.gwt.user.client.ui.DeckPanel}, with the exception that it
- * doesn't manipulate the child widgets' width and height attributes.
+ * This class has the same basic functionality as the GWT
+ * {@link com.google.gwt.user.client.ui.DeckPanel DeckPanel}, with the exception
+ * that it doesn't manipulate the child widgets' width and height attributes.
  */
 public class VTabsheetPanel extends ComplexPanel {
 
@@ -43,6 +42,7 @@ public class VTabsheetPanel extends ComplexPanel {
     /**
      * Creates an empty tabsheet panel.
      */
+    @SuppressWarnings("deprecation")
     public VTabsheetPanel() {
         setElement(DOM.createDiv());
         touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
@@ -107,7 +107,7 @@ public class VTabsheetPanel extends ComplexPanel {
                 visibleWidget = null;
             }
             if (parent != null) {
-                DOM.removeChild(getElement(), parent);
+                getElement().removeChild(parent);
             }
             touchScrollHandler.removeElement(parent);
         }
@@ -150,6 +150,19 @@ public class VTabsheetPanel extends ComplexPanel {
         e.getStyle().clearVisibility();
     }
 
+    /**
+     * Updates the size of the visible widget.
+     *
+     * @param width
+     *            the width to set (in pixels), or negative if the width should
+     *            be dynamic (final width might get overridden by the minimum
+     *            width if that is larger)
+     * @param height
+     *            the height to set (in pixels), or negative if the height
+     *            should be dynamic
+     * @param minWidth
+     *            the minimum width (in pixels) that can be set
+     */
     public void fixVisibleTabSize(int width, int height, int minWidth) {
         if (visibleWidget == null) {
             return;
@@ -190,6 +203,14 @@ public class VTabsheetPanel extends ComplexPanel {
         }
     }
 
+    /**
+     * Removes the old component and sets the new component to its place.
+     *
+     * @param oldComponent
+     *            the component to remove
+     * @param newComponent
+     *            the component to add to the old location
+     */
     public void replaceComponent(Widget oldComponent, Widget newComponent) {
         boolean isVisible = (visibleWidget == oldComponent);
         int widgetIndex = getWidgetIndex(oldComponent);

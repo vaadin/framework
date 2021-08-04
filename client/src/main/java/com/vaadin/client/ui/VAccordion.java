@@ -32,14 +32,23 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
+import com.vaadin.client.ui.VAccordion.StackItem;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.accordion.AccordionState;
 import com.vaadin.shared.ui.tabsheet.TabState;
 import com.vaadin.shared.ui.tabsheet.TabsheetServerRpc;
 import com.vaadin.shared.util.SharedUtil;
 
+/**
+ * Widget class for the Accordion component. Displays one child item's contents
+ * at a time.
+ *
+ * @author Vaadin Ltd
+ *
+ */
 public class VAccordion extends VTabsheetBase {
 
+    /** Default classname for this widget. */
     public static final String CLASSNAME = AccordionState.PRIMARY_STYLE_NAME;
 
     private Set<Widget> widgets = new HashSet<>();
@@ -53,16 +62,19 @@ public class VAccordion extends VTabsheetBase {
 
     private int tabulatorIndex;
 
+    /**
+     * Constructs a widget for an Accordion.
+     */
     public VAccordion() {
         super(CLASSNAME);
 
         touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void renderTab(TabState tabState, int index) {
         StackItem item;
-        int itemIndex;
 
         if (getWidgetCount() <= index) {
             // Create stackItem and render caption
@@ -70,12 +82,9 @@ public class VAccordion extends VTabsheetBase {
             if (getWidgetCount() == 0) {
                 item.addStyleDependentName("first");
             }
-            itemIndex = getWidgetCount();
             add(item, getElement());
         } else {
             item = getStackItem(index);
-
-            itemIndex = index;
         }
         item.updateCaption(tabState);
 
@@ -103,6 +112,12 @@ public class VAccordion extends VTabsheetBase {
         updateStyleNames(style);
     }
 
+    /**
+     * Updates the primary style name base for all stack items.
+     *
+     * @param primaryStyleName
+     *            the new primary style name base
+     */
     protected void updateStyleNames(String primaryStyleName) {
         for (Widget w : getChildren()) {
             if (w instanceof StackItem) {
@@ -114,6 +129,12 @@ public class VAccordion extends VTabsheetBase {
 
     /**
      * For internal use only. May be renamed or removed in a future release.
+     * <p>
+     * Sets the tabulator index for the active stack item. The active stack item
+     * represents the entire accordion in the browser's focus cycle (excluding
+     * any focusable elements within the content panel).
+     * <p>
+     * This value is delegated from the TabsheetState via AccordionState.
      *
      * @param tabIndex
      *            tabulator index for the open stack item
@@ -127,7 +148,12 @@ public class VAccordion extends VTabsheetBase {
         }
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param itemIndex
+     *            the index of the stack item to open
+     */
     public void open(int itemIndex) {
         StackItem item = (StackItem) getWidget(itemIndex);
         boolean alreadyOpen = false;
@@ -148,7 +174,12 @@ public class VAccordion extends VTabsheetBase {
 
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param item
+     *            the stack item to close
+     */
     public void close(StackItem item) {
         if (!item.isOpen()) {
             return;
@@ -160,6 +191,12 @@ public class VAccordion extends VTabsheetBase {
 
     }
 
+    /**
+     * Handle stack item selection.
+     *
+     * @param item
+     *            the selected stack item
+     */
     public void onSelectTab(StackItem item) {
         final int index = getWidgetIndex(item);
 
@@ -182,6 +219,13 @@ public class VAccordion extends VTabsheetBase {
         private Widget widget;
         private String id;
 
+        /**
+         * Sets the height for this stack item's contents.
+         *
+         * @param height
+         *            the height to set (in pixels), or {@code -1} to remove
+         *            height
+         */
         public void setHeight(int height) {
             if (height == -1) {
                 super.setHeight("");
@@ -193,6 +237,12 @@ public class VAccordion extends VTabsheetBase {
             }
         }
 
+        /**
+         * Sets the identifier for this stack item.
+         *
+         * @param newId
+         *            the identifier to set
+         */
         public void setId(String newId) {
             if (!SharedUtil.equals(newId, id)) {
                 if (id != null) {
@@ -205,15 +255,23 @@ public class VAccordion extends VTabsheetBase {
             }
         }
 
+        /**
+         * Returns the wrapped widget of this stack item.
+         *
+         * @return the widget
+         *
+         * @deprecated This method is not called by the framework code anymore.
+         *             Use {@link #getChildWidget()} instead.
+         */
+        @Deprecated
         public Widget getComponent() {
-            return widget;
+            return getChildWidget();
         }
 
-        @Override
-        public void setVisible(boolean visible) {
-            super.setVisible(visible);
-        }
-
+        /**
+         * Queries the height from the wrapped widget and uses it to set this
+         * stack item's height.
+         */
         public void setHeightFromWidget() {
             Widget widget = getChildWidget();
             if (widget == null) {
@@ -228,7 +286,8 @@ public class VAccordion extends VTabsheetBase {
         /**
          * Returns caption width including padding.
          *
-         * @return
+         * @return the width of the caption (in pixels), or zero if there is no
+         *         caption element (not possible via the default implementation)
          */
         public int getCaptionWidth() {
             if (caption == null) {
@@ -241,6 +300,14 @@ public class VAccordion extends VTabsheetBase {
             return captionWidth + padding;
         }
 
+        /**
+         * Sets the width of the stack item, or removes it if given value is
+         * {@code -1}.
+         *
+         * @param width
+         *            the width to set (in pixels), or {@code -1} to remove
+         *            width
+         */
         public void setWidth(int width) {
             if (width == -1) {
                 super.setWidth("");
@@ -249,10 +316,24 @@ public class VAccordion extends VTabsheetBase {
             }
         }
 
+        /**
+         * Returns the offset height of this stack item.
+         *
+         * @return the height in pixels
+         *
+         * @deprecated This method is not called by the framework code anymore.
+         *             Use {@link #getOffsetHeight()} instead.
+         */
+        @Deprecated
         public int getHeight() {
             return getOffsetHeight();
         }
 
+        /**
+         * Returns the offset height of the caption node.
+         *
+         * @return the height in pixels
+         */
         public int getCaptionHeight() {
             return captionNode.getOffsetHeight();
         }
@@ -263,6 +344,11 @@ public class VAccordion extends VTabsheetBase {
         private Element captionNode = DOM.createDiv();
         private String styleName;
 
+        /**
+         * Constructs a stack item. The content widget should be set later when
+         * the stack item is opened.
+         */
+        @SuppressWarnings("deprecation")
         public StackItem() {
             setElement(DOM.createDiv());
             caption = new VCaption(client);
@@ -295,14 +381,31 @@ public class VAccordion extends VTabsheetBase {
             onSelectTab(this);
         }
 
+        /**
+         * Returns the container element for the content widget.
+         *
+         * @return the content container element
+         */
+        @SuppressWarnings("deprecation")
         public com.google.gwt.user.client.Element getContainerElement() {
             return DOM.asOld(content);
         }
 
+        /**
+         * Returns the wrapped widget of this stack item.
+         *
+         * @return the widget
+         */
         public Widget getChildWidget() {
             return widget;
         }
 
+        /**
+         * Replaces the existing wrapped widget (if any) with a new widget.
+         *
+         * @param newWidget
+         *            the new widget to wrap
+         */
         public void replaceWidget(Widget newWidget) {
             if (widget != null) {
                 widgets.remove(widget);
@@ -318,6 +421,9 @@ public class VAccordion extends VTabsheetBase {
 
         }
 
+        /**
+         * Opens the stack item and clears any previous visibility settings.
+         */
         public void open() {
             add(widget, content);
             open = true;
@@ -328,10 +434,20 @@ public class VAccordion extends VTabsheetBase {
             getElement().setTabIndex(tabulatorIndex);
         }
 
+        /**
+         * Hides the stack item content but does not close the stack item.
+         *
+         * @deprecated This method is not called by the framework code anymore.
+         */
+        @Deprecated
         public void hide() {
             content.getStyle().setVisibility(Visibility.HIDDEN);
         }
 
+        /**
+         * Closes this stack item and removes the wrapped widget from the DOM
+         * tree and this stack item.
+         */
         public void close() {
             if (widget != null) {
                 remove(widget);
@@ -346,6 +462,11 @@ public class VAccordion extends VTabsheetBase {
             getElement().setTabIndex(-1);
         }
 
+        /**
+         * Returns whether this stack item is open or not.
+         *
+         * @return {@code true} if open, {@code false} otherwise
+         */
         public boolean isOpen() {
             return open;
         }
@@ -377,8 +498,17 @@ public class VAccordion extends VTabsheetBase {
             onSelectTab(this);
         }
 
+        /**
+         * Updates the caption to match the current tab state.
+         *
+         * @param tabState
+         *            the state for this stack item
+         */
+        @SuppressWarnings("deprecation")
         public void updateCaption(TabState tabState) {
-            // TODO need to call this because the caption does not have an owner
+            // Need to call this because the caption does not have an owner, and
+            // cannot have an owner, because only the selected stack item's
+            // connector is sent to the client.
             caption.setCaptionAsHtml(isTabCaptionsAsHtml());
             caption.updateCaptionWithoutOwner(tabState.caption,
                     !tabState.enabled, hasAttribute(tabState.description),
@@ -394,10 +524,10 @@ public class VAccordion extends VTabsheetBase {
         }
 
         /**
-         * Updates a tabs stylename from the child UIDL
+         * Updates the stack item's style name from the TabState.
          *
-         * @param uidl
-         *            The child UIDL of the tab
+         * @param newStyleName
+         *            the new style name
          */
         private void updateTabStyleName(String newStyleName) {
             if (newStyleName != null && !newStyleName.isEmpty()) {
@@ -419,20 +549,55 @@ public class VAccordion extends VTabsheetBase {
             }
         }
 
+        /**
+         * Returns the offset width of the wrapped widget.
+         *
+         * @return the offset width in pixels, or zero if no widget is set
+         */
         public int getWidgetWidth() {
-            return DOM.getFirstChild(content).getOffsetWidth();
+            if (widget == null) {
+                return 0;
+            }
+            return widget.getOffsetWidth();
         }
 
+        /**
+         * Returns whether the given container's widget is this stack item's
+         * wrapped widget. Does not check whether the given container's widget
+         * is a child of the wrapped widget.
+         *
+         * @param p
+         *            the container whose widget to set
+         * @return {@code true} if the container's widget matches wrapped
+         *         widget, {@code false} otherwise
+         *
+         * @deprecated This method is not called by the framework code anymore.
+         */
+        @Deprecated
         public boolean contains(ComponentConnector p) {
             return (getChildWidget() == p.getWidget());
         }
 
+        /**
+         * Returns whether the caption element is visible or not.
+         *
+         * @return {@code true} if visible, {@code false} otherwise
+         *
+         * @deprecated This method is not called by the framework code anymore.
+         */
+        @Deprecated
         public boolean isCaptionVisible() {
             return caption.isVisible();
         }
 
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @deprecated This method is not called by the framework code anymore.
+     */
+    @Deprecated
     @Override
     protected void clearPaintables() {
         clear();
@@ -474,15 +639,32 @@ public class VAccordion extends VTabsheetBase {
         return null;
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param index
+     *            the index of the stack item to get
+     * @return the stack item
+     */
     public StackItem getStackItem(int index) {
         return (StackItem) getWidget(index);
     }
 
+    /**
+     * Returns an iterable over all the stack items.
+     *
+     * @return the iterable
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public Iterable<StackItem> getStackItems() {
         return (Iterable) getChildren();
     }
 
+    /**
+     * Returns the currently open stack item.
+     *
+     * @return the open stack item, or {@code null} if one does not exist
+     */
     public StackItem getOpenStackItem() {
         return openTab;
     }
