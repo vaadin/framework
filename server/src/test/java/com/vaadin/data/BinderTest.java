@@ -29,6 +29,7 @@ import org.junit.rules.ExpectedException;
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.data.converter.StringToBigDecimalConverter;
+import com.vaadin.data.converter.StringToDoubleConverter;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.data.validator.NotEmptyValidator;
@@ -42,6 +43,8 @@ import org.apache.commons.lang.StringUtils;
 import org.hamcrest.CoreMatchers;
 
 public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
+
+    private int count;
 
     @Rule
     /*
@@ -1493,7 +1496,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         TextField salaryField = new TextField();
         count = 0;
         item.setSalaryDouble(100d);
-        binder.forField(ageField)
+        binder.forField(salaryField)
             .withConverter(new StringToDoubleConverter(""))
             .bind(Person::getSalaryDouble, Person::setSalaryDouble);
         binder.setBean(item);
@@ -1501,13 +1504,13 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         	count++;
         });
 
-        ageField.setValue("1000");
+        salaryField.setValue("1000");
         assertTrue(binder.isValid());
 
-        ageField.setValue("salary");
+        salaryField.setValue("salary");
         assertFalse(binder.isValid());
 
-        ageField.setValue("2000");
+        salaryField.setValue("2000");
 
         // Without fix for #12356 count will be 5
         assertEquals(3, count);
