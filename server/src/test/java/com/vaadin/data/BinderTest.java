@@ -1490,9 +1490,9 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     // See: https://github.com/vaadin/framework/issues/12356
     @Test
     public void validationShouldNotRunTwice() {
-        0TextField salaryField = new TextField();
-    	count = 0;
-    	item.setSalaryDouble(100d);
+        TextField salaryField = new TextField();
+        count = 0;
+        item.setSalaryDouble(100d);
         binder.forField(ageField)
             .withConverter(new StringToDoubleConverter(""))
             .bind(Person::getSalaryDouble, Person::setSalaryDouble);
