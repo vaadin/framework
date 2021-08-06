@@ -1487,6 +1487,34 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.readBean(new AtomicReference<>(null));
     }
 
+    // See: https://github.com/vaadin/framework/issues/12356
+    @Test
+    public void validationShouldNotRunTwice() {
+        0TextField salaryField = new TextField();
+    	count = 0;
+    	item.setSalaryDouble(100d);
+        binder.forField(ageField)
+            .withConverter(new StringToDoubleConverter(""))
+            .bind(Person::getSalaryDouble, Person::setSalaryDouble);
+        binder.setBean(item);
+        binder.addValueChangeListener(event -> {
+        	count++;
+        });
+
+        ageField.setValue("1000");
+        assertTrue(binder.isValid());
+
+        ageField.setValue("salary");
+        assertFalse(binder.isValid());
+
+        ageField.setValue("2000");
+
+        // Without fix for #12356 count will be 5
+        assertEquals(3, count);
+
+        assertEquals(new Double(2000), item.getSalaryDouble());
+    }
+
     private TextField createNullAnd42RejectingFieldWithEmptyValue(
             String emptyValue) {
         return new TextField() {
@@ -1514,34 +1542,6 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .withConverter(new StringToIntegerConverter("Must have number"))
                 .bind(AtomicReference::get, AtomicReference::set);
         return binder;
-    }
-
-    // See: https://github.com/vaadin/framework/issues/12356
-    @Test
-    public void validationShouldNotRunTwice() {
-        TextField salaryField = new TextField();
-    	count = 0;
-    	item.setSalaryDouble(100d);
-        binder.forField(ageField)
-            .withConverter(new StringToDoubleConverter(""))
-            .bind(Person::getSalaryDouble, Person::setSalaryDouble);
-        binder.setBean(item);
-        binder.addValueChangeListener(event -> {
-        	count++;
-        });
-
-        ageField.setValue("1000");
-        assertTrue(binder.isValid());
-
-        ageField.setValue("salary");
-        assertFalse(binder.isValid());
-
-        ageField.setValue("2000");
-
-        // Without fix for #12356 count will be 5
-        assertEquals(3,count);
-
-        assertEquals(new Double(2000), item.getSalaryDouble());
     }
 
     /**
