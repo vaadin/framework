@@ -1518,31 +1518,31 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
     // See: https://github.com/vaadin/framework/issues/12356
     @Test
-    public void twoConvertedFieldsChanged() {
+    public void validationShouldNotRunTwice() {
         TextField salaryField = new TextField();
-        item.setSalary(100);
+    	count = 0;
+    	item.setSalaryDouble(100d);
         binder.forField(ageField)
-            .withConverter(new StringToIntegerConverter(""))
-            .bind(Person::getAge, Person::setAge);
-        binder.forField(salaryField)
-            .withConverter(new StringToIntegerConverter(""))
-            .bind(Person::getSalary, Person::setSalary);
+            .withConverter(new StringToDoubleConverter(""))
+            .bind(Person::getSalaryDouble, Person::setSalaryDouble);
         binder.setBean(item);
+        binder.addValueChangeListener(event -> {
+        	count++;
+        });
 
-        ageField.setValue("10");
-        salaryField.setValue("1000");
+        ageField.setValue("1000");
         assertTrue(binder.isValid());
 
-        ageField.setValue("age");
-        salaryField.setValue("salary");
+        ageField.setValue("salary");
         assertFalse(binder.isValid());
 
-        ageField.setValue("20");
-        salaryField.setValue("2000");
-        
-        assertEquals(20, item.getAge());
-        assertEquals(new Integer(2000), item.getSalary());
-    }    
+        ageField.setValue("2000");
+
+        // Without fix for #12356 count will be 5
+        assertEquals(3,count);
+
+        assertEquals(new Double(2000), item.getSalaryDouble());
+    }
 
     /**
      * A converter that adds/removes the euro sign and formats currencies with
