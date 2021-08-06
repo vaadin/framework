@@ -34,8 +34,10 @@ import com.vaadin.client.ui.dd.DragImageModifier;
  * @author Vaadin Ltd.
  *
  */
+@SuppressWarnings("deprecation")
 public class VTextArea extends VTextField implements DragImageModifier {
 
+    /** Default classname for this widget. */
     public static final String CLASSNAME = "v-textarea";
 
     private EnterDownHandler enterDownHandler = new EnterDownHandler();
@@ -56,6 +58,9 @@ public class VTextArea extends VTextField implements DragImageModifier {
         }
     }
 
+    /**
+     * Constructs a widget for a TextArea.
+     */
     public VTextArea() {
         super(DOM.createTextArea());
         setStyleName(CLASSNAME);
@@ -63,14 +68,31 @@ public class VTextArea extends VTextField implements DragImageModifier {
         getElement().getStyle().setOverflowX(Overflow.HIDDEN);
     }
 
+    /**
+     * Gets the base TextAreaElement of this widget.
+     *
+     * @return the base element
+     */
     public TextAreaElement getTextAreaElement() {
         return super.getElement().cast();
     }
 
+    /**
+     * Sets the number of text rows that should be displayed.
+     *
+     * @param rows
+     *            the number of text rows
+     */
     public void setRows(int rows) {
         getTextAreaElement().setRows(rows);
     }
 
+    /**
+     * Sets whether the words should wrap or not.
+     *
+     * @param wordWrap
+     *            {@code true} if the words should wrap, {@code false} otherwise
+     */
     public void setWordWrap(boolean wordWrap) {
         if (wordWrap == this.wordWrap) {
             return;

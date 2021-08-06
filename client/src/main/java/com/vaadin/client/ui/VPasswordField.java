@@ -25,8 +25,12 @@ import com.google.gwt.user.client.DOM;
  */
 public class VPasswordField extends VTextField {
 
+    /** Default classname for this widget. */
     public static final String CLASSNAME = "v-passwordfield";
 
+    /**
+     * Constructs a widget for a PasswordField.
+     */
     public VPasswordField() {
         super(DOM.createInputPassword());
         setStyleName(CLASSNAME);

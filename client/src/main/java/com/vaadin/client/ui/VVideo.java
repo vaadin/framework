@@ -22,12 +22,22 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.VideoElement;
 import com.vaadin.client.Util;
 
+/**
+ * Widget class for the Video component.
+ *
+ * @author Vaadin Ltd
+ *
+ */
 public class VVideo extends VMediaBase {
 
+    /** Default classname for this widget. */
     public static String CLASSNAME = "v-video";
 
     private VideoElement video;
 
+    /**
+     * Constructs a widget for the Video component.
+     */
     public VVideo() {
         video = Document.get().createVideoElement();
         setMediaElement(video);
@@ -41,6 +51,7 @@ public class VVideo extends VMediaBase {
      * video metadata has been loaded.
      *
      * @param el
+     *            the root element of this widget
      */
     private native void updateDimensionsWhenMetadataLoaded(Element el)
     /*-{
@@ -48,21 +59,30 @@ public class VVideo extends VMediaBase {
               el.addEventListener('loadedmetadata', $entry(function(e) {
                   self.@com.vaadin.client.ui.VVideo::updateElementDynamicSize(II)(el.videoWidth, el.videoHeight);
               }), false);
-
+    
     }-*/;
 
     /**
      * Updates the dimensions of the widget.
      *
-     * @param w
-     * @param h
+     * @param width
+     *            width to set (in pixels)
+     * @param height
+     *            height to set (in pixels)
      */
-    private void updateElementDynamicSize(int w, int h) {
-        video.getStyle().setWidth(w, Unit.PX);
-        video.getStyle().setHeight(h, Unit.PX);
+    @SuppressWarnings("deprecation")
+    private void updateElementDynamicSize(int width, int height) {
+        video.getStyle().setWidth(width, Unit.PX);
+        video.getStyle().setHeight(height, Unit.PX);
         Util.notifyParentOfSizeChange(this, true);
     }
 
+    /**
+     * Sets the poster URL.
+     *
+     * @param poster
+     *            the poster image URL
+     */
     public void setPoster(String poster) {
         video.setPoster(poster);
     }
