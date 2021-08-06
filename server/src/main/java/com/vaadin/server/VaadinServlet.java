@@ -39,6 +39,7 @@ import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -197,8 +198,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     private VaadinServletService servletService;
 
-    // Mapped uri is for the jar file
-    static final Map<URI, Integer> openFileSystems = new HashMap<>();
+    /**
+     * Mapped uri is for the jar file.
+     * <p>
+     * FOR INTERNAL USE ONLY, may get renamed or removed.
+     */
+    static final Map<URI, Integer> OPEN_FILE_SYSTEMS = new HashMap<>();
     private static final Object fileSystemLock = new Object();
 
     /**
@@ -1364,17 +1369,29 @@ public class VaadinServlet extends HttpServlet implements Constants {
                         + " and will determine this as not a folder");
             }
 
-            Integer locks = openFileSystems.computeIfPresent(fileURI,
+            Integer locks = OPEN_FILE_SYSTEMS.computeIfPresent(fileURI,
                     (key, value) -> value + 1);
             if (locks != null) {
                 // Get filesystem is for the file to get the correct provider
                 return FileSystems.getFileSystem(resourceURI);
             }
             // Opened filesystem is for the file to get the correct provider
-            FileSystem fileSystem = FileSystems.newFileSystem(resourceURI,
-                    Collections.emptyMap());
-            openFileSystems.put(fileURI, 1);
+            FileSystem fileSystem = getNewOrExistingFileSystem(resourceURI);
+            OPEN_FILE_SYSTEMS.put(fileURI, 1);
             return fileSystem;
+        }
+    }
+
+    private FileSystem getNewOrExistingFileSystem(URI resourceURI)
+            throws IOException {
+        try {
+            return FileSystems.newFileSystem(resourceURI,
+                    Collections.emptyMap());
+        } catch (FileSystemAlreadyExistsException fsaee) {
+            getLogger().log(Level.FINER,
+                    "Tried to get new filesystem, but it already existed for target uri.",
+                    fsaee);
+            return FileSystems.getFileSystem(resourceURI);
         }
     }
 
@@ -1383,10 +1400,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
         synchronized (fileSystemLock) {
             try {
                 URI fileURI = getFileURI(resourceURI);
-                Integer locks = openFileSystems.computeIfPresent(fileURI,
+                Integer locks = OPEN_FILE_SYSTEMS.computeIfPresent(fileURI,
                         (key, value) -> value - 1);
                 if (locks != null && locks == 0) {
-                    openFileSystems.remove(fileURI);
+                    OPEN_FILE_SYSTEMS.remove(fileURI);
                     // Get filesystem is for the file to get the correct
                     // provider
                     FileSystems.getFileSystem(resourceURI).close();
