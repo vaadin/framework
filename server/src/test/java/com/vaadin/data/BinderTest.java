@@ -1516,6 +1516,34 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         return binder;
     }
 
+    // See: https://github.com/vaadin/framework/issues/12356
+    @Test
+    public void twoConvertedFieldsChanged() {
+        TextField salaryField = new TextField();
+        item.setSalary(100);
+        binder.forField(ageField)
+            .withConverter(new StringToIntegerConverter(""))
+            .bind(Person::getAge, Person::setAge);
+        binder.forField(salaryField)
+            .withConverter(new StringToIntegerConverter(""))
+            .bind(Person::getSalary, Person::setSalary);
+        binder.setBean(item);
+
+        ageField.setValue("10");
+        salaryField.setValue("1000");
+        assertTrue(binder.isValid());
+
+        ageField.setValue("age");
+        salaryField.setValue("salary");
+        assertFalse(binder.isValid());
+
+        ageField.setValue("20");
+        salaryField.setValue("2000");
+        
+        assertEquals(20, item.getAge());
+        assertEquals(new Integer(2000), item.getSalary());
+    }    
+
     /**
      * A converter that adds/removes the euro sign and formats currencies with
      * two decimal places.
