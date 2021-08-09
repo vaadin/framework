@@ -17,6 +17,11 @@ package com.vaadin.client.ui;
 
 import com.vaadin.shared.ui.AbstractLayoutState;
 
+/**
+ * Base class for layout connectors.
+ *
+ * @author Vaadin Ltd
+ */
 public abstract class AbstractLayoutConnector
         extends AbstractComponentContainerConnector {
 

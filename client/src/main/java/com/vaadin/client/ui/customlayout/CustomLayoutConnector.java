@@ -32,6 +32,12 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.customlayout.CustomLayoutState;
 import com.vaadin.ui.CustomLayout;
 
+/**
+ * A connector class for CustomLayout.
+ *
+ * @author Vaadin Ltd
+ */
+@SuppressWarnings("deprecation")
 @Connect(CustomLayout.class)
 public class CustomLayoutConnector extends AbstractLayoutConnector
         implements SimpleManagedLayout, Paintable {

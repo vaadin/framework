@@ -15,8 +15,6 @@ import com.vaadin.ui.VerticalLayout;
 public class LoggingItemDataProvider
         extends CallbackDataProvider<String, String> {
 
-    private int counter;
-
     public LoggingItemDataProvider(int size, VerticalLayout logContainer) {
         super(q -> fetch(logContainer, q, size),
                 q -> size(logContainer, q, size));

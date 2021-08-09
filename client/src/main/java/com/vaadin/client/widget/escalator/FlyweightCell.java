@@ -38,6 +38,7 @@ import com.vaadin.client.widgets.Escalator;
  * @author Vaadin Ltd
  */
 public class FlyweightCell {
+    /** The column span property name. */
     public static final String COLSPAN_ATTR = "colSpan";
 
     private final int column;
@@ -46,6 +47,17 @@ public class FlyweightCell {
     private TableCellElement element = null;
     private CellIterator currentIterator = null;
 
+    /**
+     * Creates a cell representation that follows the
+     * <code>Flyweight</code>-pattern.
+     *
+     * @param row
+     *            representation of the row that contains the cell
+     * @param column
+     *            the column index of the cell
+     *
+     * @see FlyweightCell
+     */
     public FlyweightCell(final FlyweightRow row, final int column) {
         this.row = row;
         this.column = column;
@@ -53,6 +65,8 @@ public class FlyweightCell {
 
     /**
      * Returns the row index of the cell.
+     *
+     * @return the row index
      */
     public int getRow() {
         assertSetup();
@@ -61,6 +75,8 @@ public class FlyweightCell {
 
     /**
      * Returns the column index of the cell.
+     *
+     * @return the column index
      */
     public int getColumn() {
         assertSetup();
@@ -70,6 +86,8 @@ public class FlyweightCell {
     /**
      * Returns the element of the cell. Can be either a <code>TD</code> element
      * or a <code>TH</code> element.
+     *
+     * @return the element
      */
     public TableCellElement getElement() {
         assertSetup();
@@ -78,6 +96,8 @@ public class FlyweightCell {
 
     /**
      * Return the colspan attribute of the element of the cell.
+     *
+     * @return the colspan attribute
      */
     public int getColSpan() {
         assertSetup();
@@ -148,6 +168,12 @@ public class FlyweightCell {
                 + "inappropriately.";
     }
 
+    /**
+     * Set the colspan attribute for the element of the cell.
+     *
+     * @param numberOfCells
+     *            spanned cell count, must be at least 1
+     */
     public void setColSpan(final int numberOfCells) {
         if (numberOfCells < 1) {
             throw new IllegalArgumentException(

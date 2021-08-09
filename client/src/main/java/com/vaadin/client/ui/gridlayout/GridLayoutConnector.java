@@ -37,6 +37,11 @@ import com.vaadin.shared.ui.gridlayout.GridLayoutState;
 import com.vaadin.shared.ui.gridlayout.GridLayoutState.ChildComponentData;
 import com.vaadin.ui.GridLayout;
 
+/**
+ * A connector class for the GridLayout component.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(GridLayout.class)
 public class GridLayoutConnector extends AbstractComponentContainerConnector
         implements DirectionalManagedLayout {
@@ -46,6 +51,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this) {
 
+        @SuppressWarnings("deprecation")
         @Override
         protected ComponentConnector getChildComponent(
                 com.google.gwt.user.client.Element element) {
@@ -109,6 +115,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
         return (GridLayoutState) super.getState();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);

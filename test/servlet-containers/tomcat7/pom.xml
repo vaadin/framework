@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-servlet-containers-test</artifactId>
-        <version>8.13-SNAPSHOT</version>
+        <version>8.14-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-test-tomcat7-server</artifactId>
     <name>Vaadin Tomcat 7 Test</name>
@@ -36,7 +36,7 @@
             <!-- Server configuration -->
             <plugin>
                 <groupId>org.codehaus.cargo</groupId>
-                <artifactId>cargo-maven2-plugin</artifactId>
+                <artifactId>cargo-maven3-plugin</artifactId>
                 <configuration>
                     <container>
                         <containerId>tomcat7x</containerId>

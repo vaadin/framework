@@ -35,6 +35,8 @@ public interface Spacer {
 
     /**
      * Gets the decorative element for this spacer.
+     *
+     * @return the decorative element
      */
     Element getDecoElement();
 

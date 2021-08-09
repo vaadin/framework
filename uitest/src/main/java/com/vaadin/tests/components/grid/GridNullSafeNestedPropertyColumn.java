@@ -20,8 +20,6 @@ public class GridNullSafeNestedPropertyColumn extends AbstractTestUI {
 
     private List<Person> personList = new ArrayList<>();
     private ListDataProvider<Person> listDataProvider;
-    private Grid.Column nullSafeColumn = null;
-    private Grid.Column regularColumn = null;
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -47,8 +45,7 @@ public class GridNullSafeNestedPropertyColumn extends AbstractTestUI {
 
         Button addSafeColumnButton = new Button(
                 "add 'address.streetAddress' as a null-safe column", event -> {
-                    nullSafeColumn = grid.addColumn("address.streetAddress",
-                            new TextRenderer(),
+                    grid.addColumn("address.streetAddress", new TextRenderer(),
                             Grid.Column.NestedNullBehavior.ALLOW_NULLS);
                 });
         addSafeColumnButton.setId("safe");
@@ -56,7 +53,7 @@ public class GridNullSafeNestedPropertyColumn extends AbstractTestUI {
         Button addUnsafeColumnButton = new Button(
                 "add 'address.streetAddress' column without nested null safety",
                 event -> {
-                    regularColumn = grid.addColumn("address.streetAddress");
+                    grid.addColumn("address.streetAddress");
                 });
         addUnsafeColumnButton.setId("unsafe");
 

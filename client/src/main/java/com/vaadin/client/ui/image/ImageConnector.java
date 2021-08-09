@@ -27,6 +27,11 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.image.ImageServerRpc;
 import com.vaadin.shared.ui.image.ImageState;
 
+/**
+ * A connector class for the Image component.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(com.vaadin.ui.Image.class)
 public class ImageConnector extends AbstractComponentConnector {
 
@@ -63,6 +68,7 @@ public class ImageConnector extends AbstractComponentConnector {
         getWidget().setAltText(alt != null ? alt : "");
     }
 
+    /** Click event handler for sending click data to the server. */
     protected final ClickEventHandler clickEventHandler = new ClickEventHandler(
             this) {
 

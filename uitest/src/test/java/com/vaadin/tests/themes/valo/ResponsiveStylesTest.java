@@ -1,6 +1,7 @@
 package com.vaadin.tests.themes.valo;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.util.List;
@@ -51,7 +52,7 @@ public class ResponsiveStylesTest extends MultiBrowserTest {
 
         WebElement wideMenu = menus.get(WIDE_ELEMENT_INDEX);
         int wideWidth = wideMenu.getSize().width;
-        assertThat(wideWidth, equalTo(WIDE_WIDTH));
+        assertThat((double) wideWidth, closeTo(WIDE_WIDTH, 1));
         sleep(300);
 
         compareScreen("defaultMenuWidths");

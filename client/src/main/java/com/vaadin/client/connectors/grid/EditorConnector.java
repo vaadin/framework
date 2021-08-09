@@ -29,7 +29,6 @@ import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
-import com.vaadin.shared.Range;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.editor.EditorClientRpc;
@@ -47,9 +46,6 @@ import elemental.json.JsonObject;
  */
 @Connect(EditorImpl.class)
 public class EditorConnector extends AbstractExtensionConnector {
-
-    private Integer currentEditedRow = null;
-    private boolean waitingForAvailableData = false;
 
     /**
      * EditorHandler for communicating with the server-side implementation.
@@ -104,6 +100,12 @@ public class EditorConnector extends AbstractExtensionConnector {
                     getParent().getWidget().getEditor()
                             .setEditorError(errorMessage, errorColumns);
                 }
+
+                @Override
+                public void confirmValidity(boolean isValid) {
+                    getParent().getWidget().getEditor().getEventHandler()
+                            .confirmValidity(isValid);
+                }
             });
         }
 
@@ -127,7 +129,11 @@ public class EditorConnector extends AbstractExtensionConnector {
                 // a confirmation from the server
                 rpc.cancel(afterBeingSaved);
             }
-            currentEditedRow = null;
+        }
+
+        @Override
+        public void checkValidity() {
+            rpc.checkValidity();
         }
 
         @Override

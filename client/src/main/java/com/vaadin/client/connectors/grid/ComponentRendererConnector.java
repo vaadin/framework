@@ -17,7 +17,6 @@ package com.vaadin.client.connectors.grid;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -28,7 +27,6 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.WidgetRenderer;
 import com.vaadin.client.ui.AbstractComponentConnector;
-import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.renderers.ComponentRendererState;
@@ -119,9 +117,9 @@ public class ComponentRendererConnector
     }
 
     private void unregisterHierarchyHandler() {
-        if (this.handlerRegistration != null) {
-            this.handlerRegistration.removeHandler();
-            this.handlerRegistration = null;
+        if (handlerRegistration != null) {
+            handlerRegistration.removeHandler();
+            handlerRegistration = null;
         }
     }
 

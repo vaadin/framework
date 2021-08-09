@@ -45,6 +45,7 @@ public class InlineDateTimeFieldConnector extends
         return (VDateTimeFieldCalendar) super.getWidget();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void updateListeners() {
         super.updateListeners();

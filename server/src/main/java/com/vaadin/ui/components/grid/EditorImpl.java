@@ -151,6 +151,11 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
                 rpc.confirmBind(true);
                 doEdit(getData(key));
             }
+
+            @Override
+            public void checkValidity() {
+                rpc.confirmValidity(getBinder().validate().isOk());
+            }
         });
 
         setBinder(Binder.withPropertySet(propertySet));

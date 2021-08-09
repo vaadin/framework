@@ -23,6 +23,11 @@ import com.vaadin.shared.ui.video.VideoConstants;
 import com.vaadin.shared.ui.video.VideoState;
 import com.vaadin.ui.Video;
 
+/**
+ * A connector class for the Video component.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(Video.class)
 public class VideoConnector extends MediaBaseConnector {
 

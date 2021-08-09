@@ -26,6 +26,9 @@ import com.vaadin.client.widgets.Grid;
 /**
  * Event object describing a change in Grid row selection state.
  *
+ * @param <T>
+ *            the type of the items in the Grid
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */

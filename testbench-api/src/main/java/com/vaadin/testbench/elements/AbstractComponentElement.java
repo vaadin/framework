@@ -34,9 +34,7 @@ public class AbstractComponentElement extends AbstractElement {
      */
     public String getCaption() {
         final String gwtIdAttribute = "aria-labelledby";
-        WebElement captElem = null;
-        String captionId = null;
-        captionId = getAttribute(gwtIdAttribute);
+        String captionId = getAttribute(gwtIdAttribute);
         // IE8 getAttribute returns empty string instead of null
         // when there is no attribute with specified name
         if (captionId == null || captionId.isEmpty()) {
@@ -45,7 +43,7 @@ public class AbstractComponentElement extends AbstractElement {
             captionId = elem.getAttribute(gwtIdAttribute);
         }
         // element ids are unique, we can search the whole page
-        captElem = getDriver().findElement(By.id(captionId));
+        WebElement captElem = getDriver().findElement(By.id(captionId));
         return captElem.getText();
     }
 

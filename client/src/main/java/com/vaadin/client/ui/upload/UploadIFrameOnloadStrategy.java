@@ -17,8 +17,21 @@ package com.vaadin.client.ui.upload;
 
 import com.vaadin.client.ui.VUpload;
 
+/**
+ * An IFrame onload strategy class for an Upload component.
+ *
+ * @author Vaadin Ltd
+ */
 public class UploadIFrameOnloadStrategy {
 
+    /**
+     * Hooks the events to the given IFrame's onLoad event.
+     *
+     * @param iframe
+     *            the iframe whose onLoad event should be connected
+     * @param upload
+     *            the upload widget
+     */
     public native void hookEvents(com.google.gwt.dom.client.Element iframe,
             VUpload upload)
     /*-{

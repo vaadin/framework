@@ -63,9 +63,9 @@ public class ScrolledTabSheetResizeTest extends MultiBrowserTest {
     public void testValo() throws IOException, InterruptedException {
         StringBuilder exceptions = new StringBuilder();
         boolean failed = false;
-        // upper limit is determined by the amount of tabs (wider than for
-        // reindeer), lower end by limits set by Selenium version
-        for (int i = 1550; i >= 650; i = i - 50) {
+        // 1550 would be better for the amount of tabs (wider than for
+        // reindeer), but IE11 can't adjust that far
+        for (int i = 1500; i >= 650; i = i - 50) {
             try {
                 testResize(i);
             } catch (Exception e) {

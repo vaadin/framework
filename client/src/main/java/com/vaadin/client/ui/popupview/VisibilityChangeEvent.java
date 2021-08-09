@@ -17,16 +17,32 @@ package com.vaadin.client.ui.popupview;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+/**
+ * Event for popup visibility changes.
+ *
+ * @author Vaadin Ltd
+ */
 public class VisibilityChangeEvent extends GwtEvent<VisibilityChangeHandler> {
 
     private static Type<VisibilityChangeHandler> type;
 
     private boolean visible;
 
+    /**
+     * Constructs a visibility change event.
+     *
+     * @param visible
+     *            {@code true} if the popup was made visible
+     */
     public VisibilityChangeEvent(final boolean visible) {
         this.visible = visible;
     }
 
+    /**
+     * Returns whether the popup is now visible or not.
+     *
+     * @return {@code true} if the popup is visible, {@code false} otherwise
+     */
     public boolean isVisible() {
         return visible;
     }
@@ -36,6 +52,11 @@ public class VisibilityChangeEvent extends GwtEvent<VisibilityChangeHandler> {
         return getType();
     }
 
+    /**
+     * Returns the {@link Type} used to register this event.
+     *
+     * @return the type
+     */
     public static Type<VisibilityChangeHandler> getType() {
         if (type == null) {
             type = new Type<>();

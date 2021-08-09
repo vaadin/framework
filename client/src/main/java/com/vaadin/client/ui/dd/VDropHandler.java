@@ -73,11 +73,14 @@ public interface VDropHandler {
      * though mouse is not moved.
      *
      * @param currentDrag
+     *            the latest drag event
      */
     public void dragOver(VDragEvent currentDrag);
 
     /**
      * Returns the ComponentConnector with which this DropHandler is associated.
+     *
+     * @return the connector
      */
     public ComponentConnector getConnector();
 
@@ -85,6 +88,8 @@ public interface VDropHandler {
      * Returns the application connection to which this {@link VDropHandler}
      * belongs to. DragAndDropManager uses this function to send Transferable to
      * server side.
+     *
+     * @return the application connection
      */
     public ApplicationConnection getApplicationConnection();
 

@@ -29,5 +29,10 @@ import com.vaadin.client.extensions.DropTargetExtensionConnector;
  */
 @Deprecated
 public interface VHasDropHandler {
+    /**
+     * Returns the drop handler for this widget.
+     *
+     * @return the drop handler
+     */
     public VDropHandler getDropHandler();
 }

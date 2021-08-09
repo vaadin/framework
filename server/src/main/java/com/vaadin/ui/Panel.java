@@ -334,7 +334,7 @@ public class Panel extends AbstractSingleComponentContainer
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
         // handle tabindex
-        Panel def = designContext.getDefaultInstance(this);
+        designContext.getDefaultInstance(this);
     }
 
 }

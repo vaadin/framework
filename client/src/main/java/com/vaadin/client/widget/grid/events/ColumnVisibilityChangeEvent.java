@@ -33,6 +33,11 @@ public class ColumnVisibilityChangeEvent<T>
 
     private static final Type<ColumnVisibilityChangeHandler<?>> TYPE = new Type<>();
 
+    /**
+     * Returns the associated handler type.
+     *
+     * @return the handler type
+     */
     public static final Type<ColumnVisibilityChangeHandler<?>> getType() {
         return TYPE;
     }
@@ -43,6 +48,18 @@ public class ColumnVisibilityChangeEvent<T>
 
     private final boolean hidden;
 
+    /**
+     * Constructs a visibility change event for a grid column.
+     *
+     * @param column
+     *            the updated column
+     * @param hidden
+     *            {@code true} if the column is now hidden, {@code false}
+     *            otherwise
+     * @param userOriginated
+     *            {@code true} if the event was triggered by user interaction,
+     *            {@code false} otherwise
+     */
     public ColumnVisibilityChangeEvent(Column<?, T> column, boolean hidden,
             boolean userOriginated) {
         this.column = column;

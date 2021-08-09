@@ -497,7 +497,7 @@ public class GridConnector extends AbstractListingConnector
     }
 
     private void updateStaticRow(RowState rowState,
-            Grid.StaticSection.StaticRow row) {
+            Grid.StaticSection.StaticRow<?> row) {
         rowState.cells
                 .forEach((columnId, cellState) -> updateStaticCellFromState(
                         row.getCell(getColumn(columnId)), cellState));
@@ -794,11 +794,11 @@ public class GridConnector extends AbstractListingConnector
         return null;
     }
 
-    private TooltipInfo getHeaderFooterTooltip(CellReference cell) {
+    private TooltipInfo getHeaderFooterTooltip(CellReference<?> cell) {
         Section section = Section.BODY;
         if (cell instanceof EventCellReference) {
             // Header or footer
-            section = ((EventCellReference) cell).getSection();
+            section = ((EventCellReference<?>) cell).getSection();
         }
         StaticCell staticCell = null;
         if (section == Section.HEADER) {

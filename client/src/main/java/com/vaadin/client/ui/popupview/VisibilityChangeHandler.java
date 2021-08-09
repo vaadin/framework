@@ -17,7 +17,18 @@ package com.vaadin.client.ui.popupview;
 
 import com.google.gwt.event.shared.EventHandler;
 
+/**
+ * Event handler for popup visibility change events.
+ *
+ * @author Vaadin Ltd
+ */
 public interface VisibilityChangeHandler extends EventHandler {
 
+    /**
+     * Handle popup visibility change.
+     *
+     * @param event
+     *            the visibility change event
+     */
     void onVisibilityChange(VisibilityChangeEvent event);
 }

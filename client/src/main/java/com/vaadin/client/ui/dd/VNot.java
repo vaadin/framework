@@ -38,9 +38,9 @@ public final class VNot extends VAcceptCriterion {
     public void accept(VDragEvent drag, UIDL configuration,
             VAcceptCallback callback) {
         if (crit1 == null) {
-            crit1 = getCriteria(drag, configuration, 0);
+            crit1 = getCriteria(configuration, 0);
             if (crit1 == null) {
-                getLogger().info("Not criteria didn't found a child criteria");
+                getLogger().info("Not criteria didn't find a child criteria");
                 return;
             }
         }
@@ -55,8 +55,7 @@ public final class VNot extends VAcceptCriterion {
         }
     }
 
-    private VAcceptCriterion getCriteria(VDragEvent drag, UIDL configuration,
-            int i) {
+    private VAcceptCriterion getCriteria(UIDL configuration, int i) {
         UIDL childUIDL = configuration.getChildUIDL(i);
         return VAcceptCriteria.get(childUIDL.getStringAttribute("name"));
     }

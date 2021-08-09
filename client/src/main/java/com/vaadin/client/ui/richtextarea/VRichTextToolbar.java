@@ -63,40 +63,58 @@ public class VRichTextToolbar extends Composite {
      */
     public interface Images extends ClientBundle {
 
+        /** @return the icon for bold */
         ImageResource bold();
 
+        /** @return the icon for link creation */
         ImageResource createLink();
 
+        /** @return the icon for horizontal break */
         ImageResource hr();
 
+        /** @return the icon for indent */
         ImageResource indent();
 
+        /** @return the icon for image insert */
         ImageResource insertImage();
 
+        /** @return the icon for italic */
         ImageResource italic();
 
+        /** @return the icon for center-justification */
         ImageResource justifyCenter();
 
+        /** @return the icon for left-justification */
         ImageResource justifyLeft();
 
+        /** @return the icon for right-justification */
         ImageResource justifyRight();
 
+        /** @return the icon for ordered list */
         ImageResource ol();
 
+        /** @return the icon for indent removal */
         ImageResource outdent();
 
+        /** @return the icon for formating removal */
         ImageResource removeFormat();
 
+        /** @return the icon for link removal */
         ImageResource removeLink();
 
+        /** @return the icon for strike-through */
         ImageResource strikeThrough();
 
+        /** @return the icon for subscript */
         ImageResource subscript();
 
+        /** @return the icon for superscript */
         ImageResource superscript();
 
+        /** @return the icon for unordered list */
         ImageResource ul();
 
+        /** @return the icon for underlining */
         ImageResource underline();
     }
 
@@ -106,74 +124,109 @@ public class VRichTextToolbar extends Composite {
      */
     public interface Strings extends Constants {
 
+        /** @return the constant for black */
         String black();
 
+        /** @return the constant for blue */
         String blue();
 
+        /** @return the constant for bold */
         String bold();
 
+        /** @return the constant for color */
         String color();
 
+        /** @return the constant for link creation */
         String createLink();
 
+        /** @return the constant for font */
         String font();
 
+        /** @return the constant for green */
         String green();
 
+        /** @return the constant for horizontal break */
         String hr();
 
+        /** @return the constant for indent */
         String indent();
 
+        /** @return the constant for image insert */
         String insertImage();
 
+        /** @return the constant for italic */
         String italic();
 
+        /** @return the constant for center-justification */
         String justifyCenter();
 
+        /** @return the constant for left-justification */
         String justifyLeft();
 
+        /** @return the constant for right-justification */
         String justifyRight();
 
+        /** @return the constant for large */
         String large();
 
+        /** @return the constant for medium */
         String medium();
 
+        /** @return the constant for normal */
         String normal();
 
+        /** @return the constant for ordered list */
         String ol();
 
+        /** @return the constant for indent removal */
         String outdent();
 
+        /** @return the constant for red */
         String red();
 
+        /** @return the constant for formating removal */
         String removeFormat();
 
+        /** @return the constant for link removal */
         String removeLink();
 
+        /** @return the constant for size */
         String size();
 
+        /** @return the constant for small */
         String small();
 
+        /** @return the constant for strike-through */
         String strikeThrough();
 
+        /** @return the constant for subscript */
         String subscript();
 
+        /** @return the constant for superscript */
         String superscript();
 
+        /** @return the constant for unordered list */
         String ul();
 
+        /** @return the constant for underline */
         String underline();
 
+        /** @return the constant for white */
         String white();
 
+        /** @return the constant for extra-large */
         String xlarge();
 
+        /** @return the constant for extra-small */
         String xsmall();
 
+        /** @return the constant for extra-extra-large */
         String xxlarge();
 
+        /** @return the constant for extra-extra-small */
         String xxsmall();
 
+        /** @return the constant for yellow */
         String yellow();
     }
 
@@ -274,6 +327,7 @@ public class VRichTextToolbar extends Composite {
             }
         }
 
+        @SuppressWarnings("deprecation")
         private native void createLinkViaJSNI(
                 RichTextArea.ExtendedFormatter formatter, String url)
         /*-{
@@ -283,7 +337,7 @@ public class VRichTextToolbar extends Composite {
             if (wnd.getSelection) {
                 selectedText = wnd.getSelection().toString();
             }
-        
+
             wnd.focus();
             if (selectedText) {
                 // Add url as the href property of the highlighted text
@@ -351,6 +405,10 @@ public class VRichTextToolbar extends Composite {
     @SuppressWarnings("deprecation")
     public VRichTextToolbar(RichTextArea richText) {
         this.richText = richText;
+        // NOTE: by default there is only one formatter anymore since the
+        // difference was only needed to support older versions of Safari. These
+        // deprecated methods are only called in order to support any extended
+        // versions that do still implement separate formatters for some reason.
         basic = richText.getBasicFormatter();
         extended = richText.getExtendedFormatter();
 
@@ -363,49 +421,67 @@ public class VRichTextToolbar extends Composite {
         setStyleName("gwt-RichTextToolbar");
 
         if (basic != null) {
-            topPanel.add(
-                    bold = createToggleButton(images.bold(), strings.bold()));
-            topPanel.add(italic = createToggleButton(images.italic(),
-                    strings.italic()));
-            topPanel.add(underline = createToggleButton(images.underline(),
-                    strings.underline()));
-            topPanel.add(subscript = createToggleButton(images.subscript(),
-                    strings.subscript()));
-            topPanel.add(superscript = createToggleButton(images.superscript(),
-                    strings.superscript()));
-            topPanel.add(justifyLeft = createPushButton(images.justifyLeft(),
-                    strings.justifyLeft()));
-            topPanel.add(justifyCenter = createPushButton(
-                    images.justifyCenter(), strings.justifyCenter()));
-            topPanel.add(justifyRight = createPushButton(images.justifyRight(),
-                    strings.justifyRight()));
+            bold = createToggleButton(images.bold(), strings.bold());
+            italic = createToggleButton(images.italic(), strings.italic());
+            underline = createToggleButton(images.underline(),
+                    strings.underline());
+            subscript = createToggleButton(images.subscript(),
+                    strings.subscript());
+            superscript = createToggleButton(images.superscript(),
+                    strings.superscript());
+            justifyLeft = createPushButton(images.justifyLeft(),
+                    strings.justifyLeft());
+            justifyCenter = createPushButton(images.justifyCenter(),
+                    strings.justifyCenter());
+            justifyRight = createPushButton(images.justifyRight(),
+                    strings.justifyRight());
+            topPanel.add(bold);
+            topPanel.add(italic);
+            topPanel.add(underline);
+            topPanel.add(subscript);
+            topPanel.add(superscript);
+            topPanel.add(justifyLeft);
+            topPanel.add(justifyCenter);
+            topPanel.add(justifyRight);
         }
 
         if (extended != null) {
-            topPanel.add(strikethrough = createToggleButton(
-                    images.strikeThrough(), strings.strikeThrough()));
-            topPanel.add(indent = createPushButton(images.indent(),
-                    strings.indent()));
-            topPanel.add(outdent = createPushButton(images.outdent(),
-                    strings.outdent()));
-            topPanel.add(hr = createPushButton(images.hr(), strings.hr()));
-            topPanel.add(ol = createPushButton(images.ol(), strings.ol()));
-            topPanel.add(ul = createPushButton(images.ul(), strings.ul()));
-            topPanel.add(insertImage = createPushButton(images.insertImage(),
-                    strings.insertImage()));
-            topPanel.add(createLink = createPushButton(images.createLink(),
-                    strings.createLink()));
-            topPanel.add(removeLink = createPushButton(images.removeLink(),
-                    strings.removeLink()));
-            topPanel.add(removeFormat = createPushButton(images.removeFormat(),
-                    strings.removeFormat()));
+            strikethrough = createToggleButton(images.strikeThrough(),
+                    strings.strikeThrough());
+            indent = createPushButton(images.indent(), strings.indent());
+            outdent = createPushButton(images.outdent(), strings.outdent());
+            hr = createPushButton(images.hr(), strings.hr());
+            ol = createPushButton(images.ol(), strings.ol());
+            ul = createPushButton(images.ul(), strings.ul());
+            insertImage = createPushButton(images.insertImage(),
+                    strings.insertImage());
+            createLink = createPushButton(images.createLink(),
+                    strings.createLink());
+            removeLink = createPushButton(images.removeLink(),
+                    strings.removeLink());
+            removeFormat = createPushButton(images.removeFormat(),
+                    strings.removeFormat());
+            topPanel.add(strikethrough);
+            topPanel.add(indent);
+            topPanel.add(outdent);
+            topPanel.add(hr);
+            topPanel.add(ol);
+            topPanel.add(ul);
+            topPanel.add(insertImage);
+            topPanel.add(createLink);
+            topPanel.add(removeLink);
+            topPanel.add(removeFormat);
         }
 
         if (basic != null) {
-            bottomPanel.add(backColors = createColorList("Background"));
-            bottomPanel.add(foreColors = createColorList("Foreground"));
-            bottomPanel.add(fonts = createFontList());
-            bottomPanel.add(fontSizes = createFontSizes());
+            backColors = createColorList("Background");
+            foreColors = createColorList("Foreground");
+            fonts = createFontList();
+            fontSizes = createFontSizes();
+            bottomPanel.add(backColors);
+            bottomPanel.add(foreColors);
+            bottomPanel.add(fonts);
+            bottomPanel.add(fontSizes);
 
             // We only use these handlers for updating status, so don't hook
             // them up unless at least basic editing is supported.

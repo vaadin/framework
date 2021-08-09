@@ -211,6 +211,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Creates a new empty tree with caption.
      *
      * @param caption
+     *            the caption of the component
      */
     public Tree(String caption) {
         this(caption, new HierarchicalContainer());
@@ -220,7 +221,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Creates a new tree with caption and connect it to a Container.
      *
      * @param caption
+     *            the caption of the component
      * @param dataSource
+     *            the container
      */
     public Tree(String caption, Container dataSource) {
         super(caption, dataSource);
@@ -370,6 +373,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * succeeds only if all expandable items are expanded.
      *
      * @param startItemId
+     *            ID of the initial item
      * @return True if the expand operation succeeded
      */
     public boolean expandItemsRecursively(Object startItemId) {
@@ -423,6 +427,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * succeeds only if all expandable items are collapsed.
      *
      * @param startItemId
+     *            ID of the initial item
      * @return True if the collapse operation succeeded
      */
     public boolean collapseItemsRecursively(Object startItemId) {
@@ -670,8 +675,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         // rendered selectedKeys
         LinkedList<String> selectedKeys = new LinkedList<String>();
 
-        final LinkedList<String> expandedKeys = new LinkedList<String>();
-
         // Iterates through hierarchical tree using a stack of iterators
         final Stack<Iterator<?>> iteratorStack = new Stack<Iterator<?>>();
         Collection<?> ids;
@@ -769,7 +772,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 }
                 if (areChildrenAllowed(itemId) && isExpanded(itemId)) {
                     target.addAttribute("expanded", true);
-                    expandedKeys.add(key);
                 }
 
                 // Add caption change listener
@@ -1027,11 +1029,12 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         private final Object expandedItemId;
 
         /**
-         * New instance of options change event.
+         * New instance of expanding event.
          *
          * @param source
-         *            the Source of the event.
+         *            the source component of the event.
          * @param expandedItemId
+         *            ID of the item that was expanded
          */
         public ExpandEvent(Component source, Object expandedItemId) {
             super(source);
@@ -1039,9 +1042,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         }
 
         /**
-         * Node where the event occurred.
+         * ID of the item that was expanded.
          *
-         * @return the Source of the event.
+         * @return the item id.
          */
         public Object getItemId() {
             return expandedItemId;
@@ -1082,6 +1085,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addExpandListener(ExpandListener)}
+     *
+     * @param listener
+     *            the Listener to be added.
      */
     @Deprecated
     public void addListener(ExpandListener listener) {
@@ -1102,6 +1108,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeExpandListener(ExpandListener)}
+     *
+     * @param listener
+     *            the Listener to be removed.
      */
     @Deprecated
     public void removeListener(ExpandListener listener) {
@@ -1137,6 +1146,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
          * @param source
          *            the Source of the event.
          * @param collapsedItemId
+         *            ID of the item that was collapsed
          */
         public CollapseEvent(Component source, Object collapsedItemId) {
             super(source);
@@ -1144,7 +1154,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         }
 
         /**
-         * Gets tge Collapsed Item id.
+         * Gets the ID of the item that was collapsed.
          *
          * @return the collapsed item id.
          */
@@ -1188,6 +1198,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addCollapseListener(CollapseListener)}
+     *
+     * @param listener
+     *            the Listener to be added.
      */
     @Deprecated
     public void addListener(CollapseListener listener) {
@@ -1208,6 +1221,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeCollapseListener(CollapseListener)}
+     *
+     * @param listener
+     *            the Listener to be removed.
      */
     @Deprecated
     public void removeListener(CollapseListener listener) {
@@ -1476,9 +1492,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
          * If the method returns null, the current target is on a root node or
          * on other undefined area over the tree component.
          * <p>
-         * The default Tree implementation marks the targetted tree node with
-         * CSS classnames v-tree-node-dragfolder and
-         * v-tree-node-caption-dragfolder (for the caption element).
+         * The default Tree implementation marks the targeted tree node with CSS
+         * classnames v-tree-node-dragfolder and v-tree-node-caption-dragfolder
+         * (for the caption element).
+         *
+         * @return the ID of the item that can receive the targeted drop
          */
         public Object getItemIdInto() {
 
@@ -1553,10 +1571,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * Sets the drag mode that controls how Tree behaves as a {@link DragSource}
-     * .
+     * Sets the drag mode that controls how Tree behaves as a
+     * {@link DragSource}.
      *
      * @param dragMode
+     *            the drag mode to set
      */
     public void setDragMode(TreeDragMode dragMode) {
         this.dragMode = dragMode;
@@ -1831,6 +1850,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Get the item description generator which generates tooltips for tree
      * items.
+     *
+     * @return the item description generator
      */
     public ItemDescriptionGenerator getItemDescriptionGenerator() {
         return itemDescriptionGenerator;

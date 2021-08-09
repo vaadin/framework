@@ -39,10 +39,23 @@ public class ButtonRenderer extends ClickableRenderer<String, Button> {
         return b;
     }
 
+    /**
+     * Sets whether HTML content is allowed.
+     *
+     * @param htmlContentAllowed
+     *            {@code true} if HTML content allowed, {@code false} if
+     *            contents should be rendered as plain text
+     */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
         this.htmlContentAllowed = htmlContentAllowed;
     }
 
+    /**
+     * Returns whether HTML content is allowed.
+     *
+     * @return {@code true} if HTML content allowed, {@code false} if contents
+     *         are rendered as plain text
+     */
     public boolean isHtmlContentAllowed() {
         return htmlContentAllowed;
     }

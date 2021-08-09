@@ -31,15 +31,23 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -71,7 +79,7 @@ import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({ "deprecation", "serial" })
 public class VaadinServlet extends HttpServlet implements Constants {
 
     private class ScssCacheEntry implements Serializable {
@@ -189,6 +197,14 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     private VaadinServletService servletService;
+
+    /**
+     * Mapped uri is for the jar file.
+     * <p>
+     * FOR INTERNAL USE ONLY, may get renamed or removed.
+     */
+    static final Map<URI, Integer> OPEN_FILE_SYSTEMS = new HashMap<>();
+    private static final Object FILE_SYSTEM_LOCK = new Object();
 
     /**
      * Called by the servlet container to indicate to a servlet that the servlet
@@ -685,6 +701,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * servers).
      *
      * @param servletContext
+     *            the {@link ServletContext} in which this servlet is running
      * @param path
      *            the resource path.
      * @return the resource path.
@@ -695,8 +712,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Deprecated
     protected static String getResourcePath(ServletContext servletContext,
             String path) {
-        String resultPath = null;
-        resultPath = servletContext.getRealPath(path);
+        String resultPath = servletContext.getRealPath(path);
         if (resultPath != null) {
             return resultPath;
         } else {
@@ -718,7 +734,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * e.g. '(' and ')', so values should be safe in javascript too.
      *
      * @param themeName
-     * @return
+     *            name of the theme
+     * @return name of the theme without special characters
      *
      * @deprecated As of 7.0. Will likely change or be removed in a future
      *             version
@@ -771,7 +788,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     /**
      * Returns the default theme. Must never return null.
      *
-     * @return
+     * @return default theme name
      */
     public static String getDefaultTheme() {
         return DEFAULT_THEME_NAME;
@@ -814,7 +831,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @param response
      *            The response
      * @throws IOException
+     *             if an I/O exception occurs
      * @throws ServletException
+     *             if a servlet exception occurs
      *
      * @since 8.5
      */
@@ -842,10 +861,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         // security check: do not permit navigation out of the VAADIN
-        // directory
+        // directory or into any directory rather than a file
         if (!isAllowedVAADINResourceUrl(request, resourceUrl)) {
             getLogger().log(Level.INFO,
-                    "Requested resource [{0}] not accessible in the VAADIN directory or access to it is forbidden.",
+                    "Requested resource [{0}] is a directory, "
+                            + "is not within the VAADIN directory, "
+                            + "or access to it is forbidden.",
                     filename);
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
@@ -943,6 +964,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
     /**
      * Writes the contents of the given resourceUrl in the response. Can be
      * overridden to add/modify response headers and similar.
+     * <p>
+     * WARNING: note that this should not be used for a {@code resourceUrl} that
+     * represents a directory! For security reasons, the directory contents
+     * should not be ever written into the {@code response}, and the
+     * implementation which is used for setting the content length relies on
+     * {@link URLConnection#getContentLength()} method which returns incorrect
+     * values for directories.
      *
      * @param request
      *            The request for the resource
@@ -951,6 +979,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @param resourceUrl
      *            The url to send
      * @throws IOException
+     *             if an I/O exception occurs
      */
     protected void writeStaticResourceResponse(HttpServletRequest request,
             HttpServletResponse response, URL resourceUrl) throws IOException {
@@ -1087,7 +1116,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
         // directory
         if (!isAllowedVAADINResourceUrl(request, scssUrl)) {
             getLogger().log(Level.INFO,
-                    "Requested resource [{0}] not accessible in the VAADIN directory or access to it is forbidden.",
+                    "Requested resource [{0}] is a directory, "
+                            + "is not within the VAADIN directory, "
+                            + "or access to it is forbidden.",
                     filename);
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
@@ -1196,7 +1227,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     /**
      * Check whether a URL obtained from a classloader refers to a valid static
-     * resource in the directory VAADIN.
+     * resource in the directory VAADIN. Directories do not count as valid
+     * resources.
      *
      * Warning: Overriding of this method is not recommended, but is possible to
      * support non-default classloaders or servers that may produce URLs
@@ -1205,8 +1237,11 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * outside the VAADIN directory if the method is overridden.
      *
      * @param request
+     *            current request
      * @param resourceUrl
-     * @return
+     *            URL of the resource to validate
+     * @return {@code true} if the resource is a valid VAADIN resource,
+     *         {@code false} otherwise
      *
      * @since 6.6.7
      *
@@ -1216,6 +1251,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Deprecated
     protected boolean isAllowedVAADINResourceUrl(HttpServletRequest request,
             URL resourceUrl) {
+        if (resourceUrl == null || resourceIsDirectory(resourceUrl)) {
+            return false;
+        }
         String resourcePath = resourceUrl.getPath();
         if ("jar".equals(resourceUrl.getProtocol())) {
             // This branch is used for accessing resources directly from the
@@ -1253,6 +1291,136 @@ public class VaadinServlet extends HttpServlet implements Constants {
                     "Accepted access to a file using a class loader: {0}",
                     resourceUrl);
             return true;
+        }
+    }
+
+    private boolean resourceIsDirectory(URL resource) {
+        if (resource.getPath().endsWith("/")) {
+            return true;
+        }
+        URI resourceURI = null;
+        try {
+            resourceURI = resource.toURI();
+        } catch (URISyntaxException e) {
+            getLogger().log(Level.FINE,
+                    "Syntax error in uri from getStaticResource", e);
+            // Return false as we couldn't determine if the resource is a
+            // directory.
+            return false;
+        }
+
+        if ("jar".equals(resource.getProtocol())) {
+            // Get the file path in jar
+            String pathInJar = resource.getPath()
+                    .substring(resource.getPath().indexOf('!') + 1);
+            try {
+                FileSystem fileSystem = getFileSystem(resourceURI);
+                // Get the file path inside the jar.
+                Path path = fileSystem.getPath(pathInJar);
+
+                return Files.isDirectory(path);
+            } catch (IOException e) {
+                getLogger().log(Level.FINE, "failed to read jar file contents",
+                        e);
+            } finally {
+                closeFileSystem(resourceURI);
+            }
+        }
+
+        // If not a jar check if a file path directory.
+        return "file".equals(resource.getProtocol())
+                && Files.isDirectory(Paths.get(resourceURI));
+    }
+
+    /**
+     * Get the file URI for the resource jar file. Returns give URI if
+     * URI.scheme is not of type jar.
+     *
+     * The URI for a file inside a jar is composed as
+     * 'jar:file://...pathToJar.../jarFile.jar!/pathToFile'
+     *
+     * the first step strips away the initial scheme 'jar:' leaving us with
+     * 'file://...pathToJar.../jarFile.jar!/pathToFile' from which we remove the
+     * inside jar path giving the end result
+     * 'file://...pathToJar.../jarFile.jar'
+     *
+     * @param resourceURI
+     *            resource URI to get file URI for
+     * @return file URI for resource jar or given resource if not a jar schemed
+     *         URI
+     */
+    private URI getFileURI(URI resourceURI) {
+        if (!"jar".equals(resourceURI.getScheme())) {
+            return resourceURI;
+        }
+        try {
+            String scheme = resourceURI.getRawSchemeSpecificPart();
+            int jarPartIndex = scheme.indexOf("!/");
+            if (jarPartIndex != -1) {
+                scheme = scheme.substring(0, jarPartIndex);
+            }
+            return new URI(scheme);
+        } catch (URISyntaxException syntaxException) {
+            throw new IllegalArgumentException(syntaxException.getMessage(),
+                    syntaxException);
+        }
+    }
+
+    // Package protected for feature verification purpose
+    FileSystem getFileSystem(URI resourceURI) throws IOException {
+        synchronized (FILE_SYSTEM_LOCK) {
+            URI fileURI = getFileURI(resourceURI);
+            if (!fileURI.getScheme().equals("file")) {
+                throw new IOException("Can not read scheme '"
+                        + fileURI.getScheme() + "' for resource " + resourceURI
+                        + " and will determine this as not a folder");
+            }
+
+            Integer locks = OPEN_FILE_SYSTEMS.computeIfPresent(fileURI,
+                    (key, value) -> value + 1);
+            if (locks != null) {
+                // Get filesystem is for the file to get the correct provider
+                return FileSystems.getFileSystem(resourceURI);
+            }
+            // Opened filesystem is for the file to get the correct provider
+            FileSystem fileSystem = getNewOrExistingFileSystem(resourceURI);
+            OPEN_FILE_SYSTEMS.put(fileURI, 1);
+            return fileSystem;
+        }
+    }
+
+    private FileSystem getNewOrExistingFileSystem(URI resourceURI)
+            throws IOException {
+        try {
+            return FileSystems.newFileSystem(resourceURI,
+                    Collections.emptyMap());
+        } catch (FileSystemAlreadyExistsException fsaee) {
+            getLogger().log(Level.FINER,
+                    "Tried to get new filesystem, but it already existed for target uri.",
+                    fsaee);
+            return FileSystems.getFileSystem(resourceURI);
+        }
+    }
+
+    // Package protected for feature verification purpose
+    void closeFileSystem(URI resourceURI) {
+        synchronized (FILE_SYSTEM_LOCK) {
+            try {
+                URI fileURI = getFileURI(resourceURI);
+                Integer locks = OPEN_FILE_SYSTEMS.computeIfPresent(fileURI,
+                        (key, value) -> value - 1);
+                if (locks != null && locks == 0) {
+                    OPEN_FILE_SYSTEMS.remove(fileURI);
+                    // Get filesystem is for the file to get the correct
+                    // provider
+                    FileSystems.getFileSystem(resourceURI).close();
+                }
+            } catch (IOException ioe) {
+                getLogger().log(Level.SEVERE,
+                        "Failed to close FileSystem for '{}'", resourceURI);
+                getLogger().log(Level.INFO, "Exception closing FileSystem",
+                        ioe);
+            }
         }
     }
 
@@ -1315,7 +1483,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     /**
      * @param request
-     * @return
+     *            the request that is to be evaluated
+     * @return request type
      *
      * @deprecated As of 7.0. This is no longer used and only provided for
      *             backwards compatibility. Each {@link RequestHandler} can
@@ -1350,6 +1519,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
     /**
      * Returns the relative path at which static files are served for a request
      * (if any).
+     * <p>
+     * NOTE: This method does not check whether the requested resource is a
+     * directory and as such not a valid VAADIN resource.
      *
      * @param request
      *            HTTP request
@@ -1427,6 +1599,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      *
      * @param request
      *            the HTTP request.
+     * @return current application URL
      * @throws MalformedURLException
      *             if the application is denied access to the persistent data
      *             store represented by the given URL.
@@ -1540,6 +1713,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * characters" to keep the text somewhat readable.
      *
      * @param unsafe
+     *            the string that needs to be made safe
      * @return a safe string to be added inside an html tag
      *
      * @deprecated As of 7.0. Will likely change or be removed in a future
@@ -1567,10 +1741,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     private static boolean isSafe(char c) {
         return //
-        c > 47 && c < 58 || // alphanum
-                c > 64 && c < 91 || // A-Z
-                c > 96 && c < 123 // a-z
-        ;
+        (c > 47 && c < 58) || // alphanum
+                (c > 64 && c < 91) || // A-Z
+                (c > 96 && c < 123); // a-z
     }
 
     private static final Logger getLogger() {

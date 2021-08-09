@@ -28,6 +28,11 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.accordion.AccordionState;
 import com.vaadin.ui.Accordion;
 
+/**
+ * A connector class for the Accordion component.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(Accordion.class)
 public class AccordionConnector extends TabsheetBaseConnector
         implements SimpleManagedLayout, MayScrollChildren {

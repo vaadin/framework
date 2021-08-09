@@ -62,6 +62,11 @@ import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.TabIndexState;
 import com.vaadin.shared.ui.ui.UIState;
 
+/**
+ * Base class for component connectors.
+ *
+ * @author Vaadin Ltd
+ */
 public abstract class AbstractComponentConnector extends AbstractConnector
         implements HasErrorIndicator {
 
@@ -90,6 +95,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     private int touchStartY;
     private boolean preventNextTouchEnd = false;
 
+    /** Default threshold for determining whether touch move is significant. */
     protected int SIGNIFICANT_MOVE_THRESHOLD = 20; // pixels
 
     // long touch event delay
@@ -269,6 +275,12 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }, TouchEndEvent.getType());
     }
 
+    /**
+     * Checks whether a long tap needs handling.
+     *
+     * @return {@code true} if long tap handling is needed, {@code false}
+     *         otherwise
+     */
     protected boolean shouldHandleLongTap() {
         return BrowserInfo.get().isTouchDevice();
     }
@@ -314,7 +326,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      *
      * @since 7.6
      * @param details
+     *            the mouse event details
      * @param eventTarget
+     *            the target of the event
      */
     protected void sendContextClickEvent(MouseEventDetails details,
             EventTarget eventTarget) {
@@ -380,6 +394,14 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         return widget;
     }
 
+    /**
+     * Checks whether the update is 'real' or contains cached information.
+     *
+     * @param uidl
+     *            the UIDL to check
+     * @return {@code true} if doesn't have "cached" attribute, {@code false}
+     *         otherwise
+     */
     @Deprecated
     public static boolean isRealUpdate(UIDL uidl) {
         return !uidl.hasAttribute("cached");
@@ -717,6 +739,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * {@link com.vaadin.client.ui.datefield.TextualDateConnector#setWidgetStyleNameWithPrefix(String, String, boolean)}
      * </p>
      *
+     * @param prefix
+     *            the prefix for the style name
      * @param styleName
      *            the style name to be added or removed
      * @param add

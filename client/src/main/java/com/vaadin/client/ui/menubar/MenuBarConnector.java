@@ -37,6 +37,12 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
 import com.vaadin.shared.ui.menubar.MenuBarState;
 
+/**
+ * A connector class for the MenuBar component.
+ *
+ * @author Vaadin Ltd
+ */
+@SuppressWarnings("deprecation")
 @Connect(com.vaadin.ui.MenuBar.class)
 public class MenuBarConnector extends AbstractComponentConnector
         implements Paintable, SimpleManagedLayout {
@@ -59,12 +65,13 @@ public class MenuBarConnector extends AbstractComponentConnector
                 .hasAttribute(MenuBarConstants.HTML_CONTENT_ALLOWED);
 
         if (BrowserInfo.get().isAndroid() || BrowserInfo.get().isIOS()) {
-            // disable the auto-open on hover on devices that don't support hover.
+            // disable the auto-open on hover on devices that don't support
+            // hover.
             // fixes https://github.com/vaadin/framework/issues/5873
             widget.openRootOnHover = false;
         } else {
-            widget.openRootOnHover = uidl
-                    .getBooleanAttribute(MenuBarConstants.OPEN_ROOT_MENU_ON_HOWER);
+            widget.openRootOnHover = uidl.getBooleanAttribute(
+                    MenuBarConstants.OPEN_ROOT_MENU_ON_HOWER);
         }
 
         widget.enabled = isEnabled();
@@ -148,7 +155,7 @@ public class MenuBarConnector extends AbstractComponentConnector
 
                     String domId = getState().id;
                     if (domId != null && !domId.isEmpty()) {
-                        currentItem.getElement().setId(domId+"-"+itemId);
+                        currentItem.getElement().setId(domId + "-" + itemId);
                     }
 
                     if (item.getChildCount() > 0) {

@@ -36,6 +36,7 @@ import com.vaadin.client.widgets.Grid;
  */
 public class TreeGridClickEvent extends GridClickEvent {
 
+    /** DOM event type. */
     public static final Type<GridClickHandler> TYPE = new Type<GridClickHandler>(
             BrowserEvents.CLICK, new TreeGridClickEvent());
 

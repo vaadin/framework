@@ -48,6 +48,7 @@ import com.vaadin.client.WidgetUtil;
  */
 public class VCustomLayout extends ComplexPanel {
 
+    /** The default classname for this widget. */
     public static final String CLASSNAME = "v-customlayout";
 
     /** Location-name to containing element in DOM map */
@@ -84,6 +85,10 @@ public class VCustomLayout extends ComplexPanel {
 
     private String width = "";
 
+    /**
+     * Constructs a widget for a custom layout.
+     */
+    @SuppressWarnings("deprecation")
     public VCustomLayout() {
         setElement(DOM.createDiv());
         // Clear any unwanted styling
@@ -152,7 +157,14 @@ public class VCustomLayout extends ComplexPanel {
         locationToWidget.put(location, widget);
     }
 
-    /** Initialize HTML-layout. */
+    /**
+     * Initialize HTML-layout.
+     *
+     * @param template
+     *            original HTML-template
+     * @param themeUri
+     *            URI to the current theme
+     */
     public void initializeHTML(String template, String themeUri) {
 
         // Connect body of the template to DOM
@@ -202,7 +214,11 @@ public class VCustomLayout extends ComplexPanel {
         return false;
     }-*/;
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @return {@code true} if has template contents, {@code false} otherwise
+     */
     public boolean hasTemplate() {
         return htmlInitialized;
     }
@@ -229,6 +245,9 @@ public class VCustomLayout extends ComplexPanel {
      * Evaluate given script in browser document.
      * <p>
      * For internal use only. May be removed or replaced in the future.
+     *
+     * @param script
+     *            the script to evaluate
      */
     public static native void eval(String script)
     /*-{
@@ -280,7 +299,8 @@ public class VCustomLayout extends ComplexPanel {
             scriptStart = lc.indexOf(">", scriptStart);
             final int j = lc.indexOf("</script>", scriptStart);
             scripts += html.substring(scriptStart + 1, j) + ";";
-            nextPosToCheck = endOfPrevScript = j + "</script>".length();
+            endOfPrevScript = j + "</script>".length();
+            nextPosToCheck = endOfPrevScript;
             scriptStart = lc.indexOf("<script", nextPosToCheck);
         }
         res += html.substring(endOfPrevScript);
@@ -307,6 +327,9 @@ public class VCustomLayout extends ComplexPanel {
 
     /**
      * Update caption for the given child connector.
+     *
+     * @param childConnector
+     *            the child connector whose caption should be updated
      */
     public void updateCaption(ComponentConnector childConnector) {
         Widget widget = childConnector.getWidget();
@@ -338,7 +361,13 @@ public class VCustomLayout extends ComplexPanel {
         }
     }
 
-    /** Get the location of an widget. */
+    /**
+     * Get the location of an widget.
+     *
+     * @param w
+     *            the widget whose location to check
+     * @return location name, or {@code null} if not found
+     */
     public String getLocation(Widget w) {
         for (final String location : locationToWidget.keySet()) {
             if (locationToWidget.get(location) == w) {
@@ -383,9 +412,12 @@ public class VCustomLayout extends ComplexPanel {
      * This method is published to JS side with the same name into first DOM
      * node of custom layout. This way if one implements some resizeable
      * containers in custom layout he/she can notify children after resize.
+     *
+     * @deprecated this method has done absolutely nothing since Vaadin 7.0 and
+     *             should not be used, before that forced a recursive re-layout
      */
+    @Deprecated
     public void notifyChildrenOfSizeChange() {
-        client.runDescendentsLayout(this);
     }
 
     @Override
@@ -427,6 +459,7 @@ public class VCustomLayout extends ComplexPanel {
      * @return true if layout function exists and was run successfully, else
      *         false.
      */
+    @SuppressWarnings("deprecation")
     public native boolean iLayoutJS(com.google.gwt.user.client.Element el)
     /*-{
         if (el && el.iLayoutJS) {
@@ -441,6 +474,7 @@ public class VCustomLayout extends ComplexPanel {
         }
     }-*/;
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);

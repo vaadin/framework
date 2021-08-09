@@ -30,6 +30,13 @@ public class GridEnabledEvent extends GwtEvent<GridEnabledHandler> {
     public static final Type<GridEnabledHandler> TYPE = new Type<>();
     private final boolean enabled;
 
+    /**
+     * Constructs an event that informs about Grid's enabled status change.
+     *
+     * @param enabled
+     *            {@code true} if the Grid is now enabled, {@code false} if the
+     *            Grid is now disabled
+     */
     public GridEnabledEvent(boolean enabled) {
         this.enabled = enabled;
     }

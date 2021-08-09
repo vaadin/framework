@@ -4,6 +4,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.ui.TreeTable;
 
+@SuppressWarnings("deprecation")
 public class TreeTableScrollOnExpand extends AbstractReindeerTestUI {
 
     @Override
@@ -15,9 +16,9 @@ public class TreeTableScrollOnExpand extends AbstractReindeerTestUI {
         t.addContainerProperty("Name", String.class, "null");
         for (int i = 1; i <= 100; i++) {
             String parentID = "Item " + i;
-            Object parent = t.addItem(new Object[] { parentID }, parentID);
+            t.addItem(new Object[] { parentID }, parentID);
             String childID = "Item " + (100 + i);
-            Object child = t.addItem(new Object[] { childID }, childID);
+            t.addItem(new Object[] { childID }, childID);
             t.getContainerDataSource().setParent(childID, parentID);
         }
         addComponent(t);
@@ -30,7 +31,8 @@ public class TreeTableScrollOnExpand extends AbstractReindeerTestUI {
 
     @Override
     public String getTestDescription() {
-        return "After selecting an item and scrolling it out of view, TreeTable should not scroll to the "
+        return "After selecting an item and scrolling it out of view, "
+                + "TreeTable should not scroll to the "
                 + "selected item when expanding an item.";
     }
 }

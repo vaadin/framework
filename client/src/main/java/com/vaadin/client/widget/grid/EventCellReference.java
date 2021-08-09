@@ -29,6 +29,10 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
  * this object is subject to change without the user knowing it and so should
  * not be stored anywhere outside of the method providing these instances.
  *
+ * @param <T>
+ *            The row type of the grid. The row type is the POJO type from where
+ *            the data is retrieved into the column cells.
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */
@@ -37,15 +41,27 @@ public class EventCellReference<T> extends CellReference<T> {
     private Section section;
     private TableCellElement element;
 
+    /**
+     * Constructs a cell reference for an event targeting a grid cell. Needs to
+     * be populated using {@link #set(Cell, Section)}.
+     *
+     * @param grid
+     *            the grid the event originates from
+     *
+     * @see EventCellReference
+     */
     public EventCellReference(Grid<T> grid) {
         super(new RowReference<>(grid));
     }
 
     /**
-     * Sets the RowReference and CellReference to point to given Cell.
+     * Configures this CellReference and its internal RowReference to point to
+     * the given Cell.
      *
      * @param targetCell
-     *            cell to point to
+     *            the cell to point to
+     * @param section
+     *            the section the cell belongs to
      */
     public void set(Cell targetCell, Section section) {
         Grid<T> grid = getGrid();

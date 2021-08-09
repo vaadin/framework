@@ -41,11 +41,13 @@ import com.vaadin.shared.ui.MarginInfo;
  */
 public class VAbstractOrderedLayout extends FlowPanel {
 
+    /** Spacing state. */
     protected boolean spacing = false;
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean vertical = true;
 
+    /** Defined height state. */
     protected boolean definedHeight = false;
 
     private Map<Widget, Slot> widgetToSlot = new HashMap<>();
@@ -60,6 +62,13 @@ public class VAbstractOrderedLayout extends FlowPanel {
      */
     private int lastExpandSize = -1;
 
+    /**
+     * Constructs an ordered layout widget with the indicated orientation.
+     *
+     * @param vertical
+     *            {@code true} if the widget should be vertically oriented,
+     *            {@code false} for horizontally oriented
+     */
     public VAbstractOrderedLayout(boolean vertical) {
         this.vertical = vertical;
     }
@@ -210,7 +219,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * Remove a slot from the layout.
      *
      * @param widget
-     * @return
+     *            the widget whose slot to remove
      */
     public void removeWidget(Widget widget) {
         Slot slot = widgetToSlot.remove(widget);
@@ -241,7 +250,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * @param widget
      *            The widget whose slot you want to get
      *
-     * @return
+     * @return the slot
      */
     public Slot getSlot(Widget widget) {
         Slot slot = widgetToSlot.get(widget);
@@ -277,7 +286,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
      *
      * @param widgetElement
      *            The element of the widget ( Same as getWidget().getElement() )
-     * @return
+     * @return the slot, or {@code null} if not found
      * @deprecated As of 7.2, call or override {@link #getSlot(Element)} instead
      */
     @Deprecated
@@ -296,7 +305,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
      *
      * @param widgetElement
      *            The element of the widget ( Same as getWidget().getElement() )
-     * @return
+     * @return the slot, or {@code null} if not found
      *
      * @since 7.2
      */
@@ -317,6 +326,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
     /**
      * Get the layout manager used by this layout.
      *
+     * @return the layout manager
      */
     public LayoutManager getLayoutManager() {
         return layoutManager;
@@ -491,6 +501,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * Assigns relative sizes to the children that should expand based on their
      * expand ratios.
      */
+    @SuppressWarnings("deprecation")
     public void updateExpandedSizes() {
         // Ensure the expand wrapper is in place
         if (expandWrapper == null) {
@@ -651,8 +662,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
                                 totalSize += size;
                             }
                         } else {
-                            int max = -1;
-                            max = layoutManager.getOuterWidth(
+                            int max = layoutManager.getOuterWidth(
                                     slot.getWidget().getElement());
                             if (slot.hasCaption()) {
                                 int max2 = layoutManager.getOuterWidth(
@@ -720,9 +730,11 @@ public class VAbstractOrderedLayout extends FlowPanel {
     }
 
     /**
-     * Sets the slots style names. The style names will be prefixed with the
+     * Sets the slot's style names. The style names will be prefixed with the
      * v-slot prefix.
      *
+     * @param widget
+     *            the widget whose slot to style
      * @param stylenames
      *            The style names of the slot.
      */

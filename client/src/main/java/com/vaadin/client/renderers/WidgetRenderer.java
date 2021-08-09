@@ -26,7 +26,7 @@ import com.vaadin.client.widget.grid.RendererCellReference;
  * @since 7.4
  * @author Vaadin Ltd
  * @param <T>
- *            the row data type
+ *            the column data type
  * @param <W>
  *            the Widget type
  */
@@ -96,6 +96,8 @@ public abstract class WidgetRenderer<T, W extends Widget>
      * is not an instance of the given class. Cannot be called for cells that do
      * not contain a widget.
      *
+     * @param <W>
+     *            the Widget type
      * @param e
      *            the element inside to find a widget
      * @param klass

@@ -39,6 +39,12 @@ import com.vaadin.shared.ui.panel.PanelServerRpc;
 import com.vaadin.shared.ui.panel.PanelState;
 import com.vaadin.ui.Panel;
 
+/**
+ * A connector class for the Panel component.
+ *
+ * @author Vaadin Ltd
+ */
+@SuppressWarnings("deprecation")
 @Connect(Panel.class)
 public class PanelConnector extends AbstractSingleComponentContainerConnector
         implements Paintable, SimpleManagedLayout, PostLayoutListener,

@@ -20,5 +20,12 @@ package com.vaadin.client.ui.orderedlayout;
  * Defines where the caption should be placed.
  */
 public enum CaptionPosition {
-    TOP, RIGHT, BOTTOM, LEFT
+    /** Caption placed to top. */
+    TOP,
+    /** Caption placed to right. */
+    RIGHT,
+    /** Caption placed to bottom. */
+    BOTTOM,
+    /** Caption placed to left. */
+    LEFT
 }

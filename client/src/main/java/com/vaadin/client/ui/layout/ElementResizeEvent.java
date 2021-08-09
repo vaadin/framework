@@ -18,19 +18,42 @@ package com.vaadin.client.ui.layout;
 import com.google.gwt.dom.client.Element;
 import com.vaadin.client.LayoutManager;
 
+/**
+ * Event for an element resize.
+ *
+ * @author Vaadin Ltd
+ */
 public class ElementResizeEvent {
     private final Element element;
     private final LayoutManager layoutManager;
 
+    /**
+     * Constructs an element resize event.
+     *
+     * @param layoutManager
+     *            current layout manager
+     * @param element
+     *            the resized element
+     */
     public ElementResizeEvent(LayoutManager layoutManager, Element element) {
         this.layoutManager = layoutManager;
         this.element = element;
     }
 
+    /**
+     * Returns the resized element.
+     *
+     * @return the element
+     */
     public Element getElement() {
         return element;
     }
 
+    /**
+     * Returns the current layout manager.
+     *
+     * @return the layout manager
+     */
     public LayoutManager getLayoutManager() {
         return layoutManager;
     }

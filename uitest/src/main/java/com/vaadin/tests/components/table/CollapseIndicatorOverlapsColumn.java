@@ -4,16 +4,17 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.ui.Table;
 
+@SuppressWarnings("deprecation")
 public class CollapseIndicatorOverlapsColumn extends TestBase {
 
     @Override
     protected void setup() {
         Table tbl = createTable();
-        tbl = createTable();
         tbl.setWidth("400px");
         addComponent(tbl);
     }
 
+    @SuppressWarnings("unchecked")
     private Table createTable() {
         Table tbl = new Table();
         tbl.addContainerProperty("COL1", String.class, "Column 1");

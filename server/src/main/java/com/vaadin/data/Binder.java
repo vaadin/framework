@@ -1103,6 +1103,7 @@ public class Binder<BEAN> implements Serializable {
 
         private Registration onValueChange;
         private boolean valueInit = false;
+        private boolean convertedBack = false;
 
         /**
          * Contains all converters and validators chained together in the
@@ -1283,7 +1284,8 @@ public class Binder<BEAN> implements Serializable {
         private void handleFieldValueChange(
                 ValueChangeEvent<FIELDVALUE> event) {
             // Don't handle change events when setting initial value
-            if (valueInit) {
+            if (valueInit || convertedBack) {
+                convertedBack = false;
                 return;
             }
 
@@ -1313,6 +1315,7 @@ public class Binder<BEAN> implements Serializable {
                     if (convertBackToPresentation && value != null) {
                         FIELDVALUE converted = convertToFieldType(value);
                         if (!Objects.equals(field.getValue(), converted)) {
+                            convertedBack = true;
                             getField().setValue(converted);
                         }
                     }

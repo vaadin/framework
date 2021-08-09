@@ -39,6 +39,7 @@ import com.vaadin.shared.ui.dd.AcceptCriterion;
  * classpath.
  *
  */
+@SuppressWarnings("deprecation")
 public class AcceptCriteriaFactoryGenerator extends Generator {
 
     private String packageName;
@@ -75,8 +76,8 @@ public class AcceptCriteriaFactoryGenerator extends Generator {
      */
     private void generateClass(TreeLogger logger, GeneratorContext context) {
         // get print writer that receives the source code
-        PrintWriter printWriter = null;
-        printWriter = context.tryCreate(logger, packageName, className);
+        PrintWriter printWriter = context.tryCreate(logger, packageName,
+                className);
         // print writer if null, source code has ALREADY been generated,
         // return (WidgetMap is equal to all permutations atm)
         if (printWriter == null) {
@@ -86,8 +87,8 @@ public class AcceptCriteriaFactoryGenerator extends Generator {
         Date date = new Date();
 
         // init composer, set class properties, create source writer
-        ClassSourceFileComposerFactory composer = null;
-        composer = new ClassSourceFileComposerFactory(packageName, className);
+        ClassSourceFileComposerFactory composer = new ClassSourceFileComposerFactory(
+                packageName, className);
         composer.addImport("com.google.gwt.core.client.GWT");
         composer.setSuperclass(
                 "com.vaadin.client.ui.dd.VAcceptCriterionFactory");

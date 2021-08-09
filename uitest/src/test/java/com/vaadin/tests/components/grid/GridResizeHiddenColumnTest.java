@@ -50,6 +50,10 @@ public class GridResizeHiddenColumnTest extends MultiBrowserTest {
                 headerCellWidth + dragOffset,
                 headerCells.get(0).getSize().getWidth(), delta);
 
+        // make absolutely certain the mouse isn't pressed anymore before moving
+        // to the context menu
+        new Actions(getDriver()).release().perform();
+
         // Make column 'Last Name' visible
         WebElement menuButton = grid.findElement(By.className("v-contextmenu"))
                 .findElement(By.tagName("button"));
@@ -62,7 +66,7 @@ public class GridResizeHiddenColumnTest extends MultiBrowserTest {
         // Click on "Last Name" menu item
         action.click(visibilityToggle).perform();
         waitUntilLoadingIndicatorNotVisible();
-        sleep(100); // wait for layouting
+        sleep(200); // wait for layouting
 
         // Check if column "Last Name" is visible
         headerCells = grid.getHeaderCells(0);

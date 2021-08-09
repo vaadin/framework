@@ -15,6 +15,10 @@
  */
 package com.vaadin.client.widget.grid;
 
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
@@ -30,27 +34,35 @@ import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Editor;
 import com.vaadin.client.widgets.Grid.EditorDomEvent;
 
-import java.util.List;
-
 /**
  * The default handler for Grid editor events. Offers several overridable
  * protected methods for easier customization.
+ *
+ * @param <T>
+ *            The row type of the grid. The row type is the POJO type from where
+ *            the data is retrieved into the column cells.
  *
  * @since 7.6
  * @author Vaadin Ltd
  */
 public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
 
+    /** Default key code for showing the editor. */
     public static final int KEYCODE_OPEN = KeyCodes.KEY_ENTER;
+    /** Default key code for moving the editor up or down. */
     public static final int KEYCODE_MOVE_VERTICAL = KeyCodes.KEY_ENTER;
+    /** Default key code for hiding the editor. */
     public static final int KEYCODE_CLOSE = KeyCodes.KEY_ESCAPE;
+    /** Default key code for moving cursor horizontally within the editor. */
     public static final int KEYCODE_MOVE_HORIZONTAL = KeyCodes.KEY_TAB;
+    /** Default key code for triggering save in buffered mode. */
     public static final int KEYCODE_BUFFERED_SAVE = KeyCodes.KEY_ENTER;
 
     private double lastTouchEventTime = 0;
     private int lastTouchEventX = -1;
     private int lastTouchEventY = -1;
     private int lastTouchEventRow = -1;
+    private PendingEdit pendingEdit;
 
     /**
      * Returns whether the given event is a touch event that should open the
@@ -131,9 +143,12 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
      * Specifies the direction at which the focus should move.
      */
     public enum CursorMoveDelta {
+        /** Move focus one step to the direction indicated by name. */
         UP(-1, 0), RIGHT(0, 1), DOWN(1, 0), LEFT(0, -1);
 
+        /** Vertical change. */
         public final int rowDelta;
+        /** Horizontal change. */
         public final int colDelta;
 
         CursorMoveDelta(int rowDelta, int colDelta) {
@@ -141,6 +156,12 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
             this.colDelta = colDelta;
         }
 
+        /**
+         * Returns whether the cursor move has either horizontal or vertical
+         * changes.
+         *
+         * @return {@code true} if there are changes, {@code false} otherwise
+         */
         public boolean isChanged() {
             return rowDelta != 0 || colDelta != 0;
         }
@@ -223,7 +244,16 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
                     }
                 }
 
-                editRow(event, rowIndex + delta.rowDelta, colIndex);
+                int newRowIndex = rowIndex + delta.rowDelta;
+                if (newRowIndex != event.getRowIndex()) {
+                    triggerValueChangeEvent(event);
+                    // disable until validity check is done
+                    setWidgetEnabled(event.getEditorWidget(), false);
+                    event.getEditor().getHandler().checkValidity();
+                    pendingEdit = new PendingEdit(event, newRowIndex, colIndex);
+                } else {
+                    editRow(event, newRowIndex, colIndex);
+                }
             }
 
             return changed;
@@ -255,6 +285,15 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         return -1;
     }
 
+    /**
+     * Checks whether the field within the given editor column is editable.
+     *
+     * @param grid
+     *            the grid that is being edited
+     * @param column
+     *            the column to investigate
+     * @return {@code true} if the field is editable, {@code false} otherwise
+     */
     protected boolean isEditable(Grid<T> grid, Grid.Column<?, T> column) {
         if (!column.isEditable()) {
             return false;
@@ -391,6 +430,19 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         return false;
     }
 
+    /**
+     * Opens the editor over the row with the given index and attempts to focus
+     * the editor widget in the given column index. If the given indices are
+     * outside of the existing range, the closest value within the range is
+     * used.
+     *
+     * @param event
+     *            the wrapped DOM event
+     * @param rowIndex
+     *            index of the row to edit
+     * @param colIndex
+     *            index of the editor column to focus
+     */
     protected void editRow(EditorDomEvent<T> event, int rowIndex,
             int colIndex) {
         int rowCount = event.getGrid().getDataSource().size();
@@ -400,10 +452,6 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
         int colCount = event.getGrid().getVisibleColumns().size();
         // Limit colIndex between 0 and colCount - 1
         colIndex = Math.max(0, Math.min(colCount - 1, colIndex));
-
-        if (rowIndex != event.getRowIndex()) {
-            triggerValueChangeEvent(event);
-        }
 
         event.getEditor().editRow(rowIndex, colIndex);
     }
@@ -450,5 +498,54 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
                 && editor.isBuffered();
 
         return handled || swallowEvent;
+    }
+
+    @Override
+    public void confirmValidity(boolean isValid) {
+        if (pendingEdit == null) {
+            getLogger().log(Level.SEVERE,
+                    "An editor's validation confirmation was received, but"
+                            + " no pending edit object was found ");
+            return;
+        }
+        setWidgetEnabled(pendingEdit.pendingEvent.getEditorWidget(), true);
+        if (isValid) {
+            editRow(pendingEdit.pendingEvent, pendingEdit.pendingRowIndex,
+                    pendingEdit.pendingColIndex);
+        } else {
+            pendingEdit.pendingEvent.getEditorWidget().getElement().focus();
+        }
+
+        pendingEdit = null;
+    }
+
+    private void setWidgetEnabled(Widget widget, boolean widgetEnabled) {
+        final ComponentConnector connector = Util.findConnectorFor(widget);
+        // only enable widget if it hasn't been disabled programmatically
+        if (connector.getState().enabled) {
+            connector.setWidgetEnabled(widgetEnabled);
+        }
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(DefaultEditorEventHandler.class.getName());
+    }
+
+    private final class PendingEdit {
+        private EditorDomEvent<T> pendingEvent;
+        private int pendingRowIndex;
+        private int pendingColIndex;
+
+        private PendingEdit(EditorDomEvent<T> pendingEvent, int pendingRowIndex,
+                int pendingColIndex) {
+            if (pendingEvent == null) {
+                throw new IllegalArgumentException(
+                        "The pending event cannot be null");
+            }
+            this.pendingEvent = pendingEvent;
+            this.pendingRowIndex = pendingRowIndex;
+            this.pendingColIndex = pendingColIndex;
+        }
+
     }
 }

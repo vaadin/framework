@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-test</artifactId>
-        <version>8.13-SNAPSHOT</version>
+        <version>8.14-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-servlet-containers-test</artifactId>
     <name>vaadin-servlet-containers-test</name>
@@ -110,7 +110,8 @@
                 <!-- Generic cargo plugin configuration. Define container to use in submodule. -->
                 <plugin>
                     <groupId>org.codehaus.cargo</groupId>
-                    <artifactId>cargo-maven2-plugin</artifactId>
+                    <artifactId>cargo-maven3-plugin</artifactId>
+                    <version>1.9.4</version>
                     <configuration>
                         <configuration>
                             <type>standalone</type>
@@ -194,6 +195,7 @@
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>jetty-maven-plugin</artifactId>
                     <configuration>
+                        <supportedPackagings>pom,jar,war</supportedPackagings>
                         <webApp>
                             <contextPath>${context.path}</contextPath>
                         </webApp>

@@ -234,27 +234,25 @@ public class MenuBar extends Widget implements PopupListener {
 
         final MenuItem item = findItem(DOM.eventGetTarget(event));
         switch (DOM.eventGetType(event)) {
-        case Event.ONCLICK: {
+        case Event.ONCLICK:
             // Fire an item's command when the user clicks on it.
             if (item != null) {
                 doItemAction(item, true);
             }
             break;
-        }
-
-        case Event.ONMOUSEOVER: {
+        case Event.ONMOUSEOVER:
             if (item != null) {
                 itemOver(item);
             }
             break;
-        }
-
-        case Event.ONMOUSEOUT: {
+        case Event.ONMOUSEOUT:
             if (item != null) {
                 itemOver(null);
             }
             break;
-        }
+        default:
+            // NOP
+            break;
         }
     }
 
@@ -383,15 +381,17 @@ public class MenuBar extends Widget implements PopupListener {
         }
     }
 
-    /*
+    /**
      * Performs the action associated with the given menu item. If the item has
      * a popup associated with it, the popup will be shown. If it has a command
      * associated with it, and 'fireCommand' is true, then the command will be
      * fired. Popups associated with other items will be hidden.
      *
-     * @param item the item whose popup is to be shown. @param fireCommand
-     * <code>true</code> if the item's command should be fired,
-     * <code>false</code> otherwise.
+     * @param item
+     *            the item whose popup is to be shown.
+     * @param fireCommand
+     *            <code>true</code> if the item's command should be fired,
+     *            <code>false</code> otherwise.
      */
     protected void doItemAction(final MenuItem item, boolean fireCommand) {
         // If the given item is already showing its menu, we're done.
@@ -450,6 +450,9 @@ public class MenuBar extends Widget implements PopupListener {
                         return false;
                     }
                     break;
+                default:
+                    // NOP
+                    break;
                 }
 
                 return super.onEventPreview(event);
@@ -498,6 +501,14 @@ public class MenuBar extends Widget implements PopupListener {
         }
     }
 
+    /**
+     * Moves the selection to the given item and scrolls it into view. If the
+     * given item is {@code null}, previous selection is removed but no
+     * scrolling will happen.
+     *
+     * @param item
+     *            the item to select
+     */
     public void selectItem(MenuItem item) {
         if (item == selectedItem) {
             scrollItemIntoView(item);
@@ -578,6 +589,8 @@ public class MenuBar extends Widget implements PopupListener {
      * Gets the preferred height of the menu.
      *
      * @since 7.2.6
+     *
+     * @return the preferred height
      */
     protected int getPreferredHeight() {
         return table.getOffsetHeight();

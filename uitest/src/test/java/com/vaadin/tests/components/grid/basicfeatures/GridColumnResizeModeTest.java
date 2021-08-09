@@ -103,8 +103,11 @@ public class GridColumnResizeModeTest extends GridBasicsTest {
 
         // ANIMATED resize mode
         drag(handle, 100);
-        assertTrue("Expected width: " + cell.getSize().getWidth(),
-                getLogRow(0).contains("Column resized: caption=Column 1, width="
+        String logRow = getLogRow(0);
+        assertTrue(
+                "Expected width: " + cell.getSize().getWidth()
+                        + ", latest log row: " + logRow,
+                logRow.contains("Column resized: caption=Column 1, width="
                         + cell.getSize().getWidth()));
 
         drag(handle, -100);

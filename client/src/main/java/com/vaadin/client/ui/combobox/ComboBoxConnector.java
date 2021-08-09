@@ -17,7 +17,6 @@ package com.vaadin.client.ui.combobox;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 import com.vaadin.client.Profiler;
 import com.vaadin.client.annotations.OnStateChange;
@@ -43,6 +42,11 @@ import com.vaadin.ui.ComboBox;
 
 import elemental.json.JsonObject;
 
+/**
+ * A connector class for the ComboBox component.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(ComboBox.class)
 public class ComboBoxConnector extends AbstractListingConnector
         implements SimpleManagedLayout {
@@ -486,9 +490,6 @@ public class ComboBoxConnector extends AbstractListingConnector
             pendingNewItemValue = null;
         }
     }
-
-    private static final Logger LOGGER = Logger
-            .getLogger(ComboBoxConnector.class.getName());
 
     private class PagedDataChangeHandler implements DataChangeHandler {
 

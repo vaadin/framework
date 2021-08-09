@@ -8,14 +8,12 @@ import com.vaadin.ui.Label;
 import com.vaadin.v7.ui.themes.ChameleonTheme;
 import com.vaadin.v7.ui.themes.Runo;
 
+@SuppressWarnings("deprecation")
 public class AccordionsCssTest {
 
-    private TestSampler parent;
     private int debugIdCounter = 0;
 
     public AccordionsCssTest(TestSampler parent) {
-        this.parent = parent;
-
         Accordion def = createAccordionWith("Def Accordion", null);
         parent.addComponent(def);
 

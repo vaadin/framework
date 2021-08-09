@@ -24,6 +24,10 @@ import com.vaadin.client.widgets.Grid;
  * A sort event, fired by the Grid when it needs its data source to provide data
  * sorted in a specific manner.
  *
+ * @param <T>
+ *            The row type of the Grid. The row type is the POJO type from where
+ *            the data is retrieved into the column cells.
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */

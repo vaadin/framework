@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.util.List;
 
-import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.JavascriptExecutor;
 
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.tests.layouts.layouttester.BaseLayoutRegErrorTest;
@@ -23,7 +23,9 @@ public class VLayoutRegErrorTest extends BaseLayoutRegErrorTest {
         assertEquals(3, checkBoxes.size());
         CheckBoxElement lastCheckBox = checkBoxes.get(2);
 
-        new Actions(driver).moveToElement(lastCheckBox).build().perform();
+        // moveToElement fails on Firefox since the component is out of viewport
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView(true);", lastCheckBox);
 
         compareScreen("RegError-Scrolled");
     }

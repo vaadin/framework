@@ -302,7 +302,7 @@ public class VTooltip extends VOverlay {
                         // Do not allow x to be zero, for otherwise the tooltip
                         // does not close when the mouse is moved (see
                         // isTooltipOpen()). #15129
-                        int minX = Window.getScrollLeft();
+                        int minX = Math.max(1, Window.getScrollLeft());
                         x = Math.max(x, minX);
                     }
                     return x;

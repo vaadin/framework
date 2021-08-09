@@ -21,6 +21,10 @@ import com.google.gwt.event.shared.EventHandler;
  * Handler for a Grid sort event, called when the Grid needs its data source to
  * provide data sorted in a specific manner.
  *
+ * @param <T>
+ *            The row type of the Grid. The row type is the POJO type from where
+ *            the data is retrieved into the column cells.
+ *
  * @since 7.4
  * @author Vaadin Ltd
  */

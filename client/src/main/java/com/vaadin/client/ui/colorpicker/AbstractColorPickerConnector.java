@@ -75,7 +75,7 @@ public abstract class AbstractColorPickerConnector
     /**
      * Get caption for the color picker widget.
      *
-     * @return
+     * @return the caption
      */
     protected String getCaption() {
         if (getState().showDefaultCaption && (getState().caption == null
@@ -102,6 +102,7 @@ public abstract class AbstractColorPickerConnector
      * Set caption of the color picker widget.
      *
      * @param caption
+     *            the caption to set
      */
     protected abstract void setCaption(String caption);
 

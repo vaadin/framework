@@ -17,6 +17,7 @@ package com.vaadin.client.connectors.grid;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import com.google.gwt.core.client.Scheduler;
@@ -53,11 +54,12 @@ import elemental.json.JsonObject;
  * @author Vaadin Ltd
  * @since 8.0
  */
+@SuppressWarnings("deprecation")
 @Connect(DetailsManager.class)
 public class DetailsManagerConnector extends AbstractExtensionConnector {
 
     /* Map for tracking which details are open on which row */
-    private TreeMap<Integer, String> indexToDetailConnectorId = new TreeMap<>();
+    private Map<Integer, String> indexToDetailConnectorId = new TreeMap<>();
     /* For listening data changes that originate from DataSource. */
     private Registration dataChangeRegistration;
     /* For listening spacer index changes that originate from Escalator. */
@@ -141,7 +143,8 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             boolean scrollToFirst = numberOfRows == 1
                     && latestVisibleRowRange.contains(firstRowIndex);
 
-            if (!newVisibleRowRange.equals(latestVisibleRowRange)) {
+            if (!newVisibleRowRange.equals(latestVisibleRowRange)
+                    || updatedRange.equals(newVisibleRowRange)) {
                 // update visible range
                 latestVisibleRowRange = newVisibleRowRange;
 
@@ -265,7 +268,6 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     /**
      * Height aware details generator for client-side Grid.
      */
-    @SuppressWarnings("deprecation")
     private class CustomDetailsGenerator
             implements HeightAwareDetailsGenerator {
 
@@ -634,6 +636,12 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
 
         boolean newOrUpdatedDetails = refreshRange(availableAndVisible);
 
+        // the update may have affected details row contents and size,
+        // recalculation and triggering of any pending navigation
+        // confirmations etc. is needed
+        triggerDelayedRepositioning(availableAndVisible.getStart(),
+                availableAndVisible.length());
+
         markDetailsAddedOrUpdatedForDelayedAlertToGrid(newOrUpdatedDetails);
     }
 
@@ -674,6 +682,18 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
         getWidget().setDetailsVisible(rowIndex, false);
     }
 
+    private void detachDetailsIfFound(String connectorId) {
+        if (indexToDetailConnectorId.containsValue(connectorId)) {
+            for (Entry<Integer, String> entry : indexToDetailConnectorId
+                    .entrySet()) {
+                if (connectorId.equals(entry.getValue())) {
+                    detachDetails(entry.getKey());
+                    return;
+                }
+            }
+        }
+    }
+
     private boolean refreshDetails(int rowIndex) {
         String id = getDetailsComponentConnectorId(rowIndex);
         String oldId = indexToDetailConnectorId.get(rowIndex);
@@ -700,6 +720,11 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                 indexToDetailConnectorId.remove(rowIndex);
             } else {
                 // updated, replace reference
+
+                // ensure that the detail contents aren't still attached to some
+                // other row that hasn't been refreshed yet
+                detachDetailsIfFound(id);
+
                 indexToDetailConnectorId.put(rowIndex, id);
                 newOrUpdatedDetails = true;
                 getWidget().resetVisibleDetails(rowIndex);
@@ -708,6 +733,11 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             // new Details content, listeners will get attached to the connector
             // when Escalator requests for the Details through
             // CustomDetailsGenerator#getDetails(int)
+
+            // ensure that the detail contents aren't still attached to some
+            // other row that hasn't been refreshed yet
+            detachDetailsIfFound(id);
+
             indexToDetailConnectorId.put(rowIndex, id);
             newOrUpdatedDetails = true;
             getWidget().setDetailsVisible(rowIndex, true);

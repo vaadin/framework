@@ -27,6 +27,11 @@ import com.vaadin.shared.ui.textarea.TextAreaServerRpc;
 import com.vaadin.shared.ui.textarea.TextAreaState;
 import com.vaadin.ui.TextArea;
 
+/**
+ * A connector class for the TextArea component.
+ *
+ * @author Vaadin Ltd
+ */
 @Connect(TextArea.class)
 public class TextAreaConnector extends AbstractTextFieldConnector {
 

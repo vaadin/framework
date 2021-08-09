@@ -275,7 +275,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *            <code>true</code> if event is a result of user
          *            interaction, <code>false</code> if from API call
          */
-        public ColumnReorderEvent(Grid source, boolean userOriginated) {
+        public ColumnReorderEvent(Grid<?> source, boolean userOriginated) {
             super(source);
             this.userOriginated = userOriginated;
         }
@@ -306,6 +306,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @param source
          *            the grid where the event originated from
+         * @param column
+         *            the column that was resized
          * @param userOriginated
          *            <code>true</code> if event is a result of user
          *            interaction, <code>false</code> if from API call
@@ -356,6 +358,16 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * Creates a new {@code ItemClick} event containing the given item and
          * Column originating from the given Grid.
          *
+         * @param source
+         *            the grid where the event originated from
+         * @param column
+         *            the column that contains the clicked cell
+         * @param item
+         *            the item that was clicked
+         * @param mouseEventDetails
+         *            mouse event details about the click
+         * @param rowIndex
+         *            the index of the row that contains the clicked cell
          */
         public ItemClick(Grid<T> source, Column<T, ?> column, T item,
                 MouseEventDetails mouseEventDetails, int rowIndex) {
@@ -390,6 +402,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @return the grid
          */
         @Override
+        @SuppressWarnings("unchecked")
         public Grid<T> getSource() {
             return (Grid<T>) super.getSource();
         }
@@ -501,6 +514,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public Grid<T> getComponent() {
             return (Grid<T>) super.getComponent();
         }
@@ -618,6 +632,14 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             return (AbstractGridExtensionState) super.getState(markAsDirty);
         }
 
+        /**
+         * Returns the internal id for given column. This id should not be
+         * confused with the user-defined identifier.
+         *
+         * @param column
+         *            the column
+         * @return internal id of given column
+         */
         protected String getInternalIdForColumn(Column<T, ?> column) {
             return getParent().getInternalIdForColumn(column);
         }
@@ -849,18 +871,18 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     public static class Column<T, V> extends AbstractExtension {
 
         /**
-         * behavior when parsing nested properties which may contain
-         * <code>null</code> values in the property chain
+         * Behavior when parsing nested properties which may contain
+         * <code>null</code> values in the property chain.
          */
         public enum NestedNullBehavior {
             /**
-             * throw a NullPointerException if there is a nested
-             * <code>null</code> value
+             * Throw a NullPointerException if there is a nested
+             * <code>null</code> value.
              */
             THROW,
             /**
-             * silently ignore any exceptions caused by nested <code>null</code>
-             * values
+             * Silently ignore any exceptions caused by nested <code>null</code>
+             * values.
              */
             ALLOW_NULLS
         }
@@ -1578,6 +1600,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *            the expand ratio of this column. {@code 0} to not have it
          *            expand at all. A negative number to clear the expand
          *            value.
+         * @return this column
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
          * @see #setWidth(double)
@@ -1607,6 +1630,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * <p>
          * Equal to calling {@link #setExpandRatio(int) setExpandRatio(-1)}
          *
+         * @return this column
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
          */
@@ -1790,6 +1814,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @param pixels
          *            the maximum width
+         * @return this column
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
          * @see #setExpandRatio(int)
@@ -1826,6 +1851,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param resizable
          *            {@code true} if this column should be resizable,
          *            {@code false} otherwise
+         * @return this column
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
          */
@@ -1961,8 +1987,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *            {@code true} if column is editable; {@code false} if not
          * @return this column
          * @throws IllegalStateException
-         *            if editable is true and column has no editor binding or
-         *            component defined
+         *             if editable is true and column has no editor binding or
+         *             component defined
          *
          * @see #setEditorComponent(HasValue, Setter)
          * @see #setEditorBinding(Binding)
@@ -2045,6 +2071,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * <strong>Note:</strong> The same component cannot be used for multiple
          * columns.
          *
+         * @param <C>
+         *            a class that extends both {@link HasValue} and
+         *            {@link Component}
          * @param editorComponent
          *            the editor component
          * @param setter
@@ -2081,6 +2110,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * <strong>Note:</strong> The same component cannot be used for multiple
          * columns.
          *
+         * @param <F>
+         *            a value type
+         * @param <C>
+         *            a class that extends both {@link HasValue} (for type
+         *            {@code <F>}) and {@link Component}
          * @param editorComponent
          *            the editor component
          * @return this column
@@ -2113,8 +2147,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * all currently available row data to be recreated and sent to the
          * client.
          *
-         * Note: Setting a new renderer will reset presentation provider if
-         * it exists.
+         * Note: Setting a new renderer will reset presentation provider if it
+         * exists.
          *
          * @param renderer
          *            the new renderer
@@ -2660,6 +2694,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @see Grid#Grid()
      * @see Grid#Grid(Class)
      *
+     * @param <BEAN>
+     *            the grid bean type
      * @param propertySet
      *            the property set implementation to use, not <code>null</code>.
      * @return a new grid using the provided property set, not <code>null</code>
@@ -2733,6 +2769,20 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         return beanType;
     }
 
+    /**
+     * Sends a {@link ColumnVisibilityChangeEvent} to all listeners.
+     *
+     * @param <V>
+     *            the column value type
+     * @param column
+     *            the column that changed its visibility
+     * @param hidden
+     *            {@code true} if the column was hidden, {@code false} if it
+     *            became visible
+     * @param userOriginated
+     *            {@code true} if the event was triggered by an UI interaction,
+     *            {@code false} otherwise
+     */
     public <V> void fireColumnVisibilityChangeEvent(Column<T, V> column,
             boolean hidden, boolean userOriginated) {
         fireEvent(new ColumnVisibilityChangeEvent(this, column, hidden,
@@ -2875,6 +2925,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @param valueProvider
      *            the value provider
+     * @param <V>
+     *            the column value type
      *
      * @return the new column
      */
@@ -3061,8 +3113,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Removes the given column from this {@link Grid}.
      *
-     * Note: If you have Editor with binding in this Grid to this property, you need to remove that
-     * using removeBinding method provided by Binder.
+     * Note: If you have Editor with binding in this Grid to this property, you
+     * need to remove that using removeBinding method provided by Binder.
      *
      * @param column
      *            the column to remove
@@ -4014,6 +4066,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @see Column#setId(String)
      */
+    @SuppressWarnings("unchecked")
     public void setColumns(String... columnIds) {
         // Must extract to an explicitly typed variable because otherwise javac
         // cannot determine which overload of setColumnOrder to use
@@ -4068,6 +4121,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param columns
      *            the columns in the order they should be
      */
+    @SuppressWarnings("unchecked")
     public void setColumnOrder(Column<T, ?>... columns) {
         setColumnOrder(Stream.of(columns));
     }
@@ -4133,6 +4187,11 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         return new GridSingleSelect<>(this);
     }
 
+    /**
+     * Returns the {@link Editor} for this grid.
+     *
+     * @return the editor, not null
+     */
     public Editor<T> getEditor() {
         return editor;
     }
@@ -4223,6 +4282,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @see #getSelectionModel()
      * @see GridSelectionModel
+     * @return the items in the current selection, not null
      */
     public Set<T> getSelectedItems() {
         return getSelectionModel().getSelectedItems();
@@ -4234,6 +4294,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @see #getSelectionModel()
      * @see GridSelectionModel
+     * @param item
+     *            the item to select, not null
      */
     public void select(T item) {
         getSelectionModel().select(item);
@@ -4245,6 +4307,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @see #getSelectionModel()
      * @see GridSelectionModel
+     * @param item
+     *            the item to deselect, not null
      */
     public void deselect(T item) {
         getSelectionModel().deselect(item);
@@ -4849,10 +4913,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     protected void writeData(Element body, DesignContext designContext) {
         getDataProvider().fetch(new Query<>())
-                .forEach(item -> writeRow(body, item, designContext));
+                .forEach(item -> writeRow(body, item));
     }
 
-    private void writeRow(Element container, T item, DesignContext context) {
+    private void writeRow(Element container, T item) {
         Element tableRow = container.appendElement("tr");
         tableRow.attr("item", serializeDeclarativeRepresentation(item));
         if (getSelectionModel().isSelected(item)) {

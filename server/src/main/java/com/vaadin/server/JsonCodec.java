@@ -412,7 +412,7 @@ public class JsonCodec implements Serializable {
         // Arrays
         if (JsonConstants.VTYPE_ARRAY.equals(transportType)) {
 
-            return decodeObjectArray(targetType, (JsonArray) encodedJsonValue,
+            return decodeObjectArray((JsonArray) encodedJsonValue,
                     connectorTracker);
 
         } else if (JsonConstants.VTYPE_STRINGARRAY.equals(transportType)) {
@@ -625,13 +625,14 @@ public class JsonCodec implements Serializable {
         }
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private static Object decodeEnum(Class<? extends Enum> cls,
             JsonString value) {
         return Enum.valueOf(cls, value.getString());
     }
 
-    private static Object[] decodeObjectArray(Type targetType,
-            JsonArray jsonArray, ConnectorTracker connectorTracker) {
+    private static Object[] decodeObjectArray(JsonArray jsonArray,
+            ConnectorTracker connectorTracker) {
         List<Object> list = decodeList(List.class, true, jsonArray,
                 connectorTracker);
         return list.toArray(new Object[list.size()]);
@@ -685,6 +686,7 @@ public class JsonCodec implements Serializable {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public static EncodeResult encode(Object value, JsonValue diffState,
             Type valueType, ConnectorTracker connectorTracker) {
 
@@ -1000,6 +1002,7 @@ public class JsonCodec implements Serializable {
     /*
      * Encodes a connector map. Invisible connectors are skipped.
      */
+    @SuppressWarnings("deprecation")
     private static JsonObject encodeConnectorMap(Type valueType, Map<?, ?> map,
             ConnectorTracker connectorTracker) {
         JsonObject jsonMap = Json.createObject();
@@ -1040,6 +1043,7 @@ public class JsonCodec implements Serializable {
         return TYPE_TO_TRANSPORT_TYPE.get(getClassForType(valueType));
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private static JsonValue serializeJson(Object value,
             ConnectorTracker connectorTracker) {
         JSONSerializer serializer = CUSTOM_SERIALIZERS.get(value.getClass());

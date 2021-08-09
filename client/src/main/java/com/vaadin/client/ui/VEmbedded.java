@@ -33,7 +33,13 @@ import com.vaadin.client.Util;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.embedded.EmbeddedState;
 
+/**
+ * A widget class for the Embedded component.
+ *
+ * @author Vaadin Ltd
+ */
 public class VEmbedded extends HTML {
+    /** The default classname for this widget. */
     public static String CLASSNAME = "v-embedded";
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -48,6 +54,9 @@ public class VEmbedded extends HTML {
     /** For internal use only. May be removed or replaced in the future. */
     public ApplicationConnection client;
 
+    /**
+     * Constructs a widget for an Embedded component.
+     */
     public VEmbedded() {
         setStyleName(CLASSNAME);
     }
@@ -189,7 +198,8 @@ public class VEmbedded extends HTML {
      * For internal use only. May be removed or replaced in the future.
      *
      * @param uidl
-     * @return
+     *            the UIDL to map
+     * @return the parameter map
      */
     public static Map<String, String> getParameters(UIDL uidl) {
         Map<String, String> parameters = new HashMap<>();
@@ -218,7 +228,8 @@ public class VEmbedded extends HTML {
      * @param src
      *            the src attribute
      * @param client
-     * @return
+     *            the communication engine for this UI
+     * @return the translated src-attribute or an empty String if not found
      */
     public String getSrc(String src, ApplicationConnection client) {
         String url = client.translateVaadinUri(src);
@@ -239,14 +250,15 @@ public class VEmbedded extends HTML {
                  * enough to overcome a bug when detaching an iframe with a pdf
                  * loaded in IE9. about:blank seems to cause the adobe reader
                  * plugin to unload properly before the iframe is removed. See
-                 * #7855
+                 * https://dev.vaadin.com/ticket/7855
                  */
-                DOM.setElementAttribute(browserElement, "src", "about:blank");
+                browserElement.setAttribute("src", "about:blank");
             }
         }
         super.onDetach();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);

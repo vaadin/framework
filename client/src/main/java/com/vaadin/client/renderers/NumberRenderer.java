@@ -30,10 +30,19 @@ public class NumberRenderer implements Renderer<Number> {
 
     private NumberFormat format;
 
+    /**
+     * Constructs a renderer for presenting number data.
+     */
     public NumberRenderer() {
         this(NumberFormat.getDecimalFormat());
     }
 
+    /**
+     * Constructs a renderer for presenting number data.
+     *
+     * @param format
+     *            the format to use when the number is displayed
+     */
     public NumberRenderer(NumberFormat format) {
         setFormat(format);
     }
