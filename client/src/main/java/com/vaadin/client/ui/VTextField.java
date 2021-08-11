@@ -36,6 +36,12 @@ public class VTextField extends TextBoxBase
     public static final String CLASSNAME = "v-textfield";
     public static final String CLASSNAME_FOCUS = "focus";
 
+    /** For internal use only. May be removed or replaced in the future. */
+    public boolean enabled;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public boolean readOnly;
+
     public VTextField() {
         this(DOM.createInputText());
     }
@@ -56,7 +62,7 @@ public class VTextField extends TextBoxBase
     }
 
     public void setPlaceholder(String placeholder) {
-        if (placeholder != null) {
+        if (placeholder != null && !readOnly && enabled) {
             getElement().setAttribute("placeholder", placeholder);
         } else {
             getElement().removeAttribute("placeholder");
