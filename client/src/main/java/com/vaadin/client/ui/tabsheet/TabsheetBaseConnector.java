@@ -63,11 +63,22 @@ public abstract class TabsheetBaseConnector
         // Update member references
         widget.setEnabled(isEnabled());
 
-        // Widgets in the TabSheet before update
+        // Widgets in the TabSheet before update (should be max 1)
         List<Widget> oldWidgets = new ArrayList<>();
         for (Iterator<Widget> iterator = widget.getWidgetIterator(); iterator
                 .hasNext();) {
-            oldWidgets.add(iterator.next());
+            Widget child = iterator.next();
+            // filter out any current widgets (should be max 1)
+            boolean found = false;
+            for (ComponentConnector childComponent : getChildComponents()) {
+                if (childComponent.getWidget().equals(child)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                oldWidgets.add(child);
+            }
         }
 
         // Clear previous values
@@ -93,14 +104,6 @@ public abstract class TabsheetBaseConnector
         int tabCount = widget.getTabCount();
         while (tabCount-- > index) {
             widget.removeTab(index);
-        }
-
-        for (int i = 0; i < widget.getTabCount(); i++) {
-            ComponentConnector p = widget.getTab(i);
-            // null for PlaceHolder widgets
-            if (p != null) {
-                oldWidgets.remove(p.getWidget());
-            }
         }
 
         // Detach any old tab widget, should be max 1

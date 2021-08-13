@@ -30,6 +30,11 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.shared.ui.tabsheet.TabState;
 
+/**
+ * Base class for a multi-view widget such as TabSheet or Accordion.
+ *
+ * @author Vaadin Ltd.
+ */
 public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -52,6 +57,13 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
 
     private boolean tabCaptionsAsHtml = false;
 
+    /**
+     * Constructs a multi-view widget with the given classname.
+     *
+     * @param classname
+     *            the style name to set
+     */
+    @SuppressWarnings("deprecation")
     public VTabsheetBase(String classname) {
         setElement(DOM.createDiv());
         setStyleName(classname);
@@ -64,48 +76,69 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
 
     /**
      * Clears current tabs and contents.
+     *
+     * @deprecated This method is not called by the framework code anymore.
      */
+    @Deprecated
     protected abstract void clearPaintables();
 
     /**
      * Implement in extending classes. This method should render needed elements
-     * and set the visibility of the tab according to the 'selected' parameter.
+     * and set the visibility of the tab according to the 'visible' parameter.
+     * This method should not update the selection, the connector should handle
+     * that separately.
+     *
+     * @param tabState
+     *            shared state of a single tab
+     * @param index
+     *            the index of that tab
      */
     public abstract void renderTab(TabState tabState, int index);
 
     /**
      * Implement in extending classes. This method should return the number of
      * tabs currently rendered.
+     *
+     * @return the number of currently rendered tabs
      */
     public abstract int getTabCount();
 
     /**
-     * Implement in extending classes. This method should return the Paintable
+     * Implement in extending classes. This method should return the connector
      * corresponding to the given index.
+     *
+     * @param index
+     *            the index of the tab whose connector to find
+     * @return the connector of the queried tab, or {@code null} if not found
      */
     public abstract ComponentConnector getTab(int index);
 
     /**
      * Implement in extending classes. This method should remove the rendered
      * tab with the specified index.
+     *
+     * @param index
+     *            the index of the tab to remove
      */
     public abstract void removeTab(int index);
 
     /**
-     * Returns true if the width of the widget is undefined, false otherwise.
+     * Returns whether the width of the widget is undefined.
      *
      * @since 7.2
-     * @return true if width of the widget is determined by its content
+     * @return {@code true} if width of the widget is determined by its content,
+     *         {@code false} otherwise
      */
     protected boolean isDynamicWidth() {
         return getConnectorForWidget(this).isUndefinedWidth();
     }
 
     /**
-     * Returns true if the height of the widget is undefined, false otherwise.
+     * Returns whether the height of the widget is undefined.
      *
      * @since 7.2
-     * @return true if width of the height is determined by its content
+     * @return {@code true} if height of the widget is determined by its
+     *         content, {@code false} otherwise
      */
     protected boolean isDynamicHeight() {
         return getConnectorForWidget(this).isUndefinedHeight();
@@ -119,6 +152,7 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
      *
      * @since 7.2
      * @param connector
+     *            the connector of this widget
      */
     public void setConnector(AbstractComponentConnector connector) {
         this.connector = connector;
@@ -130,7 +164,15 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
         disabledTabKeys.clear();
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param key
+     *            an internal key that corresponds with a tab
+     * @param disabled
+     *            {@code true} if the tab should be disabled, {@code false}
+     *            otherwise
+     */
     public void addTabKey(String key, boolean disabled) {
         tabKeys.add(key);
         if (disabled) {
@@ -138,12 +180,22 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
         }
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param client
+     *            the current application connection instance
+     */
     public void setClient(ApplicationConnection client) {
         this.client = client;
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param activeTabIndex
+     *            the index of the currently active tab
+     */
     public void setActiveTabIndex(int activeTabIndex) {
         this.activeTabIndex = activeTabIndex;
     }
@@ -154,17 +206,34 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
         disabled = !enabled;
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param readonly
+     *            {@code true} if this widget should be read-only, {@code false}
+     *            otherwise
+     */
     public void setReadonly(boolean readonly) {
         this.readonly = readonly;
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param widget
+     *            the widget whose connector to find
+     * @return the connector
+     */
     protected ComponentConnector getConnectorForWidget(Widget widget) {
         return ConnectorMap.get(client).getConnector(widget);
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param index
+     *            the index of the tab to select
+     */
     public abstract void selectTab(int index);
 
     @Override
@@ -176,6 +245,8 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
      * Sets whether the caption is rendered as HTML.
      * <p>
      * The default is false, i.e. render tab captions as plain text
+     * <p>
+     * This value is delegated from the TabsheetState.
      *
      * @since 7.4
      * @param tabCaptionsAsHtml

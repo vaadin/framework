@@ -21,6 +21,15 @@ public class ScrolledTabSheetResize extends AbstractTestUI {
         TabSheet tabSheet = new TabSheet();
         tabSheet.setSizeFull();
 
+        populate(tabSheet);
+
+        addComponent(tabSheet);
+        addComponent(new Button("use reindeer", e -> {
+            setTheme("reindeer");
+        }));
+    }
+
+    protected void populate(TabSheet tabSheet) {
         for (int i = 0; i < 20; i++) {
             String caption = "Tab " + i;
             Label label = new Label(caption);
@@ -28,11 +37,6 @@ public class ScrolledTabSheetResize extends AbstractTestUI {
             Tab tab = tabSheet.addTab(label, caption);
             tab.setClosable(true);
         }
-
-        addComponent(tabSheet);
-        addComponent(new Button("use reindeer", e -> {
-            setTheme("reindeer");
-        }));
     }
 
     @Override
