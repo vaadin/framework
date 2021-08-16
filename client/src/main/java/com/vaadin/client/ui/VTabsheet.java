@@ -1046,6 +1046,7 @@ public class VTabsheet extends VTabsheetBase
          * @see VTabsheet#isClipped(Tab)
          */
         private int getNextVisibleTab(int i) {
+            i = Math.max(i, -1);
             int tabs = getTabCount();
             do {
                 i++;
@@ -1082,6 +1083,7 @@ public class VTabsheet extends VTabsheetBase
          * @see VTabsheet#isClipped(Tab)
          */
         private int getPreviousVisibleTab(int i) {
+            i = Math.min(i, getTabCount());
             do {
                 i--;
             } while (i >= 0 && getTab(i).isHiddenOnServer());
