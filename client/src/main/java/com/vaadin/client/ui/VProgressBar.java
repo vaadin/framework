@@ -36,6 +36,7 @@ import com.vaadin.client.StyleConstants;
  */
 public class VProgressBar extends Widget implements HasEnabled {
 
+    /** Default classname for this widget. */
     public static final String PRIMARY_STYLE_NAME = "v-progressbar";
 
     Element wrapper = DOM.createDiv();
@@ -45,6 +46,10 @@ public class VProgressBar extends Widget implements HasEnabled {
     private float state = 0.0f;
     private boolean enabled;
 
+    /**
+     * Constructs a widget for the ProgressBar component or renderer.
+     */
+    @SuppressWarnings("deprecation")
     public VProgressBar() {
         setElement(DOM.createDiv());
         getElement().appendChild(wrapper);
@@ -68,20 +73,52 @@ public class VProgressBar extends Widget implements HasEnabled {
 
     }
 
+    /**
+     * Sets whether or not this progress indicator is indeterminate. In
+     * indeterminate mode there is an animation indicating that the task is
+     * running but without providing any information about the current progress.
+     *
+     * @param indeterminate
+     *            {@code true} to set to indeterminate mode, {@code false}
+     *            otherwise
+     */
     public void setIndeterminate(boolean indeterminate) {
         this.indeterminate = indeterminate;
         setStyleName(getStylePrimaryName() + "-indeterminate", indeterminate);
     }
 
+    /**
+     * Sets the value of this progress bar. The value is a {@code float} between
+     * 0 and 1 where 0 represents no progress at all and 1 represents fully
+     * completed.
+     *
+     * @param state
+     *            the new progress value
+     */
     public void setState(float state) {
         final int size = Math.round(100 * state);
         indicator.getStyle().setWidth(size, Unit.PCT);
     }
 
+    /**
+     * Gets whether or not this progress indicator is indeterminate. In
+     * indeterminate mode there is an animation indicating that the task is
+     * running but without providing any information about the current progress.
+     *
+     * @return {@code true} if set to indeterminate mode, {@code false}
+     *         otherwise
+     */
     public boolean isIndeterminate() {
         return indeterminate;
     }
 
+    /**
+     * Returns the current value of this progress bar. The value is a
+     * {@code float} between 0 and 1 where 0 represents no progress at all and 1
+     * represents fully completed.
+     *
+     * @return the current progress value
+     */
     public float getState() {
         return state;
     }

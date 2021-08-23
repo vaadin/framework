@@ -30,6 +30,7 @@ public class RadioButtonGroupState extends AbstractSingleSelectState {
         primaryStyleName = "v-select-optiongroup";
     }
 
+    /** Is HTML allowed in the item captions. */
     @DelegateToWidget
     public boolean htmlContentAllowed = false;
 }

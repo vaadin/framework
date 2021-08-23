@@ -53,23 +53,43 @@ public class VSlider extends SimpleFocusablePanel
      */
     private static final int MIN_SIZE = 50;
 
+    /**
+     * Current client-side communication engine.
+     *
+     * @deprecated this field is no longer used by the framework
+     */
+    @Deprecated
     protected ApplicationConnection client;
 
+    /**
+     * Current connector id.
+     *
+     * @deprecated this field is no longer used by the framework
+     */
+    @Deprecated
     protected String id;
 
+    /** Is this widget disabled. */
     protected boolean disabled;
+    /** Is this widget read-only. */
     protected boolean readonly;
 
     private int acceleration = 1;
+    /** Minimum value of slider. */
     protected double min;
+    /** Maximum value of slider. */
     protected double max;
+    /** Resolution (precision level) of slider. */
     protected int resolution;
+    /** Current value of slider. */
     protected Double value;
 
     private boolean updateValueOnClick;
+    /** Current orientation (vertical/horizontal) of slider. */
     protected SliderOrientation orientation = SliderOrientation.HORIZONTAL;
 
     private final HTML feedback = new HTML("", false);
+    @SuppressWarnings("deprecation")
     private final VOverlay feedbackPopup = new VOverlay(true, false) {
         {
             setOwner(VSlider.this);
@@ -82,20 +102,20 @@ public class VSlider extends SimpleFocusablePanel
         }
     };
 
-    /* DOM element for slider's base */
+    /** DOM element for slider's base. */
     private final Element base;
     private static final int BASE_BORDER_WIDTH = 1;
 
-    /* DOM element for slider's handle */
+    /** DOM element for slider's handle. */
     private final Element handle;
 
-    /* DOM element for decrement arrow */
+    /** DOM element for decrement arrow. */
     private final Element smaller;
 
-    /* DOM element for increment arrow */
+    /** DOM element for increment arrow. */
     private final Element bigger;
 
-    /* Temporary dragging/animation variables */
+    /** Temporary dragging/animation variables. */
     private boolean dragging = false;
 
     private VLazyExecutor delayedValueUpdater = new VLazyExecutor(100, () -> {
@@ -103,6 +123,9 @@ public class VSlider extends SimpleFocusablePanel
         acceleration = 1;
     });
 
+    /**
+     * Constructs a widget for the Slider component.
+     */
     public VSlider() {
         super();
 
@@ -138,6 +161,15 @@ public class VSlider extends SimpleFocusablePanel
         updateStyleNames(style, true);
     }
 
+    /**
+     * Updates the style names for this widget and the child elements.
+     *
+     * @param styleName
+     *            the new style name
+     * @param isPrimaryStyleName
+     *            {@code true} if the new style name is primary, {@code false}
+     *            otherwise
+     */
     protected void updateStyleNames(String styleName,
             boolean isPrimaryStyleName) {
 
@@ -161,6 +193,13 @@ public class VSlider extends SimpleFocusablePanel
         }
     }
 
+    /**
+     * Updates the value shown in the feedback pop-up when the slider is moved.
+     * The value should match the current value of this widget.
+     *
+     * @param value
+     *            the new value to show
+     */
     public void setFeedbackValue(double value) {
         feedback.setText(String.valueOf(value));
     }
@@ -293,7 +332,7 @@ public class VSlider extends SimpleFocusablePanel
 
                 delayedValueUpdater.trigger();
 
-                DOM.eventPreventDefault(event);
+                event.preventDefault();
                 DOM.eventCancelBubble(event, true);
             }
         } else if (targ.equals(getElement())
@@ -321,7 +360,7 @@ public class VSlider extends SimpleFocusablePanel
     }
 
     private void processMouseWheelEvent(final Event event) {
-        final int dir = DOM.eventGetMouseWheelVelocityY(event);
+        final int dir = event.getMouseWheelVelocityY();
 
         if (dir < 0) {
             increaseValue(false);
@@ -331,7 +370,7 @@ public class VSlider extends SimpleFocusablePanel
 
         delayedValueUpdater.trigger();
 
-        DOM.eventPreventDefault(event);
+        event.preventDefault();
         DOM.eventCancelBubble(event, true);
     }
 
@@ -347,7 +386,7 @@ public class VSlider extends SimpleFocusablePanel
                 handle.addClassName(getStylePrimaryName() + "-handle-active");
 
                 DOM.setCapture(getElement());
-                DOM.eventPreventDefault(event); // prevent selecting text
+                event.preventDefault(); // prevent selecting text
                 DOM.eventCancelBubble(event, true);
                 event.stopPropagation();
             }
@@ -432,7 +471,8 @@ public class VSlider extends SimpleFocusablePanel
      * webkit (only browser that really supports touches).
      *
      * @param event
-     * @return
+     *            the event whose position to check
+     * @return the client position
      */
     protected int getEventPosition(Event event) {
         if (isVertical()) {
@@ -442,6 +482,9 @@ public class VSlider extends SimpleFocusablePanel
         }
     }
 
+    /**
+     * Run internal layouting.
+     */
     public void iLayout() {
         if (isVertical()) {
             setHeight();
@@ -555,18 +598,54 @@ public class VSlider extends SimpleFocusablePanel
         return KeyCodes.KEY_RIGHT;
     }
 
+    /**
+     * Sets the current client-side communication engine.
+     *
+     * @param client
+     *            the application connection that manages this component
+     * @deprecated the updated field is no longer used by the framework
+     */
+    @Deprecated
     public void setConnection(ApplicationConnection client) {
         this.client = client;
     }
 
+    /**
+     * Sets the id of this component's connector.
+     *
+     * @param id
+     *            the connector id
+     * @deprecated the updated field is no longer used by the framework
+     */
+    @Deprecated
     public void setId(String id) {
         this.id = id;
     }
 
+    /**
+     * Disables or enables this slider. Users cannot interact with a disabled
+     * widget, and the default styles show it as grayed out (via opacity). The
+     * slider is enabled by default.
+     *
+     * @param disabled
+     *            a boolean value specifying whether the slider should be
+     *            disabled or not
+     * @see #setReadOnly(boolean)
+     */
     public void setDisabled(boolean disabled) {
         this.disabled = disabled;
     }
 
+    /**
+     * Sets the read-only status of this slider. Users cannot interact with a
+     * read-only widget, but the default styles don't show it grayed out unless
+     * it's also disabled. The slider is not read-only by default.
+     *
+     * @param readonly
+     *            a boolean value specifying whether the slider should be in
+     *            read-only mode or not
+     * @see #setDisabled(boolean)
+     */
     public void setReadOnly(boolean readonly) {
         this.readonly = readonly;
     }
@@ -575,6 +654,13 @@ public class VSlider extends SimpleFocusablePanel
         return orientation == SliderOrientation.VERTICAL;
     }
 
+    /**
+     * Sets the slider orientation. Updates the style names if the given
+     * orientation differs from previously set orientation.
+     *
+     * @param orientation
+     *            the orientation to use
+     */
     public void setOrientation(SliderOrientation orientation) {
         if (this.orientation != orientation) {
             this.orientation = orientation;
@@ -582,14 +668,35 @@ public class VSlider extends SimpleFocusablePanel
         }
     }
 
+    /**
+     * Sets the minimum value for slider.
+     *
+     * @param value
+     *            the minimum value to use
+     */
     public void setMinValue(double value) {
         min = value;
     }
 
+    /**
+     * Sets the maximum value for slider.
+     *
+     * @param value
+     *            the maximum value to use
+     */
     public void setMaxValue(double value) {
         max = value;
     }
 
+    /**
+     * Sets the resolution (precision level) for slider as the number of
+     * fractional digits that are considered significant. Determines how big
+     * change is used when increasing or decreasing the value, and where more
+     * precise values get rounded.
+     *
+     * @param resolution
+     *            the number of digits after the decimal point
+     */
     public void setResolution(int resolution) {
         this.resolution = resolution;
     }
@@ -664,6 +771,7 @@ public class VSlider extends SimpleFocusablePanel
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public com.google.gwt.user.client.Element getSubPartElement(
             String subPart) {
@@ -674,6 +782,7 @@ public class VSlider extends SimpleFocusablePanel
         return null;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public String getSubPartName(
             com.google.gwt.user.client.Element subElement) {
@@ -687,6 +796,8 @@ public class VSlider extends SimpleFocusablePanel
      * Specifies whether or not click event should update the Slider's value.
      *
      * @param updateValueOnClick
+     *            {@code true} if a click should update slider's value,
+     *            {@code false} otherwise
      */
     public void setUpdateValueOnClick(boolean updateValueOnClick) {
         this.updateValueOnClick = updateValueOnClick;
