@@ -20,8 +20,17 @@ import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.ui.Orientation;
 
+/**
+ * Widget class for the VerticalSplitPanel component.
+ *
+ * @author Vaadin Ltd
+ *
+ */
 public class VSplitPanelVertical extends VAbstractSplitPanel {
 
+    /**
+     * Constructs a widget for the VerticalSplitPanel component.
+     */
     public VSplitPanelVertical() {
         super(Orientation.VERTICAL);
     }

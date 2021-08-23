@@ -43,12 +43,20 @@ import com.vaadin.client.LayoutManager;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.client.ui.VAbstractSplitPanel.SplitterMoveHandler.SplitterMoveEvent;
+import com.vaadin.client.widgets.Overlay;
 import com.vaadin.shared.ui.Orientation;
 
+/**
+ * Base class for the SplitPanel widgets.
+ *
+ * @author Vaadin Ltd
+ *
+ */
 public abstract class VAbstractSplitPanel extends ComplexPanel {
 
     private boolean enabled = false;
 
+    /** Default classname for this widget. */
     public static final String CLASSNAME = "v-splitpanel";
 
     private static final int MIN_SIZE = 30;
@@ -107,14 +115,34 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
 
     private TouchScrollHandler touchScrollHandler;
 
+    /**
+     * @deprecated this element is no longer used or updated by the framework
+     */
+    @Deprecated
     protected Element scrolledContainer;
 
+    /**
+     * @deprecated this value is no longer used or updated by the framework
+     */
+    @Deprecated
     protected int origScrollTop;
 
+    /**
+     * Constructs a base widget for a SplitPanel component. Uses horizontal
+     * orientation.
+     */
     public VAbstractSplitPanel() {
         this(Orientation.HORIZONTAL);
     }
 
+    /**
+     * Constructs a base widget for a SplitPanel component with the given
+     * orientation.
+     *
+     * @param orientation
+     *            the orientation to use
+     */
+    @SuppressWarnings("deprecation")
     public VAbstractSplitPanel(Orientation orientation) {
         setElement(DOM.createDiv());
         switch (orientation) {
@@ -159,6 +187,9 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
 
     }
 
+    /**
+     * Constructs the DOM structure for this widget.
+     */
     protected void constructDom() {
         DOM.appendChild(splitter, DOM.createDiv()); // for styling
         DOM.appendChild(getElement(), wrapper);
@@ -206,7 +237,13 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         return removed;
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param newValue
+     *            {@code true} if split position should be locked, {@code false}
+     *            otherwise
+     */
     public void setLocked(boolean newValue) {
         if (locked != newValue) {
             locked = newValue;
@@ -215,7 +252,14 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         }
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param reversed
+     *            {@code true} if split position should be measured from the
+     *            second region, {@code false} (default) if from the the first
+     *            region
+     */
     public void setPositionReversed(boolean reversed) {
         if (positionReversed != reversed) {
             if (orientation == Orientation.HORIZONTAL) {
@@ -323,6 +367,12 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         return pos;
     }
 
+    /**
+     * Sets the position of the splitter element.
+     *
+     * @param pos
+     *            the required position as either percentage or pixels
+     */
     public void setSplitPosition(String pos) {
         setSplitPosition(pos, true);
     }
@@ -381,12 +431,16 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         case VERTICAL:
             verticalOrientationUpdateSizes();
             break;
+        default:
+            throw new IllegalStateException(
+                    "New orientation option has been added "
+                            + "without configuring handling for it.");
         }
     }
 
     private void verticalOrientationUpdateSizes() {
-        int wholeSize = DOM.getElementPropertyInt(wrapper, "clientHeight");
-        int pixelPosition = DOM.getElementPropertyInt(splitter, "offsetTop");
+        int wholeSize = wrapper.getPropertyInt("clientHeight");
+        int pixelPosition = splitter.getPropertyInt("offsetTop");
 
         // reposition splitter in case it is out of box
         if (pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize
@@ -435,8 +489,8 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     }
 
     private void horizontalOrientationUpdateSizes() {
-        int wholeSize = DOM.getElementPropertyInt(wrapper, "clientWidth");
-        int pixelPosition = DOM.getElementPropertyInt(splitter, "offsetLeft");
+        int wholeSize = wrapper.getPropertyInt("clientWidth");
+        int pixelPosition = splitter.getPropertyInt("offsetLeft");
 
         // reposition splitter in case it is out of box
         if (pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize
@@ -491,7 +545,13 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         }
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param w
+     *            the widget to set to the first region or {@code null} to
+     *            remove previously set widget
+     */
     public void setFirstWidget(Widget w) {
         if (firstChild == w) {
             return;
@@ -505,11 +565,22 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         firstChild = w;
     }
 
+    /**
+     * Returns the widget in the first region, if any.
+     *
+     * @return the widget in the first region, or {@code null} if not set
+     */
     public Widget getFirstWidget() {
         return firstChild;
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param w
+     *            the widget to set to the second region or {@code null} to
+     *            remove previously set widget
+     */
     public void setSecondWidget(Widget w) {
         if (secondChild == w) {
             return;
@@ -523,6 +594,11 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         secondChild = w;
     }
 
+    /**
+     * Returns the widget in the second region, if any.
+     *
+     * @return the widget in the second region, or {@code null} if not set
+     */
     public Widget getSecondWidget() {
         return secondChild;
     }
@@ -558,6 +634,9 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
             stopResize();
             resizing = false;
             break;
+        default:
+            // NOP
+            break;
         }
         // Only fire click event listeners if the splitter isn't moved
         if (WidgetUtil.isTouchEvent(event) || !resized) {
@@ -569,6 +648,15 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         }
     }
 
+    /**
+     * Handle initiating content resize and moving of the split position when
+     * clicking the splitter with a mouse. If the click targets any other
+     * element, the split position is locked, or this split panel is not
+     * enabled, nothing is done.
+     *
+     * @param event
+     *            the browser event
+     */
     public void onMouseDown(Event event) {
         if (locked || !isEnabled()) {
             return;
@@ -578,8 +666,8 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
             startResize();
             resizing = true;
             DOM.setCapture(getElement());
-            origX = DOM.getElementPropertyInt(splitter, "offsetLeft");
-            origY = DOM.getElementPropertyInt(splitter, "offsetTop");
+            origX = splitter.getPropertyInt("offsetLeft");
+            origY = splitter.getPropertyInt("offsetTop");
             origMouseX = WidgetUtil.getTouchOrMouseClientX(event);
             origMouseY = WidgetUtil.getTouchOrMouseClientY(event);
             event.stopPropagation();
@@ -588,39 +676,47 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     }
 
     /**
-     * Called when starting drag resize.
+     * Called when starting splitter drag resize of contents.
      *
      * @since 7.5.1
      */
     protected abstract void startResize();
 
     /**
-     * Called when stopping drag resize.
+     * Called when stopping splitter drag resize of contents.
      *
      * @since 7.5.1
      */
     protected abstract void stopResize();
 
     /**
-     * Gets the first container.
+     * Gets the first region's container element.
      *
      * @since 7.5.1
-     * @return the firstContainer
+     * @return the container element
      */
     protected Element getFirstContainer() {
         return firstContainer;
     }
 
     /**
-     * Gets the second container.
+     * Gets the second region's container element.
      *
      * @since 7.5.1
-     * @return the secondContainer
+     * @return the container element
      */
     protected Element getSecondContainer() {
         return secondContainer;
     }
 
+    /**
+     * Handle updating the splitter position when dragging the splitter with a
+     * mouse. This should only be called if content resizing has been
+     * successfully initialized via a mouse down event.
+     *
+     * @param event
+     *            the browser event
+     */
     public void onMouseMove(Event event) {
         switch (orientation) {
         case HORIZONTAL:
@@ -701,6 +797,14 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         setSplitPosition(newY + "px");
     }
 
+    /**
+     * Handle concluding the content resize when dragging the splitter with a
+     * mouse. This should only be called if resizing has been successfully
+     * initialized via a mouse down event.
+     *
+     * @param event
+     *            the browser event
+     */
     public void onMouseUp(Event event) {
         DOM.releaseCapture(getElement());
         hideDraggingCurtain();
@@ -712,18 +816,41 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         fireEvent(new SplitterMoveEvent(this));
     }
 
+    /**
+     * Event handler interface for moving the splitter element.
+     *
+     * @author Vaadin Ltd
+     */
     public interface SplitterMoveHandler extends EventHandler {
+        /**
+         * Handle moving of the splitter element.
+         *
+         * @param event
+         *            the splitter move event
+         */
         public void splitterMoved(SplitterMoveEvent event);
 
+        /**
+         * Event class for splitter element move.
+         *
+         * @author Vaadin Ltd
+         */
         public static class SplitterMoveEvent
                 extends GwtEvent<SplitterMoveHandler> {
 
+            /**
+             * Handler type.
+             */
             public static final Type<SplitterMoveHandler> TYPE = new Type<>();
 
-            private Widget splitPanel;
-
+            /**
+             * Constructs a move event for the splitter element.
+             *
+             * @param splitPanel
+             *            the split panel whose splitter is moved
+             */
             public SplitterMoveEvent(Widget splitPanel) {
-                this.splitPanel = splitPanel;
+                // no default use for the given splitPanel
             }
 
             @Override
@@ -739,7 +866,12 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         }
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @return the current position of the split handle in either percentages or
+     *         pixels
+     */
     public String getSplitterPosition() {
         return position;
     }
@@ -759,7 +891,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
             draggingCurtain.getStyle().setLeft(0, Unit.PX);
             draggingCurtain.getStyle().setWidth(100, Unit.PCT);
             draggingCurtain.getStyle().setHeight(100, Unit.PCT);
-            draggingCurtain.getStyle().setZIndex(VOverlay.Z_INDEX);
+            draggingCurtain.getStyle().setZIndex(Overlay.Z_INDEX);
 
             DOM.appendChild(wrapper, draggingCurtain);
         }
@@ -779,7 +911,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
      */
     private void hideDraggingCurtain() {
         if (draggingCurtain != null) {
-            DOM.removeChild(wrapper, draggingCurtain);
+            wrapper.removeChild(draggingCurtain);
             draggingCurtain = null;
         }
     }
@@ -791,13 +923,11 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
             if (isAttached()) {
                 switch (orientation) {
                 case HORIZONTAL:
-                    splitterSize = DOM.getElementPropertyInt(splitter,
-                            "offsetWidth");
+                    splitterSize = splitter.getPropertyInt("offsetWidth");
                     break;
 
                 default:
-                    splitterSize = DOM.getElementPropertyInt(splitter,
-                            "offsetHeight");
+                    splitterSize = splitter.getPropertyInt("offsetHeight");
                     break;
                 }
             }
@@ -827,10 +957,21 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         }
     }
 
+    /**
+     * Sets this split panel enabled.
+     *
+     * @param enabled
+     *            {@code true} if enabled, {@code false} if disabled
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
+    /**
+     * Returns whether this split panel is enabled or not.
+     *
+     * @return {@code true} if enabled, {@code false} if disabled
+     */
     public boolean isEnabled() {
         return enabled;
     }
