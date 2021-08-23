@@ -23,6 +23,7 @@ import com.vaadin.client.ui.orderedlayout.VAbstractOrderedLayout;
  */
 public class VVerticalLayout extends VAbstractOrderedLayout {
 
+    /** Default classname for this widget. */
     public static final String CLASSNAME = "v-verticallayout";
 
     /**

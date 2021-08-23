@@ -33,13 +33,28 @@ import com.google.gwt.user.client.ui.TextBoxBase;
 public class VTextField extends TextBoxBase
         implements Field, FocusHandler, BlurHandler, AbstractTextFieldWidget {
 
+    /** Default classname for this widget. */
     public static final String CLASSNAME = "v-textfield";
+    /**
+     * Classname suffix for this widget when focused.
+     *
+     * @see #addStyleDependentName(String)
+     */
     public static final String CLASSNAME_FOCUS = "focus";
 
+    /**
+     * Constructs a widget for a TextField.
+     */
     public VTextField() {
         this(DOM.createInputText());
     }
 
+    /**
+     * Constructs a text entry widget that wraps the given input element.
+     *
+     * @param node
+     *            the input element to wrap
+     */
     protected VTextField(Element node) {
         super(node);
         setStyleName(CLASSNAME);
@@ -47,6 +62,13 @@ public class VTextField extends TextBoxBase
         addBlurHandler(this);
     }
 
+    /**
+     * Sets the {@code maxLength} Integer property for this widget's base
+     * element. If the given value is negative, the property is removed.
+     *
+     * @param maxLength
+     *            the new maximum length
+     */
     public void setMaxLength(int maxLength) {
         if (maxLength >= 0) {
             getElement().setPropertyInt("maxLength", maxLength);
@@ -55,6 +77,13 @@ public class VTextField extends TextBoxBase
         }
     }
 
+    /**
+     * Sets the {@code placeholder} String property for this widget's base
+     * element. If the given value is {@code null}, the property is removed.
+     *
+     * @param placeholder
+     *            the new placeholder text
+     */
     public void setPlaceholder(String placeholder) {
         if (placeholder != null) {
             getElement().setAttribute("placeholder", placeholder);

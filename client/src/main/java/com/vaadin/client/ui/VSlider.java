@@ -35,9 +35,16 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 
+/**
+ * Widget class for the Slider component.
+ *
+ * @author Vaadin Ltd
+ *
+ */
 public class VSlider extends SimpleFocusablePanel
         implements Field, HasValue<Double>, SubPartAware {
 
+    /** Default classname for this widget. */
     public static final String CLASSNAME = "v-slider";
 
     /**
