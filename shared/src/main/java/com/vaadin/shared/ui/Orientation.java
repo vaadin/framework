@@ -15,6 +15,15 @@
  */
 package com.vaadin.shared.ui;
 
+/**
+ * Defines orientation for widgets that can be configured either horizontally or
+ * vertically. By default used by SplitPanels.
+ *
+ * @author Vaadin Ltd
+ */
 public enum Orientation {
-    HORIZONTAL, VERTICAL;
+    /** Horizontal orientation required. */
+    HORIZONTAL,
+    /** Vertical orientation required. */
+    VERTICAL;
 }
