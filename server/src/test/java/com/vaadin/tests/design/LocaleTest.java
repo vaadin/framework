@@ -97,7 +97,7 @@ public class LocaleTest {
     private Document componentToDoc(DesignContext dc) {
         // Create the html tree skeleton.
         Document doc = new Document("");
-        DocumentType docType = new DocumentType("html", "", "", "");
+        DocumentType docType = new DocumentType("html", "", "");
         doc.appendChild(docType);
         Element html = doc.createElement("html");
         doc.appendChild(html);
