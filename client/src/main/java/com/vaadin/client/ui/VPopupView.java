@@ -46,9 +46,16 @@ import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.popupview.VisibilityChangeEvent;
 import com.vaadin.client.ui.popupview.VisibilityChangeHandler;
 
+/**
+ * Widget class for the PopupView component.
+ *
+ * @author Vaadin Ltd
+ *
+ */
 public class VPopupView extends HTML
         implements HasEnabled, Iterable<Widget>, DeferredWorker {
 
+    /** Default classname for this widget. */
     public static final String CLASSNAME = "v-popupview";
 
     /**
@@ -113,7 +120,12 @@ public class VPopupView extends HTML
         popup.setAutoHideOnHistoryEventsEnabled(false);
     }
 
-    /** For internal use only. May be removed or replaced in the future. */
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @param popup
+     *            the popup that should be shown
+     */
     public void preparePopup(final CustomPopup popup) {
         popup.setVisible(true);
         popup.setWidget(loading);
@@ -130,6 +142,7 @@ public class VPopupView extends HTML
      * Can be overridden to customize the popup position.
      *
      * @param popup
+     *            the popup whose position should be updated
      */
     public void showPopup(final CustomPopup popup) {
         popup.setPopupPosition(0, 0);
@@ -220,6 +233,7 @@ public class VPopupView extends HTML
      * (other than it being a VOverlay) is to be considered private and
      * potentially subject to change.
      */
+    @SuppressWarnings("deprecation")
     public class CustomPopup extends VOverlay
             implements StateChangeEvent.StateChangeHandler {
 
@@ -237,6 +251,11 @@ public class VPopupView extends HTML
 
         private ShortcutActionHandler shortcutActionHandler;
 
+        /**
+         * Constructs a popup widget for VPopupView.
+         *
+         * @see CustomPopup
+         */
         public CustomPopup() {
             super(true, false); // autoHide, not modal
             setOwner(VPopupView.this);
@@ -361,6 +380,13 @@ public class VPopupView extends HTML
             return super.remove(w);
         }
 
+        /**
+         * Sets the connector of the popup content widget. Should not be
+         * {@code null}.
+         *
+         * @param newPopupComponent
+         *            the connector to set
+         */
         public void setPopupConnector(ComponentConnector newPopupComponent) {
 
             if (newPopupComponent != popupComponentConnector) {
@@ -377,6 +403,15 @@ public class VPopupView extends HTML
 
         }
 
+        /**
+         * Should this popup automatically hide when the user takes the mouse
+         * cursor out of the popup area? If this is {@code false}, the user must
+         * click outside the popup to close it. The default is {@code true}.
+         *
+         * @param hideOnMouseOut
+         *            {@code true} if this popup should hide when mouse is moved
+         *            away, {@code false} otherwise
+         */
         public void setHideOnMouseOut(boolean hideOnMouseOut) {
             this.hideOnMouseOut = hideOnMouseOut;
         }
@@ -405,6 +440,14 @@ public class VPopupView extends HTML
         }
     }
 
+    /**
+     * Adds the given visibility change handler to this widget.
+     *
+     * @param visibilityChangeHandler
+     *            the handler that should be triggered when visibility changes
+     * @return the registration object for removing the given handler when no
+     *         longer needed
+     */
     public HandlerRegistration addVisibilityChangeHandler(
             final VisibilityChangeHandler visibilityChangeHandler) {
         return addHandler(visibilityChangeHandler,
