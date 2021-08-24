@@ -16,7 +16,6 @@ import java.util.logging.Logger;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
-import org.jsoup.nodes.BooleanAttribute;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
@@ -29,6 +28,13 @@ import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.ShouldWriteDataDelegate;
 
 public abstract class DeclarativeTestBaseBase<T extends Component> {
+    private static final String[] booleanAttributes = { "allowfullscreen",
+            "async", "autofocus", "checked", "compact", "declare", "default",
+            "defer", "disabled", "formnovalidate", "hidden", "inert", "ismap",
+            "itemscope", "multiple", "muted", "nohref", "noresize", "noshade",
+            "novalidate", "nowrap", "open", "readonly", "required", "reversed",
+            "seamless", "selected", "sortable", "truespeed", "typemustmatch" };
+
     private static final class AlwaysWriteDelegate
             implements ShouldWriteDataDelegate {
         private static final long serialVersionUID = -6345914431997793599L;
@@ -249,7 +255,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         List<String> names = new ArrayList<>();
         for (Attribute a : producedElem.attributes().asList()) {
             names.add(a.getKey());
-            if (a instanceof BooleanAttribute) {
+            if (isBooleanAttribute(a.getKey())) {
                 booleanAttributes.add(a.getKey());
             }
         }
@@ -274,6 +280,13 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         }
         sb.append("</").append(producedElem.tagName()).append('>');
         return sb.toString();
+    }
+
+    /**
+     * Checks if this attribute name is defined as a boolean attribute in HTML5
+     */
+    protected static boolean isBooleanAttribute(final String key) {
+        return Arrays.binarySearch(booleanAttributes, key) >= 0;
     }
 
     protected String stripOptionTags(String design) {
