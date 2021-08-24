@@ -45,9 +45,12 @@ public class SliderConnector extends AbstractFieldConnector
     private final ElementResizeListener resizeListener = event -> getWidget()
             .iLayout();
 
+    @SuppressWarnings("deprecation")
     @Override
     public void init() {
         super.init();
+        // The widget no longer uses the connection, but the value is still set
+        // to ensure backwards compatibility.
         getWidget().setConnection(getConnection());
         getWidget().addValueChangeHandler(this);
 
@@ -78,10 +81,13 @@ public class SliderConnector extends AbstractFieldConnector
         rpc.valueChanged(event.getValue());
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
+        // The widget no longer uses the connector id, but the value is still
+        // set to ensure backwards compatibility.
         getWidget().setId(getConnectorId());
         getWidget().setDisabled(!isEnabled());
         getWidget().setReadOnly(isReadOnly());

@@ -53,8 +53,11 @@ import elemental.json.JsonObject;
 public class VRadioButtonGroup extends FocusableFlowPanelComposite
         implements Field, ClickHandler, HasEnabled {
 
+    /** Default classname for this widget. */
     public static final String CLASSNAME = "v-select-optiongroup";
+    /** Default classname for all radio buttons within this widget. */
     public static final String CLASSNAME_OPTION = "v-select-option";
+    /** Default classname for the selected radio button within this widget. */
     public static final String CLASSNAME_OPTION_SELECTED = "v-select-option-selected";
 
     private final Map<RadioButton, JsonObject> optionsToItems;
@@ -72,6 +75,9 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
     private final String groupId;
     private List<Consumer<JsonObject>> selectionChangeListeners;
 
+    /**
+     * Constructs a widget for the RadioButtonGroup component.
+     */
     public VRadioButtonGroup() {
         groupId = DOM.createUniqueId();
         getWidget().setStyleName(CLASSNAME);
@@ -80,8 +86,11 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         selectionChangeListeners = new ArrayList<>();
     }
 
-    /*
-     * Build all the options
+    /**
+     * Build all the options.
+     *
+     * @param items
+     *            the list of options
      */
     public void buildOptions(List<JsonObject> items) {
         Roles.getRadiogroupRole().set(getElement());
@@ -194,6 +203,14 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         }
     }
 
+    /**
+     * Sets the tabulator index for the container element that holds the radio
+     * buttons. It represents the entire radio button group within the browser's
+     * focus cycle.
+     *
+     * @param tabIndex
+     *            tabulator index for the radio button group
+     */
     public void setTabIndex(int tabIndex) {
         for (Widget anOptionsContainer : getWidget()) {
             FocusWidget widget = (FocusWidget) anOptionsContainer;
@@ -201,9 +218,11 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         }
     }
 
+    /**
+     * Sets radio buttons enabled according to this widget's enabled and
+     * read-only status, as well as each option's own enabled status.
+     */
     protected void updateEnabledState() {
-        // sets options enabled according to the widget's enabled,
-        // readonly and each options own enabled
         for (Map.Entry<RadioButton, JsonObject> entry : optionsToItems
                 .entrySet()) {
             RadioButton radioButton = entry.getKey();
@@ -214,10 +233,28 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         }
     }
 
+    /**
+     * Returns whether HTML is allowed in the item captions.
+     *
+     * @return {@code true} if the captions are used as HTML, {@code false} if
+     *         used as plain text
+     */
     public boolean isHtmlContentAllowed() {
         return htmlContentAllowed;
     }
 
+    /**
+     * Sets whether HTML is allowed in the item captions. If set to
+     * {@code true}, the captions are displayed as HTML and the developer is
+     * responsible for ensuring no harmful HTML is used. If set to
+     * {@code false}, the content is displayed as plain text.
+     * <p>
+     * This value is delegated from the RadioButtonGroupState.
+     *
+     * @param htmlContentAllowed
+     *            {@code true} if the captions are used as HTML, {@code false}
+     *            if used as plain text
+     */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
         this.htmlContentAllowed = htmlContentAllowed;
     }
@@ -227,10 +264,22 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         return enabled;
     }
 
+    /**
+     * Returns whether this radio button group is read-only or not.
+     *
+     * @return {@code true} if this widget is read-only, {@code false} otherwise
+     */
     public boolean isReadonly() {
         return readonly;
     }
 
+    /**
+     * Sets the read-only status of this radio button group.
+     *
+     * @param readonly
+     *            {@code true} if this widget should be read-only, {@code false}
+     *            otherwise
+     */
     public void setReadonly(boolean readonly) {
         if (this.readonly != readonly) {
             this.readonly = readonly;
@@ -246,6 +295,14 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         }
     }
 
+    /**
+     * Adds the given selection change handler to this widget.
+     *
+     * @param selectionChanged
+     *            the handler that should be triggered when selection changes
+     * @return the registration object for removing the given handler when no
+     *         longer needed
+     */
     public Registration addSelectionChangeHandler(
             Consumer<JsonObject> selectionChanged) {
         selectionChangeListeners.add(selectionChanged);
@@ -253,6 +310,12 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
                 .remove(selectionChanged);
     }
 
+    /**
+     * Removes previous selection and adds new selection.
+     *
+     * @param selectedItemKey
+     *            the key of the selected radio button
+     */
     public void selectItemKey(String selectedItemKey) {
         // At most one item could be selected so reset all radio buttons
         // before applying current selection
