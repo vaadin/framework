@@ -59,7 +59,7 @@ public class ReadEmptyDesignTest {
 
     private Document createDesign() {
         Document doc = new Document("");
-        DocumentType docType = new DocumentType("html", "", "", "");
+        DocumentType docType = new DocumentType("html", "", "");
         doc.appendChild(docType);
         Element html = doc.createElement("html");
         doc.appendChild(html);
