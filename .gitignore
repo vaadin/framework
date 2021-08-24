@@ -24,7 +24,6 @@ uitest/src/main/themes/VAADIN/themes/**/styles.scss.cache
 /build/classes
 /build/test-output
 /build/integration-test-output
-/build/buildhelpers/com/vaadin/buildhelpers/*.class
 
 # /tests/
 /tests/junit*.properties
@@ -48,12 +47,10 @@ shared/target/
 server/target/
 client/target/
 client-compiler/target/
-buildhelpers/target/
 client-compiled/target/
 liferay/target/
 themes/target/
 uitest/target/
-widgets/target/
 
 .sass-cache
 phantomjsdriver.log
