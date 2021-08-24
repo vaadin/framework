@@ -534,7 +534,7 @@ public class Design implements Serializable {
     private static Document createHtml(DesignContext designContext) {
         // Create the html tree skeleton.
         Document doc = new Document("");
-        DocumentType docType = new DocumentType("html", "", "", "");
+        DocumentType docType = new DocumentType("html", "", "");
         doc.appendChild(docType);
         Element html = doc.createElement("html");
         doc.appendChild(html);

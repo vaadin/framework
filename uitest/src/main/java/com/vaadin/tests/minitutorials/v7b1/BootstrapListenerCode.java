@@ -24,7 +24,7 @@ public class BootstrapListenerCode {
         @Override
         public void modifyBootstrapPage(BootstrapPageResponse response) {
             response.getDocument().body()
-                    .appendChild(new Comment("Powered by Vaadin!", ""));
+                    .appendChild(new Comment("Powered by Vaadin!"));
             response.setHeader("X-Powered-By", "Vaadin 7");
         }
 
