@@ -25,7 +25,7 @@
         <!-- Used version numbers for dependencies -->
         <commons-io.version>2.4</commons-io.version>
         <google.appengine.version>1.7.7</google.appengine.version>
-        <jsoup.version>1.8.3</jsoup.version>
+        <jsoup.version>1.14.2</jsoup.version>
         <liferay.portal.version>6.0.2</liferay.portal.version>
 
         <vaadin.sass.version>0.9.13</vaadin.sass.version>
