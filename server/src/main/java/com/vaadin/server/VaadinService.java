@@ -1,11 +1,11 @@
 /*
- * Copyright 2000-2018 Vaadin Ltd.
+ * Copyright 2000-2021 Vaadin Ltd.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Commercial Vaadin Developer License version 4.0 (CVDLv4); 
+ * you may not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://vaadin.com/license/cvdl-4.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
@@ -24,10 +24,12 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -134,7 +136,7 @@ public abstract class VaadinService implements Serializable {
 
     private Iterable<RequestHandler> requestHandlers;
 
-    private boolean atmosphereAvailable = checkAtmosphereSupport();
+    private Boolean atmosphereAvailable = null;
 
     /**
      * Keeps track of whether a warning about missing push support has already
@@ -602,14 +604,23 @@ public abstract class VaadinService implements Serializable {
     /**
      * Locks the given session for this service instance. Typically you want to
      * call {@link VaadinSession#lock()} instead of this method.
-     *
+     * <p>
+     * Note: The method and its signature has been changed to return lock 
+     * instance in Vaadin 7.7.27. If you have overriden this method, you need
+     * to update your implementation.
+     * <p>
+     * Note: Overriding this method is not recommended, for custom lock storage
+     * strategy override {@link #getSessionLock(WrappedSession)} and
+     * {@link #setSessionLock(WrappedSession,Lock)} instead.
+     * 
      * @param wrappedSession
      *            The session to lock
-     *
+     * @return Lock instance
+     * 
      * @throws IllegalStateException
      *             if the session is invalidated before it can be locked
      */
-    protected void lockSession(WrappedSession wrappedSession) {
+    protected Lock lockSession(WrappedSession wrappedSession) {
         Lock lock = getSessionLock(wrappedSession);
         if (lock == null) {
             /*
@@ -639,21 +650,30 @@ public abstract class VaadinService implements Serializable {
             lock.unlock();
             throw e;
         }
+        return lock;
     }
 
     /**
      * Releases the lock for the given session for this service instance.
      * Typically you want to call {@link VaadinSession#unlock()} instead of this
      * method.
+     * <p>
+     * Note: The method and its signature has been changed to get lock instance
+     * as parameter in Vaadin 7.7.27. If you have overriden this method, you need
+     * to update your implementation.
+     * <p>
+     * Note: Overriding this method is not recommended, for custom lock storage 
+     * strategy override {@link #getSessionLock(WrappedSession)} and
+     * {@link #setSessionLock(WrappedSession,Lock)} instead.
      *
      * @param wrappedSession
-     *            The session to unlock
+     *            The session to unlock, used only with assert
+     * @param lock
+     *            Lock instance to unlock
      */
-    protected void unlockSession(WrappedSession wrappedSession) {
-        assert getSessionLock(wrappedSession) != null;
-        assert ((ReentrantLock) getSessionLock(wrappedSession))
-                .isHeldByCurrentThread() : "Trying to unlock the session but it has not been locked by this thread";
-        getSessionLock(wrappedSession).unlock();
+    protected void unlockSession(WrappedSession wrappedSession, Lock lock) {
+        assert ((ReentrantLock) lock).isHeldByCurrentThread() : "Trying to unlock the session but it has not been locked by this thread";
+        lock.unlock();
     }
 
     private VaadinSession findOrCreateVaadinSession(VaadinRequest request)
@@ -662,8 +682,9 @@ public abstract class VaadinService implements Serializable {
         WrappedSession wrappedSession = getWrappedSession(request,
                 requestCanCreateSession);
 
+        final Lock lock;
         try {
-            lockSession(wrappedSession);
+            lock = lockSession(wrappedSession);
         } catch (IllegalStateException e) {
             throw new SessionExpiredException();
         }
@@ -672,7 +693,7 @@ public abstract class VaadinService implements Serializable {
             return doFindOrCreateVaadinSession(request,
                     requestCanCreateSession);
         } finally {
-            unlockSession(wrappedSession);
+            unlockSession(wrappedSession, lock);
         }
 
     }
@@ -1269,7 +1290,8 @@ public abstract class VaadinService implements Serializable {
      */
     private int getUidlRequestTimeout(VaadinSession session) {
         return getDeploymentConfiguration().isCloseIdleSessions()
-                ? session.getSession().getMaxInactiveInterval() : -1;
+                ? session.getSession().getMaxInactiveInterval()
+                : -1;
     }
 
     /**
@@ -1651,7 +1673,7 @@ public abstract class VaadinService implements Serializable {
      *         is not available.
      */
     public boolean ensurePushAvailable() {
-        if (atmosphereAvailable) {
+        if (isAtmosphereAvailable()) {
             return true;
         } else {
             if (!pushWarningEmitted) {
@@ -1663,7 +1685,7 @@ public abstract class VaadinService implements Serializable {
         }
     }
 
-    private static boolean checkAtmosphereSupport() {
+    private boolean checkAtmosphereSupport() {
         String rawVersion = AtmospherePushConnection.getAtmosphereVersion();
         if (rawVersion == null) {
             return false;
@@ -1686,6 +1708,9 @@ public abstract class VaadinService implements Serializable {
      * @return true if Atmosphere is available, false otherwise
      */
     protected boolean isAtmosphereAvailable() {
+        if (atmosphereAvailable == null) {
+            atmosphereAvailable = checkAtmosphereSupport();
+        }
         return atmosphereAvailable;
     }
 
@@ -1757,7 +1782,15 @@ public abstract class VaadinService implements Serializable {
                 .isXsrfProtectionEnabled()) {
             String sessionToken = session.getCsrfToken();
 
-            if (sessionToken == null || !sessionToken.equals(requestToken)) {
+            try {
+                if (sessionToken == null || !MessageDigest.isEqual(
+                        sessionToken.getBytes("UTF-8"),
+                        requestToken.getBytes("UTF-8"))) {
+                    return false;
+                }
+            } catch (UnsupportedEncodingException e) {
+                getLogger().log(Level.WARNING,
+                        "Session token was not UTF-8, this should never happen.");
                 return false;
             }
         }

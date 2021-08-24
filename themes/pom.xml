@@ -23,12 +23,6 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>vaadin-buildhelpers</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
 
         <dependency>
             <groupId>com.vaadin</groupId>
@@ -246,29 +240,7 @@
                             </arguments>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>generate-export-package</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <classpathScope>compile</classpathScope>
-                            <executable>${java.home}/bin/java</executable>
-                            <arguments>
-                                <argument>-Dvaadin.version=${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</argument>
-                                <argument>-DincludeNumberPackages=0</argument>
 
-                                <argument>-classpath</argument>
-                                <classpath />
-
-                                <argument>com.vaadin.buildhelpers.GeneratePackageExports</argument>
-
-                                <argument>${project.build.directory}/${project.build.finalName}.${project.packaging}</argument>
-                                <argument>VAADIN/themes</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
 

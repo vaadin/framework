@@ -2,13 +2,14 @@
  *
  * @group table
  */
-$v-table-row-height: $v-unit-size !default;
+$v-table-border-width: first-number($v-border) !default;
 
 /**
  *
  * @group table
  */
-$v-table-border-width: first-number($v-border) !default;
+$v-table-row-height: $v-unit-size !default;
+$v-table-body-row-height: round($v-table-row-height + $v-table-border-width) !default;
 
 /**
  *
@@ -240,7 +241,7 @@ $v-table-background-color: null !default;
   .#{$primary-stylename}-cell-content {
     border-left: $v-table-border-width solid $border-color;
     overflow: hidden;
-    height: $v-table-row-height;
+    height: $v-table-body-row-height;
     vertical-align: middle;
 
     &:first-child {
@@ -290,9 +291,11 @@ $v-table-background-color: null !default;
 
   .#{$primary-stylename}-table td {
     border-top: $v-table-border-width solid $border-color;
+    box-sizing: border-box;
   }
 
   .#{$primary-stylename}-table tr:first-child > td {
+    height: $v-table-row-height;
     border-top: none;
   }
 
@@ -537,7 +540,7 @@ $v-table-background-color: null !default;
 
   .#{$primary-stylename}-row-drag-bottom td.#{$primary-stylename}-cell-content {
     border-bottom: 2px solid $v-focus-color;
-    height: $v-table-row-height - 2px;
+    height: $v-table-body-row-height - 2px;
   }
 
   .#{$primary-stylename}-row-drag-bottom .#{$primary-stylename}-cell-wrapper {
@@ -546,7 +549,7 @@ $v-table-background-color: null !default;
 
   .#{$primary-stylename}-row-drag-top td.#{$primary-stylename}-cell-content {
     border-top: 2px solid $v-focus-color;
-    height: $v-table-row-height - 2px + $v-table-border-width;
+    height: $v-table-body-row-height - 2px + $v-table-border-width;
   }
 
   .#{$primary-stylename}-row-drag-top .#{$primary-stylename}-cell-wrapper {
@@ -694,7 +697,7 @@ $v-table-background-color: null !default;
 
   .#{$primary-stylename}-row-drag-top .#{$primary-stylename}-cell-content,
   .#{$primary-stylename}-row-drag-bottom .#{$primary-stylename}-cell-content {
-    height: $v-table-row-height - 1px;
+    height: $v-table-body-row-height - 1px;
   }
 }
 

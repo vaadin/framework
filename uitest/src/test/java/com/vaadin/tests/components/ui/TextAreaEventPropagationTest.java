@@ -1,15 +1,16 @@
 package com.vaadin.tests.components.ui;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Tests that the TextArea widget correctly stops ENTER events from propagating.
@@ -21,14 +22,17 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
     @Test
     public void textAreaEnterEventPropagation() throws InterruptedException {
         openTestURL();
-        WebElement textArea = $(TextAreaElement.class).first();
+        TextAreaElement textArea = $(TextAreaElement.class).first();
         Actions builder = new Actions(driver);
         builder.click(textArea);
-        builder.sendKeys(textArea, "first line asdf");
-        builder.sendKeys(Keys.ENTER);
-        builder.sendKeys(textArea, "second line jkl;");
+        builder.sendKeys(textArea, "first line asdf", Keys.ENTER,
+                "second line jkl;");
         builder.perform();
+        waitUntilLoadingIndicatorNotVisible();
 
+        String text = textArea.getValue();
+        assertEquals("Unexpected text area content,",
+                "first line asdf\nsecond line jkl;", text);
         // Should not have triggered shortcut
         assertEquals(" ", getLogRow(0));
     }
@@ -37,48 +41,55 @@ public class TextAreaEventPropagationTest extends MultiBrowserTest {
     public void testTextAreaEscapeEventPropagation()
             throws InterruptedException {
         openTestURL();
-        WebElement textArea = $(TextAreaElement.class).first();
+        TextAreaElement textArea = $(TextAreaElement.class).first();
         Actions builder = new Actions(driver);
         builder.click(textArea);
-        builder.sendKeys(textArea, "first line asdf");
-        builder.sendKeys(Keys.ESCAPE);
-        builder.sendKeys(textArea, "second line jkl;");
+        builder.sendKeys(textArea, "first line asdf", Keys.ESCAPE,
+                "second line jkl;");
         builder.perform();
+        waitUntilLoadingIndicatorNotVisible();
 
+        String text = textArea.getValue();
+        // sendKeys is erratic and can eat some letters after escape, so only
+        // test that beginning and end are present
+        assertTrue("Unexpected text area content: " + text,
+                text.startsWith("first line asdf"));
+        assertTrue("Unexpected text area content: " + text,
+                text.endsWith("nd line jkl;"));
+        assertFalse("Unexpected text area content: " + text,
+                text.contains("\n"));
         assertEquals("1. Escape button pressed", getLogRow(0));
     }
 
     @Test
-    public void testTextFieldEscapeEventPropagation() throws InterruptedException {
+    public void testTextFieldEscapeEventPropagation() {
         openTestURL();
-        WebElement textField = $(TextFieldElement.class).first();
+        TextFieldElement textField = $(TextFieldElement.class).first();
         Actions builder2 = new Actions(driver);
         builder2.click(textField);
 
-        builder2.sendKeys("third line");
-        builder2.sendKeys(Keys.ENTER);
-        sleep(100);
-        builder2.sendKeys(Keys.ESCAPE);
-        sleep(100);
+        builder2.sendKeys(textField, "third line", Keys.ESCAPE);
         builder2.perform();
-        sleep(100);
+        waitUntilLoadingIndicatorNotVisible();
 
-        assertEquals("1. Enter button pressed", getLogRow(1));
-        assertEquals("2. Escape button pressed", getLogRow(0));
+        String text = textField.getValue();
+        assertEquals("Unexpected text field content,", "third line", text);
+        assertEquals("1. Escape button pressed", getLogRow(0));
     }
 
     @Test
     public void testTextFieldEnterEventPropagation() {
         openTestURL();
-        WebElement textField = $(TextFieldElement.class).first();
+        TextFieldElement textField = $(TextFieldElement.class).first();
         Actions builder2 = new Actions(driver);
         builder2.click(textField);
 
-        builder2.sendKeys("third line");
-        builder2.sendKeys(Keys.ENTER);
-
+        builder2.sendKeys(textField, "third line", Keys.ENTER);
         builder2.perform();
+        waitUntilLoadingIndicatorNotVisible();
 
+        String text = textField.getValue();
+        assertEquals("Unexpected text field content,", "third line", text);
         assertEquals("1. Enter button pressed", getLogRow(0));
     }
 }

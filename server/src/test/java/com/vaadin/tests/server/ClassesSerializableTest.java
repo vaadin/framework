@@ -45,6 +45,7 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.server\\.VaadinPortlet", //
             "com\\.vaadin\\.server\\.MockServletConfig", //
             "com\\.vaadin\\.server\\.MockServletContext", //
+            "com\\.vaadin\\.server\\.MockVaadinServletService", //
             "com\\.vaadin\\.server\\.Constants", //
             "com\\.vaadin\\.server\\.VaadinServiceClassLoaderUtil", //
             "com\\.vaadin\\.server\\.VaadinServiceClassLoaderUtil\\$GetClassLoaderPrivilegedAction", //

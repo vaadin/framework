@@ -1,11 +1,11 @@
 /*
- * Copyright 2000-2018 Vaadin Ltd.
+ * Copyright 2000-2021 Vaadin Ltd.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Commercial Vaadin Developer License version 4.0 (CVDLv4); 
+ * you may not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://vaadin.com/license/cvdl-4.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
@@ -65,6 +65,8 @@ public class GridDataChangeHandlerWidget extends Composite {
         public RemoteDelayedDataSource(List<String> datasource) {
             super();
             rows = datasource;
+            // Make Grid request not exceed actual size.
+            resetDataAndSize(rows.size());
         }
 
         @Override
@@ -86,7 +88,6 @@ public class GridDataChangeHandlerWidget extends Composite {
         public Object getRowKey(String row) {
             return row;
         }
-
     }
 
     public GridDataChangeHandlerWidget() {

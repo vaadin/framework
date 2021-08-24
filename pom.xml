@@ -47,8 +47,7 @@
         <!-- Dependency unpack directory -->
         <dependency.unpack.directory>${project.build.directory}/dependency-unpack</dependency.unpack.directory>
 
-        <!-- Cannot use 9.3 or 9.4 because they sometimes reset the connection too early in case of errors -->
-        <jetty.version>9.4.14.v20181114</jetty.version>
+        <jetty.version>9.4.38.v20210224</jetty.version>
         <phantomjs.version>2.1.1</phantomjs.version>
     </properties>
 
@@ -96,7 +95,6 @@
     </scm>
 
     <modules>
-        <module>buildhelpers</module>
         <module>shared</module>
         <module>push</module>
         <module>server</module>

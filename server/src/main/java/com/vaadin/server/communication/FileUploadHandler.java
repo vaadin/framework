@@ -1,11 +1,11 @@
 /*
- * Copyright 2000-2018 Vaadin Ltd.
+ * Copyright 2000-2021 Vaadin Ltd.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Commercial Vaadin Developer License version 4.0 (CVDLv4); 
+ * you may not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://vaadin.com/license/cvdl-4.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.security.MessageDigest;
 
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.NoInputStreamException;
@@ -273,8 +274,10 @@ public class FileUploadHandler implements RequestHandler {
             streamVariable = uI.getConnectorTracker()
                     .getStreamVariable(connectorId, variableName);
             String secKey = uI.getConnectorTracker().getSeckey(streamVariable);
-            if (secKey == null || !secKey.equals(parts[3])) {
-                // TODO Should rethink error handling
+            String securityKey = parts[3];
+            if (secKey == null || !MessageDigest.isEqual(
+                    secKey.getBytes(UTF8),
+                    securityKey.getBytes(UTF8))) {
                 return true;
             }
 

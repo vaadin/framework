@@ -1,11 +1,11 @@
 /*
- * Copyright 2000-2018 Vaadin Ltd.
+ * Copyright 2000-2021 Vaadin Ltd.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed under the Commercial Vaadin Developer License version 4.0 (CVDLv4); 
+ * you may not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * https://vaadin.com/license/cvdl-4.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
@@ -18,6 +18,7 @@ package com.vaadin.server.communication;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,6 +44,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
+import com.vaadin.util.CurrentInstance;
 
 import elemental.json.JsonException;
 
@@ -56,6 +58,8 @@ import elemental.json.JsonException;
 public class PushHandler {
 
     private int longPollingSuspendTimeout = -1;
+
+    private static final String UTF8 = "UTF-8";
 
     /**
      * Callback interface used internally to process an event with the
@@ -308,11 +312,39 @@ public class PushHandler {
     }
 
     void connectionLost(AtmosphereResourceEvent event) {
+        VaadinSession session = null;
+        try {
+            session = handleConnectionLost(event);
+        } finally {
+            if (session != null) {
+                session.access(new Runnable() {
+                    @Override
+                    public void run() {
+                        CurrentInstance.clearAll();
+                    }
+                });
+            }
+        }
+    }
+
+    private VaadinSession handleConnectionLost(AtmosphereResourceEvent event) {
         // We don't want to use callWithUi here, as it assumes there's a client
         // request active and does requestStart and requestEnd among other
         // things.
+        if (event == null) {
+            getLogger().log(Level.SEVERE,
+                    "Could not get event. This should never happen.");
+            return null;
+        }
 
         AtmosphereResource resource = event.getResource();
+
+        if (resource == null) {
+            getLogger().log(Level.SEVERE,
+                    "Could not get resource. This should never happen.");
+            return null;
+        }
+
         VaadinServletRequest vaadinRequest = new VaadinServletRequest(
                 resource.getRequest(), service);
         VaadinSession session = null;
@@ -322,7 +354,7 @@ public class PushHandler {
         } catch (ServiceException e) {
             getLogger().log(Level.SEVERE,
                     "Could not get session. This should never happen", e);
-            return;
+            return null;
         } catch (SessionExpiredException e) {
             // This happens at least if the server is restarted without
             // preserving the session. After restart the client reconnects, gets
@@ -331,7 +363,7 @@ public class PushHandler {
             getLogger().log(Level.FINER,
                     "Session expired before push disconnect event was received",
                     e);
-            return;
+            return session;
         }
 
         UI ui = null;
@@ -356,13 +388,13 @@ public class PushHandler {
                     getLogger().log(Level.FINE,
                             "Could not get UI. This should never happen,"
                                     + " except when reloading in Firefox and Chrome -"
-                                    + " see http://dev.vaadin.com/ticket/14251.");
-                    return;
+                                    + " see https://github.com/vaadin/framework/issues/5449.");
+                    return session;
                 } else {
                     getLogger().log(Level.INFO,
                             "No UI was found based on data in the request,"
                                     + " but a slower lookup based on the AtmosphereResource succeeded."
-                                    + " See http://dev.vaadin.com/ticket/14251 for more details.");
+                                    + " See https://github.com/vaadin/framework/issues/5449 for more details.");
                 }
             }
 
@@ -407,6 +439,7 @@ public class PushHandler {
                 // can't call ErrorHandler, we (hopefully) don't have a lock
             }
         }
+        return session;
     }
 
     private static UI findUiUsingResource(AtmosphereResource resource,
@@ -471,7 +504,9 @@ public class PushHandler {
     }
 
     /**
-     * Checks whether a given push id matches the session's push id.
+     * Checks whether a given push id matches the session's push id. The
+     * comparison is done using a time-constant method since the push id is used
+     * to protect against cross-site attacks.
      *
      * @param session
      *            the vaadin session for which the check should be done
@@ -480,10 +515,12 @@ public class PushHandler {
      * @return {@code true} if the id is valid, {@code false} otherwise
      */
     private static boolean isPushIdValid(VaadinSession session,
-            String requestPushId) {
+            String requestPushId) throws IOException {
 
         String sessionPushId = session.getPushId();
-        if (requestPushId == null || !requestPushId.equals(sessionPushId)) {
+        if (requestPushId == null || !MessageDigest.isEqual(
+                requestPushId.getBytes(UTF8),
+                sessionPushId.getBytes(UTF8))) {
             return false;
         }
         return true;
