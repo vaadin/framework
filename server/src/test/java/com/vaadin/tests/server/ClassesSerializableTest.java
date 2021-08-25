@@ -30,8 +30,6 @@ import java.util.stream.Stream;
 
 import org.junit.Test;
 
-import com.vaadin.ui.Component;
-
 public class ClassesSerializableTest {
 
     /**
@@ -76,7 +74,6 @@ public class ClassesSerializableTest {
             // class level filtering, also affecting nested classes and
             // interfaces
             "com\\.vaadin\\.server\\.LegacyCommunicationManager.*", //
-            "com\\.vaadin\\.buildhelpers.*", //
             "com\\.vaadin\\.util\\.EncodeUtil.*", //
             "com\\.vaadin\\.util\\.ReflectTools.*", //
             "com\\.vaadin\\.data\\.provider\\.InMemoryDataProviderHelpers",
