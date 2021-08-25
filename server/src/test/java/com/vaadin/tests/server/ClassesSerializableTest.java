@@ -27,7 +27,7 @@ public class ClassesSerializableTest {
 
     private static String[] BASE_PACKAGES = { "com.vaadin" };
 
-    private static String[] EXCLUDED_PATTERNS = {
+    private static String[] EXCLUDED_PATTERNS = { //
             "com\\.vaadin\\.demo\\..*", //
             "com\\.vaadin\\.external\\.org\\.apache\\.commons\\.fileupload\\..*", //
             "com\\.vaadin\\.launcher\\..*", //
@@ -59,7 +59,6 @@ public class ClassesSerializableTest {
             // class level filtering, also affecting nested classes and
             // interfaces
             "com\\.vaadin\\.server\\.LegacyCommunicationManager.*", //
-            "com\\.vaadin\\.buildhelpers.*", //
             "com\\.vaadin\\.util\\.EncodeUtil.*", //
             "com\\.vaadin\\.util\\.ReflectTools.*", //
             "com\\.vaadin\\.data\\.util\\.ReflectTools.*", //
@@ -151,8 +150,9 @@ public class ClassesSerializableTest {
                     nonSerializableString += ")";
                 }
             }
-            Assert.fail("Serializable not implemented by the following classes and interfaces: "
-                    + nonSerializableString);
+            Assert.fail(
+                    "Serializable not implemented by the following classes and interfaces: "
+                            + nonSerializableString);
         }
     }
 
@@ -274,8 +274,8 @@ public class ClassesSerializableTest {
         while (e.hasMoreElements()) {
             JarEntry entry = e.nextElement();
             if (entry.getName().endsWith(".class")) {
-                String nameWithoutExtension = entry.getName().replaceAll(
-                        "\\.class", "");
+                String nameWithoutExtension = entry.getName()
+                        .replaceAll("\\.class", "");
                 String className = nameWithoutExtension.replace('/', '.');
                 classes.add(className);
             }
