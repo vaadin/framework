@@ -4,7 +4,7 @@ Bundle-Version: ${osgi.bundle.version}
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-License: http://www.apache.org/licenses/LICENSE-2.0
 Import-Package: com.vaadin.sass.*;resolution:=optional,\
-  com.liferay.portal.kernel.util;resolution:=optional;version='[7.0.0,12.0.0)',\
+  com.liferay.portal.kernel.util;resolution:=optional;version='[7.0.0,13.0.0)',\
   javax.portlet*;resolution:=optional,\
   javax.validation*;resolution:=optional;version='${javax.validation.version}',\
   org.atmosphere*;resolution:=optional;version='${atmosphere.runtime.version}',\
