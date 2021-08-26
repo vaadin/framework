@@ -34,7 +34,8 @@ public class DataAvailableEvent extends GwtEvent<DataAvailableHandler> {
     }
 
     /**
-     * Returns the range of available rows in {@link com.vaadin.client.data.DataSource DataSource} for this event.
+     * Returns the range of available rows in
+     * {@link com.vaadin.client.data.DataSource DataSource} for this event.
      *
      * @return range of available rows
      */

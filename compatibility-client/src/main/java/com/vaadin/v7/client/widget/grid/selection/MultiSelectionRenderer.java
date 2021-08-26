@@ -434,8 +434,9 @@ public class MultiSelectionRenderer<T>
                 bottomBound = Math.max(finalBottomBound, pageY);
             } else {
                 /*
-                 * Subsequent runs make sure that the scroll area grows (but doesn't
-                 * shrink) with the finger, but no further than the final bound.
+                 * Subsequent runs make sure that the scroll area grows (but
+                 * doesn't shrink) with the finger, but no further than the
+                 * final bound.
                  */
                 int oldTopBound = topBound;
                 if (topBound < finalTopBound) {

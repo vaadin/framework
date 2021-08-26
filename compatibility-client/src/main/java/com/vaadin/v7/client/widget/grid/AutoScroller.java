@@ -355,8 +355,9 @@ public class AutoScroller {
                 endBound = Math.max(finalEndBound, pageCordinate);
             } else {
                 /*
-                 * Subsequent runs make sure that the scroll area grows (but doesn't
-                 * shrink) with the finger, but no further than the final bound.
+                 * Subsequent runs make sure that the scroll area grows (but
+                 * doesn't shrink) with the finger, but no further than the
+                 * final bound.
                  */
                 int oldTopBound = startBound;
                 if (startBound < finalStartBound) {
