@@ -159,7 +159,8 @@ public class ListSorter<T> {
 
                     if (result != 0) {
                         return o.getDirection() == SortDirection.ASCENDING
-                                ? result : -result;
+                                ? result
+                                : -result;
                     }
                 }
 
