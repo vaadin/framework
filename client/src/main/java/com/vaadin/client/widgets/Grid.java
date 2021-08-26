@@ -4621,11 +4621,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 }
                 final boolean isDraggedCellRow = row.equals(draggedCellRow);
                 for (int cellColumnIndex = frozenColumns; cellColumnIndex < getColumnCount(); cellColumnIndex++) {
-                    StaticCell cell = row.getCell(getColumn(cellColumnIndex));
-                    int colspan = cell.getColspan();
-                    if (colspan <= 1) {
+                    // some of the columns might be hidden, use cell groups
+                    // rather than cell spans to determine actual span
+                    Set<Column<?, ?>> cellGroup = row
+                            .getCellGroupForColumn(getColumn(cellColumnIndex));
+                    if (cellGroup == null) {
                         continue;
                     }
+                    int colspan = cellGroup.size();
                     final int cellColumnRightIndex = cellColumnIndex + colspan;
                     final Range cellRange = Range.between(cellColumnIndex,
                             cellColumnRightIndex);
