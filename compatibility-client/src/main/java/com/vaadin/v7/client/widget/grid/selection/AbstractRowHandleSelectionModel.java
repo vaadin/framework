@@ -39,8 +39,7 @@ public abstract class AbstractRowHandleSelectionModel<T>
      *
      * @param handle
      *            the handle to select by
-     * @return <code>true</code> if the selection state was changed by this
-     *         call
+     * @return <code>true</code> if the selection state was changed by this call
      * @throws UnsupportedOperationException
      *             if the selection model does not support either handles or
      *             selection
@@ -55,8 +54,7 @@ public abstract class AbstractRowHandleSelectionModel<T>
      *
      * @param handle
      *            the handle to deselect by
-     * @return <code>true</code> if the selection state was changed by this
-     *         call
+     * @return <code>true</code> if the selection state was changed by this call
      * @throws UnsupportedOperationException
      *             if the selection model does not support either handles or
      *             deselection

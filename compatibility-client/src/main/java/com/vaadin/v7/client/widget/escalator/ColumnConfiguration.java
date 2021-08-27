@@ -172,8 +172,8 @@ public interface ColumnConfiguration {
             throws IllegalArgumentException;
 
     /**
-     * Refreshes a range of columns in the current row containers in each Escalator
-     * section.
+     * Refreshes a range of columns in the current row containers in each
+     * Escalator section.
      * <p>
      * The data for the refreshed columns is queried from the current cell
      * renderer.
