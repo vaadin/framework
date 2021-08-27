@@ -139,6 +139,9 @@ public abstract class AbstractTB3Test extends ParallelTest {
             testBench().resizeViewPortTo(w, h);
         } catch (UnsupportedOperationException e) {
             // Opera does not support this...
+        } catch (Exception e) {
+            // retry
+            testBench().resizeViewPortTo(w, h);
         }
     }
 
