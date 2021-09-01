@@ -61,6 +61,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
                 <executions>
                     <execution><id>clean-karaf</id>
                         <phase>pre-integration-test</phase>
