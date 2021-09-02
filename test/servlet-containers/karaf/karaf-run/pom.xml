@@ -127,7 +127,7 @@
                                 <command>shutdown -f +10</command>
                                 <command>feature:install http</command>
                                 <command>feature:install http-whiteboard</command>
-                                <command>bundle:install -s mvn:org.jsoup/jsoup/1.11.2</command>
+                                <command>bundle:install -s mvn:org.jsoup/jsoup/1.14.2</command>
                                 <command>bundle:install -s mvn:com.vaadin.external/gentyref/1.2.0.vaadin1</command>
                                 <command>bundle:install -s mvn:com.vaadin/vaadin-shared/${vaadin.version}</command>
                                 <command>bundle:install -s mvn:com.vaadin/vaadin-server/${vaadin.version}</command>
