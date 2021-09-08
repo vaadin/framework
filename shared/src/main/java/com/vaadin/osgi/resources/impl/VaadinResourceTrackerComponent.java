@@ -152,8 +152,10 @@ public class VaadinResourceTrackerComponent {
     @Activate
     protected void activate(BundleContext context) {
         vaadinSharedContext = context;
-        for (Delegate<?> registration : resourceToRegistration.values()) {
-            registration.register(vaadinSharedContext, vaadinService);
+        synchronized (resourceToRegistration) {
+            for (Delegate<?> registration : resourceToRegistration.values()) {
+                registration.register(vaadinSharedContext, vaadinService);
+            }
         }
     }
 
