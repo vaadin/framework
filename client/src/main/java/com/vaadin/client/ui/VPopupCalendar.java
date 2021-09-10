@@ -24,6 +24,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.vaadin.shared.ui.datefield.DateResolution;
+import com.vaadin.shared.ui.datefield.DateTimeResolution;
 
 /**
  * Represents a date selection component with a text field and a popup date
@@ -35,6 +36,11 @@ import com.vaadin.shared.ui.datefield.DateResolution;
 public class VPopupCalendar
         extends VAbstractPopupCalendar<VDateCalendarPanel, DateResolution> {
 
+    /**
+     * Constructs a date selection component with a text field and a pop-up date
+     * selector. Uses a {@link VDateCalendarPanel} as the pop-up content.
+     * Default resolution is {@link DateTimeResolution#YEAR}.
+     */
     public VPopupCalendar() {
         super(GWT.create(VDateCalendarPanel.class), YEAR);
     }
@@ -54,6 +60,15 @@ public class VPopupCalendar
         super.setCurrentResolution(resolution == null ? YEAR : resolution);
     }
 
+    /**
+     * Creates a date based on the provided date values map. Any values of a
+     * more precise resolution than day are ignored.
+     *
+     * @param dateValues
+     *            a map with date values to convert into a date
+     * @return the date based on the dateValues map
+     */
+    @SuppressWarnings("deprecation")
     public static Date makeDate(Map<DateResolution, Integer> dateValues) {
         if (dateValues.get(YEAR) == null) {
             return null;
@@ -85,6 +100,7 @@ public class VPopupCalendar
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void updateBufferedResolutions() {
         super.updateBufferedResolutions();
         Date currentDate = getDate();

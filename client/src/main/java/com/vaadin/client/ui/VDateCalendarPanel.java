@@ -18,6 +18,8 @@ package com.vaadin.client.ui;
 import com.vaadin.shared.ui.datefield.DateResolution;
 
 /**
+ * A calendar panel widget to show and select a date.
+ *
  * @author Vaadin Ltd
  * @since 8.0
  */

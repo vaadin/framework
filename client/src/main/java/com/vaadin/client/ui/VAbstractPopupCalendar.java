@@ -57,7 +57,12 @@ import com.vaadin.shared.ui.datefield.TextualDateFieldState;
  * then pass set it by calling the
  * <code>setCalendarPanel(VAbstractCalendarPanel panel)</code> method.
  *
+ * @param <PANEL>
+ *            the calendar panel type this field uses
+ * @param <R>
+ *            the resolution type which this field is based on (day, month, ...)
  * @since 8.0
+ * @author Vaadin Ltd
  */
 public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPanel<R>, R extends Enum<R>>
         extends VAbstractTextualDate<R>
@@ -70,6 +75,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     public PANEL calendar;
 
     /** For internal use only. May be removed or replaced in the future. */
+    @SuppressWarnings("deprecation")
     public final VOverlay popup;
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -96,6 +102,17 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
 
     private static final String CALENDAR_TOGGLE_ID = "popupButton";
 
+    /**
+     * Constructs a date selection widget with a text field and a pop-up
+     * date/time selector.
+     *
+     * @param calendarPanel
+     *            the calendar panel instance that should be displayed in the
+     *            pop-up
+     * @param resolution
+     *            the resolution this widget should display (day, month, ...)
+     */
+    @SuppressWarnings("deprecation")
     public VAbstractPopupCalendar(PANEL calendarPanel, R resolution) {
         super(resolution);
 
@@ -139,7 +156,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
 
         // FIXME: Problem is, that the element with the provided id does not
         // exist yet in html. This is the same problem as with the context menu.
-        // Apply here the same fix (#11795)
+        // Apply here the same fix (#3901)
         Roles.getTextboxRole().setAriaControlsProperty(text.getElement(),
                 Id.of(calendar.getElement()));
         Roles.getButtonRole().setAriaControlsProperty(
@@ -182,8 +199,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         popup.setWidget(wrapper);
         popup.addCloseHandler(this);
 
-        DOM.setElementProperty(calendar.getElement(), "id",
-                "PID_VAADIN_POPUPCAL");
+        calendar.getElement().setPropertyString("id", "PID_VAADIN_POPUPCAL");
 
         sinkEvents(Event.ONKEYDOWN);
 
@@ -207,7 +223,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     /**
      * Changes the current date, and updates the
      * {@link VDateField#bufferedResolutions}, possibly
-     * {@link VDateField#sendBufferedValues()} to the server if needed
+     * {@link VDateField#sendBufferedValues()} to the server if needed.
      *
      * @param newDate
      *            the new {@code Date} to update
@@ -247,15 +263,29 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * Sets the state of the text field of this component. By default the text
      * field is enabled. Disabling it causes only the button for date selection
      * to be active, thus preventing the user from entering invalid dates. See
-     * <a href="http://dev.vaadin.com/ticket/6790>#6790</a>.
+     * <a href="http://dev.vaadin.com/ticket/6790">#6790</a>.
+     * <p>
+     * If the text field is enabled, it represents this widget within the
+     * browser's tabulator focus cycle. When the text field is disabled, that
+     * role is instead given to the date selection button. If the entire
+     * component is disabled, the focus cycle skips this widget altogether.
      *
      * @param textFieldEnabled
+     *            {@code true} if the text field should be enabled,
+     *            {@code false} if disabled
      */
     public void setTextFieldEnabled(boolean textFieldEnabled) {
         this.textFieldEnabled = textFieldEnabled;
         updateTextFieldEnabled();
     }
 
+    /**
+     * Updates the text field's enabled status to correspond with the latest
+     * value set through {@link #setTextFieldEnabled(boolean)} and this
+     * component's general {@link #setEnabled(boolean)}.
+     *
+     * @see #setTextFieldEnabled(boolean)
+     */
     protected void updateTextFieldEnabled() {
         boolean reallyEnabled = isEnabled() && isTextFieldEnabled();
         // IE has a non input disabled themeing that can not be overridden so we
@@ -302,6 +332,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void bindAriaCaption(
             com.google.gwt.user.client.Element captionElement) {
@@ -536,7 +567,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * Get the key code that opens the calendar panel. By default it is the down
      * key but you can override this to be whatever you like
      *
-     * @return
+     * @return the key code that opens the calendar panel
      */
     protected int getOpenCalenderPanelKey() {
         return KeyCodes.KEY_DOWN;
@@ -552,6 +583,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public com.google.gwt.user.client.Element getSubPartElement(
             String subPart) {
@@ -562,6 +594,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         return super.getSubPartElement(subPart);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public String getSubPartName(
             com.google.gwt.user.client.Element subElement) {

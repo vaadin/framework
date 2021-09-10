@@ -38,11 +38,15 @@ import com.vaadin.shared.ui.datefield.DateTimeResolution;
 public class VDateTimeFieldCalendar extends
         VAbstractDateFieldCalendar<VDateTimeCalendarPanel, DateTimeResolution> {
 
+    /**
+     * Constructs a widget for the InlineDateTimeField component.
+     */
     public VDateTimeFieldCalendar() {
         super(GWT.create(VDateTimeCalendarPanel.class), MINUTE);
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void updateBufferedValues() {
         // If field is invisible at the beginning, client can still be null when
         // this function is called.

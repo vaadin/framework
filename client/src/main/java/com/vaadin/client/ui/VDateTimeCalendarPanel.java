@@ -20,7 +20,6 @@ import java.util.Date;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -28,6 +27,8 @@ import com.vaadin.client.DateTimeService;
 import com.vaadin.shared.ui.datefield.DateTimeResolution;
 
 /**
+ * A calendar panel widget to show and select a date and a time.
+ *
  * @author Vaadin Ltd
  * @since 8.0
  */
@@ -80,6 +81,7 @@ public class VDateTimeCalendarPanel
          * Constructs the ListBoxes and updates their value
          *
          */
+        @SuppressWarnings("deprecation")
         private void buildTime() {
             clear();
 
@@ -201,6 +203,7 @@ public class VDateTimeCalendarPanel
         /**
          * Updates the value to correspond to the values in value.
          */
+        @SuppressWarnings("deprecation")
         public void updateTimes() {
             if (getDate() == null) {
                 setDate(new Date());
@@ -253,6 +256,7 @@ public class VDateTimeCalendarPanel
          * .event.dom.client.ChangeEvent)
          */
         @Override
+        @SuppressWarnings("deprecation")
         public void onChange(ChangeEvent event) {
             /*
              * Value from dropdowns gets always set for the value. Like year and
@@ -311,6 +315,18 @@ public class VDateTimeCalendarPanel
      */
     public interface TimeChangeListener {
 
+        /**
+         * Handle time change.
+         *
+         * @param hour
+         *            the new hour value
+         * @param min
+         *            the new minute value
+         * @param sec
+         *            the new second value
+         * @param msec
+         *            the new millisecond value
+         */
         void changed(int hour, int min, int sec, int msec);
     }
 
@@ -318,6 +334,7 @@ public class VDateTimeCalendarPanel
      * The time change listener is triggered when the user changes the time.
      *
      * @param listener
+     *            the listener to use
      */
     public void setTimeChangeListener(TimeChangeListener listener) {
         timeChangeListener = listener;
@@ -378,7 +395,9 @@ public class VDateTimeCalendarPanel
     }
 
     @Override
-    public String getSubPartName(Element subElement) {
+    @SuppressWarnings("deprecation")
+    public String getSubPartName(
+            com.google.gwt.user.client.Element subElement) {
         if (time != null) {
             if (contains(time.hours, subElement)) {
                 return SUBPART_HOUR_SELECT;
@@ -395,7 +414,9 @@ public class VDateTimeCalendarPanel
     }
 
     @Override
-    public Element getSubPartElement(String subPart) {
+    @SuppressWarnings("deprecation")
+    public com.google.gwt.user.client.Element getSubPartElement(
+            String subPart) {
         if (SUBPART_HOUR_SELECT.equals(subPart)) {
             return time.hours.getElement();
         }
