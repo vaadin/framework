@@ -41,6 +41,7 @@ import com.vaadin.shared.ui.datefield.AbstractDateFieldServerRpc;
 public abstract class VDateField<R extends Enum<R>> extends FlowPanel
         implements Field, HasEnabled {
 
+    /** Default classname for this widget. */
     public static final String CLASSNAME = "v-datefield";
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -51,10 +52,13 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
 
     private R currentResolution;
 
+    /** Currently used locale string, e.g. {@code en_US}. */
     protected String currentLocale;
 
+    /** Is the widget read-only or not. */
     protected boolean readonly;
 
+    /** Is the widget enabled or not. */
     protected boolean enabled;
 
     /**
@@ -99,34 +103,74 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     /** For internal use only. May be removed or replaced in the future. */
     public DateTimeService dts;
 
+    /** Should ISO 8601 week numbers be shown in the date selector or not. */
     protected boolean showISOWeekNumbers;
 
+    /**
+     * Constructs a widget for a date field.
+     *
+     * @param resolution
+     *            the resolution for this widget (day, month, ...)
+     */
     public VDateField(R resolution) {
         setStyleName(CLASSNAME);
         dts = new DateTimeService();
         currentResolution = resolution;
     }
 
+    /**
+     * Returns the current resolution.
+     *
+     * @return the resolution
+     */
     public R getCurrentResolution() {
         return currentResolution;
     }
 
+    /**
+     * Sets the resolution.
+     *
+     * @param currentResolution
+     *            the new resolution
+     */
     public void setCurrentResolution(R currentResolution) {
         this.currentResolution = currentResolution;
     }
 
+    /**
+     * Returns the current locale String.
+     *
+     * @return the locale String
+     */
     public String getCurrentLocale() {
         return currentLocale;
     }
 
+    /**
+     * Sets the locale String.
+     *
+     * @param currentLocale
+     *            the new locale String.
+     */
     public void setCurrentLocale(String currentLocale) {
         this.currentLocale = currentLocale;
     }
 
+    /**
+     * Returns the current date value.
+     *
+     * @return the date value
+     */
     public Date getCurrentDate() {
         return date;
     }
 
+    /**
+     * Sets the date value.
+     *
+     * @param date
+     *            the new date value
+     */
     public void setCurrentDate(Date date) {
         this.date = date;
     }
@@ -162,6 +206,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      *
      * @see #setCurrentDate(Map)
      * @param defaultValues
+     *            a map from resolutions to date values
      * @since 8.1.2
      */
     public void setDefaultDate(Map<R, Integer> defaultValues) {
@@ -178,10 +223,21 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
         return defaultDate;
     }
 
+    /**
+     * Returns whether this widget is read-only or not.
+     *
+     * @return {@code true} if read-only, {@code false} otherwise
+     */
     public boolean isReadonly() {
         return readonly;
     }
 
+    /**
+     * Sets whether this widget should be read-only or not.
+     *
+     * @param readonly
+     *            {@code true} if read-only, {@code false} otherwise
+     */
     public void setReadonly(boolean readonly) {
         this.readonly = readonly;
     }
@@ -196,14 +252,31 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
         this.enabled = enabled;
     }
 
+    /**
+     * Returns the date time service for this widget.
+     *
+     * @return the date time service
+     */
     public DateTimeService getDateTimeService() {
         return dts;
     }
 
+    /**
+     * Returns the connector id that corresponds with this widget.
+     *
+     * @return the connector id
+     * @deprecated This method is not used by the framework code anymore.
+     */
+    @Deprecated
     public String getId() {
         return connector.getConnectorId();
     }
 
+    /**
+     * Returns the current application connection.
+     *
+     * @return the application connection
+     */
     public ApplicationConnection getClient() {
         return client;
     }
@@ -213,12 +286,22 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * selector or not. ISO 8601 defines that a week always starts with a Monday
      * so the week numbers are only shown if this is the case.
      *
-     * @return true if week number should be shown, false otherwise
+     * @return {@code true} if week number should be shown, {@code false}
+     *         otherwise
      */
     public boolean isShowISOWeekNumbers() {
         return showISOWeekNumbers;
     }
 
+    /**
+     * Sets whether ISO 8601 week numbers should be shown in the date selector
+     * or not. ISO 8601 defines that a week always starts with a Monday so the
+     * week numbers are only shown if this is the case.
+     *
+     * @param showISOWeekNumbers
+     *            {@code true} if week number should be shown, {@code false}
+     *            otherwise
+     */
     public void setShowISOWeekNumbers(boolean showISOWeekNumbers) {
         this.showISOWeekNumbers = showISOWeekNumbers;
     }
