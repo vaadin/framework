@@ -8,6 +8,8 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSessionBindingEvent;
 
+import java.util.Collections;
+
 import org.easymock.EasyMock;
 import org.junit.Test;
 import org.mockito.Mockito;
