@@ -127,13 +127,6 @@
                 <repository>
                     <id>vaadin-prereleases</id>
                     <url>https://maven.vaadin.com/vaadin-prereleases</url>
-                </repository>
-                <repository>
-                    <id>vaadin-snapshots</id>
-                    <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
-                    <releases>
-                        <enabled>false</enabled>
-                    </releases>
                     <snapshots>
                         <enabled>true</enabled>
                     </snapshots>
@@ -143,13 +136,6 @@
                 <pluginRepository>
                     <id>vaadin-prereleases</id>
                     <url>https://maven.vaadin.com/vaadin-prereleases</url>
-                </pluginRepository>
-                <pluginRepository>
-                    <id>vaadin-snapshots</id>
-                    <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots/</url>
-                    <releases>
-                        <enabled>false</enabled>
-                    </releases>
                     <snapshots>
                         <enabled>true</enabled>
                     </snapshots>
