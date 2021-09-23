@@ -1,10 +1,7 @@
 package com.vaadin.server;
 
-import java.util.Collections;
-
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 public class VaadinServletTest {
 
@@ -44,46 +41,5 @@ public class VaadinServletTest {
                 .getLastPathParameter("http://myhost.com/a;hello/;b=1,c=2"));
         Assert.assertEquals("", VaadinServlet
                 .getLastPathParameter("http://myhost.com/a;hello/;b=1,c=2/"));
-    }
-
-    @Test
-    public void reinitializeSession_setVaadinSessionAttriuteWithLock() {
-        VaadinRequest request = Mockito.mock(VaadinRequest.class);
-
-        VaadinSession vaadinSession = Mockito.mock(VaadinSession.class);
-        VaadinSession newVaadinSession = Mockito.mock(VaadinSession.class);
-
-        WrappedSession session = mockSession(request, vaadinSession, "foo");
-
-        Mockito.doAnswer(invocation -> {
-            mockSession(request, newVaadinSession, "bar");
-            return null;
-        }).when(session).invalidate();
-
-        VaadinService.reinitializeSession(request);
-
-        Mockito.verify(vaadinSession, Mockito.times(2)).lock();
-        Mockito.verify(vaadinSession).setAttribute(
-                VaadinService.PRESERVE_UNBOUND_SESSION_ATTRIBUTE, Boolean.TRUE);
-        Mockito.verify(vaadinSession).setAttribute(
-                VaadinService.PRESERVE_UNBOUND_SESSION_ATTRIBUTE, null);
-        Mockito.verify(vaadinSession, Mockito.times(2)).unlock();
-    }
-
-    private WrappedSession mockSession(VaadinRequest request,
-            VaadinSession vaadinSession, String attributeName) {
-        WrappedSession session = Mockito.mock(WrappedSession.class);
-        Mockito.when(request.getWrappedSession()).thenReturn(session);
-
-        Mockito.when(session.getAttributeNames())
-                .thenReturn(Collections.singleton(attributeName));
-
-        Mockito.when(session.getAttribute(attributeName))
-                .thenReturn(vaadinSession);
-
-        VaadinService service = Mockito.mock(VaadinService.class);
-
-        Mockito.when(vaadinSession.getService()).thenReturn(service);
-        return session;
     }
 }
