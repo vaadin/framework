@@ -133,10 +133,10 @@ public class VaadinServiceTest {
     }
     @Test
     public void reinitializeSession_setVaadinSessionAttriuteWithLock() {
-        VaadinRequest request = Mockito.mock(VaadinRequest.class);
+        final VaadinRequest request = Mockito.mock(VaadinRequest.class);
 
         VaadinSession vaadinSession = Mockito.mock(VaadinSession.class);
-        VaadinSession newVaadinSession = Mockito.mock(VaadinSession.class);
+        final VaadinSession newVaadinSession = Mockito.mock(VaadinSession.class);
 
         WrappedSession session = mockSession(request, vaadinSession, "foo");
 
