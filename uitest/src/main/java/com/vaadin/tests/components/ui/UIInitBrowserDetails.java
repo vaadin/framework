@@ -4,13 +4,10 @@
 
 package com.vaadin.tests.components.ui;
 
-import java.util.UUID;
-
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.WebBrowser;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 
@@ -48,8 +45,6 @@ public class UIInitBrowserDetails extends AbstractReindeerTestUI {
         addDetail("dst in effect", "v-dston", wb.isDSTInEffect());
         addDetail("current date", "v-curdate", wb.getCurrentDate());
         addDetail("mpr ui id", "v-mui", "");
-
-        addMprUiIdTestButtons(p);
     }
 
     private void addDetail(String name, String param, Object value) {
@@ -68,30 +63,5 @@ public class UIInitBrowserDetails extends AbstractReindeerTestUI {
     @Override
     protected Integer getTicketNumber() {
         return Integer.valueOf(9037);
-    }
-
-    private void addMprUiIdTestButtons(Page p) {
-        Button populateMprUiId = new Button("Populate MPR UI id parameter",
-                click -> {
-                    String mprUiId = UUID.randomUUID().toString();
-                    Label mprUiLabel = new Label(mprUiId);
-                    mprUiLabel.setId(EXPECTED_MPR_UI_ID_LABEL_ID);
-                    addComponents(new Label("Expected MPR UI Id"), mprUiLabel);
-                    p.getJavaScript().execute(
-                            "window.vaadin.mprUiId = " + mprUiId + ";");
-                });
-        populateMprUiId.setId(POPULATE_MPR_UI_BUTTON_ID);
-
-        Button triggerMprUiId = new Button("Trigger request with MPR UI id",
-                click -> {
-                    VaadinRequest request = VaadinRequest.getCurrent();
-                    String mprUiId = request.getParameter("v-mui");
-                    Label mprUiLabel = new Label(mprUiId);
-                    mprUiLabel.setId(ACTUAL_MPR_UI_ID_LABEL_ID);
-                    addComponents(new Label("Actual MPR UI Id"), mprUiLabel);
-                });
-        triggerMprUiId.setId(TRIGGER_MPR_UI_BUTTON_ID);
-
-        addComponents(populateMprUiId, triggerMprUiId);
     }
 }
