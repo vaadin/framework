@@ -13,13 +13,6 @@ import com.vaadin.ui.Label;
 
 public class UIInitBrowserDetails extends AbstractReindeerTestUI {
 
-    static final String EXPECTED_MPR_UI_ID_LABEL_ID =
-            "expected-mpr-ui-id-label-id";
-    static final String ACTUAL_MPR_UI_ID_LABEL_ID =
-            "actual-mpr-ui-id-label-id";
-    static final String POPULATE_MPR_UI_BUTTON_ID = "populate-mpr-ui-button-id";
-    static final String TRIGGER_MPR_UI_BUTTON_ID = "trigger-mpr-ui-button-id";
-
     private GridLayout l = new GridLayout(3, 1);
     private VaadinRequest r;
 
