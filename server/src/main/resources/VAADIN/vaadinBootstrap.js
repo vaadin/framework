@@ -367,8 +367,8 @@
 
             // This parameter is used in multiplatform-runtime as a key for
             // storing the MPR UI content in the session
-            if (window.vaadin && window.vaadin.mprUiId) {
-                params += '&v-mui' + encodeURIComponent(window.vaadin.mprUiId);
+            if (window.mprUiId) {
+                params += '&v-mui' + encodeURIComponent(window.mprUiId);
             }
 
             // Detect touch device support
