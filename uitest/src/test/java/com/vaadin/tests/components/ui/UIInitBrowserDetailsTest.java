@@ -11,7 +11,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class UIInitBrowserDetailsTest extends MultiBrowserTest {
 
     @Test
-    public void testBrowserDetails() throws Exception {
+    public void testBrowserDetails() {
         openTestURL();
         /* location */
         compareRequestAndBrowserValue("v-loc", "location", "null");
@@ -23,6 +23,9 @@ public class UIInitBrowserDetailsTest extends MultiBrowserTest {
         compareRequestAndBrowserValue("v-sw", "screen width", "-1");
         /* screen height */
         compareRequestAndBrowserValue("v-sh", "screen height", "-1");
+        /* mpr ui id */
+        compareRequestAndBrowserValue("v-mui", "mpr ui id",
+                "any-non-empty-value");
         /* timezone offset */
         assertTextNotNull("timezone offset");
         /* raw timezone offset */
