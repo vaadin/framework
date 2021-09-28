@@ -37,6 +37,7 @@ public class UIInitBrowserDetails extends AbstractReindeerTestUI {
         addDetail("dst saving", "v-dstd", wb.getDSTSavings());
         addDetail("dst in effect", "v-dston", wb.isDSTInEffect());
         addDetail("current date", "v-curdate", wb.getCurrentDate());
+        addDetail("mpr ui id", "v-mui", "");
     }
 
     private void addDetail(String name, String param, Object value) {
