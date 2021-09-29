@@ -60,6 +60,7 @@ import elemental.json.JsonObject;
 public class DataCommunicator<T> extends AbstractExtension {
 
     private Registration dataProviderUpdateRegistration;
+    private static final int MAXIMUM_ALLOWED_ROWS = 500;
 
     /**
      * Simple implementation of collection data provider communication. All data
