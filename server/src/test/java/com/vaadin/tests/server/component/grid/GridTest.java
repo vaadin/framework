@@ -829,26 +829,21 @@ public class GridTest {
 
     @Test
     public void extendGridCustomDataCommunicator() {
-        MyGrid grid = new MyGrid();
+        Grid<String> grid = new MyGrid<>();
     }
 
-    public class MyDataCommunicator extends DataCommunicator<String> {
+    public class MyDataCommunicator<T> extends DataCommunicator<T> {
         @Override
         protected int getMaximumAllowedRows() {
             return 600;
         }
     }
 
-    public class MyGrid extends Grid<String> {
-        private MyDataCommunicator dataCommunicator;
+    public class MyGrid<T> extends Grid<T> {
 
         public MyGrid() {
-            dataCommunicator = new MyDataCommunicator();
+            super(new MyDataCommunicator());
         }
 
-        @Override
-        public DataCommunicator<String> getDataCommunicator() {
-            return dataCommunicator;
-        }
     }
 }
