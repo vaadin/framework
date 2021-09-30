@@ -827,4 +827,28 @@ public class GridTest {
                 column.isSortableByUser());
     }
 
+    @Test
+    public void extendGridCustomDataCommunicator() {
+        MyGrid grid = new MyGrid();
+    }
+
+    public class MyDataCommunicator extends DataCommunicator<String> {
+        @Override
+        protected int getMaximumAllowedRows() {
+            return 600;
+        }
+    }
+
+    public class MyGrid extends Grid<String> {
+        private MyDataCommunicator dataCommunicator;
+
+        public MyGrid() {
+            dataCommunicator = new MyDataCommunicator();
+        }
+
+        @Override
+        public DataCommunicator<String> getDataCommunicator() {
+            return dataCommunicator;
+        }
+    }
 }
