@@ -314,4 +314,12 @@ public class DataCommunicatorTest {
         assertTrue("DataCommunicator should be marked as dirty",
                 ui.getConnectorTracker().isDirty(communicator));
     }
+
+
+    @Test(expected = IllegalStateException.class)
+    public void requestTooMuchRowsFail() {
+        TestDataCommunicator communicator = new TestDataCommunicator();
+        communicator.onRequestRows(0, communicator.getMaximumAllowedRows() + 10,
+                0, 0);
+    }
 }
