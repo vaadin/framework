@@ -33,6 +33,12 @@
             <groupId>org.osgi</groupId>
             <artifactId>osgi.cmpn</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.vaadin.external.gwt</groupId>
+            <artifactId>gwt-elemental</artifactId>
+            <version>2.8.2.vaadin2</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -47,57 +53,6 @@
                         <goals>
                             <goal>filter-sources</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Copy needed GWT dependencies to package -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack-dependencies</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>com.google.gwt</groupId>
-                                    <artifactId>gwt-elemental</artifactId>
-                                    <includes>
-                                        elemental/json/**,
-                                        elemental/util/Array*,
-                                        elemental/util/Can*,
-                                        elemental/util/Map*
-                                    </includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Unpacked Dependencies as source -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-
-                <!-- Needs extra source folder for unpacked dependencies -->
-                <executions>
-                    <execution>
-                        <id>add-source-path</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${dependency.unpack.directory}</source>
-                            </sources>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
