@@ -3,6 +3,7 @@ package com.vaadin.test.defaultwidgetset;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import java.util.List;
 
 import org.junit.Before;
@@ -22,6 +23,11 @@ public abstract class AbstractWidgetSetIT extends TestBenchTestCase {
     @Rule
     public ScreenshotOnFailureRule rule = new ScreenshotOnFailureRule(this,
             true);
+
+    @BeforeClass
+    public static void setupClass() {
+        WebDriverManager.phantomjs().setup();
+    }
 
     @Before
     public void setup() {
