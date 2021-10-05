@@ -284,7 +284,6 @@
                 </executions>
                 <configuration>
                     <systemPropertyVariables>
-                        <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
                         <server-name>${server.name}</server-name>
                         <com.vaadin.testbench.Parameters.screenshotReferenceDirectory>${reference.directory}</com.vaadin.testbench.Parameters.screenshotReferenceDirectory>
                         <com.vaadin.testbench.Parameters.screenshotErrorDirectory>target/error-screenshots</com.vaadin.testbench.Parameters.screenshotErrorDirectory>
