@@ -288,6 +288,7 @@
                         <server-name>${server.name}</server-name>
                         <com.vaadin.testbench.Parameters.screenshotReferenceDirectory>${reference.directory}</com.vaadin.testbench.Parameters.screenshotReferenceDirectory>
                         <com.vaadin.testbench.Parameters.screenshotErrorDirectory>target/error-screenshots</com.vaadin.testbench.Parameters.screenshotErrorDirectory>
+                        <com.vaadin.testbench.hub.url>${com.vaadin.testbench.hub.url}</com.vaadin.testbench.hub.url>
                     </systemPropertyVariables>
                     <!-- Run all the tests, don't stop on first failure -->
                     <testFailureIgnore>true</testFailureIgnore>
