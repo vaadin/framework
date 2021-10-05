@@ -20,6 +20,12 @@ import com.vaadin.client.ui.VAbstractCalendarPanel.SubmitListener;
 
 /**
  * A client side implementation for inline date field.
+ *
+ * @param <PANEL>
+ *            the calendar panel type this field uses
+ * @param <R>
+ *            the resolution type which this field is based on (day, month, ...)
+ * @author Vaadin Ltd
  */
 public abstract class VAbstractDateFieldCalendar<PANEL extends VAbstractCalendarPanel<R>, R extends Enum<R>>
         extends VDateField<R> {
@@ -27,6 +33,14 @@ public abstract class VAbstractDateFieldCalendar<PANEL extends VAbstractCalendar
     /** For internal use only. May be removed or replaced in the future. */
     public final PANEL calendarPanel;
 
+    /**
+     * Constructs a date selection widget with an inline date/time selector.
+     *
+     * @param panel
+     *            the calendar panel instance that should be displayed
+     * @param resolution
+     *            the resolution this widget should display (day, month, ...)
+     */
     public VAbstractDateFieldCalendar(PANEL panel, R resolution) {
         super(resolution);
         calendarPanel = panel;
@@ -40,8 +54,7 @@ public abstract class VAbstractDateFieldCalendar<PANEL extends VAbstractCalendar
 
             @Override
             public void onCancel() {
-                // TODO Auto-generated method stub
-
+                // NOP
             }
         });
         calendarPanel.setFocusOutListener(event -> {
@@ -50,13 +63,28 @@ public abstract class VAbstractDateFieldCalendar<PANEL extends VAbstractCalendar
         });
     }
 
-    @SuppressWarnings("deprecation")
+    /**
+     * Update buffered values and send them (if any) to the server.
+     */
     public abstract void updateValueFromPanel();
 
+    /**
+     * Sets the tabulator index for the calendar panel element that represents
+     * the entire widget in the browser's focus cycle.
+     *
+     * @param tabIndex
+     *            the new tabulator index
+     */
     public void setTabIndex(int tabIndex) {
         calendarPanel.getElement().setTabIndex(tabIndex);
     }
 
+    /**
+     * Returns the tabulator index of the calendar panel element that represents
+     * the entire widget in the browser's focus cycle.
+     *
+     * @return the tabulator index
+     */
     public int getTabIndex() {
         return calendarPanel.getElement().getTabIndex();
     }
