@@ -7,6 +7,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
