@@ -33,7 +33,7 @@ def checkArchetypeMetaData(archetypeMetadataUrl, version):
 	if archetype_metadata_request.status_code != 200:
 		return createTableRow(traffic_light.format(color="black"), "Check archetype metadata: <a href='{url}'>unable to retrieve metadata from {url}</a>".format(url=archetypeMetadataUrl))
 	else:
-		if "version=\"{version}\"".format(version=version) in archetype_metadata_request.content:
+		if "version=\"{version}\"".format(version=version) in archetype_metadata_request.text:
 			return createTableRow(traffic_light.format(color="green"), "Check archetype metadata: <a href='{url}'>metadata is correct for {url}</a>".format(url=archetypeMetadataUrl))
 		else:
 			return createTableRow(traffic_light.format(color="red"), "Check archetype metadata: <a href='{url}'>metadata seems to be incorrect for {url}</a>".format(url=archetypeMetadataUrl))
