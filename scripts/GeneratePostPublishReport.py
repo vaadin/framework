@@ -66,5 +66,5 @@ content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/rel
 
 content += "</table></body></html>"
 
-with open("result/report.html", "wb") as f:
+with open("result/report.html", "w") as f:
 	f.write(content)
