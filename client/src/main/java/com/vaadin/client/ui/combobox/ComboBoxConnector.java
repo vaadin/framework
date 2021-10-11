@@ -264,20 +264,23 @@ public class ComboBoxConnector extends AbstractListingConnector
     public void requestPage(int page, String filter) {
         setFilter(filter);
 
+        VComboBox widget = getWidget();
+        int adjustment = widget.nullSelectionAllowed && filter.isEmpty() ? 1
+                : 0;
+        int pageLength = widget.pageLength > 0 ? widget.pageLength
+                : getDataSource().size();
         if (page < 0) {
             if (getState().scrollToSelectedItem) {
-                // TODO this should be optimized not to try to fetch everything
-                getDataSource().ensureAvailability(0, getDataSource().size());
+                int index = widget.suggestionPopup.menu.getSelectedIndex();
+                page = index / pageLength;
+                int startIndex = Math.max(0,
+                        page * widget.pageLength - adjustment);
+                getDataSource().ensureAvailability(startIndex, pageLength);
                 return;
             }
             page = 0;
         }
-        VComboBox widget = getWidget();
-        int adjustment = widget.nullSelectionAllowed && filter.isEmpty() ? 1
-                : 0;
         int startIndex = Math.max(0, page * widget.pageLength - adjustment);
-        int pageLength = widget.pageLength > 0 ? widget.pageLength
-                : getDataSource().size();
         getDataSource().ensureAvailability(startIndex, pageLength);
     }
 
