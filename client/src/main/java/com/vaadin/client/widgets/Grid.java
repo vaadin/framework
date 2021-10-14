@@ -175,7 +175,6 @@ import com.vaadin.client.widget.grid.sort.SortOrder;
 import com.vaadin.client.widgets.Escalator.AbstractRowContainer;
 import com.vaadin.client.widgets.Escalator.SubPartArguments;
 import com.vaadin.client.widgets.Grid.Editor.State;
-import com.vaadin.client.widgets.Grid.StaticSection.StaticCell;
 import com.vaadin.client.widgets.Grid.StaticSection.StaticRow;
 import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
@@ -5123,8 +5122,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         @Override
         public void onDrop() {
             final int draggedColumnIndex = eventCell.getColumnIndex();
-            final int colspan = header.getRow(eventCell.getRowIndex())
-                    .getCell(eventCell.getColumn()).getColspan();
+            final StaticRow<?> draggedCellRow = header
+                    .getRow(eventCell.getRowIndex());
+            int colspan = draggedCellRow
+                    .getSizeOfCellGroup(getColumn(draggedColumnIndex));
+            colspan = colspan == 0 ? 1 : colspan;
             if (latestColumnDropIndex != draggedColumnIndex
                     && latestColumnDropIndex != draggedColumnIndex + colspan) {
                 List<Column<?, T>> columns = getColumns();
@@ -5261,13 +5263,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 }
                 final boolean isDraggedCellRow = row.equals(draggedCellRow);
                 for (int cellColumnIndex = frozenColumns; cellColumnIndex < getColumnCount(); cellColumnIndex++) {
-                    StaticCell cell = row.getCell(getColumn(cellColumnIndex));
-                    int colspan = cell.getColspan();
+                    int colspan = row
+                            .getSizeOfCellGroup(getColumn(cellColumnIndex));
                     if (colspan <= 1) {
                         continue;
                     }
-                    final int cellColumnRightIndex = cellColumnIndex + row
-                            .getSizeOfCellGroup(getColumn(cellColumnIndex));
+                    final int cellColumnRightIndex = cellColumnIndex + colspan;
                     final Range cellRange = Range.between(cellColumnIndex,
                             cellColumnRightIndex);
                     final boolean intersects = draggedCellRange
