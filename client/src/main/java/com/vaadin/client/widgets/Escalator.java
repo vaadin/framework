@@ -132,7 +132,7 @@ import com.vaadin.shared.util.SharedUtil;
 
  Each RowContainer can be thought to have three levels of
  indices for any given displayed row (but the distinction
- matters primarily for the BodyRowContainerImpl, because of 
+ matters primarily for the BodyRowContainerImpl, because of
  the way it scrolls through data):
 
  - Logical index
@@ -151,8 +151,8 @@ import com.vaadin.shared.util.SharedUtil;
  (because of 0-based indices). In Header and
  FooterRowContainers, you are safe to assume that the logical
  index is the same as the physical index. But because the
- BodyRowContainerImpl never displays large data sources 
- entirely in the DOM, a physical index usually has no 
+ BodyRowContainerImpl never displays large data sources
+ entirely in the DOM, a physical index usually has no
  apparent direct relationship with its logical index.
 
  VISUAL INDEX is the index relating to the order that you
@@ -703,13 +703,13 @@ public class Escalator extends Widget
         /*-{
             var vScroll = esc.@com.vaadin.client.widgets.Escalator::verticalScrollbar;
             var vScrollElem = vScroll.@com.vaadin.client.widget.escalator.ScrollbarBundle::getElement()();
-        
+
             var hScroll = esc.@com.vaadin.client.widgets.Escalator::horizontalScrollbar;
             var hScrollElem = hScroll.@com.vaadin.client.widget.escalator.ScrollbarBundle::getElement()();
-        
+
             return $entry(function(e) {
                 var target = e.target || e.srcElement; // IE8 uses e.scrElement
-        
+
                 // in case the scroll event was native (i.e. scrollbars were dragged, or
                 // the scrollTop/Left was manually modified), the bundles have old cache
                 // values. We need to make sure that the caches are kept up to date.
@@ -730,29 +730,29 @@ public class Escalator extends Widget
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-        
+
                 // Delta mode 0 is in pixels; we don't need to do anything...
-        
+
                 // A delta mode of 1 means we're scrolling by lines instead of pixels
                 // We need to scale the number of lines by the default line height
                 if(e.deltaMode === 1) {
                     var brc = esc.@com.vaadin.client.widgets.Escalator::body;
                     deltaY *= brc.@com.vaadin.client.widgets.Escalator.AbstractRowContainer::getDefaultRowHeight()();
                 }
-        
+
                 // Other delta modes aren't supported
                 if((e.deltaMode !== undefined) && (e.deltaMode >= 2 || e.deltaMode < 0)) {
                     var msg = "Unsupported wheel delta mode \"" + e.deltaMode + "\"";
-        
+
                     // Print warning message
                     esc.@com.vaadin.client.widgets.Escalator::logWarning(*)(msg);
                 }
-        
+
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-        
+
                 @com.vaadin.client.widgets.Escalator.JsniUtil::moveScrollFromEvent(*)(esc, deltaX, deltaY, e);
             });
         }-*/;
@@ -1143,8 +1143,8 @@ public class Escalator extends Widget
 
         /**
          * The table section element ({@code <thead>}, {@code <tbody>} or
-         * {@code <tfoot>}) the rows (i.e. {@code 
-         * 
+         * {@code <tfoot>}) the rows (i.e. {@code
+         *
         <tr>
          * } tags) are contained in.
          */
@@ -1829,8 +1829,8 @@ public class Escalator extends Widget
          * Applies the total length of the columns to each row element.
          * <p>
          * <em>Note:</em> In contrast to {@link #reapplyColumnWidths()}, this
-         * method only modifies the width of the {@code 
-         * 
+         * method only modifies the width of the {@code
+         *
         <tr>
          * } element, not the cells within.
          */
@@ -2158,7 +2158,7 @@ public class Escalator extends Widget
 
         /**
          * Gets the logical row index for the given table row element.
-         * 
+         *
          * @param tr
          *            the table row element inside this container.
          * @return the logical index of the given element
@@ -3319,7 +3319,7 @@ public class Escalator extends Widget
                          * |3| ==> |*| ==> |5| <- newly rendered
                          * |4|     |*|
                          *  5       5
-                         *  
+                         *
                          *  1       1      |1| <- newly rendered
                          * |2|     |*|     |4|
                          * |3| ==> |*| ==> |5| <- newly rendered
@@ -3366,7 +3366,7 @@ public class Escalator extends Widget
                          *  1      |1| <-- newly rendered (by scrolling)
                          * |4|     |4|
                          * |*| ==> |*|
-                         * |*|       
+                         * |*|
                          *  5       5
                          */
                         final double newScrollTop = contentBottom
@@ -3398,7 +3398,7 @@ public class Escalator extends Widget
                          * |1|     |1|
                          * |4| ==> |4|
                          * |*|     |5| <-- newly rendered
-                         *           
+                         *
                          *  5
                          */
 
@@ -3471,7 +3471,7 @@ public class Escalator extends Widget
              *  :       :      |4| <- newly rendered
              * |5|     |5|     |5|
              * |6| ==> |*| ==> |7|
-             * |7|     |7|     
+             * |7|     |7|
              */
 
             final int logicalTargetIndex = getLogicalRowIndex(
@@ -4556,11 +4556,11 @@ public class Escalator extends Widget
             }
 
             if (index < 0 || index + numberOfColumns > getColumnCount()) {
-                throw new IndexOutOfBoundsException(
-                        "The given " + "column range (" + index + ".."
-                                + (index + numberOfColumns)
-                                + ") was outside of the current number of columns ("
-                                + getColumnCount() + ")");
+                throw new IndexOutOfBoundsException("The given "
+                        + "column range (" + index + ".."
+                        + (index + numberOfColumns)
+                        + ") was outside of the current number of columns ("
+                        + getColumnCount() + ")");
             }
 
             header.refreshColumns(index, numberOfColumns);
@@ -4822,15 +4822,13 @@ public class Escalator extends Widget
             public void show() {
                 getRootElement().getStyle().clearDisplay();
                 getDecoElement().getStyle().clearDisplay();
-                Escalator.this.fireEvent(
-                        new SpacerVisibilityChangedEvent(getRow(), true));
+                fireEvent(new SpacerVisibilityChangedEvent(getRow(), true));
             }
 
             public void hide() {
                 getRootElement().getStyle().setDisplay(Display.NONE);
                 getDecoElement().getStyle().setDisplay(Display.NONE);
-                Escalator.this.fireEvent(
-                        new SpacerVisibilityChangedEvent(getRow(), false));
+                fireEvent(new SpacerVisibilityChangedEvent(getRow(), false));
             }
 
             /**
@@ -6543,7 +6541,8 @@ public class Escalator extends Widget
         double footerHeight = footer.getHeightOfSection();
         double bodyHeight = body.getDefaultRowHeight() * heightByRows;
         double scrollbar = horizontalScrollbar.showsScrollHandle()
-                ? horizontalScrollbar.getScrollbarThickness() : 0;
+                ? horizontalScrollbar.getScrollbarThickness()
+                : 0;
         double spacerHeight = 0; // ignored if HeightMode.ROW
         if (heightMode == HeightMode.UNDEFINED) {
             spacerHeight = body.spacerContainer.getSpacerHeightsSum();
@@ -6937,7 +6936,7 @@ public class Escalator extends Widget
 
     /**
      * Internal method for checking whether the browser is IE11 or Edge
-     * 
+     *
      * @return true only if the current browser is IE11, or Edge
      */
     private static boolean isCurrentBrowserIE11OrEdge() {

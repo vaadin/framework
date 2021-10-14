@@ -313,7 +313,6 @@
                                 </goals>
                                 <configuration>
                                     <failOnError>false</failOnError>
-                                    <excludePackageNames>com.vaadin.buildhelpers</excludePackageNames>
                                     <skip>false</skip>
                                     <links>
                                         <link>http://docs.oracle.com/javase/6/docs/api/</link>
