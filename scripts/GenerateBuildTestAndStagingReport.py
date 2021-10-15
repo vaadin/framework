@@ -47,7 +47,9 @@ def getTestStatusHtml():
         return createTableRow(traffic_light.format(color="black"), "Test status: unable to retrieve status of tests")
     else:
         test_failures_json = test_failures_request.json()
-        if test_failures_json["count"] == 0:
+        # nowadays the responds doesn't contain count keyword when the build is successful
+        # while count word can be found when build fails
+        if "count" not in test_failures_json:
             return createTableRow(traffic_light.format(color="green"), "Test status: all tests passing")
         else:
             return createTableRow(traffic_light.format(color="red"), "Test status: there are " + str(test_failures_json["count"]) + " failing tests, <a href={}>check the build report</a>".format(buildResultUrl))
