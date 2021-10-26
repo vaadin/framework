@@ -1569,7 +1569,7 @@ public class Binder<BEAN> implements Serializable {
             ValueChangeEvent<?> event) {
         changedBindings.add(binding);
         if (getBean() != null) {
-            doWriteIfValid(getBean(), changedBindings);
+            doWriteIfValid(getBean(), new ArrayList<>(changedBindings));
         } else {
             binding.validate();
         }
