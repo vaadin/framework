@@ -1540,6 +1540,30 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         assertEquals("Name", nameField.getValue());
     }
 
+    @Test
+    public void invalidUsage_modifyFieldsInsideValidator_binderDoesNotThrow() {
+        TextField field = new TextField();
+
+        AtomicBoolean validatorIsExecuted = new AtomicBoolean();
+        binder.forField(field).asRequired().withValidator((val, context) -> {
+            nameField.setValue("foo");
+            ageField.setValue("bar");
+            validatorIsExecuted.set(true);
+            return ValidationResult.ok();
+        }).bind(Person::getEmail, Person::setEmail);
+
+        binder.forField(nameField).bind(Person::getFirstName,
+                Person::setFirstName);
+        binder.forField(ageField).bind(Person::getLastName,
+                Person::setLastName);
+
+        binder.setBean(new Person());
+
+        field.setValue("baz");
+        // mostly self control, the main check is: not exception is thrown
+        assertTrue(validatorIsExecuted.get());
+    }    
+
     private TextField createNullAnd42RejectingFieldWithEmptyValue(
             String emptyValue) {
         return new TextField() {
