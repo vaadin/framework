@@ -2001,7 +2001,7 @@ public class Binder<BEAN> implements Serializable {
      *         updated, {@code false} otherwise
      */
     public boolean writeBeanIfValid(BEAN bean) {
-        return doWriteIfValid(bean, new ArrayList<>(bindings)).isOk();
+        return doWriteIfValid(bean, bindings).isOk();
     }
 
     /**
@@ -2024,19 +2024,26 @@ public class Binder<BEAN> implements Serializable {
         Objects.requireNonNull(bean, "bean cannot be null");
         List<ValidationResult> binderResults = Collections.emptyList();
 
+        // make a copy of the incoming bindings to avoid their modifications
+        // during validation
+        Collection<Binding<BEAN, ?>> currentBindings = new ArrayList<>(
+                bindings);        
+
         // First run fields level validation, if no validation errors then
         // update bean
-        List<BindingValidationStatus<?>> bindingResults = bindings.stream()
-                .map(b -> b.validate(false)).collect(Collectors.toList());
+        List<BindingValidationStatus<?>> bindingResults = currentBindings
+                .stream().map(b -> b.validate(false))
+                .collect(Collectors.toList());
 
         if (bindingResults.stream()
                 .noneMatch(BindingValidationStatus::isError)) {
             // Store old bean values so we can restore them if validators fail
             Map<Binding<BEAN, ?>, Object> oldValues = getBeanState(bean,
-                    bindings);
+                    currentBindings);
 
-            bindings.forEach(binding -> ((BindingImpl<BEAN, ?, ?>) binding)
-                    .writeFieldValue(bean));
+            currentBindings
+                    .forEach(binding -> ((BindingImpl<BEAN, ?, ?>) binding)
+                            .writeFieldValue(bean));
             // Now run bean level validation against the updated bean
             binderResults = validateBean(bean);
             if (binderResults.stream().anyMatch(ValidationResult::isError)) {
@@ -2047,7 +2054,7 @@ public class Binder<BEAN> implements Serializable {
                  * Changes have been successfully saved. The set is only cleared
                  * when the changes are stored in the currently set bean.
                  */
-                bindings.clear();
+                changedBindings.clear();
             } else if (getBean() == null) {
                 /*
                  * When using readBean and writeBean there is no knowledge of
