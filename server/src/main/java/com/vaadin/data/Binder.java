@@ -1891,7 +1891,6 @@ public class Binder<BEAN> implements Serializable {
         if (bean == null) {
             clearFields();
         } else {
-            changedBindings.clear();
             getBindings().forEach(binding -> {
                 // Some bindings may have been removed from binder
                 // during readBean. We should skip those bindings to
@@ -1902,6 +1901,7 @@ public class Binder<BEAN> implements Serializable {
                     binding.initFieldValue(bean, false);
                 }
             });
+            changedBindings.clear();
             getValidationStatusHandler().statusChange(
                     BinderValidationStatus.createUnresolvedStatus(this));
             fireStatusChangeEvent(false);
