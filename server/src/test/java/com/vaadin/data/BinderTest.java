@@ -1554,7 +1554,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         bean.setVals(val);
         binder.setBean(bean);
 
-        Assert.assertSame(val, bean.getVals());
+        assertSame(val, bean.getVals());
     }
 
     @Test
@@ -1571,7 +1571,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         bean.setVals(val);
         binder.setBean(bean);
 
-        Assert.assertSame(val, bean.getVals());
+        assertSame(val, bean.getVals());
     }
 
     public static class ExampleBean implements Serializable {
