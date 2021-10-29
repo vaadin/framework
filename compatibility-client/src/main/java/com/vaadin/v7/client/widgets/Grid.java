@@ -4485,8 +4485,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         @Override
         public void onDrop() {
             final int draggedColumnIndex = eventCell.getColumnIndex();
-            final int colspan = header.getRow(eventCell.getRowIndex())
-                    .getCell(eventCell.getColumn()).getColspan();
+            final StaticRow<?> draggedCellRow = header
+                    .getRow(eventCell.getRowIndex());
+            Set<Column<?, ?>> cellGroup = draggedCellRow
+                    .getCellGroupForColumn(getColumn(draggedColumnIndex));
+            final int colspan = cellGroup == null ? 1 : cellGroup.size();
             if (latestColumnDropIndex != draggedColumnIndex
                     && latestColumnDropIndex != draggedColumnIndex + colspan) {
                 List<Column<?, T>> columns = getColumns();
