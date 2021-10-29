@@ -3,7 +3,6 @@ Bundle-Activator: com.vaadin.osgi.resources.OsgiVaadinResources
 Bundle-Name: Vaadin Shared
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-License: http://www.apache.org/licenses/LICENSE-2.0
-Import-Package: org.osgi*
+Import-Package: org.osgi*, elemental.json*
 Export-Package: com.vaadin.osgi.resources;-noimport:=true,\
-  com.vaadin.shared*;-noimport:=true,\
-  elemental.json*;-noimport:=true
+  com.vaadin.shared*;-noimport:=tru
