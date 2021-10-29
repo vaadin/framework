@@ -1258,7 +1258,7 @@ public class Binder<BEAN> implements Serializable {
                 TARGET originalValue = getter.apply(bean);
                 convertAndSetFieldValue(originalValue);
 
-                if (writeBackChangedValues && setter != null) {
+                if (writeBackChangedValues && setter != null && !readOnly) {
                     doConversion().ifOk(convertedValue -> {
                         if (!Objects.equals(originalValue, convertedValue)) {
                             setter.accept(bean, convertedValue);
