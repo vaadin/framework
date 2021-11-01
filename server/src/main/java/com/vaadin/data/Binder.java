@@ -2048,6 +2048,7 @@ public class Binder<BEAN> implements Serializable {
                  * when the changes are stored in the currently set bean.
                  */
                 bindings.clear();
+                changedBindings.clear();
             } else if (getBean() == null) {
                 /*
                  * When using readBean and writeBean there is no knowledge of
