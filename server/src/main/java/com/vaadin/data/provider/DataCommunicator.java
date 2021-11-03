@@ -60,7 +60,7 @@ import elemental.json.JsonObject;
 public class DataCommunicator<T> extends AbstractExtension {
 
     private Registration dataProviderUpdateRegistration;
-    private static final int MAXIMUM_ALLOWED_ROWS = 500;
+    private int maximumAllowedRows = 500;
 
     /**
      * Simple implementation of collection data provider communication. All data
@@ -316,14 +316,24 @@ public class DataCommunicator<T> extends AbstractExtension {
     }
 
     /**
-     * Set the maximum allowed rows to be fetched in one query.
+     * Get the maximum allowed rows to be fetched in one query.
      * 
      * @return Maximum allowed rows for one query.
      * @since 8.14.1
      */
     protected int getMaximumAllowedRows() {
-        return MAXIMUM_ALLOWED_ROWS;
-    }    
+        return maximumAllowedRows;
+    }
+
+    /**
+     * Set the maximum allowed rows to be fetched in one query.
+     * 
+     * @param maximumAllowedRows Maximum allowed rows for one query.
+     * @since
+     */
+    public void setMaximumAllowedRows(int maximumAllowedRows) {
+        this.maximumAllowedRows = maximumAllowedRows;
+    }
 
     /**
      * Triggered when rows have been dropped from the client side cache.

@@ -322,4 +322,12 @@ public class DataCommunicatorTest {
         communicator.onRequestRows(0, communicator.getMaximumAllowedRows() + 10,
                 0, 0);
     }
+
+    @Test
+    public void requestTooMuchRowsOverride() {
+        TestDataCommunicator communicator = new TestDataCommunicator();
+        int maxRows = communicator.getMaximumAllowedRows();
+        communicator.setMaximumAllowedRows(maxRows + 100);
+        communicator.onRequestRows(0, maxRows + 10, 0, 0);
+    }
 }
