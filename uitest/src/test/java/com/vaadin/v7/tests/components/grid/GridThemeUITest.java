@@ -3,8 +3,10 @@ package com.vaadin.v7.tests.components.grid;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.DateFieldElement;
@@ -76,7 +78,25 @@ public class GridThemeUITest extends MultiBrowserThemeTest {
             new Actions(getDriver()).doubleClick(targetCell).perform();
             waitForElementPresent(By.className("v-grid-editor"));
         }
+        WebElement editor = findElement(By.className("v-grid-editor"));
+        waitUntil(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(WebDriver arg0) {
+                int current = editor.getSize().getHeight();
+                // it's actually expected to be the height of two rows plus one
+                // pixel, but giving it 2 pixels of leeway
+                int expected = targetCell.getSize().getHeight() * 2 - 1;
+                return current >= expected;
+            }
 
+            @Override
+            public String toString() {
+                // Expected condition failed: waiting for ...
+                return "editor to become visible, current height: "
+                        + editor.getSize().getHeight() + ", row height: "
+                        + targetCell.getSize().getHeight();
+            }
+        });
     }
 
     private void selectPage(String string) {
