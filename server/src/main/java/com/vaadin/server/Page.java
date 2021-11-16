@@ -422,6 +422,23 @@ public class Page implements Serializable {
             target.addText(css);
             target.endTag("css-string");
         }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            } else if (obj instanceof InjectedStyleString) {
+                InjectedStyleString that = (InjectedStyleString) obj;
+                return css.equals(that.css);
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public int hashCode() {
+            return css.hashCode();
+        }
     }
 
     private static class InjectedStyleResource implements InjectedStyle {
@@ -466,9 +483,9 @@ public class Page implements Serializable {
      */
     public static class Styles implements Serializable {
 
-        private LinkedHashSet<InjectedStyle> injectedStyles = new LinkedHashSet<>();
+        LinkedHashSet<InjectedStyle> injectedStyles = new LinkedHashSet<>();
 
-        private LinkedHashSet<InjectedStyle> pendingInjections = new LinkedHashSet<>();
+        LinkedHashSet<InjectedStyle> pendingInjections = new LinkedHashSet<>();
 
         private final UI ui;
 
@@ -488,8 +505,12 @@ public class Page implements Serializable {
                         "Cannot inject null CSS string");
             }
 
-            pendingInjections.add(new InjectedStyleString(css));
-            ui.markAsDirty();
+            InjectedStyleString injectedStyleString = new InjectedStyleString(
+                    css);
+            if (!injectedStyles.contains(injectedStyleString)
+                    && pendingInjections.add(injectedStyleString)) {
+                ui.markAsDirty();
+            }
         }
 
         /**
