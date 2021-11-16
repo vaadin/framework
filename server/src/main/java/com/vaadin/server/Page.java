@@ -483,9 +483,9 @@ public class Page implements Serializable {
      */
     public static class Styles implements Serializable {
 
-        private LinkedHashSet<InjectedStyle> injectedStyles = new LinkedHashSet<>();
+        LinkedHashSet<InjectedStyle> injectedStyles = new LinkedHashSet<>();
 
-        private LinkedHashSet<InjectedStyle> pendingInjections = new LinkedHashSet<>();
+        LinkedHashSet<InjectedStyle> pendingInjections = new LinkedHashSet<>();
 
         private final UI ui;
 
