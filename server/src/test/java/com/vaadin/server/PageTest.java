@@ -1,6 +1,9 @@
 package com.vaadin.server;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+
+import java.io.Writer;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
