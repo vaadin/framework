@@ -1,6 +1,9 @@
 package com.vaadin.server;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+
+import java.io.Writer;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -43,6 +46,27 @@ public class PageTest {
 
         assertFalse("Page state 'hasResizeListeners' property has wrong value",
                 page.getState(false).hasResizeListeners);
+    }
+
+    @Test
+    public void cssStringInjectedTwice() throws PaintException {
+        TestPage page = new TestPage(EasyMock.createMock(UI.class),
+                EasyMock.createMock(PageState.class));
+        JsonPaintTarget paintTarget = new JsonPaintTarget(
+                EasyMock.createMock(LegacyCommunicationManager.class),
+                EasyMock.createMock(Writer.class), true);
+
+        page.getStyles().add(".my-style { color: red; }");
+        assertEquals(page.getStyles().pendingInjections.size(), 1);
+        page.paintContent(paintTarget);
+        assertEquals(page.getStyles().pendingInjections.size(), 0);
+        assertEquals(page.getStyles().injectedStyles.size(), 1);
+
+        page.getStyles().add(".my-style { color: red; }");
+        assertEquals(page.getStyles().pendingInjections.size(), 0);
+        page.paintContent(paintTarget);
+        assertEquals(page.getStyles().pendingInjections.size(), 0);
+        assertEquals(page.getStyles().injectedStyles.size(), 1);
     }
 
     private static class TestPage extends Page {
