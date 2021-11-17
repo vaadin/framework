@@ -483,8 +483,10 @@ public class Page implements Serializable {
      */
     public static class Styles implements Serializable {
 
+        // For internal use only, visibility is package for enabling testing
         LinkedHashSet<InjectedStyle> injectedStyles = new LinkedHashSet<>();
 
+        // For internal use only, visibility is package for enabling testing
         LinkedHashSet<InjectedStyle> pendingInjections = new LinkedHashSet<>();
 
         private final UI ui;
