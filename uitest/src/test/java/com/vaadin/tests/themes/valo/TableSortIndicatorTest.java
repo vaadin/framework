@@ -21,6 +21,7 @@ public class TableSortIndicatorTest extends MultiBrowserTest {
 
         clickOnCellHeader();
 
+        waitUntilLoadingIndicatorNotVisible();
         compareScreen("ascending");
     }
 
@@ -32,6 +33,7 @@ public class TableSortIndicatorTest extends MultiBrowserTest {
         clickOnCellHeader();
         clickOnSortIndicator();
 
+        waitUntilLoadingIndicatorNotVisible();
         compareScreen("descending");
     }
 

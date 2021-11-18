@@ -12,7 +12,7 @@
     <packaging>war</packaging>
     <properties>
         <jetty.skip>false</jetty.skip>
-        <jetty.version>9.3.21.v20170918</jetty.version>
+        <jetty.version>9.4.38.v20210224</jetty.version>
         <server.name>jetty9</server.name>
     </properties>
 
