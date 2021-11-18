@@ -19,6 +19,7 @@ import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.NativeButtonElement;
 import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.widgetset.client.v7.grid.GridClientColumnRendererConnector.Renderers;
@@ -134,10 +135,16 @@ public class GridClientRenderers extends MultiBrowserTest {
         // Simulate network latency with 2000ms
         latency = 2000;
 
-        // Chrome uses RGB instead of RGBA
+        // Chrome and IE11 use RGBA instead of RGB
         String colorRed = "rgba(255, 0, 0, 1)";
         String colorWhite = "rgba(255, 255, 255, 1)";
         String colorDark = "rgba(245, 245, 245, 1)";
+
+        if (BrowserUtil.isFirefox(desiredCapabilities)) {
+            colorRed = "rgb(255, 0, 0)";
+            colorWhite = "rgb(255, 255, 255)";
+            colorDark = "rgb(245, 245, 245)";
+        }
 
         openTestURL();
 
