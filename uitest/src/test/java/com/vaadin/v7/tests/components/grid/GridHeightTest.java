@@ -92,6 +92,10 @@ public class GridHeightTest extends MultiBrowserTest {
                             detailsRowHeight, "opened" });
                 }
 
+                // Firefox fails to close the details row if the clicks happen
+                // too close to each other
+                sleep(500);
+
                 grid.getRow(2).click(5, 5);
                 waitForElementNotPresent(By.id("lbl1"));
 
