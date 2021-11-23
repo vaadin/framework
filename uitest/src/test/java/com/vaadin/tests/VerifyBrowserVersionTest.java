@@ -28,7 +28,7 @@ public class VerifyBrowserVersionTest extends MultiBrowserTest {
                     getDesiredCapabilities()) + "95";
         } else if (BrowserUtil.isFirefox(getDesiredCapabilities())) {
             browserIdentifier = getExpectedUserAgentString(
-                    getDesiredCapabilities()) + "88";
+                    getDesiredCapabilities()) + "93";
         } else {
             browserIdentifier = getExpectedUserAgentString(desiredCapabilities)
                     + desiredCapabilities.getVersion();
