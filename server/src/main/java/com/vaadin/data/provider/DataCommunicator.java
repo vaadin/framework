@@ -329,7 +329,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * Set the maximum allowed rows to be fetched in one query.
      * 
      * @param maximumAllowedRows Maximum allowed rows for one query.
-     * @since
+     * @since 8.14
      */
     public void setMaximumAllowedRows(int maximumAllowedRows) {
         this.maximumAllowedRows = maximumAllowedRows;
