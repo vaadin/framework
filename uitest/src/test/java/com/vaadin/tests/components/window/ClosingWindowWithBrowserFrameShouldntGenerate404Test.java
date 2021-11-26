@@ -43,9 +43,9 @@ public class ClosingWindowWithBrowserFrameShouldntGenerate404Test
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        // IE driver does not support logging API, see
+        // IE and Firefox drivers do not support logging API, see
         // https://github.com/SeleniumHQ/selenium/issues/6414
-        return Arrays.asList(Browser.CHROME.getDesiredCapabilities(),
-                Browser.FIREFOX.getDesiredCapabilities());
+        // https://github.com/mozilla/geckodriver/issues/284
+        return Arrays.asList(Browser.CHROME.getDesiredCapabilities());
     }
 }
