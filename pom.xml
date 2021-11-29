@@ -25,7 +25,7 @@
         <!-- Used version numbers for dependencies -->
         <commons-io.version>2.4</commons-io.version>
         <google.appengine.version>1.7.7</google.appengine.version>
-        <jsoup.version>1.14.2</jsoup.version>
+        <jsoup.version>1.14.3</jsoup.version>
         <liferay.portal.version>6.0.2</liferay.portal.version>
 
         <vaadin.sass.version>0.9.13</vaadin.sass.version>
@@ -41,7 +41,7 @@
 
         <!-- Atmosphere versions -->
         <!-- Note that this should be kept in sync with the class Constants -->
-        <atmosphere.runtime.version>2.2.13.vaadin2</atmosphere.runtime.version>
+        <atmosphere.runtime.version>2.2.13.vaadin3</atmosphere.runtime.version>
         <atmosphere.js.version>2.2.13.vaadin5</atmosphere.js.version>
 
         <!-- Dependency unpack directory -->
