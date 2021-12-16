@@ -285,6 +285,12 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 .focusStoredElement();
 
         removeTabBlockHandlers();
+        // If you click while the window is being closed,
+        // a new dragging curtain might be added and will
+        // remain after detach. Theoretically a resize curtain can also remain
+        // if you manage to click on the resize element
+        hideDraggingCurtain();
+        hideResizingCurtain();
     }
 
     private void addTabBlockHandlers() {
