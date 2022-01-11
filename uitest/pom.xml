@@ -28,11 +28,8 @@
             <url>https://maven.vaadin.com/vaadin-addons</url>
         </repository>
         <repository>
-            <id>vaadin-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
+            <id>vaadin-prereleases</id>
+            <url>http://maven.vaadin.com/vaadin-prereleases</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>

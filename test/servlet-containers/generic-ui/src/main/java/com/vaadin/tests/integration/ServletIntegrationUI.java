@@ -1,5 +1,7 @@
 package com.vaadin.tests.integration;
 
+import java.io.Serializable;
+
 import com.vaadin.annotations.DesignRoot;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
@@ -18,7 +20,7 @@ import java.util.Iterator;
 @Theme("valo")
 public class ServletIntegrationUI extends UI {
 
-    public static class Country {
+    public static class Country implements Serializable {
         private final String name;
         private final String id;
         private final Resource icon;
