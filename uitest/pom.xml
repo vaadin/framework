@@ -25,11 +25,11 @@
     <repositories>
         <repository>
             <id>vaadin-addons</id>
-            <url>http://maven.vaadin.com/vaadin-addons</url>
+            <url>https://maven.vaadin.com/vaadin-addons</url>
         </repository>
         <repository>
             <id>vaadin-snapshots</id>
-            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots</url>
+            <url>https://oss.sonatype.org/content/repositories/vaadin-snapshots</url>
             <releases>
                 <enabled>false</enabled>
             </releases>
@@ -135,13 +135,13 @@
         </dependency>
 
         <dependency>
-            <groupId>com.vaadin.external.gwt</groupId>
+            <groupId>com.google.gwt</groupId>
             <artifactId>gwt-elemental</artifactId>
             <version>${vaadin.gwt.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.vaadin.external.gwt</groupId>
+            <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
             <version>${vaadin.gwt.version}</version>
         </dependency>
