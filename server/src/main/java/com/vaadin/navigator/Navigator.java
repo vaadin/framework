@@ -1,7 +1,7 @@
 /*
- * Copyright 2000-2021 Vaadin Ltd.
+ * Copyright 2000-2022 Vaadin Ltd.
  *
- * Licensed under the Commercial Vaadin Developer License version 4.0 (CVDLv4); 
+ * Licensed under the Commercial Vaadin Developer License version 4.0 (CVDLv4);
  * you may not use this file except in compliance with the License. You may obtain
  * a copy of the License at
  *
@@ -16,9 +16,9 @@
 package com.vaadin.navigator;
 
 /*
- * Copyright 2000-2021 Vaadin Ltd.
+ * Copyright 2000-2022 Vaadin Ltd.
  *
- * Licensed under the Commercial Vaadin Developer License version 4.0 (CVDLv4); 
+ * Licensed under the Commercial Vaadin Developer License version 4.0 (CVDLv4);
  * you may not use this file except in compliance with the License. You may obtain
  * a copy of the License at
  *
