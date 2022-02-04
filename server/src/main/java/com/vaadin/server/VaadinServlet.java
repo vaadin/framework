@@ -1141,7 +1141,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     /**
      * Check whether a URL obtained from a classloader refers to a valid static
-     * resource in the directory VAADIN.
+     * resource in the directory VAADIN. Directories do not count as valid
+     * resources.
      *
      * Warning: Overriding of this method is not recommended, but is possible to
      * support non-default classloaders or servers that may produce URLs
@@ -1161,6 +1162,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Deprecated
     protected boolean isAllowedVAADINResourceUrl(HttpServletRequest request,
             URL resourceUrl) {
+        if (resourceUrl == null || resourceIsDirectory(resourceUrl)) {
+            return false;
+        }
         String resourcePath = resourceUrl.getPath();
         if ("jar".equals(resourceUrl.getProtocol())) {
             // This branch is used for accessing resources directly from the
@@ -1199,6 +1203,88 @@ public class VaadinServlet extends HttpServlet implements Constants {
                     resourceUrl);
             return true;
         }
+    }
+
+    private boolean resourceIsDirectory(URL resource) {
+        if (resource.getPath().endsWith("/")) {
+            return true;
+        }
+        URI resourceURI = null;
+        boolean isDirectory = false;
+        try {
+            resourceURI = resource.toURI();
+        } catch (URISyntaxException e) {
+            getLogger().log(Level.FINE,
+                    "Syntax error in uri from getStaticResource", e);
+            // Return false as we couldn't determine if the resource is a
+            // directory.
+            return false;
+        }
+
+        if ("jar".equals(resource.getProtocol())) {
+            // Get the file path in jar
+
+            String[] parts = resource.getPath().split("!");
+            String pathInJar = null;
+            String pathOfWar = null;
+            String pathOfJar = null;
+            if (parts.length == 2) {
+                pathInJar = parts[1].substring(1);
+                pathOfJar = parts[0].substring(8);
+
+            } else if (resource.getPath().startsWith("file:")) {
+                pathInJar = parts[2].substring(1);
+                pathOfJar = parts[1].substring(1);
+                pathOfWar = parts[0].substring(6);
+            } else {
+                pathInJar = parts[2].substring(1);
+                pathOfJar = parts[1].substring(1);
+                pathOfWar = parts[0].substring(10);
+            }
+            try {
+                ZipFile jar = null;
+                ZipFile war = null;
+                ZipEntry entry = null;
+                if (pathOfWar == null) {
+                    jar = new ZipFile(pathOfJar);
+                    entry = jar.getEntry(pathInJar);
+                } else {
+                    war = new ZipFile(pathOfWar);
+                    ZipEntry jarEntry = war.getEntry(pathOfJar);
+                    InputStream in = war.getInputStream(jarEntry);
+                    ZipInputStream stream = new ZipInputStream(in);
+                    entry = findEntry(stream, pathInJar);
+                }
+                if (entry != null) {
+                    isDirectory = entry.isDirectory();
+                }
+                if (war != null) {
+                    war.close();
+                }
+                if (jar != null) {
+                    jar.close();
+                }
+                return isDirectory;
+            } catch (IOException e) {
+                return false;
+            }
+        }
+
+        // If not a jar check if a file path directory.
+        File file = new File(resourceURI);
+        return "file".equals(resource.getProtocol()) && file.isDirectory();
+    }
+
+    private ZipEntry findEntry(ZipInputStream in, String name)
+            throws IOException {
+        ZipEntry entry = null;
+        while ((entry = in.getNextEntry()) != null) {
+            System.out.println("File: " + entry.getName());
+            if (entry.getName().equals(name)) {
+                return entry;
+            }
+        }
+        return null;
     }
 
     /**
