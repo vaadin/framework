@@ -1245,9 +1245,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 pathOfJar = parts[1].substring(1);
                 pathOfWar = parts[0].substring(10);
             }
+            ZipFile jar = null;
+            ZipFile war = null;
             try {
-                ZipFile jar = null;
-                ZipFile war = null;
                 ZipEntry entry = null;
                 if (pathOfWar == null) {
                     jar = new ZipFile(pathOfJar);
@@ -1258,19 +1258,27 @@ public class VaadinServlet extends HttpServlet implements Constants {
                     InputStream in = war.getInputStream(jarEntry);
                     ZipInputStream stream = new ZipInputStream(in);
                     entry = findEntry(stream, pathInJar);
+                    stream.close();
                 }
                 if (entry != null) {
                     isDirectory = entry.isDirectory();
                 }
-                if (war != null) {
-                    war.close();
-                }
-                if (jar != null) {
-                    jar.close();
-                }
                 return isDirectory;
             } catch (IOException e) {
                 return false;
+            } finally {
+                if (war != null) {
+                    try {
+                        war.close();
+                    } catch (IOException e) {
+                    }
+                }
+                if (jar != null) {
+                    try {
+                        jar.close();
+                    } catch (IOException e) {
+                    }
+                }
             }
         }
 
@@ -1283,7 +1291,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
             throws IOException {
         ZipEntry entry = null;
         while ((entry = in.getNextEntry()) != null) {
-            System.out.println("File: " + entry.getName());
             if (entry.getName().equals(name)) {
                 return entry;
             }
