@@ -52,9 +52,6 @@
 .#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-caption-close {
 	margin-top: 1px;
 }
-.v-ff & .#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-caption-close {
-	margin-top: -14px;
-}
 .v-ie9 &, .v-ie10 & {
 	.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-caption-close:only-child,
 	.#{$primaryStyleName}-tabs-bar .v-captiontext:first-child + .#{$primaryStyleName}-caption-close {
