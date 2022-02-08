@@ -1245,48 +1245,67 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 pathOfJar = parts[1].substring(1);
                 pathOfWar = parts[0].substring(10);
             }
-            ZipFile jar = null;
-            ZipFile war = null;
             try {
+                // Jars and wars are zip files, hence we use ZipFile to parse
+                // them. Java 6 does not have virtual filesystems.
                 ZipEntry entry = null;
                 if (pathOfWar == null) {
-                    jar = new ZipFile(pathOfJar);
-                    entry = jar.getEntry(pathInJar);
+                    entry = getJarEntry(pathOfJar, pathInJar);
                 } else {
-                    war = new ZipFile(pathOfWar);
-                    ZipEntry jarEntry = war.getEntry(pathOfJar);
-                    InputStream in = war.getInputStream(jarEntry);
-                    ZipInputStream stream = new ZipInputStream(in);
-                    entry = findEntry(stream, pathInJar);
-                    stream.close();
+                    entry = getWarEntry(pathOfWar, pathOfJar, pathInJar);
                 }
                 if (entry != null) {
                     isDirectory = entry.isDirectory();
                 }
                 return isDirectory;
             } catch (IOException e) {
+                // Return false as we couldn't determine if the resource is a
+                // directory.
                 return false;
-            } finally {
-                if (war != null) {
-                    try {
-                        war.close();
-                    } catch (IOException e) {
-                    }
-                }
-                if (jar != null) {
-                    try {
-                        jar.close();
-                    } catch (IOException e) {
-                    }
-                }
             }
         }
-
         // If not a jar check if a file path directory.
         File file = new File(resourceURI);
         return "file".equals(resource.getProtocol()) && file.isDirectory();
     }
 
+    // Find entry pathInJar within nested jar pathOfJar within war pathOfWar.
+    private ZipEntry getWarEntry(String pathOfWar, String pathOfJar,
+            String pathInJar) throws IOException {
+        ZipFile war = null;
+        ZipInputStream stream = null;
+        try {
+            // Use ZipInputStream for nested jar files
+            war = new ZipFile(pathOfWar);
+            ZipEntry jarEntry = war.getEntry(pathOfJar);
+            InputStream in = war.getInputStream(jarEntry);
+            stream = new ZipInputStream(in);
+            return findEntry(stream, pathInJar);
+        } finally {
+            if (stream != null) {
+                stream.close();
+            }
+            if (war != null) {
+                war.close();
+            }
+        }
+    }
+
+    // Find entry pathInJar within jar pathOfJar.
+    private ZipEntry getJarEntry(String pathOfJar, String pathInJar)
+            throws IOException {
+        ZipFile jar = null;
+        try {
+            jar = new ZipFile(pathOfJar);
+            return jar.getEntry(pathInJar);
+        } finally {
+            if (jar != null) {
+                jar.close();
+            }
+        }
+    }
+
+    // Traverse zip's header table for entries and return entry matching name.
     private ZipEntry findEntry(ZipInputStream in, String name)
             throws IOException {
         ZipEntry entry = null;
