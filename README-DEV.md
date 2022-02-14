@@ -116,7 +116,7 @@ After that is done, you should have 9 of 28 save actions activated and listed as
 
 ### Getting started
 
-Run <code>install</code> maven goal for the project root to get started.
+Run the <code>install</code> maven goal for the project root to get started.
 In Eclipse this is done by right-clicking on the project root in Project Explorer and choosing *Run As* -> *Maven Build...*. If you choose to skip tests you may need to run the <code>install</code> maven goal for `vaadin-uitest` project separately.
 * Note that the first compilation takes a while to finish as Maven downloads dependencies used in the projects.
 
