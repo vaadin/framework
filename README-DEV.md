@@ -23,7 +23,7 @@ Despite our best efforts the formatting options aren't always entirely consisten
 
 For IntelliJ IDEA users, see [IntelliJ IDEA Quick Setup](#intellij-idea-quick-setup).
 
-1. Decide were you would like your Eclipse workspace to be located.
+1. Decide where you would like your Eclipse workspace to be located.
     * This project contains multiple modules and uses configurations that might clash with your existing projects, using a separate workspace is recommended.
     * Eclipse Oxygen is recommended, different versions may treat formatting rules differently.
     * If you are using Windows, you may wish to keep the workspace path reasonably short (e.g. `C:\dev\<workspaceName>`) to avoid problems with too long file paths.
