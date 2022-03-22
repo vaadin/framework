@@ -18,7 +18,7 @@ Vaadin 7 open source maintenance ended in Febraury 2019, [extended support](http
 
 For a changelog of Vaadin 8 starting with 8.15.0, see the [Vaadin 8 Changelog](CHANGELOG-VAADIN8.md).
 
-For a changelog of Vaadin 7 starting with 7.7.18, see the [Vaadin 7 Changelog](CHANGELOG-VAADIN7.md).
+For a changelog of Vaadin 7 starting with 7.7.30, see the [Vaadin 7 Changelog](CHANGELOG-VAADIN7.md).
 
 
 ## Using Vaadin 8 to develop applications
