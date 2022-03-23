@@ -11,7 +11,7 @@ Vaadin 8 includes Vaadin 7 compatibility classes. The source code in this reposi
 
 Vaadin 8 open source maintenance ended in February 2022, [extended support](https://vaadin.com/support/vaadin-8-extended-maintenance) is available until February 2032. Starting with version 8.15.0, Vaadin 8 is subject to CVDLv4.
 
-Vaadin 7 open source maintenance ended in Febraury 2019, [extended support](https://vaadin.com/support/vaadin-7-extended-maintenance) is available until February 2029. Starting with version 7.8.0, Vaadin 7 is subject to CVDLv4.
+Vaadin 7 open source maintenance ended in Febraury 2019, [extended support](https://vaadin.com/support/vaadin-7-extended-maintenance) is available until February 2029. Starting with version 7.7.18, Vaadin 7 is subject to CVDLv4.
 
 
 ## Changelog
