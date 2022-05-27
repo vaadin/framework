@@ -1,5 +1,10 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.15.2
+
+* Added support for Liferay kernel versions up to 49
+* Changed all resources to use Object.class as interface type to support OSGi Portlets on Liferay CE 7.3.6 GA7 or later (#12504)
+
 ## Vaadin 8.15.1
 
 * Fixed an issue where Grid was moving focus away from external input controls when the datasource contents were updated
