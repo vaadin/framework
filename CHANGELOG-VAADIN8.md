@@ -1,5 +1,12 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.16.0
+
+* Introduced Snippets feature for the RichTextArea component
+* Moved connector map cleaning logic invocation from UI.unlock() to VaadinService.requestEnd() when not using Push
+* Improved Grid multi-select performance
+* Backported automatic conversion support and other Binder improvements from Vaadin Flow
+
 ## Vaadin 8.15.2
 
 * Added support for Liferay kernel versions up to 49
