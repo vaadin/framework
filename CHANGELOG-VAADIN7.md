@@ -1,5 +1,10 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.32
+
+* Update Atmosphere version to 2.2.13.vaadin4
+
+
 ## Vaadin 7.7.31
 
 * Don't serve directories as static files
