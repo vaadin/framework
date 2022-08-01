@@ -1,5 +1,12 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.16.1
+
+* Fixed a failure-to-start condition on some server configurations (e.g. Tomcat) caused  by the connector map cleanup logic change in 8.16.0 
+* Updated Jetty version from 9.4.43.v20210629 to 9.4.48.v20220622 to fix a potential security issue
+* Updated License Checker version to support Vaadin 8 together with the latest Vaadin Flow in MPR configurations
+* Updated the license information provided by vaadin-root POM to correctly show CVDL-4 as the project license instead of Apache-2.0 
+
 ## Vaadin 8.16.0
 
 * Introduced Snippets feature for the RichTextArea component
@@ -22,5 +29,5 @@
 
 * Change license from Apache 2.0 to CVDLv4
 * Add more intuitive resynchronization error message
-* fix: Allow scrolling away from a Grid using touch
-* fix: Throw exception when attempting to merge BeanPropertySets with identical keys but different value types
+* Allow scrolling away from a Grid using touch
+* Throw exception when attempting to merge BeanPropertySets with identical keys but different value types
