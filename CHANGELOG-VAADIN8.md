@@ -1,5 +1,14 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.17.0
+
+* Improved hierarchical data container handling, resulting in increased speed and correcting some potential memory leaks.
+* Fixed an issue in Grid's MultiSelect mode introduced by performance improvements made to Vaadin 8.16.0 which would erroneously cause a refreshed data item to become selected.
+* Fixed an issue introduced in Vaadin 8.15.1's Grid focus stealing fix where the focus stealing prevention would become overly zealous.
+* Updated JSoup version from 1.14.3 to 1.15.3. This is a **BREAKING CHANGE** for many projects, as it requires **you** to find all references to `org.jsoup.safety.Whitelist` and replace them with references to `org.jsoup.safety.Safelist`. The API of the two classes is the same; `Safelist` is a drop-in replacement for `Whitelist`. This change was made to all Vaadin versions simultaneously to address [CVE-2022-36033](https://ossindex.sonatype.org/vulnerability/CVE-2022-36033).
+* Updated PuppyCrawl dependency from version 8.18 to 8.29
+* Updated CheckStyle dependency from version 2.17 to 3.2.0
+
 ## Vaadin 8.16.1
 
 * Fixed a failure-to-start condition on some server configurations (e.g. Tomcat) caused  by the connector map cleanup logic change in 8.16.0 
