@@ -376,8 +376,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         // Try to match all roots
         for (File root : roots) {
             try {
-                val |= ((File) itemId).getCanonicalPath()
-                        .startsWith(root.getCanonicalPath());
+                val |= ((File) itemId).getCanonicalFile().toPath().startsWith(root.getCanonicalFile().toPath());
             } catch (final IOException e) {
                 // Exception ignored
             }
