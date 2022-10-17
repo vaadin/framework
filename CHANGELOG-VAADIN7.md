@@ -1,5 +1,11 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.35
+
+* a check for bundle resources in order not to fail with OSGi
+* update license checker to version 1.9.0
+
+
 ## Vaadin 7.7.34
 
 * Update Jsoup to version 1.15.3
