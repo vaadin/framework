@@ -2,8 +2,8 @@
 
 ## Vaadin 8.18.0
 
-* Fixed issue #12560 by improving Grid's horizontal scrolling scrolling logic.
-* Fixed an issue in Combobox where scrolling to selection would fail if the user had typed into the input field. Possibly related to #12562.
+* Fixed issue [#12560](https://github.com/vaadin/framework/issues/12560) by improving Grid's horizontal scrolling scrolling logic.
+* Fixed an issue in Combobox where scrolling to selection would fail if the user had typed into the input field. Possibly related to [#12562](https://github.com/vaadin/framework/issues/12562).
 * Added `runAfterRoundTrip` API to the UI class for improved sequence control, allowing execution of a callback after one or more client-server round trips have been completed.
 * Separated portlet support code out of `vaadin-server` into its own package, `vaadin-portlet`. **This will break your build** if your application makes use of Portlet classes.
 * Added support for Vaadin Multiplatform Runtime version 24+ by adding packages `vaadin-server-mpr-jakarta` and `vaadin-compatibility-server-mpr-jakarta`
@@ -34,7 +34,7 @@
 ## Vaadin 8.15.2
 
 * Added support for Liferay kernel versions up to 49
-* Changed all resources to use Object.class as interface type to support OSGi Portlets on Liferay CE 7.3.6 GA7 or later (#12504)
+* Changed all resources to use Object.class as interface type to support OSGi Portlets on Liferay CE 7.3.6 GA7 or later ([#12504](https://github.com/vaadin/framework/issues/12504))
 
 ## Vaadin 8.15.1
 
