@@ -1,5 +1,12 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.36
+
+* added the server MPR build artifact
+* updated license checker to version 1.11.2
+* extracted portlet-related parts to a new module
+
+
 ## Vaadin 7.7.35
 
 * a check for bundle resources in order not to fail with OSGi
