@@ -1,5 +1,16 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.19.0
+
+* Changed license from Commercial Vaadin Developer License 4.0 to Vaadin Commercial License. This change does not affect active subscribers, but it does mean that future releases of Vaadin Framework may move from dev- and build-time license checking to runtime license checking. Version 8.19.0 does not do that yet.
+See LICENSE file in the downloadable package for more information.
+* Fixed issue [#12562](https://github.com/vaadin/framework/issues/12562). The internal state of ComboBox got confused when adding new items after calling `clear()`.
+* Improved the `vaadin-server-mpr-jakarta` and `vaadin-compatibility-server-mpr-jakarta` POM dependency definitions such that these packages do not pull in `vaadin-server` and `vaadin-compatibility-server` as unwanted dependencies, respectively.
+* Fixed a number of assertion function which would fail when MPR was in use. Improves testability of the framework and should allow running with assertions enabled in MPR configurations.
+* Removed logging of Atmosphere version while MPR is in use. This fixes runtime failures under some configurations.
+* Updated Atmosphere to version 2.4.30-vaadin5 in order to make Vaadin Framework 8 compatible with Jetty 10.
+* Updated Vaadin License Checker to version 1.11.2 to support new license model.
+
 ## Vaadin 8.18.0
 
 * Fixed issue [#12560](https://github.com/vaadin/framework/issues/12560) by improving Grid's horizontal scrolling scrolling logic.
