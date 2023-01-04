@@ -2,8 +2,8 @@
 
 ## Vaadin 8.19.0
 
-* Changed license from Commercial Vaadin Developer License 4.0 to Vaadin Commercial License. This change does not affect active subscribers, but it does mean that future releases of Vaadin Framework may move from dev- and build-time license checking to runtime license checking. Version 8.19.0 does not do that yet.
-See LICENSE file in the downloadable package for more information.
+* Changed license from Commercial Vaadin Developer License 4.0 to Vaadin Commercial License version 1. This change does not affect active subscribers, but it does mean that future releases of Vaadin Framework may move from dev- and build-time license checking to runtime license checking. Version 8.19.0 does not do that yet.
+See LICENSE file in the downloadable package or [the Vaadin Commercial License and service terms document](https://vaadin.com/commercial-license-and-service-terms) for more information.
 * Fixed issue [#12562](https://github.com/vaadin/framework/issues/12562). The internal state of ComboBox got confused when adding new items after calling `clear()`.
 * Improved the `vaadin-server-mpr-jakarta` and `vaadin-compatibility-server-mpr-jakarta` POM dependency definitions such that these packages do not pull in `vaadin-server` and `vaadin-compatibility-server` as unwanted dependencies, respectively.
 * Fixed a number of assertion functions which would fail when MPR was in use. Improves testability of the framework and should allow running with assertions enabled in MPR configurations.
