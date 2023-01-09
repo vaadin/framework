@@ -9,7 +9,7 @@ This repository contains source code and issue tracking for Vaadin 8 and Vaadin 
 
 Vaadin 8 includes Vaadin 7 compatibility classes. The source code in this repository is (and will always be) available under Apache License 2.0, but Vaadin Framework 7 and 8 are now being maintained under a closed-source model by the Vaadin Expertise Team. You are free to continue using Vaadin Framework releases up to [8.14.3](https://github.com/vaadin/framework/releases/tag/8.14.3) and [7.7.17](https://github.com/vaadin/framework/releases/tag/7.7.17), and you are free to fork and maintain the framework yourself.
 
-Vaadin 8 open source maintenance ended in February 2022, [extended support](https://vaadin.com/support/vaadin-8-extended-maintenance) is available until February 2032. Starting with version 8.15.0, Vaadin 8 is subject to CVDLv4.
+Vaadin 8 open source maintenance ended in February 2022, [extended support](https://vaadin.com/support/vaadin-8-extended-maintenance) is available until February 2032. Starting with version 8.15.0, Vaadin 8 is subject to CVDLv4. This license was changed to the [Vaadin Commercial License](https://vaadin.com/commercial-license-and-service-terms) in version 8.19.0.
 
 Vaadin 7 open source maintenance ended in Febraury 2019, [extended support](https://vaadin.com/support/vaadin-7-extended-maintenance) is available until February 2029. Starting with version 7.7.18, Vaadin 7 is subject to CVDLv4.
 
