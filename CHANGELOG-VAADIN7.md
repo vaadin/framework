@@ -1,5 +1,11 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.37
+
+* license updated to VCL-1
+* updated server-MPR artifact POM to remove dependency on server
+
+
 ## Vaadin 7.7.36
 
 * added the server MPR build artifact
