@@ -22,7 +22,7 @@
     
     If you've referenced any of these classes, they will have been in the `com.vaadin.server` and `com.vaadin.server.communication` packages, respectively.
 * Improved OSGi packaging for vaadin-portlet. See issue [#12575](https://github.com/vaadin/framework/issues/12575).
-* Fixed an issue where push connections could get stuck when using @PreserveOnRefresh as requests intended for a new push connection would instead be queued on an old one. Now old connections are closed immediately on reconnect. See issue [#12577](https://github.com/vaadin/framework/issues/12577).
+* Fixed an issue where push connections could get stuck when using `@PreserveOnRefresh` as requests intended for a new push connection would instead be queued on an old one. Now old connections are closed immediately on reconnect. See issue [#12577](https://github.com/vaadin/framework/issues/12577).
 * Fixed Push connection operations synchronization so that a connection won't be disconnected while there are messages pending. This would result in NullPointerExceptions being thrown. Makes the isConnected() call correctly reflect current state. This is a backported fix from Flow. See Flow issue [#15571](https://github.com/vaadin/flow/issues/15571).
 * Fixed an issue where undelivered push messages would get lost, resulting in a need for UI resynchronization. Push messages are now kept in cache until a client acknowledges receipt. This is a backported fix from Flow. See Flow issue [#15205](https://github.com/vaadin/flow/issues/15205).
 * Improved performance in UIs with assertions enabled. Some assertions would check for the presence of MPR on every run. MPR is now only detected once and the check result is cached. See issue [#12572](https://github.com/vaadin/framework/issues/12572).
