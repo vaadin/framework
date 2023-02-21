@@ -1,5 +1,32 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.20.0
+
+* Moved vaadin-portlet package contents from com.vaadin.server to com.vaadin.portlet namespace. This is a BREAKING CHANGE and will require you to update your imports. This is a necessary change in order to be able to support OSGi deployments (specifically under the latest Liferay 7 releases.
+  * ***PLEASE NOTE THAT THIS IS A BREAKING CHANGE!*** - you need to update references to classes provided by `vaadin-portlet` from the `com.vaadin.server` to the `com.vaadin.portlet` namespace. The complete list of classes is as follows:
+    * `com.vaadin.portlet.LegacyVaadinPortlet`
+    * `com.vaadin.portlet.RestrictedRenderResponse`
+    * `com.vaadin.portlet.VaadinPortlet`
+    * `com.vaadin.portlet.VaadinPortletRequest`
+    * `com.vaadin.portlet.VAadinPortletService`
+    * `com.vaadin.portlet.VaadinPortletSession`
+    * `com.vaadin.portlet.WrappedPortletSession`
+    
+    and
+    
+    * `com.vaadin.portlet.communication.PortletBootstrapHandler`
+    * `com.vaadin.portlet.communication.PortletDummyRequestHandler`
+    * `com.vaadin.portlet.communication.PortletListenerNotifier`
+    * `com.vaadin.portlet.communication.PortletStateAwareRequestHandler`
+    * `com.vaadin.portlet.communication.PortletUIInitHandler`
+    
+    If you've referenced any of these classes, they will have been in the `com.vaadin.server` and `com.vaadin.server.communication` packages, respectively.
+* Improved OSGi packaging for vaadin-portlet. See issue [#12575](https://github.com/vaadin/framework/issues/12575).
+* Fixed an issue where push connections could get stuck when using @PreserveOnRefresh as requests intended for a new push connection would instead be queued on an old one. Now old connections are closed immediately on reconnect. See issue [#12577](https://github.com/vaadin/framework/issues/12577).
+* Fixed Push connection operations synchronization so that a connection won't be disconnected while there are messages pending. This would result in NullPointerExceptions being thrown. Makes the isConnected() call correctly reflect current state. This is a backported fix from Flow. See Flow issue [#15571](https://github.com/vaadin/flow/issues/15571).
+* Fixed an issue where undelivered push messages would get lost, resulting in a need for UI resynchronization. Push messages are now kept in cache until a client acknowledges receipt. This is a backported fix from Flow. See Flow issue [#15205](https://github.com/vaadin/flow/issues/15205).
+* Improved performance in UIs with assertions enabled. Some assertions would check for the presence of MPR on every run. MPR is now only detected once and the check result is cached. See issue [#12572](https://github.com/vaadin/framework/issues/12572).
+
 ## Vaadin 8.19.0
 
 * Changed license from Commercial Vaadin Developer License 4.0 to Vaadin Commercial License version 1. This change does not affect active subscribers, but it does mean that future releases of Vaadin Framework may move from dev- and build-time license checking to runtime license checking. Version 8.19.0 does not do that yet.
