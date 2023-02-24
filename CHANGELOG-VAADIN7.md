@@ -1,5 +1,12 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.38
+
+* A fix to preserve push messages in cache until they are seen by client
+* A fix to prevent concurrent disconnect and push operations
+* A change to close push connection immediately after refresh
+
+
 ## Vaadin 7.7.37
 
 * license updated to VCL-1
