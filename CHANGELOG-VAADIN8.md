@@ -1,5 +1,11 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.21.0
+
+* Fixed a bug in TwinColSelect, which caused incorrect layouting on Firefox on some platforms. The issue was similar to the problem discussed in [#9175](https://github.com/vaadin/framework/issues/9175)
+* Updated `license-checker` to the latest available version for better user experience and MPR compatibility.
+* Mitigated false positive reports of security vulnerabilities by adding maven-flatten-plugin to the build process. This strips out testing artifacts from the released POMs so that the released artifacts are not marked as vulnerable.
+
 ## Vaadin 8.20.0
 
 * Moved vaadin-portlet package contents from com.vaadin.server to com.vaadin.portlet namespace. This is a BREAKING CHANGE and will require you to update your imports. This is a necessary change in order to be able to support OSGi deployments (specifically under the latest Liferay 7 releases.
