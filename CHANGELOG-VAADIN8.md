@@ -1,6 +1,6 @@
 # Vaadin 8 extended maintenance version changelog
 
-## Vaadin 8.21.0
+## Vaadin 8.20.1
 
 * Fixed a bug in TwinColSelect, which caused incorrect layouting on Firefox on some platforms. The issue was similar to the problem discussed in [#9175](https://github.com/vaadin/framework/issues/9175)
 * Updated `license-checker` to the latest available version for better user experience and MPR compatibility.
