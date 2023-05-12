@@ -1,5 +1,10 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.20.2
+
+* Removed mentions of NetBeans Plugin, since it has not been maintained and is no longer usable in modern versions of NetBeans. Usage of NetBeans for Vaadin development is still possible, but it is not explicitly supported through a special plugin.
+* Improved build system; maven-flatten-plugin is now correctly invoked and build system related version numbers were bumped. This change should not affect users.
+
 ## Vaadin 8.20.1
 
 * Fixed a bug in TwinColSelect, which caused incorrect layouting on Firefox on some platforms. The issue was similar to the problem discussed in [#9175](https://github.com/vaadin/framework/issues/9175)
