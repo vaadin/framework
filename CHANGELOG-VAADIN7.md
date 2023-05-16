@@ -1,5 +1,11 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.39
+
+* Added the Flatten Maven Plugin
+* A fix to compute the correct path to a war file from the resource URL
+* General pom.xml and project structure fixes
+
 ## Vaadin 7.7.38
 
 * A fix to preserve push messages in cache until they are seen by client
