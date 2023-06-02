@@ -1,5 +1,10 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.20.3
+
+* Fixed an issue where compile-time license checking would fail on CI servers with release-only license files.
+* Pinned `nimbus-jose-jwt` version in order to ensure that apps can still run under included Jetty on Java 8 VMs. Newer versions of `nimbus-jose-jwt` include a `meta-info` class that JVM 8 implementations cannot load. `nimbus-jose-jwt` was included as a transitive dependency.
+
 ## Vaadin 8.20.2
 
 * Removed mentions of NetBeans Plugin, since it has not been maintained and is no longer usable in modern versions of NetBeans. Usage of NetBeans for Vaadin development is still possible, but it is not explicitly supported through a special plugin.
