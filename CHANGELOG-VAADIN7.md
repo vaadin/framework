@@ -1,5 +1,9 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.40
+
+* Fixed an issue where compile-time license checking would fail on CI servers with release-only license files.
+
 ## Vaadin 7.7.39
 
 * Added the Flatten Maven Plugin
