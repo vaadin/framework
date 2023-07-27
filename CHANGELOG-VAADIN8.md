@@ -69,18 +69,18 @@
   providers by setting the `UIPriority` value as part of
   the `DeploymentConfiguration`.
   
-  This does not alter default behavior. The default <tt>UIProvider</tt>
+  This does not alter default behavior. The default `UIProvider`
   priority is 0; higher values get processed first. Providers with
   the same priority will be processed in the order they were added.
 
   See the VaadinSession JavaDoc for more information.
 
-* Updated internal Jetty depdency from version <tt>9.4.48.v20220622</tt>
-  to version <tt>9.4.51.v20230217</tt> to avoid a false positive
+* Updated internal Jetty depdency from version `9.4.48.v20220622`
+  to version `9.4.51.v20230217` to avoid a false positive
   security alert. The internal Jetty server is only used for
   running tests at build time.
 
-* Updated plexus-archiver version in vaadin-maven-plugin to 4.8.0
+* Updated plexus-archiver version in vaadin-maven-plugin to `4.8.0`
   in order to fix a potential security vulnerability.
 
 ## Vaadin 8.20.3
