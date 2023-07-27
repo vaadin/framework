@@ -1,6 +1,5 @@
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/vaadin/framework-8?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-
 # Vaadin Framework
 
 *[Vaadin](https://vaadin.com) allows you to build modern web apps efficiently in plain Java, without touching low level web technologies.*
@@ -13,6 +12,8 @@ Vaadin 8 open source maintenance ended in February 2022, [extended support](http
 
 Vaadin 7 open source maintenance ended in Febraury 2019, [extended support](https://vaadin.com/support/vaadin-7-extended-maintenance) is available until February 2029. Starting with version 7.7.18, Vaadin 7 is subject to CVDLv4.
 
+Starting with Vaadin 8.21.0, Vaadin Framework 8 releases will be made available through a *private Maven repository*.
+To gain access to this private repository, [contact sales](https://vaadin.com/company/contact). Vaadin Framework 8 releases will eventually be exclusively available through this private repository, but for the time being artifacts will also be released to Maven Central.
 
 ## Changelog
 
@@ -20,13 +21,11 @@ For a changelog of Vaadin 8 starting with 8.15.0, see the [Vaadin 8 Changelog](C
 
 For a changelog of Vaadin 7 starting with 7.7.30, see the [Vaadin 7 Changelog](CHANGELOG-VAADIN7.md).
 
-
 ## Using Vaadin 8 to develop applications
 
 Please refer to [Vaadin tutorial](https://vaadin.com/docs/v8/framework/tutorial.html) and other [documentation](https://vaadin.com/docs/v8/index.html).
 
 For known issues within Vaadin framework, see [Issue Tracker](https://github.com/vaadin/framework/issues). Comment or react to an existing issue to mark your interest in resolving it. If you don't find an existing report of an issue you are experiencing, [submit a new issue](https://github.com/vaadin/framework/issues/new/choose).
-
 
 ## Developing Vaadin Framework
 

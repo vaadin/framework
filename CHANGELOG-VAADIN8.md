@@ -1,5 +1,88 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.21.0
+
+* Framework 8 builds are now made on Java 11. The resulting
+  JARs are still fully compatible with Java 1.8 runtimes, but
+  only Java 11 SDKs are supported for building Framework 8
+  for the 8.21 series.
+
+  Build-time compatibility with Java 17 SDKs is being
+  investigated, but is not yet available.
+  If you wish to **run** Vaadin 8 on Java 9+ JREs, you *must*
+  set the Java environment value
+  `java.locale.providers=COMPAT`, otherwise locale
+  dependent conversions (country code, currency, etc) WILL be
+  inconsistent with Java 8 behavior, potentially leading to
+  data loss.
+
+  Minimum Maven version to build Vaadin 8 is now **3.6.2**.
+  Included new dependencies:
+
+  * `javassist` version 3.29.2-GA
+  * `maven-enforcer-plugin` 3.3.0
+  
+  Updated supporting Maven plugins:
+
+  * `maven-clean-plugin` from 3.0.0 to 3.2.0
+  * `maven-compiler-plugin` from 3.5.1 to 3.11.0
+  * `maven-site-plugin` from 3.5 to 3.12.1
+  * `maven-jar-plugin` from 2.6 to 3.2.2
+  * `maven-surefire-plugin` from 2.19.1 to 2.22.2
+  * `maven-failsafe-plugin` from 2.19.1 to 2.22.2
+  * `maven-dependency-plugin` from 3.0.1 to 3.5.0
+  * `exec-maven-plugin` from 1.6.0 to 3.1.0
+  * `versions-maven-plugin` from 2.3 to 2.15.0
+  * `build-helper-maven`-plugin 1.10 to 1.12
+  * `maven-source-plugin` 3.0.1 to 3.2.1
+  * `maven-checkstyle-plugin` from 3.2.0 to 3.2.2
+
+* Upgraded GWT dependency to 2.9.0 in order to make Framework 8
+  more compatible with other Vaadin products and modern build
+  environments, as well as to improve compatibility with modern
+  browsers.
+
+* Fixed all JavaDoc generation errors and cleaned up some API
+  documentation along the way, resulting in better IDE
+  compatibility and cleaner formatting of the resulting
+  documentation.
+
+* Fixed a bug in the long polling push transport when the sync id
+  check is disabled, leading to the server continuously pushing.
+  This is a backported fix from Flow, see
+  [issue #17237](https://github.com/vaadin/flow/issues/17237)
+  [pull request #17238](https://github.com/vaadin/flow/pull/17238).
+
+* Added new API in `VaadinSession.java` which allows
+  setting priority of UIProviders. The function
+  `VaadinSession.addUIProvider` now takes an extra integer
+  parameter, which makes it possible to explicitly set priority
+  of the UI providers as they're added.
+
+  Additionally, the functions
+  `VaadinSession.getUIProviderPriority` and
+  `VaadinSession.setUIProviderPriority` were added, which
+  can be used together with `VaadinSession.getUIProviders`
+  to alter the ordering of all UI providers added to the Session.
+
+  It is also possible to specify the priority of the default UI
+  providers by setting the `UIPriority` value as part of
+  the `DeploymentConfiguration`.
+  
+  This does not alter default behavior. The default <tt>UIProvider</tt>
+  priority is 0; higher values get processed first. Providers with
+  the same priority will be processed in the order they were added.
+
+  See the VaadinSession JavaDoc for more information.
+
+* Updated internal Jetty depdency from version <tt>9.4.48.v20220622</tt>
+  to version <tt>9.4.51.v20230217</tt> to avoid a false positive
+  security alert. The internal Jetty server is only used for
+  running tests at build time.
+
+* Updated plexus-archiver version in vaadin-maven-plugin to 4.8.0
+  in order to fix a potential security vulnerability.
+
 ## Vaadin 8.20.3
 
 * Fixed an issue where compile-time license checking would fail on CI servers with release-only license files.
