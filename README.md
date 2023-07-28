@@ -12,8 +12,7 @@ Vaadin 8 open source maintenance ended in February 2022, [extended support](http
 
 Vaadin 7 open source maintenance ended in Febraury 2019, [extended support](https://vaadin.com/support/vaadin-7-extended-maintenance) is available until February 2029. Starting with version 7.7.18, Vaadin 7 is subject to CVDLv4.
 
-Starting with Vaadin 8.21.0, Vaadin Framework 8 releases will be made available through a *private Maven repository*.
-To gain access to this private repository, [contact sales](https://vaadin.com/company/contact). Vaadin Framework 8 releases will eventually be exclusively available through this private repository, but for the time being artifacts will also be released to Maven Central.
+Starting with Vaadin 8.21.0, Vaadin Framework 8 releases will be made available through a *private Maven repository*. To gain access to this private repository, you can find instructions [here](https://vaadin.com/vaadin-8-extended-maintenance-releases). Vaadin Framework 8 releases will eventually be exclusively available through this private repository, but for the time being artifacts will also be released to Maven Central.
 
 ## Changelog
 
