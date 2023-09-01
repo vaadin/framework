@@ -1,5 +1,14 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.41
+
+* fixed a regression which caused issues if the syncId check was disabled
+* added the possibility to reorder UIProviders
+* modified the Framework 7 project itself to compile with Java 11
+* license updated to VCL-2
+* fixed a version mismatch for the license checker being used
+* test fixes
+
 ## Vaadin 7.7.40
 
 * Fixed an issue where compile-time license checking would fail on CI servers with release-only license files.
