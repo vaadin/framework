@@ -4,15 +4,25 @@
 
 *[Vaadin](https://vaadin.com) allows you to build modern web apps efficiently in plain Java, without touching low level web technologies.*
 
-This repository contains source code and issue tracking for Vaadin 8 and Vaadin 7, both of which use GWT as the base of client-side implementations. You can find source code and issue tracking for newer, web component based Vaadin versions in [vaadin/platform](https://github.com/vaadin/platform).
+This repository serves as an archive of the source code and issue tracking for Vaadin 8 and Vaadin 7, both of which use GWT as the base of client-side implementations. You can find source code and issue tracking for newer, web component based Vaadin versions in [vaadin/platform](https://github.com/vaadin/platform). Vaadin 8 includes Vaadin 7 compatibility classes.
 
-Vaadin 8 includes Vaadin 7 compatibility classes. The source code in this repository is (and will always be) available under Apache License 2.0, but Vaadin Framework 7 and 8 are now being maintained under a closed-source model by the Vaadin Expertise Team. You are free to continue using Vaadin Framework releases up to [8.14.3](https://github.com/vaadin/framework/releases/tag/8.14.3) and [7.7.17](https://github.com/vaadin/framework/releases/tag/7.7.17), and you are free to fork and maintain the framework yourself.
+The code in this repository reflects the state of Vaadin 8.14.3 and Vaadin 7.7.17, the last releases made available under the Apache-2 license, and will be left as-is.
 
-Vaadin 8 open source maintenance ended in February 2022, [extended support](https://vaadin.com/vaadin-8-extended-maintenance) is available until February 2032. Starting with version 8.15.0, Vaadin 8 is subject to CVDLv4.
+## NOTICE
 
-Vaadin 7 open source maintenance ended in Febraury 2019, [extended support](https://vaadin.com/support/vaadin-7-extended-maintenance) is available until February 2029. Starting with version 7.7.18, Vaadin 7 is subject to CVDLv4.
+Starting with versions 7.7.18 and 8.15.0, no new artifacts are being released in this repository. However, releases are being published for the users who have subscribed to the release feed of this repository. No further code changes will be published here.
 
-Starting with Vaadin 8.21.0, Vaadin Framework 8 releases will be made available through a *private Maven repository*. To gain access to this private repository, you can find instructions [here](https://vaadin.com/vaadin-8-extended-maintenance-releases). Vaadin Framework 8 releases will eventually be exclusively available through this private repository, but for the time being artifacts will also be released to Maven Central.
+## Vaadin Framework has entered extended maintenance
+
+Vaadin Framework 7 and 8 are now being maintained under a closed-source model by the Vaadin Expertise Team. You are free to continue using Vaadin Framework releases up to [8.14.3](https://github.com/vaadin/framework/releases/tag/8.14.3) and [7.7.17](https://github.com/vaadin/framework/releases/tag/7.7.17) as made available through this repository, and you are free to fork and maintain the framework yourself.
+
+Vaadin 8 open source maintenance ended in February 2022, [extended support](https://vaadin.com/vaadin-8-extended-maintenance) is available until February 2032. Starting with version 8.15.0, Vaadin 8 is subject to Vaadin Commercial License, version 2.
+
+Vaadin 7 open source maintenance ended in Febraury 2019, [extended support](https://vaadin.com/support/vaadin-7-extended-maintenance) is available until February 2029. Starting with version 7.7.18, Vaadin 7 is subject to Vaadin Commercial License, version 2.
+
+Starting with Vaadin 8.21.0 and Vaadin 7.7.41, Vaadin Framework releases will be made available through a *private Maven repository*. To gain access to this private repository, you can find instructions [here](https://vaadin.com/vaadin-8-extended-maintenance-releases). Vaadin Framework releases will eventually be exclusively available through this private repository, but for the time being artifacts will also be released to Maven Central.
+
+In order to get access to extended maintenance Framework source code, [contact sales](https://pages.vaadin.com/contact).
 
 ## Changelog
 
@@ -29,7 +39,6 @@ For known issues within Vaadin framework, see [Issue Tracker](https://github.com
 ## Developing Vaadin Framework
 
 For instructions on how to set up a working environment for developing the Vaadin framework, please visit [Development Instructions](README-DEV.md). Pay special attention to workspace preferences.
-
 
 ## Contributing
 
