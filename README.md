@@ -10,7 +10,7 @@ The code in this repository reflects the state of Vaadin 8.14.3 and Vaadin 7.7.1
 
 ## NOTICE
 
-Starting with versions 7.7.18 and 8.15.0, no new artifacts are being released in this repository. However, releases are being published for the users who have subscribed to the release feed of this repository. No further code changes will be published here.
+Starting with versions 7.7.18 and 8.15.0, no new artifacts are being released in this repository. However, releases are being published as courtesy notifications to the users who have subscribed to the release feed of this repository. No further code changes will be published here.
 
 ## Vaadin Framework has entered extended maintenance
 
