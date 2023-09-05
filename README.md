@@ -12,7 +12,7 @@ The code in this repository reflects the state of Vaadin 8.14.3 and Vaadin 7.7.1
 
 Starting with versions 7.7.30\* and 8.15.0, no new code is being released here, as development now happens in a private repository. However, releases are being published as courtesy notifications to the users who have subscribed to the release feed of this repository. The source code attached to Github releases in this repository reflects the state of code ***in this respository*** at time of release. It is ***NOT*** the source code of the corresponding Extended Maintenance release.
 
-\* Note: 7.7.18 is the last Apache-2 licensed version, however in the beginning of the transition phase maintenance changes to the 7.7 branch were being made here. In order to be in compliance with the license terms, you are only allowed to use 7.7 code up to [release 7.7.17](https://github.com/vaadin/framework/releases/tag/7.7.17).
+\* Note: 7.7.17 is the last Apache-2 licensed version, however in the beginning of the transition phase extended maintenance version changes to the 7.7 branch were being made here. In order to be in compliance with the license terms, you are only allowed to use 7.7 code up to [release 7.7.17](https://github.com/vaadin/framework/releases/tag/7.7.17).
 
 ## Vaadin Framework has entered extended maintenance
 
