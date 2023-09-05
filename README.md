@@ -4,7 +4,7 @@
 
 *[Vaadin](https://vaadin.com) allows you to build modern web apps efficiently in plain Java, without touching low level web technologies.*
 
-This repository serves as an archive of the source code and issue tracking for Vaadin 8 and Vaadin 7, both of which use GWT as the base of client-side implementations. You can find source code and issue tracking for newer, web component based Vaadin versions in [vaadin/platform](https://github.com/vaadin/platform). Vaadin 8 includes Vaadin 7 compatibility classes.
+This repository serves as an archive of the source code and issue tracking for Vaadin 8 and Vaadin 7. Both use GWT as the base of client-side implementations. Vaadin 8 includes Vaadin 7 compatibility classes. You can find source code and issue tracking for newer, web component based Vaadin versions in [vaadin/platform](https://github.com/vaadin/platform).
 
 The code in this repository reflects the state of Vaadin 8.14.3 and Vaadin 7.7.17, the last releases made available under the Apache-2 license, and will be left as-is.
 
@@ -16,9 +16,9 @@ Starting with versions 7.7.18 and 8.15.0, no new artifacts are being released in
 
 Vaadin Framework 7 and 8 are now being maintained under a closed-source model by the Vaadin Expertise Team. You are free to continue using Vaadin Framework releases up to [8.14.3](https://github.com/vaadin/framework/releases/tag/8.14.3) and [7.7.17](https://github.com/vaadin/framework/releases/tag/7.7.17) as made available through this repository, and you are free to fork and maintain the framework yourself.
 
-Vaadin 8 open source maintenance ended in February 2022, [extended support](https://vaadin.com/vaadin-8-extended-maintenance) is available until February 2032. Starting with version 8.15.0, Vaadin 8 is subject to Vaadin Commercial License, version 2.
+* Vaadin 8 open source maintenance ended in February 2022, [extended support](https://vaadin.com/vaadin-8-extended-maintenance) is available until February 2032. Starting with version 8.15.0, Vaadin 8 is subject to commercial Vaadin licenses (CVDLv4 from 8.15.0 onward, VCL-1 from 8.19.0 onward, and VCL-2 starting with 8.21.0). The current license is (Vaadin Commercial License, version 2)[https://vaadin.com/commercial-license-and-service-terms].
 
-Vaadin 7 open source maintenance ended in Febraury 2019, [extended support](https://vaadin.com/support/vaadin-7-extended-maintenance) is available until February 2029. Starting with version 7.7.18, Vaadin 7 is subject to Vaadin Commercial License, version 2.
+* Vaadin 7 open source maintenance ended in Febraury 2019, [extended support](https://vaadin.com/support/vaadin-7-extended-maintenance) is available until February 2029. Starting with version 7.7.18, Vaadin 7 is subject to commercial Vaadin licenses (CVDLv4 from 7.7.18 onward, VCL-1 from 7.7.37 onward, and VCL-2 starting with 7.7.41). The current license is (Vaadin Commercial License, version 2)[https://vaadin.com/commercial-license-and-service-terms].
 
 Starting with Vaadin 8.21.0 and Vaadin 7.7.41, Vaadin Framework releases will be made available through a *private Maven repository*. To gain access to this private repository, you can find instructions [here](https://vaadin.com/vaadin-8-extended-maintenance-releases). Vaadin Framework releases will eventually be exclusively available through this private repository, but for the time being artifacts will also be released to Maven Central.
 
