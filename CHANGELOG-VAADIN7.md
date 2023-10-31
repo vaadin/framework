@@ -1,5 +1,11 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.42
+
+* Added read-only support to Grid. This allows disabling editing features in an otherwise editable Grid while still retaining scrolling. Use existing API method `Grid.setReadOnly(true)`.
+* Enabled dependency convergence enforcement in Vaadin 7 to mitigate transitive dependency mismatches.
+* Internal test fixes
+
 ## Vaadin 7.7.41
 
 * fixed a regression which caused issues if the syncId check was disabled
