@@ -1,5 +1,34 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.22.0
+
+* Added Read-Only mode support to Grid and Compatibility Grid.
+  The Read-Only mode can be engaged using the *existing* API
+  call `grid.setReadOnly(true)`. This mode disallows
+  editing of the Grid, while still allowing scrolling. This was
+  added as the previous way to disallow editing in an otherwise
+  editable grid was to call `grid.setDisabled(true)`, but
+  that would also stop users from scrolling through data.
+* Added missing style class name strings in `ValoTheme`, to allow
+  cleaner access to menu and navigation elements in the style.
+  The new fields are
+  * `MENU_SELECTED`
+  * `MENU_TOGGLE`
+  * `MENU_VISIBLE`
+  * `MENU_ITEMS`
+  * `MENU_USER`
+  * `NAV_CONTENT`
+  * `SCROLLABLE`
+  
+  See JavaDoc for usage descriptions. Previouly, access to these
+  classes had to be done through magic strings in the application.
+* Fixed an issue with `DateField` event propagation when the
+  backend doesn't immediately service the request. Events would
+  get queued and then sent stale and out of order, resulting in
+  the server side getting false user interaction events from
+  the `DateField`.
+* Updated `jetty` dependency to address CVE-2023-36479.
+
 ## Vaadin 8.21.0
 
 * Framework 8 builds are now made on Java 11. The resulting
