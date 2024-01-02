@@ -1,5 +1,16 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.23.0
+
+* Implemented eager UI cleanup through the Beacon API. Previously UIs would be cleaned up after several consequtive missed heartbeats. Now, closing the browser or tab or navigating away from the page sends a message to the server to notify it of such, allowing the UI to be destroyed immediately.
+  This should result in lower server resource usage without any modifications to the software. However, this feature does come with some caveats:
+  * This feature is not available for Internet Explorer clients. Our testing showed that Internet Explorer will report compatibility with the API, but fail to function as expected. As such, the feature is disabled for IE.
+  * Vaadin 8 included a LegacyApplication class for Vaadin 6 compatibility that was a holdover from Vaadin 7 and should have been removed with the release of Vaadin 8. This feature may cause systems extending the LegacyApplication class to close and not reopen when the first client closes their window.
+  If this is a problem for your application, please contact Vaadin Support.
+  * Should you experience ANY abnormal behavior as it pertains to UI instance availability with this version of Vaadin but not with 8.22.0, please let us know by creating a support ticket.
+* Improved stability of internal tests and build.
+* Fixed JavaDoc generation and deployment to [vaadin.com/api](https://vaadin.com/api).
+
 ## Vaadin 8.22.0
 
 * Added Read-Only mode support to Grid and Compatibility Grid.
