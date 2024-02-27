@@ -1,5 +1,32 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.24.0
+
+* Removed support for Adobe Flash in the form of the Flash widget and Flash type support in Embed. Adobe Flash has not been supported at all in modern browsers since 2021, and has had several known security issues long before that, to the point that security auditing tools will now actively flag the dormant Flash support code in Vaadin Framework as "harmful".
+* The Flash widget and the parts of the Embedded widget specifically providing Flash support are no longer present in Vaadin Framework, meaning that any software currently relying on the Flash widget will fail to compile.
+  * The existing Flash widget and Embedded support is planned to be provided in the form of an add-on for those that need it, but at the time of the release of Vaadin 8.24.0 this add-on is not yet available.
+  * If your application still relies on Flash support, please contact [support@vaadin.com](mailto:support@vaadin.com) or alternatively open a ticket at [support.vaadin.com](https://support.vaadin.com/).
+* Removed a reference to ActiveXObject used in the bootstrap script, which was a workaround needed for Internet Explorer versions up to version 9. Support for Internet Explorer 9 finally ended on January 9, 2024 for Azure customers.
+  * At this point, the only Internet Explorer version receiving any kind of support from Microsoft is Internet Explorer 11. Customers should be aware, though, that support for IE11 is only offered on a "best effort" basis, in that we will actively attempt to not break features that worked on IE11 in the past, but no new code or fixes are being built with IE11 or even tested against it.
+    It should be noted that all support for Internet Explorer 11 as well as compatibility code for IE11 may be removed from Vaadin Framework after extended support for IE11 ends.
+* Fixed a Drag & Drop issue that prevented dragging of certain widgets on some browsers and operating systems, but not on others. Widget dragging behavior should now be stable on all platforms.
+  * See [issue #12604](https://github.com/vaadin/framework/issues/12604).
+* Fixed scroll bar behavior on Firefox in several widgets.
+  * See [issue #12605](https://github.com/vaadin/framework/issues/12605).
+* Made sure DataProvider I/O streams are closed eagerly to avoid resource leaks. Framework cannot reliably detect which streams are affected, so all potentially susceptible streams are now handled using a try-with-resources pattern.
+  * In applications that call the methods directly it's sufficient to use the pattern only with DataProviders that open I/O channels during data requests.
+  * See [Flow issue #18551](https://github.com/vaadin/flow/issues/18551) and [Flow pull request #18552](https://github.com/vaadin/flow/pull/18552).
+* Several improvements have been made to Binder:
+  * Validation has been improved as follows
+    * Once `Binder.handleFieldValueChange` runs for a binding when readBean was used, the whole binder will be silently validated also. BinderValidationStatusHandler is called like before (only contains status from changed binding), but StatusChangeEvent is now fired considering all bindings and if possible bean validators as well.
+    * Once `Binder.handleFieldValueChange` runs for a binding when setBean was used, doWriteIfValid will validate all bindings, not only the changed ones. This prevents writing an invalid bean in cases where one or more of the initial values are in invalid state (but not marked as such since setBean resets validation status), but they have not been changed from their initial value(s).
+    * Calling setAsRequiredEnabled with a changed value no longer triggers validation, since that validation is now handled elsewhere when needed as stated above.
+    * It is now possible to check for changes for a specific binding via the `Binder.hasChanges` method. This is a backported feature from Flow.
+    * See [Flow issue #17395](https://github.com/vaadin/flow/issues/17395) and [Flow pull request #17861](https://github.com/vaadin/flow/pull/17861).
+  * It is now possible to only write the changed properties to a Bean through an overloaded `Binder.writeBean` method that now accepts an additional Collection parameter. This is a backported feature from Flow.
+    * See [Flow issue #185383](https://github.com/vaadin/flow/issues/18583) and [Flow pull request #18636](https://github.com/vaadin/flow/pull/18636).
+* Several internal tests were fixed for improved build stability.
+
 ## Vaadin 8.23.0
 
 * Implemented eager UI cleanup through the Beacon API. Previously UIs would be cleaned up after several consequtive missed heartbeats. Now, closing the browser or tab or navigating away from the page sends a message to the server to notify it of such, allowing the UI to be destroyed immediately.
