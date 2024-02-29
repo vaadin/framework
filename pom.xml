@@ -289,7 +289,7 @@
             <dependency>
                 <groupId>org.eclipse.jgit</groupId>
                 <artifactId>org.eclipse.jgit</artifactId>
-                <version>3.5.1.201410131835-r</version>
+                <version>3.5.3.201412180710-r</version>
             </dependency>
             <dependency>
                 <groupId>com.github.siom79.japicmp</groupId>
