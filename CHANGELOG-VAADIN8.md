@@ -1,5 +1,15 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.25.0
+
+* Added feature in Grid that allows setting the order of the hidable columns as presented in the Grid sidebar menu. The list can now be sorted either as `DEFAULT`, `ASCENDING` or `DESCENDING`. Default order is the same as the presentation order in the Grid. Ascending and descending ordering use the set title of each hidable column, sorted alphabetically.
+  * The new API can be found in Grid - `grid.setSidebarColumnOrder(GridConstants.SidebarColumnOrder order)` and the corresponding getter `grid.getSidebarColumnOrder()`.
+* Fixed edge-case issue [#12611](https://github.com/vaadin/framework/issues/12611) where a combination of a TabSheet inside of a FormLayout inside of a TabSheet would be rendered with 0px width.
+* Added a workaround for Grid issue [#12608](https://github.com/vaadin/framework/issues/12608) where using a layout component containing multiple subcomponents inside a Grid cell with a `ComponentRenderer` would cause rendering to break.
+  * This workaround schedules re-layouting of the Grid after each scroll event. As a result, minor slowdowns in complex Grids can occur in some cases.
+  * If you are experiencing performance issues with your Grids after upgrading to Vaadin 8.25.0, please open a support ticket at [support.vaadin.com](https://support.vaadin.com/).
+* Improved the documentation of the TestBench `TextFieldElement` class.
+
 ## Vaadin 8.24.0
 
 * Removed support for Adobe Flash in the form of the Flash widget and Flash type support in Embed. Adobe Flash has not been supported at all in modern browsers since 2021, and has had several known security issues long before that, to the point that security auditing tools will now actively flag the dormant Flash support code in Vaadin Framework as "harmful".
