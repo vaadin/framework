@@ -22,7 +22,7 @@ Vaadin Framework 7 and 8 are now being maintained under a closed-source model by
 
 * Vaadin 7 open source maintenance ended in Febraury 2019, [extended support](https://vaadin.com/support/vaadin-7-extended-maintenance) is available until February 2029. Starting with version 7.7.18, Vaadin 7 is subject to commercial Vaadin licenses (CVDLv4 from 7.7.18 onward, VCL-1 from 7.7.37 onward, and VCL-2 starting with 7.7.41). The current license is [Vaadin Commercial License, version 2](https://vaadin.com/commercial-license-and-service-terms).
 
-Starting with Vaadin 8.21.0 and Vaadin 7.7.41, Vaadin Framework releases will be made available through a *private Maven repository*. To gain access to this private repository, you can find instructions [here](https://vaadin.com/vaadin-8-extended-maintenance-releases). Vaadin Framework releases will eventually be exclusively available through this private repository, but for the time being artifacts will also be released to Maven Central.
+Extended Maintenance versions of Vaadin Framework are being made available through Maven Central.
 
 In order to get access to extended maintenance Framework source code, [contact sales](https://pages.vaadin.com/contact).
 
