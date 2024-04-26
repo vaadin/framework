@@ -1,5 +1,12 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.25.1
+
+* Reverted a fix for a ComboBox issue where, if a filter was applied and the user opens the dropdown choice menu, the currently selected choice was not initially being scrolled into view. This fix had the side effect of making it impossible to scroll the dropdown menu in certain cases. The fix for the original issue will be re-implemented in a side-effect free manner in a future release.
+* Fixed a packaging issue, where the Vaadin license checker and Vaadin Open were incorrectly being included as part of the vaadin-server artifact. This caused a cascade of classpath conflict warnings on startup. As far as we're aware, this problem appeared to be completely cosmetic but was causing concern for some users.
+* Added a missing style rule for FormLayout's disabled caption opacity when using the light Valo theme.
+* Updated the license checker version.
+
 ## Vaadin 8.25.0
 
 * Added feature in Grid that allows setting the order of the hidable columns as presented in the Grid sidebar menu. The list can now be sorted either as `DEFAULT`, `ASCENDING` or `DESCENDING`. Default order is the same as the presentation order in the Grid. Ascending and descending ordering use the set title of each hidable column, sorted alphabetically.
