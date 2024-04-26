@@ -23,7 +23,7 @@ Despite our best efforts the formatting options aren't always entirely consisten
 
 For IntelliJ IDEA users, see [IntelliJ IDEA Quick Setup](#intellij-idea-quick-setup).
 
-1. Decide were you would like your Eclipse workspace to be located.
+1. Decide where you would like your Eclipse workspace to be located.
     * This project contains multiple modules and uses configurations that might clash with your existing projects, using a separate workspace is recommended.
     * Eclipse Oxygen is recommended, different versions may treat formatting rules differently.
     * If you are using Windows, you may wish to keep the workspace path reasonably short (e.g. `C:\dev\<workspaceName>`) to avoid problems with too long file paths.
@@ -116,7 +116,7 @@ After that is done, you should have 9 of 28 save actions activated and listed as
 
 ### Getting started
 
-Run <code>install</code> maven goal for the project root to get started.
+Run the <code>install</code> maven goal for the project root to get started.
 In Eclipse this is done by right-clicking on the project root in Project Explorer and choosing *Run As* -> *Maven Build...*. If you choose to skip tests you may need to run the <code>install</code> maven goal for `vaadin-uitest` project separately.
 * Note that the first compilation takes a while to finish as Maven downloads dependencies used in the projects.
 

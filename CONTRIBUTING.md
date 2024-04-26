@@ -28,7 +28,7 @@ Getting in touch with us early will also help us coordinate efforts so that not 
 
 To make contributions you should create a fork of the Vaadin repository and check out the sources to your development environment. If you are not familiar with Git and GitHub, you can refer to [GitHub's forking guide](https://guides.github.com/activities/forking/).
 
-We encourige to develop all features in separate branches. This way you can have one feature per pull request. 
+We encourage to develop all features in separate branches. This way you can have one feature per pull request. 
 
 https://robots.thoughtbot.com/keeping-a-github-fork-updated has instructions on how to keep your local fork up to date.
 
@@ -104,7 +104,7 @@ Start with a good Commit message in imperative form.
 
 ### Describe the user impact & describe what was done to solve the problem:
 
-    This change introduces a separate icon font for valo (9KB instead of 80KB) and decouples Valo from Font Awesome to enable updating Font Awesome without taking Valo into account.
+    This change introduces a separate icon font for Valo (9KB instead of 80KB) and decouples Valo from Font Awesome to enable updating Font Awesome without taking Valo into account.
 
     This change also makes it easy to not load Font Awesome when using Valo by setting $v-font-awesome:false
 
@@ -146,7 +146,7 @@ You should receive comments within a week or so; if that does not happen, make s
 
 ## Source code auto-formatting
 
-Before submitting changes to Github, run the command `mvn process-sources` from project's root. This maven goal automatically formats source code according to Vaadin standards. The same goal is run automatically if you invoke `mvn install` or `mvn compile`.   
+Before submitting changes to Github, run the command `mvn process-sources` from project's root. This Maven goal automatically formats source code according to Vaadin standards. The same goal is run automatically if you invoke `mvn install` or `mvn compile`.   
 
 ## Creating a pull request in GitHub
 
