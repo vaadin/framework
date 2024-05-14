@@ -1,5 +1,10 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.25.2
+
+* Defined Vaadin License Checker version as a variable in the root POM in order to fix OSGI packaging. The packaging change in 8.25.1 exposed this issue.
+* Mitigated the performance overhead caused by the Grid changes in 8.25.0, namely the re-layouting of a Grid on scroll is now only performed when a ComponentRenderer is present.
+
 ## Vaadin 8.25.1
 
 * Reverted a fix for a ComboBox issue where, if a filter was applied and the user opens the dropdown choice menu, the currently selected choice was not initially being scrolled into view. This fix had the side effect of making it impossible to scroll the dropdown menu in certain cases. The fix for the original issue will be re-implemented in a side-effect free manner in a future release.
