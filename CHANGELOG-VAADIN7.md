@@ -1,5 +1,12 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.43
+
+* Made ComboBox rendering faster by trying to avoid constant popup size recalculations
+* Backported Upload fixed from Vaadin 8, namely preventing upload if no file has been selected, and making sure the ChangeListener still works after the first upload.
+* Added things necessary for JavaDoc generation.
+* Updated the license checker, fixed tests, updated the copyright dates
+
 ## Vaadin 7.7.42
 
 * Added read-only support to Grid. This allows disabling editing features in an otherwise editable Grid while still retaining scrolling. Use existing API method `Grid.setReadOnly(true)`.
