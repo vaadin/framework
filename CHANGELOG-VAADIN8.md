@@ -1,5 +1,12 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.26.0
+
+* Backported Binder fixes from Flow (pull requests [#18760](https://github.com/vaadin/flow/pull/18760), [#18770](https://github.com/vaadin/flow/pull/18770), [#18891](https://github.com/vaadin/flow/pull/18891), [#18833](https://github.com/vaadin/flow/pull/18833)). This also fixes an issue where data entry was being prohibited by required fields with no value assigned - with multiple empty required fields with input validation enabled on the same form, clicking on one of the required fields would result in loss of UI interactivity. Validation is now only run for changed fields, not an entire field group.
+* Improved GridLayout layouting. Due the timing of internal measurements, GridLayout could finish its layouting logic prematurely and then fail to account for the size of its contents once the child components finished rendering, e.g. in situations where dynamically loaded styles are applied late.
+* Fixed a ComboBox issue where ComboBox would open the wrong page in the dropdown option list, or prevent navigation in some cases. This fix was previously attempted in 8.18.1 but had to be reverted in 8.25.1 due to it preventing scrolling of the list as an unforeseen side effect. These side effects are now properly detected in continuous integration tests and should not recur.
+* Updated client-side compilation to use GWT 2.11.0 for better Java 11 compatibility.
+
 ## Vaadin 8.25.2
 
 * Defined Vaadin License Checker version as a variable in the root POM in order to fix OSGI packaging. The packaging change in 8.25.1 exposed this issue.
