@@ -1,5 +1,10 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.44
+
+* Internal changes needed for future development
+* ComboBox popup position updates smoother when the page is scrolled
+
 ## Vaadin 7.7.43
 
 * Made ComboBox rendering faster by trying to avoid constant popup size recalculations
