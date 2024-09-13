@@ -23,7 +23,7 @@
 * Vastly improved the ColorPicker widget, by improving the behavior of its history feature and made it render correctly on Valo-based themes.
 * Improved ComboBox so that it no longer unnecessarily truncates the contents of the popup list.
 * Improved ComboBox popup management. ComboBox should no longer cause constant reflows for updating the popup list position when no repositioning is necessary.
-* Fixed an oversight in the eager UI closing feature of Vaadin Server, where the browser's Beacon API would be attempted to signal to the server that the session can be cleaned up. The original implementation assumed browsers detected to be Chrome-based to support the Beacon API, but this was found to not be a correct assumption in testing, so Beacon API availability is now detected dynamically at runtime to avoid a late-stage JavaScript execution fault.
+* Fixed an oversight in the eager UI closing feature of Vaadin Server, where the browser's Beacon API would be attempted to be used to signal to the server that the session can be closed and cleaned up. The original implementation assumed browsers detected as Chrome-based to support the Beacon API, but this was found to not be a correct assumption in testing, so Beacon API availability is now detected dynamically at runtime to avoid a late-stage JavaScript execution fault.
   
   Also made eager UI closing function on Firefox, which advertises Beacon API availability but does not actually send the message to the server. Firefox was special-cased to use the `beforeUnload` event instead.
 
