@@ -16,7 +16,7 @@
 * Fixed an issue in Binder where calling `binder.removeBinding()` could result in a null pointer exception down the line, as the removed binding was not also removed from the `changedBindings` list.
   
   This is a backport of Flow pull request [#6827](https://github.com/vaadin/flow/pull/6827) which fixes Flow issue [#5384](https://github.com/vaadin/flow/issues/5384).
-* Changed the internal `LayoutManager.layoutLater` method to use `requestAnimationFrame` instead of a timer with a magic 100 msec timeout value to improve rendering performance and stability. We have not detected any breakage with this change, but it should nonetheless be considered a **potentially breaking change**, as if your client-side code for whatever relies on the presence of that 100 msec timer between layout cycles, you may experience rendering instability.
+* Changed the internal `LayoutManager.layoutLater` method to use `requestAnimationFrame` instead of a timer with a magic 100 msec timeout value to improve rendering performance and stability. We have not detected any breakage with this change, but it should nonetheless be considered a **potentially breaking change**, as if your client-side code for whatever reason relies on the presence of that 100 msec timer between layout cycles, you may experience rendering instability.
   
   If this is the case, contact [Vaadin Support](https://support.vaadin.com/).
 * Updated the license checker, which fixes an issue where licence checking could fail due to an SSL error.
