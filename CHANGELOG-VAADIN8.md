@@ -1,5 +1,32 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.27.0
+
+* Added `vaadin-push-jakarta` package for a Jakarta-based Push implementation, based on Atmosphere 3. This package is meant to be used together with the `vaadin-server-mpr-jakarta` and `vaadin-compatibility-server-mpr-jakarta` packages in environments like Spring 6+ and Jetty 11+.
+  
+  This feature is to be considered experimental for the moment; please report any and all issues you encounter with it to [Vaadin Support](https://vaadin.com/solutions/support).
+* Altered packaging of vaadin-client, vaadin-compatibility-client and vaadin-client-compiler packages to have the vaadin-server and vaadin-compatiblity-server dependencies with provided scope.
+  
+  This is a **potentially breaking change** if your build expects to have a transitive vaadin-server dependency.
+  
+  This change was made in order to make it easier to use the Jakarta versions of the server and push packages, namely `vaadin-server-mpr-jakarta`, `vaadin-compatibility-server-mpr-jakarta` and `vaadin-push-jakarta`, as they provide the same API and class structure but rely on the Jakarta namespace instead of Javax.
+* Improved change detection of Binder. This is a backport from Flow pull request [#19488](https://github.com/vaadin/flow/pull/19488) which fixes Flow issue [#19260](https://github.com/vaadin/flow/issues/19260).
+  
+  In short, previously a reverted change to a bound field would still be considered a change. With this change, the meaningfulness of the value changes is considered.
+* Fixed an issue in Binder where calling `binder.removeBinding()` could result in a null pointer exception down the line, as the removed binding was not also removed from the `changedBindings` list.
+  
+  This is a backport of Flow pull request [#6827](https://github.com/vaadin/flow/pull/6827) which fixes Flow issue [#5384](https://github.com/vaadin/flow/issues/5384).
+* Changed the internal `LayoutManager.layoutLater` method to use `requestAnimationFrame` instead of a timer with a magic 100 msec timeout value to improve rendering performance and stability. We have not detected any breakage with this change, but it should nonetheless be considered a **potentially breaking change**, as if your client-side code for whatever relies on the presence of that 100 msec timer between layout cycles, you may experience rendering instability.
+  
+  If this is the case, contact [Vaadin Support](https://vaadin.com/solutions/support).
+* Updated the license checker, which fixes an issue where licence checking could fail due to an SSL error.
+* Vastly improved the ColorPicker widget, by improving the behavior of its history feature and made it render correctly on Valo-based themes.
+* Improved ComboBox so that it no longer unnecessarily truncates the contents of the popup list.
+* Improved ComboBox popup management. ComboBox should no longer cause constant reflows for updating the popup list position when no repositioning is necessary.
+* Fixed an oversight in the eager UI closing feature of Vaadin Server, where the browser's Beacon API would be attempted to signal to the server that the session can be cleaned up. The original implementation assumed browsers detected to be Chrome-based to support the Beacon API, but this was found to not be a correct assumption in testing, so Beacon API availability is now detected dynamically at runtime to avoid a late-stage JavaScript execution fault.
+  
+  Also made eager UI closing function on Firefox, which advertises Beacon API availability but does not actually send the message to the server. Firefox was special-cased to use the `beforeUnload` event instead.
+
 ## Vaadin 8.26.0
 
 * Backported Binder fixes from Flow (pull requests [#18760](https://github.com/vaadin/flow/pull/18760), [#18770](https://github.com/vaadin/flow/pull/18770), [#18891](https://github.com/vaadin/flow/pull/18891), [#18833](https://github.com/vaadin/flow/pull/18833)). This also fixes an issue where data entry was being prohibited by required fields with no value assigned - with multiple empty required fields with input validation enabled on the same form, clicking on one of the required fields would result in loss of UI interactivity. Validation is now only run for changed fields, not an entire field group.
