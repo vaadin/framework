@@ -5,9 +5,9 @@
 * Added `vaadin-push-jakarta` package for a Jakarta-based Push implementation, based on Atmosphere 3. This package is meant to be used together with the `vaadin-server-mpr-jakarta` and `vaadin-compatibility-server-mpr-jakarta` packages in environments like Spring 6+ and Jetty 11+.
   
   This feature is to be considered experimental for the moment; please report any and all issues you encounter with it to [Vaadin Support](https://vaadin.com/solutions/support).
-* Altered packaging of vaadin-client, vaadin-compatibility-client and vaadin-client-compiler packages to have the vaadin-server and vaadin-compatiblity-server dependencies with provided scope.
+* Altered packaging of `vaadin-client`, `vaadin-compatibility-client` and `vaadin-client-compiler` packages to have the `vaadin-server` and `vaadin-compatiblity-server` dependencies with provided scope.
   
-  This is a **potentially breaking change** if your build expects to have a transitive vaadin-server dependency.
+  This is a **potentially breaking change** if your build expects to have a transitive `vaadin-server` dependency.
   
   This change was made in order to make it easier to use the Jakarta versions of the server and push packages, namely `vaadin-server-mpr-jakarta`, `vaadin-compatibility-server-mpr-jakarta` and `vaadin-push-jakarta`, as they provide the same API and class structure but rely on the Jakarta namespace instead of Javax.
 * Improved change detection of Binder. This is a backport from Flow pull request [#19488](https://github.com/vaadin/flow/pull/19488) which fixes Flow issue [#19260](https://github.com/vaadin/flow/issues/19260).
