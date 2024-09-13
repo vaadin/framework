@@ -4,7 +4,7 @@
 
 * Added `vaadin-push-jakarta` package for a Jakarta-based Push implementation, based on Atmosphere 3. This package is meant to be used together with the `vaadin-server-mpr-jakarta` and `vaadin-compatibility-server-mpr-jakarta` packages in environments like Spring 6+ and Jetty 11+.
   
-  This feature is to be considered experimental for the moment; please report any and all issues you encounter with it to [Vaadin Support](https://vaadin.com/solutions/support).
+  This feature is to be considered experimental for the moment; please report any and all issues you encounter with it to [Vaadin Support](https://support.vaadin.com/).
 * Altered packaging of `vaadin-client`, `vaadin-compatibility-client` and `vaadin-client-compiler` packages to have the `vaadin-server` and `vaadin-compatiblity-server` dependencies with provided scope.
   
   This is a **potentially breaking change** if your build expects to have a transitive `vaadin-server` dependency.
@@ -18,7 +18,7 @@
   This is a backport of Flow pull request [#6827](https://github.com/vaadin/flow/pull/6827) which fixes Flow issue [#5384](https://github.com/vaadin/flow/issues/5384).
 * Changed the internal `LayoutManager.layoutLater` method to use `requestAnimationFrame` instead of a timer with a magic 100 msec timeout value to improve rendering performance and stability. We have not detected any breakage with this change, but it should nonetheless be considered a **potentially breaking change**, as if your client-side code for whatever relies on the presence of that 100 msec timer between layout cycles, you may experience rendering instability.
   
-  If this is the case, contact [Vaadin Support](https://vaadin.com/solutions/support).
+  If this is the case, contact [Vaadin Support](https://support.vaadin.com/).
 * Updated the license checker, which fixes an issue where licence checking could fail due to an SSL error.
 * Vastly improved the ColorPicker widget, by improving the behavior of its history feature and made it render correctly on Valo-based themes.
 * Improved ComboBox so that it no longer unnecessarily truncates the contents of the popup list.
