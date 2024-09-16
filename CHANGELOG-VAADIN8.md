@@ -1,5 +1,10 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.27.1
+
+* Fixed an issue with the `vaadin-push` packaging which prevented the JavaScript payload from loading.
+* Internal test fixes
+
 ## Vaadin 8.27.0
 
 * Added `vaadin-push-jakarta` package for a Jakarta-based Push implementation, based on Atmosphere 3. This package is meant to be used together with the `vaadin-server-mpr-jakarta` and `vaadin-compatibility-server-mpr-jakarta` packages in environments like Spring 6+ and Jetty 11+.
