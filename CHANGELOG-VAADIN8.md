@@ -1,5 +1,14 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.27.2
+
+* Included the vaadin-portlet package in the Vaadin 8 BOM. As a result, the version of the `vaadin-portlet` package does not need to be defined if the `vaadin-bom` artifact is imported.
+  This definition was originally left out due to an oversight and the omission was discovered during internal manual testing.
+* Improved initialization of the eager unload feature when using Firefox, Safari or any iOS browser.
+
+  PLEASE NOTE: this feature will make the "are you sure you want to leave" confirmation not function as intended, as these browsers need to hook onto the `beforeunload` event. This will cause the session to become invalidated and will require reloading the page even if the user decides to stay.
+  If you need to disable the eager unload functionality for Safari/Firefox/iOS in order to display the confirmation, directly assign a handler to `window.onbeforeunload` with a JavaScript call.
+
 ## Vaadin 8.27.1
 
 * Fixed an issue with the `vaadin-push` packaging which prevented the JavaScript payload from loading.
