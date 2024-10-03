@@ -2,7 +2,7 @@
 
 ## Vaadin 8.27.2
 
-* Included the vaadin-portlet package in the Vaadin 8 BOM. As a result, the version of the `vaadin-portlet` package does not need to be defined if the `vaadin-bom` artifact is imported.
+* Included the `vaadin-portlet` package in the Vaadin 8 BOM. As a result, the version of the `vaadin-portlet` package does not need to be defined if the `vaadin-bom` artifact is imported.
   This definition was originally left out due to an oversight and the omission was discovered during internal manual testing.
 * Improved initialization of the eager unload feature when using Firefox, Safari or any iOS browser.
 
