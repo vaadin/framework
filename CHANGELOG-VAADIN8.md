@@ -1,5 +1,13 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.27.3
+
+* Added an option to disable Push disconnect on refresh. This is a special-case workaround. Normally when UI is refreshed when `@PreserveOnRefresh` is used, UI checks if an associated Push connection is active and disconnects it in order to avoid a race condition. This functionality was originally introduced to fix Framework [issue #12577](https://github.com/vaadin/framework/issues/12577). However, with some containers such as Payara this can have unwanted side effects, such as CDI reporting that no session scoped context is available after refresh.
+
+  This feature can now be toggled off using the `protected` UI method `setDisconnectPushOnRefresh(false)`.
+
+* Updated Atmosphere to detect Payara alongside Glassfish and enable async support for it. This is a workaround for a bug/feature that exists both in Glassfish and Payara that provides a null ServerContainer reference that would otherwise cause initialization to fail.
+
 ## Vaadin 8.27.2
 
 * Included the `vaadin-portlet` package in the Vaadin 8 BOM. As a result, the version of the `vaadin-portlet` package does not need to be defined if the `vaadin-bom` artifact is imported.
