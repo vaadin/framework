@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="https://maven.apache.org/POM/4.0.0" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.vaadin</groupId>
@@ -27,15 +27,17 @@
         <liferay.portal-kernel.version>2.0.0</liferay.portal-kernel.version>
 
         <vaadin.gwt.version>2.8.2</vaadin.gwt.version>
-        <vaadin.plugin.version>8.15-SNAPSHOT</vaadin.plugin.version>
+        <vaadin.plugin.version>8.14-SNAPSHOT</vaadin.plugin.version>
 
         <!-- Used in OSGi manifests -->
         <javax.validation.version>2.0.1.Final</javax.validation.version>
         <jsoup.version>1.14.3</jsoup.version>
         <javax.portlet.version>2.0</javax.portlet.version>
         <vaadin.sass.version>0.9.13</vaadin.sass.version>
+
         <!-- Note that this should be kept in sync with the class Constants -->
-        <atmosphere.runtime.version>2.4.30.vaadin4</atmosphere.runtime.version>
+        <atmosphere.runtime.version>2.4.30.vaadin7</atmosphere.runtime.version>
+        <atmosphere.client.version>2.3.2.vaadin2</atmosphere.client.version>
 
         <!-- OSGi -->
         <osgi.execution.environment>JavaSE-1.8</osgi.execution.environment>
@@ -48,7 +50,10 @@
         <!-- Dependency unpack directory -->
         <dependency.unpack.directory>${project.build.directory}/dependency-unpack</dependency.unpack.directory>
  
-        <jetty.version>9.4.43.v20210629</jetty.version>
+        <jetty.version>9.4.56.v20240826</jetty.version>
+        
+        <!-- Javassist, required for compilation on Java 9+ -->
+        <javassist.version>3.30.2-GA</javassist.version>
 
         <!-- Sonar properties -->
         <sonar.java.source>8</sonar.java.source>
@@ -58,6 +63,9 @@
 
         <vaadin.icons.version>3.0.2</vaadin.icons.version>
         <vaadin.testbench.version>5.2.0</vaadin.testbench.version>
+        
+        <!-- Required for testing -->
+        <hsqldb.version>2.7.4</hsqldb.version>
     </properties>
 
     <pluginRepositories>
@@ -103,7 +111,7 @@
         <license>
             <name>Apache License Version 2.0</name>
             <distribution>repo</distribution>
-            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
     </licenses>
     <scm>
@@ -118,12 +126,12 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.7</version>
+                <version>2.17.0</version>
             </dependency>
             <dependency>
                 <groupId>commons-cli</groupId>
                 <artifactId>commons-cli</artifactId>
-                <version>1.2</version>
+                <version>1.4</version>
             </dependency>
             <dependency>
                 <groupId>commons-lang</groupId>
@@ -133,7 +141,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.5</version>
+                <version>1.17.0</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -182,7 +190,7 @@
                 <groupId>com.vaadin.external.atmosphere.client</groupId>
                 <artifactId>javascript</artifactId>
                 <type>war</type>
-                <version>2.3.2.vaadin2</version>
+                <version>${atmosphere.client.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -245,11 +253,6 @@
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest-all</artifactId>
                 <version>1.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.hsqldb</groupId>
-                <artifactId>hsqldb</artifactId>
-                <version>2.2.6</version>
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
@@ -356,7 +359,14 @@
             <artifactId>javax.el</artifactId>
             <version>3.0.0</version>
             <scope>test</scope>
-        </dependency>	
+        </dependency>
+        
+        <!-- Required when building on Java 9+ to avoid reflection issues -->
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>${javassist.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <pluginManagement>
@@ -477,7 +487,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>animal-sniffer-maven-plugin</artifactId>
-                    <version>1.15</version>
+                    <version>1.23</version>
                 </plugin>
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
@@ -568,6 +578,46 @@
                         <id>parse-version</id>
                         <goals>
                             <goal>parse-version</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+			<!-- Always flatten all POMs -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.4.1</version>
+                <inherited>true</inherited>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                        <configuration>
+                            <updatePomFile>true</updatePomFile>
+                            <flattenMode>bom</flattenMode>
+                            <!-- Uncomment this to get a full list of dependencies in the resulting POM -->
+                            <!--<flattenDependencyMode>all</flattenDependencyMode>-->
+                            <pomElements>
+                                <parent>expand</parent>
+                                <name>keep</name>
+                                <description>keep</description>
+                                <url>keep</url>
+                                <properties>keep</properties>
+                                <pluginManagement>keep</pluginManagement>
+                                <dependencyManagement>keep</dependencyManagement>
+                                <build>keep</build>
+                            </pomElements>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>flatten-clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
                         </goals>
                     </execution>
                 </executions>
