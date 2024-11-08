@@ -62,3 +62,5 @@ phantomjsdriver.log
 
 # TB default error screenshot folder
 error-screenshots/
+.vscode/settings.json
+.project
