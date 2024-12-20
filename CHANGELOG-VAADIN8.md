@@ -1,5 +1,14 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.27.4
+
+* Added feature to automatically resume Push connection when a client unexpectedly loses communication with the server. Pending Push messages are now cached on the server until the session times out or connectivity is restored for a better user experience.
+  This is a backport of Flow pull request [#20283](https://github.com/vaadin/flow/pull/20283).
+* Fixed Framework issue #11699. Previously, calling UI.getCurrent() inside a UI.access() callback could return a random UI instance under certain circumastances. CurrentInstance is now properly cleared before the current session reference is set before running any pending access callbacks.
+  This is a backport of Flow pull request [#20255](https://github.com/vaadin/flow/pull/20255).
+* Moved (some) blocking calls outside of session lock. Fixes a potential deadlock issue. This is a backport of Flow pull request [#20475](https://github.com/vaadin/flow/pull/20475).
+* Specified pointer-events: auto as default for overlay containers in the Valo theme. This fixes an edge case where users were unable to select values from V8 comboboxes placed inside a V14 Dialog component when running under the Vaadin Multi Platform Runtime.
+
 ## Vaadin 8.27.3
 
 * Added an option to disable Push disconnect on refresh. This is a special-case workaround. Normally when UI is refreshed when `@PreserveOnRefresh` is used, UI checks if an associated Push connection is active and disconnects it in order to avoid a race condition. This functionality was originally introduced to fix Framework [issue #12577](https://github.com/vaadin/framework/issues/12577). However, with some containers such as Payara this can have unwanted side effects, such as CDI reporting that no session scoped context is available after refresh.
