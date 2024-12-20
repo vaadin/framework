@@ -7,7 +7,7 @@
 * Fixed Framework issue [#11699](https://github.com/vaadin/framework/issues/11699). Previously, calling `UI.getCurrent()`  inside a `UI.access()` callback could return a random UI instance under certain circumastances. `CurrentInstance` is now properly cleared before the current session reference is set before running any pending access callbacks.
   This is a backport of Flow pull request [#20255](https://github.com/vaadin/flow/pull/20255).
 * Moved (some) blocking calls outside of session lock. Fixes a potential deadlock issue. This is a backport of Flow pull request [#20475](https://github.com/vaadin/flow/pull/20475).
-* Specified pointer-events: auto as default for overlay containers in the Valo theme. This fixes an edge case where users were unable to select values from V8 comboboxes placed inside a V14 Dialog component when running under the Vaadin Multi Platform Runtime.
+* Specified `pointer-events: auto` as default for overlay containers in the Valo theme. This fixes an edge case where users were unable to select values from V8 comboboxes placed inside a V14 Dialog component when running under the Vaadin Multi Platform Runtime.
 
 ## Vaadin 8.27.3
 
