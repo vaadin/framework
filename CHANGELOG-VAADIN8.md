@@ -1,5 +1,13 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.27.5
+
+* Fixed an issue where exceptions might not be properly processed as a component is being detached. Exceptions are now caught both when handling the detach event and when calling detach manually. The detach event now fires reliably when the connector tracker is updated even when an exception occurs during detach.
+
+* Altered handling of the eager UI cleanup feature to not use the `beforeunload` event as a workaround on Safari. Safari will instead use the default `pagehide` event to listen for imminent UI disposal. Using the `beforeunload` event caused an issue where resource links would erroneously be treated as navigation away from the current UI, causing the UI to be invalidated.
+  
+  Firefox and Internet Explorer still use the `beforeunload` event to signal cleanup for the UI.
+
 ## Vaadin 8.27.4
 
 * Added feature to automatically resume Push connection when a client unexpectedly loses communication with the server. Pending Push messages are now cached on the server until the session times out or connectivity is restored for a better user experience.
