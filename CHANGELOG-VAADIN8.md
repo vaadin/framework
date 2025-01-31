@@ -1,5 +1,9 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.27.6
+
+* Fixed an issue with license checking related to pro components (Charts, Spreadsheet, etc.). The widgetset compilation process was incorrectly checking for an old form product key in certain edge cases, and would cause the build to fail when the key could not be found.
+
 ## Vaadin 8.27.5
 
 * Fixed an issue where exceptions might not be properly processed as a component is being detached. Exceptions are now caught both when handling the detach event and when calling detach manually. The detach event now fires reliably when the connector tracker is updated even when an exception occurs during detach.
