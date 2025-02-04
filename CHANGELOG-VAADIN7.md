@@ -1,5 +1,11 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.45
+
+* Set no-store headers for error responses
+* ComboBox popup size and positioning take into account the menu element’s own padding in addition to the menu item’s
+* Internal changes, and a fix for a license checking issue
+
 ## Vaadin 7.7.44
 
 * Internal changes needed for future development
