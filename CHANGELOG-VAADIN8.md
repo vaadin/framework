@@ -1,5 +1,14 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.27.7
+
+* Major update to Vaadin Maven Plugin to avoid depending on obsolete packages with open CVEs. While none of the affected packages have presented an actual risk to users due to how they are used within the Vaadin build process, they are being flagged as security issues, and as such are undesireable to have in the dependency list.
+
+* Fixed an issue where the SessionDestroyListener would receive a null WrappedSession instance and thus the HTTP session could not be explicitly invalidated.
+This is a backport from Flow. See Flow issue [#6959](https://github.com/vaadin/flow/issues/6959).
+
+* Fixed Grid's sorting indicator visibility when using the Runo theme.
+
 ## Vaadin 8.27.6
 
 * Fixed an issue with license checking related to pro components (Charts, Spreadsheet, etc.). The widgetset compilation process was incorrectly checking for an old form product key in certain edge cases, and would cause the build to fail when the key could not be found.
