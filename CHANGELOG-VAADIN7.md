@@ -2,6 +2,11 @@
 
 ## Vaadin 7.7.45
 
+* Updated maven plugin with updated dependencies
+* Internal test fixes
+
+## Vaadin 7.7.45
+
 * Set no-store headers for error responses
 * ComboBox popup size and positioning take into account the menu element’s own padding in addition to the menu item’s
 * Internal changes, and a fix for a license checking issue
