@@ -1,5 +1,10 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.46
+
+* Updated maven plugin with updated dependencies
+* Internal test fixes
+
 ## Vaadin 7.7.45
 
 * Set no-store headers for error responses
