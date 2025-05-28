@@ -1,5 +1,11 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.47
+
+* Fixed the text selection problems within Grid cells, so copying the contents of a single cell is possible
+* Added a Jakarta-compatible Push module
+* Fixed root module POM Source Code Management URLs to point to the correct repository
+
 ## Vaadin 7.7.46
 
 * Updated maven plugin with updated dependencies
