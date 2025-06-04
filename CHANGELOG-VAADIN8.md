@@ -1,5 +1,17 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.28.0
+
+* Fixed a Grid issue that was affecting at least Firefox where attempts to copy and paste text became difficult or impossible due to how Grid handled cell value updates during a refresh. Cells are refreshed every time a cell is clicked.
+
+* Fixed a MenuBar issue where the popup menu would become detached from the MenuBar and possibly inaccessible if the browser window was resized or scrolled. The popup menu will now be closed if a resize or mousewheel event is detected.
+
+* Improved Grid accessibility regarding navigation.
+  A new accessible navigation mode is introduced which changes Grid focus handling and DOM properties such that NVDA and similar screen readers will correctly announce current cell contents, allow proper tab navigation, properly reacts to header rows and adjusts the handling of the focus visuals to match.
+  This new functionality can be toggled on and off using the API Grid.setAccessibleNavigation(boolean) and the status checked using Grid.isAccessibleNavigation().
+
+* Fixed Combobox behavior so that the aria-expanded property is correctly handled when the combobox dropdown is opened and closed. This fixes combobox related issues with screen readers.
+
 ## Vaadin 8.27.7
 
 * Major update to Vaadin Maven Plugin to avoid depending on obsolete packages with open CVEs. While none of the affected packages have presented an actual risk to users due to how they were used within the Vaadin build process, they were being flagged as security issues, and as such were undesireable to have in the dependency list.
