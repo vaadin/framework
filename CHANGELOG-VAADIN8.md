@@ -1,5 +1,10 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.28.1
+
+* Hotfix: the Grid fix in 8.28.0 that made sure that DOM contents are not altered unless there is a need to update them was missing the logic for the Vaadin 8 version of Grid's TextRenderer, while it was added for the Vaadin 7 compatibility Grid.
+  This hotfix version adds the TextRenderer logic to	the Vaadin 8 Grid.
+
 ## Vaadin 8.28.0
 
 * Fixed a Grid issue that was affecting at least Firefox where attempts to copy and paste text became difficult or impossible due to how Grid handled cell value updates during a refresh. Cells are refreshed every time a cell is clicked.
