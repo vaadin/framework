@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class FileDownloaderUI extends AbstractTestUIWithLog {
         }, "demo.png");
         addComponents("Dynamic image", resource, components);
         try {
-            File hugeFile = File.createTempFile("huge", ".txt");
+            File hugeFile = Files.createTempFile("huge", ".txt").toFile();
             hugeFile.deleteOnExit();
             BufferedOutputStream os = new BufferedOutputStream(
                     new FileOutputStream(hugeFile));

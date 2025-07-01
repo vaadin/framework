@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -175,7 +176,7 @@ public class DisablingUploadTest extends SingleBrowserTest {
      * @throws IOException
      */
     private File createTempFile(boolean large) throws IOException {
-        File tempFile = File.createTempFile("TestFileUpload", ".txt");
+        File tempFile = Files.createTempFile("TestFileUpload", ".txt").toFile();
         BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
         if (large) {
             writer.write(getLargeTempFileContents());

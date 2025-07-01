@@ -2,6 +2,7 @@ package com.vaadin.tests.containers.filesystemcontainer;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class FileSystemContainerInTreeTable extends TestBase {
 
         final File folder;
         try {
-            File tempFile = File.createTempFile("fsc-tt", "");
+            File tempFile = Files.createTempFile("fsc-tt", "").toFile();
             tempFile.delete();
             folder = new File(tempFile.getParent(), tempFile.getName());
             folder.mkdir();

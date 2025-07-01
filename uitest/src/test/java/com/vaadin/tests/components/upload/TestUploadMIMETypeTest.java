@@ -15,6 +15,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 import static com.vaadin.tests.components.upload.TestUploadMIMEType.TEST_MIME_TYPE;
@@ -52,7 +53,7 @@ public class TestUploadMIMETypeTest extends MultiBrowserTest {
      * @throws IOException
      */
     private File createTempFile() throws IOException {
-        File tempFile = File.createTempFile("TestFileUpload", ".pdf");
+        File tempFile = Files.createTempFile("TestFileUpload", ".pdf").toFile();
         BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
         writer.write(getTempFileContents());
         writer.close();

@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
+import java.nio.file.Files;
 
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.StreamResource;
@@ -172,7 +173,7 @@ public class TestForStyledUpload extends LegacyApplication
             final String tempFileName = "upload_tmpfile_"
                     + System.currentTimeMillis();
             try {
-                file = File.createTempFile(tempFileName, null);
+                file = Files.createTempFile(tempFileName, null).toFile();
             } catch (final IOException e) {
                 e.printStackTrace();
             }

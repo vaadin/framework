@@ -25,6 +25,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.prefs.Preferences;
@@ -288,7 +289,7 @@ public class CvalCheckerTest {
         testManifest.getMainAttributes().putValue(VAADIN_ADDON_VERSION, "2");
 
         // Create a temporary Jar
-        File testJarFile = File.createTempFile("vaadin." + productName, ".jar");
+        File testJarFile = Files.createTempFile("vaadin." + productName, ".jar").toFile();
         testJarFile.deleteOnExit();
         JarOutputStream target = new JarOutputStream(
                 new FileOutputStream(testJarFile), testManifest);
@@ -357,7 +358,7 @@ public class CvalCheckerTest {
 
     @Test
     public void testReadKeyFromFile_LicenseFileEmpty() throws Exception {
-        File tmpLicenseFile = File.createTempFile("license", "lic");
+        File tmpLicenseFile = Files.createTempFile("license", "lic").toFile();
 
         assertNull(licenseChecker
                 .readKeyFromFile(tmpLicenseFile.toURI().toURL(), 4));
@@ -368,7 +369,7 @@ public class CvalCheckerTest {
     @Test
     public void testReadKeyFromFile_LicenseFileHasSingleUnidentifiedKey()
             throws Exception {
-        File tmpLicenseFile = File.createTempFile("license", "lic");
+        File tmpLicenseFile = Files.createTempFile("license", "lic").toFile();
         PrintWriter out = new PrintWriter(tmpLicenseFile);
         out.println("this-is-a-license");
         out.close();
@@ -382,7 +383,7 @@ public class CvalCheckerTest {
     @Test
     public void testReadKeyFromFile_LicenseFileHasSingleIdentifiedKey()
             throws Exception {
-        File tmpLicenseFile = File.createTempFile("license", "lic");
+        File tmpLicenseFile = Files.createTempFile("license", "lic").toFile();
         PrintWriter out = new PrintWriter(tmpLicenseFile);
         out.println("4=this-is-a-license");
         out.close();
@@ -396,7 +397,7 @@ public class CvalCheckerTest {
     @Test
     public void testReadKeyFromFile_LicenseFileHasMultipleKeys()
             throws Exception {
-        File tmpLicenseFile = File.createTempFile("license", "lic");
+        File tmpLicenseFile = Files.createTempFile("license", "lic").toFile();
         PrintWriter out = new PrintWriter(tmpLicenseFile);
         out.println("4=this-is-a-license");
         out.println("5=this-is-another-license");
@@ -413,7 +414,7 @@ public class CvalCheckerTest {
     @Test
     public void testReadKeyFromFile_LicenseFileHasMultipleKeysWithWhitespace()
             throws Exception {
-        File tmpLicenseFile = File.createTempFile("license", "lic");
+        File tmpLicenseFile = Files.createTempFile("license", "lic").toFile();
         PrintWriter out = new PrintWriter(tmpLicenseFile);
         out.println("4 = this-is-a-license");
         out.println("5 = this-is-another-license");
@@ -429,7 +430,7 @@ public class CvalCheckerTest {
 
     @Test
     public void testReadKeyFromFile_RequestedVersionMissing() throws Exception {
-        File tmpLicenseFile = File.createTempFile("license", "lic");
+        File tmpLicenseFile = Files.createTempFile("license", "lic").toFile();
         PrintWriter out = new PrintWriter(tmpLicenseFile);
         out.println("4 = this-is-a-license");
         out.println("5 = this-is-another-license");
@@ -443,7 +444,7 @@ public class CvalCheckerTest {
 
     @Test
     public void testReadKeyFromFile_FallbackToDefaultKey() throws Exception {
-        File tmpLicenseFile = File.createTempFile("license", "lic");
+        File tmpLicenseFile = Files.createTempFile("license", "lic").toFile();
         PrintWriter out = new PrintWriter(tmpLicenseFile);
         out.println("this-is-a-license");
         out.println("5 = this-is-another-license");
@@ -462,7 +463,7 @@ public class CvalCheckerTest {
     @Test
     public void testReadKeyFromFile_FallbackToDefaultKeyReversed()
             throws Exception {
-        File tmpLicenseFile = File.createTempFile("license", "lic");
+        File tmpLicenseFile = Files.createTempFile("license", "lic").toFile();
         PrintWriter out = new PrintWriter(tmpLicenseFile);
         out.println("5 = this-is-another-license");
         out.println("this-is-a-license");

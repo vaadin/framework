@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import com.vaadin.server.FileResource;
 import com.vaadin.tests.components.TestBase;
@@ -32,7 +33,7 @@ public class DownloadLargeFileResource extends TestBase {
 
     private void createFile() {
         try {
-            File hugeFile = File.createTempFile("huge", ".txt");
+            File hugeFile = Files.createTempFile("huge", ".txt").toFile();
             hugeFile.deleteOnExit();
             BufferedOutputStream os = new BufferedOutputStream(
                     new FileOutputStream(hugeFile));

@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -72,7 +73,7 @@ public class InterruptUploadTest extends MultiBrowserTest {
      * @throws IOException
      */
     private File createTempFile() throws IOException {
-        File tempFile = File.createTempFile("TestFileUpload", ".txt");
+        File tempFile = Files.createTempFile("TestFileUpload", ".txt").toFile();
         BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
         writer.write(getTempFileContents());
         writer.close();

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -54,7 +55,7 @@ public class TestFileUploadTest extends MultiBrowserTest {
      * @throws IOException
      */
     private File createTempFile() throws IOException {
-        File tempFile = File.createTempFile("TestFileUpload", ".txt");
+        File tempFile = Files.createTempFile("TestFileUpload", ".txt").toFile();
         BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
         writer.write(getTempFileContents());
         writer.close();
