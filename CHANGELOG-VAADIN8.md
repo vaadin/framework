@@ -1,5 +1,11 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.28.2
+
+* Fixed a bug where scrolling in a UI with a menubar would attempt to close the menubar popup even when the popup didn't exist, resulting in a cascade of JavaScript errors in the console.
+* Improved Upload component handling so that the `receiveUpload` handler will not get triggered if the upload has been interrupted in `startListener`.
+* Updated the JNA and OSHI dependencies for security.
+
 ## Vaadin 8.28.1
 
 * Hotfix: the Grid fix in 8.28.0 that made sure that DOM contents are not altered unless there is a need to update them was missing the logic for the Vaadin 8 version of Grid's TextRenderer, while it was added for the Vaadin 7 compatibility Grid.
