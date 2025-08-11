@@ -1,5 +1,10 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.48
+
+* Updated to Atmosphere 2.4.x, and consequently, Java 8. This bumps the minimum Java requirement from 7 to 8.
+* Added changes to make interrupting uploads more reliable, and block a possible security issue in the process.
+
 ## Vaadin 7.7.47
 
 * Fixed the text selection problems within Grid cells, so copying the contents of a single cell is possible
