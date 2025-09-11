@@ -1,5 +1,12 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.28.3
+
+* Fixed an issue where `getBeanPropertyDescriptors()` could include
+  properties more than once in the returned results list.
+  This is a backport of [Flow PR #21836](https://github.com/vaadin/flow/pull/21836).
+* Updated license checker for improved compatibility.
+
 ## Vaadin 8.28.2
 
 * Fixed a bug where scrolling in a UI with a menubar would attempt to close the menubar popup even when the popup didn't exist, resulting in a cascade of JavaScript errors in the console.
