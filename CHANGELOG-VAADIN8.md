@@ -6,8 +6,8 @@
 * Fixed a `NullPointerException` in Push (Atmosphere) where a missing null check in a logging call would create a mystery stack trace on the server when attempting to communicate with an already disconnected client. This is likely the fix to an issue [reported in Flow](https://github.com/vaadin/flow/issues/7177).
 * Fixed the Push version check to not complain about `vaadin-push-jakarta`.
 
-## Vaadin 8.28.3
-
+## ~~Vaadin 8.28.3~~
+#### **Warning: this release has been determined to be faulty and should not be used. Either use 8.28.2 or 8.28.4.**
 * Fixed an issue where `getBeanPropertyDescriptors()` could include
   properties more than once in the returned results list.
   This is a backport of [Flow PR #21836](https://github.com/vaadin/flow/pull/21836).
