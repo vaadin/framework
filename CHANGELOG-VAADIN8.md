@@ -1,5 +1,11 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.28.4
+
+* Fixed critical issue in license checking which became evident with 8.28.3 during the release. While the 8.28.3 release artifacts are available, build announcements were held back due to this issue. This release restores old behavior.
+* Fixed a `NullPointerException` in Push (Atmosphere) where a missing null check in a logging call would create a mystery stack trace on the server when attempting to communicate with an already disconnected client. This is likely the fix to an issue [reported in Flow](https://github.com/vaadin/flow/issues/7177).
+* Fixed the Push version check to not complain about `vaadin-push-jakarta`.
+
 ## Vaadin 8.28.3
 
 * Fixed an issue where `getBeanPropertyDescriptors()` could include
