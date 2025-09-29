@@ -1,5 +1,14 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.49
+
+* Made loading of scripts happen synchronously like in Vaadin 8
+* Added support for the usage of multiple `@JavaScript` and `@StyleSheet` annotations on a class
+* Bumped Atmosphere version to fix unload event handling on Chrome
+* Fixed internal Atmosphere version check to correctly detect MPR/Jakarta version of Push
+* Updated license checker invocations to be compatible with upstream technical licensing changes.
+* Internal: corrected incorrect line delimiters in various files
+
 ## Vaadin 7.7.48
 
 * Updated to Atmosphere 2.4.x, and consequently, Java 8. This bumps the minimum Java requirement from 7 to 8.
