@@ -222,7 +222,8 @@ public class VBrowserDetails implements Serializable {
         } else if (userAgent.contains("macintosh")
                 || userAgent.contains("mac osx")
                 || userAgent.contains("mac os x")) {
-            isIPad = userAgent.contains("ipad");
+            boolean isMultiTouch = getMaxTouchPoints() > 2;
+            isIPad = userAgent.contains("ipad") || isMultiTouch;
             isIPhone = userAgent.contains("iphone");
             if (isIPad || userAgent.contains("ipod") || isIPhone) {
                 os = OperatingSystem.IOS;
@@ -236,6 +237,10 @@ public class VBrowserDetails implements Serializable {
             parseChromeOSVersion(userAgent);
         }
     }
+
+    private native int getMaxTouchPoints() /*-{
+        return navigator.maxTouchPoints || 0;
+    }-*/;
 
     // (X11; CrOS armv7l 6946.63.0)
     private void parseChromeOSVersion(String userAgent) {
