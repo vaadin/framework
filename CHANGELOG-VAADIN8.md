@@ -1,5 +1,19 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.29.0
+* Implemented ARIA caption handling in `VNativeSelect`, allowing ARIA captions to be used in `NativeSelect` components.
+* Improved the server-side `WebBrowser` class and the client-side `BrowserInfo` class' implementation of the `.isIOS()` call by adding an additional heuristic of checking for a maximum touch points value greater than 2 if an operating system of MacOS X is reported by the user agent.
+   
+   Also improved the `WebBrowser` class by adding null checks for all functions requiring a valid `VBrowserDetails` instance, so that they adhere to documented behavior, and added the `WebBrowser.onInformationAvailable(Runnable)` method that can be used to register a callback that fires once as soon as information about the client's browser is available.
+   
+   Also improved documentation around these facilities.
+ * Updated `atmosphere` version to `2.4.30.vaadin9` to fix a `NullPointerException` in `DefaultAtmosphereResourceSessionFactory` when resource is null.
+    
+   Atmopshere could experience a race condition, where `event.destroy()` would be called before `notifyEventListeners()`, setting the resource to null, triggering the bug.
+   
+   Fixes [Atmosphere issue #2527](https://github.com/Atmosphere/atmosphere/issues/2527).
+* Updated `commons-io` to version `2.20.0` to address [CVE-2022-42889](https://nvd.nist.gov/vuln/detail/cve-2022-42889).
+
 ## Vaadin 8.28.4
 
 * Fixed critical issue in license checking which became evident with 8.28.3 during the release. While the 8.28.3 release artifacts are available, build announcements were held back due to this issue. This release restores old behavior.
