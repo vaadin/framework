@@ -1,5 +1,17 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.30.0
+* Updated the behavior of captions of `Action`s to remove any HTML from the passed-in caption string by default to guard against unexpected XSS vulnerabilities. **This change may require updating your code.**
+  
+  Rationale: the Action class is used for a lot of things throughout the Framework, including things such as populating custom drop-down menus.
+An issue was discovered in Spreadsheet where the caption string was being passed as-is into the DOM. This would normally be a benign unintended feature, but in the event that the caption string is populated from an untrusted source (such as from direct user input, which is then shared between sessions, or a translation table that can be edited by a third party) this can allow for the injection of malicious HTML, leading to cross site scripting vulnerabilities.
+  
+  The default behavior is now to use JSoup to strip any and all HTML tags out of the Caption string. Since some users may be relying on the caption string being able to contain HTML, overloaded constructors for Action as well as an overloaded setCaption function that take ContentMode as a second parameter were added. This allows specifying ContentMode.HTML to have caption string be passed through without sanitation, and this also provides an indicator in the code that HTML content *is to be expected* in the caption string.
+* Added `ChartElement` class to `testbench-api` for Vaadin-Charts support in Testbench.
+* Added ARIA handling to `VListSelect`. This allows screen readers to respond to ListSelect components.
+* Changed `ComboBox` dropdown's ARIA role from `List` to `ListBox` to improve screen reader behavior with `ComboBox` components.
+* Included `vaadin-testbench` artifact as part of `vaadin-bom` to provide a compatible default version whenever `vaadin-bom` is used in dependency management.
+
 ## Vaadin 8.29.0
 * Implemented ARIA caption handling in `VNativeSelect`, allowing ARIA captions to be used in `NativeSelect` components.
 * Improved the server-side `WebBrowser` class and the client-side `BrowserInfo` class' implementation of the `.isIOS()` call by adding an additional heuristic of checking for a maximum touch points value greater than 2 if an operating system of MacOS X is reported by the user agent.
