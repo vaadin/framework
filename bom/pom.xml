@@ -119,6 +119,11 @@
             </dependency>
             <dependency>
                 <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-spring-security</artifactId>
+                <version>${vaadin.spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-testbench-core</artifactId>
                 <version>${vaadin.testbench.version}</version>
             </dependency>
