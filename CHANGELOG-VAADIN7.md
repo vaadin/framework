@@ -1,5 +1,10 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.50
+
+* Added sanitisation to Action captions unless HTML content mode is specified.
+* Added checks to prevent the same CSS strings from being injected into the styles multiple times.
+
 ## Vaadin 7.7.49
 
 * Made loading of scripts happen synchronously like in Vaadin 8
