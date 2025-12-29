@@ -1,14 +1,19 @@
 package com.vaadin.server;
 
+import javax.servlet.http.HttpServletResponse;
+
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.Properties;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.server.BootstrapHandler.BootstrapContext;
 import com.vaadin.server.BootstrapHandler.BootstrapUriResolver;
+import com.vaadin.server.communication.ServletBootstrapHandler;
 
 public class BootstrapHandlerTest {
 
@@ -66,6 +71,28 @@ public class BootstrapHandlerTest {
 
     }
 
+    @Test
+    public void synchronizedHandleRequest_requestTargetVAADINFolder_noUiCreated() throws IOException {
+        final BootstrapHandler bootstrapHandler = new ServletBootstrapHandler();
+
+        final VaadinServletRequest request = Mockito.mock(
+                VaadinServletRequest.class);
+        Mockito.doAnswer(invocation -> "/VAADIN").when(request).getPathInfo();
+
+        final TestVaadinServletResponse response = new TestVaadinServletResponse();
+
+        final boolean value = bootstrapHandler.synchronizedHandleRequest(
+                Mockito.mock(VaadinSession.class), request, response);
+        Assert.assertTrue("No further request handlers should be called",
+                value);
+
+        Assert.assertEquals("Invalid status code reported", 400,
+                response.getErrorCode());
+        Assert.assertEquals("Invalid message reported",
+                "Invalid UI location: VAADIN is for static files",
+                response.getErrorMessage());
+    }
+
     private static void testResolveFrontEnd(String frontendUrl,
             String expectedUrl, WebBrowser browser) {
         testResolveFrontEnd(frontendUrl, expectedUrl, browser,
@@ -92,5 +119,40 @@ public class BootstrapHandlerTest {
         Mockito.when(session.getConfiguration()).thenReturn(configuration);
 
         assertEquals(expectedUrl, resolver.resolveVaadinUri(frontendUrl));
+    }
+
+    public static class TestVaadinServletResponse
+            extends VaadinServletResponse {
+        private int errorCode;
+        private String errorMessage;
+
+        private TestVaadinServletResponse() {
+            super(Mockito.mock(HttpServletResponse.class), Mockito.mock(
+                    VaadinServletService.class));
+        }
+
+        @Override
+        public void sendError(int errorCode, String message) {
+            this.errorCode = errorCode;
+            errorMessage = message;
+        }
+
+        @Override
+        public void sendError(int sc) {
+            errorCode = sc;
+        }
+
+        public int getErrorCode() {
+            return errorCode;
+        }
+
+        public String getErrorMessage() {
+            return errorMessage;
+        }
+
+        @Override
+        public void setStatus(int sc) {
+            errorCode = sc;
+        }
     }
 }

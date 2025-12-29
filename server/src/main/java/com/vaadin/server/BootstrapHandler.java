@@ -389,6 +389,12 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
     @Override
     public boolean synchronizedHandleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
+        if (request.getPathInfo() != null &&
+                request.getPathInfo().startsWith("/VAADIN")) {
+            response.sendError(400,
+                    "Invalid UI location: VAADIN is for static files");
+            return true;
+        }
         try {
             List<UIProvider> uiProviders = session.getUIProviders();
 
