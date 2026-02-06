@@ -1,5 +1,13 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.30.1
+* Fixed a packaging issue with Vaadin Maven Plugin, where Maven versions after 3.9.12 would require the use of JDK 11 or later, due to the plugin descriptor specifying that as the required Java version.
+  
+  This has not been an issue with previous versions of Maven, and had thus gone unnoticed.
+* Added logic to prevent starting a session when accessing the /VAADIN context path to mitigate a potential abuse vector.
+* Adjusted scrollbar padding for Firefox to prevent the scrollbar overlapping with Grid content in current Firefox versions.
+* Fixed a mention of a nonexistent function in the JavaDoc of the WebBrowser class.
+
 ## Vaadin 8.30.0
 * Updated the behavior of captions of `Action`s to remove any HTML from the passed-in caption string by default to guard against unexpected XSS vulnerabilities. **This change may require updating your code.**
   
