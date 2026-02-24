@@ -272,8 +272,8 @@ public class DefaultDeploymentConfiguration
         productionMode = getApplicationOrSystemProperty(
                 Constants.SERVLET_PARAMETER_PRODUCTION_MODE, "false")
                         .equals("true");
+        getLogger().warning(Constants.UNMAINTAINED_VERSION_WARNING);
         if (!productionMode) {
-            getLogger().warning(Constants.UNMAINTAINED_VERSION_WARNING);
             getLogger().warning(Constants.NOT_PRODUCTION_MODE_INFO);
         }
     }
