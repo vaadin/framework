@@ -2,6 +2,7 @@
     xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>vaadin-liferay-integration</artifactId>
+    <name>vaadin-liferay-integration</name>
     <packaging>jar</packaging>
     <url>https://vaadin.com/</url>
     <description>Liferay 7+ OSGi portlet support</description>
