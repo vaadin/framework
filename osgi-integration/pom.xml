@@ -2,6 +2,7 @@
     xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>vaadin-osgi-integration</artifactId>
+    <name>vaadin-osgi-integration</name>
     <packaging>jar</packaging>
     <url>https://vaadin.com/</url>
     <description>OSGi Integration</description>
