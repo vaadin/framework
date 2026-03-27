@@ -1,5 +1,10 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.51
+
+* Fixed a packaging issue with Vaadin Maven Plugin where it would incorrectly advertise the required JVM version as 11 instead of 1.8.
+* Added a security check to BootstrapHandler to prevent serving of /VAADIN/* as a context path. Backport of Flow PR #22998.
+
 ## Vaadin 7.7.50
 
 * Added sanitisation to Action captions unless HTML content mode is specified.
