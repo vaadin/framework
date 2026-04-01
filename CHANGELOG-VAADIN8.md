@@ -1,5 +1,22 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.31.0
+* Fixed a client side crash in ResponsiveConnector.
+
+  Execution would fail if a CSS rule did not have the selectorText property set. This change handles the unset property gracefully.
+* Fixed a client side compilation error when using Java 21.
+
+  It was discovered that the usage of the toMap Collector in AbstractDateFieldConnector would cause the GWT compiler to fail under Java 21. The code was refactored to avoid the use of the toMap Collector.
+* A11Y: Improved screen reader compatibility of DatePicker and other Calendar Panel derived widgets when using keyboard navigation.
+
+  This change explicitly modifies the tab index of day elements in the calendar widget which helps screen readers like NVDA properly respond to the value change.
+* A11Y: Added enhanced ARIA role attributes to Calendar popup widgets to improve accessibility.
+* Improved license checking strategy.
+
+  License checking is now performed more consistently during development. If an application built with Vaadin 8.31+ is deployed in a production environment without a valid license key present, an error event is logged.
+
+  [Read more about license validation on production servers here.](https://vaadin.com/docs/latest/flow/configuration/licenses#validation-on-production-server)
+
 ## Vaadin 8.30.1
 * Fixed a packaging issue with Vaadin Maven Plugin, where Maven versions after 3.9.12 would require the use of JDK 11 or later, due to the plugin descriptor specifying that as the required Java version.
   
