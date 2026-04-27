@@ -1,5 +1,16 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.52
+
+* Fixed a client side crash in `ResponsiveConnector`.
+
+  Execution would fail if a CSS rule did not have the `selectorText` property set. This change handles the unset property gracefully.
+* Improved license checking strategy.
+  
+  License checking is now performed more consistently during development. If an application built with Vaadin 8.31+ is deployed in a production environment without a valid license key present, an error event is logged.
+  [Read more about license validation on production servers here.](https://vaadin.com/docs/latest/flow/configuration/licenses#validation-on-production-server)
+
+
 ## Vaadin 7.7.51
 
 * Fixed a packaging issue with Vaadin Maven Plugin where it would incorrectly advertise the required JVM version as 11 instead of 1.8.
