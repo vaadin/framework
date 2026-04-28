@@ -1,6 +1,9 @@
 # Vaadin 8 extended maintenance version changelog
 
 ## Vaadin 8.31.0
+* Added caching to `ConnectorTracker`'s update operations to speed up component hierarchy visibility changes. This change adds a minor temporary memory usage penalty but reduces the total amount of checks performed to about 9% of previous values and helps speed up heavy UI updates significantly.
+
+## Vaadin 8.31.0
 * Fixed a client side crash in `ResponsiveConnector`.
 
   Execution would fail if a CSS rule did not have the `selectorText` property set. This change handles the unset property gracefully.
