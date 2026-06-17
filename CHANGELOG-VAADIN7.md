@@ -1,5 +1,10 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.53
+
+* The framework now uses 403 FORBIDDEN instead of 410 GONE when the session has expired.
+* Added a missing OSGi dependency to the license checker.
+
 ## Vaadin 7.7.52
 
 * Fixed a client side crash in `ResponsiveConnector`.
