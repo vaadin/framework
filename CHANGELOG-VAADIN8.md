@@ -1,5 +1,49 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.32.0
+
+* Added URL scheme validation in `ExternalResource` and `Page`. Based on concepts introduced in Flow PRs [#24539](https://github.com/vaadin/flow/pull/24539) and [#24943](https://github.com/vaadin/flow/pull/24943).
+
+  This is an optional (disabled by default) security feature that allows enabling and configuring a list of safe URL schemes in order to block a class of attack where a normal link to a resource could be manipulated to execute JavaScript or make users grant access to any privileged resources accessible through a URL scheme.
+
+  When enabled with the `safeUrlSchemes` configuration parameter, all uses of `ExternalResource` (including `Image` and downloads) as well as `Page#open` and `Page#setLocation` will be validated against a list of valid URL schemas.  
+  Alternative constructors and methods are provided for bypassing the validation on a case-by-case basis.
+
+  In Vaadin versions 25.2+, the default set of safe URL schemes are **http, https, mailto, tel and ftp**. Script-capable schemes such as `javascript` and `data` are intentionally left out.
+
+  To enable URL scheme validation with the default set of schemes, set the configuration parameter `safeUrlSchemes` with no value. To provide your own list of safe URL schemes, set the parameter's value to a comma-separated list of URL schemes you wish to allow. Relative URLs are always considered safe.
+
+* Added API for controlling the behavior of Grid's layout-after-scroll behavior when using Component Renderers.
+
+  This was a problem mitigation feature added in Vaadin 8.25.0 in order to fix [issue #12608](https://github.com/vaadin/framework/issues/12608). In the release notes, we asked for people to contact Vaadin Support in case they experience severe performance degradation, as the full layout operation could get heavy in complex Grids. This resulted in [issue #12680](https://github.com/vaadin/framework/issues/12680).
+
+  The API introduces the enum `Grid.LayoutAfterScrollMode` with the values `AUTOMATIC`, `ALWAYS` and `NEVER`, along with the following functions:
+
+  * `void Grid#setLayoutAfterScrollMode(LayoutAfterScrollMode)`
+  * `LayoutAfterScrollMode Grid#getLayoutAfterScrollMode()`
+  * `boolean Grid#isLayoutAfterScrollActive()`
+
+  You are encouraged to read the JavaDoc for those functions for more information. In short, `LayoutAfterScrollMode.AUTOMATIC` is now the default, and it disables the layout-after-scroll pass if only simple, "scroll safe" components are used in Grid, and if any component outside of that list is used, enables the mitigation. Depending on need, users can set the mode to `ALWAYS` (where the mitigation is always active as long as any component renderer is used; this is how it worked previously) or `NEVER`, which disables the mitigation.
+
+* Added a configuration parameter to control the maximum request body size.
+
+  The parameter `maxRequestBodySize` can be set to a numeric value (in bytes) or -1 to disable the limit. The default is 10 megabytes. This affects the maximum size UIDL, RPC and Push request bodies. Does not affect uploads.
+
+  If the request size exceeds the limit, the Framework rejects the request with a HTTP 413 (Request Entity Too Large) code. This is intended as an anti-(D)DOS measure. For more information, read the JavaDoc of `Constants.SERVLET_PARAMETER_MAX_REQUEST_BODY_SIZE`.
+
+  This is a backport of [Flow PR #24866](https://github.com/vaadin/flow/pull/24866).
+
+* Replaced GWT's `Window.ClosingHandler` functionality with a custom implementation in order to remove dependency on the HTML [unload event](https://developer.mozilla.org/en-US/docs/Web/API/Window/unload_event).
+
+  The `unload` event is deprecated and will make modern browsers complain about its usage, or may outright disable functionality depending on it. Vaadin Framework uses it to detect when a browser window is closed, so that sessions can be cleaned up, etc. GWT has deprecated the functions related to window closing and may remove them in the future. Vaadin Framework now uses a custom `pagehide` event hook.
+
+  The version of GWT shipped with Vaadin 8 still hooks functions to `window.onunload`, which will cause browsers to warn about it, but this should not break functionality. In order to get rid of the warning browser-side, update to a GWT version >=2.12.0 by updating your project's dependencies as described [in this Vaadin blog post](https://vaadin.com/blog/update-your-vaadin-8-project-to-java-11-and-gwt-2.9.0).
+
+* Unified response headers with current Flow behavior. In practice, removed Content-Type headers and one unnecessary Cache-Control header from heartbeat traffic. See [Flow PR #23225](https://github.com/vaadin/flow/pull/23225).
+
+* Removed the `org.reflections.reflections` dependency from `vaadin-portlet` and updated its version from `0.9.11` to `0.10.2` in `vaadin-server`.
+
+
 ## Vaadin 8.31.1
 * Added caching to `ConnectorTracker`'s update operations to speed up component hierarchy visibility changes. This change adds a minor temporary memory usage penalty but reduces the total amount of checks performed to about 9% of previous values and helps speed up heavy UI updates significantly.
 
