@@ -39,7 +39,7 @@
 
   The `unload` event is deprecated and will make modern browsers complain about its usage, or may outright disable functionality depending on it. Vaadin Framework uses it to detect when a browser window is closed, so that sessions can be cleaned up, etc. GWT has deprecated the functions related to window closing and may remove them in the future. Vaadin Framework now uses a custom `pagehide` event hook.
 
-  The version of GWT shipped with Vaadin 8 still hooks functions to `window.onunload`, which will cause browsers to warn about it, but this should not break functionality. In order to get rid of the warning browser-side, update to a GWT version >=2.12.0 by updating your project's dependencies as described [in this Vaadin blog post](https://github.com/TatuLund/vaadin-create23/wiki/How-to-Upgrade-GWT-and-Selenium-in-a-Vaadin-8-Project-Running-on-Java-11-).
+  The version of GWT shipped with Vaadin 8 still hooks functions to `window.onunload`, which will cause browsers to warn about it, but this should not break functionality. In order to get rid of the warning browser-side, update to a GWT version >=2.12.0 by updating your project's dependencies as described [in this post by Tatu Lund](https://github.com/TatuLund/vaadin-create23/wiki/How-to-Upgrade-GWT-and-Selenium-in-a-Vaadin-8-Project-Running-on-Java-11-).
 
 * Unified response headers with current Flow behavior. In practice, removed Content-Type headers and one unnecessary Cache-Control header from heartbeat traffic. See [Flow PR #23225](https://github.com/vaadin/flow/pull/23225).
 
