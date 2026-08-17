@@ -25,6 +25,8 @@
 
   You are encouraged to read the JavaDoc for those functions for more information. In short, `LayoutAfterScrollMode.AUTOMATIC` is now the default, and it disables the layout-after-scroll pass if only simple, "scroll safe" components are used in Grid, and if any component outside of that list is used, enables the mitigation. Depending on need, users can set the mode to `ALWAYS` (where the mitigation is always active as long as any component renderer is used; this is how it worked previously) or `NEVER`, which disables the mitigation.
 
+  You will need to configure the behavior on a per-Grid basis. There is currently no way to change the set of "scroll safe" components.
+
 * Added a configuration parameter to control the maximum request body size.
 
   The parameter `maxRequestBodySize` can be set to a numeric value (in bytes) or -1 to disable the limit. The default is 10 megabytes. This affects the maximum size UIDL, RPC and Push request bodies. Does not affect uploads.
