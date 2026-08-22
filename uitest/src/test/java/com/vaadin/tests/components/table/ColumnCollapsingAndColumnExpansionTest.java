@@ -3,19 +3,29 @@ package com.vaadin.tests.components.table;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TableElement.ContextMenuElement;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ColumnCollapsingAndColumnExpansionTest extends MultiBrowserTest {
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        return Arrays.asList(Browser.CHROME.getDesiredCapabilities(),
+                Browser.FIREFOX.getDesiredCapabilities());
+    }
 
     @Test
     public void expandCorrectlyAfterCollapse() throws IOException {
