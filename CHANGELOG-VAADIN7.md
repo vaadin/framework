@@ -1,5 +1,13 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.54
+
+* The jsoup version being used has been updated to 1.23.2. This new version will change how it handles self-closing tags for components.
+* Bundle-RequiredExecutionEnvironment has been updated to JavaSE-1.8
+* Made the maximum request body size has been made configurable. This is intended to be an anti-(D)DOS measure.
+* Moved blocking calls outside session lock as a possible deadlock mitigation measure.
+* Made it possible to override ServerRpcHandler creation in PushHandler.
+
 ## Vaadin 7.7.53
 
 * The framework now uses 403 FORBIDDEN instead of 410 GONE when the session has expired.
