@@ -6,9 +6,7 @@
 
   This should be an invisible change to users; however, the behavior of JSoup has changed between versions in a way that **might** require changes to some files. Namely, self-closing tags are not allowed when parsing in an HTML context.
 
-  Vaadin 7 and 8 contained several tests that imported partial Vaadin Designer files, which contained several self-closing custom tags. These were accepted by JSoup 1.15.3, but no longer by JSoup version 1.15.4. However, examination of Vaadin Designer itself suggests that released versions do not create output that uses self-closing tags, and consequently the change should not affect users.
-
-  If you experience issues regarding HTML content with self-closing tags, let us know by filing an issue with [Vaadin Support](https://support.vaadin.com/).
+  If you experience issues regarding HTML content or Designer templates with self-closing tags, let us know by filing an issue with [Vaadin Support](https://support.vaadin.com/).
 
 ## Vaadin 8.32.0
 
