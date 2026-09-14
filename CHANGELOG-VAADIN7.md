@@ -2,7 +2,12 @@
 
 ## Vaadin 7.7.54
 
-* The jsoup version being used has been updated to 1.23.2. This new version will change how it handles self-closing tags for components.
+* The jsoup version being used has been updated to 1.23.2 to address [CVE-2026-71497](https://nvd.nist.gov/vuln/detail/cve-2026-71497).
+
+  This new version changes how it handles self-closing tags, namely they're not allowed when parsing in an HTML context.
+
+  If you experience issues regarding HTML content or Designer templates with self-closing tags, let us know by filing an issue with [Vaadin Support](https://support.vaadin.com/).
+  
 * Bundle-RequiredExecutionEnvironment has been updated to JavaSE-1.8
 * Made the maximum request body size has been made configurable. This is intended to be an anti-(D)DOS measure.
 * Moved blocking calls outside session lock as a possible deadlock mitigation measure.
