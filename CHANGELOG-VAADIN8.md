@@ -1,5 +1,13 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.32.1
+
+* Updated JSoup from version 1.15.3 to 1.23.2 to address [CVE-2026-71497](https://nvd.nist.gov/vuln/detail/cve-2026-71497).
+
+  This should be an invisible change to users; however, the behavior of JSoup has changed between versions in a way that **might** require changes to some files. Namely, self-closing tags are not allowed when parsing in an HTML context.
+
+  If you experience issues regarding HTML content or Designer templates with self-closing tags, let us know by filing an issue with [Vaadin Support](https://support.vaadin.com/).
+
 ## Vaadin 8.32.0
 
 * Added URL scheme validation in `ExternalResource` and `Page`. Based on concepts introduced in Flow PRs [#24539](https://github.com/vaadin/flow/pull/24539) and [#24943](https://github.com/vaadin/flow/pull/24943).
