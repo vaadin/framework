@@ -9,7 +9,7 @@
   If you experience issues regarding HTML content or Designer templates with self-closing tags, let us know by filing an issue with [Vaadin Support](https://support.vaadin.com/).
   
 * Bundle-RequiredExecutionEnvironment has been updated to JavaSE-1.8
-* Made the maximum request body size has been made configurable. This is intended to be an anti-(D)DOS measure.
+* Made the maximum request body size configurable. This is intended to be an anti-(D)DOS measure.
 * Moved blocking calls outside session lock as a possible deadlock mitigation measure.
 * Made it possible to override ServerRpcHandler creation in PushHandler.
 
