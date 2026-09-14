@@ -90,8 +90,16 @@ the shortcut key from the localized string.
 Shortcut keys can be defined as __actions__ using the
 [classname]#ShortcutAction# class. It extends the generic [classname]#Action#
 class that is used for example in [classname]#Tree# and [classname]#Table# for
-context menus. Currently, the only classes that accept
-[classname]##ShortcutAction##s are [classname]#Window# and [classname]#Panel#.
+context menus.
+
+This generic action API is separate from click shortcuts
+([methodname]#setClickShortcut()#) and focus shortcuts
+([classname]#FocusShortcut#) described above, which you add to a button or a
+field. A [classname]#ShortcutAction# is not added to those child components.
+You register an [classname]#Action.Handler# on a [classname]#Panel# or a
+[classname]#Window# with [methodname]#addActionHandler()#. Those are currently
+the only classes that accept the handler; the handler then returns the
+[classname]#ShortcutAction# objects from [methodname]#getActions()#.
 
 To handle key presses, you need to define an action handler by implementing the
 [classname]#Handler# interface. The interface has two methods that you need to
@@ -222,9 +230,10 @@ public class DefaultButtonExample extends CustomComponent
 }
 ----
 
-Notice that the keyboard actions can currently be attached only to
-[classname]##Panel##s and [classname]##Window##s. This can cause problems if you
-have components that require a certain key. For example, multi-line
+Attach the handler to the [classname]#Panel# or [classname]#Window# that should
+own the shortcut, not to nested fields. The actions then apply for the whole
+scope of that panel or window. This can cause problems if you have components
+that require a certain key. For example, multi-line
 [classname]#TextField# requires the kbd:[Enter] key. There is currently no way to
 filter the shortcut actions out while the focus is inside some specific
 component, so you need to avoid such conflicts.
