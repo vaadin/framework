@@ -1,17 +1,28 @@
 package com.vaadin.tests.components.combobox;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ComboBoxElement;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("xvfb-test")
 public class ComboBoxItemIconTest extends MultiBrowserTest {
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        return Arrays.asList(Browser.CHROME.getDesiredCapabilities(),
+                Browser.FIREFOX.getDesiredCapabilities());
+    }
 
     @Test
     public void testIconsInComboBox() throws Exception {
