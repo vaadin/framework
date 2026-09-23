@@ -17,6 +17,7 @@ Starting with versions 7.7.30\* and 8.15.0, no new code is being released here, 
 ## Vaadin Framework has entered extended maintenance
 
 Vaadin Framework 7 and 8 are now being maintained under a closed-source model by the Vaadin Expertise Team. You are free to continue using Vaadin Framework releases up to [8.14.3](https://github.com/vaadin/framework/releases/tag/8.14.3) and [7.7.17](https://github.com/vaadin/framework/releases/tag/7.7.17) as made available through this repository, and you are free to fork and maintain the framework yourself.
+We have released Vaadin 8.14.4 as a free update, which includes some POM updates for easier future development work.
 
 * Vaadin 8 open source maintenance ended in February 2022, [extended support](https://vaadin.com/vaadin-8-extended-maintenance) is available until February 2032. Starting with version 8.15.0, Vaadin 8 is subject to commercial Vaadin licenses (CVDLv4 from 8.15.0 onward, VCL from 8.19.0 onward). The current license is [Vaadin Commercial License](https://vaadin.com/commercial-license-and-service-terms).
 
