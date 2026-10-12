@@ -1,5 +1,10 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.32.2
+
+* Disabled Atmosphere's CORS header interceptor for security. Backport of [Flow PR #26215](https://github.com/vaadin/flow/pull/26215). Fixes [issue #26214](https://github.com/vaadin/flow/issues/26214).
+* Prevented session lock from leaking if an invalid UI ID was provided in a request from the client to the server.
+
 ## Vaadin 8.32.1
 
 * Updated JSoup from version 1.15.3 to 1.23.2 to address [CVE-2026-71497](https://nvd.nist.gov/vuln/detail/cve-2026-71497).
