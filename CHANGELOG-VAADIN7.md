@@ -1,5 +1,9 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.55
+
+* Disabled Atmosphere's CORS header interceptor for security. Backport of [Flow PR #26215](https://github.com/vaadin/flow/pull/26215). Fixes [issue #26214](https://github.com/vaadin/flow/issues/26214).
+
 ## Vaadin 7.7.54
 
 * The jsoup version being used has been updated to 1.23.2 to address [CVE-2026-71497](https://nvd.nist.gov/vuln/detail/cve-2026-71497).
