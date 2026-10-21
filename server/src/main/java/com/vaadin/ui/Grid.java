@@ -5061,7 +5061,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     @Override
     protected void internalSetDataProvider(DataProvider<T, ?> dataProvider) {
-        boolean newProvider = getDataProvider() != dataProvider;
+        boolean newProvider = internalGetDataProvider() != dataProvider;
         super.internalSetDataProvider(dataProvider);
         if (newProvider) {
             Set<T> oldVisibleDetails = new HashSet<>(
