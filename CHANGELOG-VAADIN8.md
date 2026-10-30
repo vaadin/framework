@@ -2,7 +2,7 @@
 
 ## Vaadin 8.32.3
 
-* Added support for runtime licenses, aka. Deployment Keys, which will allow you to distribute a Vaadin application built with an Extended Maintenance version without having to expose a developer key.
+* Added support for runtime licenses, aka. Distribution Keys, which will allow you to distribute a Vaadin application built with an Extended Maintenance version without having to expose a developer key.
   
   [Read more about this feature on Vaadin Docs](https://vaadin.com/docs/next/flow/configuration/licenses#distribution-license-key).
 * Fixed a race condition in Push where a PushConnection would close permanently instead of being resumed when a client temporarily loses network connectivity.
