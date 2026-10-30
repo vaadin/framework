@@ -1,5 +1,14 @@
 # Vaadin 8 extended maintenance version changelog
 
+## Vaadin 8.32.3
+
+* Added support for runtime licenses, aka. Deployment Keys, which will allow you to distribute a Vaadin application built with an Extended Maintenance version without having to expose a developer key.
+  
+  [Read more about this feature on Vaadin Docs](https://vaadin.com/docs/next/flow/configuration/licenses#distribution-license-key).
+* Fixed a race condition in Push where a PushConnection would close permanently instead of being resumed when a client temporarily loses network connectivity.
+  
+  As this issue is caused by a race condition, it would manifest in a nondeterministic manner, and as such flew under the radar for a long time. It was originally reported as [Flow issue #26689](https://github.com/vaadin/flow/issues/26689).
+
 ## Vaadin 8.32.2
 
 * Disabled Atmosphere's CORS header interceptor for security. Backport of [Flow PR #26215](https://github.com/vaadin/flow/pull/26215). Fixes [issue #26214](https://github.com/vaadin/flow/issues/26214).
