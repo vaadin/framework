@@ -1,5 +1,12 @@
 # Vaadin 7 extended maintenance version changelog
 
+## Vaadin 7.7.56
+
+* The framework will now ignore the disconnect of stale push resources after reconnect. This means that the Push connection will properly re-establish itself after a network interruption.
+* There will now be a warning about JEP 500 violations.
+* Added BOM convergence validation tooling to keep dependency versions in line.
+* The license checker now also supports distribution keys. [Read more about license validation on production servers here.](https://vaadin.com/docs/latest/flow/configuration/licenses#validation-on-production-server)
+
 ## Vaadin 7.7.55
 
 * Disabled Atmosphere's CORS header interceptor for security. Backport of [Flow PR #26215](https://github.com/vaadin/flow/pull/26215). Fixes [issue #26214](https://github.com/vaadin/flow/issues/26214).
